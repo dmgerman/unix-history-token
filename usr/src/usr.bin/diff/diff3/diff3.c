@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff3.c	4.3 (Berkeley) %G%"
+literal|"@(#)diff3.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,23 +139,6 @@ name|fp
 index|[
 literal|3
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|linct
-index|[
-literal|3
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +337,9 @@ condition|(
 name|oflag
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|f1mark
@@ -375,6 +361,9 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|f3mark
@@ -764,6 +753,9 @@ name|new
 operator|.
 name|to
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -1179,11 +1171,6 @@ argument_list|,
 operator|&
 name|d1
 operator|->
-name|old
-argument_list|,
-operator|&
-name|d1
-operator|->
 name|new
 argument_list|)
 expr_stmt|;
@@ -1241,11 +1228,6 @@ expr_stmt|;
 name|keep
 argument_list|(
 literal|1
-argument_list|,
-operator|&
-name|d2
-operator|->
-name|old
 argument_list|,
 operator|&
 name|d2
@@ -1827,6 +1809,9 @@ return|return;
 name|i
 operator|--
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|skip
 argument_list|(
 name|i
@@ -1842,6 +1827,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|skip
 argument_list|(
 name|i
@@ -1950,8 +1938,6 @@ name|keep
 argument_list|(
 argument|i
 argument_list|,
-argument|rold
-argument_list|,
 argument|rnew
 argument_list|)
 end_macro
@@ -1959,9 +1945,6 @@ end_macro
 begin_decl_stmt
 name|struct
 name|range
-modifier|*
-name|rold
-decl_stmt|,
 modifier|*
 name|rnew
 decl_stmt|;
@@ -2177,6 +2160,9 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|skip
 argument_list|(
 literal|0
@@ -2192,6 +2178,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|skip
 argument_list|(
 literal|1
@@ -2283,7 +2272,11 @@ argument_list|(
 name|nchar
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 do|while
@@ -2332,6 +2325,9 @@ condition|;
 name|i
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|fseek
 argument_list|(
 name|fp
@@ -2621,6 +2617,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fseek
 argument_list|(
 name|fp
@@ -2705,6 +2704,9 @@ condition|)
 name|trouble
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|block
