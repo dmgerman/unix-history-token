@@ -3670,7 +3670,7 @@ if|if
 condition|(
 name|ohcidebug
 operator|>
-literal|10
+literal|11
 condition|)
 block|{
 name|printf
@@ -5809,8 +5809,8 @@ name|hcpriv
 operator|=
 name|stat
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|OHCI_DEBUG
 if|if
 condition|(
@@ -5938,42 +5938,13 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+literal|0
+ifdef|#
+directive|ifdef
 name|OHCI_DEBUG
-if|if
-condition|(
-name|ohcidebug
-operator|>
-literal|5
-condition|)
-block|{
-name|delay
-argument_list|(
-literal|5000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ohci_device_request: status=%x\n"
-argument_list|,
-name|OREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_COMMAND_STATUS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ohci_dump_ed
-argument_list|(
-name|sed
-argument_list|)
-expr_stmt|;
-name|ohci_dump_tds
-argument_list|(
-name|setup
-argument_list|)
-expr_stmt|;
-block|}
+block|if (ohcidebug> 15) { 		delay(5000); 		printf("ohci_device_request: status=%x\n", 		       OREAD4(sc, OHCI_COMMAND_STATUS)); 		ohci_dump_ed(sed); 		ohci_dump_tds(setup); 	}
+endif|#
+directive|endif
 endif|#
 directive|endif
 return|return
@@ -6349,10 +6320,25 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+name|usbd_request_handle
+modifier|*
+name|reqh
+init|=
+name|addr
+decl_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ohci_timeout: reqh=%p\n"
+operator|,
+name|reqh
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|usbd_request_handle *reqh = addr; 	int s;  	DPRINTF(("ohci_timeout: reqh=%p\n", reqh)); 	s = splusb();
+block|int s;  	s = splusb();
 comment|/* XXX need to inactivate TD before calling interrupt routine */
 block|ohci_XXX_done(reqh); 	splx(s);
 endif|#
@@ -10582,8 +10568,8 @@ name|hcpriv
 operator|=
 name|xfer
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|OHCI_DEBUG
 if|if
 condition|(
@@ -10660,44 +10646,15 @@ operator|~
 name|OHCI_ED_SKIP
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 ifdef|#
 directive|ifdef
 name|OHCI_DEBUG
-if|if
-condition|(
-name|ohcidebug
-operator|>
-literal|5
-condition|)
-block|{
-name|delay
-argument_list|(
-literal|5000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ohci_device_intr_transfer: status=%x\n"
-argument_list|,
-name|OREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_COMMAND_STATUS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ohci_dump_ed
-argument_list|(
-name|sed
-argument_list|)
-expr_stmt|;
-name|ohci_dump_tds
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-block|}
+block|if (ohcidebug> 15) { 		delay(5000); 		printf("ohci_device_intr_transfer: status=%x\n", 		       OREAD4(sc, OHCI_COMMAND_STATUS)); 		ohci_dump_ed(sed); 		ohci_dump_tds(xfer); 	}
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|splx
