@@ -12026,45 +12026,6 @@ operator|(
 name|pTHX
 operator|)
 argument_list|;
-ifndef|#
-directive|ifndef
-name|PERL_OBJECT
-argument_list|typedef
-name|int
-name|runops_proc_t
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-argument_list|;
-name|int
-name|runops_standard
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-argument_list|;
-ifdef|#
-directive|ifdef
-name|DEBUGGING
-name|int
-name|runops_debug
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-argument_list|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* PERL_OBJECT */
 comment|/* _ (for $_) must be first in the following list (DEFSV requires it) */
 define|#
 directive|define
@@ -15680,11 +15641,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Set up PERLVAR macros for populating structs */
 end_comment
@@ -16286,23 +16242,6 @@ name|init
 parameter_list|)
 value|EXTCONST type PL_##var INIT(init);
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PERL_GLOBAL_STRUCT
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"perlvars.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
