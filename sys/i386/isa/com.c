@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/i386/isa/RCS/com.c,v 1.2 92/01/21 14:34:11 william Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/i386/isa/com.c,v 1.1.1.1 1993/06/12 14:58:02 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2039,7 +2039,7 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_flags
+name|t_cflag
 operator|&
 name|CRTSCTS
 operator|)
