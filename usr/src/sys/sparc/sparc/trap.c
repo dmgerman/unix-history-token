@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.3 (Berkeley) %G%  *  * from: $Header: trap.c,v 1.31 92/07/11 11:08:57 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.4 (Berkeley) %G%  *  * from: $Header: trap.c,v 1.33 92/11/26 03:05:09 torek Exp $  */
 end_comment
 
 begin_include
@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ctlreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -108,12 +114,6 @@ begin_include
 include|#
 directive|include
 file|<machine/trap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc/sparc/ctlreg.h>
 end_include
 
 begin_define
