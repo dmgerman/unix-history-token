@@ -1552,6 +1552,9 @@ name|int
 name|psf_flags
 decl_stmt|;
 name|int
+name|psf_cancelflags
+decl_stmt|;
+name|int
 name|psf_interrupted
 decl_stmt|;
 name|int
