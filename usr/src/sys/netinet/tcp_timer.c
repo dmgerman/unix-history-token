@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.16 82/03/15 */
+comment|/* tcp_timer.c 4.17 82/03/19 */
 end_comment
 
 begin_include
@@ -738,6 +738,8 @@ name|so_options
 operator|&
 name|SO_KEEPALIVE
 condition|)
+block|{
+comment|/* 			 * Saying tp->rcv_nxt-1 lies about what 			 * we have received, and by the protocol spec 			 * requires the correspondent TCP to respond. 			 * Saying tp->snd_una-1 causes the transmitted 			 * byte to lie outside the receive window; this 			 * is important because we don't necessarily 			 * have a byte in the window to send (consider 			 * a one-way stream!) 			 */
 name|tcp_respond
 argument_list|(
 name|tp
@@ -749,6 +751,8 @@ argument_list|,
 name|tp
 operator|->
 name|rcv_nxt
+operator|-
+literal|1
 argument_list|,
 name|tp
 operator|->
@@ -759,6 +763,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|tp
 operator|->
