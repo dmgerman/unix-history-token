@@ -94,7 +94,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mii.c,v 1.1 1999/08/21 17:40:41 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,6 +306,8 @@ name|mii
 decl_stmt|;
 name|device_t
 name|child
+init|=
+literal|0
 decl_stmt|,
 name|parent
 decl_stmt|;
@@ -487,15 +489,12 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
-name|ma
-operator|.
-name|mii_phyno
+name|child
 operator|==
-name|MII_NPHY
+name|NULL
 condition|)
 return|return
 operator|(
