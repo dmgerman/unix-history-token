@@ -1,40 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_disksubr.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_disksubr.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"disklabel.h"
+file|<sys/disklabel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_comment
-comment|/*  * Seek sort for disks.  We depend on the driver  * which calls us using b_resid as the current cylinder number.  *  * The argument dp structure holds a b_actf activity chain pointer  * on which we keep two queues, sorted in ascending cylinder order.  * The first queue holds those requests which are positioned after  * the current cylinder (in the first request); the second holds  * requests which came in after their cylinder number was passed.  * Thus we implement a one way scan, retracting after reaching the  * end of the drive to the first request on the second queue,  * at which time it becomes the first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead  * blocks are allocated.  */
+comment|/*  * Seek sort for disks.  We depend on the driver which calls us using b_resid  * as the current cylinder number.  *  * The argument dp structure holds a b_actf activity chain pointer on which we  * keep two queues, sorted in ascending cylinder order.  The first queue holds  * those requests which are positioned after the current cylinder (in the first  * request); the second holds requests which came in after their cylinder number  * was passed.  Thus we implement a one way scan, retracting after reaching the  * end of the drive to the first request on the second queue, at which time it  * becomes the first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead blocks are  * allocated.  */
 end_comment
 
 begin_define
@@ -44,23 +44,24 @@ name|b_cylin
 value|b_resid
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|disksort
-argument_list|(
+parameter_list|(
 name|dp
-argument_list|,
+parameter_list|,
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|dp
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|bp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -309,7 +310,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Attempt to read a disk label from a device  * using the indicated stategy routine.  * The label must be partly set up before this:  * secpercyl and anything required in the strategy routine  * (e.g., sector size) must be filled in before calling us.  * Returns null on success and an error string on failure.  */
+comment|/*  * Attempt to read a disk label from a device using the indicated stategy  * routine.  The label must be partly set up before this: secpercyl and  * anything required in the strategy routine (e.g., sector size) must be  * filled in before calling us.  Returns NULL on success and an error  * string on failure.  */
 end_comment
 
 begin_decl_stmt
@@ -635,28 +636,29 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check new disk label for sensibility  * before setting it.  */
+comment|/*  * Check new disk label for sensibility before setting it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|setdisklabel
-argument_list|(
+parameter_list|(
 name|olp
-argument_list|,
+parameter_list|,
 name|nlp
-argument_list|,
+parameter_list|,
 name|openmask
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|disklabel
-operator|*
+modifier|*
 name|olp
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|nlp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_decl_stmt
 name|u_long
@@ -908,18 +910,16 @@ begin_comment
 comment|/*  * Write disk label back to device after modification.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|writedisklabel
 argument_list|(
-argument|dev
+name|dev
 argument_list|,
-argument|strat
+name|strat
 argument_list|,
-argument|lp
+name|lp
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
@@ -1298,38 +1298,36 @@ begin_comment
 comment|/*  * Disk error is the preface to plaintive error messages  * about failing disk transfers.  It prints messages of the form  hp0g: hard error reading fsbn 12345 of 12344-12347 (hp0 bn %d cn %d tn %d sn %d)   * if the offset of the error in the transfer and a disk label  * are both available.  blkdone should be -1 if the position of the error  * is unknown; the disklabel pointer may be null from drivers that have not  * been converted to use them.  The message is printed with printf  * if pri is LOG_PRINTF, otherwise it uses log at the specified priority.  * The message should be completed (with at least a newline) with printf  * or addlog, respectively.  There is no trailing space.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|diskerr
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|,
+parameter_list|,
 name|dname
-argument_list|,
+parameter_list|,
 name|what
-argument_list|,
+parameter_list|,
 name|pri
-argument_list|,
+parameter_list|,
 name|blkdone
-argument_list|,
+parameter_list|,
 name|lp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|dname
 decl_stmt|,
-modifier|*
+decl|*
 name|what
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
