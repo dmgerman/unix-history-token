@@ -2145,7 +2145,7 @@ name|ccb_h
 operator|.
 name|ccb_state
 operator|=
-name|PT_CCB_BUFFER_IO
+name|PT_CCB_BUFFER_IO_UA
 expr_stmt|;
 comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|oldspl

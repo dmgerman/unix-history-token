@@ -4420,10 +4420,8 @@ argument_list|,
 comment|/* error handler */
 name|NULL
 argument_list|,
-comment|/* cam_flags */
-literal|0
+name|CAM_RETRY_SELTO
 argument_list|,
-comment|/* sense_flags */
 name|SF_RETRY_UA
 argument_list|,
 operator|&
