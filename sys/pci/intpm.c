@@ -138,6 +138,13 @@ block|,
 literal|"Intel 82371AB Power management controller"
 block|}
 block|,
+if|#
+directive|if
+literal|0
+comment|/* Not a good idea yet, this stops isab0 functioning */
+block|{ 0x02001166,"ServerWorks OSB4 PCI to ISA Bridge"},
+endif|#
+directive|endif
 block|{
 literal|0x00000000
 block|,
