@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	1.1 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	1.2 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
-comment|/*  * Null Layer  * (See umap_vnops.c for a description of what this does.)  */
+comment|/*  * Umap Layer  * (See mount_umap(8) for a descritpion of this layer.)  */
 end_comment
 
 begin_include
@@ -191,7 +191,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Find target node 	 */
+comment|/* 	 * Find lower node 	 */
 name|NDINIT
 argument_list|(
 name|ndp
@@ -227,7 +227,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Sanity check on target vnode 	 */
+comment|/* 	 * Sanity check on lower vnode 	 */
 name|lowerrootvp
 operator|=
 name|ndp
@@ -259,7 +259,6 @@ name|ni_dvp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * NEEDSWORK: Is this really bad, or just not 	 * the way it's been? 	 */
 if|if
 condition|(
 name|lowerrootvp
@@ -313,7 +312,7 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* 	 * Save reference to underlying target FS 	 */
+comment|/* 	 * Save reference to underlying FS 	 */
 name|amp
 operator|->
 name|umapm_vfs
@@ -354,7 +353,12 @@ name|amp
 operator|->
 name|info_mapdata
 argument_list|,
-literal|8
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 operator|*
 name|args
 operator|.
@@ -370,6 +374,9 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|UMAP_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"umap_mount:nentries %d\n"
@@ -419,6 +426,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|copyin
@@ -434,7 +443,12 @@ name|amp
 operator|->
 name|info_gmapdata
 argument_list|,
-literal|8
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 operator|*
 name|args
 operator|.
@@ -450,6 +464,9 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|UMAP_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"umap_mount:gnentries %d\n"
@@ -499,6 +516,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Save reference.  Each mount also holds 	 * a reference on the root vnode. 	 */
 name|error
 operator|=
@@ -512,7 +531,7 @@ operator|&
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unlock the node (either the target or the alias) 	 */
+comment|/* 	 * Unlock the node (either the lower or the alias) 	 */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -674,7 +693,7 @@ directive|ifdef
 name|UMAPFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"umapfs_mount: target %s, alias at %s\n"
+literal|"umapfs_mount: lower %s, alias at %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -864,20 +883,9 @@ return|;
 ifdef|#
 directive|ifdef
 name|UMAPFS_DIAGNOSTIC
-comment|/* 	 * Flush any remaining vnode references 	 */
-name|umap_node_flushmp
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|UMAPFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"alias root of target"
+literal|"alias root of lower"
 argument_list|,
 name|umapm_rootvp
 argument_list|)
