@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.23 (Berkeley) %G%"
+literal|"@(#)table.c	1.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2098,8 +2098,6 @@ operator||
 name|AWD
 block|,
 name|ANYSIGNED
-operator||
-name|ANYUSIGNED
 block|,
 name|SANY
 block|,
@@ -2114,6 +2112,32 @@ operator||
 name|RESCC
 block|,
 literal|"	cvtZLl	AL,A1\n	mcoml	A1,A1\n"
+block|,
+name|COMPL
+block|,
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|ANYUSIGNED
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+name|NAREG
+operator||
+name|NASL
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	movzZLl	AL,A1\n	mcoml	A1,A1\n"
 block|,
 name|AND
 block|,
