@@ -58,7 +58,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GTAGS
+name|GLOBAL
 end_ifdef
 
 begin_function

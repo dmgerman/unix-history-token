@@ -40,12 +40,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -65,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"die.h"
 end_include
 
 begin_include
@@ -159,9 +159,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|warnx
+name|fprintf
 argument_list|(
-literal|"too many entries to sort"
+name|stderr
+argument_list|,
+literal|"too many entries to sort\n"
 argument_list|)
 expr_stmt|;
 name|put_entries
@@ -196,10 +198,8 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|errx
+name|die
 argument_list|(
-literal|1
-argument_list|,
 literal|"out of space"
 argument_list|)
 expr_stmt|;
@@ -295,10 +295,8 @@ name|name
 argument_list|)
 operator|)
 condition|)
-name|errx
+name|die
 argument_list|(
-literal|1
-argument_list|,
 literal|"out of space"
 argument_list|)
 expr_stmt|;
@@ -338,10 +336,8 @@ name|lbuf
 argument_list|)
 operator|)
 condition|)
-name|errx
+name|die
 argument_list|(
-literal|1
-argument_list|,
 literal|"out of space"
 argument_list|)
 expr_stmt|;
@@ -403,7 +399,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|GTAGS
+name|GLOBAL
 if|if
 condition|(
 operator|!
