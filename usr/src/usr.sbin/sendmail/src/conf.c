@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.87 (Berkeley) %G%"
+literal|"@(#)conf.c	8.88 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2045,21 +2045,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|LA_TYPE
-operator|==
-name|LA_INT
-operator|)
-operator|||
-operator|(
-name|LA_TYPE
-operator|==
-name|LA_SHORT
-operator|)
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FSHIFT
+end_ifndef
 
 begin_define
 define|#
@@ -2073,34 +2068,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|LA_TYPE
-operator|==
-name|LA_INT
-operator|)
-operator|||
-operator|(
-name|LA_TYPE
-operator|==
-name|LA_SHORT
-operator|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|FSCALE
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
