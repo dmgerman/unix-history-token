@@ -117,7 +117,7 @@ parameter_list|,
 name|rdy
 parameter_list|)
 define|\
-value|while ((SEEPROM_INB(sd)& rdy) == 0) {		\ 		;
+value|while ((SEEPROM_INB(sd)& rdy) == 0) {	\ 		;
 comment|/* Do nothing */
 value|\ 	}
 end_define
