@@ -6780,7 +6780,7 @@ case|:
 name|update_led
 argument_list|()
 expr_stmt|;
-comment|/* ??? */
+comment|/* ? */
 break|break;
 case|case
 name|KBDGLOCK
@@ -8146,7 +8146,7 @@ operator|*
 operator|)
 literal|"\033[35~"
 expr_stmt|;
-comment|/* F21 ??!! */
+comment|/* F21 ? !! */
 block|}
 block|}
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 9  *---------------------------------------------------------------------------*/
