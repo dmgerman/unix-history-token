@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.9 (Berkeley) %G%"
+literal|"@(#)local.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1176,6 +1176,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|andable
 argument_list|(
@@ -1333,6 +1337,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|NODE
 modifier|*
@@ -1360,7 +1368,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* t, d, and s are the type, dimension offset, and sizeoffset */
-comment|/* in general they  are necessary for offcon, but not on H'well */
+comment|/* in general they  are necessary for offcon, but not on VAX */
 name|p
 operator|=
 name|bcon
@@ -2069,6 +2077,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|isitlong
