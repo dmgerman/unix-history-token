@@ -3526,6 +3526,7 @@ block|}
 block|}
 do|while
 condition|(
+operator|(
 name|pfh
 operator|=
 name|TAILQ_NEXT
@@ -3534,6 +3535,9 @@ name|pfh
 argument_list|,
 name|pfil_link
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 comment|/* 	     * If we get here, the firewall has passed the pkt, but the mbuf 	     * pointer might have changed. Restore ip and the fields ntohs()'d. 	     */
