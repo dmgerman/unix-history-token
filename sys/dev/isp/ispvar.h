@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|1
+value|2
 end_define
 
 begin_comment
@@ -736,15 +736,19 @@ name|isp_retry_delay
 decl_stmt|;
 struct|struct
 block|{
-name|u_int
+name|u_int32_t
+name|exc_throttle
+range|:
+literal|8
+decl_stmt|,
+range|:
+literal|1
+decl_stmt|,
 name|dev_enable
 range|:
 literal|1
 decl_stmt|,
 comment|/* ignored */
-range|:
-literal|1
-decl_stmt|,
 name|dev_update
 range|:
 literal|1
@@ -753,34 +757,42 @@ name|dev_refresh
 range|:
 literal|1
 decl_stmt|,
-name|exc_throttle
-range|:
-literal|8
-decl_stmt|,
-name|cur_offset
+name|actv_offset
 range|:
 literal|4
 decl_stmt|,
-name|sync_offset
+name|goal_offset
+range|:
+literal|4
+decl_stmt|,
+name|nvrm_offset
 range|:
 literal|4
 decl_stmt|;
 name|u_int8_t
-name|cur_period
+name|actv_period
 decl_stmt|;
 comment|/* current sync period */
 name|u_int8_t
-name|sync_period
+name|goal_period
 decl_stmt|;
 comment|/* goal sync period */
+name|u_int8_t
+name|nvrm_period
+decl_stmt|;
+comment|/* nvram sync period */
 name|u_int16_t
-name|dev_flags
+name|actv_flags
+decl_stmt|;
+comment|/* current device flags */
+name|u_int16_t
+name|goal_flags
 decl_stmt|;
 comment|/* goal device flags */
 name|u_int16_t
-name|cur_dflags
+name|nvrm_flags
 decl_stmt|;
-comment|/* current device flags */
+comment|/* nvram device flags */
 block|}
 name|isp_devparam
 index|[
@@ -2184,7 +2196,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands and locks may be released while this is occurring.  *  * A few notes about some of these functions:  *  * ISPCTL_FCLINK_TEST tests to make sure we have good fibre channel link.  * The argument is a pointer to an integer which is the time, in microseconds,  * we should wait to see whether we have good link. This test, if successful,  * lets us know our connection topology and our Loop ID/AL_PA and so on.  * You can't get anywhere without this.  *  * ISPCTL_SCAN_FABRIC queries the name server (if we're on a fabric) for  * all entities using the FC Generic Services subcommand GET ALL NEXT.  * For each found entity, an ISPASYNC_FABRICDEV event is generated (see  * below).  *  * ISPCTL_SCAN_LOOP does a local loop scan. This is only done if the connection  * topology is NL or FL port (private or public loop). Since the Qlogic f/w  * 'automatically' manages local loop connections, this function essentially  * notes the arrival, departure, and possible shuffling around of local loop  * entities. Thus for each arrival and departure this generates an isp_async  * event of ISPASYNC_PROMENADE (see below).  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been seperated to allow for finer control.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands and locks may be released while this is occurring.  *  * A few notes about some of these functions:  *  * ISPCTL_FCLINK_TEST tests to make sure we have good fibre channel link.  * The argument is a pointer to an integer which is the time, in microseconds,  * we should wait to see whether we have good link. This test, if successful,  * lets us know our connection topology and our Loop ID/AL_PA and so on.  * You can't get anywhere without this.  *  * ISPCTL_SCAN_FABRIC queries the name server (if we're on a fabric) for  * all entities using the FC Generic Services subcommand GET ALL NEXT.  * For each found entity, an ISPASYNC_FABRICDEV event is generated (see  * below).  *  * ISPCTL_SCAN_LOOP does a local loop scan. This is only done if the connection  * topology is NL or FL port (private or public loop). Since the Qlogic f/w  * 'automatically' manages local loop connections, this function essentially  * notes the arrival, departure, and possible shuffling around of local loop  * entities. Thus for each arrival and departure this generates an isp_async  * event of ISPASYNC_PROMENADE (see below).  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been separated to allow for finer control.  */
 end_comment
 
 begin_typedef
