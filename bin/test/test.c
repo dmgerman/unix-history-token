@@ -785,7 +785,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|quad_t
+name|long
+name|long
 name|getq
 name|__P
 argument_list|(
@@ -2428,7 +2429,8 @@ end_comment
 
 begin_function
 specifier|static
-name|quad_t
+name|long
+name|long
 name|getq
 parameter_list|(
 name|s
@@ -2443,7 +2445,8 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|quad_t
+name|long
+name|long
 name|r
 decl_stmt|;
 name|errno
@@ -2452,7 +2455,7 @@ literal|0
 expr_stmt|;
 name|r
 operator|=
-name|strtoq
+name|strtoll
 argument_list|(
 name|s
 argument_list|,
@@ -2550,7 +2553,8 @@ end_function
 
 begin_block
 block|{
-name|quad_t
+name|long
+name|long
 name|q1
 decl_stmt|,
 name|q2
