@@ -3699,7 +3699,59 @@ operator|&
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Available Isochrounous DMA channel probe */
+comment|/* Available Isochrounous DMA channel probe */
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_IT_MASK
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_IR_MASK
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|reg
+operator|=
+name|OREAD
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_IT_MASK
+argument_list|)
+operator|&
+name|OREAD
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_IR_MASK
+argument_list|)
+expr_stmt|;
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_IT_MASKCLR
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|OWRITE
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_IR_MASKCLR
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3713,76 +3765,21 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|OWRITE
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_IRCTL
-argument_list|(
-name|i
-argument_list|)
-argument_list|,
-name|OHCI_CNTL_DMA_RUN
-argument_list|)
-expr_stmt|;
-name|reg
-operator|=
-name|OREAD
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_IRCTL
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|reg
 operator|&
-name|OHCI_CNTL_DMA_RUN
-operator|)
-condition|)
-break|break;
-name|OWRITE
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_ITCTL
-argument_list|(
-name|i
-argument_list|)
-argument_list|,
-name|OHCI_CNTL_DMA_RUN
-argument_list|)
-expr_stmt|;
-name|reg
-operator|=
-name|OREAD
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_ITCTL
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
 operator|(
-name|reg
-operator|&
-name|OHCI_CNTL_DMA_RUN
+literal|1
+operator|<<
+name|i
 operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 break|break;
-block|}
 name|sc
 operator|->
 name|fc
@@ -4136,7 +4133,7 @@ name|CROMSIZE
 operator|*
 literal|2
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4318,7 +4315,7 @@ name|malloc
 argument_list|(
 name|OHCI_SIDSIZE
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4739,14 +4736,25 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|fc
 operator|.
-name|timeouthandle
-operator|=
-name|timeout
-argument_list|(
+name|timeout_callout
+argument_list|,
+name|FW_XFERTIMEOUT
+operator|*
+name|hz
+operator|*
+literal|10
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fwohci_timeout
 argument_list|,
 operator|(
@@ -4754,12 +4762,6 @@ name|void
 operator|*
 operator|)
 name|sc
-argument_list|,
-name|FW_XFERTIMEOUT
-operator|*
-name|hz
-operator|*
-literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -4841,7 +4843,7 @@ name|fc
 operator|.
 name|sid_buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 if|if
@@ -4862,7 +4864,7 @@ name|sc
 operator|->
 name|cromptr
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|fwohci_db_free
@@ -6740,6 +6742,7 @@ default|default:
 break|break;
 block|}
 block|}
+block|}
 name|dbch
 operator|->
 name|xferq
@@ -6747,7 +6750,6 @@ operator|.
 name|queued
 operator|--
 expr_stmt|;
-block|}
 name|tr
 operator|->
 name|xfer
@@ -6843,6 +6845,10 @@ name|int
 name|i
 decl_stmt|,
 name|s
+decl_stmt|,
+name|found
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|fwohcidb_tr
@@ -6876,7 +6882,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|dbch
 operator|->
 name|xferq
@@ -6896,87 +6902,22 @@ operator|==
 name|xfer
 condition|)
 block|{
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|tr
 operator|->
 name|xfer
 operator|=
 name|NULL
 expr_stmt|;
-name|dbch
-operator|->
-name|xferq
-operator|.
-name|queued
-operator|--
-expr_stmt|;
 if|#
 directive|if
-literal|1
+literal|0
+block|dbch->xferq.queued --;
 comment|/* XXX */
-if|if
-condition|(
-name|tr
-operator|==
-name|dbch
-operator|->
-name|bottom
-condition|)
-name|dbch
-operator|->
-name|bottom
-operator|=
-name|STAILQ_NEXT
-argument_list|(
-name|tr
-argument_list|,
-name|link
-argument_list|)
-expr_stmt|;
+block|if (tr == dbch->bottom) 				dbch->bottom = STAILQ_NEXT(tr, link); 			if (dbch->flags& FWOHCI_DBCH_FULL) { 				printf("fwohci_drain: make slot\n"); 				dbch->flags&= ~FWOHCI_DBCH_FULL; 				fwohci_start((struct fwohci_softc *)fc, dbch); 			}
 endif|#
 directive|endif
-if|if
-condition|(
-name|dbch
-operator|->
-name|flags
-operator|&
-name|FWOHCI_DBCH_FULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"fwohci_drain: make slot\n"
-argument_list|)
-expr_stmt|;
-name|dbch
-operator|->
-name|flags
-operator|&=
-operator|~
-name|FWOHCI_DBCH_FULL
-expr_stmt|;
-name|fwohci_start
-argument_list|(
-operator|(
-expr|struct
-name|fwohci_softc
-operator|*
-operator|)
-name|fc
-argument_list|,
-name|dbch
-argument_list|)
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|found
+operator|++
 expr_stmt|;
 break|break;
 block|}
@@ -6993,6 +6934,20 @@ block|}
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"fwochi_drain: xfer not found\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7097,7 +7052,7 @@ name|db_tr
 operator|->
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|db_tr
@@ -7149,14 +7104,14 @@ index|[
 name|i
 index|]
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|db_tr
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -7247,7 +7202,7 @@ name|dbch
 operator|->
 name|ndb
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -7372,7 +7327,7 @@ name|malloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -7418,14 +7373,14 @@ index|[
 name|j
 index|]
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|db_tr
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7902,7 +7857,7 @@ index|]
 operator|.
 name|dummy
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -10343,7 +10298,7 @@ name|dbch
 operator|->
 name|ndb
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -10870,7 +10825,7 @@ end_function
 
 begin_function
 name|int
-name|fwohci_shutdown
+name|fwohci_stop
 parameter_list|(
 name|struct
 name|fwohci_softc
@@ -11487,54 +11442,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-literal|1
+literal|0
 comment|/* pending all pre-bus_reset packets */
-name|fwohci_txd
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|atrq
-argument_list|)
-expr_stmt|;
-name|fwohci_txd
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|atrs
-argument_list|)
-expr_stmt|;
-name|fwohci_arcv
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|arrs
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|fwohci_arcv
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|arrq
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+block|fwohci_txd(sc,&sc->atrq); 		fwohci_txd(sc,&sc->atrs); 		fwohci_arcv(sc,&sc->arrs, -1); 		fwohci_arcv(sc,&sc->arrq, -1);
 endif|#
 directive|endif
 name|OWRITE
@@ -12078,7 +11988,7 @@ name|malloc
 argument_list|(
 name|OHCI_SIDSIZE
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -12119,6 +12029,58 @@ argument_list|,
 name|plen
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* pending all pre-bus_reset packets */
+name|fwohci_txd
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|atrq
+argument_list|)
+expr_stmt|;
+name|fwohci_txd
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|atrs
+argument_list|)
+expr_stmt|;
+name|fwohci_arcv
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arrs
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|fwohci_arcv
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arrq
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fw_sidrcv
 argument_list|(
 name|fc
@@ -14119,7 +14081,7 @@ argument|]; 	int dsiz[
 literal|2
 argument|];  	if(buf ==
 literal|0
-argument|){ 		buf = malloc(size, M_DEVBUF, M_NOWAIT); 		if(buf == NULL) return
+argument|){ 		buf = malloc(size, M_FW, M_NOWAIT); 		if(buf == NULL) return
 literal|0
 argument|; 		db_tr->buf = buf; 		db_tr->dbcnt =
 literal|1
@@ -14189,7 +14151,7 @@ argument|]); 		plen = sizeof(struct fw_isohdr) 			+ ntohs(fp->mode.stream.len) +
 literal|0x1f
 argument|; 		spd =  reg&
 literal|0x3
-argument|; 		switch(stat){ 			case FWOHCIEV_ACKCOMPL: 			case FWOHCIEV_ACKPEND: 				fw_rcv(&sc->fc, buf, plen - sizeof(u_int32_t), dmach, sizeof(u_int32_t), spd); 				break; 			default: 				free(buf, M_DEVBUF); 				device_printf(sc->fc.dev,
+argument|; 		switch(stat){ 			case FWOHCIEV_ACKCOMPL: 			case FWOHCIEV_ACKPEND: 				fw_rcv(&sc->fc, buf, plen - sizeof(u_int32_t), dmach, sizeof(u_int32_t), spd); 				break; 			default: 				free(buf, M_FW); 				device_printf(sc->fc.dev,
 literal|"Isochronous receive err %02x\n"
 argument|, stat); 				break; 		} 		i++; 		fwohci_add_rx_buf(db_tr, dbch->xferq.psize,  					dbch->xferq.flag,
 literal|0
@@ -14302,9 +14264,9 @@ argument|; 					len -= plen; 				} else { 					plen = -hlen; 					len -= hlen; 	
 literal|0
 argument||| len>
 literal|0
-argument|){ 					buf = malloc( dbch->xferq.psize, 							M_DEVBUF, M_NOWAIT); 					if(buf == NULL){ 						printf(
+argument|){ 					buf = malloc( dbch->xferq.psize, 							M_FW, M_NOWAIT); 					if(buf == NULL){ 						printf(
 literal|"cannot malloc!\n"
-argument|); 						free(db_tr->buf, M_DEVBUF); 						goto out; 					} 					bcopy(ld, buf, plen); 					poff =
+argument|); 						free(db_tr->buf, M_FW); 						goto out; 					} 					bcopy(ld, buf, plen); 					poff =
 literal|0
 argument|; 					dbch->frag.buf = NULL; 					dbch->frag.plen =
 literal|0
@@ -14336,8 +14298,10 @@ literal|0x1f
 argument|; 				switch(stat){ 				case FWOHCIEV_ACKPEND:
 if|#
 directive|if
-literal|0
-argument|printf("fwohci_arcv: ack pending..\n");
+literal|1
+argument|printf(
+literal|"fwohci_arcv: ack pending..\n"
+argument|);
 endif|#
 directive|endif
 comment|/* fall through */
@@ -14349,7 +14313,7 @@ argument|); 					fw_rcv(&sc->fc, buf, plen - sizeof(struct fwohci_trailer),
 literal|0
 argument|,
 literal|0
-argument|, spd); 					break; 				case FWOHCIEV_BUSRST: 					free(buf, M_DEVBUF); 					if (sc->fc.status != FWBUSRESET)  						printf(
+argument|, spd); 					break; 				case FWOHCIEV_BUSRST: 					free(buf, M_FW); 					if (sc->fc.status != FWBUSRESET)  						printf(
 literal|"got BUSRST packet!?\n"
 argument|); 					break; 				default: 					device_printf(sc->fc.dev,
 literal|"Async DMA Receive error err = %02x %s\n"

@@ -1934,7 +1934,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%02d   %2d      %d  %4s     %d    %d   %3s"
+literal|"%02d   %2d      %2d  %4s     %d    %d   %3s"
 literal|"     %s     %s     %s   %d    %d\n"
 argument_list|,
 name|sid

@@ -128,7 +128,7 @@ define|#
 directive|define
 name|FWDEVINVAL
 value|3
-name|TAILQ_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|fw_device
 argument_list|)
@@ -447,7 +447,7 @@ argument|fw_bind
 argument_list|)
 name|binds
 expr_stmt|;
-name|TAILQ_HEAD
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|fw_device
@@ -504,16 +504,16 @@ name|callout
 name|busprobe_callout
 decl_stmt|;
 name|struct
-name|callout_handle
-name|bmrhandle
+name|callout
+name|bmr_callout
 decl_stmt|;
 name|struct
-name|callout_handle
-name|timeouthandle
+name|callout
+name|timeout_callout
 decl_stmt|;
 name|struct
-name|callout_handle
-name|retry_probe_handle
+name|callout
+name|retry_probe_callout
 decl_stmt|;
 name|u_int32_t
 argument_list|(
@@ -1248,6 +1248,11 @@ argument|fw_xfer
 argument_list|)
 name|link
 expr_stmt|;
+name|struct
+name|malloc_type
+modifier|*
+name|malloc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1318,7 +1323,9 @@ name|fw_xfer_alloc
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|malloc_type
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1619,7 +1626,25 @@ begin_decl_stmt
 name|struct
 name|fw_device
 modifier|*
-name|fw_noderesolve
+name|fw_noderesolve_nodeid
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|firewire_comm
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|fw_device
+modifier|*
+name|fw_noderesolve_eui64
 name|__P
 argument_list|(
 operator|(
@@ -1735,6 +1760,13 @@ begin_define
 define|#
 directive|define
 name|BUS_TIME
+value|0x0204
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUSY_TIMEOUT
 value|0x0210
 end_define
 
@@ -1852,6 +1884,22 @@ end_endif
 begin_comment
 comment|/* __alpha__ */
 end_comment
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FWXFER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

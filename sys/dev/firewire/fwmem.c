@@ -285,7 +285,9 @@ decl_stmt|;
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -360,7 +362,7 @@ name|malloc
 argument_list|(
 name|len
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -694,7 +696,7 @@ name|wreqq
 operator|.
 name|tcode
 operator|=
-name|FWTCODE_RREQQ
+name|FWTCODE_WREQQ
 expr_stmt|;
 name|fp
 operator|->
@@ -1138,7 +1140,7 @@ argument_list|)
 expr_stmt|;
 name|fwdev
 operator|=
-name|fw_noderesolve
+name|fw_noderesolve_eui64
 argument_list|(
 name|sc
 operator|->

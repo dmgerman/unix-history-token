@@ -1138,6 +1138,19 @@ define|\
 value|((((x)<4)?				\ 		((eui)->hi>> (8*(3-(x)))): 	\ 		((eui)->lo>> (8*(7-(x))))	\ 	)& 0xff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FW_EUI64_EQUAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((x).hi == (y).hi&& (x).lo == (y).lo)
+end_define
+
 begin_struct
 struct|struct
 name|fw_asyreq

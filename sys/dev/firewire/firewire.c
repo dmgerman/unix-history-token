@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/firewire/fwmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/firewire/iec13213.h>
 end_include
 
@@ -187,6 +193,30 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Try to be a bus manager"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FW
+argument_list|,
+literal|"firewire"
+argument_list|,
+literal|"FireWire"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FWXFER
+argument_list|,
+literal|"fw_xfer"
+argument_list|,
+literal|"XFER/FireWire"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -480,6 +510,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|fw_bmr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|firewire_comm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|device_method_t
 name|firewire_methods
 index|[]
@@ -658,14 +703,94 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * To lookup node id. from EUI64.  */
+comment|/*  * Lookup fwdev by node id.  */
 end_comment
 
 begin_function
 name|struct
 name|fw_device
 modifier|*
-name|fw_noderesolve
+name|fw_noderesolve_nodeid
+parameter_list|(
+name|struct
+name|firewire_comm
+modifier|*
+name|fc
+parameter_list|,
+name|int
+name|dst
+parameter_list|)
+block|{
+name|struct
+name|fw_device
+modifier|*
+name|fwdev
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splfw
+argument_list|()
+expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|fwdev
+argument_list|,
+argument|&fc->devices
+argument_list|,
+argument|link
+argument_list|)
+if|if
+condition|(
+name|fwdev
+operator|->
+name|dst
+operator|==
+name|dst
+condition|)
+break|break;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwdev
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+name|fwdev
+operator|->
+name|status
+operator|==
+name|FWDEVINVAL
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|fwdev
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Lookup fwdev by EUI64.  */
+end_comment
+
+begin_function
+name|struct
+name|fw_device
+modifier|*
+name|fw_noderesolve_eui64
 parameter_list|(
 name|struct
 name|firewire_comm
@@ -682,58 +807,39 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-for|for
-control|(
-name|fwdev
+name|int
+name|s
+decl_stmt|;
+name|s
 operator|=
-name|TAILQ_FIRST
+name|splfw
+argument_list|()
+expr_stmt|;
+name|STAILQ_FOREACH
 argument_list|(
-operator|&
-name|fc
-operator|->
-name|devices
-argument_list|)
-init|;
-name|fwdev
-operator|!=
-name|NULL
-condition|;
-name|fwdev
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwdev
+argument|fwdev
 argument_list|,
-name|link
+argument|&fc->devices
+argument_list|,
+argument|link
 argument_list|)
-control|)
-block|{
 if|if
 condition|(
+name|FW_EUI64_EQUAL
+argument_list|(
 name|fwdev
 operator|->
 name|eui
-operator|.
-name|hi
-operator|==
+argument_list|,
 name|eui
-operator|.
-name|hi
-operator|&&
-name|fwdev
-operator|->
-name|eui
-operator|.
-name|lo
-operator|==
-name|eui
-operator|.
-name|lo
+argument_list|)
 condition|)
-block|{
 break|break;
-block|}
-block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fwdev
@@ -1744,16 +1850,86 @@ name|d
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+define|#
+directive|define
+name|CALLOUT_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|callout_init(x, 0
+comment|/* mpsafe */
+value|)
+else|#
+directive|else
+define|#
+directive|define
+name|CALLOUT_INIT
+parameter_list|(
+name|x
+parameter_list|)
+value|callout_init(x)
+endif|#
+directive|endif
+name|CALLOUT_INIT
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|fc
 operator|->
-name|timeouthandle
-operator|=
-name|timeout
+name|timeout_callout
+argument_list|)
+expr_stmt|;
+name|CALLOUT_INIT
 argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+operator|->
+name|bmr_callout
+argument_list|)
+expr_stmt|;
+name|CALLOUT_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+operator|->
+name|retry_probe_callout
+argument_list|)
+expr_stmt|;
+name|CALLOUT_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+operator|->
+name|busprobe_callout
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+operator|->
+name|timeout_callout
+argument_list|,
+name|hz
+operator|*
+literal|10
+argument_list|,
 operator|(
-name|timeout_t
+name|void
 operator|*
 operator|)
 name|sc
@@ -1769,70 +1945,21 @@ operator|)
 name|sc
 operator|->
 name|fc
-argument_list|,
-name|hz
-operator|*
-literal|10
 argument_list|)
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fc
-operator|->
-name|busprobe_callout
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-argument_list|,
-comment|/* mpsafe? */
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-block|)
-function|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Locate our children */
-end_comment
-
-begin_expr_stmt
 name|bus_generic_probe
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* launch attachement of the added children */
-end_comment
-
-begin_expr_stmt
 name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* bus_reset */
-end_comment
-
-begin_expr_stmt
 name|fc
 operator|->
 name|ibr
@@ -1840,21 +1967,18 @@ argument_list|(
 name|fc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Attach it as child.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|device_t
 name|firewire_add_child
 parameter_list|(
@@ -2011,27 +2135,44 @@ block|}
 endif|#
 directive|endif
 comment|/* XXX xfree_free and untimeout on all xfers */
-name|untimeout
+name|callout_stop
 argument_list|(
-operator|(
-name|timeout_t
-operator|*
-operator|)
+operator|&
 name|sc
 operator|->
 name|fc
 operator|->
-name|timeout
-argument_list|,
+name|timeout_callout
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|fc
-argument_list|,
+operator|->
+name|bmr_callout
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|fc
 operator|->
-name|timeouthandle
+name|retry_probe_callout
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|fc
+operator|->
+name|busprobe_callout
 argument_list|)
 expr_stmt|;
 name|free
@@ -2042,7 +2183,7 @@ name|fc
 operator|->
 name|topology_map
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|free
@@ -2053,7 +2194,7 @@ name|fc
 operator|->
 name|speed_map
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach
@@ -2113,23 +2254,12 @@ block|{
 case|case
 name|FWBUSMGRELECT
 case|:
-name|untimeout
+name|callout_stop
 argument_list|(
-operator|(
-name|timeout_t
-operator|*
-operator|)
-name|fw_try_bmr
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|fc
-argument_list|,
+operator|&
 name|fc
 operator|->
-name|bmrhandle
+name|bmr_callout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3157,7 +3287,7 @@ expr|struct
 name|fw_topology_map
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3181,7 +3311,7 @@ expr|struct
 name|fw_speed_map
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3232,7 +3362,7 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-name|TAILQ_INIT
+name|STAILQ_INIT
 argument_list|(
 operator|&
 name|fc
@@ -3294,7 +3424,7 @@ expr|struct
 name|csrdir
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3395,7 +3525,7 @@ expr|struct
 name|fw_bind
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -4062,7 +4192,7 @@ name|free
 argument_list|(
 name|tl
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4201,7 +4331,12 @@ name|struct
 name|fw_xfer
 modifier|*
 name|fw_xfer_alloc
-parameter_list|()
+parameter_list|(
+name|struct
+name|malloc_type
+modifier|*
+name|type
+parameter_list|)
 block|{
 name|struct
 name|fw_xfer
@@ -4218,7 +4353,7 @@ expr|struct
 name|fw_xfer
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|type
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -4246,6 +4381,12 @@ name|sub
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|xfer
+operator|->
+name|malloc
+operator|=
+name|type
 expr_stmt|;
 return|return
 name|xfer
@@ -4497,7 +4638,7 @@ name|send
 operator|.
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -4520,7 +4661,7 @@ name|recv
 operator|.
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -4547,20 +4688,18 @@ name|free
 argument_list|(
 name|xfer
 argument_list|,
-name|M_DEVBUF
+name|xfer
+operator|->
+name|malloc
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Callback for PHY configuration.   */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|fw_phy_config_callback
+name|fw_asy_callback_free
 parameter_list|(
 name|struct
 name|fw_xfer
@@ -4571,7 +4710,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("phy_config done state=%d resp=%d\n", 				xfer->state, xfer->resp);
+block|printf("asyreq done state=%d resp=%d\n", 				xfer->state, xfer->resp);
 endif|#
 directive|endif
 name|fw_xfer_free
@@ -4579,8 +4718,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* XXX need bus reset ?? */
-comment|/* sc->fc->ibr(xfer->fc);  LOOP */
 block|}
 end_function
 
@@ -4630,7 +4767,9 @@ directive|endif
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
@@ -4666,7 +4805,7 @@ name|act
 operator|.
 name|hand
 operator|=
-name|fw_phy_config_callback
+name|fw_asy_callback_free
 expr_stmt|;
 name|xfer
 operator|->
@@ -4681,7 +4820,7 @@ argument_list|(
 name|u_int32_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -5685,14 +5824,19 @@ name|status
 operator|=
 name|FWBUSMGRELECT
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|fc
 operator|->
-name|bmrhandle
-operator|=
-name|timeout
-argument_list|(
+name|bmr_callout
+argument_list|,
+name|hz
+operator|/
+literal|8
+argument_list|,
 operator|(
-name|timeout_t
+name|void
 operator|*
 operator|)
 name|fw_try_bmr
@@ -5702,10 +5846,6 @@ name|void
 operator|*
 operator|)
 name|fc
-argument_list|,
-name|hz
-operator|/
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -5729,10 +5869,9 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
-comment|/* Optimize gap_count, if I am BMGR */
 if|if
 condition|(
 name|fc
@@ -5755,19 +5894,10 @@ literal|0x3f
 operator|)
 condition|)
 block|{
-name|fw_phy_config
+comment|/* I am BMGR */
+name|fw_bmr
 argument_list|(
 name|fc
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|gap_cnt
-index|[
-name|fc
-operator|->
-name|max_hop
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -5846,7 +5976,7 @@ for|for
 control|(
 name|fwdev
 operator|=
-name|TAILQ_FIRST
+name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|fc
@@ -5865,7 +5995,7 @@ control|)
 block|{
 name|next
 operator|=
-name|TAILQ_NEXT
+name|STAILQ_NEXT
 argument_list|(
 name|fwdev
 argument_list|,
@@ -5912,7 +6042,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TAILQ_REMOVE
+name|STAILQ_REMOVE
 argument_list|(
 operator|&
 name|fc
@@ -5921,6 +6051,8 @@ name|devices
 argument_list|,
 name|fwdev
 argument_list|,
+name|fw_device
+argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
@@ -5928,7 +6060,7 @@ name|free
 argument_list|(
 name|fwdev
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|)
 expr_stmt|;
 block|}
@@ -6004,6 +6136,9 @@ name|struct
 name|fw_device
 modifier|*
 name|fwdev
+decl_stmt|,
+modifier|*
+name|pfwdev
 decl_stmt|,
 modifier|*
 name|tfwdev
@@ -6218,62 +6353,28 @@ operator|==
 name|NULL
 condition|)
 block|{
-for|for
-control|(
-name|fwdev
-operator|=
-name|TAILQ_FIRST
+name|STAILQ_FOREACH
 argument_list|(
-operator|&
-name|fc
-operator|->
-name|devices
-argument_list|)
-init|;
-name|fwdev
-operator|!=
-name|NULL
-condition|;
-name|fwdev
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwdev
+argument|fwdev
 argument_list|,
-name|link
+argument|&fc->devices
+argument_list|,
+argument|link
 argument_list|)
-control|)
-block|{
 if|if
 condition|(
+name|FW_EUI64_EQUAL
+argument_list|(
 name|fwdev
 operator|->
 name|eui
-operator|.
-name|hi
-operator|==
+argument_list|,
 name|fc
 operator|->
 name|ongoeui
-operator|.
-name|hi
-operator|&&
-name|fwdev
-operator|->
-name|eui
-operator|.
-name|lo
-operator|==
-name|fc
-operator|->
-name|ongoeui
-operator|.
-name|lo
+argument_list|)
 condition|)
-block|{
 break|break;
-block|}
-block|}
 if|if
 condition|(
 name|fwdev
@@ -6342,7 +6443,7 @@ expr|struct
 name|fw_device
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6432,23 +6533,21 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-name|tfwdev
+name|pfwdev
 operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|devices
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|tfwdev
-operator|!=
 name|NULL
-operator|&&
-operator|(
+expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|tfwdev
+argument_list|,
+argument|&fc->devices
+argument_list|,
+argument|link
+argument_list|)
+block|{
+if|if
+condition|(
 name|tfwdev
 operator|->
 name|eui
@@ -6460,9 +6559,7 @@ operator|->
 name|eui
 operator|.
 name|hi
-operator|)
-operator|&&
-operator|(
+operator|||
 operator|(
 name|tfwdev
 operator|->
@@ -6475,7 +6572,6 @@ operator|->
 name|eui
 operator|.
 name|hi
-operator|)
 operator|&&
 name|tfwdev
 operator|->
@@ -6490,25 +6586,19 @@ operator|.
 name|lo
 operator|)
 condition|)
-block|{
-name|tfwdev
+break|break;
+name|pfwdev
 operator|=
-name|TAILQ_NEXT
-argument_list|(
 name|tfwdev
-argument_list|,
-name|link
-argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|tfwdev
+name|pfwdev
 operator|==
 name|NULL
 condition|)
-block|{
-name|TAILQ_INSERT_TAIL
+name|STAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|fc
@@ -6520,19 +6610,21 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|TAILQ_INSERT_BEFORE
+name|STAILQ_INSERT_AFTER
 argument_list|(
-name|tfwdev
+operator|&
+name|fc
+operator|->
+name|devices
+argument_list|,
+name|pfwdev
 argument_list|,
 name|fwdev
 argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-block|}
 name|device_printf
 argument_list|(
 name|fc
@@ -6602,7 +6694,9 @@ directive|else
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6639,7 +6733,7 @@ name|malloc
 argument_list|(
 literal|16
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6896,7 +6990,9 @@ decl_stmt|;
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6934,7 +7030,7 @@ name|malloc
 argument_list|(
 literal|16
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -8361,31 +8457,14 @@ name|spec
 decl_stmt|,
 name|ver
 decl_stmt|;
-for|for
-control|(
-name|fwdev
-operator|=
-name|TAILQ_FIRST
+name|STAILQ_FOREACH
 argument_list|(
-operator|&
-name|fc
-operator|->
-name|devices
-argument_list|)
-init|;
-name|fwdev
-operator|!=
-name|NULL
-condition|;
-name|fwdev
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwdev
+argument|fwdev
 argument_list|,
-name|link
+argument|&fc->devices
+argument_list|,
+argument|link
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -8764,14 +8843,19 @@ operator|->
 name|retry_count
 argument_list|)
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|fc
 operator|->
-name|retry_probe_handle
-operator|=
-name|timeout
-argument_list|(
+name|retry_probe_callout
+argument_list|,
+name|hz
+operator|*
+literal|2
+argument_list|,
 operator|(
-name|timeout_t
+name|void
 operator|*
 operator|)
 name|fc
@@ -8783,10 +8867,6 @@ name|void
 operator|*
 operator|)
 name|fc
-argument_list|,
-name|hz
-operator|*
-literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -8923,7 +9003,7 @@ expr|struct
 name|tlabel
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_FW
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -9419,9 +9499,9 @@ endif|#
 directive|endif
 argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				fp->mode.common.tcode); 			if (fc->status == FWBUSRESET) { 				printf(
 literal|"fw_rcv: cannot response(bus reset)!\n"
-argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
+argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16
-argument|, M_DEVBUF, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
 literal|12
 argument|; 				break; 			case FWTCODE_RREQQ: 				resfp->mode.hdr.tcode = FWTCODE_RRESQ; 				xfer->send.len =
 literal|16
@@ -9439,9 +9519,9 @@ argument|;
 comment|/* 			xfer->act.hand = fw_asy_callback; */
 argument|xfer->act.hand = fw_xfer_free; 			if(fw_asyreq(fc, -
 literal|1
-argument|, xfer)){ 				fw_xfer_free( xfer); 				return; 			} 			goto err; 		} 		switch(bind->xfer->act_type){ 		case FWACT_XFER: 			xfer = fw_xfer_alloc(); 			if(xfer == NULL) goto err; 			xfer->fc = bind->xfer->fc; 			xfer->sc = bind->xfer->sc; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			xfer->act.hand = bind->xfer->act.hand; 			if (fc->status != FWBUSRESET) 				xfer->act.hand(xfer); 			else 				STAILQ_INSERT_TAIL(&fc->pending, xfer, link); 			return; 			break; 		case FWACT_CH: 			if(fc->ir[bind->xfer->sub]->queued>= 				fc->ir[bind->xfer->sub]->maxq){ 				device_printf(fc->bdev,
+argument|, xfer)){ 				fw_xfer_free( xfer); 				return; 			} 			goto err; 		} 		switch(bind->xfer->act_type){ 		case FWACT_XFER: 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL) goto err; 			xfer->fc = bind->xfer->fc; 			xfer->sc = bind->xfer->sc; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			xfer->act.hand = bind->xfer->act.hand; 			if (fc->status != FWBUSRESET) 				xfer->act.hand(xfer); 			else 				STAILQ_INSERT_TAIL(&fc->pending, xfer, link); 			return; 			break; 		case FWACT_CH: 			if(fc->ir[bind->xfer->sub]->queued>= 				fc->ir[bind->xfer->sub]->maxq){ 				device_printf(fc->bdev,
 literal|"Discard a packet %x %d\n"
-argument|, 					bind->xfer->sub, 					fc->ir[bind->xfer->sub]->queued); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL) goto err; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			s = splfw(); 			fc->ir[bind->xfer->sub]->queued++; 			STAILQ_INSERT_TAIL(&fc->ir[bind->xfer->sub]->q, xfer, link); 			splx(s);  			wakeup((caddr_t)fc->ir[bind->xfer->sub]);  			return; 			break; 		default: 			goto err; 			break; 		} 		break; 	case FWTCODE_STREAM: 	{ 		struct fw_xferq *xferq;  		xferq = fc->ir[sub];
+argument|, 					bind->xfer->sub, 					fc->ir[bind->xfer->sub]->queued); 				goto err; 			} 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL) goto err; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			s = splfw(); 			fc->ir[bind->xfer->sub]->queued++; 			STAILQ_INSERT_TAIL(&fc->ir[bind->xfer->sub]->q, xfer, link); 			splx(s);  			wakeup((caddr_t)fc->ir[bind->xfer->sub]);  			return; 			break; 		default: 			goto err; 			break; 		} 		break; 	case FWTCODE_STREAM: 	{ 		struct fw_xferq *xferq;  		xferq = fc->ir[sub];
 if|#
 directive|if
 literal|0
@@ -9450,7 +9530,7 @@ endif|#
 directive|endif
 argument|if(xferq->queued>= xferq->maxq) { 			printf(
 literal|"receive queue is full\n"
-argument|); 			goto err; 		} 		xfer = fw_xfer_alloc(); 		if(xfer == NULL) goto err; 		xfer->recv.buf = buf; 		xfer->recv.len = len; 		xfer->recv.off = off; 		xfer->spd = spd; 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, xfer, link); 		splx(s); 		sc = device_get_softc(fc->bdev);
+argument|); 			goto err; 		} 		xfer = fw_xfer_alloc(M_FWXFER); 		if(xfer == NULL) goto err; 		xfer->recv.buf = buf; 		xfer->recv.len = len; 		xfer->recv.off = off; 		xfer->spd = spd; 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, xfer, link); 		splx(s); 		sc = device_get_softc(fc->bdev);
 if|#
 directive|if
 name|__FreeBSD_version
@@ -9466,7 +9546,7 @@ endif|#
 directive|endif
 argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	} 	default: 		printf(
 literal|"fw_rcv: unknow tcode\n"
-argument|); 		break; 	} err: 	free(buf, M_DEVBUF); }
+argument|); 		break; 	} err: 	free(buf, M_FW); }
 comment|/*  * Post process for Bus Manager election process.  */
 argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *rfp; 	struct firewire_comm *fc; 	int bmr;  	if (xfer == NULL) 		return; 	fc = xfer->fc; 	if (xfer->resp !=
 literal|0
@@ -9480,23 +9560,19 @@ argument|); 	device_printf(fc->bdev,
 literal|"new bus manager %d "
 argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if(bmr == fc->nodeid){ 		printf(
 literal|"(me)\n"
-argument|);
-comment|/* If I am bus manager, optimize gapcount */
-argument|if(fc->max_hop<= MAX_GAPHOP ){ 			fw_phy_config(fc, -
-literal|1
-argument|, gap_cnt[fc->max_hop]); 		} 	}else{ 		printf(
+argument|); 		fw_bmr(fc); 	}else{ 		printf(
 literal|"\n"
 argument|); 	} error: 	fw_xfer_free(xfer); }
 comment|/*  * To candidate Bus Manager election process.  */
-argument|void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
+argument|static void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
 literal|0
-argument|;  	xfer = fw_xfer_alloc(); 	if(xfer == NULL){ 		return; 	} 	xfer->send.len =
+argument|;  	xfer = fw_xfer_alloc(M_FWXFER); 	if(xfer == NULL){ 		return; 	} 	xfer->send.len =
 literal|24
 argument|; 	xfer->spd =
 literal|0
 argument|; 	xfer->send.buf = malloc(
 literal|24
-argument|, M_DEVBUF, M_NOWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
+argument|, M_FW, M_NOWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
 literal|0
 argument|;  	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.lreq.dest_hi = htons(
 literal|0xffff
@@ -9551,19 +9627,19 @@ argument|){ 		fw_xfer_free( xfer); 		return; 	} 	if(xfer->recv.buf == NULL){ 		f
 comment|/* XXX need fix for 64bit arch */
 argument|case FWTCODE_WREQB: 			xfer->send.buf = malloc(
 literal|12
-argument|, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|12
 argument|; 			sfp = (struct fw_pkt *)xfer->send.buf; 			bcopy(rfp->mode.wreqb.payload, 				(caddr_t)ntohl(rfp->mode.wreqb.dest_lo), ntohs(rfp->mode.wreqb.len)); 			sfp->mode.wres.tcode = FWTCODE_WRES; 			sfp->mode.wres.rtcode =
 literal|0
 argument|; 			break; 		case FWTCODE_WREQQ: 			xfer->send.buf = malloc(
 literal|12
-argument|, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|12
 argument|; 			sfp->mode.wres.tcode = FWTCODE_WRES; 			*((u_int32_t *)(ntohl(rfp->mode.wreqb.dest_lo))) = rfp->mode.wreqq.data; 			sfp->mode.wres.rtcode =
 literal|0
 argument|; 			break; 		case FWTCODE_RREQB: 			xfer->send.buf = malloc(
 literal|16
-argument|+ rfp->mode.rreqb.len, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|+ rfp->mode.rreqb.len, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|16
 argument|+ ntohs(rfp->mode.rreqb.len); 			sfp = (struct fw_pkt *)xfer->send.buf; 			bcopy((caddr_t)ntohl(rfp->mode.rreqb.dest_lo), 				sfp->mode.rresb.payload, (u_int16_t)ntohs(rfp->mode.rreqb.len)); 			sfp->mode.rresb.tcode = FWTCODE_RRESB; 			sfp->mode.rresb.len = rfp->mode.rreqb.len; 			sfp->mode.rresb.rtcode =
 literal|0
@@ -9571,7 +9647,7 @@ argument|; 			sfp->mode.rresb.extcode =
 literal|0
 argument|; 			break; 		case FWTCODE_RREQQ: 			xfer->send.buf = malloc(
 literal|16
-argument|, M_DEVBUF, M_NOWAIT); 			xfer->send.len =
+argument|, M_FW, M_NOWAIT); 			xfer->send.len =
 literal|16
 argument|; 			sfp = (struct fw_pkt *)xfer->send.buf; 			sfp->mode.rresq.data = *(u_int32_t *)(ntohl(rfp->mode.rreqq.dest_lo)); 			sfp->mode.wres.tcode = FWTCODE_RRESQ; 			sfp->mode.rresb.rtcode =
 literal|0
@@ -9621,7 +9697,42 @@ argument|) ^ ( sum<<
 literal|5
 argument|) ^ sum; 		} 		crc&=
 literal|0xffff
-argument|; 	} 	return((u_int16_t) crc); }  DRIVER_MODULE(firewire,fwohci,firewire_driver,firewire_devclass,
+argument|; 	} 	return((u_int16_t) crc); }  static int fw_bmr(struct firewire_comm *fc) { 	struct fw_device fwdev; 	int cmstr;
+comment|/* XXX Assume that the current root node is cycle master capable */
+argument|cmstr = fc->max_node;
+comment|/* If I am the bus manager, optimize gapcount */
+argument|if(fc->max_hop<= MAX_GAPHOP ){ 		fw_phy_config(fc, (fc->max_node>
+literal|0
+argument|)?cmstr:-
+literal|1
+argument|, 						gap_cnt[fc->max_hop]); 	}
+comment|/* If we are the cycle master, nothing to do */
+argument|if (cmstr == fc->nodeid) 		return
+literal|0
+argument|;
+comment|/* Bus probe has not finished, make dummy fwdev for cmstr */
+argument|bzero(&fwdev, sizeof(fwdev)); 	fwdev.fc = fc; 	fwdev.dst = cmstr; 	fwdev.speed =
+literal|0
+argument|; 	fwdev.maxrec =
+literal|8
+argument|;
+comment|/* 512 */
+argument|fwdev.status = FWDEVINIT;
+comment|/* Set cmstr bit on the cycle master */
+argument|fwmem_write_quad(&fwdev, NULL,
+literal|0
+comment|/*spd*/
+argument|,
+literal|0xffff
+argument|,
+literal|0xf0000000
+argument|| STATE_SET,
+literal|1
+argument|<<
+literal|16
+argument|, 		fw_asy_callback_free);  	return
+literal|0
+argument|; }  DRIVER_MODULE(firewire,fwohci,firewire_driver,firewire_devclass,
 literal|0
 argument|,
 literal|0
