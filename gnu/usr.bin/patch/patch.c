@@ -221,6 +221,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* TRUE if -S was specified on command line. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|skip_flag_specified
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Apply a set of diffs as appropriate. */
 end_comment
 
@@ -947,6 +959,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|skip_flag_specified
+condition|)
+name|failed
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|verbose
 condition|)
 name|say3
@@ -1432,6 +1452,10 @@ operator|=
 name|reverse_flag_specified
 expr_stmt|;
 name|skip_rest_of_patch
+operator|=
+name|FALSE
+expr_stmt|;
+name|skip_flag_specified
 operator|=
 name|FALSE
 expr_stmt|;
@@ -2097,6 +2121,10 @@ case|case
 literal|'S'
 case|:
 name|skip_rest_of_patch
+operator|=
+name|TRUE
+expr_stmt|;
+name|skip_flag_specified
 operator|=
 name|TRUE
 expr_stmt|;
