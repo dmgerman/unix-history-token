@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dlvrmail.h"
+file|"postbox.h"
 end_include
 
 begin_decl_stmt
@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	2.2	%G%"
+literal|"@(#)savemail.c	3.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ end_empty_stmt
 
 begin_decl_stmt
 specifier|auto
-name|addrq
+name|ADDRESS
 name|to_addr
 decl_stmt|;
 end_decl_stmt
@@ -131,7 +131,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|addrq
+name|ADDRESS
 modifier|*
 name|parse
 parameter_list|()
