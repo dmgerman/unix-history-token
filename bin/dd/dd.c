@@ -88,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/filio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mtio.h>
 end_include
 
 begin_include
@@ -1146,13 +1134,34 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|S_ISREG
+name|lseek
 argument_list|(
-name|sb
-operator|.
-name|st_mode
+name|io
+operator|->
+name|fd
+argument_list|,
+operator|(
+name|off_t
+operator|)
+literal|0
+argument_list|,
+name|SEEK_CUR
 argument_list|)
+operator|==
+literal|0
+condition|)
+name|io
+operator|->
+name|flags
+operator||=
+name|ISSEEK
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|ESPIPE
 condition|)
 name|io
 operator|->
@@ -1315,21 +1324,14 @@ expr_stmt|;
 name|summary
 argument_list|()
 expr_stmt|;
-comment|/* 			 * If it's not a tape drive or a pipe, seek past the 			 * error.  If your OS doesn't do the right thing for 			 * raw disks this section should be modified to re-read 			 * in sector size chunks. 			 */
+comment|/* 			 * If it's a seekable file descriptor, seek past the 			 * error.  If your OS doesn't do the right thing for 			 * raw disks this section should be modified to re-read 			 * in sector size chunks. 			 */
 if|if
 condition|(
-operator|!
-operator|(
 name|in
 operator|.
 name|flags
 operator|&
-operator|(
-name|ISPIPE
-operator||
-name|ISTAPE
-operator|)
-operator|)
+name|ISSEEK
 operator|&&
 name|lseek
 argument_list|(
@@ -1543,7 +1545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Clea nup any remaining I/O and flush output.  If necessary, the output file  * is truncated.  */
+comment|/*  * Clean up any remaining I/O and flush output.  If necessary, the output file  * is truncated.  */
 end_comment
 
 begin_function
@@ -1990,6 +1992,25 @@ name|out
 operator|.
 name|flags
 operator|&
+name|ISTAPE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: short write on tape device"
+argument_list|,
+name|out
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|out
+operator|.
+name|flags
+operator|&
 name|ISCHR
 operator|&&
 operator|!
@@ -2010,25 +2031,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|out
-operator|.
-name|flags
-operator|&
-name|ISTAPE
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: short write on tape device"
-argument_list|,
-name|out
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

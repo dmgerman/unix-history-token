@@ -1089,6 +1089,21 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|files_cnt
+operator|<
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"files must be between 1 and %qd"
+argument_list|,
+name|QUAD_MAX
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1140,7 +1155,7 @@ literal|1
 argument_list|,
 literal|"ibs must be between 1 and %d"
 argument_list|,
-name|INT_MAX
+name|SSIZE_MAX
 argument_list|)
 expr_stmt|;
 name|in
@@ -1148,7 +1163,7 @@ operator|.
 name|dbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|res
 expr_stmt|;

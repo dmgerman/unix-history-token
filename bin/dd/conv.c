@@ -243,9 +243,6 @@ name|intrunc
 decl_stmt|;
 name|int
 name|ch
-init|=
-operator|-
-literal|1
 decl_stmt|;
 comment|/* 	 * Record truncation can cross block boundaries.  If currently in a 	 * truncation state, keep tossing characters until reach a newline. 	 * Start at the beginning of the buffer, as the input buffer is always 	 * left empty. 	 */
 if|if

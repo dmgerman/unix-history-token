@@ -104,24 +104,9 @@ decl_stmt|;
 name|size_t
 name|bcnt
 decl_stmt|;
-comment|/* If not a character, pipe or tape device, try to seek on it. */
+comment|/* If known to be seekable, try to seek on it. */
 if|if
 condition|(
-operator|!
-operator|(
-name|in
-operator|.
-name|flags
-operator|&
-operator|(
-name|ISCHR
-operator||
-name|ISPIPE
-operator||
-name|ISTAPE
-operator|)
-operator|)
-operator|||
 name|in
 operator|.
 name|flags
@@ -343,7 +328,7 @@ decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|;
-comment|/* If not a character, pipe or tape device, try to seek on it. */
+comment|/* 	 * If not a tape, try seeking on the file.  Seeking on a pipe is 	 * going to fail, but don't protect the user -- they shouldn't 	 * have specified the seek operand. 	 */
 if|if
 condition|(
 operator|!
@@ -352,20 +337,8 @@ name|out
 operator|.
 name|flags
 operator|&
-operator|(
-name|ISCHR
-operator||
-name|ISPIPE
-operator||
 name|ISTAPE
 operator|)
-operator|)
-operator|||
-name|out
-operator|.
-name|flags
-operator|&
-name|ISSEEK
 condition|)
 block|{
 name|errno

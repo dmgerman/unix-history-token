@@ -256,7 +256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 specifier|const
 name|u_char
 name|a2ibm_32V

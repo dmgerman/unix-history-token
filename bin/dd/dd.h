@@ -21,6 +21,7 @@ modifier|*
 name|dbp
 decl_stmt|;
 comment|/* current buffer I/O address */
+comment|/* XXX ssize_t? */
 name|size_t
 name|dbcnt
 decl_stmt|;
@@ -42,12 +43,12 @@ define|#
 directive|define
 name|ISPIPE
 value|0x02
-comment|/* pipe (not truncatable) */
+comment|/* pipe-like (not truncatable) */
 define|#
 directive|define
 name|ISTAPE
 value|0x04
-comment|/* tape (not seekable) */
+comment|/* tape */
 define|#
 directive|define
 name|ISSEEK
