@@ -7861,7 +7861,7 @@ name|cp
 argument_list|,
 name|sp
 argument_list|,
-name|STATE_ACK_SENT
+name|STATE_REQ_SENT
 argument_list|)
 expr_stmt|;
 call|(
