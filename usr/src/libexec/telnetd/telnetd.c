@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	8.2 (Berkeley) %G%"
+literal|"@(#)telnetd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4097,6 +4097,9 @@ name|void
 name|netflush
 parameter_list|()
 function_decl|;
+name|int
+name|nfd
+decl_stmt|;
 comment|/* 	 * Initialize the slc mapping table. 	 */
 name|get_slc_defaults
 argument_list|()
@@ -4795,6 +4798,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|nfd
+operator|=
+operator|(
+operator|(
+name|f
+operator|>
+name|p
+operator|)
+condition|?
+name|f
+else|:
+name|p
+operator|)
+operator|+
+literal|1
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4947,7 +4966,7 @@ name|c
 operator|=
 name|select
 argument_list|(
-literal|16
+name|nfd
 argument_list|,
 operator|&
 name|ibits
@@ -6287,6 +6306,52 @@ name|ptyflush
 argument_list|()
 expr_stmt|;
 comment|/* half-hearted */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STREAMSPTY
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TIOCSIGNAL
+argument_list|)
+comment|/* Streams PTY style ioctl to post a signal */
+block|{
+name|int
+name|sig
+init|=
+name|SIGINT
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|pty
+argument_list|,
+name|TIOCSIGNAL
+argument_list|,
+operator|&
+name|sig
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|pty
+argument_list|,
+name|I_FLUSH
+argument_list|,
+name|FLUSHR
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|TCSIG
@@ -6340,6 +6405,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TCSIG */
+endif|#
+directive|endif
 block|}
 end_function
 
