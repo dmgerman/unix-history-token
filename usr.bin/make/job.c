@@ -413,6 +413,31 @@ block|,
 literal|"e"
 block|, }
 block|,
+comment|/*      * KSH description. The Korn shell has a superset of      * the Bourne shell's functionality.      */
+block|{
+literal|"ksh"
+block|,
+name|TRUE
+block|,
+literal|"set -"
+block|,
+literal|"set -v"
+block|,
+literal|"set -"
+block|,
+literal|5
+block|,
+name|TRUE
+block|,
+literal|"set -e"
+block|,
+literal|"set +e"
+block|,
+literal|"v"
+block|,
+literal|"e"
+block|, }
+block|,
 comment|/*      * UNKNOWN.      */
 block|{
 operator|(
