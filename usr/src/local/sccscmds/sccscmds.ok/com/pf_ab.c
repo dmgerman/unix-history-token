@@ -13,7 +13,12 @@ operator|(
 operator|#
 operator|)
 name|pf_ab
-literal|2.1.1.1
+operator|.
+name|c
+literal|1.2
+operator|%
+name|G
+operator|%
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -175,7 +180,7 @@ operator|)
 name|i
 operator|)
 operator|<
-literal|8
+name|SZLNAM
 condition|)
 block|{
 name|move
