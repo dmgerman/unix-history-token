@@ -874,6 +874,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset to a known value */
+name|msqids
+index|[
+name|i
+index|]
+operator|.
+name|msg_perm
+operator|.
+name|mode
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 end_function
