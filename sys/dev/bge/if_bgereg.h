@@ -11133,6 +11133,9 @@ comment|/* has external SSRAM */
 name|u_int8_t
 name|bge_tbi
 decl_stmt|;
+name|u_int8_t
+name|bge_rx_alignment_bug
+decl_stmt|;
 name|u_int32_t
 name|bge_asicrev
 decl_stmt|;
