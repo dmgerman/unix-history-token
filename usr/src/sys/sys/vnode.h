@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -64,8 +64,18 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data.  If non-null, this area is free in getnewvnode().  */
+comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data.  If non-null, this area is freed in getnewvnode().  */
 end_comment
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|buflists
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -110,39 +120,27 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* vnode operations vector */
+name|TAILQ_ENTRY
+argument_list|(
+argument|vnode
+argument_list|)
+name|v_freelist
+expr_stmt|;
+comment|/* vnode freelist */
+name|LIST_ENTRY
+argument_list|(
+argument|vnode
+argument_list|)
+name|v_mntvnodes
+expr_stmt|;
+comment|/* vnodes for mount point */
 name|struct
-name|vnode
-modifier|*
-name|v_freef
-decl_stmt|;
-comment|/* vnode freelist forward */
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|v_freeb
-decl_stmt|;
-comment|/* vnode freelist back */
-name|struct
-name|vnode
-modifier|*
-name|v_mountf
-decl_stmt|;
-comment|/* vnode mountlist forward */
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|v_mountb
-decl_stmt|;
-comment|/* vnode mountlist back */
-name|struct
-name|list_entry
+name|buflists
 name|v_cleanblkhd
 decl_stmt|;
 comment|/* clean blocklist head */
 name|struct
-name|list_entry
+name|buflists
 name|v_dirtyblkhd
 decl_stmt|;
 comment|/* dirty blocklist head */
