@@ -90,7 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"nfs/nfs_lock.h"
+file|<nfs/rpcv2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfsproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfsclient/nfs_lock.h>
 end_include
 
 begin_include
@@ -108,19 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/rpcv2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs/nfsproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs/nfs.h>
+file|<nfsclient/nfs.h>
 end_include
 
 begin_define
@@ -133,7 +133,7 @@ parameter_list|,
 name|_ansp
 parameter_list|)
 define|\
-value|((_ansp)->la_vers = _v, \ 	nfssvc(NFSSVC_LOCKDANS, _ansp))
+value|((_ansp)->la_vers = _v, \ 	nfsclnt(NFSCLNT_LOCKDANS, _ansp))
 end_define
 
 begin_comment

@@ -89,7 +89,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<nfs/nfs.h>
+file|<nfsclient/nfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfsserver/nfs.h>
 end_include
 
 begin_endif

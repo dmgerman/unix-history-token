@@ -226,13 +226,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfs.h>
+file|<nfsclient/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsnode.h>
+file|<nfsclient/nfsnode.h>
 end_include
 
 begin_include
