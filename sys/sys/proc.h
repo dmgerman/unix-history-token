@@ -1885,6 +1885,10 @@ modifier|*
 name|p_args
 decl_stmt|;
 comment|/* (c) Process arguments. */
+name|rlim_t
+name|p_cpulimit
+decl_stmt|;
+comment|/* (j) Current CPU limit in seconds. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define

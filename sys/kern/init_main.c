@@ -1723,15 +1723,15 @@ literal|3
 expr_stmt|;
 name|limit0
 operator|.
-name|p_cpulimit
-operator|=
-name|RLIM_INFINITY
-expr_stmt|;
-name|limit0
-operator|.
 name|p_refcnt
 operator|=
 literal|1
+expr_stmt|;
+name|p
+operator|->
+name|p_cpulimit
+operator|=
+name|RLIM_INFINITY
 expr_stmt|;
 comment|/* Allocate a prototype map so we have something to fork. */
 name|pmap_pinit0

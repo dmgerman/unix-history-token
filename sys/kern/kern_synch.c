@@ -2840,24 +2840,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * over max, arrange to kill the process in ast(). 	 * 	 * XXX The checking for p_limit being NULL here is totally bogus, 	 * but hides something easy to trip over, as a result of us switching 	 * after the limit has been freed/set-to-NULL.  A KASSERT() will be 	 * appropriate once this is no longer a bug, to watch for regression. 	 */
+comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * over max, arrange to kill the process in ast(). 	 */
 if|if
 condition|(
 name|p
-operator|->
-name|p_state
-operator|!=
-name|PRS_ZOMBIE
-operator|&&
-name|p
-operator|->
-name|p_limit
-operator|!=
-name|NULL
-operator|&&
-name|p
-operator|->
-name|p_limit
 operator|->
 name|p_cpulimit
 operator|!=
@@ -2870,8 +2856,6 @@ operator|.
 name|sec
 operator|>
 name|p
-operator|->
-name|p_limit
 operator|->
 name|p_cpulimit
 condition|)
