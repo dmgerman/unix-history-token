@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1987, 1990 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -15,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	4.6 (Berkeley) %G%"
+literal|"@(#)update.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Update the file system every 30 seconds.  * For cache benefit, open certain system directories.  */
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -37,13 +61,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -60,14 +102,8 @@ name|struct
 name|itimerval
 name|value
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|f
-decl_stmt|;
 name|void
-name|sync
+name|mysync
 parameter_list|()
 function_decl|;
 name|daemon
@@ -77,25 +113,48 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|f
-operator|=
-name|fillst
-init|;
-operator|*
-name|f
-condition|;
-name|f
-operator|++
-control|)
 operator|(
 name|void
 operator|)
 name|open
 argument_list|(
-operator|*
-name|f
+name|_PATH_BIN
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+name|_PATH_USR
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+name|_PATH_USRBIN
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+name|_PATH_USRLIB
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -109,7 +168,7 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|sync
+name|mysync
 argument_list|)
 expr_stmt|;
 name|value
@@ -145,11 +204,6 @@ argument_list|,
 operator|&
 name|value
 argument_list|,
-operator|(
-expr|struct
-name|itimerval
-operator|*
-operator|)
 name|NULL
 argument_list|)
 condition|)
@@ -174,6 +228,29 @@ name|pause
 argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
+block|}
+end_function
+
+begin_comment
+comment|/* VARARGS */
+end_comment
+
+begin_function
+name|void
+name|mysync
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+decl_stmt|;
+block|{
+operator|(
+name|void
+operator|)
+name|sync
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
