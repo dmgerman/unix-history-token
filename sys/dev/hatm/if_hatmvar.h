@@ -1345,6 +1345,9 @@ name|struct
 name|istats
 name|istats
 decl_stmt|;
+name|u_int
+name|mpsafe
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HATM_DEBUG
