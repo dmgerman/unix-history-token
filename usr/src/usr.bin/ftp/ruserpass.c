@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	1.8 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
