@@ -82,6 +82,12 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_function
 name|main
 parameter_list|(
@@ -328,6 +334,12 @@ name|stdin
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
