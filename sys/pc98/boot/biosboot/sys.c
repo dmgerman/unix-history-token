@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.6.2.1 1996/11/09 21:12:13 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.6.2.2 1997/01/04 16:19:16 kato Exp $  */
 end_comment
 
 begin_comment
@@ -25,11 +25,11 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|0
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/* #define BUFSIZE 4096 */
@@ -42,26 +42,8 @@ name|BUFSIZE
 value|MAXBSIZE
 end_define
 
-begin_decl_stmt
-name|char
-name|buf
-index|[
-name|BUFSIZE
-index|]
-decl_stmt|,
-name|fsbuf
-index|[
-name|SBSIZE
-index|]
-decl_stmt|,
-name|iobuf
-index|[
-name|MAXBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char buf[BUFSIZE], fsbuf[SBSIZE], iobuf[MAXBSIZE];
 endif|#
 directive|endif
 end_endif
@@ -88,6 +70,7 @@ value|BUFSIZE
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buf
 index|[
@@ -107,6 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|mapbuf
 index|[
@@ -116,6 +100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mapblock
 decl_stmt|;
@@ -148,6 +133,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|int
+name|block_map
+parameter_list|(
+name|int
+name|file_block
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|find
+parameter_list|(
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -241,16 +249,33 @@ name|cnt2
 decl_stmt|,
 name|bnum2
 decl_stmt|;
+name|struct
+name|fs
+modifier|*
+name|fs_copy
+decl_stmt|;
 while|while
 condition|(
 name|count
+operator|>
+literal|0
+operator|&&
+name|poff
+operator|<
+name|inode
+operator|.
+name|i_size
 condition|)
 block|{
+name|fs_copy
+operator|=
+name|fs
+expr_stmt|;
 name|off
 operator|=
 name|blkoff
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 name|poff
 argument_list|)
@@ -259,7 +284,7 @@ name|logno
 operator|=
 name|lblkno
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 name|poff
 argument_list|)
@@ -270,7 +295,7 @@ name|size
 operator|=
 name|blksize
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 operator|&
 name|inode
@@ -282,7 +307,7 @@ name|bnum2
 operator|=
 name|fsbtodb
 argument_list|(
-name|fs
+name|fs_copy
 argument_list|,
 name|block_map
 argument_list|(
@@ -550,6 +575,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|int
 name|find
 parameter_list|(
@@ -897,6 +923,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|block_map
 parameter_list|(
@@ -1421,19 +1448,13 @@ name|dosdev
 operator|=
 name|dosdev_copy
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"dosdev= %x, biosdrive = %d, unit = %d, maj = %d\n"
-argument_list|,
-name|dosdev_copy
-argument_list|,
-name|biosdrive
-argument_list|,
-name|unit
-argument_list|,
-name|maj
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX this is useful, but misplaced. */
+block|printf("dosdev= %x, biosdrive = %d, unit = %d, maj = %d\n", 		dosdev_copy, biosdrive, unit, maj);
+endif|#
+directive|endif
 comment|/***********************************************\ 	* Now we know the disk unit and part,		* 	* Load disk info, (open the device)		* 	\***********************************************/
 if|if
 condition|(
@@ -1479,6 +1500,10 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|cp
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -1494,17 +1519,19 @@ name|ret
 operator|<
 literal|0
 condition|)
+block|{
+name|name
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|poff
 operator|=
 literal|0
-expr_stmt|;
-name|name
-operator|=
-name|cp
 expr_stmt|;
 endif|#
 directive|endif
