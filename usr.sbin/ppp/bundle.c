@@ -2859,6 +2859,8 @@ operator|->
 name|filter
 operator|.
 name|in
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2921,9 +2923,6 @@ name|PHASE_DEAD
 condition|)
 block|{
 comment|/*        * Note, we must be in AUTO mode :-/ otherwise our interface should        * *not* be UP and we can't receive data        */
-if|if
-condition|(
-operator|(
 name|pri
 operator|=
 name|PacketCheck
@@ -2942,9 +2941,14 @@ operator|->
 name|filter
 operator|.
 name|dial
+argument_list|,
+name|NULL
 argument_list|)
-operator|)
-operator|>=
+expr_stmt|;
+if|if
+condition|(
+name|pri
+operator|>
 literal|0
 condition|)
 name|bundle_Open
@@ -2980,6 +2984,8 @@ operator|->
 name|filter
 operator|.
 name|out
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6689,7 +6695,25 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" ID check:      %s\n"
+literal|" Filter Decap:  %s\n"
+argument_list|,
+name|optval
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_FILTERDECAP
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" ID check:      %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6707,7 +6731,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Keep-Session:  %-20.20s"
+literal|" Keep-Session:  %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6725,7 +6749,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Loopback:      %s\n"
+literal|" Loopback:      %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6743,7 +6767,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" PasswdAuth:    %-20.20s"
+literal|" PasswdAuth:    %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6761,7 +6785,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Proxy:         %s\n"
+literal|" Proxy:         %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6779,7 +6803,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Proxyall:      %-20.20s"
+literal|" Proxyall:      %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6797,7 +6821,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Throughput:    %s\n"
+literal|" Throughput:    %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6815,7 +6839,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Utmp Logging:  %-20.20s"
+literal|" Utmp Logging:  %s\n"
 argument_list|,
 name|optval
 argument_list|(

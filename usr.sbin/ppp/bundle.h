@@ -65,71 +65,78 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OPT_IDCHECK
+name|OPT_FILTERDECAP
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_IFACEALIAS
+name|OPT_IDCHECK
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_KEEPSESSION
+name|OPT_IFACEALIAS
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_LOOPBACK
+name|OPT_KEEPSESSION
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PASSWDAUTH
+name|OPT_LOOPBACK
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXY
+name|OPT_PASSWDAUTH
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXYALL
+name|OPT_PROXY
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_SROUTES
+name|OPT_PROXYALL
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_THROUGHPUT
+name|OPT_SROUTES
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_UTMP
+name|OPT_THROUGHPUT
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_UTMP
+value|0x0400
 end_define
 
 begin_define

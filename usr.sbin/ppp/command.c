@@ -17090,6 +17090,27 @@ index|[]
 init|=
 block|{
 block|{
+literal|"filter-decapsulation"
+block|,
+name|NULL
+block|,
+name|OptSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"filter on PPPoUDP payloads"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|OPT_FILTERDECAP
+block|}
+block|,
+block|{
 literal|"idcheck"
 block|,
 name|NULL
