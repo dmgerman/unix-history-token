@@ -2028,7 +2028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Must be called at splnet...  */
+comment|/*  * soabort() must not be called with any socket locks held, as it calls  * into the protocol, which will call back into the socket code causing  * it to acquire additional socket locks that may cause recursion or lock  * order reversals.  */
 end_comment
 
 begin_function
