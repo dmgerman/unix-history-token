@@ -1895,17 +1895,7 @@ name|args
 operator|=
 name|n2
 expr_stmt|;
-comment|/* A newline or semicolon is optional here. Anything 			   else gets pushed back so we can read it again.  */
-if|if
-condition|(
-name|lasttoken
-operator|!=
-name|TNL
-operator|&&
-name|lasttoken
-operator|!=
-name|TSEMI
-condition|)
+comment|/* Many shells accept an optional semicolon here, but 			   POSIX says we should not, so we don't.  An optional 			   newline is OK here, but that is handled by the 			   checkkwd = 2 assignment below.  */
 name|tokpushback
 operator|++
 expr_stmt|;
@@ -2400,7 +2390,14 @@ expr_stmt|;
 break|break;
 comment|/* Handle an empty command like other simple commands.  */
 case|case
+name|TSEMI
+case|:
+case|case
 name|TNL
+case|:
+comment|/* Handle EOF like other simple commands, too.  */
+case|case
+name|TEOF
 case|:
 case|case
 name|TWORD
