@@ -49,6 +49,21 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|sysarch
+parameter_list|(
+name|int
+name|op
+parameter_list|,
+name|char
+modifier|*
+name|parms
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -75,6 +90,10 @@ name|sysarch
 argument_list|(
 name|SPARC_SIGTRAMP_INSTALL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sia
 argument_list|)

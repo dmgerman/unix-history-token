@@ -160,7 +160,7 @@ parameter_list|,
 name|test
 parameter_list|)
 define|\
-value|int _Qp_f ## name(u_int *a, u_int *b) ; \ int \ _Qp_f ## name(u_int *a, u_int *b) \ { \ 	struct fpemu fe; \ 	struct fpn *r; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_qtof(&fe.fe_f1, a[0], a[1], a[2], a[3]); \ 	fe.fe_f2.fp_sign = b[0]>> 31; \ 	fe.fe_f2.fp_sticky = 0; \ 	fe.fe_f2.fp_class = __fpu_qtof(&fe.fe_f2, b[0], b[1], b[2], b[3]); \ 	__fpu_compare(&fe, cmpe, 0); \ 	return (test(FSR_GET_FCC0(fe.fe_fsr))); \ }
+value|int _Qp_f ## name(u_int *a, u_int *b) ; \ int \ _Qp_f ## name(u_int *a, u_int *b) \ { \ 	struct fpemu fe; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_qtof(&fe.fe_f1, a[0], a[1], a[2], a[3]); \ 	fe.fe_f2.fp_sign = b[0]>> 31; \ 	fe.fe_f2.fp_sticky = 0; \ 	fe.fe_f2.fp_class = __fpu_qtof(&fe.fe_f2, b[0], b[1], b[2], b[3]); \ 	__fpu_compare(&fe, cmpe, 0); \ 	return (test(FSR_GET_FCC0(fe.fe_fsr))); \ }
 end_define
 
 begin_function_decl

@@ -677,10 +677,6 @@ block|{
 name|u_int64_t
 name|tmp64
 decl_stmt|;
-name|u_int32_t
-modifier|*
-name|p32
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
