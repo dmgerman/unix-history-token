@@ -1763,6 +1763,9 @@ literal|"pam_vsystem_log called"
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* make sure we have a log state to use */
 if|if
 condition|(
@@ -1854,6 +1857,8 @@ name|facility
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|vsyslog
 argument_list|(
 name|priority
@@ -1863,9 +1868,14 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|closelog
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|D
 argument_list|(
 operator|(
@@ -1922,6 +1932,9 @@ literal|"pam_system_log called"
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* make sure we have a log state to use */
 if|if
 condition|(
@@ -2013,6 +2026,8 @@ name|facility
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|va_start
 argument_list|(
 name|args
@@ -2034,9 +2049,14 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|closelog
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|D
 argument_list|(
 operator|(
