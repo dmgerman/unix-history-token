@@ -414,6 +414,25 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * Initialize the screen offset. 	 */
+name|scno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Leading number if O_NUMBER option set. */
+if|if
+condition|(
+name|O_ISSET
+argument_list|(
+name|sp
+argument_list|,
+name|O_NUMBER
+argument_list|)
+condition|)
+name|scno
+operator|+=
+name|O_NUMBER_LENGTH
+expr_stmt|;
 comment|/* Need the line to go any further. */
 if|if
 condition|(
@@ -473,9 +492,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|scno
 return|;
 block|}
 comment|/* Store away the values of the list and leftright edit options. */
@@ -497,30 +514,14 @@ argument_list|,
 name|O_LEFTRIGHT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the pointer into the buffer and screen and current 	 * offsets. 	 */
+comment|/* 	 * Initialize the pointer into the buffer and current offset. 	 */
 name|p
 operator|=
 name|lp
 expr_stmt|;
 name|curoff
 operator|=
-name|scno
-operator|=
 literal|0
-expr_stmt|;
-comment|/* Leading number if O_NUMBER option set. */
-if|if
-condition|(
-name|O_ISSET
-argument_list|(
-name|sp
-argument_list|,
-name|O_NUMBER
-argument_list|)
-condition|)
-name|scno
-operator|+=
-name|O_NUMBER_LENGTH
 expr_stmt|;
 comment|/* Macro to return the display length of any signal character. */
 define|#
