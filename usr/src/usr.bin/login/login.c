@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.30 (Berkeley) 83/06/13"
+literal|"@(#)login.c	4.31 (Berkeley) 83/06/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -897,14 +897,12 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
 name|getloginname
 argument_list|(
 operator|&
 name|utmp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2685,9 +2683,16 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
+block|{
+name|pwd
+operator|=
+operator|&
+name|nouser
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|setpwent
 argument_list|()
 expr_stmt|;
@@ -2707,9 +2712,16 @@ name|pwd
 operator|==
 name|NULL
 condition|)
+block|{
+name|pwd
+operator|=
+operator|&
+name|nouser
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|hostf
 operator|=
 name|pwd
