@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.1	%H%	*/
+comment|/*	conf.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -684,6 +684,12 @@ argument_list|()
 decl_stmt|,
 name|ttread
 argument_list|()
+decl_stmt|,
+name|nullioctl
+argument_list|()
+decl_stmt|,
+name|ttstart
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -705,6 +711,36 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BERKNET
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|netopen
+argument_list|()
+decl_stmt|,
+name|netclose
+argument_list|()
+decl_stmt|,
+name|netread
+argument_list|()
+decl_stmt|,
+name|netinput
+argument_list|()
+decl_stmt|,
+name|netioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|linesw
@@ -720,7 +756,7 @@ name|ttread
 block|,
 name|ttwrite
 block|,
-name|nodev
+name|nullioctl
 block|,
 name|ttyinput
 block|,
@@ -733,6 +769,32 @@ block|,
 name|nulldev
 block|,
 comment|/* 0 */
+ifdef|#
+directive|ifdef
+name|BERKNET
+name|netopen
+block|,
+name|netclose
+block|,
+name|netread
+block|,
+name|ttwrite
+block|,
+name|netioctl
+block|,
+name|netinput
+block|,
+name|nodev
+block|,
+name|nulldev
+block|,
+name|ttstart
+block|,
+name|nulldev
+block|,
+comment|/* 1 */
+endif|#
+directive|endif
 name|mxopen
 block|,
 name|mxclose
@@ -753,11 +815,30 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-comment|/* 1 */
+comment|/* 1 or 2 */
 literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BERKNET
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|nldisp
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|int
@@ -766,6 +847,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|dev_t
