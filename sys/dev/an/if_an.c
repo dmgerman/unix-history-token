@@ -703,7 +703,7 @@ name|sc
 operator|->
 name|an_bhandle
 operator|=
-name|rman_get_start
+name|rman_get_bushandle
 argument_list|(
 name|sc
 operator|->
