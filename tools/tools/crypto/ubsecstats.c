@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/sys/dev/ubsec/ubsecvar.h"
+file|"../../../sys/dev/ubsec/ubsecvar.h"
 end_include
 
 begin_comment
