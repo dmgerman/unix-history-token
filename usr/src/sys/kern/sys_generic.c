@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -90,6 +90,24 @@ begin_comment
 comment|/*  * Read system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|read_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|char
+modifier|*
+name|cbuf
+decl_stmt|;
+name|unsigned
+name|count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -113,26 +131,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|char
-modifier|*
-name|cbuf
-decl_stmt|;
-name|unsigned
-name|count
-decl_stmt|;
-block|}
+name|struct
+name|read_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -421,9 +427,24 @@ begin_comment
 comment|/*  * Scatter read system call.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
+begin_struct
+struct|struct
+name|readv_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|struct
+name|iovec
+modifier|*
+name|iovp
+decl_stmt|;
+name|unsigned
+name|iovcnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_macro
 name|readv
@@ -444,27 +465,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
 name|struct
-name|iovec
-modifier|*
-name|iovp
-decl_stmt|;
-name|unsigned
-name|iovcnt
-decl_stmt|;
-block|}
+name|readv_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -957,6 +965,24 @@ begin_comment
 comment|/*  * Write system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|write_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|char
+modifier|*
+name|cbuf
+decl_stmt|;
+name|unsigned
+name|count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|write
 argument_list|(
@@ -976,26 +1002,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|char
-modifier|*
-name|cbuf
-decl_stmt|;
-name|unsigned
-name|count
-decl_stmt|;
-block|}
+name|struct
+name|write_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1299,6 +1313,25 @@ begin_comment
 comment|/*  * Gather write system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|writev_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|struct
+name|iovec
+modifier|*
+name|iovp
+decl_stmt|;
+name|unsigned
+name|iovcnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|writev
 argument_list|(
@@ -1318,27 +1351,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
 name|struct
-name|iovec
-modifier|*
-name|iovp
-decl_stmt|;
-name|unsigned
-name|iovcnt
-decl_stmt|;
-block|}
+name|writev_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1846,6 +1866,23 @@ begin_comment
 comment|/*  * Ioctl system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|ioctl_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|caddr_t
+name|cmarg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1869,25 +1906,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|caddr_t
-name|cmarg
-decl_stmt|;
-block|}
+name|struct
+name|ioctl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2598,27 +2624,9 @@ begin_comment
 comment|/*  * Select system call.  */
 end_comment
 
-begin_expr_stmt
-name|select
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-specifier|register
-expr|struct
-name|proc
-operator|*
-name|p
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
-specifier|register
 struct|struct
-name|args
+name|select_args
 block|{
 name|int
 name|nd
@@ -2639,10 +2647,34 @@ modifier|*
 name|tv
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
+
+begin_expr_stmt
+name|select
+argument_list|(
+name|p
+argument_list|,
+name|uap
+argument_list|,
+name|retval
+argument_list|)
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|select_args
+modifier|*
+name|uap
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3345,28 +3377,6 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_macro
-name|seltrue
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|int which
-argument_list|,
-argument|struct proc *p
-argument_list|)
-end_macro
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_macro
 name|seltrue
 argument_list|(
@@ -3397,11 +3407,6 @@ modifier|*
 name|p
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
