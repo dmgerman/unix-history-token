@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * %sccs.include.redist.c%  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	from NetBSD: Id: clock.c,v 1.6 1993/05/22 08:01:07 cgd Exp   *  *	@(#)clock.c	7.4 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -49,6 +49,212 @@ directive|include
 file|<i386/isa/rtc.h>
 end_include
 
+begin_comment
+comment|/* these should go elsewere (timerreg.h) but to avoid admin overhead... */
+end_comment
+
+begin_comment
+comment|/*  * Macros for specifying values to be written into a mode register.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_CNTR0
+value|(IO_TIMER1 + 0)
+end_define
+
+begin_comment
+comment|/* timer 0 counter port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_CNTR1
+value|(IO_TIMER1 + 1)
+end_define
+
+begin_comment
+comment|/* timer 1 counter port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_CNTR2
+value|(IO_TIMER1 + 2)
+end_define
+
+begin_comment
+comment|/* timer 2 counter port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_MODE
+value|(IO_TIMER1 + 3)
+end_define
+
+begin_comment
+comment|/* timer mode port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_SEL0
+value|0x00
+end_define
+
+begin_comment
+comment|/* select counter 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_SEL1
+value|0x40
+end_define
+
+begin_comment
+comment|/* select counter 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_SEL2
+value|0x80
+end_define
+
+begin_comment
+comment|/* select counter 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_INTTC
+value|0x00
+end_define
+
+begin_comment
+comment|/* mode 0, intr on terminal cnt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_ONESHOT
+value|0x02
+end_define
+
+begin_comment
+comment|/* mode 1, one shot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_RATEGEN
+value|0x04
+end_define
+
+begin_comment
+comment|/* mode 2, rate generator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_SQWAVE
+value|0x06
+end_define
+
+begin_comment
+comment|/* mode 3, square wave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_SWSTROBE
+value|0x08
+end_define
+
+begin_comment
+comment|/* mode 4, s/w triggered strobe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_HWSTROBE
+value|0x0a
+end_define
+
+begin_comment
+comment|/* mode 5, h/w triggered strobe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_LATCH
+value|0x00
+end_define
+
+begin_comment
+comment|/* latch counter for reading */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_LSB
+value|0x10
+end_define
+
+begin_comment
+comment|/* r/w counter LSB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_MSB
+value|0x20
+end_define
+
+begin_comment
+comment|/* r/w counter MSB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_16BIT
+value|0x30
+end_define
+
+begin_comment
+comment|/* r/w counter 16 bits, LSB first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_BCD
+value|0x01
+end_define
+
+begin_comment
+comment|/* count in BCD */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -63,6 +269,24 @@ name|DAYEN
 value|303
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XTALSPEED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|XTALSPEED
+value|1193182
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|startrtclock
 argument_list|()
@@ -73,21 +297,34 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|findcpuspeed
+argument_list|()
+expr_stmt|;
+comment|/* use the clock (while it's free) 					to find the cpu speed */
 comment|/* initialize 8253 clock */
 name|outb
 argument_list|(
-name|IO_TIMER1
-operator|+
-literal|3
+name|TIMER_MODE
 argument_list|,
-literal|0x36
+name|TIMER_SEL0
+operator||
+name|TIMER_RATEGEN
+operator||
+name|TIMER_16BIT
 argument_list|)
 expr_stmt|;
+comment|/* Correct rounding will buy us a better precision in timekeeping */
 name|outb
 argument_list|(
 name|IO_TIMER1
 argument_list|,
-literal|1193182
+operator|(
+name|XTALSPEED
+operator|+
+name|hz
+operator|/
+literal|2
+operator|)
 operator|/
 name|hz
 argument_list|)
@@ -97,7 +334,13 @@ argument_list|(
 name|IO_TIMER1
 argument_list|,
 operator|(
-literal|1193182
+operator|(
+name|XTALSPEED
+operator|+
+name|hz
+operator|/
+literal|2
+operator|)
 operator|/
 name|hz
 operator|)
@@ -184,6 +427,121 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|unsigned
+name|int
+name|delaycount
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* calibrated loop variable (1 millisecond) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIRST_GUESS
+value|0x2000
+end_define
+
+begin_macro
+name|findcpuspeed
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|unsigned
+name|char
+name|low
+decl_stmt|;
+name|unsigned
+name|int
+name|remainder
+decl_stmt|;
+comment|/* Put counter in count down mode */
+name|outb
+argument_list|(
+name|IO_TIMER1
+operator|+
+literal|3
+argument_list|,
+literal|0x34
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|IO_TIMER1
+argument_list|,
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|IO_TIMER1
+argument_list|,
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|delaycount
+operator|=
+name|FIRST_GUESS
+expr_stmt|;
+name|spinwait
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Read the value left in the counter */
+name|low
+operator|=
+name|inb
+argument_list|(
+name|IO_TIMER1
+argument_list|)
+expr_stmt|;
+comment|/* least siginifcant */
+name|remainder
+operator|=
+name|inb
+argument_list|(
+name|IO_TIMER1
+argument_list|)
+expr_stmt|;
+comment|/* most significant */
+name|remainder
+operator|=
+operator|(
+name|remainder
+operator|<<
+literal|8
+operator|)
+operator|+
+name|low
+expr_stmt|;
+comment|/* Formula for delaycount is : 	 *  (loopcount * timer clock speed)/ (counter ticks * 1000) 	 */
+name|delaycount
+operator|=
+operator|(
+name|FIRST_GUESS
+operator|*
+operator|(
+name|XTALSPEED
+operator|/
+literal|1000
+operator|)
+operator|)
+operator|/
+operator|(
+literal|0xffff
+operator|-
+name|remainder
+operator|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/* convert 2 digit BCD number */
 end_comment
@@ -249,17 +607,11 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|y
-operator|=
-name|y
-operator|-
-literal|70
-expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1970
 init|;
 name|i
 operator|<
@@ -526,6 +878,18 @@ argument_list|(
 name|RTC_YEAR
 argument_list|)
 argument_list|)
+operator|+
+literal|1900
+expr_stmt|;
+if|if
+condition|(
+name|sec
+operator|<
+literal|1970
+condition|)
+name|sec
+operator|+=
+literal|100
 expr_stmt|;
 name|leap
 operator|=
@@ -537,7 +901,7 @@ literal|4
 operator|)
 expr_stmt|;
 name|sec
-operator|+=
+operator|=
 name|ytos
 argument_list|(
 name|sec
@@ -640,18 +1004,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* seconds */
-name|sec
-operator|-=
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
-expr_stmt|;
-comment|/* XXX why ??? */
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* XXX off by one? Need to calculate DST on SUNDAY */
 comment|/* Perhaps we should have the RTC hold GMT time to save */
 comment|/* us the bother of converting. */
@@ -659,11 +1011,13 @@ name|yd
 operator|=
 name|yd
 operator|/
+operator|(
 literal|24
 operator|*
 literal|60
 operator|*
 literal|60
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -687,8 +1041,6 @@ operator|*
 literal|60
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sec
 operator|+=
 name|tz
@@ -952,6 +1304,60 @@ expr_stmt|;
 name|splnone
 argument_list|()
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|spinwait
+argument_list|(
+argument|millisecs
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|millisecs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of milliseconds to delay */
+end_comment
+
+begin_block
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|millisecs
+condition|;
+name|i
+operator|++
+control|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|delaycount
+condition|;
+name|j
+operator|++
+control|)
+empty_stmt|;
 block|}
 end_block
 
