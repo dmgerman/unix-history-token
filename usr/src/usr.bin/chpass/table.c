@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	8.1 (Berkeley) %G%"
+literal|"@(#)table.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,44 +61,6 @@ name|e2
 index|[]
 init|=
 literal|":,"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|p_change
-argument_list|()
-decl_stmt|,
-name|p_class
-argument_list|()
-decl_stmt|,
-name|p_expire
-argument_list|()
-decl_stmt|,
-name|p_gecos
-argument_list|()
-decl_stmt|,
-name|p_gid
-argument_list|()
-decl_stmt|,
-name|p_hdir
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|p_login
-argument_list|()
-decl_stmt|,
-name|p_passwd
-argument_list|()
-decl_stmt|,
-name|p_shell
-argument_list|()
-decl_stmt|,
-name|p_uid
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 

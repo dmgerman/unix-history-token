@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.2 (Berkeley) %G%"
+literal|"@(#)util.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -61,13 +55,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -234,32 +246,29 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|atot
-argument_list|(
-argument|p
-argument_list|,
-argument|store
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|store
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|time_t
 modifier|*
 name|store
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
+specifier|static
+name|struct
+name|tm
+modifier|*
+name|lt
+decl_stmt|;
 name|char
 modifier|*
 name|t
@@ -268,17 +277,8 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
-specifier|static
-name|struct
-name|tm
-modifier|*
-name|lt
-decl_stmt|;
 name|time_t
 name|tval
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 name|int
 name|day
@@ -590,7 +590,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -599,13 +599,11 @@ name|ok_shell
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -613,11 +611,6 @@ decl_stmt|,
 modifier|*
 name|sh
 decl_stmt|;
-name|char
-modifier|*
-name|getusershell
-parameter_list|()
-function_decl|;
 name|setusershell
 argument_list|()
 expr_stmt|;
@@ -650,7 +643,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|sh
 argument_list|,
@@ -658,7 +651,6 @@ literal|'/'
 argument_list|)
 operator|)
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|name
@@ -667,6 +659,8 @@ name|p
 operator|+
 literal|1
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

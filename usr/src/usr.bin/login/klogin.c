@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	8.1 (Berkeley) %G%"
+literal|"@(#)klogin.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -73,7 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -290,9 +302,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
-literal|"login: setuid"
+literal|"setuid"
 argument_list|)
 expr_stmt|;
 return|return
@@ -476,12 +488,9 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|warnx
 argument_list|(
-literal|"unable to use TGT: (%s)\n"
+literal|"unable to use TGT: (%s)"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -539,8 +548,15 @@ literal|1
 operator|)
 return|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|faddr
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -548,13 +564,6 @@ operator|)
 name|hp
 operator|->
 name|h_addr
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|faddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -628,12 +637,9 @@ operator|)
 return|;
 block|}
 comment|/* failed for some other reason */
-operator|(
-name|void
-operator|)
-name|printf
+name|warnx
 argument_list|(
-literal|"unable to verify %s ticket: (%s)\n"
+literal|"unable to verify %s ticket: (%s)"
 argument_list|,
 name|VERIFY_SERVICE
 argument_list|,

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	8.1 (Berkeley) %G%"
+literal|"@(#)chpass.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -98,25 +116,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pw_scan.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pw_util.h>
 end_include
 
 begin_include
@@ -153,7 +183,32 @@ name|uid
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|baduser
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -169,16 +224,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|register
 enum|enum
 block|{
 name|NEWSH
@@ -189,14 +234,11 @@ name|EDITENTRY
 block|}
 name|op
 enum|;
-specifier|register
 name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|;
-name|struct
-name|passwd
+decl_stmt|,
 name|lpw
 decl_stmt|;
 name|int
@@ -311,25 +353,15 @@ name|uid
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"chpass: unknown user: uid %u\n"
+literal|"unknown user: uid %u"
 argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|1
@@ -347,26 +379,16 @@ name|argv
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"chpass: unknown user %s.\n"
+literal|"unknown user: %s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|uid
@@ -552,21 +574,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|baduser
-argument_list|()
-end_macro
-
-begin_block
-block|{
-operator|(
+begin_function
 name|void
-operator|)
-name|fprintf
+name|baduser
+parameter_list|()
+block|{
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"chpass: %s\n"
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -574,20 +591,13 @@ name|EACCES
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -605,7 +615,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	8.2 (Berkeley) %G%"
+literal|"@(#)field.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,25 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -67,7 +55,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -86,40 +104,29 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_login
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -128,14 +135,9 @@ operator|*
 name|p
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: empty login field.\n"
+literal|"empty login field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -152,14 +154,9 @@ operator|==
 literal|'-'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: login names may not begin with a hyphen.\n"
+literal|"login names may not begin with a hyphen"
 argument_list|)
 expr_stmt|;
 return|return
@@ -183,14 +180,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: can't save entry.\n"
+literal|"can't save entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -201,21 +193,16 @@ return|;
 block|}
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
 literal|'.'
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: \'.\' is dangerous in a login name.\n"
+literal|"\'.\' is dangerous in a login name"
 argument_list|)
 expr_stmt|;
 for|for
@@ -236,14 +223,9 @@ name|p
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: upper-case letters are dangerous in a login name.\n"
+literal|"upper-case letters are dangerous in a login name"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -254,46 +236,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_passwd
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -324,14 +295,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: can't save password entry.\n"
+literal|"can't save password entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -346,44 +312,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|p_uid
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pw
-argument_list|,
+parameter_list|,
 name|ep
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|uid_t
 name|id
@@ -399,14 +356,9 @@ operator|*
 name|p
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: empty uid field.\n"
+literal|"empty uid field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -425,14 +377,9 @@ name|p
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: illegal uid.\n"
+literal|"illegal uid"
 argument_list|)
 expr_stmt|;
 return|return
@@ -473,14 +420,9 @@ name|ERANGE
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: illegal uid.\n"
+literal|"illegal uid"
 argument_list|)
 expr_stmt|;
 return|return
@@ -501,44 +443,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|p_gid
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pw
-argument_list|,
+parameter_list|,
 name|ep
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|group
@@ -559,14 +492,9 @@ operator|*
 name|p
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: empty gid field.\n"
+literal|"empty gid field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -598,14 +526,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: unknown group %s.\n"
+literal|"unknown group %s"
 argument_list|,
 name|p
 argument_list|)
@@ -662,14 +585,9 @@ name|ERANGE
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: illegal gid.\n"
+literal|"illegal gid"
 argument_list|)
 expr_stmt|;
 return|return
@@ -690,46 +608,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_class
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -759,14 +666,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: can't save entry.\n"
+literal|"can't save entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -781,46 +683,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_change
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -840,14 +731,9 @@ operator|(
 literal|0
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: illegal date for change field.\n"
+literal|"illegal date for change field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -856,46 +742,35 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_expire
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -915,14 +790,9 @@ operator|(
 literal|0
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: illegal date for expire field.\n"
+literal|"illegal date for expire field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -931,46 +801,35 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_gecos
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1000,14 +859,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: can't save entry.\n"
+literal|"can't save entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1022,46 +876,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|p_hdir
-argument_list|(
-argument|p
-argument_list|,
-argument|pw
-argument_list|,
-argument|ep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|pw
+parameter_list|,
+name|ep
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1070,14 +913,9 @@ operator|*
 name|p
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: empty home directory field.\n"
+literal|"empty home directory field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1101,14 +939,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: can't save entry.\n"
+literal|"can't save entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1123,44 +956,35 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|p_shell
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pw
-argument_list|,
+parameter_list|,
 name|ep
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1207,14 +1031,9 @@ name|pw_shell
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: %s: current shell non-standard.\n"
+literal|"%s: current shell non-standard"
 argument_list|,
 name|pw
 operator|->
@@ -1245,14 +1064,9 @@ condition|(
 name|uid
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: %s: non-standard shell.\n"
+literal|"%s: non-standard shell"
 argument_list|,
 name|p
 argument_list|)
@@ -1284,14 +1098,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: can't save entry.\n"
+literal|"can't save entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1306,7 +1115,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	8.2 (Berkeley) %G%"
+literal|"@(#)login.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,37 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ttyent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -144,7 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -163,6 +139,36 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ttyent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -329,6 +335,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|login
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|utmp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -345,7 +366,7 @@ comment|/*  * This bounds the time given to login.  Not a define so it can  * be
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|timeout
 init|=
 literal|300
@@ -486,15 +507,6 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-specifier|register
-name|int
-name|ch
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|struct
 name|group
 modifier|*
@@ -515,6 +527,8 @@ decl_stmt|;
 name|int
 name|ask
 decl_stmt|,
+name|ch
+decl_stmt|,
 name|cnt
 decl_stmt|,
 name|fflag
@@ -528,12 +542,16 @@ decl_stmt|,
 name|rootlogin
 decl_stmt|,
 name|rval
-decl_stmt|,
+decl_stmt|;
+name|uid_t
 name|uid
 decl_stmt|;
 name|char
 modifier|*
 name|domain
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|,
 modifier|*
 name|salt
@@ -580,9 +598,6 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|timeout
 argument_list|)
 expr_stmt|;
@@ -656,7 +671,7 @@ expr_stmt|;
 else|else
 name|domain
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|localhost
 argument_list|,
@@ -733,15 +748,11 @@ if|if
 condition|(
 name|uid
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"login: -h option: %s\n"
+literal|"-h option: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -749,12 +760,6 @@ name|EPERM
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|rflag
@@ -784,7 +789,7 @@ operator|&&
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|optarg
 argument_list|,
@@ -1069,7 +1074,7 @@ if|if
 condition|(
 name|tty
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|ttyn
 argument_list|,
@@ -1121,7 +1126,7 @@ condition|(
 operator|(
 name|instance
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|username
 argument_list|,
@@ -1386,9 +1391,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -1958,7 +1965,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Nothing else left to fail -- really log in. */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|void
@@ -1966,6 +1973,8 @@ operator|*
 operator|)
 operator|&
 name|utmp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2488,7 +2497,7 @@ argument_list|,
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|pwd
 operator|->
@@ -2560,28 +2569,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|pwd
 operator|->
 name|pw_shell
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2626,11 +2622,9 @@ name|void
 name|getloginname
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2800,7 +2794,6 @@ name|void
 name|motd
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|fd
 decl_stmt|,
@@ -2970,7 +2963,6 @@ name|void
 name|checknologin
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|fd
 decl_stmt|,
@@ -3245,7 +3237,7 @@ name|L_SET
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|void
@@ -3253,6 +3245,8 @@ operator|*
 operator|)
 operator|&
 name|ll
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3527,9 +3521,6 @@ name|void
 operator|)
 name|sleep
 argument_list|(
-operator|(
-name|u_int
-operator|)
 literal|5
 argument_list|)
 expr_stmt|;

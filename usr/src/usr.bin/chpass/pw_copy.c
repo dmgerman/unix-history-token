@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_copy.c	8.1 (Berkeley) %G%"
+literal|"@(#)pw_copy.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -50,47 +56,41 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pw_util.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
-name|progname
-decl_stmt|,
 modifier|*
 name|tempname
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|pw_copy
-argument_list|(
-argument|ffd
-argument_list|,
-argument|tfd
-argument_list|,
-argument|pw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ffd
+parameter_list|,
+name|tfd
+parameter_list|,
+name|pw
+parameter_list|)
 name|int
 name|ffd
 decl_stmt|,
 name|tfd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|from
@@ -98,16 +98,13 @@ decl_stmt|,
 modifier|*
 name|to
 decl_stmt|;
-specifier|register
 name|int
 name|done
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 name|buf
 index|[
 literal|8192
@@ -182,7 +179,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -190,16 +187,9 @@ literal|'\n'
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: line too long\n"
-argument_list|,
-name|progname
+literal|"%s: line too long"
 argument_list|,
 name|_PATH_MASTERPASSWD
 argument_list|)
@@ -249,7 +239,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -258,16 +248,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: corrupted entry\n"
-argument_list|,
-name|progname
+literal|"%s: corrupted entry"
 argument_list|,
 name|_PATH_MASTERPASSWD
 argument_list|)
@@ -475,7 +458,7 @@ name|to
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

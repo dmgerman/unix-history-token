@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	8.1 (Berkeley) %G%"
+literal|"@(#)su.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,19 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -98,19 +92,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -169,7 +187,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|char
+modifier|*
+name|ontty
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|chshell
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -191,19 +236,11 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|optind
-decl_stmt|;
-specifier|register
 name|struct
 name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -211,42 +248,7 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|g
-decl_stmt|;
-name|struct
-name|group
-modifier|*
-name|gr
-decl_stmt|;
-name|uid_t
-name|ruid
 decl_stmt|,
-name|getuid
-argument_list|()
-decl_stmt|;
-name|int
-name|asme
-decl_stmt|,
-name|ch
-decl_stmt|,
-name|asthem
-decl_stmt|,
-name|fastlogin
-decl_stmt|,
-name|prio
-decl_stmt|;
-enum|enum
-block|{
-name|UNSET
-block|,
-name|YES
-block|,
-name|NO
-block|}
-name|iscsh
-init|=
-name|UNSET
-enum|;
-name|char
 modifier|*
 name|user
 decl_stmt|,
@@ -272,32 +274,42 @@ modifier|*
 modifier|*
 name|np
 decl_stmt|;
+name|struct
+name|group
+modifier|*
+name|gr
+decl_stmt|;
+name|uid_t
+name|ruid
+decl_stmt|;
+name|int
+name|asme
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|asthem
+decl_stmt|,
+name|fastlogin
+decl_stmt|,
+name|prio
+decl_stmt|;
+enum|enum
+block|{
+name|UNSET
+block|,
+name|YES
+block|,
+name|NO
+block|}
+name|iscsh
+init|=
+name|UNSET
+enum|;
 name|char
 name|shellbuf
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|crypt
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getpass
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ontty
-argument_list|()
 decl_stmt|;
 name|np
 operator|=
@@ -510,20 +522,13 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: who are you?\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"who are you?"
 argument_list|)
 expr_stmt|;
-block|}
 name|username
 operator|=
 name|strdup
@@ -531,6 +536,19 @@ argument_list|(
 name|pwd
 operator|->
 name|pw_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|username
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -677,28 +695,17 @@ operator|!
 operator|*
 name|g
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"su: you are not in the correct group to su %s.\n"
+literal|"you are not in the correct group to su %s."
 argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|username
@@ -706,6 +713,8 @@ argument_list|,
 operator|*
 name|g
 argument_list|)
+operator|==
+literal|0
 condition|)
 break|break;
 block|}
@@ -794,23 +803,13 @@ argument_list|)
 operator|&&
 name|ruid
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: permission denied (shell).\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"permission denied (shell)."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -859,7 +858,7 @@ if|if
 condition|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|shell
 argument_list|,
@@ -900,18 +899,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"su: setgid"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"setgid"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|initgroups
@@ -923,23 +917,13 @@ operator|->
 name|pw_gid
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: initgroups failed.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"initgroups failed"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|setuid
@@ -951,18 +935,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"su: setuid"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"setuid"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1022,20 +1001,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: no directory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no directory"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1171,52 +1143,33 @@ argument_list|,
 name|np
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: %s not found.\n"
-argument_list|,
-name|shell
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|shell
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|chshell
-argument_list|(
-argument|sh
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sh
+parameter_list|)
 name|char
 modifier|*
 name|sh
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|char
-modifier|*
-name|getusershell
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 operator|(
@@ -1230,13 +1183,14 @@ name|NULL
 condition|)
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|cp
 argument_list|,
 name|sh
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1249,7 +1203,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -1260,10 +1214,6 @@ block|{
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
 decl_stmt|;
 specifier|static
 name|char
@@ -1290,9 +1240,14 @@ argument_list|(
 name|STDERR_FILENO
 argument_list|)
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|" on %s"
 argument_list|,
@@ -1359,7 +1314,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1394,13 +1348,9 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|ontty
-argument_list|()
-decl_stmt|,
-modifier|*
 name|krb_get_phost
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|krb_get_lrealm
@@ -1432,14 +1382,9 @@ operator|!
 name|uid
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kerberos su: not in %s's ACL.\n"
+literal|"kerberos: not in %s's ACL."
 argument_list|,
 name|user
 argument_list|)
@@ -1498,9 +1443,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"su: setuid"
+literal|"setuid"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1559,11 +1504,9 @@ operator|==
 name|KDC_PR_UNKNOWN
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"principal unknown: %s.%s@%s\n"
+literal|"kerberos: principal unknown: %s.%s@%s"
 argument_list|,
 operator|(
 name|uid
@@ -1594,14 +1537,9 @@ literal|1
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"su: unable to su: %s\n"
+literal|"kerberos: unable to su: %s"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1651,9 +1589,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"su: chown:"
+literal|"chown"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1699,9 +1637,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"su: gethostname"
+literal|"gethostname"
 argument_list|)
 expr_stmt|;
 name|dest_tkt
@@ -1766,14 +1704,9 @@ operator|==
 name|KDC_PR_UNKNOWN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: TGT not verified.\n"
+literal|"Warning: TGT not verified."
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -1810,14 +1743,9 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unable to use TGT: %s\n"
+literal|"Unable to use TGT: %s"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1870,14 +1798,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"su: can't get addr of %s\n"
+literal|"can't get addr of %s"
 argument_list|,
 name|hostname
 argument_list|)
@@ -1891,11 +1814,15 @@ literal|1
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|faddr
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -1903,13 +1830,6 @@ operator|)
 name|hp
 operator|->
 name|h_addr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|faddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1943,14 +1863,9 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"su: unable to verify rcmd ticket: %s\n"
+literal|"kerberos: unable to verify rcmd ticket: %s\n"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -2023,7 +1938,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|AUTH_DAT
 modifier|*
 name|kdata
@@ -2036,12 +1950,15 @@ operator|=
 operator|&
 name|kdata_st
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
-name|caddr_t
+name|char
+operator|*
 operator|)
 name|kdata
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

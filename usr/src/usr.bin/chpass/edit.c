@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	8.1 (Berkeley) %G%"
+literal|"@(#)edit.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -55,13 +61,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -74,6 +86,24 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pw_scan.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pw_util.h>
 end_include
 
 begin_include
@@ -168,14 +198,9 @@ operator|.
 name|st_mtime
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: no changes made\n"
+literal|"no changes made"
 argument_list|)
 expr_stmt|;
 name|pw_error
@@ -207,36 +232,23 @@ begin_comment
 comment|/*  * display --  *	print out the file for the user to edit; strange side-effect:  *	set conditional flag if the user gets to edit the shell.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|display
-argument_list|(
-argument|fd
-argument_list|,
-argument|pw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|,
+name|pw
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|FILE
 modifier|*
 name|fp
@@ -246,8 +258,7 @@ modifier|*
 name|bp
 decl_stmt|,
 modifier|*
-name|ok_shell
-argument_list|()
+name|p
 decl_stmt|,
 modifier|*
 name|ttoa
@@ -612,31 +623,24 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|verify
-argument_list|(
-argument|pw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pw
+parameter_list|)
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|ENTRY
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -712,14 +716,9 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: corrupted temporary file.\n"
+literal|"corrupted temporary file"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -763,7 +762,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -772,14 +771,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: line too long.\n"
+literal|"line too long"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -810,14 +804,9 @@ operator|->
 name|prompt
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: unrecognized field.\n"
+literal|"unrecognized field"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -850,14 +839,9 @@ operator|&&
 name|uid
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: you may not change the %s field.\n"
+literal|"you may not change the %s field"
 argument_list|,
 name|ep
 operator|->
@@ -874,7 +858,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -883,14 +867,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: line corrupted.\n"
+literal|"line corrupted"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -923,14 +902,9 @@ name|except
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: illegal character in the \"%s\" field.\n"
+literal|"illegal character in the \"%s\" field"
 argument_list|,
 name|ep
 operator|->
@@ -1042,28 +1016,13 @@ name|len
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1166,14 +1125,9 @@ name|buf
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: entries too long\n"
+literal|"entries too long"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1193,7 +1147,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
