@@ -376,7 +376,7 @@ if|if
 condition|(
 name|melody
 operator|->
-name|duration
+name|pitch
 operator|!=
 name|NULL
 condition|)
@@ -385,11 +385,11 @@ name|sysbeep
 argument_list|(
 name|melody
 operator|->
-name|duration
+name|pitch
 argument_list|,
 name|melody
 operator|->
-name|pitch
+name|duration
 argument_list|)
 expr_stmt|;
 name|timeout
@@ -401,7 +401,7 @@ name|melody
 argument_list|,
 name|melody
 operator|->
-name|pitch
+name|duration
 argument_list|)
 expr_stmt|;
 block|}
@@ -445,7 +445,7 @@ name|BEEP_ON
 operator|&&
 name|melody
 operator|->
-name|duration
+name|pitch
 operator|!=
 name|NULL
 condition|)
@@ -458,11 +458,11 @@ name|sysbeep
 argument_list|(
 name|melody
 operator|->
-name|duration
+name|pitch
 argument_list|,
 name|melody
 operator|->
-name|pitch
+name|duration
 argument_list|)
 expr_stmt|;
 name|timeout
@@ -474,7 +474,7 @@ name|melody
 argument_list|,
 name|melody
 operator|->
-name|pitch
+name|duration
 argument_list|)
 expr_stmt|;
 block|}
