@@ -399,6 +399,12 @@ literal|1
 expr_stmt|;
 name|sc
 operator|->
+name|cursor_char
+operator|=
+name|SC_CURSOR_CHAR
+expr_stmt|;
+name|sc
+operator|->
 name|mouse_char
 operator|=
 name|SC_MOUSE_CHAR
