@@ -768,21 +768,6 @@ begin_comment
 comment|/* Non-private for the benefit of libkvm. */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|ccdbuf
-modifier|*
-name|ccdfreebufs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|numccdfreebufs
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * getccdbuf() -	Allocate and zero a ccd buffer.  *  *	This routine is called at splbio().  */
 end_comment
@@ -802,33 +787,6 @@ name|ccdbuf
 operator|*
 name|cbp
 block|;
-comment|/* 	 * Allocate from freelist or malloc as necessary 	 */
-if|if
-condition|(
-operator|(
-name|cbp
-operator|=
-name|ccdfreebufs
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|ccdfreebufs
-operator|=
-name|cbp
-operator|->
-name|cb_freenext
-expr_stmt|;
-operator|--
-name|numccdfreebufs
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_else
-else|else
-block|{
 name|cbp
 operator|=
 name|malloc
@@ -839,19 +797,12 @@ expr|struct
 name|ccdbuf
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
-expr_stmt|;
-block|}
-end_else
-
-begin_comment
+block|;
 comment|/* 	 * Used by mirroring code 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|cpy
@@ -881,7 +832,7 @@ name|ccdbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * independant struct bio initialization 	 */
@@ -912,29 +863,6 @@ modifier|*
 name|cbp
 parameter_list|)
 block|{
-if|if
-condition|(
-name|numccdfreebufs
-operator|<
-name|NCCDFREEHIWAT
-condition|)
-block|{
-name|cbp
-operator|->
-name|cb_freenext
-operator|=
-name|ccdfreebufs
-expr_stmt|;
-name|ccdfreebufs
-operator|=
-name|cbp
-expr_stmt|;
-operator|++
-name|numccdfreebufs
-expr_stmt|;
-block|}
-else|else
-block|{
 name|free
 argument_list|(
 operator|(
@@ -942,10 +870,9 @@ name|caddr_t
 operator|)
 name|cbp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1513,7 +1440,7 @@ expr|struct
 name|ccdcinfo
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1533,7 +1460,7 @@ name|malloc
 argument_list|(
 name|MAXPATHLEN
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1646,7 +1573,7 @@ name|ci
 operator|->
 name|ci_pathlen
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1912,7 +1839,7 @@ name|free
 argument_list|(
 name|tmppath
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|tmppath
@@ -2253,7 +2180,7 @@ name|ci
 operator|->
 name|ci_path
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 block|}
@@ -2267,7 +2194,7 @@ name|free
 argument_list|(
 name|tmppath
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|free
@@ -2276,7 +2203,7 @@ name|cs
 operator|->
 name|sc_cinfo
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 return|return
@@ -2377,7 +2304,7 @@ name|malloc
 argument_list|(
 name|size
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 operator||
@@ -2432,7 +2359,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -2547,7 +2474,7 @@ operator|->
 name|sc_nccdisks
 operator|)
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -5732,7 +5659,7 @@ name|char
 operator|*
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -5752,7 +5679,7 @@ name|vnode
 operator|*
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -5794,14 +5721,14 @@ name|free
 argument_list|(
 name|vpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|cpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|ccdunlock
@@ -5950,14 +5877,14 @@ name|free
 argument_list|(
 name|vpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|cpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|ccdunlock
@@ -6057,14 +5984,14 @@ name|free
 argument_list|(
 name|vpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|cpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|ccdunlock
@@ -6282,7 +6209,7 @@ index|]
 operator|.
 name|ci_path
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 block|}
@@ -6316,7 +6243,7 @@ index|]
 operator|.
 name|ii_index
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 comment|/* Free component info and interleave table. */
@@ -6326,7 +6253,7 @@ name|cs
 operator|->
 name|sc_cinfo
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|free
@@ -6335,7 +6262,7 @@ name|cs
 operator|->
 name|sc_itable
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 name|free
@@ -6344,7 +6271,7 @@ name|cs
 operator|->
 name|sc_vpp
 argument_list|,
-name|M_DEVBUF
+name|M_CCD
 argument_list|)
 expr_stmt|;
 comment|/* And remove the devstat entry. */
