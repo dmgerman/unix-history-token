@@ -290,6 +290,11 @@ name|void
 name|procinit
 parameter_list|()
 block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
 name|lockinit
 argument_list|(
 operator|&
@@ -391,6 +396,26 @@ argument_list|)
 operator|!=
 name|KINFO_PROC_SIZE
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"This message will repeat for the next 20 seconds\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|20
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|printf
 argument_list|(
 literal|"WARNING: size of kinfo_proc (%ld) should be %d!!!\n"
@@ -407,6 +432,32 @@ argument_list|,
 name|KINFO_PROC_SIZE
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"The kinfo_proc structure was changed "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"incorrectly in<sys/user.h>\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+literal|0x7ffffff
+condition|;
+name|j
+operator|++
+control|)
+empty_stmt|;
+block|}
+block|}
 block|}
 end_function
 
