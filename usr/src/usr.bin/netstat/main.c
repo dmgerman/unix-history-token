@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1700,12 +1700,14 @@ block|{
 if|if
 condition|(
 name|sflag
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|tp
 operator|->
 name|pr_stats
 condition|)
-block|{
 call|(
 modifier|*
 name|tp
@@ -1727,8 +1729,8 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|tp
@@ -1760,6 +1762,7 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|af
 operator|==
 name|AF_UNIX
@@ -1767,6 +1770,10 @@ operator|||
 name|af
 operator|==
 name|AF_UNSPEC
+operator|)
+operator|&&
+operator|!
+name|sflag
 condition|)
 name|unixpr
 argument_list|(
