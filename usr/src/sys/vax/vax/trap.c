@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../sys/syscalls.c"
+file|"../kern/syscalls.c"
 end_include
 
 begin_endif
@@ -247,6 +247,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|unsigned
+name|ucode
+init|=
+name|code
+decl_stmt|;
 specifier|register
 name|struct
 name|proc
@@ -373,10 +378,8 @@ name|T_RESOPFLT
 operator|+
 name|USER
 case|:
-comment|/* resereved operand fault */
-name|u
-operator|.
-name|u_code
+comment|/* reserved operand fault */
+name|ucode
 operator|=
 name|type
 operator|&
@@ -445,12 +448,6 @@ name|T_ARITHTRAP
 operator|+
 name|USER
 case|:
-name|u
-operator|.
-name|u_code
-operator|=
-name|code
-expr_stmt|;
 name|i
 operator|=
 name|SIGFPE
@@ -590,25 +587,17 @@ name|u_acflag
 operator||=
 name|ACOMPAT
 expr_stmt|;
-name|u
-operator|.
-name|u_code
-operator|=
-name|code
-expr_stmt|;
 name|i
 operator|=
 name|SIGILL
 expr_stmt|;
 break|break;
 block|}
-name|psignal
+name|trapsignal
 argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|,
 name|i
+argument_list|,
+name|ucode
 argument_list|)
 expr_stmt|;
 name|out
@@ -666,6 +655,16 @@ name|ru_nivcsw
 operator|++
 expr_stmt|;
 name|swtch
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ISSIG
+argument_list|(
+name|p
+argument_list|)
+condition|)
+name|psig
 argument_list|()
 expr_stmt|;
 block|}
@@ -881,24 +880,6 @@ name|u_ar0
 operator|=
 name|locr0
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-literal|139
-condition|)
-block|{
-comment|/* XXX 4.2 COMPATIBILITY */
-name|osigcleanup
-argument_list|()
-expr_stmt|;
-comment|/* XXX 4.2 COMPATIBILITY */
-goto|goto
-name|done
-goto|;
-comment|/* XXX 4.2 COMPATIBILITY */
-block|}
-comment|/* XXX 4.2 COMPATIBILITY */
 name|params
 operator|=
 operator|(
@@ -1464,55 +1445,6 @@ operator|=
 name|p
 operator|->
 name|p_pri
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * nonexistent system call-- signal process (may want to handle it)  * flag error if process won't see signal immediately  * Q: should we do that all the time ??  */
-end_comment
-
-begin_macro
-name|nosys
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|u
-operator|.
-name|u_signal
-index|[
-name|SIGSYS
-index|]
-operator|==
-name|SIG_IGN
-operator|||
-name|u
-operator|.
-name|u_signal
-index|[
-name|SIGSYS
-index|]
-operator|==
-name|SIG_HOLD
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EINVAL
-expr_stmt|;
-name|psignal
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|,
-name|SIGSYS
-argument_list|)
 expr_stmt|;
 block|}
 end_block
