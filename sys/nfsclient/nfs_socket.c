@@ -6251,8 +6251,12 @@ block|{
 name|tprintf
 argument_list|(
 name|td
+condition|?
+name|td
 operator|->
 name|td_proc
+argument_list|,
+name|NULL
 argument_list|,
 name|LOG_INFO
 argument_list|,
