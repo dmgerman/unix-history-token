@@ -13876,9 +13876,6 @@ expr_stmt|;
 name|IPFW_DYN_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|init_tables
-argument_list|()
-expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
@@ -14319,6 +14316,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Must be run after route_init(). */
+end_comment
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|ipfw
+argument_list|,
+argument|SI_SUB_PROTO_DOMAIN
+argument_list|,
+argument|SI_ORDER_ANY
+argument_list|,
+argument|init_tables
+argument_list|,
+literal|0
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
