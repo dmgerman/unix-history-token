@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Exported interface to downloadable microcode for AdvanSys SCSI Adapters  *  * $FreeBSD$  *  * Obtained from:  *  * Copyright (c) 1995-1998 Advanced System Products, Inc.  * All Rights Reserved.  *     * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
+comment|/*  * Exported interface to downloadable microcode for AdvanSys SCSI Adapters  *  * $FreeBSD$  *  * Obtained from:  *  * Copyright (c) 1995-1999 Advanced System Products, Inc.  * All Rights Reserved.  *     * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
 end_comment
 
 begin_ifndef
@@ -15,25 +15,42 @@ directive|define
 name|_ADMCODE_H_
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|u_int16_t
+begin_struct
+struct|struct
 name|adw_mcode
-index|[]
+block|{
+specifier|const
+name|u_int8_t
+modifier|*
+name|mcode_buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int16_t
-name|adw_mcode_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+specifier|const
 name|u_int32_t
-name|adw_mcode_chksum
+name|mcode_chksum
+decl_stmt|;
+specifier|const
+name|u_int16_t
+name|mcode_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|adw_mcode
+name|adw_asc3550_mcode_data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|adw_mcode
+name|adw_asc38C0800_mcode_data
 decl_stmt|;
 end_decl_stmt
 
@@ -72,28 +89,6 @@ end_define
 
 begin_comment
 comment|/* microcode code checksum */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_STACK_BEGIN
-value|0x002E
-end_define
-
-begin_comment
-comment|/* microcode stack begin */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_STACK_END
-value|0x0030
-end_define
-
-begin_comment
-comment|/* microcode stack end */
 end_comment
 
 begin_define
@@ -143,40 +138,138 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADW_MC_HALTCODE
+name|ADW_MC_BIOS_SIGNATURE
+value|0x0058
+end_define
+
+begin_comment
+comment|/* BIOS Signature 0x55AA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_BIOS_VERSION
+value|0x005A
+end_define
+
+begin_comment
+comment|/* BIOS Version (2 Bytes) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_SDTR_SPEED1
+value|0x0090
+end_define
+
+begin_comment
+comment|/* SDTR Speed for TID 0-3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_SDTR_SPEED2
+value|0x0092
+end_define
+
+begin_comment
+comment|/* SDTR Speed for TID 4-7 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_SDTR_SPEED3
 value|0x0094
 end_define
 
 begin_comment
-comment|/* microcode halt code */
+comment|/* SDTR Speed for TID 8-11 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_CALLERPC
+name|ADW_MC_SDTR_SPEED4
 value|0x0096
 end_define
 
 begin_comment
-comment|/* microcode halt caller PC */
+comment|/* SDTR Speed for TID 12-15 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_ADAPTER_SCSI_ID
-value|0x0098
+name|ADW_MC_CHIP_TYPE
+value|0x009A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_INTRB_CODE
+value|0x009B
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADW_ASYNC_RDMA_FAILURE
+value|0x01
 end_define
 
 begin_comment
-comment|/* one ID byte + reserved */
+comment|/* Fatal RDMA failure. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_ULTRA_ABLE
+name|ADW_ASYNC_SCSI_BUS_RESET_DET
+value|0x02
+end_define
+
+begin_comment
+comment|/* Detected Bus Reset. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_ASYNC_CARRIER_READY_FAILURE
+value|0x03
+end_define
+
+begin_comment
+comment|/* Carrier Ready failure.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_ASYNC_HOST_SCSI_BUS_RESET
+value|0x80
+end_define
+
+begin_comment
+comment|/* 						      * Host Initiated 						      * SCSI Bus Reset. 						      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_WDTR_ABLE_BIOS_31
+value|0x0120
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADW_MC_WDTR_ABLE
 value|0x009C
 end_define
 
@@ -204,6 +297,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADW_MC_IDLE_CMD_STATUS
+value|0x00A4
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADW_MC_IDLE_CMD
 value|0x00A6
 end_define
@@ -211,7 +311,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADW_MC_IDLE_PARA_STAT
+name|ADW_MC_IDLE_CMD_PARAMETER
 value|0x00A8
 end_define
 
@@ -296,7 +396,7 @@ begin_define
 define|#
 directive|define
 name|ADW_HSHK_CFG_RATE_MASK
-value|0x0F00
+value|0x7F00
 end_define
 
 begin_define
@@ -309,31 +409,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADW_HSHK_CFG_PERIOD_FACTOR
-parameter_list|(
-name|cfg_val
-parameter_list|)
-define|\
-value|((((((cfg_val)& ADW_HSHK_CFG_RATE_MASK)>> ADW_HSHK_CFG_RATE_SHIFT) \ 								* 25) + 50)/4)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ADW_HSHK_CFG_OFFSET
 value|0x001F
 end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_WDTR_ABLE
-value|0x0120
-end_define
-
-begin_comment
-comment|/* Wide Transfer TID bitmask. */
-end_comment
 
 begin_define
 define|#
@@ -367,175 +445,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADW_MC_HOST_NEXT_READY
-value|0x0128
+name|ADW_MC_CAM_MODE_MASK
+value|0x015E
 end_define
 
 begin_comment
-comment|/* Host Next Ready RQL Entry. */
+comment|/* CAM mode TID bitmask. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_HOST_NEXT_DONE
-value|0x0129
-end_define
-
-begin_comment
-comment|/* Host Next Done RQL Entry. */
-end_comment
-
-begin_comment
-comment|/*  * LRAM RISC Queue Lists (LRAM addresses 0x1200 - 0x19FF)  *  * Each of the 255 Adv Library/Microcode RISC queue lists or mailboxes   * starting at LRAM address 0x1200 is 8 bytes and has the following  * structure. Only 253 of these are actually used for command queues.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_RISC_Q_LIST_BASE
-value|0x1200
+name|ADW_MC_ICQ
+value|0x0160
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_RISC_Q_LIST_SIZE
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_RISC_Q_TOTAL_CNT
-value|0x00FF
-end_define
-
-begin_comment
-comment|/* Num. queue slots in LRAM. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_RISC_Q_FIRST
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_RISC_Q_LAST
-value|0x00FF
-end_define
-
-begin_comment
-comment|/* RISC Queue List structure - 8 bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQL_FWD
-value|0
-end_define
-
-begin_comment
-comment|/* forward pointer (1 byte) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQL_BWD
-value|1
-end_define
-
-begin_comment
-comment|/* backward pointer (1 byte) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQL_STATE
-value|2
-end_define
-
-begin_comment
-comment|/* state byte - free, ready, done, aborted (1 byte) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQL_TID
-value|3
-end_define
-
-begin_comment
-comment|/* request target id (1 byte) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQL_PHYADDR
-value|4
-end_define
-
-begin_comment
-comment|/* request physical pointer (4 bytes) */
-end_comment
-
-begin_comment
-comment|/* RISC Queue List state values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_QS_FREE
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_QS_READY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_QS_DONE
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_QS_ABORTED
-value|0x80
-end_define
-
-begin_comment
-comment|/* RISC Queue List pointer values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_NULL_Q
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_BIOS_Q
-value|0xFF
+name|ADW_MC_IRQ
+value|0x0164
 end_define
 
 begin_comment
@@ -545,19 +474,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADW_MC_QC_START_MOTOR
-value|0x02
+name|ADW_QC_DATA_CHECK
+value|0x01
 end_define
 
 begin_comment
-comment|/* Issue start motor. */
+comment|/* Require ADW_QC_DATA_OUT set or clear. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_QC_NO_OVERRUN
+name|ADW_QC_DATA_OUT
+value|0x02
+end_define
+
+begin_comment
+comment|/* Data out DMA transfer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QC_START_MOTOR
 value|0x04
+end_define
+
+begin_comment
+comment|/* Send auto-start motor before request. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QC_NO_OVERRUN
+value|0x08
 end_define
 
 begin_comment
@@ -567,46 +518,129 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADW_MC_QC_FIRST_DMA
-value|0x08
-end_define
-
-begin_comment
-comment|/* Internal microcode flag. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADW_MC_QC_ABORTED
+name|ADW_QC_FREEZE_TIDQ
 value|0x10
 end_define
 
 begin_comment
-comment|/* Request aborted by host. */
+comment|/* Freeze TID queue after request.XXXTBD */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_QC_REQ_SENSE
-value|0x20
+name|ADW_QSC_NO_DISC
+value|0x01
 end_define
 
 begin_comment
-comment|/* Auto-Request Sense. */
+comment|/* Don't allow disconnect for request.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ADW_MC_QC_DOS_REQ
+name|ADW_QSC_NO_TAGMSG
+value|0x02
+end_define
+
+begin_comment
+comment|/* Don't allow tag queuing for request. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QSC_NO_SYNC
+value|0x04
+end_define
+
+begin_comment
+comment|/* Don't use Synch. transfer on request.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QSC_NO_WIDE
+value|0x08
+end_define
+
+begin_comment
+comment|/* Don't use Wide transfer on request.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QSC_REDO_DTR
+value|0x10
+end_define
+
+begin_comment
+comment|/* Renegotiate WDTR/SDTR before request.*/
+end_comment
+
+begin_comment
+comment|/*  * Note: If a Tag Message is to be sent and neither ADW_QSC_HEAD_TAG or  * ADW_QSC_ORDERED_TAG is set, then a Simple Tag Message (0x20) is used.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QSC_HEAD_TAG
+value|0x40
+end_define
+
+begin_comment
+comment|/* Use Head Tag Message (0x21). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADW_QSC_ORDERED_TAG
 value|0x80
 end_define
 
 begin_comment
-comment|/* Request issued by DOS. */
+comment|/* Use Ordered Tag Message (0x22). */
 end_comment
+
+begin_struct
+struct|struct
+name|adw_carrier
+block|{
+name|u_int32_t
+name|carr_offset
+decl_stmt|;
+comment|/* Carrier byte offset into our array */
+name|u_int32_t
+name|carr_ba
+decl_stmt|;
+comment|/* Carrier Bus Address */
+name|u_int32_t
+name|areq_ba
+decl_stmt|;
+comment|/* SCSI Req Queue Bus Address */
+name|u_int32_t
+name|next_ba
+decl_stmt|;
+define|#
+directive|define
+name|ADW_RQ_DONE
+value|0x00000001
+define|#
+directive|define
+name|ADW_CQ_STOPPER
+value|0x00000000
+define|#
+directive|define
+name|ADW_NEXT_BA_MASK
+value|0xFFFFFFF0
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Microcode idle loop commands  */
@@ -640,9 +674,17 @@ name|ADW_IDLE_CMD_DEVICE_RESET
 init|=
 literal|0x0010
 block|,
-name|ADW_IDLE_CMD_SCSI_RESET
+name|ADW_IDLE_CMD_SCSI_RESET_START
 init|=
 literal|0x0020
+block|,
+name|ADW_IDLE_CMD_SCSI_RESET_END
+init|=
+literal|0x0040
+block|,
+name|ADW_IDLE_CMD_SCSIREQ
+init|=
+literal|0x0080
 block|}
 name|adw_idle_cmd_t
 typedef|;
