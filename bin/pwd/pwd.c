@@ -308,7 +308,7 @@ parameter_list|)
 block|{
 name|struct
 name|stat
-name|log
+name|lg
 decl_stmt|,
 name|phy
 decl_stmt|;
@@ -343,7 +343,7 @@ argument_list|(
 name|pwd
 argument_list|,
 operator|&
-name|log
+name|lg
 argument_list|)
 operator|==
 operator|-
@@ -367,7 +367,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|log
+name|lg
 operator|.
 name|st_dev
 operator|==
@@ -375,7 +375,7 @@ name|phy
 operator|.
 name|st_dev
 operator|&&
-name|log
+name|lg
 operator|.
 name|st_ino
 operator|==
