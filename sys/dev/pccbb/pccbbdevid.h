@@ -10,17 +10,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_ID_INTEL_82092AA
-value|0x12218086ul
-end_define
-
-begin_comment
-comment|/* 16bit I/O */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCIC_ID_CLPD6729
 value|0x11001013ul
 end_define
@@ -53,6 +42,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIC_ID_INTEL_82092AA_0
+value|0x12218086ul
+end_define
+
+begin_comment
+comment|/* 16bit I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_INTEL_82092AA_1
+value|0x12228086ul
+end_define
+
+begin_comment
+comment|/* 16bit I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_ID_OMEGA_82C094
 value|0x1221119bul
 end_define
@@ -68,12 +79,20 @@ name|PCIC_ID_OZ6729
 value|0x67291217ul
 end_define
 
+begin_comment
+comment|/* 16bit I/O */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PCIC_ID_OZ6730
 value|0x673A1217ul
 end_define
+
+begin_comment
+comment|/* 16bit I/O */
+end_comment
 
 begin_define
 define|#
@@ -174,6 +193,17 @@ directive|define
 name|PCIC_ID_RICOH_RL5C478
 value|0x04781180ul
 end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_SMC_34C90
+value|0xb10610b3ul
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_define
 define|#
@@ -392,7 +422,7 @@ value|0x06171179ul
 end_define
 
 begin_comment
-comment|/*  * Other ID, from sources too vague to be reliable  *	Mfg		  model		PCI ID  *   smc/Databook	DB87144		0x310610b3  *   SMC/databook	smc34c90	0xb10610b3  *   Omega/Trident	82c194		0x01941023  *   Omega/Trident	82c722		0x07221023?  *   Opti		82c814		0xc8141045  *   Opti		82c824		0xc8241045  *   NEC		uPD66369	0x003e1033  */
+comment|/*  * Other ID, from sources too vague to be reliable  *	Mfg		  model		PCI ID  *   smc/Databook	DB87144		0x310610b3  *   Omega/Trident	82c194		0x01941023  *   Omega/Trident	82c722		0x07221023?  *   Opti		82c814		0xc8141045  *   Opti		82c824		0xc8241045  *   NEC		uPD66369	0x003e1033  */
 end_comment
 
 end_unit
