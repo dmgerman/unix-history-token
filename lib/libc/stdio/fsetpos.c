@@ -47,31 +47,23 @@ begin_comment
 comment|/*  * fsetpos: like fseek.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fsetpos
-argument_list|(
-argument|iop
-argument_list|,
-argument|pos
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|iop
+parameter_list|,
+name|pos
+parameter_list|)
 name|FILE
 modifier|*
 name|iop
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|fpos_t
 modifier|*
 name|pos
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -90,7 +82,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

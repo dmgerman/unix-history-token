@@ -43,21 +43,16 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|getw
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|x
@@ -91,7 +86,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

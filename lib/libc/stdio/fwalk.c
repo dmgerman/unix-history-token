@@ -61,20 +61,21 @@ directive|include
 file|"glue.h"
 end_include
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|_fwalk
 argument_list|(
 name|function
 argument_list|)
-specifier|register
+decl|register
 name|int
 argument_list|(
 operator|*
 name|function
 argument_list|)
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

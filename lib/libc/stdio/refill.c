@@ -61,19 +61,17 @@ directive|include
 file|"local.h"
 end_include
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|lflush
-argument_list|(
-argument|fp
-argument_list|)
-name|FILE
-operator|*
+parameter_list|(
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -107,25 +105,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Refill a stdio buffer.  * Return EOF on eof or error, 0 otherwise.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__srefill
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 comment|/* make sure stdio is set up */
 if|if
@@ -424,7 +420,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -65,30 +65,25 @@ begin_comment
 comment|/*  * Write some memory regions.  Return zero on success, EOF on error.  *  * This routine is large and unsightly, but most of the ugliness due  * to the three different kinds of output buffering is handled here.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__sfvwrite
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|__suio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|size_t
@@ -733,7 +728,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
