@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ebc_disp.c	3.1 (Berkeley) %G%"
+literal|"@(#)ebc_disp.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -601,7 +601,7 @@ index|]
 init|=
 block|{
 comment|/*00*/
-literal|0xff
+literal|0x00
 block|,
 literal|0xce
 block|,
