@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.2 1997/04/19 20:28:50 peter Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.3 1997/04/21 13:53:47 ache Exp $  */
 end_comment
 
 begin_include
@@ -210,6 +210,13 @@ operator|*
 name|retfree
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|smpmode
 decl_stmt|;
 end_decl_stmt
 
@@ -453,20 +460,10 @@ begin_comment
 comment|/*  *  These definitions control the format of the per-process area  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|P_IDLEPROC
-end_ifdef
-
-begin_comment
-comment|/* FreeBSD SMP kernel */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|header
+name|smp_header
 index|[]
 init|=
 literal|"  PID X                PRI NICE SIZE   RES STATE C   TIME   WCPU    CPU COMMAND"
@@ -480,31 +477,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UNAME_START
+name|SMP_UNAME_START
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|Proc_format
+name|smp_Proc_format
 define|\
 value|"%5d %-16.16s%3d%3d%7s %6s %-6.6s%1x%7s %5.2f%% %5.2f%% %.6s"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Standard kernel */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|header
+name|up_header
 index|[]
 init|=
 literal|"  PID X                PRI NICE SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
@@ -518,22 +506,17 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UNAME_START
+name|UP_UNAME_START
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|Proc_format
+name|up_Proc_format
 define|\
-value|"%5d %-16.16s%3d %3d%7s %6s %-6.6s%7s %5.2f%% %5.2f%% %.6s"
+value|"%5d %-16.16s%3d %3d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.6s"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* process state names for the "STATE" column of the display */
@@ -946,6 +929,46 @@ specifier|register
 name|int
 name|pagesize
 decl_stmt|;
+name|int
+name|modelen
+decl_stmt|;
+name|modelen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|smpmode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.smp_active"
+argument_list|,
+operator|&
+name|smpmode
+argument_list|,
+operator|&
+name|modelen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|modelen
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|smpmode
+argument_list|)
+condition|)
+name|smpmode
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1291,11 +1314,22 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
+if|if
+condition|(
+name|smpmode
+condition|)
 name|ptr
 operator|=
-name|header
+name|smp_header
 operator|+
-name|UNAME_START
+name|SMP_UNAME_START
+expr_stmt|;
+else|else
+name|ptr
+operator|=
+name|up_header
+operator|+
+name|UP_UNAME_START
 expr_stmt|;
 while|while
 condition|(
@@ -1316,7 +1350,11 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|header
+name|smpmode
+condition|?
+name|smp_header
+else|:
+name|up_header
 operator|)
 return|;
 block|}
@@ -2596,12 +2634,10 @@ block|{
 case|case
 name|SRUN
 case|:
-ifdef|#
-directive|ifdef
-name|P_IDLEPROC
-comment|/* FreeBSD SMP kernel */
 if|if
 condition|(
+name|smpmode
+operator|&&
 name|PP
 argument_list|(
 name|pp
@@ -2626,8 +2662,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|strcpy
 argument_list|(
 name|status
@@ -2697,7 +2731,11 @@ name|sprintf
 argument_list|(
 name|fmt
 argument_list|,
-name|Proc_format
+name|smpmode
+condition|?
+name|smp_Proc_format
+else|:
+name|up_Proc_format
 argument_list|,
 name|PP
 argument_list|(
@@ -2765,19 +2803,17 @@ argument_list|)
 argument_list|,
 name|status
 argument_list|,
-ifdef|#
-directive|ifdef
-name|P_IDLEPROC
-comment|/* FreeBSD SMP kernel */
+name|smpmode
+condition|?
 name|PP
 argument_list|(
 name|pp
 argument_list|,
 name|p_lastcpu
 argument_list|)
+else|:
+literal|0
 argument_list|,
-endif|#
-directive|endif
 name|format_time
 argument_list|(
 name|cputime
