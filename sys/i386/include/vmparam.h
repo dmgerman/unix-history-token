@@ -209,6 +209,32 @@ value|(2*NPTEPG)
 end_define
 
 begin_comment
+comment|/*  * Size of the Shared Memory Pages page table.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHMAXPGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SHMMAXPGS
+value|64
+end_define
+
+begin_comment
+comment|/* XXX until we have more kmap space */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Size of User Raw I/O map  */
 end_comment
 
