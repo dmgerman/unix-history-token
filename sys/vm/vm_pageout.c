@@ -1138,6 +1138,7 @@ name|wire_count
 operator|!=
 literal|0
 operator|||
+comment|/* may be held by buf cache */
 name|p
 operator|->
 name|hold_count
@@ -1145,6 +1146,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* may be undergoing I/O */
 name|ib
 operator|=
 literal|0
@@ -1286,6 +1288,7 @@ name|wire_count
 operator|!=
 literal|0
 operator|||
+comment|/* may be held by buf cache */
 name|p
 operator|->
 name|hold_count
@@ -1293,6 +1296,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* may be undergoing I/O */
 break|break;
 block|}
 name|mc
@@ -2664,6 +2668,7 @@ operator|&
 name|PG_MARKER
 condition|)
 continue|continue;
+comment|/* 		 * A held page may be undergoing I/O, so skip it. 		 */
 if|if
 condition|(
 name|m
@@ -3160,7 +3165,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 				 * If the page has become held, then skip it 				 */
+comment|/* 				 * If the page has become held it might 				 * be undergoing I/O, so skip it 				 */
 if|if
 condition|(
 name|m
