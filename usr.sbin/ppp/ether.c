@@ -1096,6 +1096,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+while|while
+condition|(
+literal|1
+condition|)
+block|{
 name|zerofdset
 argument_list|(
 name|r
@@ -1140,18 +1145,13 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ret
 operator|<=
 literal|0
 condition|)
-return|return;
+break|break;
 if|if
 condition|(
 name|NgRecvMsg
@@ -1170,7 +1170,7 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-return|return;
+break|break;
 if|if
 condition|(
 name|rep
@@ -1203,7 +1203,7 @@ operator|)
 name|NG_VERSION
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -1237,7 +1237,7 @@ operator|)
 name|NGM_PPPOE_COOKIE
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 name|asciilen
 operator|=
@@ -1523,6 +1523,12 @@ name|CARRIER_LOST
 expr_stmt|;
 break|break;
 block|}
+block|}
+name|free
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
