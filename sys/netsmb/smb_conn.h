@@ -550,6 +550,8 @@ name|char
 name|srvname
 index|[
 name|SMB_MAXSRVNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
