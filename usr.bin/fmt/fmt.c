@@ -34,15 +34,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)fmt.c	8.1 (Berkeley) 7/20/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)fmt.c	8.1 (Berkeley) 7/20/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -56,13 +74,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -74,7 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -188,11 +218,131 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|fmt
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ispref
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|leadin
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|oflush
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pack
+name|__P
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|prefix
+name|__P
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setout
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|split
+name|__P
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tabulate
+name|__P
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Drive the whole formatter by managing input files.  Also,  * cause initialization of the output stuff and flush it out  * at the end.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -362,22 +512,13 @@ name|max_length
 operator|<=
 name|goal_length
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Max length must be greater than %s\n"
-argument_list|,
-literal|"goal length"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"max length must be greater than goal length"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -460,21 +601,16 @@ begin_comment
 comment|/*  * Read up characters from the passed input file, forming lines,  * doing ^H processing, expanding tabs, stripping trailing blanks,  * and sending each line down for analysis.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fmt
-argument_list|(
-argument|fi
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fi
+parameter_list|)
 name|FILE
 modifier|*
 name|fi
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -851,11 +987,13 @@ name|canonb
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|cc
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -1035,27 +1173,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Take a line devoid of tabs and other garbage and determine its  * blank prefix.  If the indent changes, call for a linebreak.  * If the input line is blank, echo the blank line on the output.  * Finally, if the line minus the prefix is a mail header, try to keep  * it on a line by itself.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prefix
-argument_list|(
-argument|line
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|)
 name|char
 name|line
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1137,12 +1270,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|h
 operator|=
 name|ishead
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 condition|)
 name|oflush
 argument_list|()
@@ -1261,27 +1396,22 @@ name|lineno
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Split up the passed line into output "words" which are  * maximal strings of non-blanks with the blank separation  * attached at the end.  Pass these words along to the output  * line packer.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|split
-argument_list|(
-argument|line
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|)
 name|char
 name|line
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1433,7 +1563,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Output section.  * Build up line images from the words passed in.  Prefix  * each line with correct number of blanks.  The buffer "outbuf"  * contains the current partial line image, including prefixed blanks.  * "outp" points to the next available space therein.  When outp is NOSTR,  * there ain't nothing in there yet.  At the bottom of this whole mess,  * leading tabs are reinserted.  */
@@ -1467,19 +1597,17 @@ begin_comment
 comment|/*  * Initialize the output section.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|outp
 operator|=
 name|NOSTR
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pack a word onto the output line.  If this is the beginning of  * the line, push on the appropriately-sized string of blanks first.  * If the word won't fit on the current line, flush and begin a new  * line.  If the word is too long to fit all by itself on a line,  * just give it its own and hope for the best.  *  * LIZ@UOM 6/18/85 -- If the new word will fit in at less than the  *	goal length, take it.  If not, then check to see if the line  *	will be over the max length; if so put the word on the next  *	line.  If not, check to see if the line will be closer to the  *	goal length with or without the word and take it or put it on  *	the next line accordingly.  */
@@ -1489,29 +1617,21 @@ begin_comment
 comment|/*  * LIZ@UOM 6/18/85 -- pass in the length of the word as well  * pack(word)  *	char word[];  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pack
-argument_list|(
-argument|word
-argument_list|,
-argument|wl
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|word
+parameter_list|,
+name|wl
+parameter_list|)
 name|char
 name|word
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|wl
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1627,18 +1747,16 @@ operator|++
 control|)
 empty_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * If there is anything on the current output line, send it on  * its way.  Set outp to NOSTR to indicate the absence of the current  * line prefix.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|oflush
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1662,27 +1780,22 @@ operator|=
 name|NOSTR
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Take the passed line buffer, insert leading tabs where possible, and  * output on standard output (finally).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tabulate
-argument_list|(
-argument|line
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|)
 name|char
 name|line
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1821,18 +1934,16 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize the output line with the appropriate number of  * leading blanks.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|leadin
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1871,7 +1982,7 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Save a string in dynamic space.  * This little goodie is needed for  * a headline detector in head.c  */
@@ -1912,20 +2023,13 @@ name|top
 operator|==
 name|NOSTR
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fmt:  Ran out of memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"ran out of memory"
 argument_list|)
 expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|top
@@ -1945,22 +2049,23 @@ begin_comment
 comment|/*  * Is s1 a prefix of s2??  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ispref
-argument_list|(
+parameter_list|(
 name|s1
-argument_list|,
+parameter_list|,
 name|s2
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
