@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.4 (Berkeley) %G%"
+literal|"@(#)main.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ftp.h"
 end_include
 
@@ -98,6 +104,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|home
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -118,6 +132,17 @@ name|cp
 decl_stmt|;
 name|int
 name|top
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+name|char
+name|homedir
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|sp
 operator|=
@@ -341,6 +366,50 @@ condition|)
 name|verbose
 operator|++
 expr_stmt|;
+comment|/* 	 * Set up the home directory in case we're globbing. 	 */
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|getlogin
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+block|{
+name|home
+operator|=
+name|homedir
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|home
+argument_list|,
+name|pw
+operator|->
+name|pw_dir
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
