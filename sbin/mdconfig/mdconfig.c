@@ -162,7 +162,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tmdconfig -a -t type [-o [no]option]... [ -f file] [-s size] [-u unit]\n"
+literal|"\tmdconfig -a -t type [-o [no]option]... [ -f file] [-s size] [-S sectorsize] [-u unit]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -251,7 +251,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:df:lo:s:t:u:"
+literal|"ab:df:lo:s:S:t:u:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -679,6 +679,33 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Unknown option."
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+if|if
+condition|(
+name|cmdline
+operator|!=
+literal|2
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|mdio
+operator|.
+name|md_secsize
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

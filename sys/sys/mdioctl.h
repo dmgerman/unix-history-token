@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|MDNPAD
-value|100
+value|99
 end_define
 
 begin_struct
@@ -75,6 +75,10 @@ name|u_int64_t
 name|md_base
 decl_stmt|;
 comment|/* base address */
+name|int
+name|md_secsize
+decl_stmt|;
+comment|/* sectorsize */
 name|int
 name|md_pad
 index|[
