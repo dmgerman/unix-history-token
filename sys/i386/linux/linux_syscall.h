@@ -461,7 +461,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_osethostname
+name|LINUX_SYS_linux_sethostname
 value|74
 end_define
 
@@ -531,7 +531,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_ostat
+name|LINUX_SYS_stat
 value|84
 end_define
 
@@ -594,7 +594,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_oftruncate
+name|LINUX_SYS_ftruncate
 value|93
 end_define
 

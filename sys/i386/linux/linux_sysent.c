@@ -1032,21 +1032,19 @@ block|}
 block|,
 comment|/* 73 = linux_sigpending */
 block|{
-name|SYF_MPSAFE
-operator||
 name|AS
 argument_list|(
-name|sethostname_args
+name|linux_sethostname_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|osethostname
+name|linux_sethostname
 block|}
 block|,
-comment|/* 74 = osethostname */
+comment|/* 74 = linux_sethostname */
 block|{
 name|AS
 argument_list|(
@@ -1178,17 +1176,17 @@ comment|/* 83 = linux_symlink */
 block|{
 name|AS
 argument_list|(
-name|ostat_args
+name|stat_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ostat
+name|stat
 block|}
 block|,
-comment|/* 84 = ostat */
+comment|/* 84 = stat */
 block|{
 name|AS
 argument_list|(
@@ -1304,17 +1302,17 @@ comment|/* 92 = linux_truncate */
 block|{
 name|AS
 argument_list|(
-name|oftruncate_args
+name|ftruncate_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|oftruncate
+name|ftruncate
 block|}
 block|,
-comment|/* 93 = oftruncate */
+comment|/* 93 = ftruncate */
 block|{
 name|AS
 argument_list|(
