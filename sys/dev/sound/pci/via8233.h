@@ -231,6 +231,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIA_PCI_ACLINK_DESIRED
+value|(VIA_PCI_ACLINK_EN | 		      \ 					 VIA_PCI_ACLINK_NRST |		      \ 					 VIA_PCI_ACLINK_VRATE | 	      \ 					 VIA_PCI_ACLINK_SGD)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIA_MC_SGD_STATUS
 value|0x40
 end_define
