@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,6 +8,17 @@ include|#
 directive|include
 file|<ufs/ufs/dinode.h>
 end_include
+
+begin_comment
+comment|/*  * Theoretically, directories can be more than 2Gb in length,  * however, in practice this seems unlikely. So, we define  * the type doff_t as a long to keep down the cost of doing  * lookup on a 32-bit machine. If you are porting to a 64-bit  * architecture, you should make doff_t the same as off_t.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|doff_t
+value|long
+end_define
 
 begin_comment
 comment|/*  * The inode is used to describe each active (or recently active)  * file in the UFS filesystem. It is composed of two types of  * information. The first part is the information that is needed  * only while the file is active (such as the identity of the file  * and linkage to speed its lookup). The second part is the   * permannent meta-data associated with the file which is read  * in from the permanent dinode from long term storage when the  * file becomes active, and is put back when the file is no longer  * being used.  */
@@ -107,15 +118,15 @@ name|i_lockwaiter
 decl_stmt|;
 comment|/* DEBUG: latest blocked for inode lock */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
-name|off_t
+name|doff_t
 name|i_endoff
 decl_stmt|;
 comment|/* end of useful stuff in directory */
-name|long
+name|doff_t
 name|i_diroff
 decl_stmt|;
 comment|/* offset in dir, where we found last entry */
-name|long
+name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* offset of free space in directory */

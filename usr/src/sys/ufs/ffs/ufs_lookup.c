@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.43 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,7 +109,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
+comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
 end_comment
 
 begin_function
@@ -173,7 +173,7 @@ name|FOUND
 block|}
 name|slotstatus
 enum|;
-name|int
+name|doff_t
 name|slotoffset
 decl_stmt|;
 comment|/* offset of area with free space */
@@ -193,11 +193,11 @@ name|int
 name|numdirpasses
 decl_stmt|;
 comment|/* strategy for directory search */
-name|int
+name|doff_t
 name|endsearch
 decl_stmt|;
 comment|/* offset to end directory search */
-name|int
+name|doff_t
 name|prevoff
 decl_stmt|;
 comment|/* prev entry dp->i_offset */
@@ -213,7 +213,7 @@ modifier|*
 name|tdp
 decl_stmt|;
 comment|/* returned by VOP_VGET */
-name|off_t
+name|doff_t
 name|enduseful
 decl_stmt|;
 comment|/* pointer past last used dir slot */
@@ -610,35 +610,23 @@ expr_stmt|;
 name|slotneeded
 operator|=
 operator|(
-operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|direct
 argument_list|)
 operator|-
-operator|(
 name|MAXNAMLEN
 operator|+
-literal|1
-operator|)
-operator|)
-operator|+
-operator|(
-operator|(
 name|cnp
 operator|->
 name|cn_namelen
-operator|+
-literal|1
 operator|+
 literal|3
 operator|)
 operator|&
 operator|~
 literal|3
-operator|)
-operator|)
 expr_stmt|;
 block|}
 comment|/* 	 * If there is cached information on a previous search of 	 * this directory, pick up where we last left off. 	 * We cache only lookups as these are the most common 	 * and have the greatest payoff. Caching CREATE has little 	 * benefit as it usually must search the entire directory 	 * to determine that the entry does not exist. Caching the 	 * location of the last DELETE or RENAME has not reduced 	 * profiling time and hence has been removed in the interest 	 * of simplicity. 	 */
@@ -684,6 +672,8 @@ condition|)
 block|{
 name|entryoffsetinblock
 operator|=
+literal|0
+expr_stmt|;
 name|dp
 operator|->
 name|i_offset
@@ -724,6 +714,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|i_offset
@@ -815,6 +808,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|i_offset
@@ -1969,7 +1965,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|off_t
+name|doff_t
 name|offset
 decl_stmt|;
 name|char
@@ -2176,27 +2172,6 @@ operator|)
 return|;
 name|bad
 label|:
-name|printf
-argument_list|(
-literal|"ufs_dirbadentry: jumping out: reclen: %d namlen %d ino %d name %s\n"
-argument_list|,
-name|ep
-operator|->
-name|d_reclen
-argument_list|,
-name|ep
-operator|->
-name|d_namlen
-argument_list|,
-name|ep
-operator|->
-name|d_ino
-argument_list|,
-name|ep
-operator|->
-name|d_name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2565,6 +2540,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|i_offset
@@ -2845,7 +2823,7 @@ argument_list|(
 name|dvp
 argument_list|,
 operator|(
-name|u_long
+name|off_t
 operator|)
 name|dp
 operator|->
@@ -2929,6 +2907,9 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|i_offset
@@ -2986,6 +2967,10 @@ name|VOP_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
+call|(
+name|off_t
+call|)
+argument_list|(
 name|dp
 operator|->
 name|i_offset
@@ -2993,6 +2978,7 @@ operator|-
 name|dp
 operator|->
 name|i_count
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -3100,6 +3086,9 @@ argument_list|(
 name|dp
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|dp
 operator|->
 name|i_offset
