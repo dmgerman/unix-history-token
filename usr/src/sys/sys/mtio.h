@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtio.h	4.7	82/08/01	*/
+comment|/*	mtio.h	4.8	82/10/31	*/
 end_comment
 
 begin_comment
@@ -167,35 +167,49 @@ begin_define
 define|#
 directive|define
 name|MT_ISTS
-value|01
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|MT_ISHT
-value|02
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|MT_ISTM
-value|03
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|MT_ISMT
-value|04
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|MT_ISUT
-value|05
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT_ISCPC
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|MT_ISAR
+value|0x07
 end_define
 
 begin_comment
