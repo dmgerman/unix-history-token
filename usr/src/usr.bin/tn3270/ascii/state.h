@@ -1,0 +1,50 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *	@(#)state.h	3.1  10/29/86  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCLUDED_STATE
+end_define
+
+begin_comment
+comment|/* this defines the state structure used by the key mapping routines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|state
+value|struct State
+end_define
+
+begin_struct
+struct|struct
+name|State
+block|{
+name|int
+name|match
+decl_stmt|;
+comment|/* character to match */
+name|int
+name|result
+decl_stmt|;
+comment|/* 3270 control code */
+name|state
+modifier|*
+name|next
+decl_stmt|;
+comment|/* next entry in this same state */
+name|state
+modifier|*
+name|address
+decl_stmt|;
+comment|/* if goto, where is next state */
+block|}
+struct|;
+end_struct
+
+end_unit
+
