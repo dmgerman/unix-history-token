@@ -206,7 +206,7 @@ name|nlistpath
 operator|=
 name|argc
 operator|>
-literal|1
+literal|0
 condition|?
 name|argv
 index|[
