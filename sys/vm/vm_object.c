@@ -3807,6 +3807,9 @@ name|shadowlookup
 goto|;
 block|}
 comment|/* 		 * If the page is busy or not in a normal active state, 		 * we skip it.  If the page is not managed there are no 		 * page queues to mess with.  Things can break if we mess 		 * with pages in any of the below states. 		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -3832,11 +3835,14 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 continue|continue;
 block|}
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|m
 argument_list|,
@@ -3848,9 +3854,6 @@ condition|)
 goto|goto
 name|relookup
 goto|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|advise
@@ -5660,6 +5663,9 @@ argument_list|)
 expr_stmt|;
 name|again
 label|:
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|size
 operator|=
 name|end
@@ -5764,7 +5770,7 @@ block|}
 comment|/* 				 * The busy flags are only cleared at 				 * interrupt -- minimize the spl transitions 				 */
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|p
 argument_list|,
@@ -5802,9 +5808,6 @@ name|dirty
 condition|)
 continue|continue;
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|p
@@ -5821,9 +5824,6 @@ name|vm_page_free
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -5850,7 +5850,7 @@ name|start
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -5893,7 +5893,7 @@ block|}
 comment|/* 				 * The busy flags are only cleared at 				 * interrupt -- minimize the spl transitions 				 */
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|p
 argument_list|,
@@ -5941,9 +5941,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|p
@@ -5961,9 +5958,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 block|}
 name|start
 operator|+=
@@ -5975,6 +5969,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|vm_object_pip_wakeup
 argument_list|(
 name|object
