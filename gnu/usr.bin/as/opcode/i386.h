@@ -4,7 +4,7 @@ comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright (C) 1989, 1991
 end_comment
 
 begin_comment
-comment|/* $Id: i386.h,v 1.2 1993/10/04 22:53:32 pk Exp $ */
+comment|/* $Id: i386.h,v 1.1 1993/11/03 00:55:51 paul Exp $ */
 end_comment
 
 begin_decl_stmt
@@ -9222,6 +9222,25 @@ block|,
 name|Modrm
 block|,
 name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* Pentium and late-model 486 extensions */
+block|{
+literal|"cpuid"
+block|,
+literal|0
+block|,
+literal|0x0fa2
+block|,
+name|_
+block|,
+name|NoModrm
+block|,
+literal|0
 block|,
 literal|0
 block|,
