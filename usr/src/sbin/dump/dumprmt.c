@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumprmt.c	1.5 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,13 +788,16 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|rmtcall
 argument_list|(
 literal|"ioctl"
 argument_list|,
 name|buf
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
