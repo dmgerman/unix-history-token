@@ -1033,7 +1033,7 @@ name|CTYPE_DOMAIN
 parameter_list|(
 name|c
 parameter_list|)
-value|((unsigned) (c)<= 0177)
+value|((unsigned char) (c)<= 0177)
 end_define
 
 begin_endif
@@ -1054,7 +1054,7 @@ name|ISPRINT
 parameter_list|(
 name|c
 parameter_list|)
-value|(CTYPE_DOMAIN (c)&& isprint (c))
+value|(CTYPE_DOMAIN (c)&& isprint ((unsigned char)c))
 end_define
 
 begin_endif
@@ -1075,7 +1075,7 @@ name|ISSPACE
 parameter_list|(
 name|c
 parameter_list|)
-value|(CTYPE_DOMAIN (c)&& isspace (c))
+value|(CTYPE_DOMAIN (c)&& isspace ((unsigned char)c))
 end_define
 
 begin_endif
@@ -1096,7 +1096,7 @@ name|ISUPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|(CTYPE_DOMAIN (c)&& isupper (c))
+value|(CTYPE_DOMAIN (c)&& isupper ((unsigned char)c))
 end_define
 
 begin_endif
@@ -1117,7 +1117,7 @@ name|ISDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|((unsigned) (c) - '0'<= 9)
+value|((unsigned char) (c) - '0'<= 9)
 end_define
 
 begin_endif
