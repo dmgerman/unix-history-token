@@ -1567,9 +1567,13 @@ block|{
 name|char
 modifier|*
 name|line
+init|=
+name|NULL
 decl_stmt|;
 name|size_t
 name|line_chars_allocated
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
