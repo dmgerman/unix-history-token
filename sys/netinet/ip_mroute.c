@@ -313,15 +313,31 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|u_char
-name|nexpire
-index|[
-name|MFCTBLSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SYSCTL_OPAQUE
+argument_list|(
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mfctable
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mfctable
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mfctable
+argument_list|)
+argument_list|,
+literal|"S,*mfc[MFCTBLSIZ]"
+argument_list|,
+literal|"Multicast Forwarding Table (struct *mfc[MFCTBLSIZ], netinet/ip_mroute.h)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -330,6 +346,42 @@ name|vif
 name|viftable
 index|[
 name|MAXVIFS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_OPAQUE
+argument_list|(
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|viftable
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|viftable
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|viftable
+argument_list|)
+argument_list|,
+literal|"S,vif[MAXVIFS]"
+argument_list|,
+literal|"Multicast Virtual Interfaces (struct vif[MAXVIFS], netinet/ip_mroute.h)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_char
+name|nexpire
+index|[
+name|MFCTBLSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -5810,7 +5862,7 @@ name|vifp
 parameter_list|,
 name|m
 parameter_list|)
-value|{                             \                 if ((vifp)->v_flags& VIFF_TUNNEL)  	 \                     encap_send((ip), (vifp), (m));       \                 else                                     \                     phyint_send((ip), (vifp), (m));      \ }
+value|{				\ 		if ((vifp)->v_flags& VIFF_TUNNEL)	\ 		    encap_send((ip), (vifp), (m));	\ 		else					\ 		    phyint_send((ip), (vifp), (m));	\ }
 comment|/*      * If xmt_vif is not -1, send on only the requested vif.      *      * (since vifi_t is u_short, -1 becomes MAXUSHORT, which> numvifs.)      */
 if|if
 condition|(
@@ -5944,6 +5996,40 @@ decl_stmt|;
 name|u_long
 name|delta
 decl_stmt|;
+comment|/* Get vifi for the incoming packet */
+for|for
+control|(
+name|vifi
+operator|=
+literal|0
+init|;
+name|vifi
+operator|<
+name|numvifs
+operator|&&
+name|viftable
+index|[
+name|vifi
+index|]
+operator|.
+name|v_ifp
+operator|!=
+name|ifp
+condition|;
+name|vifi
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|vifi
+operator|>=
+name|numvifs
+condition|)
+return|return
+literal|0
+return|;
+comment|/* if not found: ignore the packet */
 name|GET_TIME
 argument_list|(
 name|now
@@ -6075,6 +6161,11 @@ operator|->
 name|im_vif
 operator|=
 name|vifi
+expr_stmt|;
+name|mrtstat
+operator|.
+name|mrts_upcalls
+operator|++
 expr_stmt|;
 name|k_igmpsrc
 operator|.
