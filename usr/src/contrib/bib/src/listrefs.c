@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)listrefs.c	2.5	%G%"
+literal|"@(#)listrefs.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +191,13 @@ name|biblineno
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|programName
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -228,21 +235,21 @@ decl_stmt|,
 name|intr
 argument_list|()
 decl_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|BMACLIB
 argument_list|,
 name|N_BMACLIB
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|COMFILE
 argument_list|,
 name|N_COMFILE
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|DEFSTYLE
 argument_list|,
@@ -255,6 +262,13 @@ name|SIGINT
 argument_list|,
 name|intr
 argument_list|)
+expr_stmt|;
+name|programName
+operator|=
+name|argv
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|tfd
 operator|=
@@ -443,9 +457,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
+name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|p
 decl_stmt|,
@@ -472,6 +487,40 @@ init|;
 condition|;
 control|)
 block|{
+name|getch
+argument_list|(
+name|c
+argument_list|,
+name|ifile
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* skip leading newlines and comments */
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|getch
+argument_list|(
+name|c
+argument_list|,
+name|ifile
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'#'
+condition|)
 while|while
 condition|(
 name|getch
@@ -480,13 +529,20 @@ name|c
 argument_list|,
 name|ifile
 argument_list|)
-operator|==
+operator|!=
 literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOF
 condition|)
+empty_stmt|;
+else|else
+break|break;
 name|biblineno
 operator|++
 expr_stmt|;
-comment|/* skip leading newlines */
+block|}
 if|if
 condition|(
 name|c
@@ -541,7 +597,8 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-if|if
+comment|/* at end-of-line */
+while|while
 condition|(
 name|getch
 argument_list|(
@@ -550,6 +607,28 @@ argument_list|,
 name|ifile
 argument_list|)
 operator|==
+literal|'#'
+condition|)
+while|while
+condition|(
+name|getch
+argument_list|(
+name|c
+argument_list|,
+name|ifile
+argument_list|)
+operator|!=
+literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOF
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|c
+operator|==
 literal|'\n'
 operator|||
 name|c
@@ -557,6 +636,7 @@ operator|==
 name|EOF
 condition|)
 block|{
+comment|/* if empty or eof */
 name|biblineno
 operator|++
 expr_stmt|;

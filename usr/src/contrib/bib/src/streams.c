@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)streams.c	2.4	%G%"
+literal|"@(#)streams.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ directive|include
 file|"ctype.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bib.h"
+end_include
+
 begin_comment
 comment|/*  getword(stream,p,ignore):         read next sequence of nonspaces on current line into *p.     null if no more words on current line.     %x (x in ignore) terminates line and any following non-blank lines that        don't begin with '%'     all words of the form %a are returned as null.     *p is a null terminated string (char p[maxstr]). */
 end_comment
@@ -55,6 +61,8 @@ argument_list|,
 argument|p
 argument_list|,
 argument|ignore
+argument_list|,
+argument|bolp
 argument_list|)
 end_macro
 
@@ -75,11 +83,19 @@ name|ignore
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+modifier|*
+name|bolp
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
+comment|/* will always contain the last character seen */
 name|char
 modifier|*
 name|oldp
@@ -89,6 +105,9 @@ name|stop
 decl_stmt|;
 name|long
 name|save
+decl_stmt|;
+name|int
+name|newbolp
 decl_stmt|;
 name|oldp
 operator|=
@@ -160,20 +179,23 @@ name|p
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* if line begins with %, then if following char is one to cause the      * line to be ignored, then skip to \n.  If the following line is      * a continuation line, then skip it as well.      * small BUG in old version: ANY word that began with '%', whether      * at the beginning of the line or not, could cause the rest of      * the line to be ignored: this is not the advertised behavior.       * modified to ignore %x words, but they do not delete lines unless      * they occur at the beginning of lines.  -ads      */
 if|if
 condition|(
+operator|*
+name|bolp
+condition|)
+block|{
+if|if
+condition|(
+operator|*
 name|oldp
-index|[
-literal|0
-index|]
 operator|==
 literal|'%'
 condition|)
 block|{
+operator|*
 name|oldp
-index|[
-literal|0
-index|]
 operator|=
 name|NULL
 expr_stmt|;
@@ -207,13 +229,6 @@ argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
-name|save
-operator|=
-name|ftell
-argument_list|(
-name|stream
-argument_list|)
-expr_stmt|;
 name|c
 operator|=
 name|getc
@@ -239,13 +254,41 @@ operator|!=
 literal|'%'
 condition|)
 do|;
-name|pos
+name|ungetc
 argument_list|(
-name|save
+name|c
+argument_list|,
+name|stream
 argument_list|)
+expr_stmt|;
+operator|*
+name|bolp
+operator|=
+name|true
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|bolp
+operator|=
+name|false
 expr_stmt|;
 block|}
 block|}
+else|else
+operator|*
+name|bolp
+operator|=
+operator|(
+name|c
+operator|==
+literal|'\n'
+operator|||
+name|c
+operator|==
+name|EOF
+operator|)
+expr_stmt|;
 block|}
 end_block
 
@@ -371,7 +414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  nextrecord(stream,x): seeks in stream for first non-blank line         at or after char x in stream. seeks to eof if x is past last record.         x is the index of a character in the file (not eof).     returns position in stream.  (returns EOF, if seeks to EOF) */
+comment|/*  nextrecord(stream,x): seeks in stream for first non-blank line         at or after char x in stream. seeks to eof if x is past last record.         x is the index of a character in the file (not eof).     returns position in stream.  (returns EOF, if seeks to EOF)     skips comment lines (those beginning with '#') */
 end_comment
 
 begin_function
@@ -453,6 +496,8 @@ name|c
 operator|==
 literal|'#'
 condition|)
+block|{
+comment|/* skip any comment lines */
 while|while
 condition|(
 name|c
@@ -466,17 +511,15 @@ argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
-operator|!
 name|isspace
 argument_list|(
 name|c
 argument_list|)
 condition|)
-break|break;
-else|else
 name|c
 operator|=
 name|getc
@@ -484,6 +527,8 @@ argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
+else|else
+break|break;
 block|}
 if|if
 condition|(

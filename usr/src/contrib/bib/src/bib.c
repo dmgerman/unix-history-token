@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.10	%G%"
+literal|"@(#)bib.c	2.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*         Bib - bibliographic formatter          Authored by: Tim Budd, University of Arizona, 1983.                 lookup routines written by gary levin 2/82                  version 7/4/83          Various modifications suggested by:                 David Cherveny - Duke University Medical Center                 Phil Garrison - UC Berkeley                 M. J. Hawley - Yale University                                                             */
+comment|/*         Bib - bibliographic formatter          Authored by: Tim Budd, University of Arizona, 1983.                 lookup routines written by gary levin 2/82                  version 7/4/83          Various modifications suggested by:                 David Cherveny - Duke University Medical Center                 Phil Garrison - UC Berkeley                 M. J. Hawley - Yale University  	       version 8/23/1988 	  	 Adapted to use TiB style macro calls (i.e. |macro|) 	       A. Dain Samples                                                          */
 end_comment
 
 begin_include
@@ -266,6 +266,13 @@ begin_comment
 comment|/* can we read the file INDEX ?          */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|programName
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* global variables in bibargs */
 end_comment
@@ -313,6 +320,13 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|TibOption
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -344,21 +358,21 @@ name|intr
 parameter_list|()
 function_decl|;
 comment|/* the file INDEX in the current directory is the default index,       if it is present */
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|BMACLIB
 argument_list|,
 name|N_BMACLIB
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|COMFILE
 argument_list|,
 name|N_COMFILE
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|DEFSTYLE
 argument_list|,
@@ -482,6 +496,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* may not return */
 name|strcpy
 argument_list|(
 name|bibfname
@@ -1044,11 +1059,7 @@ name|info
 argument_list|,
 name|huntstr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+literal|""
 argument_list|)
 expr_stmt|;
 name|huntstr
@@ -1279,20 +1290,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|doacite
-operator|&&
-operator|(
-name|tail
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|)
-condition|)
 name|fprintf
 argument_list|(
 name|tfd
@@ -1309,25 +1306,11 @@ name|info
 argument_list|,
 name|CITEEND
 argument_list|,
+name|doacite
+condition|?
 name|tail
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|tfd
-argument_list|,
-literal|"%c%d%c%s%c"
-argument_list|,
-name|c
-argument_list|,
-name|n
-argument_list|,
-name|c
-argument_list|,
-name|info
-argument_list|,
-name|CITEEND
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -1835,6 +1818,10 @@ begin_comment
 comment|/* hunt - hunt for reference from either personal or system index */
 end_comment
 
+begin_comment
+comment|/* the old versions would stop at the first index file where a citation  * matched.  This is NOT what is desired.  I have changed it so that it still  * returns the first citation found, but also reports the existence of  * duplicate entries in an INDEX file as well as across INDEX files.  * Also, we do NOT assume that the SYSINDEX has been Tib'd.  Therefore,  * if tib style expansion is in effect, the SYSINDEX is not searched.  * (Besides which, on Sun systems at least, the SYSINDEX files are  * created by refer, not bib, so we can't use them very effectively  * anyway.  Besides which again, everything in SYSINDEX is in our  * local files anyway.)  *                   - ads 8/88  */
+end_comment
+
 begin_function
 name|char
 modifier|*
@@ -1849,6 +1836,9 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
+name|found
+decl_stmt|,
+modifier|*
 name|fhunt
 argument_list|()
 decl_stmt|,
@@ -1856,16 +1846,20 @@ modifier|*
 name|r
 decl_stmt|,
 modifier|*
-name|p
+name|tp
 decl_stmt|,
 modifier|*
-name|q
+name|sp
 decl_stmt|,
 name|fname
 index|[
 literal|120
 index|]
 decl_stmt|;
+name|found
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|personal
@@ -1873,35 +1867,35 @@ condition|)
 block|{
 for|for
 control|(
-name|p
+name|tp
 operator|=
 name|fname
 operator|,
-name|q
+name|sp
 operator|=
 name|pfile
 init|;
 condition|;
-name|q
+name|sp
 operator|++
 control|)
 if|if
 condition|(
 operator|*
-name|q
+name|sp
 operator|==
 literal|','
 operator|||
 operator|*
-name|q
+name|sp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 operator|*
-name|p
+name|tp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -1918,33 +1912,65 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|found
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* we need an option to suppress this message -ads 5/89 */
+name|bibwarning
+argument_list|(
+literal|"multiple INDEX files match citation %s\n"
+argument_list|,
+name|huntstr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|r
+name|found
 operator|)
 return|;
-elseif|else
+block|}
+name|found
+operator|=
+name|r
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
-name|q
+name|sp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 break|break;
-name|p
+name|tp
 operator|=
 name|fname
 expr_stmt|;
 block|}
 else|else
 operator|*
-name|p
+name|tp
 operator|++
 operator|=
 operator|*
-name|q
+name|sp
 expr_stmt|;
+if|if
+condition|(
+name|found
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|found
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -1975,6 +2001,12 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|TibOption
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|r
 operator|=
@@ -1993,6 +2025,7 @@ operator|(
 name|r
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|NULL

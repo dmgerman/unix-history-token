@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.7	%G%  */
+comment|/*  *	@(#)bib.h	2.8	%G%  */
 end_comment
 
 begin_comment
@@ -23,6 +23,13 @@ define|#
 directive|define
 name|false
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|bool
+value|unsigned char
 end_define
 
 begin_define
@@ -145,11 +152,29 @@ begin_comment
 comment|/* default system dictionary */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BASEDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BASEDIR
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|N_BMACLIB
-value|"/usr/new/lib/bmac"
+value|"/lib/bmac"
 end_define
 
 begin_comment
@@ -160,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|N_COMFILE
-value|"/usr/new/lib/bmac/common"
+value|"/lib/bmac/common"
 end_define
 
 begin_comment
@@ -171,28 +196,41 @@ begin_define
 define|#
 directive|define
 name|N_DEFSTYLE
-value|"/usr/new/lib/bmac/bib.stdsn"
+value|"/lib/bmac/bib.stdsn"
 end_define
 
 begin_comment
 comment|/* default style of refs */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|InitDirectory
+parameter_list|(
+name|arr
+parameter_list|,
+name|str
+parameter_list|)
+define|\
+value|strcpy(arr,BASEDIR); strcat(arr,str);
+end_define
+
 begin_decl_stmt
 name|char
 name|BMACLIB
 index|[
-literal|64
+literal|100
 index|]
 decl_stmt|,
 name|COMFILE
 index|[
-literal|64
+literal|100
 index|]
 decl_stmt|,
 name|DEFSTYLE
 index|[
-literal|64
+literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -315,6 +353,10 @@ name|int
 name|wi_length
 decl_stmt|;
 comment|/* word length */
+name|bool
+name|wi_expanding
+decl_stmt|;
+comment|/* is it being expanded? */
 name|struct
 name|wordinfo
 modifier|*

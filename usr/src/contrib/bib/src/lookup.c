@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	2.5	%G%"
+literal|"@(#)lookup.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,16 +85,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
-name|common
-init|=
-comment|/*  name of file of common words            */
-name|COMFILE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|INDEX
 index|[
 name|maxstr
@@ -161,25 +151,18 @@ decl_stmt|;
 name|int
 name|found
 decl_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|BMACLIB
 argument_list|,
 name|N_BMACLIB
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|COMFILE
 argument_list|,
 name|N_COMFILE
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|DEFSTYLE
-argument_list|,
-name|N_DEFSTYLE
 argument_list|)
 expr_stmt|;
 name|argc
@@ -278,7 +261,7 @@ name|one_index
 argument_list|,
 name|max_klen
 argument_list|,
-name|common
+name|COMFILE
 argument_list|)
 expr_stmt|;
 if|if
@@ -463,9 +446,12 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|common
-operator|=
+name|strcpy
+argument_list|(
+name|COMFILE
+argument_list|,
 name|operand
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

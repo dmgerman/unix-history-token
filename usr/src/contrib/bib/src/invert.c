@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invert.c	2.6	%G%"
+literal|"@(#)invert.c	2.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,16 +46,6 @@ include|#
 directive|include
 file|"bib.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|isnull
-parameter_list|(
-name|x
-parameter_list|)
-value|(*(x) == NULL)
-end_define
 
 begin_define
 define|#
@@ -98,16 +88,6 @@ name|ignore
 init|=
 comment|/*  string of line starts to ignore         */
 literal|"CNOPVX"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|common
-init|=
-comment|/*  name of file of common words            */
-name|COMFILE
 decl_stmt|;
 end_decl_stmt
 
@@ -227,6 +207,12 @@ index|[
 name|maxstr
 index|]
 decl_stmt|;
+name|int
+name|bol
+init|=
+literal|1
+decl_stmt|;
+comment|/* at beginning of line */
 name|long
 name|int
 name|records
@@ -251,18 +237,18 @@ name|int
 name|shorten
 parameter_list|()
 function_decl|;
-name|strcpy
-argument_list|(
-name|COMFILE
-argument_list|,
-name|N_COMFILE
-argument_list|)
-expr_stmt|;
-name|strcpy
+name|InitDirectory
 argument_list|(
 name|BMACLIB
 argument_list|,
 name|N_BMACLIB
+argument_list|)
+expr_stmt|;
+name|InitDirectory
+argument_list|(
+name|COMFILE
+argument_list|,
+name|N_COMFILE
 argument_list|)
 expr_stmt|;
 name|argc
@@ -429,6 +415,9 @@ argument_list|,
 name|word
 argument_list|,
 name|ignore
+argument_list|,
+operator|&
+name|bol
 argument_list|)
 expr_stmt|;
 name|makekey
@@ -437,16 +426,15 @@ name|word
 argument_list|,
 name|max_klen
 argument_list|,
-name|common
+name|COMFILE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|isnull
-argument_list|(
+operator|*
 name|word
-argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -615,9 +603,12 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|common
-operator|=
+name|strcpy
+argument_list|(
+name|COMFILE
+argument_list|,
 name|operand
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	2.6	%G%"
+literal|"@(#)locate.c	2.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,7 +423,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"locate: no keys for citation\n"
+literal|"locate: no keys for citation: %s\n"
+argument_list|,
+name|keys
 argument_list|)
 expr_stmt|;
 name|allrefs
