@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.6 (Berkeley) %G%"
+literal|"@(#)ns.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -705,7 +705,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|((x) ? printf("\t%u %s%s%s\n",x,y,plural(x),z) : 0)
+value|((x) ? printf("\t%d %s%s%s -- %s\n",x,y,plural(x),z,"x") : 0)
 end_define
 
 begin_comment
@@ -740,6 +740,10 @@ name|struct
 name|spp_istat
 name|spp_istat
 decl_stmt|;
+define|#
+directive|define
+name|sppstat
+value|spp_istat.newstats
 if|if
 condition|(
 name|off
@@ -879,8 +883,545 @@ argument_list|,
 literal|" refused as exceeding allocation"
 argument_list|)
 expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_connattempt
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" initiated"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_accepts
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" accepted"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_connects
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" established"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_drops
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" dropped"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_conndrops
+argument_list|,
+literal|"embryonic connection"
+argument_list|,
+literal|" dropped"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_closed
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" closed (includes drops)"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_segstimed
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" where we tried to get rtt"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rttupdated
+argument_list|,
+literal|"time"
+argument_list|,
+literal|" we got rtt"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_delack
+argument_list|,
+literal|"delayed ack"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_timeoutdrop
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" dropped in rxmt timeout"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rexmttimeo
+argument_list|,
+literal|"retransmit timeout"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_persisttimeo
+argument_list|,
+literal|"persist timeout"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_keeptimeo
+argument_list|,
+literal|"keepalive timeout"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_keepprobe
+argument_list|,
+literal|"keepalive probe"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_keepdrops
+argument_list|,
+literal|"connection"
+argument_list|,
+literal|" dropped in keepalive"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndtotal
+argument_list|,
+literal|"total packet"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndpack
+argument_list|,
+literal|"data packet"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndbyte
+argument_list|,
+literal|"data byte"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndrexmitpack
+argument_list|,
+literal|"data packet"
+argument_list|,
+literal|" retransmitted"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndrexmitbyte
+argument_list|,
+literal|"data byte"
+argument_list|,
+literal|" retransmitted"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndacks
+argument_list|,
+literal|"ack-only packet"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndprobe
+argument_list|,
+literal|"window probe"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndurg
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" sent with URG only"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndwinup
+argument_list|,
+literal|"window update-only packet"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndctrl
+argument_list|,
+literal|"control (SYN|FIN|RST) packet"
+argument_list|,
+literal|" sent"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_sndvoid
+argument_list|,
+literal|"request"
+argument_list|,
+literal|" to send a non-existant packet"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvtotal
+argument_list|,
+literal|"total packet"
+argument_list|,
+literal|" received"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvpack
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" received in sequence"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvbyte
+argument_list|,
+literal|"byte"
+argument_list|,
+literal|" received in sequence"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvbadsum
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" received with ccksum errs"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvbadoff
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" received with bad offset"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvshort
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" received too short"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvduppack
+argument_list|,
+literal|"duplicate-only packet"
+argument_list|,
+literal|" received"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvdupbyte
+argument_list|,
+literal|"duplicate-only byte"
+argument_list|,
+literal|" received"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvpartduppack
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" with some duplicate data"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvpartdupbyte
+argument_list|,
+literal|"dup. byte"
+argument_list|,
+literal|" in part-dup. packet"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvoopack
+argument_list|,
+literal|"out-of-order packet"
+argument_list|,
+literal|" received"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvoobyte
+argument_list|,
+literal|"out-of-order byte"
+argument_list|,
+literal|" received"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvpackafterwin
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" with data after window"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvbyteafterwin
+argument_list|,
+literal|"byte"
+argument_list|,
+literal|" rcvd after window"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvafterclose
+argument_list|,
+literal|"packet"
+argument_list|,
+literal|" rcvd after 'close'"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvwinprobe
+argument_list|,
+literal|"rcvd window probe packet"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvdupack
+argument_list|,
+literal|"rcvd duplicate ack"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvacktoomuch
+argument_list|,
+literal|"rcvd ack"
+argument_list|,
+literal|" for unsent data"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvackpack
+argument_list|,
+literal|"rcvd ack packet"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvackbyte
+argument_list|,
+literal|"byte"
+argument_list|,
+literal|" acked by rcvd acks"
+argument_list|)
+expr_stmt|;
+name|ANY
+argument_list|(
+name|sppstat
+operator|.
+name|spps_rcvwinupd
+argument_list|,
+literal|"rcvd window update packet"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|ANY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ANY
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|((x) ? printf("\t%d %s%s%s\n",x,y,plural(x),z) : 0)
+end_define
 
 begin_comment
 comment|/*  * Dump IDP statistics structure.  */
@@ -990,71 +1531,101 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_struct
 specifier|static
+struct|struct
+block|{
+name|u_short
+name|code
+decl_stmt|;
 name|char
-operator|*
-operator|(
-operator|(
+modifier|*
+name|name
+decl_stmt|;
+name|char
+modifier|*
+name|where
+decl_stmt|;
+block|}
 name|ns_errnames
 index|[]
-operator|)
-index|[
-literal|2
-index|]
-operator|)
-operator|=
+init|=
 block|{
 block|{
+literal|0
+block|,
 literal|"Unspecified Error"
 block|,
 literal|" at Destination"
 block|}
 block|,
 block|{
+literal|1
+block|,
 literal|"Bad Checksum"
 block|,
 literal|" at Destination"
 block|}
 block|,
 block|{
+literal|2
+block|,
 literal|"No Listener"
 block|,
 literal|" at Socket"
 block|}
 block|,
 block|{
+literal|3
+block|,
 literal|"Packet"
 block|,
 literal|" Refused due to lack of space at Destination"
 block|}
 block|,
 block|{
+literal|01000
+block|,
 literal|"Unspecified Error"
 block|,
 literal|" while gatewayed"
 block|}
 block|,
 block|{
+literal|01001
+block|,
 literal|"Bad Checksum"
 block|,
 literal|" while gatewayed"
 block|}
 block|,
 block|{
+literal|01002
+block|,
 literal|"Packet"
 block|,
 literal|" forwarded too many times"
 block|}
 block|,
 block|{
+literal|01003
+block|,
 literal|"Packet"
 block|,
 literal|" too large to be forwarded"
 block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|, }
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Dump NS Error statistics structure.  */
@@ -1238,24 +1809,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|ANY
+name|ns_erputil
 argument_list|(
 name|z
 argument_list|,
-name|ns_errnames
+name|ns_errstat
+operator|.
+name|ns_es_codes
 index|[
 name|j
-index|]
-index|[
-literal|0
-index|]
-argument_list|,
-name|ns_errnames
-index|[
-name|j
-index|]
-index|[
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -1304,24 +1866,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|ANY
+name|ns_erputil
 argument_list|(
 name|z
 argument_list|,
-name|ns_errnames
+name|ns_errstat
+operator|.
+name|ns_es_codes
 index|[
 name|j
-index|]
-index|[
-literal|0
-index|]
-argument_list|,
-name|ns_errnames
-index|[
-name|j
-index|]
-index|[
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -1329,8 +1882,136 @@ block|}
 block|}
 end_block
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|ns_erputil
+argument_list|(
+argument|z
+argument_list|,
+argument|c
+argument_list|)
+block|{
+name|int
+name|j
+block|;
+name|char
+name|codebuf
+index|[
+literal|30
+index|]
+block|;
+name|char
+operator|*
+name|name
+block|,
+operator|*
+name|where
+block|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+condition|;
+name|j
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|name
+operator|=
+name|ns_errnames
+index|[
+name|j
+index|]
+operator|.
+name|name
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|ns_errnames
+index|[
+name|j
+index|]
+operator|.
+name|code
+operator|==
+name|c
+condition|)
+break|break;
+block|}
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|name
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|>
+literal|01000
+condition|)
+name|where
+operator|=
+literal|"in transit"
+expr_stmt|;
+else|else
+name|where
+operator|=
+literal|"at destination"
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|codebuf
+argument_list|,
+literal|"Unknown XNS error code 0%o"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|codebuf
+expr_stmt|;
+block|}
+else|else
+name|where
+operator|=
+name|ns_errnames
+index|[
+name|j
+index|]
+operator|.
+name|where
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|ANY
+argument_list|(
+name|z
+argument_list|,
+name|name
+argument_list|,
+name|where
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+unit|} static
 name|struct
 name|sockaddr_ns
 name|ssns
