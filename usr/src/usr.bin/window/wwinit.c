@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.12 83/12/02"
+literal|"@(#)wwinit.c	3.13 83/12/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,14 +163,6 @@ operator|=
 name|wwoldtty
 operator|.
 name|ww_lmode
-expr_stmt|;
-name|wwnewtty
-operator|.
-name|ww_pgrp
-operator|=
-name|wwoldtty
-operator|.
-name|ww_pgrp
 expr_stmt|;
 name|wwnewtty
 operator|.
