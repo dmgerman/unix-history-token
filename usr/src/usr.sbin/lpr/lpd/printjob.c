@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.18 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6348,6 +6348,49 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|XC
+operator|||
+name|XS
+condition|)
+block|{
+name|int
+name|ldisc
+init|=
+name|NTTYDISC
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|pfd
+argument_list|,
+name|TIOCSETD
+argument_list|,
+operator|&
+name|ldisc
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: ioctl(TIOCSETD): %m"
+argument_list|,
+name|printer
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
