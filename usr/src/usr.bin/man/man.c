@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.10 (Berkeley) %G%"
+literal|"@(#)man.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1769,11 +1769,9 @@ argument_list|,
 name|name
 argument_list|)
 condition|)
-return|return
-operator|(
-name|YES
-operator|)
-return|;
+goto|goto
+name|found
+goto|;
 block|}
 elseif|else
 if|if
@@ -1792,11 +1790,24 @@ argument_list|,
 name|name
 argument_list|)
 condition|)
+block|{
+name|found
+label|:
+if|if
+condition|(
+name|end
+condition|)
+operator|*
+name|end
+operator|=
+literal|':'
+expr_stmt|;
 return|return
 operator|(
 name|YES
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1807,6 +1818,11 @@ operator|(
 name|NO
 operator|)
 return|;
+operator|*
+name|end
+operator|=
+literal|':'
+expr_stmt|;
 block|}
 comment|/*NOTREACHED*/
 block|}
