@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fstab.h	4.1	83/05/03	*/
+comment|/*	fstab.h	4.2	83/05/19	*/
 end_comment
 
 begin_comment
@@ -12,37 +12,6 @@ define|#
 directive|define
 name|FSTAB
 value|"/etc/fstab"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSNMLG
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSTABFMT
-value|"%32s:%32s:%2s:%d:%d\n"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSTABARG
-parameter_list|(
-name|p
-parameter_list|)
-value|(p)->fs_spec, (p)->fs_file, \ 			(p)->fs_type,&(p)->fs_freq,&(p)->fs_passno
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSTABNARGS
-value|5
 end_define
 
 begin_define
@@ -94,26 +63,25 @@ struct|struct
 name|fstab
 block|{
 name|char
+modifier|*
 name|fs_spec
-index|[
-name|FSNMLG
-index|]
 decl_stmt|;
 comment|/* block special device name */
 name|char
+modifier|*
 name|fs_file
-index|[
-name|FSNMLG
-index|]
 decl_stmt|;
 comment|/* file system path prefix */
 name|char
+modifier|*
 name|fs_type
-index|[
-literal|3
-index|]
 decl_stmt|;
 comment|/* rw,ro,sw or xx */
+name|char
+modifier|*
+name|fs_quotafile
+decl_stmt|;
+comment|/* name of quota file if used */
 name|int
 name|fs_freq
 decl_stmt|;
