@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* parsechallenge.c: The __opieparsechallenge() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.32. Check for extended response sets. 		Change prefix to double underscore. 	Created by cmetz for OPIE 2.3 using generator.c as a guide. */
+comment|/* parsechallenge.c: The __opieparsechallenge() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.4. Use OPIE_SEQUENCE_MAX, check for 	        sequence number of zero. 	Modified by cmetz for OPIE 2.32. Check for extended response sets. 		Change prefix to double underscore. 	Created by cmetz for OPIE 2.3 using generator.c as a guide. */
 end_comment
 
 begin_include
@@ -206,6 +206,7 @@ block|}
 if|if
 condition|(
 operator|(
+operator|(
 operator|*
 name|sequence
 operator|=
@@ -221,7 +222,12 @@ literal|10
 argument_list|)
 operator|)
 operator|>
-literal|9999
+name|OPIE_SEQUENCE_MAX
+operator|)
+operator|||
+operator|!
+operator|*
+name|sequence
 condition|)
 return|return
 operator|-

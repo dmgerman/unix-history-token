@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opie.h: Data structures and values for the OPIE authentication 	system that a program might need.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Added symbolic flag names for 		opiepasswd(). Added __opieparsechallenge() prototype. 	Modified by cmetz for OPIE 2.31. Removed active attack protection. 	Modified by cmetz for OPIE 2.3. Renamed PTR to VOIDPTR. Added 		re-init key and extension file fields to struct opie. Added 		opie_ prefix on struct opie members. Added opie_flags field 		and definitions. Added more prototypes. Changed opiehash() 		prototype. 	Modified by cmetz for OPIE 2.22. Define __P correctly if this file 		is included in a third-party program. 	Modified by cmetz for OPIE 2.2. Re-did prototypes. Added FUNCTION                 definition et al. Multiple-include protection. Added struct 		utsname fake. Got rid of gethostname() cruft. Moved UINT4                 here. Provide for *seek whence values. Move MDx context here                 and unify. Re-did prototypes. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skey.h). */
+comment|/* opie.h: Data structures and values for the OPIE authentication 	system that a program might need.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.4. Added sequence number limits. Added 		struct opie_otpkey and made many functions use it. Added 		opiestrncpy(). Include header with libmissing prototypes. 	Modified by cmetz for OPIE 2.32. Added symbolic flag names for 		opiepasswd(). Added __opieparsechallenge() prototype. 	Modified by cmetz for OPIE 2.31. Removed active attack protection. 	Modified by cmetz for OPIE 2.3. Renamed PTR to VOIDPTR. Added 		re-init key and extension file fields to struct opie. Added 		opie_ prefix on struct opie members. Added opie_flags field 		and definitions. Added more prototypes. Changed opiehash() 		prototype. 	Modified by cmetz for OPIE 2.22. Define __P correctly if this file 		is included in a third-party program. 	Modified by cmetz for OPIE 2.2. Re-did prototypes. Added FUNCTION                 definition et al. Multiple-include protection. Added struct 		utsname fake. Got rid of gethostname() cruft. Moved UINT4                 here. Provide for *seek whence values. Move MDx context here                 and unify. Re-did prototypes. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skey.h). */
 end_comment
 
 begin_ifndef
@@ -557,7 +557,7 @@ begin_define
 define|#
 directive|define
 name|OPIE_SECRET_MIN
-value|10
+value|1
 end_define
 
 begin_endif
@@ -725,6 +725,58 @@ begin_comment
 comment|/* OPIE_PRINCIPAL_MAX */
 end_comment
 
+begin_comment
+comment|/* Maximum sequence number */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPIE_SEQUENCE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPIE_SEQUENCE_MAX
+value|9999
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPIE_SEQUENCE_MAX */
+end_comment
+
+begin_comment
+comment|/* Restricted sequence number */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPIE_SEQUENCE_RESTRICT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPIE_SEQUENCE_RESTRICT
+value|9
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OPIE_SEQUENCE_RESTRICT */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -784,6 +836,20 @@ name|char
 name|buffer
 index|[
 literal|64
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|opie_otpkey
+block|{
+name|UINT4
+name|words
+index|[
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -893,7 +959,8 @@ name|opieatob8
 name|__P
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|opie_otpkey
 operator|*
 operator|,
 name|char
@@ -926,7 +993,8 @@ operator|(
 name|char
 operator|*
 operator|,
-name|char
+expr|struct
+name|opie_otpkey
 operator|*
 operator|)
 argument_list|)
@@ -943,7 +1011,8 @@ operator|(
 name|char
 operator|*
 operator|,
-name|char
+expr|struct
+name|opie_otpkey
 operator|*
 operator|)
 argument_list|)
@@ -960,7 +1029,8 @@ operator|(
 name|char
 operator|*
 operator|,
-name|char
+expr|struct
+name|opie_otpkey
 operator|*
 operator|)
 argument_list|)
@@ -973,7 +1043,8 @@ name|opieetob
 name|__P
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|opie_otpkey
 operator|*
 operator|,
 name|char
@@ -1042,7 +1113,9 @@ name|opiehash
 name|__P
 argument_list|(
 operator|(
-name|VOIDPTR
+expr|struct
+name|opie_otpkey
+operator|*
 operator|,
 name|unsigned
 operator|)
@@ -1071,7 +1144,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|char
+expr|struct
+name|opie_otpkey
 operator|*
 operator|,
 name|char
@@ -1478,6 +1552,25 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|opiestrncpy
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|do { \     strncpy(dst, src, n-1); \     dst[n-1] = 0; \   } while(0)
+end_define
+
+begin_comment
+comment|/* #include "missing.h" */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hashlen.c: The opiehashlen() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Created by cmetz for OPIE 2.3. */
+comment|/* hashlen.c: The opiehashlen() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.4. Use struct opie_otpkey, isolate variables. 	Created by cmetz for OPIE 2.3. */
 end_comment
 
 begin_include
@@ -36,23 +36,31 @@ name|AND
 name|VOIDPTR
 name|in
 name|AND
-name|VOIDPTR
-name|out
+expr|struct
+name|opie_otpkey
+operator|*
+name|results
 name|AND
 name|int
 name|n
 argument_list|)
 block|{
-name|UINT4
-modifier|*
-name|results
-init|=
-operator|(
-name|UINT4
-operator|*
-operator|)
-name|out
-decl_stmt|;
+switch|switch
+condition|(
+name|algorithm
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|case 3:       {       SHA_INFO sha;        sha_init(&sha);       sha_update(&sha, (BYTE *)in, n);       sha_final(&sha);        results->words[0] = sha.digest[0] ^ sha.digest[2] ^ sha.digest[4];       results->words[1] = sha.digest[1] ^ sha.digest[3] ^ sha.digest[5];       };       break;
+endif|#
+directive|endif
+comment|/* 0 */
+case|case
+literal|4
+case|:
+block|{
 name|struct
 name|opiemdx_ctx
 name|mdx
@@ -63,28 +71,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|SHA_INFO sha;
-endif|#
-directive|endif
-comment|/* 0 */
-switch|switch
-condition|(
-name|algorithm
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|case 3:       sha_init(&sha);       sha_update(&sha, (BYTE *)in, n);       sha_final(&sha);       results[0] = sha.digest[0] ^ sha.digest[2] ^ sha.digest[4];       results[1] = sha.digest[1] ^ sha.digest[3] ^ sha.digest[5];       break;
-endif|#
-directive|endif
-comment|/* 0 */
-case|case
-literal|4
-case|:
 name|opiemd4init
 argument_list|(
 operator|&
@@ -120,6 +106,8 @@ name|mdx
 argument_list|)
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|0
 index|]
@@ -135,6 +123,8 @@ literal|2
 index|]
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|1
 index|]
@@ -149,10 +139,22 @@ index|[
 literal|3
 index|]
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|5
 case|:
+block|{
+name|struct
+name|opiemdx_ctx
+name|mdx
+decl_stmt|;
+name|UINT4
+name|mdx_tmp
+index|[
+literal|4
+index|]
+decl_stmt|;
 name|opiemd5init
 argument_list|(
 operator|&
@@ -188,6 +190,8 @@ name|mdx
 argument_list|)
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|0
 index|]
@@ -203,6 +207,8 @@ literal|2
 index|]
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|1
 index|]
@@ -217,6 +223,7 @@ index|[
 literal|3
 index|]
 expr_stmt|;
+block|}
 break|break;
 block|}
 block|}

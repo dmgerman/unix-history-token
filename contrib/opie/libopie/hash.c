@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hash.c: The opiehash() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Updated by cmetz for OPIE 2.31. Added SHA support (which may               not be correct). Backed out previous optimizations as               they killed thread-safety.         Created by cmetz for OPIE 2.3 using the old hash.c as a guide. */
+comment|/* hash.c: The opiehash() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.4. Use struct opie_otpkey for binary arg.  	Modified by cmetz for OPIE 2.31. Added SHA support (which may               not be correct). Backed out previous optimizations as               they killed thread-safety.         Created by cmetz for OPIE 2.3 using the old hash.c as a guide. */
 end_comment
 
 begin_include
@@ -47,23 +47,15 @@ operator|,
 name|algorithm
 operator|)
 argument_list|,
-name|VOIDPTR
-name|x
+expr|struct
+name|opie_otpkey
+operator|*
+name|results
 name|AND
 name|unsigned
 name|algorithm
 argument_list|)
 block|{
-name|UINT4
-modifier|*
-name|results
-init|=
-operator|(
-name|UINT4
-operator|*
-operator|)
-name|x
-decl_stmt|;
 switch|switch
 condition|(
 name|algorithm
@@ -72,7 +64,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|case 3:       {       SHA_CTX sha;       SHAInit(&sha);       SHAUpdate(&sha, (unsigned char *)x, 8);       SHAFinal(&sha);       results[0] = sha.buffer[0] ^ sha.buffer[2] ^ sha.buffer[4];       results[1] = sha.buffer[1] ^ sha.buffer[3];       };       break;
+block|case 3:       {       SHA_CTX sha;        SHAInit(&sha);       SHAUpdate(&sha, (unsigned char *)results, 8);       SHAFinal(&sha);        results->words[0] = sha.buffer[0] ^ sha.buffer[2] ^ sha.buffer[4];       results->words[1] = sha.buffer[1] ^ sha.buffer[3];       };       break;
 endif|#
 directive|endif
 comment|/* 0 */
@@ -106,7 +98,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|x
+name|results
 argument_list|,
 literal|8
 argument_list|)
@@ -125,6 +117,8 @@ name|mdx
 argument_list|)
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|0
 index|]
@@ -140,6 +134,8 @@ literal|2
 index|]
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|1
 index|]
@@ -187,7 +183,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|x
+name|results
 argument_list|,
 literal|8
 argument_list|)
@@ -206,6 +202,8 @@ name|mdx
 argument_list|)
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|0
 index|]
@@ -221,6 +219,8 @@ literal|2
 index|]
 expr_stmt|;
 name|results
+operator|->
+name|words
 index|[
 literal|1
 index|]

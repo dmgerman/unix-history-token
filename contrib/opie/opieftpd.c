@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opieftpd.c: Main program for an FTP daemon.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Remove include of dirent.h here; it's 		done already (and conditionally) in opie_cfg.h. 	Modified by cmetz for OPIE 2.31. Merged in some 4.4BSD-Lite changes. 		Merged in a security fix to BSD-derived ftpds. 	Modified by cmetz for OPIE 2.3. Fixed the filename at the top. 		Moved LS_COMMAND here. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.                 Removed useless strings (I don't think that removing the                 ucb copyright one is a problem -- please let me know if                 I'm wrong). Changed default CMASK to 077. Removed random                 comments. Use ANSI stdargs for reply/lreply if we can,                 added stdargs version of reply/lreply. Don't declare the                 tos variable unless IP_TOS defined. Include stdargs headers                 early. More headers ifdefed. Made everything static.                 Got rid of gethostname() call and use of hostname. Pared                 down status response for places where header files frequently                 cause trouble. Made logging of user logins (ala -l)                 non-optional. Moved reply()/lrepy(). Fixed some prototypes. 	Modified at NRL for OPIE 2.1. Added declaration of envp. Discard 	        result of opiechallenge (allows access control to work). 		Added patches for AIX. Symbol changes for autoconf.         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to avoid problems with drain-bamaged shadow password packages.                 Properly handle internal state for anonymous FTP. Unlock                 user accounts properly if login fails because of /etc/shells.                 Make sure to close syslog by function to avoid problems with                 drain bamaged syslog implementations. 	Modified at NRL for OPIE 2.0. 	Originally from BSD Net/2.  	        There is some really, really ugly code in here. */
+comment|/* opieftpd.c: Main program for an FTP daemon.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.4. Add id parameter to opielogwtmp. Use 		opiestrncpy(). Fix incorrect use of setproctitle(). 	Modified by cmetz for OPIE 2.32. Remove include of dirent.h here; it's 		done already (and conditionally) in opie_cfg.h. 	Modified by cmetz for OPIE 2.31. Merged in some 4.4BSD-Lite changes. 		Merged in a security fix to BSD-derived ftpds. 	Modified by cmetz for OPIE 2.3. Fixed the filename at the top. 		Moved LS_COMMAND here. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.                 Removed useless strings (I don't think that removing the                 ucb copyright one is a problem -- please let me know if                 I'm wrong). Changed default CMASK to 077. Removed random                 comments. Use ANSI stdargs for reply/lreply if we can,                 added stdargs version of reply/lreply. Don't declare the                 tos variable unless IP_TOS defined. Include stdargs headers                 early. More headers ifdefed. Made everything static.                 Got rid of gethostname() call and use of hostname. Pared                 down status response for places where header files frequently                 cause trouble. Made logging of user logins (ala -l)                 non-optional. Moved reply()/lrepy(). Fixed some prototypes. 	Modified at NRL for OPIE 2.1. Added declaration of envp. Discard 	        result of opiechallenge (allows access control to work). 		Added patches for AIX. Symbol changes for autoconf.         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to avoid problems with drain-bamaged shadow password packages.                 Properly handle internal state for anonymous FTP. Unlock                 user accounts properly if login fails because of /etc/shells.                 Make sure to close syslog by function to avoid problems with                 drain bamaged syslog implementations. 	Modified at NRL for OPIE 2.0. 	Originally from BSD Net/2.  	        There is some really, really ugly code in here. */
 end_comment
 
 begin_comment
@@ -1116,6 +1116,9 @@ name|opielogwtmp
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -2455,6 +2458,8 @@ argument|);   if (logged_in)     opielogwtmp(ttyline,
 literal|""
 argument|,
 literal|""
+argument|,
+literal|"ftp"
 argument|);   pw = NULL;   logged_in =
 literal|0
 argument|;
@@ -2533,7 +2538,9 @@ argument|, pw->pw_gid, strerror(errno), errno);     return;   }   initgroups(pw-
 comment|/* open wtmp before chroot */
 argument|sprintf(ttyline,
 literal|"ftp%d"
-argument|, getpid());   opielogwtmp(ttyline, pw->pw_name, remotehost);   logged_in =
+argument|, getpid());   opielogwtmp(ttyline, pw->pw_name, remotehost,
+literal|"ftp"
+argument|);   logged_in =
 literal|1
 argument|;
 if|#
@@ -2635,11 +2642,11 @@ argument|);
 if|#
 directive|if
 name|DOTITLE
-argument|sprintf(proctitle,
+argument|setproctitle(
 literal|"%s: anonymous/%.*s"
-argument|, remotehost, 	    sizeof(proctitle) - sizeof(remotehost) - 	    sizeof(
+argument|, remotehost,             sizeof(proctitle) - sizeof(remotehost) - sizeof(
 literal|": anonymous/"
-argument|), passwd);     setproctitle(proctitle);
+argument|), 	    passwd);
 endif|#
 directive|endif
 comment|/* DOTITLE */
@@ -2657,9 +2664,9 @@ argument|, pw->pw_name);
 if|#
 directive|if
 name|DOTITLE
-argument|sprintf(proctitle,
+argument|setproctitle(
 literal|"%s: %s"
-argument|, remotehost, pw->pw_name);     setproctitle(proctitle);
+argument|, remotehost, pw->pw_name);
 endif|#
 directive|endif
 comment|/* DOTITLE */
@@ -3250,13 +3257,13 @@ argument|);   else     ack(
 literal|"RNTO"
 argument|); }  static VOIDRET dolog FUNCTION((sin), struct sockaddr_in *sin) {   struct hostent *hp = gethostbyaddr((char *)&sin->sin_addr, 				     sizeof(struct in_addr), AF_INET);   time_t t
 argument_list|,
-argument|time();    if (hp)     strncpy(remotehost, hp->h_name, sizeof(remotehost));   else     strncpy(remotehost, inet_ntoa(sin->sin_addr), sizeof(remotehost));
+argument|time();    if (hp)     opiestrncpy(remotehost, hp->h_name, sizeof(remotehost));   else     opiestrncpy(remotehost, inet_ntoa(sin->sin_addr), sizeof(remotehost));
 if|#
 directive|if
 name|DOTITLE
-argument|sprintf(proctitle,
+argument|setproctitle(
 literal|"%s: connected"
-argument|, remotehost);   setproctitle(proctitle);
+argument|, remotehost);
 endif|#
 directive|endif
 comment|/* DOTITLE */
@@ -3274,6 +3281,8 @@ argument|);     opielogwtmp(ttyline,
 literal|""
 argument|,
 literal|""
+argument|,
+literal|"ftp"
 argument|);   }
 comment|/* beware of flushing buffers after a SIGPIPE */
 argument|_exit(status); }  static VOIDRET myoob FUNCTION((input), int input) {   char *cp;
