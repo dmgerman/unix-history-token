@@ -4546,7 +4546,7 @@ break|break;
 case|case
 name|FIOSETOWN
 case|:
-comment|/* 		 * Policy -- Don't allow FIOSETOWN on someone else's  		 *           controlling tty 		 */
+comment|/* 		 * Policy -- Don't allow FIOSETOWN on someone else's 		 *           controlling tty 		 */
 if|if
 condition|(
 name|tp
@@ -12652,7 +12652,7 @@ operator|)
 return|;
 comment|/* tie - return highest pid */
 block|}
-comment|/*  	 * weed out zombies 	 */
+comment|/* 	 * weed out zombies 	 */
 switch|switch
 condition|(
 name|TESTAB
@@ -12984,7 +12984,7 @@ comment|/*  * Free a tty struct.  Clists in the struct should have been freed by
 end_comment
 
 begin_endif
-unit|void ttyfree(tp) 	struct tty *tp; {         free(tp, M_TTYS); }
+unit|void ttyfree(tp) 	struct tty *tp; { 	free(tp, M_TTYS); }
 endif|#
 directive|endif
 end_endif
