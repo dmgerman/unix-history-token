@@ -2764,7 +2764,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"kde"
+literal|"kdebase"
 argument_list|)
 expr_stmt|;
 if|if
