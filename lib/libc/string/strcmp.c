@@ -100,6 +100,7 @@ return|return
 operator|(
 operator|*
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -108,12 +109,16 @@ name|s1
 operator|-
 operator|*
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
 operator|)
-operator|--
+operator|(
 name|s2
+operator|-
+literal|1
+operator|)
 operator|)
 return|;
 block|}
