@@ -2213,7 +2213,7 @@ if|if
 condition|(
 name|sav
 operator|->
-name|key_auth
+name|alg_auth
 operator|==
 name|SADB_AALG_NONE
 condition|)
