@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dir.c,v 1.6 1997/02/22 14:01:42 peter Exp $"
+literal|"$Id: dir.c,v 1.7 1997/08/07 21:42:05 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3644,7 +3644,11 @@ argument_list|,
 name|tlink
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tlink
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|>=
@@ -4056,7 +4060,11 @@ argument_list|,
 name|tlink
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tlink
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|>=

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: utils.c,v 1.17 1998/05/06 06:50:25 charnier Exp $"
+literal|"$Id: utils.c,v 1.18 1998/05/13 07:25:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,6 +884,8 @@ sizeof|sizeof
 argument_list|(
 name|link
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|==

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ftree.c,v 1.10 1998/05/15 06:27:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,14 +1297,16 @@ argument|switch(S_IFMT& arcn->sb.st_mode) { 		case S_IFDIR: 			arcn->type = PAX_
 comment|/* 			 * only regular files with have data to store on the 			 * archive. all others will store a zero length skip. 			 * the skip field is used by pax for actual data it has 			 * to read (or skip over). 			 */
 argument|arcn->type = PAX_REG; 			arcn->skip = arcn->sb.st_size; 			break; 		case S_IFLNK: 			arcn->type = PAX_SLK;
 comment|/* 			 * have to read the symlink path from the file 			 */
-argument|if ((cnt = readlink(ftent->fts_path, arcn->ln_name, 			    PAXPATHLEN))<
+argument|if ((cnt = readlink(ftent->fts_path, arcn->ln_name, 			    PAXPATHLEN -
+literal|1
+argument|))<
 literal|0
 argument|) { 				sys_warn(
 literal|1
 argument|, errno,
 literal|"Unable to read symlink %s"
 argument|, 				    ftent->fts_path); 				continue; 			}
-comment|/* 			 * set link name length, watch out readlink does not 			 * allways null terminate the link path 			 */
+comment|/* 			 * set link name length, watch out readlink does not 			 * allways NUL terminate the link path 			 */
 argument|arcn->ln_name[cnt] =
 literal|'\0'
 argument|; 			arcn->ln_nlen = cnt; 			break; 		case S_IFSOCK:
