@@ -24,19 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascebc.h"
+file|"../ascii/ascebc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ebc_disp.h"
+file|"../ctlr/ebc_disp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../kbd3270.h"
+file|"../ctlr/function.h"
 end_include
 
 begin_include
@@ -69,6 +69,15 @@ literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|unsigned
@@ -499,6 +508,61 @@ end_block
 begin_function
 name|char
 modifier|*
+name|savechr
+parameter_list|(
+name|c
+parameter_list|)
+name|unsigned
+name|char
+name|c
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|foo
+decl_stmt|;
+name|foo
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+name|c
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|foo
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No room for ascii characters!\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|foo
+operator|=
+name|c
+expr_stmt|;
+return|return
+name|foo
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
 name|doit
 parameter_list|(
 name|hit
@@ -583,6 +647,14 @@ index|]
 index|]
 index|]
 expr_stmt|;
+return|return
+name|savechr
+argument_list|(
+operator|*
+name|type
+argument_list|)
+return|;
+comment|/* The character is the name */
 block|}
 else|else
 block|{
@@ -677,8 +749,10 @@ name|name
 return|;
 block|}
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Error: Unknown type %s.\n"
 argument_list|,
 name|type
@@ -768,14 +842,14 @@ expr_stmt|;
 comment|/*      * First, we read "host3270.h" to find the names/values of      * various AID; then we read kbd3270.h to find the names/values      * of various FCNs.      */
 name|scan
 argument_list|(
-literal|"host3270.h"
+literal|"../ctlr/hostctlr.h"
 argument_list|,
 literal|"AID_"
 argument_list|)
 expr_stmt|;
 name|scan
 argument_list|(
-literal|"kbd3270.h"
+literal|"../ctlr/function.h"
 argument_list|,
 literal|"FCN_"
 argument_list|)
@@ -924,8 +998,10 @@ operator|>=
 literal|256
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Error: scancode 0x%02x for keynumber %d\n"
 argument_list|,
 name|scancode
@@ -954,8 +1030,10 @@ operator|!=
 name|undefined
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Error: duplicate scancode 0x%02x for keynumber %d\n"
 argument_list|,
 name|scancode

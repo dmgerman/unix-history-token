@@ -24,19 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascebc.h"
+file|"../ascii/ascebc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ebc_disp.h"
+file|"../ctlr/ebc_disp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../kbd3270.h"
+file|"../ctlr/function.h"
 end_include
 
 begin_include

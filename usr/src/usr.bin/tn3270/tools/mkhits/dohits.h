@@ -30,7 +30,6 @@ value|(table[dohash(0, (x))%highestof(table)])
 end_define
 
 begin_struct
-specifier|extern
 struct|struct
 name|Hits
 block|{
