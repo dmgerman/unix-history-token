@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.26.2.8 1997/09/15 08:07:06 jkh Exp $ */
+comment|/* $Id: main.c,v 1.26.2.9 1998/05/09 08:50:03 des Exp $ */
 end_comment
 
 begin_include
@@ -644,6 +644,7 @@ index|]
 operator|==
 literal|'/'
 condition|)
+block|{
 name|strcat
 argument_list|(
 name|uri
@@ -651,6 +652,17 @@ argument_list|,
 literal|"%2f"
 argument_list|)
 expr_stmt|;
+name|strcat
+argument_list|(
+name|uri
+argument_list|,
+name|change_to_dir
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|strcat
 argument_list|(
 name|uri
