@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	1.4 83/07/27		*/
+comment|/*	@(#)defs.h	1.5 83/07/28		*/
 end_comment
 
 begin_include
@@ -26,13 +26,6 @@ include|#
 directive|include
 file|<sys/resource.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ESCAPE
-value|CTRL(p)
-end_define
 
 begin_decl_stmt
 name|int
@@ -139,6 +132,18 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|quit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|terse
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|escapec
 decl_stmt|;
 end_decl_stmt
 
