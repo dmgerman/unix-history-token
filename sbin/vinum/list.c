@@ -4505,7 +4505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print config file to a file.  This is a userland version  * of kernel format_config */
+comment|/*  * Print config file to a file.  This is a userland version  * of kernel format_config  */
 end_comment
 
 begin_function
@@ -4530,6 +4530,110 @@ name|FILE
 modifier|*
 name|of
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: \tprintconfig [<outfile>]\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|of
+operator|=
+name|fopen
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+else|else
+name|of
+operator|=
+name|stdout
+expr_stmt|;
+if|if
+condition|(
+name|of
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't open %s: %s\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printconfig
+argument_list|(
+name|of
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|fclose
+argument_list|(
+name|of
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The guts of printconfig.  This is called from  * vinum_printconfig and from vinum_create when  * called without an argument, in order to give  * the user something to edit.  */
+end_comment
+
+begin_function
+name|void
+name|printconfig
+parameter_list|(
+name|FILE
+modifier|*
+name|of
+parameter_list|,
+name|char
+modifier|*
+name|comment
+parameter_list|)
+block|{
 name|struct
 name|utsname
 name|uname_s
@@ -4558,22 +4662,6 @@ name|drive
 decl_stmt|;
 if|if
 condition|(
-name|argc
-operator|!=
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: \tprintconfig<outfile>\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
 name|ioctl
 argument_list|(
 name|superdev
@@ -4590,44 +4678,6 @@ block|{
 name|perror
 argument_list|(
 literal|"Can't get vinum config"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|of
-operator|=
-name|fopen
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|of
-operator|==
-name|NULL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't open %s: %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4664,6 +4714,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* say who did it */
+if|if
+condition|(
+name|comment
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+condition|)
+comment|/* abuse this for commented version */
+name|fprintf
+argument_list|(
+name|of
+argument_list|,
+literal|"# Current configuration:\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4701,7 +4768,9 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"drive %s device %s\n"
+literal|"%sdrive %s device %s\n"
+argument_list|,
+name|comment
 argument_list|,
 name|drive
 operator|.
@@ -4762,7 +4831,9 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"volume %s readpol prefer %s\n"
+literal|"%svolume %s readpol prefer %s\n"
+argument_list|,
+name|comment
 argument_list|,
 name|vol
 operator|.
@@ -4786,7 +4857,9 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"volume %s\n"
+literal|"%svolume %s\n"
+argument_list|,
+name|comment
 argument_list|,
 name|vol
 operator|.
@@ -4833,7 +4906,9 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"plex name %s org %s "
+literal|"%splex name %s org %s "
+argument_list|,
+name|comment
 argument_list|,
 name|plex
 operator|.
@@ -4980,7 +5055,9 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"sd name %s drive %s plex %s len %qdb driveoffset %qdb plexoffset %qdb\n"
+literal|"%ssd name %s drive %s plex %s len %qdb driveoffset %qdb plexoffset %qdb\n"
+argument_list|,
+name|comment
 argument_list|,
 name|sd
 operator|.
