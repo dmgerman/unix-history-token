@@ -38,16 +38,9 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|GPROF
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PROF
 argument_list|)
 end_if
 
@@ -55,11 +48,9 @@ begin_define
 define|#
 directive|define
 name|MCOUNT
+define|\
+value|alloc	out0 = ar.pfs, 8, 0, 4, 0;	\ 	mov	out1 = r1;			\ 	mov	out2 = b0;;			\ 	mov	out3 = r0;			\ 	br.call.sptk b0 = _mcount;;
 end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
 
 begin_else
 else|#
@@ -70,9 +61,11 @@ begin_define
 define|#
 directive|define
 name|MCOUNT
-define|\
-value|br.call.sptk.many b7=_mcount
 end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_endif
 endif|#
@@ -93,7 +86,7 @@ parameter_list|,
 name|_n_args_
 parameter_list|)
 define|\
-value|.global	_name_;				\ 	.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
+value|.global	_name_;				\ 	.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0;		\ 	MCOUNT
 end_define
 
 begin_define
