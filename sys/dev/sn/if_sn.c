@@ -2745,9 +2745,6 @@ operator|&
 name|IM_RCV_INT
 condition|)
 block|{
-if|#
-directive|if
-literal|1
 name|int
 name|packet_number
 decl_stmt|;
@@ -2782,8 +2779,6 @@ goto|goto
 name|out
 goto|;
 block|}
-endif|#
-directive|endif
 name|snread
 argument_list|(
 name|ifp
