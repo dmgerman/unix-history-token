@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getgrent.c	4.2 (Berkeley) %G% */
+comment|/* @(#)getgrent.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MAXGRP
-value|100
+value|200
 end_define
 
 begin_decl_stmt
