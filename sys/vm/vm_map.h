@@ -329,6 +329,10 @@ name|lock
 name|lock
 decl_stmt|;
 comment|/* Lock for map data */
+name|struct
+name|mtx
+name|system_mtx
+decl_stmt|;
 name|int
 name|nentries
 decl_stmt|;
