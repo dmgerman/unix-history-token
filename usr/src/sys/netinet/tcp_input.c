@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3427,7 +3427,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* 		 * The only thing that can arrive in  LAST_ACK state 		 * is an acknowledgment of our FIN.  If our FIN is now 		 * acknowledged, delete the TCB, enter the closed state 		 * and return. 		 */
+comment|/* 		 * In LAST_ACK, we may still be waiting for data to drain 		 * and/or to be acked, as well as for the ack of our FIN. 		 * If our FIN is now acknowledged, delete the TCB, 		 * enter the closed state and return. 		 */
 case|case
 name|TCPS_LAST_ACK
 case|:
@@ -3435,6 +3435,7 @@ if|if
 condition|(
 name|ourfinisacked
 condition|)
+block|{
 name|tp
 operator|=
 name|tcp_close
@@ -3445,6 +3446,8 @@ expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
+break|break;
 comment|/* 		 * In TIME_WAIT state the only thing that should arrive 		 * is a retransmission of the remote FIN.  Acknowledge 		 * it and restart the finack timer. 		 */
 case|case
 name|TCPS_TIME_WAIT
