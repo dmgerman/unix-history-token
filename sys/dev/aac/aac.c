@@ -1627,6 +1627,10 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
+name|count
+init|=
+literal|0
+decl_stmt|,
 name|i
 init|=
 literal|0
@@ -1732,10 +1736,8 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|debug
+name|printf
 argument_list|(
-literal|2
-argument_list|,
 literal|"error probing container %d"
 argument_list|,
 name|i
@@ -1758,6 +1760,13 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+comment|/* XXX Need to check if count changed */
+name|count
+operator|=
+name|mir
+operator|->
+name|MntRespCount
+expr_stmt|;
 name|aac_add_container
 argument_list|(
 name|sc
@@ -1776,9 +1785,7 @@ condition|(
 operator|(
 name|i
 operator|<
-name|mir
-operator|->
-name|MntRespCount
+name|count
 operator|)
 operator|&&
 operator|(
@@ -11156,6 +11163,10 @@ decl_stmt|,
 name|found
 decl_stmt|;
 name|int
+name|count
+init|=
+literal|0
+decl_stmt|,
 name|added
 init|=
 literal|0
@@ -11304,10 +11315,8 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|debug
+name|printf
 argument_list|(
-literal|2
-argument_list|,
 literal|"Error probing container %d\n"
 argument_list|,
 name|i
@@ -11329,6 +11338,13 @@ name|data
 index|[
 literal|0
 index|]
+expr_stmt|;
+comment|/* XXX Need to check if count changed */
+name|count
+operator|=
+name|mir
+operator|->
+name|MntRespCount
 expr_stmt|;
 comment|/* 				 * Check the container against our list. 				 * co->co_found was already set to 0 in a 				 * previous run. 				 */
 if|if
@@ -11434,9 +11450,7 @@ condition|(
 operator|(
 name|i
 operator|<
-name|mir
-operator|->
-name|MntRespCount
+name|count
 operator|)
 operator|&&
 operator|(
