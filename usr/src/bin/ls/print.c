@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.9 (Berkeley) %G%"
+literal|"@(#)print.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,8 +215,6 @@ operator|->
 name|lstat
 operator|.
 name|st_blocks
-operator|/
-literal|2
 argument_list|)
 expr_stmt|;
 name|printperms
@@ -713,8 +711,6 @@ operator|->
 name|lstat
 operator|.
 name|st_blocks
-operator|/
-literal|2
 argument_list|)
 expr_stmt|;
 name|chcnt
