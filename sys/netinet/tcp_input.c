@@ -4694,25 +4694,6 @@ argument_list|,
 name|th
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|rcv_laststart
-operator|=
-name|th
-operator|->
-name|th_seq
-expr_stmt|;
-comment|/* last recv'd segment*/
-name|tp
-operator|->
-name|rcv_lastend
-operator|=
-name|th
-operator|->
-name|th_seq
-operator|+
-name|tlen
-expr_stmt|;
 block|}
 comment|/* 	 * Header prediction: check for the two common cases 	 * of a uni-directional data xfer.  If the packet has 	 * no control flags, is in-sequence, the window didn't 	 * change and we're not retransmitting, it's a 	 * candidate.  If the length is zero and the ack moved 	 * forward, we're the sender side of the xfer.  Just 	 * free the data acked& wake any higher level process 	 * that was blocked waiting for space.  If the length 	 * is non-zero and the ack didn't move, we're the 	 * receiver side.  If we're getting packets in-order 	 * (the reassembly queue is empty), add the data to 	 * the socket buffer and note that we need a delayed ack. 	 * Make sure that the hidden state-flags are also off. 	 * Since we check for TCPS_ESTABLISHED above, it can only 	 * be TH_NEEDSYN. 	 */
 if|if
@@ -9454,11 +9435,32 @@ name|tp
 operator|->
 name|sack_enable
 condition|)
+block|{
+name|tp
+operator|->
+name|rcv_laststart
+operator|=
+name|th
+operator|->
+name|th_seq
+expr_stmt|;
+comment|/* last recv'd segment*/
+name|tp
+operator|->
+name|rcv_lastend
+operator|=
+name|th
+operator|->
+name|th_seq
+operator|+
+name|tlen
+expr_stmt|;
 name|tcp_update_sack_list
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 */
 name|len
 operator|=
