@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_var.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_var.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,40 +107,40 @@ struct|struct
 name|udpstat
 block|{
 comment|/* input statistics: */
-name|int
+name|u_long
 name|udps_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|int
+name|u_long
 name|udps_hdrops
 decl_stmt|;
 comment|/* packet shorter than header */
-name|int
+name|u_long
 name|udps_badsum
 decl_stmt|;
 comment|/* checksum error */
-name|int
+name|u_long
 name|udps_badlen
 decl_stmt|;
 comment|/* data length larger than packet */
-name|int
+name|u_long
 name|udps_noport
 decl_stmt|;
 comment|/* no socket on port */
-name|int
+name|u_long
 name|udps_noportbcast
 decl_stmt|;
 comment|/* of above, arrived as broadcast */
-name|int
+name|u_long
 name|udps_fullsock
 decl_stmt|;
 comment|/* not delivered, input socket full */
-name|int
+name|u_long
 name|udpps_pcbcachemiss
 decl_stmt|;
 comment|/* input packets missing pcb cache */
 comment|/* output statistics: */
-name|int
+name|u_long
 name|udps_opackets
 decl_stmt|;
 comment|/* total output packets */

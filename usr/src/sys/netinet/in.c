@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -284,9 +284,6 @@ name|i
 operator|&
 name|IN_CLASSC_NET
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 elseif|else
 if|if
 condition|(
@@ -301,8 +298,6 @@ name|i
 operator|&
 name|IN_CLASSD_NET
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 return|return
 operator|(
@@ -704,9 +699,6 @@ name|i
 operator|&
 name|IN_CLASSC_HOST
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 block|}
 elseif|else
 if|if
@@ -729,8 +721,6 @@ name|i
 operator|&
 name|IN_CLASSD_HOST
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 return|return
@@ -3005,9 +2995,6 @@ name|ia_flags
 operator||=
 name|IFA_ROUTE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 comment|/* 	 * If the interface supports multicast, join the "all hosts" 	 * multicast group on that interface. 	 */
 if|if
 condition|(
@@ -3040,8 +3027,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
@@ -3242,12 +3227,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
 
 begin_comment
 comment|/*  * Add an address to the list of IP multicast addresses for a given interface.  */
@@ -3727,11 +3706,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

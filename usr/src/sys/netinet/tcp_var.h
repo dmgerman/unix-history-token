@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_var.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_var.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -225,34 +225,59 @@ name|char
 name|t_force
 decl_stmt|;
 comment|/* 1 if forcing out a byte */
-name|u_char
+name|u_short
 name|t_flags
 decl_stmt|;
 define|#
 directive|define
 name|TF_ACKNOW
-value|0x01
+value|0x0001
 comment|/* ack peer immediately */
 define|#
 directive|define
 name|TF_DELACK
-value|0x02
+value|0x0002
 comment|/* ack, but try to delay it */
 define|#
 directive|define
 name|TF_NODELAY
-value|0x04
+value|0x0004
 comment|/* don't delay packets to coalesce */
 define|#
 directive|define
 name|TF_NOOPT
-value|0x08
+value|0x0008
 comment|/* don't use tcp options */
 define|#
 directive|define
 name|TF_SENTFIN
-value|0x10
+value|0x0010
 comment|/* have sent FIN */
+define|#
+directive|define
+name|TF_REQ_SCALE
+value|0x0020
+comment|/* have/will request window scaling */
+define|#
+directive|define
+name|TF_RCVD_SCALE
+value|0x0040
+comment|/* other side has requested scaling */
+define|#
+directive|define
+name|TF_REQ_TSTMP
+value|0x0080
+comment|/* have/will request timestamps */
+define|#
+directive|define
+name|TF_RCVD_TSTMP
+value|0x0100
+comment|/* a timestamp was received in SYN */
+define|#
+directive|define
+name|TF_SACK_PERMIT
+value|0x0200
+comment|/* other side said I could SACK */
 name|struct
 name|tcpiphdr
 modifier|*
@@ -291,12 +316,12 @@ name|tcp_seq
 name|iss
 decl_stmt|;
 comment|/* initial send sequence number */
-name|u_short
+name|u_long
 name|snd_wnd
 decl_stmt|;
 comment|/* send window */
 comment|/* receive sequence variables */
-name|u_short
+name|u_long
 name|rcv_wnd
 decl_stmt|;
 comment|/* receive window */
@@ -324,11 +349,11 @@ name|snd_max
 decl_stmt|;
 comment|/* highest sequence number sent; 					 * used to recognize retransmits 					 */
 comment|/* congestion control (for slow start, source quench, retransmit after loss) */
-name|u_short
+name|u_long
 name|snd_cwnd
 decl_stmt|;
 comment|/* congestion-controlled window */
-name|u_short
+name|u_long
 name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshhold for 					 * for slow start exponential to 					 * linear switch 					 */
@@ -357,7 +382,7 @@ name|u_short
 name|t_rttmin
 decl_stmt|;
 comment|/* minimum rtt allowed */
-name|u_short
+name|u_long
 name|max_sndwnd
 decl_stmt|;
 comment|/* largest window peer has offered */
@@ -382,6 +407,33 @@ name|short
 name|t_softerror
 decl_stmt|;
 comment|/* possible error not yet reported */
+comment|/* RFC 1323 variables */
+name|u_char
+name|snd_scale
+decl_stmt|;
+comment|/* window scaling for send window */
+name|u_char
+name|rcv_scale
+decl_stmt|;
+comment|/* window scaling for recv window */
+name|u_char
+name|request_r_scale
+decl_stmt|;
+comment|/* pending window scaling */
+name|u_char
+name|requested_s_scale
+decl_stmt|;
+name|u_long
+name|ts_recent
+decl_stmt|;
+comment|/* timestamp echo data */
+name|u_long
+name|ts_recent_age
+decl_stmt|;
+comment|/* when last updated */
+name|tcp_seq
+name|last_ack_sent
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -711,6 +763,10 @@ name|u_long
 name|tcps_rcvwinupd
 decl_stmt|;
 comment|/* rcvd window update packets */
+name|u_long
+name|tcps_pawsdrop
+decl_stmt|;
+comment|/* segments dropped due to PAWS */
 block|}
 struct|;
 end_struct
@@ -741,6 +797,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* tcp statistics */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|tcp_now
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for RFC 1323 timestamps */
 end_comment
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -242,86 +242,94 @@ begin_struct
 struct|struct
 name|ipstat
 block|{
-name|long
+name|u_long
 name|ips_total
 decl_stmt|;
 comment|/* total packets received */
-name|long
+name|u_long
 name|ips_badsum
 decl_stmt|;
 comment|/* checksum bad */
-name|long
+name|u_long
 name|ips_tooshort
 decl_stmt|;
 comment|/* packet too short */
-name|long
+name|u_long
 name|ips_toosmall
 decl_stmt|;
 comment|/* not enough data */
-name|long
+name|u_long
 name|ips_badhlen
 decl_stmt|;
 comment|/* ip header length< data size */
-name|long
+name|u_long
 name|ips_badlen
 decl_stmt|;
 comment|/* ip length< ip header length */
-name|long
+name|u_long
 name|ips_fragments
 decl_stmt|;
 comment|/* fragments received */
-name|long
+name|u_long
 name|ips_fragdropped
 decl_stmt|;
 comment|/* frags dropped (dups, out of space) */
-name|long
+name|u_long
 name|ips_fragtimeout
 decl_stmt|;
 comment|/* fragments timed out */
-name|long
+name|u_long
 name|ips_forward
 decl_stmt|;
 comment|/* packets forwarded */
-name|long
+name|u_long
 name|ips_cantforward
 decl_stmt|;
 comment|/* packets rcvd for unreachable dest */
-name|long
+name|u_long
 name|ips_redirectsent
 decl_stmt|;
 comment|/* packets forwarded on same net */
-name|long
+name|u_long
 name|ips_noproto
 decl_stmt|;
 comment|/* unknown or unsupported protocol */
-name|long
+name|u_long
 name|ips_delivered
 decl_stmt|;
-comment|/* packets consumed here */
-name|long
+comment|/* datagrams delivered to upper level*/
+name|u_long
 name|ips_localout
 decl_stmt|;
 comment|/* total ip packets generated here */
-name|long
+name|u_long
 name|ips_odropped
 decl_stmt|;
 comment|/* lost packets due to nobufs, etc. */
-name|long
+name|u_long
 name|ips_reassembled
 decl_stmt|;
 comment|/* total packets reassembled ok */
-name|long
+name|u_long
 name|ips_fragmented
 decl_stmt|;
-comment|/* output packets fragmented ok */
-name|long
+comment|/* datagrams sucessfully fragmented */
+name|u_long
 name|ips_ofragments
 decl_stmt|;
 comment|/* output fragments created */
-name|long
+name|u_long
 name|ips_cantfrag
 decl_stmt|;
 comment|/* don't fragment flag was set, etc. */
+name|u_long
+name|ips_badoptions
+decl_stmt|;
+comment|/* error in option processing */
+name|u_long
+name|ips_noroute
+decl_stmt|;
+comment|/* packtes discarded due to no route */
 block|}
 struct|;
 end_struct

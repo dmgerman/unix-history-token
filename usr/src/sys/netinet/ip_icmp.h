@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -53,6 +53,19 @@ struct|;
 name|int
 name|ih_void
 decl_stmt|;
+comment|/* ICMP_UNREACH_NEEDFRAG -- Path MTU Discovery (RFC1191) */
+struct|struct
+name|ih_pmtu
+block|{
+name|n_short
+name|ipm_void
+decl_stmt|;
+name|n_short
+name|ipm_nextmtu
+decl_stmt|;
+block|}
+name|ih_pmtu
+struct|;
 block|}
 name|icmp_hun
 union|;
@@ -76,6 +89,14 @@ define|#
 directive|define
 name|icmp_void
 value|icmp_hun.ih_void
+define|#
+directive|define
+name|icmp_pmvoid
+value|icmp_hun.ih_pmtu.ipm_void
+define|#
+directive|define
+name|icmp_nextmtu
+value|icmp_hun.ih_pmtu.ipm_nextmtu
 union|union
 block|{
 struct|struct
@@ -301,6 +322,83 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP_UNREACH_NET_UNKNOWN
+value|6
+end_define
+
+begin_comment
+comment|/* unknown net */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_UNREACH_HOST_UNKNOWN
+value|7
+end_define
+
+begin_comment
+comment|/* unknown host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_UNREACH_ISOLATED
+value|8
+end_define
+
+begin_comment
+comment|/* src host isolated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_UNREACH_NET_PROHIB
+value|9
+end_define
+
+begin_comment
+comment|/* prohibited access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_UNREACH_HOST_PROHIB
+value|10
+end_define
+
+begin_comment
+comment|/* ditto */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_UNREACH_TOSNET
+value|11
+end_define
+
+begin_comment
+comment|/* bad tos for net */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_UNREACH_TOSHOST
+value|12
+end_define
+
+begin_comment
+comment|/* bad tos for host */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP_SOURCEQUENCH
 value|4
 end_define
@@ -378,6 +476,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP_ROUTERADVERT
+value|9
+end_define
+
+begin_comment
+comment|/* router advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_ROUTERSOLICIT
+value|10
+end_define
+
+begin_comment
+comment|/* router solicitation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP_TIMXCEED
 value|11
 end_define
@@ -417,6 +537,17 @@ end_define
 
 begin_comment
 comment|/* ip header bad */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMP_PARAMPROB_OPTABSENT
+value|1
+end_define
+
+begin_comment
+comment|/* req. opt. absent */
 end_comment
 
 begin_define
@@ -500,7 +631,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((type) == ICMP_ECHOREPLY || (type) == ICMP_ECHO || \ 	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \ 	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \ 	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
+value|((type) == ICMP_ECHOREPLY || (type) == ICMP_ECHO || \ 	(type) == ICMP_ROUTERADVERT || (type) == ICMP_ROUTERSOLICIT || \ 	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \ 	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \ 	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
 end_define
 
 end_unit

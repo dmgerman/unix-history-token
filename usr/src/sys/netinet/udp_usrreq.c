@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -540,9 +540,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
 if|if
 condition|(
 name|IN_MULTICAST
@@ -570,7 +567,7 @@ name|socket
 modifier|*
 name|last
 decl_stmt|;
-comment|/* 		 * Deliver a multicast or broadcast datagram to *all* sockets 		 * for which the local and remote addresses and ports match 		 * those of the incoming datagram.  This allows more than 		 * one process to receive multi/broadcasts on the same port. 		 * (This really ought to be done for unicast datagrams as 		 * well, but that would cause problems with existing 		 * applications that open both address-specific sockets and 		 * a wildcard socket listening to the same port -- they would 		 * end up receiving duplicates of every unicast datagram. 		 * Those applications open the multiple sockets to overcome an 		 * inadequacy of the UDP socket interface, but for backwards 		 * compatibility we avoid the problem here rather than 		 * fixing the interface.  Maybe 4.4BSD will remedy this?) 		 */
+comment|/* 		 * Deliver a multicast or broadcast datagram to *all* sockets 		 * for which the local and remote addresses and ports match 		 * those of the incoming datagram.  This allows more than 		 * one process to receive multi/broadcasts on the same port. 		 * (This really ought to be done for unicast datagrams as 		 * well, but that would cause problems with existing 		 * applications that open both address-specific sockets and 		 * a wildcard socket listening to the same port -- they would 		 * end up receiving duplicates of every unicast datagram. 		 * Those applications open the multiple sockets to overcome an 		 * inadequacy of the UDP socket interface, but for backwards 		 * compatibility we avoid the problem here rather than 		 * fixing the interface.  Maybe 4.5BSD will remedy this?) 		 */
 comment|/* 		 * Construct sockaddr format source address. 		 */
 name|udp_in
 operator|.
@@ -765,11 +762,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|m_freem
 argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+name|udpstat
+operator|.
+name|udps_fullsock
+operator|++
+expr_stmt|;
+block|}
 else|else
 name|sorwakeup
 argument_list|(
@@ -807,6 +811,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * No matching pcb found; discard datagram. 			 * (No need to send an ICMP Port Unreachable 			 * for a broadcast or multicast datgram.) 			 */
+name|udpstat
+operator|.
+name|udps_noportbcast
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -840,9 +849,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|udpstat
+operator|.
+name|udps_fullsock
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|sorwakeup
 argument_list|(
 name|last
@@ -850,8 +866,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Locate pcb for datagram. 	 */
 name|inp
 operator|=
@@ -947,40 +961,11 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* don't send ICMP response for broadcast packet */
 name|udpstat
 operator|.
 name|udps_noport
 operator|++
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MULTICAST
-comment|/* XXX why don't we do this with MULTICAST? */
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-operator|(
-name|M_BCAST
-operator||
-name|M_MCAST
-operator|)
-condition|)
-block|{
-name|udpstat
-operator|.
-name|udps_noportbcast
-operator|++
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-endif|#
-directive|endif
 operator|*
 name|ip
 operator|=
@@ -1520,11 +1505,18 @@ index|[]
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|PRC_IS_REDIRECT
+argument_list|(
+name|cmd
+argument_list|)
+operator|&&
+operator|(
 operator|(
 name|unsigned
 operator|)
 name|cmd
-operator|>
+operator|>=
 name|PRC_NCMDS
 operator|||
 name|inetctlerrmap
@@ -1533,6 +1525,7 @@ name|cmd
 index|]
 operator|==
 literal|0
+operator|)
 condition|)
 return|return;
 if|if
@@ -2018,15 +2011,10 @@ name|SO_DONTROUTE
 operator||
 name|SO_BROADCAST
 operator|)
-ifdef|#
-directive|ifdef
-name|MULTICAST
 argument_list|,
 name|inp
 operator|->
 name|inp_moptions
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
 if|if

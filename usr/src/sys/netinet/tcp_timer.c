@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -487,6 +487,10 @@ expr_stmt|;
 comment|/* XXX */
 endif|#
 directive|endif
+name|tcp_now
+operator|++
+expr_stmt|;
+comment|/* for timestamps */
 name|splx
 argument_list|(
 name|s

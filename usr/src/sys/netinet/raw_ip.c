@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -633,15 +633,10 @@ name|SO_DONTROUTE
 operator|)
 operator||
 name|IP_ALLOWBROADCAST
-ifdef|#
-directive|ifdef
-name|MULTICAST
 argument_list|,
 name|inp
 operator|->
 name|inp_moptions
-endif|#
-directive|endif
 argument_list|)
 operator|)
 return|;
@@ -1052,17 +1047,9 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTICAST
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|MROUTING
-argument_list|)
 specifier|extern
 name|struct
 name|socket
@@ -1204,17 +1191,9 @@ argument_list|(
 literal|"rip_detach"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTICAST
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|MROUTING
-argument_list|)
 if|if
 condition|(
 name|so

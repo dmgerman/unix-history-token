@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_output.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_output.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -171,13 +171,8 @@ parameter_list|,
 name|ro
 parameter_list|,
 name|flags
-ifdef|#
-directive|ifdef
-name|MULTICAST
 parameter_list|,
 name|imo
-endif|#
-directive|endif
 parameter_list|)
 name|struct
 name|mbuf
@@ -197,16 +192,11 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|struct
 name|ip_moptions
 modifier|*
 name|imo
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -361,6 +351,11 @@ name|hlen
 operator|>>
 literal|2
 expr_stmt|;
+name|ipstat
+operator|.
+name|ips_localout
+operator|++
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -371,11 +366,6 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
-expr_stmt|;
-name|ipstat
-operator|.
-name|ips_localout
-operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Route packet. 	 */
@@ -555,6 +545,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|ipstat
+operator|.
+name|ips_noroute
+operator|++
+expr_stmt|;
 name|error
 operator|=
 name|ENETUNREACH
@@ -594,6 +589,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|ipstat
+operator|.
+name|ips_noroute
+operator|++
+expr_stmt|;
 name|error
 operator|=
 name|EHOSTUNREACH
@@ -654,9 +654,6 @@ operator|->
 name|rt_gateway
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
 if|if
 condition|(
 name|IN_MULTICAST
@@ -759,6 +756,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|ipstat
+operator|.
+name|ips_noroute
+operator|++
+expr_stmt|;
 name|error
 operator|=
 name|ENETUNREACH
@@ -931,8 +933,6 @@ goto|goto
 name|sendit
 goto|;
 block|}
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|notdef
@@ -1041,13 +1041,16 @@ operator||=
 name|M_BCAST
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
+else|else
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_BCAST
+expr_stmt|;
 name|sendit
 label|:
-endif|#
-directive|endif
 comment|/* 	 * If small enough for interface, can just send directly. 	 */
 if|if
 condition|(
@@ -1137,11 +1140,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|ipstat
-operator|.
-name|ips_fragmented
-operator|++
-expr_stmt|;
 comment|/* 	 * Too large for interface; fragment if possible. 	 * Must be able to put at least 8 bytes per fragment. 	 */
 if|if
 condition|(
@@ -1155,6 +1153,11 @@ block|{
 name|error
 operator|=
 name|EMSGSIZE
+expr_stmt|;
+name|ipstat
+operator|.
+name|ips_cantfrag
+operator|++
 expr_stmt|;
 goto|goto
 name|bad
@@ -1261,6 +1264,11 @@ block|{
 name|error
 operator|=
 name|ENOBUFS
+expr_stmt|;
+name|ipstat
+operator|.
+name|ips_odropped
+operator|++
 expr_stmt|;
 goto|goto
 name|sendorfree
@@ -1441,6 +1449,11 @@ operator|=
 name|ENOBUFS
 expr_stmt|;
 comment|/* ??? */
+name|ipstat
+operator|.
+name|ips_odropped
+operator|++
+expr_stmt|;
 goto|goto
 name|sendorfree
 goto|;
@@ -1664,6 +1677,17 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|ipstat
+operator|.
+name|ips_fragmented
+operator|++
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -2171,10 +2195,20 @@ name|opt
 operator|==
 name|IPOPT_NOP
 condition|)
+block|{
+comment|/* Preserve for IP mcast tunnel's LSRR alignment. */
+operator|*
+name|dp
+operator|++
+operator|=
+name|IPOPT_NOP
+expr_stmt|;
 name|optlen
 operator|=
 literal|1
 expr_stmt|;
+continue|continue;
+block|}
 else|else
 name|optlen
 operator|=
@@ -2507,9 +2541,6 @@ break|break;
 undef|#
 directive|undef
 name|OPTSET
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|IP_MULTICAST_IF
 case|:
@@ -2540,8 +2571,6 @@ name|m
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 name|freeit
 label|:
 default|default:
@@ -2760,9 +2789,6 @@ operator|=
 name|optval
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|IP_MULTICAST_IF
 case|:
@@ -2792,8 +2818,6 @@ name|mp
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=
@@ -3286,12 +3310,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
 
 begin_comment
 comment|/*  * Set the IP multicast options in response to user setsockopt().  */
@@ -4654,11 +4672,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

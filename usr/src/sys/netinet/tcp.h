@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -217,6 +217,89 @@ name|TCPOPT_MAXSEG
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCPOLEN_MAXSEG
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_WINDOW
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_WINDOW
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_SACK_PERMITTED
+value|4
+end_define
+
+begin_comment
+comment|/* Experimental */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_SACK_PERMITTED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_SACK
+value|5
+end_define
+
+begin_comment
+comment|/* Experimental */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_TIMESTAMP
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_TIMESTAMP
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_TSTAMP_APPA
+value|(TCPOLEN_TIMESTAMP+2)
+end_define
+
+begin_comment
+comment|/* appendix A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_TSTAMP_HDR
+define|\
+value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_TIMESTAMP<<8|TCPOLEN_TIMESTAMP)
+end_define
+
 begin_comment
 comment|/*  * Default maximum segment size for TCP.  * With an IP MSS of 576, this is 536,  * but 512 is probably more convenient.  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).  */
 end_comment
@@ -236,7 +319,18 @@ value|65535
 end_define
 
 begin_comment
-comment|/* largest value for window */
+comment|/* largest value for (unscaled) window */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MAX_WINSHIFT
+value|14
+end_define
+
+begin_comment
+comment|/* maximum window shift */
 end_comment
 
 begin_comment

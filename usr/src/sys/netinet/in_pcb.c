@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -99,22 +99,11 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -1136,9 +1125,6 @@ name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
 comment|/* 		 * If the destination address is multicast and an outgoing 		 * interface has been set as a multicast option, use the 		 * address of that interface as our source address. 		 */
 if|if
 condition|(
@@ -1223,8 +1209,6 @@ operator|)
 return|;
 block|}
 block|}
-endif|#
-directive|endif
 name|ifaddr
 operator|=
 operator|(
@@ -1466,9 +1450,6 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ip_freemoptions
 argument_list|(
 name|inp
@@ -1476,8 +1457,6 @@ operator|->
 name|inp_moptions
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|remque
 argument_list|(
 name|inp

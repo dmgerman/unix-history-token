@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -938,6 +938,19 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_v
+operator|!=
+name|IPVERSION
+condition|)
+block|{
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* 	 * Convert fields to host representation. 	 */
 name|NTOHS
 argument_list|(
@@ -1237,9 +1250,6 @@ name|ours
 goto|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
 if|if
 condition|(
 name|IN_MULTICAST
@@ -1302,6 +1312,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ipstat
+operator|.
+name|ips_cantforward
+operator|++
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1334,6 +1349,11 @@ condition|)
 goto|goto
 name|ours
 goto|;
+name|ipstat
+operator|.
+name|ips_forward
+operator|++
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -1360,6 +1380,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ipstat
+operator|.
+name|ips_cantforward
+operator|++
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -1373,8 +1398,6 @@ goto|goto
 name|ours
 goto|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ip
@@ -1663,7 +1686,6 @@ condition|)
 goto|goto
 name|next
 goto|;
-else|else
 name|ipstat
 operator|.
 name|ips_reassembled
@@ -3306,9 +3328,21 @@ name|forward
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 			 * Let ip_intr's mcast routing check handle mcast pkts 			 */
 name|forward
 operator|=
-literal|1
+operator|!
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3785,7 +3819,6 @@ literal|1
 operator|)
 return|;
 block|}
-else|else
 return|return
 operator|(
 literal|0
@@ -3793,6 +3826,17 @@ operator|)
 return|;
 name|bad
 label|:
+name|ip
+operator|->
+name|ip_len
+operator|-=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+expr_stmt|;
+comment|/* XXX icmp_error adds in hdr length */
 name|icmp_error
 argument_list|(
 name|m
@@ -3801,6 +3845,11 @@ name|type
 argument_list|,
 name|code
 argument_list|)
+expr_stmt|;
+name|ipstat
+operator|.
+name|ips_badoptions
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -4774,6 +4823,11 @@ name|struct
 name|in_addr
 name|dest
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|destifp
+decl_stmt|;
 name|dest
 operator|.
 name|s_addr
@@ -5288,6 +5342,8 @@ operator|&
 name|ipforward_rt
 argument_list|,
 name|IP_FORWARDING
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5336,6 +5392,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|destifp
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|error
@@ -5381,6 +5441,20 @@ name|code
 operator|=
 name|ICMP_UNREACH_NEEDFRAG
 expr_stmt|;
+if|if
+condition|(
+name|ipforward_rt
+operator|.
+name|ro_rt
+condition|)
+name|destifp
+operator|=
+name|ipforward_rt
+operator|.
+name|ro_rt
+operator|->
+name|rt_ifp
+expr_stmt|;
 name|ipstat
 operator|.
 name|ips_cantfrag
@@ -5409,6 +5483,8 @@ argument_list|,
 name|code
 argument_list|,
 name|dest
+argument_list|,
+name|destifp
 argument_list|)
 expr_stmt|;
 block|}

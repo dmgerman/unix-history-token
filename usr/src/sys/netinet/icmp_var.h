@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)icmp_var.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)icmp_var.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,19 +12,19 @@ struct|struct
 name|icmpstat
 block|{
 comment|/* statistics related to icmp packets generated */
-name|int
+name|u_long
 name|icps_error
 decl_stmt|;
 comment|/* # of calls to icmp_error */
-name|int
+name|u_long
 name|icps_oldshort
 decl_stmt|;
 comment|/* no error 'cuz old ip too short */
-name|int
+name|u_long
 name|icps_oldicmp
 decl_stmt|;
 comment|/* no error 'cuz old was icmp */
-name|int
+name|u_long
 name|icps_outhist
 index|[
 name|ICMP_MAXTYPE
@@ -33,27 +33,27 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* statistics related to input messages processed */
-name|int
+name|u_long
 name|icps_badcode
 decl_stmt|;
 comment|/* icmp_code out of range */
-name|int
+name|u_long
 name|icps_tooshort
 decl_stmt|;
 comment|/* packet< ICMP_MINLEN */
-name|int
+name|u_long
 name|icps_checksum
 decl_stmt|;
 comment|/* bad checksum */
-name|int
+name|u_long
 name|icps_badlen
 decl_stmt|;
 comment|/* calculated bound mismatch */
-name|int
+name|u_long
 name|icps_reflect
 decl_stmt|;
 comment|/* number of responses */
-name|int
+name|u_long
 name|icps_inhist
 index|[
 name|ICMP_MAXTYPE
