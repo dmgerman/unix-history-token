@@ -1204,14 +1204,6 @@ argument_list|,
 literal|"permission denied (shell)"
 argument_list|)
 expr_stmt|;
-name|shell
-operator|=
-name|_PATH_BSHELL
-expr_stmt|;
-name|iscsh
-operator|=
-name|NO
-expr_stmt|;
 block|}
 elseif|else
 if|if
