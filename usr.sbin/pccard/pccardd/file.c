@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.14 1998/03/09 05:18:56 hosokawa Exp $"
+literal|"$Id: file.c,v 1.15 1998/04/25 17:52:15 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,12 +132,6 @@ comment|/* 10 */
 literal|"remove"
 block|,
 comment|/* 11 */
-literal|"iosize"
-block|,
-comment|/* 12 */
-literal|"memsize"
-block|,
-comment|/* 13 */
 literal|0
 block|}
 decl_stmt|;
@@ -218,20 +212,6 @@ define|#
 directive|define
 name|KWD_REMOVE
 value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|KWD_IOSIZE
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|KWD_MEMSIZE
-value|13
 end_define
 
 begin_struct
