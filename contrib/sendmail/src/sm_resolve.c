@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"$Id: sm_resolve.c,v 8.24.4.6 2002/06/25 04:22:41 ca Exp $"
+literal|"$Id: sm_resolve.c,v 8.24.4.7 2003/03/22 22:55:37 ca Exp $"
 argument_list|)
 end_macro
 
@@ -418,21 +418,8 @@ operator|(
 name|DNS_REPLY_T
 operator|*
 operator|)
-name|xalloc
+name|sm_malloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|r
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|r
-argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -449,6 +436,19 @@ condition|)
 return|return
 name|NULL
 return|;
+name|memset
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|data
@@ -717,7 +717,7 @@ operator|(
 name|RESOURCE_RECORD_T
 operator|*
 operator|)
-name|xalloc
+name|sm_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -744,6 +744,21 @@ return|return
 name|NULL
 return|;
 block|}
+name|memset
+argument_list|(
+operator|*
+name|rr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|*
+name|rr
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|rr
@@ -963,7 +978,7 @@ operator|(
 name|MX_RECORD_T
 operator|*
 operator|)
-name|xalloc
+name|sm_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1114,7 +1129,7 @@ operator|(
 name|SRV_RECORDT_T
 operator|*
 operator|)
-name|xalloc
+name|sm_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1311,7 +1326,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|xalloc
+name|sm_malloc
 argument_list|(
 name|txtlen
 operator|+
@@ -1384,17 +1399,13 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|xalloc
+name|sm_malloc
 argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|size
-operator|!=
-literal|0
-operator|&&
 operator|(
 operator|*
 name|rr

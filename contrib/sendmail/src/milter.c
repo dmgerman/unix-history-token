@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.197.2.6 2002/12/30 05:54:00 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.197.2.7 2003/03/22 18:54:25 ca Exp $"
 argument_list|)
 end_macro
 
@@ -218,10 +218,12 @@ define|#
 directive|define
 name|MILTER_CHECK_ERROR
 parameter_list|(
+name|initial
+parameter_list|,
 name|action
 parameter_list|)
 define|\
-value|if (tTd(71, 101)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (bitnset(SMF_TEMPFAIL, m->mf_flags)) \ 		*state = SMFIR_TEMPFAIL; \ 	else if (bitnset(SMF_REJECT, m->mf_flags)) \ 		*state = SMFIR_REJECT; \ 	else \ 		action;
+value|if (!initial&& tTd(71, 100)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (tTd(71, 101)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (bitnset(SMF_TEMPFAIL, m->mf_flags)) \ 		*state = SMFIR_TEMPFAIL; \ 	else if (bitnset(SMF_REJECT, m->mf_flags)) \ 		*state = SMFIR_REJECT; \ 	else \ 		action;
 end_define
 
 begin_else
@@ -238,6 +240,8 @@ define|#
 directive|define
 name|MILTER_CHECK_ERROR
 parameter_list|(
+name|initial
+parameter_list|,
 name|action
 parameter_list|)
 define|\
@@ -7338,6 +7342,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|return NULL
 argument_list|)
 empty_stmt|;
@@ -7379,6 +7385,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|return NULL
 argument_list|)
 empty_stmt|;
@@ -7833,6 +7841,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;
@@ -7899,6 +7909,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;
@@ -11810,6 +11822,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|true
+argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;
@@ -11908,6 +11922,8 @@ argument_list|)
 expr_stmt|;
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|true
+argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;
@@ -13482,6 +13498,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;
@@ -13747,6 +13765,8 @@ argument_list|)
 expr_stmt|;
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|break
 argument_list|)
 empty_stmt|;
@@ -14512,6 +14532,8 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
+argument|false
+argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;

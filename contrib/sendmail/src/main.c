@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.887.2.20 2003/02/07 17:57:44 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.887.2.22 2003/03/06 18:38:08 ca Exp $"
 argument_list|)
 end_macro
 
@@ -533,7 +533,7 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|{									\ 	if (extraprivs&&						\ 	    OpMode != MD_DELIVER&& OpMode != MD_SMTP&&		\ 	    OpMode != MD_VERIFY&& OpMode != MD_TEST)			\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option (not in submission mode)\n", \ 		       (cmd));						\ 		break;							\ 	}								\ 	if (extraprivs&& queuerun)					\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option with -q\n", \ 		       (cmd));						\ 		break;							\ 	}								\ }
+value|{									\ 	if (extraprivs&&						\ 	    OpMode != MD_DELIVER&& OpMode != MD_SMTP&&		\ 	    OpMode != MD_ARPAFTP&&					\ 	    OpMode != MD_VERIFY&& OpMode != MD_TEST)			\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option (not in submission mode)\n", \ 		       (cmd));						\ 		break;							\ 	}								\ 	if (extraprivs&& queuerun)					\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option with -q\n", \ 		       (cmd));						\ 		break;							\ 	}								\ }
 end_define
 
 begin_function
@@ -1476,6 +1476,7 @@ comment|/* ! OPTIONS */
 endif|#
 directive|endif
 comment|/* _FFR_QUARANTINE */
+comment|/* Set to 0 to allow -b; need to check optarg before using it! */
 name|opterr
 operator|=
 literal|0
@@ -1650,6 +1651,34 @@ break|break;
 case|case
 literal|'L'
 case|:
+if|if
+condition|(
+name|optarg
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"option requires an argument -- '%c'"
+argument_list|,
+operator|(
+name|char
+operator|)
+name|j
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_USAGE
+return|;
+block|}
 name|j
 operator|=
 name|SM_MIN
