@@ -327,11 +327,11 @@ begin_define
 define|#
 directive|define
 name|SBC_IRQ
-value|7
+value|5
 end_define
 
 begin_comment
-comment|/* IQR7 is the factory default.	 */
+comment|/* IQR5 is the factory default.	 */
 end_comment
 
 begin_endif
