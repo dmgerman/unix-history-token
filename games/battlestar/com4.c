@@ -238,7 +238,7 @@ index|[
 name|value
 index|]
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 if|if
@@ -909,7 +909,7 @@ operator|++
 expr_stmt|;
 name|followgod
 operator|=
-name|time
+name|gtime
 expr_stmt|;
 name|clearbit
 argument_list|(
@@ -1523,7 +1523,7 @@ name|tempwiz
 operator|=
 literal|0
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 if|if
@@ -1849,7 +1849,7 @@ argument_list|,
 name|value
 argument_list|)
 operator|&&
-name|time
+name|gtime
 operator|>
 name|ate
 operator|-
@@ -1888,7 +1888,7 @@ name|ate
 operator|=
 name|max
 argument_list|(
-name|time
+name|gtime
 argument_list|,
 name|ate
 argument_list|)
@@ -1903,7 +1903,7 @@ name|CYCLE
 operator|/
 literal|10
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|puts
@@ -1915,7 +1915,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|time
+name|gtime
 operator|<
 name|ate
 operator|-

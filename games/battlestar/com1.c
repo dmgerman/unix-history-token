@@ -107,7 +107,7 @@ argument_list|(
 name|token
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 block|}
@@ -397,7 +397,7 @@ name|hurt
 decl_stmt|;
 if|if
 condition|(
-name|time
+name|gtime
 operator|>
 literal|30
 operator|&&
@@ -427,7 +427,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|time
+name|gtime
 operator|>
 literal|20
 operator|&&
@@ -442,7 +442,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|time
+name|gtime
 operator|>
 name|snooze
 condition|)
@@ -458,7 +458,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|time
+name|gtime
 operator|>
 name|snooze
 operator|-
@@ -471,7 +471,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|time
+name|gtime
 operator|>
 operator|(
 name|rythmn
@@ -496,7 +496,7 @@ if|if
 condition|(
 name|OUTSIDE
 operator|&&
-name|time
+name|gtime
 operator|-
 name|rythmn
 operator|-
@@ -545,7 +545,7 @@ if|if
 condition|(
 name|OUTSIDE
 operator|&&
-name|time
+name|gtime
 operator|-
 name|rythmn
 operator|-
@@ -578,9 +578,9 @@ block|}
 block|}
 name|rythmn
 operator|=
-name|time
+name|gtime
 operator|-
-name|time
+name|gtime
 operator|%
 name|CYCLE
 expr_stmt|;
@@ -833,7 +833,7 @@ name|CYCLE
 operator|*
 literal|1.5
 operator|-
-name|time
+name|gtime
 operator|<
 literal|10
 condition|)
@@ -887,7 +887,7 @@ index|[
 name|position
 index|]
 operator|||
-name|time
+name|gtime
 operator|>
 name|CYCLE
 operator|)
@@ -922,7 +922,7 @@ if|if
 condition|(
 name|meetgirl
 operator|&&
-name|time
+name|gtime
 operator|-
 name|CYCLE
 operator|*
@@ -996,7 +996,7 @@ name|printf
 argument_list|(
 literal|"The targeting computer says we have %d seconds to attack!\n"
 argument_list|,
-name|clock
+name|gclock
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -1349,7 +1349,7 @@ argument_list|,
 name|CRASH
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|+=
 name|rnd
 argument_list|(

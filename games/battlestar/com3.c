@@ -56,7 +56,7 @@ argument_list|(
 literal|"OK"
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 switch|switch
@@ -784,7 +784,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|zzz
@@ -924,7 +924,7 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|printf
@@ -1033,7 +1033,7 @@ operator|==
 name|NOUNS
 condition|)
 block|{
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 switch|switch
@@ -1370,7 +1370,7 @@ block|}
 else|else
 name|puts
 argument_list|(
-literal|"What old timer?"
+literal|"What old gtimer?"
 argument_list|)
 expr_stmt|;
 break|break;

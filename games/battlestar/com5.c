@@ -343,7 +343,7 @@ name|loved
 operator|=
 literal|1
 expr_stmt|;
-name|time
+name|gtime
 operator|+=
 literal|10
 expr_stmt|;
@@ -387,7 +387,7 @@ argument_list|(
 literal|"Girl:\n"
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|+=
 literal|10
 expr_stmt|;
@@ -426,14 +426,14 @@ name|n
 decl_stmt|;
 name|oldtime
 operator|=
-name|time
+name|gtime
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|snooze
 operator|-
-name|time
+name|gtime
 operator|)
 operator|<
 operator|(
@@ -443,7 +443,7 @@ name|CYCLE
 operator|)
 condition|)
 block|{
-name|time
+name|gtime
 operator|+=
 literal|0.75
 operator|*
@@ -452,7 +452,7 @@ operator|-
 operator|(
 name|snooze
 operator|-
-name|time
+name|gtime
 operator|)
 expr_stmt|;
 name|printf
@@ -468,7 +468,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|time
+name|gtime
 operator|-
 name|oldtime
 condition|;
@@ -490,7 +490,7 @@ operator|+=
 literal|3
 operator|*
 operator|(
-name|time
+name|gtime
 operator|-
 name|oldtime
 operator|)
@@ -506,7 +506,7 @@ block|{
 name|fuel
 operator|-=
 operator|(
-name|time
+name|gtime
 operator|-
 name|oldtime
 operator|)
@@ -725,7 +725,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|time
+name|gtime
 operator|/
 name|CYCLE
 operator|+
@@ -739,7 +739,7 @@ condition|)
 switch|switch
 condition|(
 operator|(
-name|time
+name|gtime
 operator|%
 name|CYCLE
 operator|)
@@ -823,7 +823,7 @@ condition|)
 switch|switch
 condition|(
 operator|(
-name|time
+name|gtime
 operator|%
 name|CYCLE
 operator|)
@@ -1174,7 +1174,7 @@ argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
-name|time
+name|gtime
 operator|++
 expr_stmt|;
 name|ego
@@ -1323,7 +1323,7 @@ argument_list|)
 expr_stmt|;
 name|wintime
 operator|=
-name|time
+name|gtime
 expr_stmt|;
 block|}
 block|}

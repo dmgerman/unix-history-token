@@ -98,14 +98,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|clock
+name|gclock
 init|=
 literal|120
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time for all the flights in the game */
+comment|/* gtime for all the flights in the game */
 end_comment
 
 begin_decl_stmt
@@ -492,7 +492,7 @@ return|;
 block|}
 if|if
 condition|(
-name|clock
+name|gclock
 operator|<=
 literal|0
 condition|)
@@ -1054,7 +1054,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
-name|clock
+name|gclock
 operator|--
 expr_stmt|;
 name|mvaddstr
@@ -1131,7 +1131,7 @@ name|printw
 argument_list|(
 literal|"%3d"
 argument_list|,
-name|clock
+name|gclock
 argument_list|)
 expr_stmt|;
 name|refresh
