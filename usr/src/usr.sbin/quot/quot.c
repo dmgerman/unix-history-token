@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.12 (Berkeley) 87/02/23"
+literal|"@(#)quot.c	4.13 (Berkeley) 87/10/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -566,6 +566,9 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dev

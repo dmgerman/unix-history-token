@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.10 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,14 +271,6 @@ literal|"/tmp/EdDk.aXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -494,6 +486,9 @@ operator|!=
 literal|'/'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|np
@@ -557,6 +552,9 @@ operator|!=
 literal|'/'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|specname
@@ -1652,6 +1650,9 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|np
@@ -1688,6 +1689,9 @@ name|xxboot
 operator|=
 name|np
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|xxboot
@@ -1712,6 +1716,9 @@ name|bootxx
 operator|=
 name|np
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bootxx

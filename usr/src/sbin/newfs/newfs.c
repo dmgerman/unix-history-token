@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.13 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,14 +567,6 @@ begin_function_decl
 name|char
 modifier|*
 name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1787,8 +1779,9 @@ condition|)
 name|special
 operator|++
 expr_stmt|;
-name|special
-operator|=
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|device
@@ -1797,6 +1790,10 @@ literal|"/dev/r%s"
 argument_list|,
 name|special
 argument_list|)
+expr_stmt|;
+name|special
+operator|=
+name|device
 expr_stmt|;
 if|if
 condition|(

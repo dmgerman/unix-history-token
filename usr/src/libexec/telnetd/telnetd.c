@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.22 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2058,6 +2058,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Is the client side a 4.2 (NOT 4.3) system?  We need to know this 	 * because 4.2 clients are unable to deal with TCP urgent data. 	 * 	 * To find out, we send out a "DO ECHO".  If the remote system 	 * answers "WILL ECHO" it is probably a 4.2 client, and we note 	 * that fact ("WILL ECHO" ==> that the client will echo what 	 * WE, the server, sends it; it does NOT mean that the client will 	 * echo the terminal input). 	 */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nfrontp
@@ -3590,6 +3593,9 @@ operator|=
 name|OPT_NO
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nfrontp
@@ -3676,6 +3682,9 @@ index|]
 operator|=
 name|OPT_NO
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nfrontp
@@ -3801,6 +3810,9 @@ operator|=
 name|OPT_NO
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nfrontp
@@ -3894,6 +3906,9 @@ operator|=
 name|OPT_YES
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nfrontp

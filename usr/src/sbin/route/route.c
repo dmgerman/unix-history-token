@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.7 (Berkeley) %G%"
+literal|"@(#)route.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,6 +1130,9 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1204,6 +1207,9 @@ name|sa
 operator|->
 name|sa_data
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1505,6 +1511,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1534,6 +1543,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1572,6 +1584,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1607,6 +1622,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -1681,6 +1699,9 @@ name|sa
 operator|->
 name|sa_data
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -2865,6 +2886,9 @@ condition|(
 name|port
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|mybuf
@@ -2881,6 +2905,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|mybuf
@@ -2951,6 +2978,9 @@ name|x_host
 operator|.
 name|c_host
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|chost
@@ -3018,6 +3048,9 @@ if|if
 condition|(
 name|port
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cport
@@ -3036,6 +3069,9 @@ name|cport
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|mybuf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.5 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2595,8 +2595,9 @@ operator|(
 literal|"     0"
 operator|)
 return|;
-return|return
 operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -2611,6 +2612,10 @@ name|dev
 operator|->
 name|d_unit
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|buf
 operator|)
 return|;
 block|}
@@ -2646,8 +2651,9 @@ operator|(
 literal|" -1"
 operator|)
 return|;
-return|return
 operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|errbuf
@@ -2656,6 +2662,10 @@ literal|"%3d"
 argument_list|,
 name|num
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|errbuf
 operator|)
 return|;
 block|}

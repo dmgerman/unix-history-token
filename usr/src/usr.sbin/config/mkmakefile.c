@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.18 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2058,6 +2058,9 @@ operator|!=
 name|SWAPSPEC
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|swapname
@@ -2330,6 +2333,9 @@ operator|==
 name|SYSTEMSPEC
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|swapname

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	5.3 (Berkeley) %G%"
+literal|"@(#)announce.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,6 +294,9 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|full_tty
@@ -565,6 +568,9 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line_buf
@@ -603,6 +609,9 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line_buf
@@ -651,6 +660,9 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line_buf
@@ -695,6 +707,9 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line_buf
@@ -739,6 +754,9 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line_buf

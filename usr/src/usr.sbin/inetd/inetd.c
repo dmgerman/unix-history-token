@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.10 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3923,6 +3923,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -3940,6 +3943,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -5085,6 +5091,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buffer
@@ -5216,6 +5225,9 @@ operator|<
 literal|0
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buffer

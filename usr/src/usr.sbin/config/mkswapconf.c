@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkswapconf.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkswapconf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -794,6 +794,9 @@ name|dp
 operator|=
 name|devtable
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -864,6 +867,9 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

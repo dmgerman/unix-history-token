@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.9 (Berkeley) %G%"
+literal|"@(#)sa.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4577,6 +4577,9 @@ name|int
 name|uid
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|UserKey

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.4 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,6 +386,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -480,6 +483,9 @@ decl_stmt|,
 name|cc
 decl_stmt|;
 extern|extern errno;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -596,6 +602,9 @@ index|[
 literal|30
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -658,6 +667,9 @@ index|[
 literal|30
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -764,6 +776,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
@@ -907,6 +922,9 @@ operator|-
 literal|1
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.4 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,12 +180,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
 name|argc
 operator|--
 operator|,
@@ -260,8 +254,9 @@ condition|)
 name|special
 operator|++
 expr_stmt|;
-name|special
-operator|=
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|device
@@ -270,6 +265,10 @@ literal|"/dev/%s"
 argument_list|,
 name|special
 argument_list|)
+expr_stmt|;
+name|special
+operator|=
+name|device
 expr_stmt|;
 goto|goto
 name|again

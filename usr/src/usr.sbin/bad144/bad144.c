@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.10 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,9 @@ index|]
 operator|!=
 literal|'/'
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|name

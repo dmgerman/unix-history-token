@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkhosts.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkhosts.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +238,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tempname
@@ -682,6 +685,9 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tempname
@@ -694,6 +700,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|newname
@@ -729,6 +738,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tempname
@@ -741,6 +753,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|newname
@@ -792,6 +807,9 @@ argument_list|)
 expr_stmt|;
 name|err
 label|:
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tempname
@@ -809,6 +827,9 @@ argument_list|(
 name|tempname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tempname

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.3 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2889,18 +2889,20 @@ name|so_type
 operator|>
 name|STYPEMAX
 condition|)
+block|{
 name|stype
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|sprintf
-argument_list|(
 name|emalloc
 argument_list|(
 literal|10
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|stype
 argument_list|,
 literal|"unk%d"
 argument_list|,
@@ -2909,6 +2911,7 @@ operator|.
 name|so_type
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|stype
 operator|=
@@ -3243,6 +3246,10 @@ parameter_list|(
 name|number
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 switch|switch
 condition|(
 name|number
@@ -3321,11 +3328,8 @@ literal|"raw"
 operator|)
 return|;
 default|default:
-return|return
 operator|(
-operator|(
-name|char
-operator|*
+name|void
 operator|)
 name|sprintf
 argument_list|(
@@ -3338,6 +3342,10 @@ literal|"%d"
 argument_list|,
 name|number
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|cp
 operator|)
 return|;
 block|}

@@ -1745,6 +1745,9 @@ literal|"ilsym"
 operator|)
 return|;
 default|default:
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tagbuff

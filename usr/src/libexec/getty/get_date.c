@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_date.c	5.1 (Berkeley) %G%"
+literal|"@(#)get_date.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +232,9 @@ name|PM
 expr_stmt|;
 block|}
 comment|/* format is '8:10pm on Sunday, 16 Sept 1973' */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|datebuffer

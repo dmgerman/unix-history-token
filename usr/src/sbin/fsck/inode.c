@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.3 (Berkeley) %G%"
+literal|"@(#)inode.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -650,6 +650,9 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

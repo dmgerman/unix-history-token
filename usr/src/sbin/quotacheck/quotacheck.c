@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.7 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -970,6 +970,9 @@ break|break;
 case|case
 literal|0
 case|:
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|quotafile
