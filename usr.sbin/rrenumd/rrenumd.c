@@ -1290,7 +1290,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> IPV6_PKTINFO: %s"
+literal|"<%s> IPV6_RECVPKTINFO: %s"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
