@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.22 (Berkeley) %G%"
+literal|"@(#)init.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,11 +250,22 @@ begin_define
 define|#
 directive|define
 name|GETTY_SPACING
-value|10
+value|5
 end_define
 
 begin_comment
-comment|/* fork getty on a port every N secs */
+comment|/* N secs minimum getty spacing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETTY_SLEEP
+value|30
+end_define
+
+begin_comment
+comment|/* sleep N secs after spacing problem */
 end_comment
 
 begin_define
@@ -1346,6 +1357,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1431,6 +1447,11 @@ argument_list|(
 name|maskp
 argument_list|,
 name|sig
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
@@ -1773,6 +1794,9 @@ name|int
 name|getsecuritylevel
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|KERN_SECURELVL
 name|int
 name|name
 index|[
@@ -1852,6 +1876,16 @@ operator|(
 name|curlevel
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1869,6 +1903,9 @@ name|int
 name|newlevel
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|KERN_SECURELVL
 name|int
 name|name
 index|[
@@ -1958,6 +1995,8 @@ argument_list|,
 name|newlevel
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -4587,17 +4626,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|GETTY_SPACING
-operator|+
-literal|1
-operator|-
-operator|(
-name|current_time
-operator|-
-name|sp
-operator|->
-name|se_started
-operator|)
+name|GETTY_SLEEP
 argument_list|)
 expr_stmt|;
 block|}
@@ -4683,13 +4712,25 @@ end_comment
 
 begin_function
 name|void
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|collect_child
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|)
+else|#
+directive|else
+function|collect_child
 parameter_list|(
 name|pid
 parameter_list|)
 name|pid_t
 name|pid
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 specifier|register
 name|session_t
