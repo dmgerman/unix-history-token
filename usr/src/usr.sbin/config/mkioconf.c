@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.22 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2670,7 +2670,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"hp300/dev/device.h\"\n\n"
+literal|"#include \"hp/dev/device.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
