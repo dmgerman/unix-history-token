@@ -192,6 +192,26 @@ name|nswbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|maxswzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max swmeta KVA storage */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxbcache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max buffer cache KVA storage */
+end_comment
+
 begin_comment
 comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
 end_comment
@@ -334,6 +354,30 @@ literal|"kern.nbuf"
 argument_list|,
 operator|&
 name|nbuf
+argument_list|)
+expr_stmt|;
+name|maxswzone
+operator|=
+name|VM_SWZONE_SIZE_MAX
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxswzone"
+argument_list|,
+operator|&
+name|maxswzone
+argument_list|)
+expr_stmt|;
+name|maxbcache
+operator|=
+name|VM_BCACHE_SIZE_MAX
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxbcache"
+argument_list|,
+operator|&
+name|maxbcache
 argument_list|)
 expr_stmt|;
 name|ncallout

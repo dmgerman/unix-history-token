@@ -2197,6 +2197,28 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|maxswzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max KVA for swap structures */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxbcache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max KVA for buffer cache */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|runningbufspace
 decl_stmt|;
 end_decl_stmt
