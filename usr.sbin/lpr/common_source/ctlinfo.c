@@ -1215,7 +1215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine renames the temporary control file as received from some  * other (remote) host.  That file will always start with 'tfA*', because  * that's the name it is created with in recvjob.c.  This will rewrite  * the file to 'tfB*' (correcting any lines which need correcting), rename  * 'tfB*' to 'cfA*', and then remove the original 'tfA*' file.  *  * The purpose of this routine is to be a little paranoid about the contents  * of that control file.  It is partially meant to protect against people  * TRYING to cause trouble (perhaps after breaking into root of some host  * that this host will accept print jobs from).  The fact that we're willing  * to print jobs from some remote host does not mean that we should blindly  * do anything that host tells us to do.  *  * This is also meant to protect us from errors in other implementations of  * lpr, particularly since we may want to use some values from the control  * file as environment variables when it comes time to print, or as parameters  * to commands which will be exec'ed, or values in statistics records.  *  * This may also do some "conversions" between how different versions of  * lpr or lprNG define the contents of various lines in a control file.  *  * If there is an error, it returns a pointer to a descriptive error message.  * Error messages which are RETURNED (as opposed to syslog-ed) do not include  * the printer-queue name.  Let the caller add that if it is wanted.  */
+comment|/*  * This routine renames the temporary control file as received from some  * other (remote) host.  That file will almost always with `tfA*', because  * recvjob.c creates the file by changing `c' to `t' in the original name  * for the control file.  Now if you read the RFC, you would think that all  * control filenames start with `cfA*'.  However, it seems there are some  * implementations which send control filenames which start with `cf'  * followed by *any* letter, so this routine can not assume what the third  * letter will (or will not) be.  Sigh.  *  * So this will rewrite the temporary file to `rf*' (correcting any lines  * which need correcting), rename that `rf*' file to `cf*', and then remove  * the original `tf*' temporary file.  *  * The *main* purpose of this routine is to be paranoid about the contents  * of that control file.  It is partially meant to protect against people  * TRYING to cause trouble (perhaps after breaking into root of some host  * that this host will accept print jobs from).  The fact that we're willing  * to print jobs from some remote host does not mean that we should blindly  * do anything that host tells us to do.  *  * This is also meant to protect us from errors in other implementations of  * lpr, particularly since we may want to use some values from the control  * file as environment variables when it comes time to print, or as parameters  * to commands which will be exec'ed, or values in statistics records.  *  * This may also do some "conversions" between how different versions of  * lpr or lprNG define the contents of various lines in a control file.  *  * If there is an error, it returns a pointer to a descriptive error message.  * Error messages which are RETURNED (as opposed to syslog-ed) do not include  * the printer-queue name.  Let the caller add that if it is wanted.  */
 end_comment
 
 begin_function
@@ -1235,11 +1235,13 @@ name|tfname
 parameter_list|)
 block|{
 name|int
-name|res
+name|chk3rd
 decl_stmt|,
 name|newfd
 decl_stmt|,
 name|nogood
+decl_stmt|,
+name|res
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1397,21 +1399,40 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* in case of early jump to error_ret */
+name|chk3rd
+operator|=
+name|tfname
+index|[
+literal|2
+index|]
+expr_stmt|;
 if|if
 condition|(
-name|strncmp
-argument_list|(
-name|tfname
-argument_list|,
-literal|"tfA"
-argument_list|,
 operator|(
-name|size_t
-operator|)
-literal|3
-argument_list|)
-operator|!=
+name|tfname
+index|[
 literal|0
+index|]
+operator|!=
+literal|'t'
+operator|)
+operator|||
+operator|(
+name|tfname
+index|[
+literal|1
+index|]
+operator|!=
+literal|'f'
+operator|)
+operator|||
+operator|(
+operator|!
+name|isalpha
+argument_list|(
+name|chk3rd
+argument_list|)
+operator|)
 condition|)
 block|{
 name|snprintf
@@ -1481,12 +1502,12 @@ argument_list|)
 expr_stmt|;
 name|tfname2
 index|[
-literal|2
+literal|0
 index|]
 operator|=
-literal|'B'
+literal|'r'
 expr_stmt|;
-comment|/* tfB<job><hostname> */
+comment|/* rf<letter><job><hostname> */
 name|newfd
 operator|=
 name|open
