@@ -3364,6 +3364,11 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
@@ -3376,6 +3381,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_INTERLOCK
 operator||
 name|LK_TIMELOCK
 argument_list|,
