@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)what1.c	4.1 (Berkeley) %G%"
+literal|"@(#)what1.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,12 +45,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|relfeed
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -71,6 +72,7 @@ index|]
 decl_stmt|,
 modifier|*
 name|rbp
+init|=
 name|rbb
 decl_stmt|;
 end_decl_stmt
@@ -118,14 +120,15 @@ name|af
 decl_stmt|;
 name|int
 name|xargc
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|nw
-operator|,
+decl_stmt|,
 name|nf
-operator|,
+decl_stmt|,
 name|i
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 name|argc
@@ -547,6 +550,10 @@ name|buf
 index|[
 literal|200
 index|]
+decl_stmt|,
+modifier|*
+name|ctime
+argument_list|()
 decl_stmt|;
 name|int
 name|eval
@@ -558,11 +565,13 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|rf
+init|=
 name|NULL
 decl_stmt|;
 name|FILE
 modifier|*
 name|ans
+init|=
 name|NULL
 decl_stmt|;
 name|pid
@@ -910,10 +919,11 @@ begin_block
 block|{
 name|int
 name|i
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|c
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 operator|(

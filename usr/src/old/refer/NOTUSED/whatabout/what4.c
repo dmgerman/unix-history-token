@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)what4.c	4.1 (Berkeley) %G%"
+literal|"@(#)what4.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,7 @@ index|]
 decl_stmt|,
 modifier|*
 name|tp
+init|=
 name|tbuf
 decl_stmt|;
 end_decl_stmt
@@ -159,22 +160,23 @@ index|]
 decl_stmt|;
 name|int
 name|nw
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|i
-operator|,
+decl_stmt|,
 name|any
-operator|,
+decl_stmt|,
 name|nf
-operator|,
+decl_stmt|,
 name|j
-operator|,
+decl_stmt|,
 name|wexch
 argument_list|()
-operator|,
+decl_stmt|,
 name|wcomp
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|char
 name|tw
 index|[
@@ -617,14 +619,17 @@ begin_block
 block|{
 name|int
 name|k
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|c
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|i
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 name|c
@@ -688,13 +693,15 @@ begin_block
 block|{
 name|int
 name|start
+init|=
 literal|1
-operator|,
+decl_stmt|,
 name|oldc
+init|=
 literal|' '
-operator|,
+decl_stmt|,
 name|c
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|f

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)what2.c	4.1 (Berkeley) %G%"
+literal|"@(#)what2.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,8 +113,9 @@ begin_block
 block|{
 name|int
 name|ns
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|char
 name|linbuf
 index|[
@@ -131,13 +132,16 @@ name|int
 name|i
 decl_stmt|,
 name|wrflg
-decl|0
+init|=
+literal|0
 decl_stmt|,
 name|wrote
-decl|0
+init|=
+literal|0
 decl_stmt|,
 name|ln
-decl|0
+init|=
+literal|0
 decl_stmt|;
 name|FILE
 modifier|*
@@ -410,19 +414,21 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|state
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
 name|oldc
+init|=
 literal|'\n'
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|gsent
@@ -459,7 +465,8 @@ name|int
 name|c
 decl_stmt|,
 name|leng
-decl|0
+init|=
+literal|0
 decl_stmt|;
 comment|/* state 		0: looking for '.'  		1: looking for nl or space aftter '.' 		2: looking for nl after line with dot. 		*/
 name|s
@@ -811,8 +818,9 @@ name|t
 decl_stmt|;
 name|int
 name|more
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 name|t
 operator|=
 name|s
@@ -953,6 +961,7 @@ index|]
 decl_stmt|,
 modifier|*
 name|s
+init|=
 name|sb
 decl_stmt|;
 name|int
@@ -1185,8 +1194,9 @@ block|{
 comment|/* see if sentence array should be updated */
 name|int
 name|lval
+init|=
 literal|100
-expr_stmt|;
+decl_stmt|;
 name|char
 modifier|*
 name|ob
@@ -1198,6 +1208,7 @@ name|sp
 decl_stmt|,
 modifier|*
 name|least
+init|=
 name|NULL
 decl_stmt|;
 if|if
