@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_getc[] = "@(#)getc_.c	1.2";  *  * get a character from the standard input  *  * calling sequence:  *	integer getc  *	ierror = getc (char)  * where:  *	char will be read from the standard input, usually the terminal  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/* char id_getc[] = "@(#)getc_.c	1.3";  *  * get a character from the standard input  *  * calling sequence:  *	integer getc  *	ierror = getc (char)  * where:  *	char will be read from the standard input, usually the terminal  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include
@@ -82,12 +82,21 @@ condition|(
 name|lu
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|lu
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|errno
+operator|)
+return|;
 if|if
 condition|(
 operator|(

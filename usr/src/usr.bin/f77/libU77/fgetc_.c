@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fgetc[] = "@(#)fgetc_.c	1.3";  *  * get a character from a logical unit bypassing formatted I/O  *  * calling sequence:  *	integer fgetc  *	ierror = fgetc (unit, char)  * where:  *	char will return a character from logical unit  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/* char id_fgetc[] = "@(#)fgetc_.c	1.4";  *  * get a character from a logical unit bypassing formatted I/O  *  * calling sequence:  *	integer fgetc  *	ierror = fgetc (unit, char)  * where:  *	char will return a character from logical unit  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include
@@ -113,12 +113,21 @@ condition|(
 name|lu
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|lu
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|errno
+operator|)
+return|;
 if|if
 condition|(
 operator|(
