@@ -748,7 +748,7 @@ expr|*
 name|export
 operator|&&
 name|export
-operator|.
+operator|->
 name|ex_flags
 condition|)
 return|return
@@ -762,14 +762,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-block|}
-end_function
-
-begin_comment
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
-end_comment
-
-begin_expr_stmt
 name|NDINIT
 argument_list|(
 operator|&
@@ -786,9 +779,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -806,9 +796,6 @@ operator|(
 name|error
 operator|)
 return|;
-end_if
-
-begin_expr_stmt
 name|NDFREE
 argument_list|(
 operator|&
@@ -817,18 +804,12 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|devvp
 operator|=
 name|ndp
 operator|.
 name|ni_vp
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -852,20 +833,11 @@ name|error
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * Verify that user has necessary permissions on the device, 	 * or has superuser abilities 	 */
-end_comment
-
-begin_expr_stmt
 name|accessmode
 operator|=
 name|VREAD
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|vn_lock
 argument_list|(
 name|devvp
@@ -877,9 +849,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|error
 operator|=
 name|VOP_ACCESS
@@ -895,9 +864,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|error
@@ -909,9 +875,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|error
@@ -928,9 +891,6 @@ name|error
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
@@ -940,9 +900,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -990,9 +947,6 @@ name|devvp
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1007,9 +961,6 @@ return|return
 name|error
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|vfs_mountedfrom
 argument_list|(
 name|mp
@@ -1017,21 +968,18 @@ argument_list|,
 name|fspec
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Common code for mount and mountroot  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|int
 name|iso_mountfs
 parameter_list|(
