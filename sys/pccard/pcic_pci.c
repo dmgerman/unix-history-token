@@ -747,7 +747,7 @@ name|PCI_DEVICE_ID_PCIC_CLPD6832
 case|:
 name|desc
 operator|=
-literal|"Cirrus Logic PD6832 PCI/CardBus Bridge"
+literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
 case|case
