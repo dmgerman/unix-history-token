@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -118,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -139,28 +139,11 @@ directive|include
 file|<netinet/ip.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<net/pfil.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3995,9 +3978,6 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 operator|(
 name|inet_pfil_hook
 operator|.
@@ -4010,8 +3990,6 @@ operator|!=
 literal|0
 operator|)
 operator|||
-endif|#
-directive|endif
 operator|(
 name|IPFW_LOADED
 operator|&&
@@ -4127,9 +4105,6 @@ name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* temporarily strip header */
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 comment|/* 	 * NetBSD-style generic packet filter, pfil(9), hooks. 	 * Enables ipf(8) in bridging. 	 */
 if|if
 condition|(
@@ -4275,9 +4250,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* XXX: Prevent ipfw from being run twice. */
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
 comment|/* 	 * Prepare arguments and call the firewall. 	 */
 if|if
 condition|(

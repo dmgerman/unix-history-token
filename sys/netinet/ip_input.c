@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -674,12 +668,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|pfil_head
@@ -687,10 +675,9 @@ name|inet_pfil_hook
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Packet filter hooks */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1288,9 +1275,7 @@ name|pr
 operator|-
 name|inetsw
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
+comment|/* Initialize packet filter hooks. */
 name|inet_pfil_hook
 operator|.
 name|ph_type
@@ -1327,9 +1312,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
 name|IPQ_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -1455,16 +1437,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* dest changed after fw */
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 name|struct
 name|in_addr
 name|odst
 decl_stmt|;
 comment|/* original dst address */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
@@ -2007,7 +1984,7 @@ name|m
 argument_list|)
 condition|)
 goto|goto
-name|pass
+name|passin
 goto|;
 endif|#
 directive|endif
@@ -2038,14 +2015,24 @@ operator|!=
 name|NULL
 condition|)
 goto|goto
-name|pass
+name|passin
 goto|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing (e.g. 	 *     by NAT rewriting).  When this happens, tell 	 *     ip_forward to do the right thing. 	 */
+comment|/* Jump over all PFIL processing if hooks are not active. */
+if|if
+condition|(
+name|inet_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|passin
+goto|;
 name|odst
 operator|=
 name|ip
@@ -2148,32 +2135,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* IPFIREWALL_FORWARD */
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|FAST_IPSEC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IPSEC
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IPSEC_FILTERGIF
-argument_list|)
-name|pass
+name|passin
 label|:
-endif|#
-directive|endif
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */
 if|if
 condition|(

@@ -1013,12 +1013,6 @@ begin_comment
 comment|/* whether to prefer temporary addresses 					in the source address selection */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1027,10 +1021,9 @@ name|inet6_pfil_hook
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* packet filter hooks */
+end_comment
 
 begin_decl_stmt
 specifier|extern

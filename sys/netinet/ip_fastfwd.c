@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1182,10 +1176,19 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 comment|/* 	 * Run through list of ipfilter hooks for input packets 	 */
+if|if
+condition|(
+name|inet_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|passin
+goto|;
 if|if
 condition|(
 name|pfil_run_hooks
@@ -1289,9 +1292,8 @@ block|}
 endif|#
 directive|endif
 comment|/* IPFIREWALL_FORWARD */
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
+name|passin
+label|:
 comment|/* 	 * Step 4: decrement TTL and look up route 	 */
 comment|/* 	 * Check TTL 	 */
 ifdef|#
@@ -1417,10 +1419,19 @@ operator|->
 name|rt_ifp
 expr_stmt|;
 comment|/* 	 * Step 5: outgoing firewall packet processing 	 */
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 comment|/* 	 * Run through list of hooks for output packets. 	 */
+if|if
+condition|(
+name|inet_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|passout
+goto|;
 if|if
 condition|(
 name|pfil_run_hooks
@@ -1700,9 +1711,8 @@ operator|->
 name|rt_ifp
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
+name|passout
+label|:
 comment|/* 	 * Step 6: send off the packet 	 */
 comment|/* 	 * Check if route is dampned (when ARP is unable to resolve) 	 */
 if|if

@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pfil_hooks.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mbuf_stress_test.h"
 end_include
 
@@ -108,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/pfil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -146,23 +146,6 @@ include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<net/pfil.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -567,15 +550,10 @@ name|struct
 name|route
 name|iproute
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 name|struct
 name|in_addr
 name|odst
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
@@ -775,13 +753,8 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
 name|again
 label|:
-endif|#
-directive|endif
 comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
 if|if
 condition|(
@@ -2618,10 +2591,20 @@ label|:
 endif|#
 directive|endif
 comment|/* FAST_IPSEC */
-ifdef|#
-directive|ifdef
-name|PFIL_HOOKS
-comment|/* 	 * Run through list of hooks for output packets. 	 */
+comment|/* Jump over all PFIL processing if hooks are not active. */
+if|if
+condition|(
+name|inet_pfil_hook
+operator|.
+name|ph_busy_count
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|passout
+goto|;
+comment|/* Run through list of hooks for output packets. */
 name|odst
 operator|.
 name|s_addr
@@ -2969,15 +2952,8 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
-if|#
-directive|if
-literal|0
-block|pass:
-endif|#
-directive|endif
+name|passout
+label|:
 comment|/* 127/8 must not appear on wire - RFC1122. */
 if|if
 condition|(
