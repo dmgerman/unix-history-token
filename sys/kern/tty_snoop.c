@@ -1670,8 +1670,7 @@ name|snp
 operator|->
 name|snp_target
 operator|=
-operator|-
-literal|1
+name|NODEV
 expr_stmt|;
 return|return
 operator|(
@@ -1794,8 +1793,7 @@ name|snp
 operator|->
 name|snp_target
 operator|=
-operator|-
-literal|1
+name|NODEV
 expr_stmt|;
 name|detach_notty
 label|:
@@ -2049,8 +2047,7 @@ if|if
 condition|(
 name|tdev
 operator|==
-operator|-
-literal|1
+name|NODEV
 condition|)
 return|return
 operator|(
@@ -2137,8 +2134,7 @@ name|snp
 operator|->
 name|snp_target
 operator|==
-operator|-
-literal|1
+name|NODEV
 condition|)
 block|{
 name|tpo
