@@ -176,11 +176,13 @@ begin_function
 name|void
 name|ext2_discard_prealloc
 parameter_list|(
+name|ip
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
-parameter_list|)
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -356,7 +358,7 @@ name|NOCRED
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_alloc: missing credential\n"
+literal|"ext2_alloc: missing credential"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2123,7 +2125,7 @@ name|s_groups_count
 condition|)
 name|panic
 argument_list|(
-literal|"ifree: range: dev = 0x%x, ino = %d, fs = %s\n"
+literal|"ifree: range: dev = 0x%x, ino = %d, fs = %s"
 argument_list|,
 name|pip
 operator|->

@@ -2701,12 +2701,17 @@ name|error_msg
 operator|!=
 name|NULL
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"bad directory entry: %s\n"
-literal|"offset=%lu, inode=%lu, rec_len=%d, name_len=%d \n"
 argument_list|,
 name|error_msg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"offset=%lu, inode=%lu, rec_len=%d, name_len=%d\n"
 argument_list|,
 name|entryoffsetinblock
 argument_list|,
@@ -2727,6 +2732,7 @@ operator|->
 name|name_len
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|error_msg
 operator|==

@@ -462,8 +462,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ext2_balloc: "
-literal|"Something is terribly wrong\n"
+literal|"ext2_balloc: Something is terribly wrong"
 argument_list|)
 expr_stmt|;
 comment|/*  * please note there haven't been any changes from here on -  * FFS seems to work.  */
@@ -675,7 +674,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_balloc: ufs_bmaparray returned indirect block\n"
+literal|"ext2_balloc: ufs_bmaparray returned indirect block"
 argument_list|)
 expr_stmt|;
 endif|#
