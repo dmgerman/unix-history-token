@@ -2073,6 +2073,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|readonlyfs
+operator|==
+literal|0
+operator|&&
 name|isfile
 argument_list|(
 name|path

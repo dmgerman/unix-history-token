@@ -787,6 +787,8 @@ decl_stmt|;
 if|if
 condition|(
 name|noexec
+operator|||
+name|readonlyfs
 condition|)
 return|return
 operator|(

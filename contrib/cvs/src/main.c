@@ -150,6 +150,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|readonlyfs
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|logoff
 init|=
 name|FALSE
@@ -1647,6 +1655,25 @@ name|cvswrite
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+name|CVSREADONLYFS_ENV
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|readonlyfs
+operator|=
+name|TRUE
+expr_stmt|;
+name|logoff
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* I'm not sure whether this needs to be 1 instead of 0 anymore.  Using        1 used to accomplish what passing "+" as the first character to        the option string does, but that reason doesn't exist anymore.  */
 name|optind
 operator|=
@@ -2675,6 +2702,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|readonlyfs
+operator|==
+literal|0
+operator|&&
 name|isfile
 argument_list|(
 name|path

@@ -1156,6 +1156,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CVSREADONLYFS_ENV
+value|"CVSREADONLYFS"
+end_define
+
+begin_comment
+comment|/* repository is read-only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RCSBIN_ENV
 value|"RCSBIN"
 end_define
@@ -1717,6 +1728,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Don't modify disk anywhere */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|readonlyfs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fail on all write locks; succeed all read locks */
 end_comment
 
 begin_decl_stmt
