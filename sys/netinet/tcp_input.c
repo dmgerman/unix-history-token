@@ -5005,6 +5005,10 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
+name|headlocked
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 				 * this is a pure ack for outstanding data. 				 */
 operator|++
 name|tcpstat
@@ -5369,6 +5373,10 @@ argument_list|(
 operator|&
 name|tcbinfo
 argument_list|)
+expr_stmt|;
+name|headlocked
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 			 * this is a pure, in-sequence data packet 			 * with nothing on the reassembly queue and 			 * we have enough buffer space to take it. 			 */
 comment|/* Clean receiver SACK report if present */
@@ -9685,6 +9693,10 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
+name|headlocked
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -9741,6 +9753,17 @@ argument_list|)
 expr_stmt|;
 name|check_delack
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"tcp_input: check_delack: head locked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
