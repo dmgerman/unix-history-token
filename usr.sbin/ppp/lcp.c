@@ -1436,7 +1436,7 @@ name|cfg
 operator|.
 name|chap80lm
 operator|=
-name|NEG_ACCEPTED
+literal|0
 expr_stmt|;
 name|lcp
 operator|->
