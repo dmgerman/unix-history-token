@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.57 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.58 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/clist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/device.h>
 end_include
 
 begin_include
@@ -303,6 +309,12 @@ name|filedesc0
 modifier|*
 name|fdp
 decl_stmt|;
+specifier|register
+name|struct
+name|pdevinit
+modifier|*
+name|pdev
+decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -310,6 +322,12 @@ name|rval
 index|[
 literal|2
 index|]
+decl_stmt|;
+specifier|extern
+name|struct
+name|pdevinit
+name|pdevinit
+index|[]
 decl_stmt|;
 specifier|extern
 name|void
@@ -743,21 +761,21 @@ expr_stmt|;
 name|rqinit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * configure virtual memory system, 	 * set vm rlimits 	 */
+comment|/* Configure virtual memory system, set vm rlimits. */
 name|vm_init_limits
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the file systems. 	 */
+comment|/* Initialize the file systems. */
 name|vfsinit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Start real time and statistics clocks. 	 */
+comment|/* Start real time and statistics clocks. */
 name|initclocks
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialize tables, protocols, and set up well-known inodes. 	 */
+comment|/* Initialize tables. */
 name|mbinit
 argument_list|()
 expr_stmt|;
@@ -772,35 +790,35 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-include|#
-directive|include
-file|"sl.h"
-if|#
-directive|if
-name|NSL
-operator|>
-literal|0
-name|slattach
-argument_list|()
+comment|/* Attach pseudo-devices. */
+for|for
+control|(
+name|pdev
+operator|=
+name|pdevinit
+init|;
+name|pdev
+operator|->
+name|pdev_attach
+operator|!=
+name|NULL
+condition|;
+name|pdev
+operator|++
+control|)
+call|(
+modifier|*
+name|pdev
+operator|->
+name|pdev_attach
+call|)
+argument_list|(
+name|pdev
+operator|->
+name|pdev_count
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
-include|#
-directive|include
-file|"loop.h"
-if|#
-directive|if
-name|NLOOP
-operator|>
-literal|0
-name|loattach
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
-comment|/* 	 * Block reception of incoming packets 	 * until protocols have been initialized. 	 */
+comment|/* 	 * Initialize protocols.  Block reception of incoming packets 	 * until everything is ready. 	 */
 name|s
 operator|=
 name|splimp
