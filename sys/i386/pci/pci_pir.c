@@ -607,8 +607,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*      * Look for the interrupt routing table.      */
-comment|/* We use PCI BIOS's PIR table if it's available */
+comment|/*      * Look for the interrupt routing table.      *      * We use PCI BIOS's PIR table if it's available $PIR is the      * standard way to do this.  Sadly, some machines are not      * standards conforming and have _PIR instead.  We shrug and cope      * by looking for both.      */
 if|if
 condition|(
 name|pcibios_get_version
@@ -619,8 +618,8 @@ operator|&&
 name|pt
 operator|==
 name|NULL
-operator|&&
-operator|(
+condition|)
+block|{
 name|sigaddr
 operator|=
 name|bios_sigsearch
@@ -635,7 +634,31 @@ literal|16
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sigaddr
+operator|==
+literal|0
+condition|)
+name|sigaddr
+operator|=
+name|bios_sigsearch
+argument_list|(
+literal|0
+argument_list|,
+literal|"_PIR"
+argument_list|,
+literal|4
+argument_list|,
+literal|16
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigaddr
 operator|!=
 literal|0
 condition|)
@@ -737,6 +760,7 @@ argument_list|,
 name|pci_route_table
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|opened
