@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.24 (Berkeley) %G%"
+literal|"@(#)func.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4772,7 +4772,7 @@ name|ptr_t
 operator|)
 name|name
 argument_list|)
-operator|,
+expr_stmt|;
 name|name
 operator|=
 name|NULL

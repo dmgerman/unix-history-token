@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.14 (Berkeley) %G%"
+literal|"@(#)misc.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1440,11 +1440,13 @@ name|Char
 modifier|*
 modifier|*
 name|u
-init|=
-name|v
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|u
+operator|=
+name|v
+init|;
 operator|*
 name|u
 operator|&&
@@ -1452,7 +1454,10 @@ operator|--
 name|c
 operator|>=
 literal|0
-condition|)
+condition|;
+name|u
+operator|++
+control|)
 name|xfree
 argument_list|(
 operator|(
@@ -1460,7 +1465,6 @@ name|ptr_t
 operator|)
 operator|*
 name|u
-operator|++
 argument_list|)
 expr_stmt|;
 operator|(
