@@ -2931,6 +2931,12 @@ name|DEVFS
 name|int
 name|mynor
 decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
