@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.4	%G%"
+literal|"@(#)readcf.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,9 @@ name|struct
 name|rewrite
 modifier|*
 name|RewriteRules
+index|[
+literal|10
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +114,11 @@ parameter_list|()
 function_decl|;
 name|int
 name|class
+decl_stmt|;
+name|int
+name|ruleset
+init|=
+literal|0
 decl_stmt|;
 name|cf
 operator|=
@@ -251,7 +259,11 @@ name|rwp
 operator|==
 name|NULL
 condition|)
+block|{
 name|RewriteRules
+index|[
+name|ruleset
+index|]
 operator|=
 name|rwp
 operator|=
@@ -267,6 +279,7 @@ expr|*
 name|rwp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|rwp
@@ -377,6 +390,26 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* select rewriting set */
+name|ruleset
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|rwp
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 case|case
 literal|'D'
@@ -949,11 +982,49 @@ name|rewrite
 modifier|*
 name|rwp
 decl_stmt|;
+specifier|register
+name|int
+name|ruleset
+decl_stmt|;
+for|for
+control|(
+name|ruleset
+operator|=
+literal|0
+init|;
+name|ruleset
+operator|<
+literal|10
+condition|;
+name|ruleset
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|RewriteRules
+index|[
+name|ruleset
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|"\n----Rule Set %d:\n"
+argument_list|,
+name|ruleset
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|rwp
 operator|=
 name|RewriteRules
+index|[
+name|ruleset
+index|]
 init|;
 name|rwp
 operator|!=
@@ -1045,6 +1116,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

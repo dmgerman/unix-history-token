@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.13	%G%"
+literal|"@(#)parseaddr.c	3.14	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,8 @@ comment|/* 	**  Apply rewriting rules. 	*/
 name|rewrite
 argument_list|(
 name|pvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	**  See if we resolved to a real mailer. 	*/
@@ -1365,6 +1367,8 @@ begin_macro
 name|rewrite
 argument_list|(
 argument|pvp
+argument_list|,
+argument|ruleset
 argument_list|)
 end_macro
 
@@ -1373,6 +1377,12 @@ name|char
 modifier|*
 modifier|*
 name|pvp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ruleset
 decl_stmt|;
 end_decl_stmt
 
@@ -1459,6 +1469,9 @@ control|(
 name|rwr
 operator|=
 name|RewriteRules
+index|[
+name|ruleset
+index|]
 init|;
 name|rwr
 operator|!=

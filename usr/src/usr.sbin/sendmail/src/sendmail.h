@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.16	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.17	%G% */
 end_comment
 
 begin_include
@@ -588,6 +588,7 @@ name|struct
 name|rewrite
 modifier|*
 name|RewriteRules
+index|[]
 decl_stmt|;
 end_decl_stmt
 
