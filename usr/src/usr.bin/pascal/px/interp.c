@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.22 %G%"
+literal|"@(#)interp.c 1.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6803,16 +6803,26 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-name|ts
-operator|=
-name|pop2
+name|ASRT
 argument_list|()
 expr_stmt|;
-name|ASRT
+name|popsp
 argument_list|(
-name|ts
-argument_list|,
-literal|""
+call|(
+name|long
+call|)
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
