@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.82 (Berkeley) 10/28/95"
+literal|"@(#)headers.c	8.82.1.1 (Berkeley) 2/18/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -4912,6 +4912,24 @@ name|obp
 operator|=
 name|obuf
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\t'
+condition|)
+operator|*
+name|obp
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
 block|}
 name|sprintf
 argument_list|(
@@ -5705,15 +5723,10 @@ operator|=
 name|savechar
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+operator|*
 name|obp
-argument_list|,
-literal|"\n"
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 name|putline
 argument_list|(
