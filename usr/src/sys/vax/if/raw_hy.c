@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)raw_hy.c	6.1	%G%  *  * 4.2 BSD Unix kernel - NSC HYPERchannel support  * NEEDS WORK FOR 4.3  *  * $Header: raw_hy.c,v 3.1 84/02/15 04:27:44 steveg Exp $  * $Locker:  $  *  * Copyright (c) 1984, Tektronix Inc.  * All Rights Reserved  *  */
+comment|/*  *	@(#)raw_hy.c	6.2	%G%  *  * 4.3 BSD Unix kernel - NSC HYPERchannel support  *  * $Header: raw_hy.c,v 3.1 84/02/15 04:27:44 steveg Exp $  * $Locker:  $  *  * Copyright (c) 1984, Tektronix Inc.  * All Rights Reserved  *  */
 end_comment
 
 begin_include
@@ -57,6 +57,23 @@ directive|include
 file|"../net/raw_cb.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BBNNET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INET
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -67,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in_systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in_var.h"
 end_include
 
 begin_include
@@ -136,9 +159,9 @@ name|so
 argument_list|)
 decl_stmt|;
 name|struct
-name|ifnet
+name|in_ifaddr
 modifier|*
-name|ifp
+name|ia
 decl_stmt|;
 comment|/* 	 * Verify user has supplied necessary space 	 * for the header. 	 */
 if|if
@@ -201,29 +224,29 @@ operator|->
 name|rcb_faddr
 expr_stmt|;
 comment|/* no routing here */
-name|ifp
+name|ia
 operator|=
-name|if_ifonnetof
+name|in_iaonnetof
 argument_list|(
-operator|(
-name|int
-operator|)
+name|in_netof
+argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
+name|ia
 condition|)
 return|return
 operator|(
 name|hyoutput
 argument_list|(
-name|ifp
+name|ia
+operator|->
+name|ia_ifp
 argument_list|,
 name|m
 argument_list|,
