@@ -1323,11 +1323,12 @@ literal|"fw_asybusy\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	xfer->ch =  timeout((timeout_t *)fw_asystart, (void *)xfer, 20000); */
-name|DELAY
-argument_list|(
-literal|20000
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DELAY(20000);
+endif|#
+directive|endif
 name|fw_asystart
 argument_list|(
 name|xfer
@@ -1622,6 +1623,16 @@ operator|>
 argument_list|)
 condition|)
 comment|/* the rests are newer than this */
+break|break;
+if|if
+condition|(
+name|xfer
+operator|->
+name|state
+operator|==
+name|FWXF_START
+condition|)
+comment|/* not sent yet */
 break|break;
 name|device_printf
 argument_list|(
@@ -3972,14 +3983,6 @@ operator|->
 name|devices
 argument_list|)
 expr_stmt|;
-name|STAILQ_INIT
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|pending
-argument_list|)
-expr_stmt|;
 comment|/* Initialize csr ROM work space */
 name|SLIST_INIT
 argument_list|(
@@ -5125,16 +5128,6 @@ argument_list|(
 literal|"fw_xfer_done: why xfer->fc is NULL?"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|fc
-operator|->
-name|status
-operator|!=
-name|FWBUSRESET
-condition|)
 name|xfer
 operator|->
 name|act
@@ -5144,28 +5137,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"fw_xfer_done: pending\n"
-argument_list|)
-expr_stmt|;
-name|STAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|xfer
-operator|->
-name|fc
-operator|->
-name|pending
-argument_list|,
-name|xfer
-argument_list|,
-name|link
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -8772,11 +8743,6 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -8970,70 +8936,6 @@ argument_list|(
 name|devlistp
 argument_list|,
 name|M_TEMP
-argument_list|)
-expr_stmt|;
-comment|/* call pending handlers */
-name|i
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|xfer
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|pending
-argument_list|)
-operator|)
-condition|)
-block|{
-name|STAILQ_REMOVE_HEAD
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|pending
-argument_list|,
-name|link
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|act
-operator|.
-name|hand
-condition|)
-name|xfer
-operator|->
-name|act
-operator|.
-name|hand
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|i
-operator|>
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"fw_attach_dev: %d pending handlers called\n"
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
 if|if
@@ -10076,7 +9978,7 @@ argument|; i< rb->nvec; i ++) 			len += rb->vec[i].iov_len; 		switch(bind->act_t
 comment|/* splfw()?? */
 argument|rb->xfer = STAILQ_FIRST(&bind->xferlist); 			if (rb->xfer == NULL) { 				printf(
 literal|"Discard a packet for this bind.\n"
-argument|); 				goto err; 			} 			STAILQ_REMOVE_HEAD(&bind->xferlist, link); 			fw_rcv_copy(rb); 			if (rb->fc->status != FWBUSRESET) 				rb->xfer->act.hand(rb->xfer); 			else 				STAILQ_INSERT_TAIL(&rb->fc->pending, 				    rb->xfer, link); 			return; 			break; 		case FWACT_CH: 			if(rb->fc->ir[bind->sub]->queued>= 				rb->fc->ir[bind->sub]->maxq){ 				device_printf(rb->fc->bdev,
+argument|); 				goto err; 			} 			STAILQ_REMOVE_HEAD(&bind->xferlist, link); 			fw_rcv_copy(rb); 			rb->xfer->act.hand(rb->xfer); 			return; 			break; 		case FWACT_CH: 			if(rb->fc->ir[bind->sub]->queued>= 				rb->fc->ir[bind->sub]->maxq){ 				device_printf(rb->fc->bdev,
 literal|"Discard a packet %x %d\n"
 argument|, 					bind->sub, 					rb->fc->ir[bind->sub]->queued); 				goto err; 			} 			rb->xfer = STAILQ_FIRST(&bind->xferlist); 			if (rb->xfer == NULL) { 				printf(
 literal|"Discard packet for this bind\n"

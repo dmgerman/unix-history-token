@@ -14560,8 +14560,10 @@ comment|/* sanity check */
 argument|if (resCount !=
 literal|0
 argument|)  						printf(
-literal|"resCount != 0 !?\n"
-argument|); 					goto out; 				} 				offset =
+literal|"resCount = %d !?\n"
+argument|, 						    resCount);
+comment|/* XXX clear pdb_tr */
+argument|goto out; 				} 				offset =
 literal|0
 argument|; 				nvec =
 literal|0
@@ -14571,7 +14573,9 @@ argument|) {
 comment|/* minimum header size + trailer 				= sizeof(fw_pkt) so this shouldn't happens */
 argument|printf(
 literal|"plen(%d) is negative! offset=%d\n"
-argument|, 				    plen, offset); 				goto out; 			} 			if (plen>
+argument|, 				    plen, offset);
+comment|/* XXX clear pdb_tr */
+argument|goto out; 			} 			if (plen>
 literal|0
 argument|) { 				len -= plen; 				if (len<
 literal|0
@@ -14582,8 +14586,10 @@ comment|/* sanity check */
 argument|if (resCount !=
 literal|0
 argument|)  						printf(
-literal|"resCount != 0 !?\n"
-argument|); 					goto out; 				} 				vec[nvec].iov_base = ld; 				vec[nvec].iov_len = plen; 				nvec ++; 				ld += plen; 			} 			dbch->buf_offset = ld - (u_int8_t *)db_tr->buf; 			if (nvec ==
+literal|"resCount = %d !?\n"
+argument|, 						    resCount);
+comment|/* XXX clear pdb_tr */
+argument|goto out; 				} 				vec[nvec].iov_base = ld; 				vec[nvec].iov_len = plen; 				nvec ++; 				ld += plen; 			} 			dbch->buf_offset = ld - (u_int8_t *)db_tr->buf; 			if (nvec ==
 literal|0
 argument|) 				printf(
 literal|"nvec == 0\n"

@@ -278,6 +278,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FWMEM
+argument_list|,
+literal|"fwmem"
+argument_list|,
+literal|"fwmem/FireWire"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -338,7 +350,7 @@ name|xfer
 operator|=
 name|fw_xfer_alloc
 argument_list|(
-name|M_FWXFER
+name|M_FWMEM
 argument_list|)
 expr_stmt|;
 if|if
@@ -1324,7 +1336,7 @@ expr|struct
 name|fwmem_softc
 argument_list|)
 argument_list|,
-name|M_FW
+name|M_FWMEM
 argument_list|,
 name|M_WAITOK
 argument_list|)

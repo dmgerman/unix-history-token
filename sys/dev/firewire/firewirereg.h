@@ -447,13 +447,6 @@ argument|fw_device
 argument_list|)
 name|devices
 expr_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|fw_xfer
-argument_list|)
-name|pending
-expr_stmt|;
 name|u_int
 name|sid_cnt
 decl_stmt|;
