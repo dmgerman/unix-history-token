@@ -139,6 +139,8 @@ block|,
 name|VT_HPFS
 block|,
 name|VT_NWFS
+block|,
+name|VT_PSEUDOFS
 block|}
 enum|;
 end_enum
