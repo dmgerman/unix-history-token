@@ -401,7 +401,7 @@ literal|"%s"
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
-name|NULL
+literal|""
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -454,7 +454,7 @@ name|clnt_sperror
 argument_list|(
 name|cl
 argument_list|,
-name|NULL
+literal|""
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -565,7 +565,7 @@ name|clnt_sperror
 argument_list|(
 name|cl
 argument_list|,
-name|NULL
+literal|""
 argument_list|)
 argument_list|)
 expr_stmt|;
