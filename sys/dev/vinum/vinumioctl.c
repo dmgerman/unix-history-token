@@ -1231,6 +1231,7 @@ literal|0
 return|;
 default|default:
 comment|/* FALLTHROUGH */
+break|break;
 block|}
 case|case
 name|VINUM_DRIVE_TYPE

@@ -4278,6 +4278,7 @@ name|state
 expr_stmt|;
 break|break;
 default|default:
+break|break;
 block|}
 name|ioctl_reply
 operator|->

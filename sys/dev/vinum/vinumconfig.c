@@ -8898,6 +8898,8 @@ name|vol
 decl_stmt|;
 name|int
 name|data_sds
+init|=
+literal|0
 decl_stmt|;
 comment|/* number of sds carrying data */
 if|if

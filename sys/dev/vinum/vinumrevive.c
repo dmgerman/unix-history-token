@@ -475,6 +475,7 @@ case|case
 name|plex_disorg
 case|:
 comment|/* to keep the compiler happy */
+break|break;
 block|}
 if|if
 condition|(
