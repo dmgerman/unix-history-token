@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)basename.c	4.5 (Berkeley) %G%"
+literal|"@(#)basename.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_function
 name|main
@@ -83,14 +89,19 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|<=
-literal|1
+operator|<
+literal|2
+operator|||
+name|argc
+operator|>
+literal|3
 condition|)
 block|{
-comment|/* backward compatible */
-name|putchar
+name|fprintf
 argument_list|(
-literal|'\n'
+name|stderr
+argument_list|,
+literal|"usage: basename string [suffix]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -128,11 +139,10 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|>
-literal|2
+operator|==
+literal|3
 condition|)
 block|{
-comment|/* original version allows any # of args */
 for|for
 control|(
 name|t
@@ -182,8 +192,10 @@ name|p
 condition|)
 do|;
 block|}
-name|puts
+name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
