@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.10 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +573,10 @@ argument_list|)
 expr_stmt|;
 name|sync
 argument_list|()
+expr_stmt|;
+name|dev_bsize
+operator|=
+literal|1
 expr_stmt|;
 name|bread
 argument_list|(
