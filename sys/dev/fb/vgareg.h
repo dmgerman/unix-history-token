@@ -309,6 +309,10 @@ name|video_adapter
 modifier|*
 name|adp
 decl_stmt|;
+name|void
+modifier|*
+name|state_buf
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|FB_INSTALL_CDEV
