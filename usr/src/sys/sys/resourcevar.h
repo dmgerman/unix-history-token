@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resourcevar.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resourcevar.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -61,8 +61,7 @@ struct|struct
 name|uprof
 block|{
 comment|/* profile arguments */
-name|short
-modifier|*
+name|caddr_t
 name|pr_base
 decl_stmt|;
 comment|/* buffer base */
@@ -164,6 +163,66 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* add profiling ticks: in interrupt context, and from AST */
+end_comment
+
+begin_decl_stmt
+name|void
+name|addupc_intr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|u_long
+name|pc
+operator|,
+name|u_int
+name|ticks
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|addupc_task
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|u_long
+name|pc
+operator|,
+name|u_int
+name|ticks
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* add user profiling from AST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADDUPROF
+parameter_list|(
+name|p
+parameter_list|)
+value|addupc_task(p, (p)->p_stats->p_prof.pr_addr, \ 			    (p)->p_stats->p_prof.pr_ticks)
+end_define
 
 begin_endif
 endif|#
