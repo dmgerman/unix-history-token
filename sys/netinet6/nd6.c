@@ -4371,7 +4371,7 @@ expr_stmt|;
 name|nd6_allocated
 operator|++
 expr_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 name|ln
 argument_list|,
@@ -4523,7 +4523,7 @@ condition|(
 name|macp
 condition|)
 block|{
-name|Bcopy
+name|bcopy
 argument_list|(
 name|macp
 argument_list|,

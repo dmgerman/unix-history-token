@@ -2077,7 +2077,7 @@ name|newrt
 init|=
 name|NULL
 decl_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|def
@@ -2088,7 +2088,7 @@ name|def
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|mask
@@ -2099,7 +2099,7 @@ name|mask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|gate
@@ -2556,7 +2556,7 @@ name|oldrt
 init|=
 name|NULL
 decl_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|def
@@ -2567,7 +2567,7 @@ name|def
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|mask
@@ -2578,7 +2578,7 @@ name|mask
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|gate
