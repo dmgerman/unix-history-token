@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	2.1	%G%"
+literal|"@(#)deliver.c	2.1.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1230,7 +1230,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- insert the From header into some mail ** **	For mailers such as 'msgs' that want the header inserted **	into the mail, this edit filter inserts the From line and **	then passes the rest of the message through. ** **	Parameters: **		fp -- the file pointer for the output. ** **	Returns: **		none ** **	Side Effects: **		Puts a "From" line in UNIX format, and then **			outputs the rest of the message. ** **	Called By: **		deliver */
+comment|/* **  PUTHEADER -- insert the From header into some mail ** **	For mailers such as 'msgs' that want the header inserted **	into the mail, this edit filter inserts the From line and **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	Parameters: **		fp -- the file pointer for the output. ** **	Returns: **		none ** **	Side Effects: **		Puts a "From" line in UNIX format, and then **			outputs the rest of the message. ** **	Called By: **		deliver */
 end_comment
 
 begin_expr_stmt
@@ -1264,6 +1264,32 @@ modifier|*
 name|ctime
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+name|SentDate
+index|[]
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"From %s "
+argument_list|,
+name|From
+operator|.
+name|q_paddr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SentDate
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
 name|time
 argument_list|(
 operator|&
@@ -1274,17 +1300,24 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"From %s %s"
-argument_list|,
-name|From
-operator|.
-name|q_paddr
+literal|"%s"
 argument_list|,
 name|ctime
 argument_list|(
 operator|&
 name|tim
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s"
+argument_list|,
+name|SentDate
 argument_list|)
 expr_stmt|;
 while|while
