@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.h	4.2	%G%	*/
+comment|/*	cons.h	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -106,6 +106,14 @@ begin_comment
 comment|/* channel id */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
+
 begin_define
 define|#
 directive|define
@@ -138,6 +146,46 @@ end_define
 begin_comment
 comment|/* enable boot */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|750
+end_if
+
+begin_define
+define|#
+directive|define
+name|TXDB_BOOT
+value|0xf02
+end_define
+
+begin_comment
+comment|/* reboot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TXDB_CCSF
+value|0xf04
+end_define
+
+begin_comment
+comment|/* clear cold-start flag */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtpr.h	4.1	%G%	*/
+comment|/*	mtpr.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -337,9 +337,13 @@ begin_comment
 comment|/* system identification */
 end_comment
 
-begin_comment
-comment|/*  * VAX-11/780 specific registers  */
-end_comment
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
 
 begin_define
 define|#
@@ -472,6 +476,134 @@ end_define
 begin_comment
 comment|/* micro-program breakpoint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|750
+end_if
+
+begin_define
+define|#
+directive|define
+name|CSRS
+value|0x1c
+end_define
+
+begin_comment
+comment|/* console storage receive status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSRD
+value|0x1d
+end_define
+
+begin_comment
+comment|/* console storage receive data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSTS
+value|0x1e
+end_define
+
+begin_comment
+comment|/* console storage transmit status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSTD
+value|0x1f
+end_define
+
+begin_comment
+comment|/* console storage transmit data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBDR
+value|0x24
+end_define
+
+begin_comment
+comment|/* translation buffer disable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CADR
+value|0x25
+end_define
+
+begin_comment
+comment|/* cache disable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCESR
+value|0x26
+end_define
+
+begin_comment
+comment|/* machine check error summary register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAER
+value|0x27
+end_define
+
+begin_comment
+comment|/* cache error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IUR
+value|0x37
+end_define
+
+begin_comment
+comment|/* init unibus register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TB
+value|0x3b
+end_define
+
+begin_comment
+comment|/* translation buffer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

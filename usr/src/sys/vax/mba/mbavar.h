@@ -1,7 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.1	%G%	*/
+comment|/*	mbavar.h	4.2	%G%	*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
 
 begin_comment
 comment|/*  * VAX Massbus adapter registers  */
@@ -169,6 +177,11 @@ name|int
 name|mbaact
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

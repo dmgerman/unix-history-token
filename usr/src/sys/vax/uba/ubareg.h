@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.1	%G%	*/
+comment|/*	ubareg.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -39,6 +39,14 @@ end_define
 begin_comment
 comment|/* UNIBUS phys base of i/o reg's */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
 
 begin_comment
 comment|/* UBA Configuration Register, CNFGR */
@@ -541,6 +549,11 @@ begin_comment
 comment|/* Device Interrupt Vector Field */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Data Path Register, DPR */
 end_comment
@@ -685,12 +698,44 @@ begin_comment
 comment|/* someone is waiting for buffered data path */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
+
+begin_define
+define|#
+directive|define
+name|NUBABDP
+value|15
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NUBABDP
+value|3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|map
 name|bdpmap
 index|[
-literal|15
+name|NUBABDP
 index|]
 decl_stmt|;
 end_decl_stmt

@@ -1,18 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.1	%G%	*/
+comment|/*	tty.h	4.2	%G%	*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|"../h/ioctl.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
 end_include
 
 begin_comment
@@ -236,6 +258,14 @@ decl_stmt|;
 block|}
 name|t_un
 union|;
+name|struct
+name|buf
+modifier|*
+name|t_ibp
+decl_stmt|,
+modifier|*
+name|t_obp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -573,13 +603,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PROTO1
+name|NDQB
 value|010000
 end_define
-
-begin_comment
-comment|/* reserved for line discipline */
-end_comment
 
 begin_define
 define|#
@@ -606,12 +632,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CNTLQ
+name|BEXT
 value|0100000
 end_define
 
 begin_comment
-comment|/* interpret t_un as clist */
+comment|/* use (external) system buffers */
 end_comment
 
 begin_comment

@@ -1,11 +1,110 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.3	%G%	*/
+comment|/*	param.h	4.1	11/9/80	*/
 end_comment
 
 begin_comment
 comment|/*  * tunable variables  *  * NB: NBUF must be less than MAXNBUF in locore.s.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NBUF
+value|64
+end_define
+
+begin_comment
+comment|/* size of buffer cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NINODE
+value|200
+end_define
+
+begin_comment
+comment|/* number of in core inodes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFILE
+value|175
+end_define
+
+begin_comment
+comment|/* number of in core file structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NMOUNT
+value|7
+end_define
+
+begin_comment
+comment|/* number of mountable file systems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSWAPX
+value|7
+end_define
+
+begin_comment
+comment|/* pseudo mount table index for swapdev */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPROC
+value|125
+end_define
+
+begin_comment
+comment|/* max number of processes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTEXT
+value|40
+end_define
+
+begin_comment
+comment|/* max number of pure texts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCLIST
+value|250
+end_define
+
+begin_comment
+comment|/* max total clist size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -60,6 +159,39 @@ end_define
 
 begin_comment
 comment|/* pseudo mount table index for swapdev */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPROC
+value|250
+end_define
+
+begin_comment
+comment|/* max number of processes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTEXT
+value|60
+end_define
+
+begin_comment
+comment|/* max number of pure texts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCLIST
+value|500
+end_define
+
+begin_comment
+comment|/* max total clist size */
 end_comment
 
 begin_define
@@ -137,39 +269,6 @@ end_define
 
 begin_comment
 comment|/* max simultaneous time callouts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPROC
-value|250
-end_define
-
-begin_comment
-comment|/* max number of processes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTEXT
-value|60
-end_define
-
-begin_comment
-comment|/* max number of pure texts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCLIST
-value|500
-end_define
-
-begin_comment
-comment|/* max total clist size */
 end_comment
 
 begin_define
