@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.9	81/12/21	*/
+comment|/*	protosw.h	4.10	82/04/10	*/
 end_comment
 
 begin_comment
@@ -327,6 +327,17 @@ begin_comment
 comment|/* send out of band data */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRU_SOCKADDR
+value|13
+end_define
+
+begin_comment
+comment|/* fetch socket's address */
+end_comment
+
 begin_comment
 comment|/* begin for protocols internal use */
 end_comment
@@ -335,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|13
+value|14
 end_define
 
 begin_comment
@@ -346,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
-value|14
+value|15
 end_define
 
 begin_comment
@@ -357,7 +368,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTORCV
-value|15
+value|16
 end_define
 
 begin_comment
@@ -368,22 +379,18 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTOSEND
-value|16
+value|17
 end_define
 
 begin_comment
 comment|/* send to below */
 end_comment
 
-begin_comment
-comment|/* need some stuff for splice */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|PRU_NREQ
-value|17
+value|18
 end_define
 
 begin_ifdef
@@ -424,6 +431,8 @@ block|,
 literal|"RCVOOB"
 block|,
 literal|"SENDOOB"
+block|,
+literal|"SOCKADDR"
 block|,
 literal|"FASTTIMO"
 block|,

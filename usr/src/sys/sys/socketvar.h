@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.15	82/03/15	*/
+comment|/*	socketvar.h	4.16	82/04/10	*/
 end_comment
 
 begin_comment
@@ -118,11 +118,6 @@ name|u_short
 name|so_error
 decl_stmt|;
 comment|/* error affecting connection */
-name|struct
-name|sockaddr
-name|so_addr
-decl_stmt|;
-comment|/* socket address */
 name|short
 name|so_oobmark
 decl_stmt|;
