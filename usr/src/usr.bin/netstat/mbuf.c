@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.3 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,12 +140,6 @@ block|{
 name|MT_SONAME
 block|,
 literal|"socket names and addresses"
-block|}
-block|,
-block|{
-name|MT_ZOMBIE
-block|,
-literal|"zombie process information"
 block|}
 block|,
 block|{
@@ -514,15 +508,6 @@ operator|.
 name|m_clusters
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%u interface pages allocated\n"
-argument_list|,
-name|mbstat
-operator|.
-name|m_space
-argument_list|)
-expr_stmt|;
 name|totmem
 operator|=
 name|mbstat
@@ -534,12 +519,6 @@ operator|+
 name|mbstat
 operator|.
 name|m_clusters
-operator|*
-name|CLBYTES
-operator|+
-name|mbstat
-operator|.
-name|m_space
 operator|*
 name|CLBYTES
 expr_stmt|;
