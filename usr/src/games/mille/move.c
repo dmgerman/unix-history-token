@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.1 (Berkeley) %G%"
+literal|"@(#)move.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -328,6 +331,9 @@ operator|*
 operator|--
 name|Topcard
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -345,6 +351,8 @@ name|Topcard
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|acc
 label|:
 if|if
@@ -412,6 +420,9 @@ operator|*
 operator|--
 name|Topcard
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -429,6 +440,8 @@ name|Topcard
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|acc
 goto|;
@@ -687,6 +700,9 @@ name|card
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -735,8 +751,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 elseif|else
 if|if
 condition|(
@@ -754,6 +775,8 @@ name|card
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|Finished
@@ -839,6 +862,9 @@ index|[
 name|Card_no
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -855,6 +881,8 @@ name|card
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|Next
 operator|=
 name|FALSE
@@ -1622,13 +1650,6 @@ decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
-specifier|static
-name|char
-name|moveprompt
-index|[]
-init|=
-literal|">>:Move:"
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|EXTRAP
@@ -1975,18 +1996,13 @@ literal|'\0'
 case|:
 comment|/* and nulls		*/
 break|break;
+ifdef|#
+directive|ifdef
+name|DEBUG
 case|case
 literal|'Z'
 case|:
 comment|/* Debug code */
-if|if
-condition|(
-name|geteuid
-argument_list|()
-operator|==
-name|ARNOLD
-condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -2000,11 +2016,9 @@ block|{
 name|char
 name|buf
 index|[
-literal|40
+name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|over
-label|:
 name|prompt
 argument_list|(
 name|FILEPROMPT
@@ -2158,8 +2172,8 @@ operator|!
 name|Debug
 expr_stmt|;
 break|break;
-block|}
-comment|/* FALLTHROUGH */
+endif|#
+directive|endif
 default|default:
 name|error
 argument_list|(
