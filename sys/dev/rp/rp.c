@@ -2782,13 +2782,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_INLINE_
-value|__inline
-end_define
-
-begin_define
-define|#
-directive|define
 name|POLL_INTERVAL
 value|1
 end_define
@@ -3020,7 +3013,6 @@ end_function_decl
 
 begin_function
 specifier|static
-name|_INLINE_
 name|void
 name|rp_do_receive
 parameter_list|(
@@ -3445,7 +3437,6 @@ end_function
 
 begin_function
 specifier|static
-name|_INLINE_
 name|void
 name|rp_handle_port
 parameter_list|(
