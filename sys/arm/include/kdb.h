@@ -27,6 +27,12 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
 begin_function
 specifier|static
 name|__inline
@@ -61,7 +67,11 @@ parameter_list|,
 name|int
 name|code
 parameter_list|)
-block|{ }
+block|{
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_endif

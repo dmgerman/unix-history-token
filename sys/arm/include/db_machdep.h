@@ -36,13 +36,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|BYTE_MSF
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|T_BREAKPOINT
 value|(1)
 end_define
@@ -103,19 +96,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|db_clear_single_step
-parameter_list|(
-name|regs
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|db_set_single_step
-parameter_list|(
-name|regs
-parameter_list|)
+name|SOFTWARE_SSTEP
+value|1
 end_define
 
 begin_define
@@ -167,8 +149,12 @@ name|inst_return
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)& 0x0e108000) == 0x08108000 || \ 				 ((ins)& 0x0ff0fff0) == 0x01a0f000)
+value|(((ins)& 0x0e108000) == 0x08108000 || \ 				 ((ins)& 0x0ff0fff0) == 0x01a0f000 ||	\ 				 ((ins)& 0x0ffffff0) == 0x012fff10)
 end_define
+
+begin_comment
+comment|/* bx */
+end_comment
 
 begin_comment
 comment|/* bl ... 					    00ffffff  offset>>2 */
@@ -195,6 +181,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|inst_branch
+parameter_list|(
+name|ins
+parameter_list|)
+value|(((ins)& 0x0f000000) == 0x0a000000 || \ 				 ((ins)& 0x0fdffff0) == 0x079ff100)
+end_define
+
+begin_define
+define|#
+directive|define
 name|inst_load
 parameter_list|(
 name|ins
@@ -215,6 +211,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|next_instr_address
+parameter_list|(
+name|pc
+parameter_list|,
+name|bd
+parameter_list|)
+value|((bd) ? (pc) : ((pc) + INSN_SIZE))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DB_SMALL_VALUE_MAX
 value|(0x7fffffff)
 end_define
@@ -230,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|DB_ELFSIZE
-value|64
+value|32
 end_define
 
 begin_function_decl
@@ -238,6 +246,19 @@ name|int
 name|db_validate_address
 parameter_list|(
 name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|branch_taken
+parameter_list|(
+name|u_int
+name|insn
+parameter_list|,
+name|u_int
+name|pc
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -803,7 +809,7 @@ directive|ifdef
 name|KDB
 name|kdb_trap
 argument_list|(
-literal|0
+name|T_BREAKPOINT
 argument_list|,
 literal|0
 argument_list|,
@@ -819,43 +825,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|frame
-operator|->
-name|tf_pc
-operator|+=
-literal|4
-expr_stmt|;
 return|return;
 block|}
 else|else
-block|{
-ifdef|#
-directive|ifdef
-name|KDB
-name|printf
-argument_list|(
-literal|"Undefined instruction in kernel.\n"
-argument_list|)
-expr_stmt|;
-name|kdb_trap
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|frame
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|panic
 argument_list|(
 literal|"Undefined instruction in kernel.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 block|}
 ifdef|#
 directive|ifdef
