@@ -2244,11 +2244,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Initialize the console before we print anything out. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
-comment|/* OUTPUT NOW ALLOWED */
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
 operator|=
@@ -2317,6 +2312,11 @@ name|bootverbose
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Initialize the console before we print anything out. 	 */
+name|cninit
+argument_list|()
+expr_stmt|;
+comment|/* OUTPUT NOW ALLOWED */
 comment|/* 	 * Wire things up so we can call the firmware. 	 */
 name|map_pal_code
 argument_list|()
