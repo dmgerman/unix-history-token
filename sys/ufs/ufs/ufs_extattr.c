@@ -590,6 +590,71 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Destroy per-FS structures supporting extended attributes.  Assumes  * that EAs have already been stopped, and will panic if not.  */
+end_comment
+
+begin_function
+name|void
+name|ufs_extattr_uepm_destroy
+parameter_list|(
+name|struct
+name|ufs_extattr_per_mount
+modifier|*
+name|uepm
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|uepm
+operator|->
+name|uepm_flags
+operator|&
+name|UFS_EXTATTR_UEPM_INITIALIZED
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"ufs_extattr_uepm_destroy: not initialized"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|uepm
+operator|->
+name|uepm_flags
+operator|&
+name|UFS_EXTATTR_UEPM_STARTED
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"ufs_extattr_uepm_destroy: called while still started"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX: It's not clear that either order for the next two lines is 	 * ideal, and it should never be a problem if this is only called 	 * during unmount, and with vfs_busy(). 	 */
+name|uepm
+operator|->
+name|uepm_flags
+operator|&=
+operator|~
+name|UFS_EXTATTR_UEPM_INITIALIZED
+expr_stmt|;
+name|lockdestroy
+argument_list|(
+operator|&
+name|uepm
+operator|->
+name|uepm_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Start extended attribute support on an FS  */
 end_comment
 
@@ -3661,16 +3726,6 @@ argument_list|(
 name|ump
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-name|lockdestroy
-argument_list|(
-operator|&
-name|ump
-operator|->
-name|um_extattr
-operator|.
-name|uepm_lock
 argument_list|)
 expr_stmt|;
 block|}
