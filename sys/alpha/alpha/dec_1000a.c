@@ -1320,7 +1320,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/*  * Enable cascade interrupt.  */
-name|dec_1000_intr_enable
+name|dec_1000a_intr_enable
 argument_list|(
 literal|2
 argument_list|)
