@@ -721,7 +721,6 @@ modifier|*
 name|argvp
 parameter_list|)
 block|{
-name|unsigned
 name|char
 modifier|*
 name|p
@@ -944,11 +943,6 @@ name|strtoll
 argument_list|(
 name|num
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|end
 argument_list|,

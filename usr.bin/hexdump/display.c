@@ -179,6 +179,10 @@ decl_stmt|,
 modifier|*
 name|savebp
 decl_stmt|;
+name|savech
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1582,6 +1586,10 @@ literal|1
 operator|&&
 name|nbytes
 operator|>
+operator|(
+name|unsigned
+name|int
+operator|)
 name|length
 condition|)
 name|nbytes

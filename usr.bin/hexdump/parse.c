@@ -1015,6 +1015,14 @@ name|nconv
 decl_stmt|,
 name|prec
 decl_stmt|;
+name|nextpr
+operator|=
+name|NULL
+expr_stmt|;
+name|prec
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|fu
