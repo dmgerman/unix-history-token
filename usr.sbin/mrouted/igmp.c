@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 3.6 1995/06/25 18:52:55 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
 end_comment
 
 begin_include
@@ -447,6 +447,18 @@ case|:
 return|return
 literal|"graft message ack "
 return|;
+case|case
+name|DVMRP_INFO_REQUEST
+case|:
+return|return
+literal|"info request      "
+return|;
+case|case
+name|DVMRP_INFO_REPLY
+case|:
+return|return
+literal|"info reply        "
+return|;
 default|default:
 return|return
 literal|"unknown DVMRP msg "
@@ -689,7 +701,14 @@ name|LOG_WARNING
 argument_list|,
 literal|0
 argument_list|,
-literal|"received packet shorter (%u bytes) than hdr+data length (%u+%u)"
+literal|"received packet from %s shorter (%u bytes) than hdr+data length (%u+%u)"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|src
+argument_list|,
+name|s1
+argument_list|)
 argument_list|,
 name|recvlen
 argument_list|,
@@ -1053,6 +1072,52 @@ name|igmpdatalen
 argument_list|)
 expr_stmt|;
 return|return;
+case|case
+name|DVMRP_INFO_REQUEST
+case|:
+name|accept_info_request
+argument_list|(
+name|src
+argument_list|,
+name|dst
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|igmp
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|igmpdatalen
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|DVMRP_INFO_REPLY
+case|:
+name|accept_info_reply
+argument_list|(
+name|src
+argument_list|,
+name|dst
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|igmp
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|igmpdatalen
+argument_list|)
+expr_stmt|;
+return|return;
 default|default:
 name|log
 argument_list|(
@@ -1245,7 +1310,6 @@ name|int
 name|datalen
 decl_stmt|;
 block|{
-specifier|static
 name|struct
 name|sockaddr_in
 name|sdst
@@ -1259,6 +1323,9 @@ name|struct
 name|igmp
 modifier|*
 name|igmp
+decl_stmt|;
+name|int
+name|setloop
 decl_stmt|;
 name|ip
 operator|=
@@ -1361,6 +1428,7 @@ name|dst
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|k_set_if
 argument_list|(
 name|src
@@ -1368,15 +1436,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dst
-operator|==
-name|allhosts_group
+name|type
+operator|!=
+name|IGMP_DVMRP
 condition|)
+block|{
+name|setloop
+operator|=
+literal|1
+expr_stmt|;
 name|k_set_loop
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|bzero
 argument_list|(
 operator|&
@@ -1499,9 +1574,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|dst
-operator|==
-name|allhosts_group
+name|setloop
 condition|)
 name|k_set_loop
 argument_list|(

@@ -420,8 +420,13 @@ begin_function
 name|void
 name|rsrr_read
 parameter_list|(
+name|f
+parameter_list|,
 name|rfd
 parameter_list|)
+name|int
+name|f
+decl_stmt|;
 name|fd_set
 modifier|*
 name|rfd
