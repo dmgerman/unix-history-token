@@ -407,7 +407,7 @@ name|match
 condition|)
 name|printf
 argument_list|(
-literal|"Note: static unit limits for %s are set (%s = %d)\n"
+literal|"FYI: static unit limits for %s are set: %s=%d\n"
 argument_list|,
 name|dev
 argument_list|,
