@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr_reg.h,v 2.0.0.5 94/08/25 22:51:04 wolf Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- ** **  $Log:	ncr_reg.h,v $ **  Revision 2.0.0.5  94/08/25  22:51:04  wolf **  New SCR_REG_OFS() macro. **   **  Revision 2.0.0.4  94/08/09  23:10:10  wolf **  new message. **   **  Revision 2.0.0.3  94/07/24  08:59:19  wolf **  bits of sstat0 defined. **   **  Revision 2.0  94/07/10  15:53:27  wolf **  FreeBSD release. **   **  Revision 1.0  94/06/07  20:02:21  wolf **  Beta release. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr_reg.h,v 2.0.0.8 94/09/11 22:04:58 wolf Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
 end_comment
 
 begin_ifndef
@@ -51,11 +51,36 @@ name|u_char
 name|nc_scntl2
 decl_stmt|;
 comment|/* no disconnect expected           */
+define|#
+directive|define
+name|SDU
+value|0x80
+comment|/* cmd: disconnect will raise error */
+define|#
+directive|define
+name|CHM
+value|0x40
+comment|/* sta: chained mode                */
+define|#
+directive|define
+name|WSS
+value|0x08
+comment|/* sta: wide scsi send           [W]*/
+define|#
+directive|define
+name|WSR
+value|0x01
+comment|/* sta: wide scsi received       [W]*/
 comment|/*03*/
 name|u_char
 name|nc_scntl3
 decl_stmt|;
 comment|/* cnf system clock dependent       */
+define|#
+directive|define
+name|EWS
+value|0x08
+comment|/* cmd: enable wide scsi         [W]*/
 comment|/*04*/
 name|u_char
 name|nc_scid
@@ -190,17 +215,17 @@ define|#
 directive|define
 name|ILF
 value|0x80
-comment|/* sta: data in SIDL register       */
+comment|/* sta: data in SIDL register lsb   */
 define|#
 directive|define
 name|ORF
 value|0x40
-comment|/* sta: data in SODR register       */
+comment|/* sta: data in SODR register lsb   */
 define|#
 directive|define
 name|OLF
 value|0x20
-comment|/* sta: data in SODL register       */
+comment|/* sta: data in SODL register lsb   */
 define|#
 directive|define
 name|AIP
@@ -230,10 +255,30 @@ comment|/*0e*/
 name|u_char
 name|nc_sstat1
 decl_stmt|;
+define|#
+directive|define
+name|FF3210
+value|0xf0
+comment|/* sta: bytes in the scsi fifo      */
 comment|/*0f*/
 name|u_char
 name|nc_sstat2
 decl_stmt|;
+define|#
+directive|define
+name|ILF1
+value|0x80
+comment|/* sta: data in SIDL register msb[W]*/
+define|#
+directive|define
+name|ORF1
+value|0x40
+comment|/* sta: data in SODR register msb[W]*/
+define|#
+directive|define
+name|OLF1
+value|0x20
+comment|/* sta: data in SODL register msb[W]*/
 comment|/*10*/
 name|u_long
 name|nc_dsa
@@ -474,7 +519,7 @@ name|nc_slpar
 decl_stmt|;
 comment|/*45*/
 name|u_char
-name|nc_45_
+name|nc_swide
 decl_stmt|;
 comment|/*46*/
 name|u_char
@@ -495,14 +540,10 @@ name|nc_stime1
 decl_stmt|;
 comment|/* cmd: timeout user defined        */
 comment|/*4a*/
-name|u_char
+name|u_short
 name|nc_respid
 decl_stmt|;
 comment|/* sta: Reselect-IDs                */
-comment|/*4b*/
-name|u_char
-name|nc_4b_
-decl_stmt|;
 comment|/*4c*/
 name|u_char
 name|nc_stest0
@@ -540,55 +581,31 @@ name|CSF
 value|0x02
 comment|/* c: clear scsi fifo */
 comment|/*50*/
-name|u_char
+name|u_short
 name|nc_sidl
 decl_stmt|;
 comment|/* Lowlevel: latched from scsi data */
-comment|/*51*/
-name|u_char
-name|nc_51_
-decl_stmt|;
 comment|/*52*/
-name|u_char
+name|u_short
 name|nc_52_
 decl_stmt|;
-comment|/*53*/
-name|u_char
-name|nc_53_
-decl_stmt|;
 comment|/*54*/
-name|u_char
+name|u_short
 name|nc_sodl
 decl_stmt|;
 comment|/* Lowlevel: data out to scsi data  */
-comment|/*55*/
-name|u_char
-name|nc_55_
-decl_stmt|;
 comment|/*56*/
-name|u_char
+name|u_short
 name|nc_56_
 decl_stmt|;
-comment|/*57*/
-name|u_char
-name|nc_57_
-decl_stmt|;
 comment|/*58*/
-name|u_char
+name|u_short
 name|nc_sbdl
 decl_stmt|;
 comment|/* Lowlevel: data from scsi data    */
-comment|/*59*/
-name|u_char
-name|nc_59_
-decl_stmt|;
 comment|/*5a*/
-name|u_char
+name|u_short
 name|nc_5a_
-decl_stmt|;
-comment|/*5b*/
-name|u_char
-name|nc_5b_
 decl_stmt|;
 comment|/*5c*/
 name|u_char
@@ -1391,6 +1408,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|M_IGN_RESIDUE
+value|(0x23)
+end_define
+
+begin_define
+define|#
+directive|define
 name|M_IDENTIFY
 value|(0x80)
 end_define
@@ -1398,8 +1422,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_X_SDTR
+name|M_X_MODIFY_DP
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_X_SYNC_REQ
 value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_X_WIDE_REQ
+value|(0x03)
 end_define
 
 begin_comment
@@ -1474,6 +1512,13 @@ define|#
 directive|define
 name|S_ILLEGAL
 value|(0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_SENSE
+value|(0x80)
 end_define
 
 begin_endif

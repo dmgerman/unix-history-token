@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrstat.c,v 2.0.0.7 94/08/27 20:13:42 wolf Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** **------------------------------------------------------------------------- ** **  $Log:	ncrstat.c,v $ **  Revision 2.0.0.7  94/08/27  20:13:42  wolf **  New: "-sflags=xxx" **  flags=1: command tracing. **   **  Revision 2.0.0.6  94/08/10  19:36:32  wolf **  Multiple "-s" options per line supported. **  Ported to NetBSD. **   **  Revision 2.0.0.5  94/08/09  23:10:20  wolf **  new message. **   **  Revision 2.0.0.4  94/08/08  19:10:28  wolf **  struct script left outside struct ncb. **  (must fit in one physical page) **   **  Revision 2.0.0.3  94/08/05  18:44:43  wolf **  adapted to ncr.c 2.0.0.8 **  (script now inside control structure) **   **  Revision 2.0.0.2  94/07/22  16:57:34  wolf **  New option "-n#": get the script label of an address. **   **  Revision 2.0.0.1  94/07/19  22:25:05  wolf **  hexadecimal args. **   **  Revision 2.0  94/07/10  19:01:30  wolf **  FreeBSD release. **   **  Revision 1.1  94/06/25  17:18:11  wolf **  Initial revision **   *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrstat.c,v 2.0.0.9 94/09/11 22:12:21 wolf Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** **------------------------------------------------------------------------- */
 end_comment
 
 begin_include
@@ -1364,7 +1364,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"T:L  Vendor   Device           Rev  Speed   Max   Tags\n"
+literal|"T:L  Vendor   Device           Rev  Speed   Max Wide Tags\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1663,6 +1663,48 @@ name|l
 index|]
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|tip
+operator|->
+name|widedone
+condition|)
+block|{
+case|case
+literal|1
+case|:
+name|printf
+argument_list|(
+literal|"   8"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|printf
+argument_list|(
+literal|"  16"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|printf
+argument_list|(
+literal|"  32"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"   ?"
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 if|if
 condition|(
 name|lcb
@@ -3201,6 +3243,8 @@ literal|"async:         disable synchronous transfers.\n"
 literal|"sync=value:    set the maximal synchronous transfer rate (MHz).\n"
 literal|"fast:          set FAST SCSI-2.\n"
 literal|"\n"
+literal|"wide=value:    set the bus width (0=8bit 1=16bit).\n"
+literal|"\n"
 literal|"tags=value:    use this number of tags.\n"
 literal|"orderedtag:    use ordered tags only.\n"
 literal|"simpletag:     use simple tags only.\n"
@@ -3312,6 +3356,61 @@ operator|.
 name|cmd
 operator|=
 name|UC_SETSYNC
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"wide="
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|u_char
+name|t
+init|=
+name|strtoul
+argument_list|(
+name|arg
+operator|+
+literal|5
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|t
+operator|<=
+literal|1
+condition|)
+block|{
+name|user
+operator|.
+name|data
+operator|=
+name|t
+expr_stmt|;
+name|user
+operator|.
+name|cmd
+operator|=
+name|UC_SETWIDE
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -4640,7 +4739,7 @@ argument_list|(
 expr|struct
 name|script
 argument_list|,
-name|savepos
+name|cleanup0
 argument_list|)
 operator|)
 operator|<
@@ -4652,7 +4751,7 @@ name|d
 operator|,
 name|s
 operator|=
-literal|"<savepos>"
+literal|"<cleanup>"
 expr_stmt|;
 if|if
 condition|(
@@ -7485,11 +7584,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" user limits: usrsync=%d  usrtags=%d.\n"
+literal|" user limits: usrsync=%d  usrwide=%d  usrtags=%d.\n"
 argument_list|,
 name|tip
 operator|->
 name|usrsync
+argument_list|,
+name|tip
+operator|->
+name|usrwide
 argument_list|,
 name|tip
 operator|->
@@ -7515,6 +7618,19 @@ argument_list|,
 name|tip
 operator|->
 name|sval
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"	wide: widedone=%d, wval=%x.\n"
+argument_list|,
+name|tip
+operator|->
+name|widedone
+argument_list|,
+name|tip
+operator|->
+name|wval
 argument_list|)
 expr_stmt|;
 name|printf
