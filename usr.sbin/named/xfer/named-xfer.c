@@ -73,7 +73,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: named-xfer.c,v 1.4 1995/08/20 21:49:40 peter Exp $"
+literal|"$Id: named-xfer.c,v 1.5 1996/01/07 05:48:49 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,11 +116,22 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -5805,10 +5816,15 @@ name|n1
 decl_stmt|,
 name|n
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|iso_addr
 name|isoa
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|data
 index|[
@@ -7821,6 +7837,9 @@ name|dbfp
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|T_NSAP
 case|:
@@ -7881,6 +7900,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|T_UINFO
 case|:

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 1.5 1995/08/21 09:15:34 bde Exp $"
+literal|"$Id: res_debug.c,v 1.6 1996/01/07 09:14:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,11 +59,22 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2074,10 +2085,15 @@ name|struct
 name|in_addr
 name|inaddr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|iso_addr
 name|isoa
 decl_stmt|;
+endif|#
+directive|endif
 specifier|const
 name|u_char
 modifier|*
@@ -3026,6 +3042,9 @@ name|file
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|T_NSAP
 case|:
@@ -3093,6 +3112,8 @@ operator|+=
 name|dlen
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|T_MINFO
 case|:

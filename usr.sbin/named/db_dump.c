@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 1.4 1995/08/20 21:18:14 peter Exp $"
+literal|"$Id: db_dump.c,v 1.5 1996/01/07 05:48:21 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,11 +66,22 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1657,10 +1668,15 @@ name|j
 decl_stmt|,
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|iso_addr
 name|isoa
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|u_char
 modifier|*
@@ -2847,6 +2863,9 @@ name|fp
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|T_NSAP
 case|:
@@ -2912,6 +2931,8 @@ name|fp
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|LOC_RR

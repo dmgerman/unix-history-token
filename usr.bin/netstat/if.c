@@ -94,6 +94,12 @@ directive|include
 file|<netns/ns_if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -105,6 +111,11 @@ include|#
 directive|include
 file|<netiso/iso_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -225,10 +236,15 @@ name|struct
 name|ns_ifaddr
 name|ns
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|iso_ifaddr
 name|iso
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|ifaddr
 union|;

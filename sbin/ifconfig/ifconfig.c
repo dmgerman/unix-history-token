@@ -171,6 +171,12 @@ directive|include
 file|<netns/ns_if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -188,6 +194,11 @@ include|#
 directive|include
 file|<netiso/iso_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -271,6 +282,12 @@ name|addreq
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|iso_ifreq
@@ -284,6 +301,11 @@ name|iso_aliasreq
 name|iso_addreq
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -411,21 +433,40 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|notealias
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
+begin_decl_stmt
+name|int
 name|setsnpaoffset
 argument_list|()
 decl_stmt|,
 name|setnsellength
 argument_list|()
-decl_stmt|,
-name|notrailers
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|int
+name|notrailers
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -610,6 +651,9 @@ block|,
 name|setifipdst
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ISO
 block|{
 literal|"snpaoffset"
 block|,
@@ -626,6 +670,8 @@ block|,
 name|setnsellength
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"link0"
 block|,
@@ -763,6 +809,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|iso_status
@@ -772,6 +824,11 @@ name|iso_getaddr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -905,6 +962,9 @@ argument|addreq
 argument_list|)
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ISO
 block|{
 literal|"iso"
 block|,
@@ -929,6 +989,8 @@ argument|iso_addreq
 argument_list|)
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"ether"
 block|,
@@ -2094,6 +2156,9 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ISO
 if|if
 condition|(
 name|af
@@ -2103,6 +2168,8 @@ condition|)
 name|adjust_nsellength
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setipdst
@@ -3046,6 +3113,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_macro
 name|setsnpaoffset
 argument_list|(
@@ -3073,6 +3146,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3992,6 +4070,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_macro
 name|iso_status
 argument_list|(
@@ -4204,6 +4288,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|ether_status
@@ -4972,6 +5061,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -5240,6 +5335,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

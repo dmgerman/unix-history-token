@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.3 1996/01/02 20:09:22 wollman Exp $"
+literal|"$Id: route.c,v 1.4 1996/01/20 12:56:57 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,17 +125,39 @@ directive|include
 file|<netns/ns.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CCITT
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netccitt/x25.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -254,18 +276,28 @@ name|struct
 name|sockaddr_ns
 name|sns
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|sockaddr_iso
 name|siso
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_dl
 name|sdl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CCITT
 name|struct
 name|sockaddr_x25
 name|sx25
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|so_dst
 union|,
@@ -457,6 +489,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CCITT
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -474,6 +512,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|__dead
@@ -936,6 +979,9 @@ operator|=
 name|AF_LINK
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|K_ISO
 case|:
@@ -947,6 +993,11 @@ operator|=
 name|AF_ISO
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CCITT
 case|case
 name|K_X25
 case|:
@@ -954,6 +1005,8 @@ name|af
 operator|=
 name|AF_CCITT
 expr_stmt|;
+endif|#
+directive|endif
 default|default:
 goto|goto
 name|bad
@@ -1711,6 +1764,9 @@ name|sa
 argument_list|)
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|AF_ISO
 case|:
@@ -1740,6 +1796,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 block|{
 name|u_short
@@ -2257,6 +2315,9 @@ name|sa
 argument_list|)
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|AF_ISO
 case|:
@@ -2286,6 +2347,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 block|{
 name|u_short
@@ -2663,6 +2726,9 @@ name|sockaddr_dl
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|K_OSI
 case|:
@@ -2682,6 +2748,8 @@ name|sockaddr_iso
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|K_INET
 case|:
@@ -2698,6 +2766,9 @@ name|sockaddr_in
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CCITT
 case|case
 name|K_X25
 case|:
@@ -2714,6 +2785,8 @@ name|sockaddr_x25
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|K_SA
 case|:
@@ -3774,12 +3847,17 @@ name|ns_addr
 name|ns_addr
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|iso_addr
 modifier|*
 name|iso_addr
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 name|struct
 name|hostent
 modifier|*
@@ -4085,6 +4163,9 @@ name|sns_addr
 argument_list|)
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|AF_OSI
 case|:
@@ -4184,6 +4265,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 name|AF_LINK
 case|:
@@ -4202,6 +4285,9 @@ operator|(
 literal|1
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|AF_CCITT
 case|:
@@ -4227,6 +4313,8 @@ else|:
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 name|PF_ROUTE
 case|:
@@ -4477,6 +4565,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CCITT
+end_ifdef
+
 begin_function
 name|int
 name|x25_makemask
@@ -4566,6 +4660,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|short
@@ -5711,13 +5810,21 @@ case|:
 case|case
 name|AF_INET
 case|:
+ifdef|#
+directive|ifdef
+name|CCITT
 case|case
 name|AF_CCITT
 case|:
+endif|#
+directive|endif
 case|case
 literal|0
 case|:
 return|return;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|AF_ISO
 case|:
@@ -5746,6 +5853,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 name|cp1
 operator|=
@@ -5828,6 +5937,9 @@ operator|*
 operator|--
 name|cp2
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 switch|switch
 condition|(
 name|so_dst
@@ -5850,6 +5962,8 @@ name|olen
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -7233,6 +7347,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|AF_ISO
 case|:
@@ -7257,6 +7374,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|AF_INET
 case|:

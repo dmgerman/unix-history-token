@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: list.c,v 1.3 1995/05/30 03:49:15 rgrimes Exp $"
+literal|"$Id: list.c,v 1.4 1995/08/20 22:32:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,11 +60,22 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1965,10 +1976,15 @@ name|struct
 name|in_addr
 name|inaddr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISO
 name|struct
 name|iso_addr
 name|isoa
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|name
 index|[
@@ -3149,6 +3165,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|ISO
 case|case
 name|T_NSAP
 case|:
@@ -3209,6 +3228,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|T_MINFO
 case|:
