@@ -689,8 +689,33 @@ name|SERVICING_INTERRUPT
 parameter_list|(
 name|isp
 parameter_list|)
+value|1
+end_define
+
+begin_comment
+comment|/* not ready yet... */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|SERVICING_INTERRUPT
+parameter_list|(
+name|isp
+parameter_list|)
 value|(intr_nesting_level != 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
