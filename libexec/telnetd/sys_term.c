@@ -5350,9 +5350,6 @@ else|:
 literal|9600
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LINEMODE
 if|if
 condition|(
 name|erase
@@ -5366,6 +5363,9 @@ index|]
 operator|=
 name|erase
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LINEMODE
 if|if
 condition|(
 name|waslm
