@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.28 1996/11/15 06:17:36 nate Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.29 1996/11/15 17:30:29 nate Exp $  */
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_ifdef
@@ -472,6 +478,7 @@ decl_stmt|;
 endif|#
 directive|endif
 block|}
+modifier|*
 name|psm_softc
 index|[
 name|NPSM
@@ -1648,7 +1655,6 @@ operator|)
 return|;
 name|sc
 operator|=
-operator|&
 name|psm_softc
 index|[
 name|unit
@@ -2181,12 +2187,31 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-operator|&
 name|psm_softc
 index|[
 name|unit
 index|]
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|sc
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
 decl_stmt|;
+name|bzero
+argument_list|(
+name|sc
+argument_list|,
+sizeof|sizeof
+expr|*
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* initial operation mode */
 name|sc
 operator|->
@@ -2372,7 +2397,6 @@ return|;
 comment|/* Get device data */
 name|sc
 operator|=
-operator|&
 name|psm_softc
 index|[
 name|unit
@@ -2641,7 +2665,6 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-operator|&
 name|psm_softc
 index|[
 name|PSM_UNIT
@@ -3411,7 +3434,6 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-operator|&
 name|psm_softc
 index|[
 name|PSM_UNIT
@@ -3765,7 +3787,6 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-operator|&
 name|psm_softc
 index|[
 name|PSM_UNIT
@@ -4418,7 +4439,6 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-operator|&
 name|psm_softc
 index|[
 name|unit
@@ -4945,7 +4965,6 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-operator|&
 name|psm_softc
 index|[
 name|PSM_UNIT

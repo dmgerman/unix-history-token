@@ -198,17 +198,13 @@ name|g_lenno
 decl_stmt|;
 comment|/* Length number */
 name|char
+modifier|*
 name|g_fmtdesc
-index|[
-literal|16
-index|]
 decl_stmt|;
 comment|/* Format text description */
 name|char
+modifier|*
 name|g_lendesc
-index|[
-literal|16
-index|]
 decl_stmt|;
 comment|/* Length text description */
 name|int
