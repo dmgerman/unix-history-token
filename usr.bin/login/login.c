@@ -207,12 +207,6 @@ directive|include
 file|<utmp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PAM
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -230,15 +224,6 @@ include|#
 directive|include
 file|<sys/wait.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_PAM */
-end_comment
 
 begin_include
 include|#
@@ -276,18 +261,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|checknologin
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -444,12 +417,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PAM
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -516,15 +483,6 @@ directive|define
 name|PAM_END
 value|{ \ 	if ((e = pam_setcred(pamh, PAM_DELETE_CRED)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_setcred: %s", pam_strerror(pamh, e)); \ 	if ((e = pam_close_session(pamh,0)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_close_session: %s", pam_strerror(pamh, e)); \ 	if ((e = pam_end(pamh, e)) != PAM_SUCCESS) \ 		syslog(LOG_ERR, "pam_end: %s", pam_strerror(pamh, e)); \ }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_PAM */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -745,9 +703,6 @@ name|rootlogin
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|int
-name|changepass
-decl_stmt|;
 name|time_t
 name|warntime
 decl_stmt|;
@@ -797,18 +752,12 @@ name|lc
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_PAM
 name|pid_t
 name|pid
 decl_stmt|;
 name|int
 name|e
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* USE_PAM */
 operator|(
 name|void
 operator|)
@@ -1594,9 +1543,6 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_PAM
 comment|/* 		 * Try to authenticate using PAM.  If a PAM system error 		 * occurs, perhaps because of a botched configuration, 		 * then fall back to using traditional Unix authentication. 		 */
 if|if
 condition|(
@@ -1610,9 +1556,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-endif|#
-directive|endif
-comment|/* USE_PAM */
 name|rval
 operator|=
 name|auth_traditional
@@ -1630,9 +1573,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_PAM
 comment|/* 		 * PAM authentication may have changed "pwd" to the 		 * entry for the template user.  Check again to see if 		 * this is a root login after all. 		 */
 if|if
 condition|(
@@ -1650,9 +1590,6 @@ name|rootlogin
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_PAM */
 name|ttycheck
 label|:
 comment|/* 		 * If trying to log in as root without Kerberos, 		 * but with insecure terminal, refuse the login attempt. 		 */
@@ -1771,17 +1708,6 @@ operator|=
 name|login_getpwclass
 argument_list|(
 name|pwd
-argument_list|)
-expr_stmt|;
-comment|/* if user not super-user, check for disabled logins */
-if|if
-condition|(
-operator|!
-name|rootlogin
-condition|)
-name|auth_checknologin
-argument_list|(
-name|lc
 argument_list|)
 expr_stmt|;
 name|quietlog
@@ -2031,98 +1957,6 @@ operator|&
 name|pwd
 operator|->
 name|pw_expire
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|warntime
-operator|=
-name|login_getcaptime
-argument_list|(
-name|lc
-argument_list|,
-literal|"warnpassword"
-argument_list|,
-name|DEFAULT_WARN
-argument_list|,
-name|DEFAULT_WARN
-argument_list|)
-expr_stmt|;
-name|changepass
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_change
-condition|)
-block|{
-if|if
-condition|(
-name|tp
-operator|.
-name|tv_sec
-operator|>=
-name|pwd
-operator|->
-name|pw_change
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"Sorry -- your password has expired.\n"
-argument_list|)
-expr_stmt|;
-name|changepass
-operator|=
-literal|1
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"%s Password expired - forcing change"
-argument_list|,
-name|pwd
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_change
-operator|-
-name|tp
-operator|.
-name|tv_sec
-operator|<
-name|warntime
-operator|&&
-operator|!
-name|quietlog
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"Warning: your password expires on %s"
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|pwd
-operator|->
-name|pw_change
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2799,9 +2633,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|USE_PAM
 if|if
 condition|(
 name|pamh
@@ -2972,9 +2803,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* USE_PAM */
 comment|/* 	 * We don't need to be root anymore, so 	 * set the user and session context 	 */
 if|if
 condition|(
@@ -3384,26 +3212,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|changepass
-condition|)
-block|{
-if|if
-condition|(
-name|system
-argument_list|(
-name|_PATH_CHPASS
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|sleepexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Login shells have a leading '-' in front of argv[0] 	 */
 if|if
 condition|(
@@ -3601,12 +3409,6 @@ name|rval
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PAM
-end_ifdef
 
 begin_comment
 comment|/*  * Attempt to authenticate the user using PAM.  Returns 0 if the user is  * authenticated, or 1 if not authenticated.  If some sort of PAM system  * error occurs (e.g., the "/etc/pam.conf" file is missing) then this  * function returns -1.  This can be used as an indication that we should  * fall back to a different authentication mechanism.  */
@@ -4204,15 +4006,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_PAM */
-end_comment
 
 begin_function
 specifier|static
