@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|MIN_LQRPERIOD
-value|2
+value|1
 end_define
 
 begin_comment
@@ -306,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|MIN_FSMRETRY
-value|3
+value|1
 end_define
 
 begin_comment
