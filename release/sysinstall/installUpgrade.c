@@ -1137,6 +1137,8 @@ argument_list|(
 literal|"Now you must specify an installation medium for the upgrade."
 argument_list|)
 expr_stmt|;
+name|media
+label|:
 if|if
 condition|(
 operator|!
@@ -1168,12 +1170,19 @@ name|mediaDevice
 argument_list|)
 condition|)
 block|{
-name|msgConfirm
+if|if
+condition|(
+operator|!
+name|msgYesNo
 argument_list|(
-literal|"Couldn't initialize the media; upgrade aborted.  Please\n"
-literal|"fix whatever the problem is and try again."
+literal|"Couldn't initialize the media.  Would you like\n"
+literal|"to adjust your media selection and try again?"
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|media
+goto|;
+else|else
 return|return
 name|DITEM_FAILURE
 operator||
@@ -1340,7 +1349,6 @@ operator||
 name|DITEM_RECREATE
 return|;
 block|}
-block|}
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1379,6 +1387,7 @@ expr_stmt|;
 name|systemCreateHoloshell
 argument_list|()
 expr_stmt|;
+block|}
 name|saved_etc
 operator|=
 name|NULL
