@@ -2561,7 +2561,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"unknown mode 0x%x in saclose\n"
+literal|"unknown mode 0x%x in saclose"
 argument_list|,
 name|mode
 argument_list|)
