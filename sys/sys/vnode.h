@@ -1916,7 +1916,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLUSIVE)		\ 		panic("%s: %p is not exclusive locked but should be",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLUSIVE) {		\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not exclusive locked but should be\n",\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1929,7 +1929,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLOTHER)		\ 		panic("%s: %p is not exclusive locked by another thread",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLOTHER) {		\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not exclusive locked by another thread\n",\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1942,7 +1942,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, NULL) != LK_SHARED)			\ 		panic("%s: %p is not locked shared but should be",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, NULL) != LK_SHARED) {			\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not locked shared but should be",\ 		    str, _vp);						\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
 end_define
 
 begin_function_decl
