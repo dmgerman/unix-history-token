@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.16 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ directive|define
 name|MAXNINDIR
 value|(MAXBSIZE / sizeof (daddr_t))
 end_define
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -620,6 +626,9 @@ return|return;
 block|}
 name|bread
 argument_list|(
+operator|(
+name|daddr_t
+operator|)
 name|SBOFF
 argument_list|,
 operator|(
@@ -1870,6 +1879,9 @@ name|dirp
 operator|->
 name|dbuf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dblksize
 argument_list|(
 name|sblockp
