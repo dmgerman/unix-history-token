@@ -19,6 +19,12 @@ directive|define
 name|_VM_MAP_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/lockmgr.h>
+end_include
+
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_map_t		the high-level address map data structure.  *	vm_map_entry_t		an entry in an address map.  */
 end_comment
