@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -48,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -61,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
 end_include
 
 begin_include
@@ -109,18 +85,6 @@ begin_include
 include|#
 directive|include
 file|<netatalk/at_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/aarp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/phase2.h>
 end_include
 
 begin_include

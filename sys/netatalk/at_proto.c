@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -25,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<sys/domain.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -54,24 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/radix.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -79,18 +49,6 @@ begin_include
 include|#
 directive|include
 file|<netatalk/at.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/ddp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/at_var.h>
 end_include
 
 begin_include
