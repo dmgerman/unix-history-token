@@ -314,36 +314,15 @@ directive|define
 name|HAVE_INLINE_FFS
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|int
+begin_define
+define|#
+directive|define
 name|ffs
 parameter_list|(
-name|int
-name|mask
+name|x
 parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* 	 * Note that gcc-2's builtin ffs would be used if we didn't declare 	 * this inline or turn off the builtin.  The builtin is faster but 	 * broken in gcc-2.4.5 and slower but working in gcc-2.5 and later 	 * versions. 	 */
-block|return (mask == 0 ? mask : (int)bsfl((u_int)mask) + 1);
-else|#
-directive|else
-comment|/* Actually, the above is way out of date.  The builtins use cmov etc */
-return|return
-operator|(
-name|__builtin_ffs
-argument_list|(
-name|mask
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
-block|}
-end_function
+value|__builtin_ffs(x)
+end_define
 
 begin_define
 define|#
