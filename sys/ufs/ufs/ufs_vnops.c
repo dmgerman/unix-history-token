@@ -1221,18 +1221,6 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the access time - this catches normal open(2) of files 	 * as well as execve(2). 	 */
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_ACCESS
-expr_stmt|;
-name|ufs_itimes
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
