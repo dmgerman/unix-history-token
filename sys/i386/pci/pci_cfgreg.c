@@ -229,8 +229,6 @@ name|pcibus_read
 block|,
 name|pcibus_write
 block|,
-name|ICU_LEN
-block|,
 name|pcibus_ihandler_attach
 block|,
 name|pcibus_ihandler_detach
