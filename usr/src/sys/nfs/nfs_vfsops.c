@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2076,34 +2076,8 @@ name|nmp
 operator|->
 name|nm_flag
 operator|&
-operator|(
-name|NFSMNT_RDIRALOOK
-operator||
-name|NFSMNT_LEASETERM
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|nmp
-operator|->
-name|nm_flag
-operator|&
 name|NFSMNT_NQNFS
-operator|)
-operator|==
-literal|0
 condition|)
-block|{
-name|error
-operator|=
-name|EPERM
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 comment|/* 		 * We have to set mnt_maxsymlink to a non-zero value so 		 * that COMPAT_43 routines will know that we are setting 		 * the d_type field in directories (and can zero it for 		 * unsuspecting binaries). 		 */
 name|mp
 operator|->
@@ -2111,7 +2085,6 @@ name|mnt_maxsymlinklen
 operator|=
 literal|1
 expr_stmt|;
-block|}
 name|nmp
 operator|->
 name|nm_timeo
