@@ -3928,11 +3928,11 @@ index|]
 decl_stmt|;
 name|size_t
 name|oidlen
+decl_stmt|,
+name|plen
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|plen
 decl_stmt|;
 name|oid
 index|[
