@@ -1549,6 +1549,7 @@ name|retval
 operator|!=
 name|PAM_SUCCESS
 condition|)
+block|{
 name|PAM_VERBOSE_ERROR
 argument_list|(
 literal|"Unable to get new password"
@@ -1559,6 +1560,7 @@ operator|(
 name|retval
 operator|)
 return|;
+block|}
 name|pwd
 operator|->
 name|pw_change
