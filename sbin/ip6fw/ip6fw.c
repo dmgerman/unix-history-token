@@ -2864,6 +2864,9 @@ name|u_char
 modifier|*
 name|addr
 decl_stmt|;
+name|int
+name|family
+decl_stmt|;
 block|{
 name|struct
 name|hostent
@@ -3068,6 +3071,10 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|ipno
 argument_list|,
 name|AF_INET6
