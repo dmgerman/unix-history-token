@@ -4,23 +4,43 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * stlstats.c  -- stallion intelligent multiport stats display.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: stlstats.c,v 1.4 1997/02/22 16:13:50 peter Exp $  */
+comment|/*  * stlstats.c  -- stallion intelligent multiport stats display.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*****************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -32,7 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ncurses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -44,13 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ncurses.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -96,13 +128,6 @@ modifier|*
 name|defdevice
 init|=
 literal|"/dev/staliomem0"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +223,7 @@ comment|/*  *	Declare internal function prototypes here.  */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -288,6 +314,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -296,51 +323,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-hVbpdc]\n\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: stlstats [-hVi] [-c control-device] [-b board-number]"
 argument_list|,
-literal|"    -h   print this information\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -V   show version information and exit\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -b   display board\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -p   display panel\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -d   display port device stats\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -c   specify control device to use\n"
+literal|"                [-p port-number] [-d port-device]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -375,8 +362,6 @@ name|portcnt
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|fd
 decl_stmt|;
 if|if
 condition|(
@@ -390,24 +375,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: port device %s does not exist\n"
-argument_list|,
-name|progname
+literal|"port device %s does not exist"
 argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -420,24 +396,15 @@ operator|)
 operator|!=
 name|S_IFCHR
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: port device %s is not a char device\n"
-argument_list|,
-name|progname
+literal|"port device %s is not a char device"
 argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|displaybrdnr
 operator|=
 operator|(
@@ -483,24 +450,15 @@ name|ioaddr
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: device %s does not exist\n"
-argument_list|,
-name|progname
+literal|"device %s does not exist"
 argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|portcnt
@@ -569,24 +527,15 @@ name|brdstats
 operator|.
 name|nrpanels
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: device %s does not exist\n"
-argument_list|,
-name|progname
+literal|"device %s does not exist"
 argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|displaypanelnr
 operator|=
 name|i
@@ -917,14 +866,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\n\r\nERROR: ioctl(COM_GETPORTSTATS) "
-literal|"failed, errno=%d\n\r\n"
-argument_list|,
-name|errno
+literal|"ioctl(COM_GETPORTSTATS) failed"
 argument_list|)
 expr_stmt|;
 name|localexit
@@ -2503,13 +2447,6 @@ name|optind
 operator|=
 literal|0
 expr_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|ctrldevice
 operator|=
 name|defdevice
@@ -2547,9 +2484,7 @@ literal|'V'
 case|:
 name|printf
 argument_list|(
-literal|"%s version %s\n"
-argument_list|,
-name|progname
+literal|"stlstats version %s\n"
 argument_list|,
 name|version
 argument_list|)
@@ -2631,24 +2566,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: control device %s does not exist\n"
-argument_list|,
-name|progname
+literal|"control device %s does not exist"
 argument_list|,
 name|ctrldevice
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2661,24 +2587,15 @@ operator|)
 operator|!=
 name|S_IFCHR
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: control device %s is not a char device\n"
-argument_list|,
-name|progname
+literal|"control device %s is not a char device"
 argument_list|,
 name|ctrldevice
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2694,26 +2611,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: open of %s failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|ctrldevice
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"open of %s failed"
+argument_list|,
+name|ctrldevice
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*  *	Validate the panel number supplied by user. We do this now since we  *	need to have parsed the entire command line first.  */
 name|getbrdstats
 argument_list|()
