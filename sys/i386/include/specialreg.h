@@ -504,7 +504,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID_B30
+name|CPUID_IA64
 value|0x40000000
 end_define
 
