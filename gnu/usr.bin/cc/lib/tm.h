@@ -43,14 +43,14 @@ value|"-Dunix -Di386 -D__FreeBSD__ -D____386BSD____ -D__386BSD__ -DBSD_NET2"
 end_define
 
 begin_comment
-comment|/* Like the default, except no -lg.  */
+comment|/* Like the default, except no -lg and no shared profiling libraries.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
+value|"%{!p:%{!pg:-lc}}%{p:-lc_p -Bstatic}%{pg:-lc_p -Bstatic}"
 end_define
 
 begin_undef
