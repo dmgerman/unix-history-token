@@ -96,7 +96,7 @@ name|de_flags
 decl_stmt|;
 define|#
 directive|define
-name|DE_ORPHAN
+name|DE_WHITEOUT
 value|0x1
 define|#
 directive|define
