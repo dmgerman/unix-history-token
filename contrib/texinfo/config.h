@@ -930,6 +930,14 @@ comment|/* #undef HAVE___ARGZ_STRINGIFY */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `__fsetlocking' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___FSETLOCKING */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `__secure_getenv' function. */
 end_comment
 
@@ -997,7 +1005,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"GNU Texinfo 4.5"
+value|"GNU Texinfo 4.6"
 end_define
 
 begin_comment
@@ -1019,7 +1027,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.5"
+value|"4.6"
 end_define
 
 begin_comment
@@ -1084,7 +1092,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.5"
+value|"4.6"
 end_define
 
 begin_comment
