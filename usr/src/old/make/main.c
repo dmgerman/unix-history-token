@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.3 (Berkeley) 82/10/10"
+literal|"@(#)main.c	4.4 (Berkeley) 82/10/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -718,6 +718,22 @@ block|}
 operator|*
 name|op
 operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|options
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|*
+name|options
 operator|=
 literal|'\0'
 expr_stmt|;
