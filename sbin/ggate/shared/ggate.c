@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -1015,6 +1027,12 @@ name|gprovider
 modifier|*
 name|pp
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|5
+index|]
+decl_stmt|;
 name|pp
 operator|=
 name|LIST_FIRST
@@ -1130,13 +1148,45 @@ literal|"ref"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|humanize_number
 argument_list|(
-literal|"  mediasize: %jd\n"
+name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+operator|(
+name|int64_t
+operator|)
 name|pp
 operator|->
 name|lg_mediasize
+argument_list|,
+literal|""
+argument_list|,
+name|HN_AUTOSCALE
+argument_list|,
+name|HN_B
+operator||
+name|HN_NOSPACE
+operator||
+name|HN_DECIMAL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  mediasize: %jd (%s)\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|pp
+operator|->
+name|lg_mediasize
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 name|printf
