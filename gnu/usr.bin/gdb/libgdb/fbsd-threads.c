@@ -2518,9 +2518,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* XXX: We've replaced the pid with the lwpid for GDB's benefit. */
 name|lwp
 operator|=
-name|GET_LWP
+name|GET_PID
 argument_list|(
 name|inferior_ptid
 argument_list|)
@@ -5443,16 +5444,14 @@ operator|=
 name|save_inferior_ptid
 argument_list|()
 expr_stmt|;
+comment|/* XXX: Target operation isn't lwp aware: replace pid with lwp */
 name|inferior_ptid
 operator|=
 name|BUILD_LWP
 argument_list|(
-name|lwpid
+literal|0
 argument_list|,
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
+name|lwpid
 argument_list|)
 expr_stmt|;
 name|target_fetch_registers
