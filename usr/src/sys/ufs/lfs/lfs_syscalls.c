@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -252,8 +252,6 @@ name|blkcnt
 expr_stmt|;
 name|start
 operator|=
-name|blkp
-operator|=
 name|malloc
 argument_list|(
 name|cnt
@@ -278,7 +276,7 @@ name|uap
 operator|->
 name|blkiov
 argument_list|,
-name|blkp
+name|start
 argument_list|,
 name|cnt
 operator|*
@@ -323,6 +321,10 @@ control|(
 name|lastino
 operator|=
 name|LFS_UNUSED_INUM
+operator|,
+name|blkp
+operator|=
+name|start
 init|;
 name|cnt
 operator|--
@@ -532,8 +534,6 @@ name|inocnt
 expr_stmt|;
 name|start
 operator|=
-name|inop
-operator|=
 name|malloc
 argument_list|(
 name|cnt
@@ -558,7 +558,7 @@ name|uap
 operator|->
 name|inoiov
 argument_list|,
-name|inop
+name|start
 argument_list|,
 name|cnt
 operator|*
@@ -584,6 +584,9 @@ return|;
 block|}
 for|for
 control|(
+name|inop
+operator|=
+name|start
 init|;
 name|cnt
 operator|--
