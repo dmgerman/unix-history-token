@@ -351,6 +351,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_GEOM
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* GEOM I/O events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_BUSDMA
 value|0x08000000
 end_define
