@@ -431,6 +431,26 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|plist
+operator|.
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s does not appear to be a valid package!"
+argument_list|,
+name|pkg
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 comment|/*      * First we check if the installed package has an origin, and try      * looking for it's Makefile. If we find the Makefile we get the      * latest version from there. If we fail, we start looking in the      * INDEX, first matching the origin and then the package name.      */
 if|if
 condition|(
