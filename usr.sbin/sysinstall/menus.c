@@ -9973,7 +9973,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866b-8x16"
+literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866b-8x16,mousechar_start=3"
 block|}
 block|,
 block|{
