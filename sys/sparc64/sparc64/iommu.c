@@ -233,6 +233,7 @@ begin_expr_stmt
 specifier|static
 name|TAILQ_HEAD
 argument_list|(
+argument|iommu_maplruq_head
 argument_list|,
 argument|bus_dmamap
 argument_list|)
@@ -2683,6 +2684,8 @@ parameter_list|)
 block|{
 name|bus_dmamap_t
 name|tm
+decl_stmt|,
+name|last
 decl_stmt|;
 name|bus_addr_t
 name|dvmaddr
@@ -2742,7 +2745,7 @@ operator|!
 name|complete
 condition|)
 block|{
-comment|/* 			 * Free the allocated DVMA of a few tags until 			 * the required size is reached. This is an 			 * approximation to not have to call the allocation 			 * function too often; most likely one free run 			 * will not suffice if not one map was large enough 			 * itself due to fragmentation. 			 */
+comment|/* 			 * Free the allocated DVMA of a few maps until 			 * the required size is reached. This is an 			 * approximation to not have to call the allocation 			 * function too often; most likely one free run 			 * will not suffice if not one map was large enough 			 * itself due to fragmentation. 			 */
 name|IS_LOCK
 argument_list|(
 name|is
@@ -2751,6 +2754,16 @@ expr_stmt|;
 name|freed
 operator|=
 literal|0
+expr_stmt|;
+name|last
+operator|=
+name|TAILQ_LAST
+argument_list|(
+operator|&
+name|iommu_maplruq
+argument_list|,
+name|iommu_maplruq_head
+argument_list|)
 expr_stmt|;
 do|do
 block|{
@@ -2762,19 +2775,19 @@ operator|&
 name|iommu_maplruq
 argument_list|)
 expr_stmt|;
+name|complete
+operator|=
+name|tm
+operator|==
+name|last
+expr_stmt|;
 if|if
 condition|(
 name|tm
 operator|==
 name|NULL
 condition|)
-block|{
-name|complete
-operator|=
-literal|1
-expr_stmt|;
 break|break;
-block|}
 name|freed
 operator|+=
 name|iommu_dvma_vprune
@@ -2798,6 +2811,9 @@ condition|(
 name|freed
 operator|<
 name|size
+operator|&&
+operator|!
+name|complete
 condition|)
 do|;
 name|IS_UNLOCK
