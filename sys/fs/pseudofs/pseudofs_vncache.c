@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -99,11 +105,22 @@ name|pfs_vncache
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|pfs_exit_tag
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
 name|pfs_exit
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
 name|struct
 name|proc
 modifier|*
@@ -276,10 +293,17 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-comment|/* XXX at_exit() can fail with ENOMEN */
-name|at_exit
+name|pfs_exit_tag
+operator|=
+name|EVENTHANDLER_REGISTER
 argument_list|(
+name|process_exit
+argument_list|,
 name|pfs_exit
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 block|}
@@ -296,9 +320,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|rm_at_exit
+name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|pfs_exit
+name|process_exit
+argument_list|,
+name|pfs_exit_tag
 argument_list|)
 expr_stmt|;
 if|if
@@ -888,6 +914,10 @@ specifier|static
 name|void
 name|pfs_exit
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
 name|struct
 name|proc
 modifier|*

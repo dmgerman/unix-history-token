@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -181,6 +187,10 @@ specifier|static
 name|void
 name|semexit_myhook
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
 name|struct
 name|proc
 modifier|*
@@ -473,6 +483,13 @@ end_decl_stmt
 begin_comment
 comment|/* undo structure pool */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|semexit_tag
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1404,11 +1421,6 @@ operator|&
 name|semu_list
 argument_list|)
 expr_stmt|;
-name|at_exit
-argument_list|(
-name|semexit_myhook
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1419,6 +1431,19 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|semexit_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|process_exit
+argument_list|,
+name|semexit_myhook
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1446,6 +1471,13 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|process_exit
+argument_list|,
+name|semexit_tag
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|sem
@@ -1465,11 +1497,6 @@ argument_list|(
 name|semu
 argument_list|,
 name|M_SEM
-argument_list|)
-expr_stmt|;
-name|rm_at_exit
-argument_list|(
-name|semexit_myhook
 argument_list|)
 expr_stmt|;
 for|for
@@ -6239,8 +6266,14 @@ specifier|static
 name|void
 name|semexit_myhook
 parameter_list|(
+name|arg
+parameter_list|,
 name|p
 parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
