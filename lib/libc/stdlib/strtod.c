@@ -50,7 +50,7 @@ comment|/* strtod for IEEE-, VAX-, and IBM-arithmetic machines.  *  * This strto
 end_comment
 
 begin_comment
-comment|/*  * #define IEEE_LITTLE_ENDIAN for IEEE-arithmetic machines where the least  *	significant byte has the lowest address.  * #define IEEE_BIG_ENDIAN for IEEE-arithmetic machines where the most  *	significant byte has the lowest address.  * #define Sudden_Underflow for IEEE-format machines without gradual  *	underflow (i.e., that flush to zero on underflow).  * #define IBM for IBM mainframe-style floating-point arithmetic.  * #define VAX for VAX-style floating-point arithmetic.  * #define Unsigned_Shifts if>> does treats its left operand as unsigned.  * #define No_leftright to omit left-right logic in fast floating-point  *	computation of dtoa.  * #define Check_FLT_ROUNDS if FLT_ROUNDS can assume the values 2 or 3.  * #define RND_PRODQUOT to use rnd_prod and rnd_quot (assembly routines  *	that use extended-precision instructions to compute rounded  *	products and quotients) with IBM.  * #define ROUND_BIASED for IEEE-format with biased rounding.  * #define Inaccurate_Divide for IEEE-format with correctly rounded  *	products but inaccurate quotients, e.g., for Intel i860.  * #define Just_16 to store 16 bits per 32-bit long when doing high-precision  *	integer arithmetic.  Whether this speeds things up or slows things  *	down depends on the machine and the number being converted.  * #define KR_headers for old-style C function headers.  * #define Bad_float_h if your system lacks a float.h or if it does not  *	define some or all of DBL_DIG, DBL_MAX_10_EXP, DBL_MAX_EXP,  *	FLT_RADIX, FLT_ROUNDS, and DBL_MAX.  */
+comment|/*  * #define IEEE_LITTLE_ENDIAN for IEEE-arithmetic machines where the least  *	significant byte has the lowest address.  * #define IEEE_BIG_ENDIAN for IEEE-arithmetic machines where the most  *	significant byte has the lowest address.  * #define Long int on machines with 32-bit ints and 64-bit longs.  * #define Sudden_Underflow for IEEE-format machines without gradual  *	underflow (i.e., that flush to zero on underflow).  * #define IBM for IBM mainframe-style floating-point arithmetic.  * #define VAX for VAX-style floating-point arithmetic.  * #define Unsigned_Shifts if>> does treats its left operand as unsigned.  * #define No_leftright to omit left-right logic in fast floating-point  *	computation of dtoa.  * #define Check_FLT_ROUNDS if FLT_ROUNDS can assume the values 2 or 3.  * #define RND_PRODQUOT to use rnd_prod and rnd_quot (assembly routines  *	that use extended-precision instructions to compute rounded  *	products and quotients) with IBM.  * #define ROUND_BIASED for IEEE-format with biased rounding.  * #define Inaccurate_Divide for IEEE-format with correctly rounded  *	products but inaccurate quotients, e.g., for Intel i860.  * #define Just_16 to store 16 bits per 32-bit Long when doing high-precision  *	integer arithmetic.  Whether this speeds things up or slows things  *	down depends on the machine and the number being converted.  * #define KR_headers for old-style C function headers.  * #define Bad_float_h if your system lacks a float.h or if it does not  *	define some or all of DBL_DIG, DBL_MAX_10_EXP, DBL_MAX_EXP,  *	FLT_RADIX, FLT_ROUNDS, and DBL_MAX.  */
 end_comment
 
 begin_include
@@ -91,10 +91,18 @@ name|__alpha__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
 begin_define
 define|#
 directive|define
-name|IEEE_LITTLE_ENDIAN
+name|IEEE_BIG_ENDIAN
 end_define
 
 begin_else
@@ -105,13 +113,36 @@ end_else
 begin_define
 define|#
 directive|define
-name|IEEE_BIG_ENDIAN
+name|IEEE_LITTLE_ENDIAN
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__i386__) ... */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int32_t
+name|Long
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|ULong
+typedef|;
+end_typedef
 
 begin_ifdef
 ifdef|#
@@ -589,14 +620,14 @@ name|word0
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_int32_t *)&x)[1]
+value|((ULong *)&x)[1]
 define|#
 directive|define
 name|word1
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_int32_t *)&x)[0]
+value|((ULong *)&x)[0]
 else|#
 directive|else
 define|#
@@ -605,14 +636,14 @@ name|word0
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_int32_t *)&x)[0]
+value|((ULong *)&x)[0]
 define|#
 directive|define
 name|word1
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_int32_t *)&x)[1]
+value|((ULong *)&x)[1]
 endif|#
 directive|endif
 comment|/* The following definition of Storeinc is appropriate for MIPS processors.  * An alternative that might be better on some machines is  * #define Storeinc(a,b,c) (*a++ = b<< 16 | c& 0xffff)  */
@@ -1072,7 +1103,7 @@ value|0xffffffff
 ifndef|#
 directive|ifndef
 name|Just_16
-comment|/* When Pack_32 is not defined, we store 16 bits per 32-bit long.  * This makes some inner loops simpler and sometimes saves work  * during multiplications, but it often seems to make things slightly  * slower.  Hence the default is now to store 32 bits per long.  */
+comment|/* When Pack_32 is not defined, we store 16 bits per 32-bit Long.  * This makes some inner loops simpler and sometimes saves work  * during multiplications, but it often seems to make things slightly  * slower.  Hence the default is now to store 32 bits per Long.  */
 ifndef|#
 directive|ifndef
 name|Pack_32
@@ -1159,8 +1190,7 @@ name|sign
 decl_stmt|,
 name|wds
 decl_stmt|;
-name|unsigned
-name|long
+name|ULong
 name|x
 index|[
 literal|1
@@ -1229,7 +1259,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|Long
 argument_list|)
 argument_list|)
 block|;
@@ -1295,7 +1325,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|memcpy((char *)&x->sign, (char *)&y->sign, \ y->wds*sizeof(long) + 2*sizeof(int))
+value|memcpy((char *)&x->sign, (char *)&y->sign, \ y->wds*sizeof(Long) + 2*sizeof(int))
 specifier|static
 name|Bigint
 operator|*
@@ -1341,8 +1371,7 @@ name|i
 block|,
 name|wds
 block|;
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|x
 block|,
@@ -1351,8 +1380,7 @@ block|;
 ifdef|#
 directive|ifdef
 name|Pack_32
-name|unsigned
-name|long
+name|ULong
 name|xi
 block|,
 name|z
@@ -1583,8 +1611,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|ULong
 name|y9
 decl_stmt|;
 end_decl_stmt
@@ -1607,8 +1634,7 @@ operator|,
 name|int
 name|nd
 operator|,
-name|unsigned
-name|long
+name|ULong
 name|y9
 operator|)
 endif|#
@@ -1623,7 +1649,7 @@ name|i
 block|,
 name|k
 block|;
-name|long
+name|Long
 name|x
 block|,
 name|y
@@ -1851,9 +1877,7 @@ name|KR_headers
 argument_list|(
 name|x
 argument_list|)
-decl|register
-name|unsigned
-name|long
+name|ULong
 name|x
 decl_stmt|;
 end_decl_stmt
@@ -1865,15 +1889,12 @@ end_else
 
 begin_expr_stmt
 operator|(
-specifier|register
-name|unsigned
-name|long
+name|ULong
 name|x
 operator|)
 endif|#
 directive|endif
 block|{
-specifier|register
 name|int
 name|k
 operator|=
@@ -2011,8 +2032,7 @@ name|KR_headers
 argument_list|(
 name|y
 argument_list|)
-name|unsigned
-name|long
+name|ULong
 modifier|*
 name|y
 decl_stmt|;
@@ -2025,21 +2045,17 @@ end_else
 
 begin_expr_stmt
 operator|(
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|y
 operator|)
 endif|#
 directive|endif
 block|{
-specifier|register
 name|int
 name|k
 block|;
-specifier|register
-name|unsigned
-name|long
+name|ULong
 name|x
 operator|=
 operator|*
@@ -2348,16 +2364,14 @@ name|wb
 block|,
 name|wc
 block|;
-name|unsigned
-name|long
+name|ULong
 name|carry
 block|,
 name|y
 block|,
 name|z
 block|;
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|x
 block|,
@@ -2382,8 +2396,7 @@ block|;
 ifdef|#
 directive|ifdef
 name|Pack_32
-name|unsigned
-name|long
+name|ULong
 name|z2
 block|;
 endif|#
@@ -3206,8 +3219,7 @@ name|Bigint
 operator|*
 name|b1
 block|;
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|x
 block|,
@@ -3551,8 +3563,7 @@ operator|)
 endif|#
 directive|endif
 block|{
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|xa
 block|,
@@ -3781,14 +3792,13 @@ name|wa
 block|,
 name|wb
 block|;
-name|long
+name|Long
 name|borrow
 block|,
 name|y
 block|;
 comment|/* We need signed shifts here. */
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|xa
 block|,
@@ -3807,7 +3817,7 @@ block|;
 ifdef|#
 directive|ifdef
 name|Pack_32
-name|long
+name|Long
 name|z
 block|;
 endif|#
@@ -4291,8 +4301,7 @@ operator|)
 endif|#
 directive|endif
 block|{
-specifier|register
-name|long
+name|Long
 name|L
 block|;
 name|double
@@ -4484,8 +4493,7 @@ operator|)
 endif|#
 directive|endif
 block|{
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|xa
 block|,
@@ -4507,8 +4515,7 @@ block|;
 ifdef|#
 directive|ifdef
 name|VAX
-name|unsigned
-name|long
+name|ULong
 name|d0
 block|,
 name|d1
@@ -5069,8 +5076,7 @@ name|i
 block|,
 name|k
 block|;
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|x
 block|,
@@ -5081,8 +5087,7 @@ block|;
 ifdef|#
 directive|ifdef
 name|VAX
-name|unsigned
-name|long
+name|ULong
 name|d0
 block|,
 name|d1
@@ -6362,11 +6367,10 @@ name|rv
 block|,
 name|rv0
 block|;
-name|long
+name|Long
 name|L
 block|;
-name|unsigned
-name|long
+name|ULong
 name|y
 block|,
 name|z
@@ -9036,21 +9040,19 @@ block|{
 name|int
 name|n
 block|;
-name|long
+name|Long
 name|borrow
 block|,
 name|y
 block|;
-name|unsigned
-name|long
+name|ULong
 name|carry
 block|,
 name|q
 block|,
 name|ys
 block|;
-name|unsigned
-name|long
+name|ULong
 operator|*
 name|bx
 block|,
@@ -9066,11 +9068,10 @@ block|;
 ifdef|#
 directive|ifdef
 name|Pack_32
-name|long
+name|Long
 name|z
 block|;
-name|unsigned
-name|long
+name|ULong
 name|si
 block|,
 name|zs
@@ -9692,7 +9693,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/* dtoa for IEEE arithmetic (dmg): convert double to ASCII string.  *  * Inspired by "How to Print Floating-Point Numbers Accurately" by  * Guy L. Steele, Jr. and Jon L. White [Proc. ACM SIGPLAN '90, pp. 92-101].  *  * Modifications:  *	1. Rather than iterating, we use a simple numeric overestimate  *	   to determine k = floor(log10(d)).  We scale relevant  *	   quantities using O(log2(k)) rather than O(k) multiplications.  *	2. For some modes> 2 (corresponding to ecvt and fcvt), we don't  *	   try to generate digits strictly left to right.  Instead, we  *	   compute with fewer bits and propagate the carry if necessary  *	   when rounding the final digit up.  This is often faster.  *	3. Under the assumption that input will be rounded nearest,  *	   mode 0 renders 1e23 as 1e23 rather than 9.999999999999999e22.  *	   That is, we allow equality in stopping tests when the  *	   round-nearest rule will give the same floating-point value  *	   as would satisfaction of the stopping test with strict  *	   inequality.  *	4. We remove common factors of powers of 2 from relevant  *	   quantities.  *	5. When converting floating-point integers less than 1e16,  *	   we use floating-point arithmetic rather than resorting  *	   to multiple-precision integers.  *	6. When asked to produce fewer than 15 digits, we first try  *	   to get by with floating-point arithmetic; we resort to  *	   multiple-precision integer arithmetic only if we cannot  *	   guarantee that the floating-point calculation has given  *	   the correctly rounded result.  For k requested digits and  *	   "uniformly" distributed input, the probability is  *	   something like 10^(k-15) that we must resort to the long  *	   calculation.  */
+comment|/* dtoa for IEEE arithmetic (dmg): convert double to ASCII string.  *  * Inspired by "How to Print Floating-Point Numbers Accurately" by  * Guy L. Steele, Jr. and Jon L. White [Proc. ACM SIGPLAN '90, pp. 92-101].  *  * Modifications:  *	1. Rather than iterating, we use a simple numeric overestimate  *	   to determine k = floor(log10(d)).  We scale relevant  *	   quantities using O(log2(k)) rather than O(k) multiplications.  *	2. For some modes> 2 (corresponding to ecvt and fcvt), we don't  *	   try to generate digits strictly left to right.  Instead, we  *	   compute with fewer bits and propagate the carry if necessary  *	   when rounding the final digit up.  This is often faster.  *	3. Under the assumption that input will be rounded nearest,  *	   mode 0 renders 1e23 as 1e23 rather than 9.999999999999999e22.  *	   That is, we allow equality in stopping tests when the  *	   round-nearest rule will give the same floating-point value  *	   as would satisfaction of the stopping test with strict  *	   inequality.  *	4. We remove common factors of powers of 2 from relevant  *	   quantities.  *	5. When converting floating-point integers less than 1e16,  *	   we use floating-point arithmetic rather than resorting  *	   to multiple-precision integers.  *	6. When asked to produce fewer than 15 digits, we first try  *	   to get by with floating-point arithmetic; we resort to  *	   multiple-precision integer arithmetic only if we cannot  *	   guarantee that the floating-point calculation has given  *	   the correctly rounded result.  For k requested digits and  *	   "uniformly" distributed input, the probability is  *	   something like 10^(k-15) that we must resort to the Long  *	   calculation.  */
 end_comment
 
 begin_expr_stmt
@@ -9831,7 +9832,7 @@ name|spec_case
 block|,
 name|try_quick
 block|;
-name|long
+name|Long
 name|L
 block|;
 ifndef|#
@@ -9840,8 +9841,7 @@ name|Sudden_Underflow
 name|int
 name|denorm
 block|;
-name|unsigned
-name|long
+name|ULong
 name|x
 block|;
 endif|#
