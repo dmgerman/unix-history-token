@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.171 (Berkeley) %G%"
+literal|"@(#)conf.c	8.172 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10945,6 +10945,18 @@ ifdef|#
 directive|ifdef
 name|SIOCGIFCONF
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|rtentry
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
 
 begin_include
 include|#
