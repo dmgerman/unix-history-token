@@ -54,7 +54,6 @@ name|int
 name|pthread_attr_get_np
 parameter_list|(
 name|pthread_t
-modifier|*
 parameter_list|,
 name|pthread_attr_t
 modifier|*
