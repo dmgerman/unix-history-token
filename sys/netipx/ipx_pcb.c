@@ -1243,7 +1243,7 @@ name|ro_rt
 operator|!=
 name|NULL
 condition|)
-name|rtfree
+name|RTFREE
 argument_list|(
 name|ipxp
 operator|->
