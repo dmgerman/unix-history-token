@@ -142,15 +142,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|osf1_emul_path
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|osf1_emul_find
@@ -158,22 +149,23 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-parameter_list|,
-name|caddr_t
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|td
 parameter_list|,
 name|char
 modifier|*
+name|path
+parameter_list|,
+name|enum
+name|uio_seg
+name|pathseg
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+name|pbuf
 parameter_list|,
 name|int
+name|create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -183,16 +175,16 @@ define|#
 directive|define
 name|CHECKALT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
-name|sgp
+name|upath
 parameter_list|,
-name|path
+name|pathp
 parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {								\ 		int _error;						\ 									\ 		_error = osf1_emul_find(p, sgp, osf1_emul_path, path,	\&path, i);			\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
+value|do {								\ 		int _error;						\ 									\ 		_error = osf1_emul_find(td, upath, UIO_USERSPACE, pathp, i); \ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
 end_define
 
 begin_define
@@ -200,13 +192,13 @@ define|#
 directive|define
 name|CHECKALTEXIST
 parameter_list|(
-name|p
+name|td
 parameter_list|,
-name|sgp
+name|upath
 parameter_list|,
-name|path
+name|pathp
 parameter_list|)
-value|CHECKALT((p), (sgp), (path), 0)
+value|CHECKALT((td), (upath), (pathp), 0)
 end_define
 
 begin_define
@@ -214,13 +206,13 @@ define|#
 directive|define
 name|CHECKALTCREAT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
-name|sgp
+name|upath
 parameter_list|,
-name|path
+name|pathp
 parameter_list|)
-value|CHECKALT((p), (sgp), (path), 1)
+value|CHECKALT((td), (upath), (pathp), 1)
 end_define
 
 end_unit
