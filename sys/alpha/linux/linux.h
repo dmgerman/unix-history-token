@@ -132,6 +132,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_RLIMIT_AS
+value|7
+end_define
+
+begin_comment
+comment|/* address space limit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LINUX_RLIMIT_NPROC
 value|8
 end_define
@@ -142,17 +153,6 @@ directive|define
 name|LINUX_RLIMIT_NOFILE
 value|6
 end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_RLIMIT_AS
-value|7
-end_define
-
-begin_comment
-comment|/* address space limit */
-end_comment
 
 begin_define
 define|#
@@ -189,15 +189,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_MAP_FIXED
-value|0x0100
+name|LINUX_MAP_ANON
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_MAP_ANON
-value|0x0010
+name|LINUX_MAP_FIXED
+value|0x0100
 end_define
 
 begin_define
@@ -590,8 +590,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SIGUNUSED
+name|LINUX_SIGTBLSZ
 value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SIGUNUSED
+value|LINUX_SIGTBLSZ
 end_define
 
 begin_define
@@ -601,13 +608,6 @@ name|LINUX_NSIG
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|LINUX_SIGTBLSZ
-value|31
-end_define
-
 begin_comment
 comment|/* sigaction flags */
 end_comment
@@ -615,8 +615,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LINUX_SA_ONSTACK
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SA_RESTART
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SA_NOCLDSTOP
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SA_NODEFER
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SA_RESETHAND
+value|0x00000010
 end_define
 
 begin_define
@@ -643,20 +671,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SA_ONSTACK
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SA_RESTART
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
 name|LINUX_SA_INTERRUPT
 value|0x20000000
 end_define
@@ -673,20 +687,6 @@ define|#
 directive|define
 name|LINUX_SA_ONESHOT
 value|LINUX_SA_RESETHAND
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SA_NODEFER
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SA_RESETHAND
-value|0x00000010
 end_define
 
 begin_comment
@@ -951,22 +951,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|linux_sysvec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|elf_linux_sysvec
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Pluggable ioctl handlers  */
 end_comment
@@ -1098,8 +1082,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_O_NONBLOCK
+value|04
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_O_APPEND
+value|010
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_O_CREAT
 value|01000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_O_TRUNC
+value|02000
 end_define
 
 begin_define
@@ -1114,27 +1119,6 @@ define|#
 directive|define
 name|LINUX_O_NOCTTY
 value|010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_O_TRUNC
-value|02000
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_O_APPEND
-value|010
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_O_NONBLOCK
-value|04
 end_define
 
 begin_define
@@ -1157,6 +1141,10 @@ directive|define
 name|LINUX_FASYNC
 value|020000
 end_define
+
+begin_comment
+comment|/* fcntl flags */
+end_comment
 
 begin_define
 define|#
@@ -1642,20 +1630,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SOL_IPX
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SOL_AX25
-value|257
-end_define
-
-begin_define
-define|#
-directive|define
 name|LINUX_SOL_TCP
 value|6
 end_define
@@ -1665,6 +1639,20 @@ define|#
 directive|define
 name|LINUX_SOL_UDP
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SOL_IPX
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SOL_AX25
+value|257
 end_define
 
 begin_define
@@ -1890,6 +1878,7 @@ index|[
 name|LINUX_IFNAMSIZ
 index|]
 decl_stmt|;
+comment|/* if name, e.g. "en0" */
 block|}
 name|ifr_ifrn
 union|;
@@ -1995,6 +1984,22 @@ name|linux_sysent
 index|[
 name|LINUX_SYS_MAXSYSCALL
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|linux_sysvec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|elf_linux_sysvec
 decl_stmt|;
 end_decl_stmt
 
