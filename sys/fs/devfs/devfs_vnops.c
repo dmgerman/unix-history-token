@@ -2533,7 +2533,7 @@ literal|0
 operator|)
 return|;
 case|case
-name|_POSIX_MAC_PRESENT
+name|_PC_MAC_PRESENT
 case|:
 ifdef|#
 directive|ifdef
@@ -2557,7 +2557,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MAC */
 return|return
 operator|(
 literal|0
