@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.4 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mtio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_define
@@ -192,6 +198,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|copy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -506,6 +519,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|errno
+operator|==
+name|EINVAL
+operator|&&
 name|guesslen
 operator|&&
 name|maxblk
