@@ -602,6 +602,10 @@ name|new
 goto|;
 if|if
 condition|(
+name|psl
+operator|==
+literal|0
+operator|||
 operator|(
 name|p
 operator|=
@@ -861,6 +865,10 @@ condition|)
 break|break;
 if|if
 condition|(
+name|psl
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|p
 operator|=
@@ -1174,6 +1182,10 @@ case|:
 if|if
 condition|(
 name|pd
+operator|||
+name|psl
+operator|==
+literal|0
 condition|)
 break|break;
 for|for
