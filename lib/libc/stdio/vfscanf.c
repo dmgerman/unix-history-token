@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.3 1996/06/22 10:34:06 jraynard Exp $"
+literal|"$Id: vfscanf.c,v 1.3.2.1 1997/02/02 18:30:54 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,10 @@ name|nassigned
 decl_stmt|;
 comment|/* number of fields assigned */
 name|int
+name|nconversions
+decl_stmt|;
+comment|/* number of conversions */
+name|int
 name|nread
 decl_stmt|;
 comment|/* number of characters consumed from fp */
@@ -518,6 +522,10 @@ name|nassigned
 operator|=
 literal|0
 expr_stmt|;
+name|nconversions
+operator|=
+literal|0
+expr_stmt|;
 name|nread
 operator|=
 literal|0
@@ -582,11 +590,9 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
-return|return
-operator|(
-name|nassigned
-operator|)
-return|;
+goto|goto
+name|input_failure
+goto|;
 if|if
 condition|(
 operator|!
@@ -1002,6 +1008,9 @@ break|break;
 case|case
 literal|'n'
 case|:
+name|nconversions
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1327,6 +1336,9 @@ name|nassigned
 operator|++
 expr_stmt|;
 block|}
+name|nconversions
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|CT_CCL
@@ -1529,6 +1541,9 @@ name|nread
 operator|+=
 name|n
 expr_stmt|;
+name|nconversions
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|CT_STRING
@@ -1691,6 +1706,9 @@ name|nassigned
 operator|++
 expr_stmt|;
 block|}
+name|nconversions
+operator|++
+expr_stmt|;
 continue|continue;
 case|case
 name|CT_INT
@@ -2263,6 +2281,9 @@ name|p
 operator|-
 name|buf
 expr_stmt|;
+name|nconversions
+operator|++
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -2696,6 +2717,9 @@ name|p
 operator|-
 name|buf
 expr_stmt|;
+name|nconversions
+operator|++
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -2706,12 +2730,13 @@ name|input_failure
 label|:
 return|return
 operator|(
-name|nassigned
+name|nconversions
+operator|!=
+literal|0
 condition|?
 name|nassigned
 else|:
-operator|-
-literal|1
+name|EOF
 operator|)
 return|;
 name|match_failure
