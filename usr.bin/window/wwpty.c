@@ -184,7 +184,7 @@ for|for
 control|(
 name|p
 operator|=
-literal|"0123456789abcdef"
+literal|"0123456789abcdefghijklmnopqrstuv"
 init|;
 operator|*
 name|p
