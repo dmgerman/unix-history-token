@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.29 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,8 @@ operator|.
 name|psize
 operator|>
 name|MAX_PAGE_OFFSET
+operator|+
+literal|1
 operator|||
 name|b
 operator|.
@@ -904,6 +906,8 @@ operator|.
 name|m_psize
 operator|>
 name|MAX_PAGE_OFFSET
+operator|+
+literal|1
 operator|||
 name|m
 operator|.
@@ -1005,12 +1009,16 @@ operator|.
 name|psize
 operator|>
 name|MAX_PAGE_OFFSET
+operator|+
+literal|1
 condition|)
 name|b
 operator|.
 name|psize
 operator|=
 name|MAX_PAGE_OFFSET
+operator|+
+literal|1
 expr_stmt|;
 block|}
 comment|/* Set flag if duplicates permitted. */
