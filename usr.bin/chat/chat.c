@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.4 1994/05/30 00:30:37 paulus Exp $"
+literal|"$Id: chat.c,v 1.1.1.1 1994/11/12 05:25:32 lars Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,11 +325,19 @@ directive|ifndef
 name|LOCK_DIR
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
