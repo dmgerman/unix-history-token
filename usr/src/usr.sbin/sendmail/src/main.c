@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.37	%G%"
+literal|"@(#)main.c	3.38	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,6 +1941,12 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|V6
+name|From
+operator|.
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
 comment|/* 	**  Rewrite the from person to dispose of possible implicit 	**	links in the net. 	*/
 name|pvp
 operator|=

@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.18	%G%"
+literal|"@(#)recipient.c	3.19	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,6 +954,12 @@ name|pw
 operator|->
 name|pw_gid
 expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1360,6 +1366,10 @@ name|oldto
 init|=
 name|To
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1385,6 +1395,50 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"Cannot fstat %s!"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|ctladdr
+operator|->
+name|q_uid
+operator|=
+name|st
+operator|.
+name|st_uid
+expr_stmt|;
+name|ctladdr
+operator|->
+name|q_gid
+operator|=
+name|st
+operator|.
+name|st_gid
+expr_stmt|;
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
 comment|/* read the file -- each line is a comma-separated list. */
 while|while
 condition|(
@@ -1670,11 +1724,15 @@ name|a
 operator|!=
 name|NULL
 operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QGOODUID
+argument_list|,
 name|a
 operator|->
-name|q_home
-operator|==
-name|NULL
+name|q_flags
+argument_list|)
 condition|)
 name|a
 operator|=
