@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.3 %G%"
+literal|"@(#)asjxxx.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,23 +509,29 @@ name|mask
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|xp
 operator|->
 name|e_xtype
 operator|!=
 name|XABS
+operator|)
 operator|||
+operator|(
 name|xp
 operator|->
 name|e_xvalue
 operator|<
 literal|0
+operator|)
 operator|||
+operator|(
 name|xp
 operator|->
 name|e_xvalue
 operator|>
 literal|16
+operator|)
 condition|)
 block|{
 name|yyerror
@@ -534,6 +540,42 @@ literal|"Illegal `align' argument"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|xp
+operator|->
+name|e_xvalue
+operator|>
+literal|3
+operator|)
+operator|&&
+operator|(
+name|dotp
+operator|!=
+operator|&
+name|usedot
+index|[
+literal|0
+index|]
+operator|)
+condition|)
+block|{
+name|yywarning
+argument_list|(
+literal|"Alignment by %d in segments other than text 0 may not work."
+argument_list|,
+name|xp
+operator|->
+name|e_xvalue
+argument_list|)
+expr_stmt|;
+name|yywarning
+argument_list|(
+literal|"Phase errors may occur after this .align in the second pass."
+argument_list|)
+expr_stmt|;
 block|}
 name|flushfield
 argument_list|(
