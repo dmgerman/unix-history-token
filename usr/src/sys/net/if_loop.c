@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.10	82/04/13	*/
+comment|/*	if_loop.c	4.11	82/04/16	*/
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_define
