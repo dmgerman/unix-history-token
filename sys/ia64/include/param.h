@@ -171,13 +171,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MID_MACHINE
-value|MID_IA64
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
