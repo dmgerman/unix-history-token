@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: ypclnt.c,v 1.1 1995/01/31 09:28:45 wpaul Exp $ */
+comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: ypclnt.c,v 1.2 1995/02/06 23:35:48 wpaul Exp $ */
 end_comment
 
 begin_include
@@ -105,6 +105,23 @@ modifier|*
 name|TcpClient
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|Perror
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -329,10 +346,8 @@ block|{
 case|case
 name|YPBIND_ERR_ERR
 case|:
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"YPBINDPROC_DOMAIN: Internal error\n"
 argument_list|)
 expr_stmt|;
@@ -340,10 +355,8 @@ break|break;
 case|case
 name|YPBIND_ERR_NOSERV
 case|:
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"YPBINDPROC_DOMAIN: No bound server for passed domain\n"
 argument_list|)
 expr_stmt|;
@@ -351,19 +364,15 @@ break|break;
 case|case
 name|YPBIND_ERR_RESC
 case|:
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"YPBINDPROC_DOMAIN: System resource allocation failure\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"YPBINDPROC_DOMAIN: Unknown error\n"
 argument_list|)
 expr_stmt|;

@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -70,6 +76,23 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|Perror
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|()
@@ -122,13 +145,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"cannot create udp service.\n"
 argument_list|)
 expr_stmt|;
@@ -155,13 +173,8 @@ name|IPPROTO_UDP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to register (YPPROG, YPVERS, udp).\n"
 argument_list|)
 expr_stmt|;
@@ -188,13 +201,8 @@ name|IPPROTO_UDP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to register (YPPUSH_XFRRESPPROG, YPPUSH_XFRRESPVERS, udp).\n"
 argument_list|)
 expr_stmt|;
@@ -221,13 +229,8 @@ name|IPPROTO_UDP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to register (YPBINDPROG, YPBINDVERS, udp).\n"
 argument_list|)
 expr_stmt|;
@@ -255,13 +258,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"cannot create tcp service.\n"
 argument_list|)
 expr_stmt|;
@@ -288,13 +286,8 @@ name|IPPROTO_TCP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to register (YPPROG, YPVERS, tcp).\n"
 argument_list|)
 expr_stmt|;
@@ -321,13 +314,8 @@ name|IPPROTO_TCP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to register (YPPUSH_XFRRESPPROG, YPPUSH_XFRRESPVERS, tcp).\n"
 argument_list|)
 expr_stmt|;
@@ -354,13 +342,8 @@ name|IPPROTO_TCP
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to register (YPBINDPROG, YPBINDVERS, tcp).\n"
 argument_list|)
 expr_stmt|;
@@ -373,13 +356,8 @@ block|}
 name|svc_run
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"svc_run returned\n"
 argument_list|)
 expr_stmt|;
@@ -859,13 +837,8 @@ name|argument
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to free arguments\n"
 argument_list|)
 expr_stmt|;
@@ -1079,13 +1052,8 @@ name|argument
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to free arguments\n"
 argument_list|)
 expr_stmt|;
@@ -1326,13 +1294,8 @@ name|argument
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|Perror
 argument_list|(
-name|stderr
-argument_list|,
 literal|"unable to free arguments\n"
 argument_list|)
 expr_stmt|;

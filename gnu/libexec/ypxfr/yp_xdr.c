@@ -40,6 +40,23 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|Perror
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 block|{
@@ -1056,7 +1073,7 @@ name|val
 argument_list|)
 condition|)
 block|{
-name|printf
+name|Perror
 argument_list|(
 literal|"__xdr_ypresp_key_val failed\n"
 argument_list|)
