@@ -376,6 +376,46 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"kshell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+block|{
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
+name|old_warning
+argument_list|(
+literal|"kshell service unknown"
+argument_list|)
+expr_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"kshell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 name|sp
 operator|=
 name|getservbyname
@@ -385,6 +425,8 @@ argument_list|,
 literal|"tcp"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sp
@@ -1148,6 +1190,41 @@ argument_list|(
 literal|"remote host doesn't support Kerberos"
 argument_list|)
 expr_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"shell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"unknown service shell/tcp\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|port
+operator|=
+name|sp
+operator|->
+name|s_port
+expr_stmt|;
 goto|goto
 name|try_again
 goto|;
@@ -1585,6 +1662,41 @@ name|old_warning
 argument_list|(
 literal|"remote host doesn't suport Kerberos"
 argument_list|)
+expr_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"shell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"unknown service shell/tcp\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|port
+operator|=
+name|sp
+operator|->
+name|s_port
 expr_stmt|;
 goto|goto
 name|one_more_time
@@ -4542,6 +4654,25 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|fputs
+argument_list|(
+literal|"usage: rcp [-k realm] [-x] [-p] f1 f2;\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"   or: rcp [-k realm] [-x] [-rp] f1 ... fn d2\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fputs
 argument_list|(
 literal|"usage: rcp [-p] f1 f2; or: rcp [-rp] f1 ... fn d2\n"
@@ -4549,6 +4680,8 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|1
@@ -4583,7 +4716,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: %s, using standard rcp"
+literal|"Warning: %s, using standard rcp\n"
 argument_list|,
 name|str
 argument_list|)
