@@ -56,8 +56,7 @@ block|{
 comment|/* XXXTHR */
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOTSUP
 operator|)
 return|;
 block|}
