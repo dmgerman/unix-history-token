@@ -625,12 +625,6 @@ operator|!=
 name|ufhp
 operator|->
 name|ufid_gen
-operator|||
-name|ip
-operator|->
-name|i_effnlink
-operator|<=
-literal|0
 condition|)
 block|{
 name|vput
