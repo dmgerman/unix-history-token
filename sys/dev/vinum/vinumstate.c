@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.11 1999/03/13 04:47:09 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.12 1999/07/05 01:36:48 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -1705,6 +1705,20 @@ expr_stmt|;
 comment|/* how do we compare with the other plexes? */
 if|if
 condition|(
+name|statemap
+operator|&
+name|sd_initializing
+condition|)
+comment|/* something initializing? */
+name|plex
+operator|->
+name|state
+operator|=
+name|plex_initializing
+expr_stmt|;
+comment|/* yup, that makes the plex the same */
+if|if
+condition|(
 operator|(
 name|statemap
 operator|==
@@ -1838,6 +1852,34 @@ name|state
 operator|=
 name|plex_up
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+operator|)
+comment|/* raid 5 plex */
+operator|&&
+operator|(
+name|plex
+operator|->
+name|sddowncount
+operator|==
+literal|1
+operator|)
+condition|)
+comment|/* and exactly one subdisk down */
+name|plex
+operator|->
+name|state
+operator|=
+name|plex_degraded
+expr_stmt|;
+comment|/* limping a bit */
 elseif|else
 if|if
 condition|(
@@ -2097,6 +2139,43 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Helper for checksdstate.  If this is a write  * operation, it's no necessarily the end of the  * world that we can't write: there could be  * another plex which can satisfy the operation.  * We must write everything we can, though, so we  * don't want to stop when we hit a subdisk which  * is down.  Return a separate indication instead.  */
+end_comment
+
+begin_function
+name|enum
+name|requeststatus
+name|sddownstate
+parameter_list|(
+name|struct
+name|request
+modifier|*
+name|rq
+parameter_list|)
+block|{
+if|if
+condition|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|)
+comment|/* read operation? */
+return|return
+name|REQUEST_DOWN
+return|;
+comment|/* OK, can't do it */
+else|else
+return|return
+name|REQUEST_DEGRADED
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.  */
 end_comment
 
@@ -2183,9 +2262,44 @@ name|plex_striped
 condition|)
 comment|/* plex is striped, */
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
-comment|/* can't access it now */
+elseif|else
+if|if
+condition|(
+name|plex
+operator|->
+name|state
+operator|==
+name|plex_raid5
+condition|)
+block|{
+comment|/* RAID5 plex */
+if|if
+condition|(
+name|plex
+operator|->
+name|sddowncount
+operator|>
+literal|1
+condition|)
+comment|/* with more than one sd down, */
+return|return
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
+return|;
+else|else
+comment|/* 		 * XXX We shouldn't do this if we can find a 		 * better way.  Check the other plexes 		 * first, and return a DOWN if another 		 * plex will do it better 		 */
+return|return
+name|REQUEST_OK
+return|;
+comment|/* OK, we'll find a way */
+block|}
 if|if
 condition|(
 name|diskaddr
@@ -2210,9 +2324,11 @@ operator|)
 condition|)
 comment|/* we're beyond the end */
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
-comment|/* don't take the sd down again... */
 elseif|else
 if|if
 condition|(
@@ -2254,9 +2370,11 @@ comment|/* and which sd last caused it */
 block|}
 else|else
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
-comment|/* can't read this yet */
 block|}
 return|return
 name|REQUEST_OK
@@ -2276,7 +2394,10 @@ else|else
 comment|/* don't allow a read */
 comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX 	     */
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
 case|case
 name|sd_down
@@ -2299,9 +2420,11 @@ argument_list|)
 expr_stmt|;
 comment|/* it's not consistent now */
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
-comment|/* and it's down one way or another */
 case|case
 name|sd_crashed
 case|:
@@ -2323,12 +2446,17 @@ argument_list|)
 expr_stmt|;
 comment|/* it's not consistent now */
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
-comment|/* and it's down one way or another */
 default|default:
 return|return
-name|REQUEST_DOWN
+name|sddownstate
+argument_list|(
+name|rq
+argument_list|)
 return|;
 block|}
 block|}
@@ -2667,7 +2795,7 @@ index|]
 operator|.
 name|state
 operator|>=
-name|plex_flaky
+name|plex_degraded
 condition|)
 comment|/* are we up? */
 name|state
@@ -2692,7 +2820,7 @@ index|]
 operator|.
 name|state
 operator|>=
-name|plex_flaky
+name|plex_degraded
 condition|)
 comment|/* not us */
 name|state
