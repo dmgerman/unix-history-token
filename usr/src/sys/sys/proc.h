@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.11	82/07/16	*/
+comment|/*	proc.h	4.12	82/07/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"mush.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mu_msg.h"
+end_include
 
 begin_comment
 comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
