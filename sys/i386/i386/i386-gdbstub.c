@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sio.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -72,36 +66,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|NSIO
-operator|==
-literal|0
-end_if
-
-begin_function
-name|int
-name|gdb_handle_exception
-parameter_list|(
-name|db_regs_t
-modifier|*
-name|raw_regs
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-name|code
-parameter_list|)
-block|{ }
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/************************************************************************/
@@ -2378,15 +2342,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSIO> 0 */
-end_comment
 
 end_unit
 

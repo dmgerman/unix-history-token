@@ -39,12 +39,6 @@ directive|include
 file|"pci.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"sio.h"
-end_include
-
 begin_comment
 comment|/*  * Serial driver, based on 386BSD-0.1 com driver.  * Mostly rewritten to use pseudo-DMA.  * Works for National Semiconductor NS8250-NS16550AF UARTs.  * COM driver, based on HP dca driver.  *  * Changes for PC-Card integration:  *	- Added PC-Card driver table and handlers  */
 end_comment

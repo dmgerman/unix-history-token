@@ -59,51 +59,11 @@ directive|include
 file|<setjmp.h>
 end_include
 
-begin_comment
-comment|/* #include "sio.h" */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"sio.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSIO
-operator|==
-literal|0
-end_if
-
-begin_function
-name|void
-name|gdb_handle_exception
-parameter_list|(
-name|db_regs_t
-modifier|*
-name|raw_regs
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-name|code
-parameter_list|)
-block|{ }
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/************************************************************************/
@@ -156,6 +116,20 @@ end_comment
 begin_comment
 comment|/* XXX this is fairly bogus.  strlen() and strcpy() should be reentrant,    and are reentrant under FreeBSD.  In any case, our versions should not    be named the same as the standard versions, so that the address `strlen'    is unambiguous...  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|strlen
+value|gdb_strlen
+end_define
+
+begin_define
+define|#
+directive|define
+name|strcpy
+value|gdb_strcpy
+end_define
 
 begin_function
 specifier|static
@@ -235,17 +209,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX sio always uses its major with minor 0 no matter what we specify.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REMOTE_DEV
-value|0
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -256,18 +219,25 @@ name|c
 parameter_list|)
 comment|/* write a single character      */
 block|{
-if|#
-directive|if
-name|NSIO
-operator|>
+if|if
+condition|(
+name|gdbdev
+operator|==
+name|NODEV
+condition|)
+return|return
 literal|0
-name|siogdbputc
+return|;
+call|(
+modifier|*
+name|gdb_putc
+call|)
 argument_list|(
+name|gdbdev
+argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -283,22 +253,25 @@ name|void
 parameter_list|)
 comment|/* read and return a single char */
 block|{
-if|#
-directive|if
-name|NSIO
-operator|>
-literal|0
+if|if
+condition|(
+name|gdbdev
+operator|==
+name|NODEV
+condition|)
 return|return
-name|siogdbgetc
-argument_list|()
+operator|-
+literal|1
 return|;
-else|#
-directive|else
 return|return
-literal|0
+call|(
+modifier|*
+name|gdb_getc
+call|)
+argument_list|(
+name|gdbdev
+argument_list|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2431,6 +2404,17 @@ condition|(
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|gdbdev
+operator|==
+name|NODEV
+condition|)
+comment|/* somebody's removed it */
+return|return
+literal|1
+return|;
+comment|/* get out of here */
 name|remcomOutBuffer
 index|[
 literal|0
@@ -2922,15 +2906,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSIO> 0 */
-end_comment
 
 end_unit
 

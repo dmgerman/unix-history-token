@@ -59,51 +59,11 @@ directive|include
 file|<setjmp.h>
 end_include
 
-begin_comment
-comment|/* #include "sio.h" */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"sio.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSIO
-operator|==
-literal|0
-end_if
-
-begin_function
-name|void
-name|gdb_handle_exception
-parameter_list|(
-name|db_regs_t
-modifier|*
-name|raw_regs
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-name|code
-parameter_list|)
-block|{ }
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/************************************************************************/
@@ -151,9 +111,19 @@ begin_comment
 comment|/* Create private copies of common functions used by the stub.  This prevents    nasty interactions between app code and the stub (for instance if user steps    into strlen, etc..) */
 end_comment
 
-begin_comment
-comment|/* XXX this is fairly bogus.  strlen() and strcpy() should be reentrant,    and are reentrant under FreeBSD.  In any case, our versions should not    be named the same as the standard versions, so that the address `strlen'    is unambiguous...  */
-end_comment
+begin_define
+define|#
+directive|define
+name|strlen
+value|gdb_strlen
+end_define
+
+begin_define
+define|#
+directive|define
+name|strcpy
+value|gdb_strcpy
+end_define
 
 begin_function
 specifier|static
@@ -1282,15 +1252,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSIO> 0 */
-end_comment
 
 end_unit
 
