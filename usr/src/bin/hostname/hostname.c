@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1988, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1988 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1988, 1993 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hostname.c	5.4 (Berkeley) %G%"
+literal|"@(#)hostname.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,16 +55,41 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -76,8 +101,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -90,17 +115,13 @@ decl_stmt|,
 name|sflag
 decl_stmt|;
 name|char
+modifier|*
+name|p
+decl_stmt|,
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
 index|]
-decl_stmt|,
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|;
 name|sflag
 operator|=
@@ -125,9 +146,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -143,11 +161,14 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"hostname [-s] [hostname]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: hostname [-s] [hostname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -156,6 +177,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
 name|argv
 operator|+=
 name|optind
@@ -180,18 +205,13 @@ name|argv
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"sethostname"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -207,18 +227,13 @@ name|hostname
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"gethostname"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sflag
@@ -226,7 +241,7 @@ operator|&&
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hostname
 argument_list|,
@@ -239,8 +254,13 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|puts
+operator|(
+name|void
+operator|)
+name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
