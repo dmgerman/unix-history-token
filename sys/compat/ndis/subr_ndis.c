@@ -5301,8 +5301,7 @@ operator|*
 operator|)
 name|list
 argument_list|,
-operator|*
-name|buflen
+name|rsclen
 argument_list|)
 expr_stmt|;
 operator|*
@@ -11159,6 +11158,15 @@ argument_list|(
 name|fh
 argument_list|,
 name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"NDIS: open file %s failed: %d\n"
+argument_list|,
+name|path
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return;

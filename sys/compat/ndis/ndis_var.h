@@ -5925,7 +5925,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 modifier|*
 name|ndis_reset_handler
