@@ -226,25 +226,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*      * Fill in the bootinfo for the kernel.      */
-name|strncpy
-argument_list|(
-name|bootinfo_v1
-operator|.
-name|booted_kernel
-argument_list|,
-name|mp
-operator|->
-name|m_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bootinfo_v1
-operator|.
-name|booted_kernel
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/*      * Fill in rest of bootinfo for the kernel.      */
 name|flen
 operator|=
 name|prom_getenv
