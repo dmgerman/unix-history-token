@@ -41,6 +41,16 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -50,6 +60,11 @@ end_include
 begin_comment
 comment|/* for DELAY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

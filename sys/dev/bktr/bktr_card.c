@@ -45,6 +45,16 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -54,6 +64,11 @@ end_include
 begin_comment
 comment|/* for DELAY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -202,6 +217,33 @@ begin_include
 include|#
 directive|include
 file|<dev/bktr/bktr_audio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Include the PCI Vendor definitions */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcidevs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_endif
@@ -426,7 +468,7 @@ block|{
 name|CARD_MIRO
 block|,
 comment|/* the card id */
-literal|"Miro TV"
+literal|"Pinnacle/Miro TV"
 block|,
 comment|/* the 'name' */
 name|NULL
@@ -1230,7 +1272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the contents of the configuration EEPROM on the card.  * (This is not fitted to all makes of card. All Hauppuage cards have them  * and so do newer Bt878 based cards.  */
+comment|/*  * Read the contents of the configuration EEPROM on the card.  * (This is not fitted to all makes of card. All Hauppauge cards have them  * and so do newer Bt878 based cards.  */
 end_comment
 
 begin_function
@@ -1760,53 +1802,75 @@ begin_comment
 comment|/*  * These are the sub-system vendor ID codes stored in the  * configuration EEPROM used on Bt878/879 cards. They should match the  * number assigned to the company by the PCI Special Interest Group  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VENDOR_AVER_MEDIA
-value|0x1461
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VENDOR_HAUPPAUGE
+name|PCI_VENDOR_HAUPPAUGE
 value|0x0070
 end_define
 
 begin_define
 define|#
 directive|define
-name|VENDOR_FLYVIDEO
-value|0x1851
+name|PCI_VENDOR_AVERMEDIA
+value|0x1461
 end_define
 
 begin_define
 define|#
 directive|define
-name|VENDOR_FLYVIDEO_2
-value|0x1852
-end_define
-
-begin_define
-define|#
-directive|define
-name|VENDOR_STB
+name|PCI_VENDOR_STB
 value|0x10B4
 end_define
 
 begin_define
 define|#
 directive|define
-name|VENDOR_ASKEY_COMP
+name|PCI_VENDOR_ASKEY
 value|0x144F
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Following not confirmed with http://members.hyperlink.net.au/~chart,    so not added to NetBSD's pcidevs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_LEADTEK_ALT
+value|0x6606
 end_define
 
 begin_define
 define|#
 directive|define
-name|VENDOR_LEADTEK
-value|0x6606
+name|PCI_VENDOR_FLYVIDEO
+value|0x1851
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_FLYVIDEO_2
+value|0x1852
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_PINNACLE_ALT
+value|0xBD11
 end_define
 
 begin_function
@@ -2272,7 +2336,7 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_AVER_MEDIA
+name|PCI_VENDOR_AVERMEDIA
 condition|)
 block|{
 name|bktr
@@ -2319,7 +2383,7 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_HAUPPAUGE
+name|PCI_VENDOR_HAUPPAUGE
 condition|)
 block|{
 name|bktr
@@ -2367,13 +2431,13 @@ condition|(
 operator|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_FLYVIDEO
+name|PCI_VENDOR_FLYVIDEO
 operator|)
 operator|||
 operator|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_FLYVIDEO_2
+name|PCI_VENDOR_FLYVIDEO_2
 operator|)
 condition|)
 block|{
@@ -2421,7 +2485,7 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_STB
+name|PCI_VENDOR_STB
 condition|)
 block|{
 name|bktr
@@ -2468,7 +2532,7 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_ASKEY_COMP
+name|PCI_VENDOR_ASKEY
 condition|)
 block|{
 name|bktr
@@ -2515,7 +2579,7 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-name|VENDOR_LEADTEK
+name|PCI_VENDOR_LEADTEK_ALT
 condition|)
 block|{
 name|bktr
@@ -2528,6 +2592,53 @@ operator|(
 name|card
 operator|=
 name|CARD_LEADTEK
+operator|)
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkTuner
+goto|;
+block|}
+if|if
+condition|(
+name|subsystem_vendor_id
+operator|==
+name|PCI_VENDOR_PINNACLE_ALT
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_MIRO
 operator|)
 index|]
 expr_stmt|;

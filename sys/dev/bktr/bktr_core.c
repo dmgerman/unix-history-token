@@ -198,6 +198,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -207,6 +217,11 @@ end_include
 begin_comment
 comment|/* for DELAY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2565,13 +2580,26 @@ literal|0
 expr_stmt|;
 comment|/* using the pci device id and revision id */
 comment|/* and determine the card type            */
+if|if
+condition|(
+name|PCI_VENDOR
+argument_list|(
+name|pci_id
+argument_list|)
+operator|==
+name|PCI_VENDOR_BROOKTREE
+condition|)
+block|{
 switch|switch
 condition|(
+name|PCI_PRODUCT
+argument_list|(
 name|pci_id
+argument_list|)
 condition|)
 block|{
 case|case
-name|BROOKTREE_848_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT848
 case|:
 if|if
 condition|(
@@ -2594,7 +2622,7 @@ name|BROOKTREE_848
 expr_stmt|;
 break|break;
 case|case
-name|BROOKTREE_849_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT849
 case|:
 name|bktr
 operator|->
@@ -2604,7 +2632,7 @@ name|BROOKTREE_849A
 expr_stmt|;
 break|break;
 case|case
-name|BROOKTREE_878_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT878
 case|:
 name|bktr
 operator|->
@@ -2614,7 +2642,7 @@ name|BROOKTREE_878
 expr_stmt|;
 break|break;
 case|case
-name|BROOKTREE_879_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT879
 case|:
 name|bktr
 operator|->
@@ -2623,6 +2651,7 @@ operator|=
 name|BROOKTREE_879
 expr_stmt|;
 break|break;
+block|}
 block|}
 empty_stmt|;
 name|bktr
