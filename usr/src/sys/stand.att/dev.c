@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -87,6 +87,9 @@ operator|&=
 operator|~
 name|F_TYPEMASK
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|scankbd
@@ -99,6 +102,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cc
@@ -163,6 +168,9 @@ operator|&=
 operator|~
 name|F_TYPEMASK
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|scankbd
@@ -175,6 +183,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cc
@@ -228,6 +238,16 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|SMALL
+name|printf
+argument_list|(
+literal|"open error\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"%s(%d,%d,%d,%d): "
@@ -339,6 +359,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|ret
