@@ -2012,6 +2012,11 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+operator|*
+name|pager
+operator|==
+literal|'\0'
 condition|)
 name|pager
 operator|=
