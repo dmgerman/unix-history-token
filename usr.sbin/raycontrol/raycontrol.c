@@ -892,7 +892,7 @@ operator|=
 name|RAY_MIB_NET_TYPE
 init|;
 name|mib
-operator|<
+operator|<=
 name|RAY_MIB_MAX
 condition|;
 name|mib
