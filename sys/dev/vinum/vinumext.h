@@ -600,9 +600,6 @@ name|driveno
 parameter_list|,
 name|int
 name|force
-parameter_list|,
-name|int
-name|recurse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1486,6 +1483,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|parityops
+parameter_list|(
+name|struct
+name|vinum_ioctl_msg
+modifier|*
+parameter_list|,
+name|enum
+name|parityop
+name|op
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Auxiliary functions */
 end_comment
@@ -1942,6 +1954,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* and the end of the queue */
+end_comment
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
 end_comment
 
 end_unit
