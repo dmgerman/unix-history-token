@@ -602,7 +602,7 @@ comment|/* undecipherable: probably didn't have a srvtab on the local host */
 if|if
 condition|(
 name|kerror
-operator|=
+operator|==
 name|RD_AP_UNDEC
 condition|)
 block|{
