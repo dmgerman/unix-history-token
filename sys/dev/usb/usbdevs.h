@@ -5520,6 +5520,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_MUSTEK_1200USBPLUS
+value|0x0007
+end_define
+
+begin_comment
+comment|/* 1200 USB Plus scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MUSTEK_BEARPAW1200F
+value|0x0010
+end_define
+
+begin_comment
+comment|/* BearPaw 1200F scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MUSTEK_600USB
+value|0x0873
+end_define
+
+begin_comment
+comment|/* 600 USB scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_MUSTEK_MDC800
 value|0xa800
 end_define
@@ -5550,12 +5583,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_NATIONAL_BEARPAW
+name|USB_PRODUCT_NATIONAL_BEARPAW1200
 value|0x1000
 end_define
 
 begin_comment
-comment|/* BearPaw 1200 */
+comment|/* BearPaw 1200 scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_NATIONAL_BEARPAW2400
+value|0x1001
+end_define
+
+begin_comment
+comment|/* BearPaw 2400 scanner */
 end_comment
 
 begin_comment

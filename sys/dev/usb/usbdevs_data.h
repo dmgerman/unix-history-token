@@ -2637,6 +2637,42 @@ block|,
 block|{
 name|USB_VENDOR_MUSTEK
 block|,
+name|USB_PRODUCT_MUSTEK_1200USBPLUS
+block|,
+literal|0
+block|,
+literal|"Mustek Systems, Inc."
+block|,
+literal|"1200 USB Plus scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MUSTEK
+block|,
+name|USB_PRODUCT_MUSTEK_BEARPAW1200F
+block|,
+literal|0
+block|,
+literal|"Mustek Systems, Inc."
+block|,
+literal|"BearPaw 1200F scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MUSTEK
+block|,
+name|USB_PRODUCT_MUSTEK_600USB
+block|,
+literal|0
+block|,
+literal|"Mustek Systems, Inc."
+block|,
+literal|"600 USB scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MUSTEK
+block|,
 name|USB_PRODUCT_MUSTEK_MDC800
 block|,
 literal|0
@@ -2661,13 +2697,25 @@ block|,
 block|{
 name|USB_VENDOR_NATIONAL
 block|,
-name|USB_PRODUCT_NATIONAL_BEARPAW
+name|USB_PRODUCT_NATIONAL_BEARPAW1200
 block|,
 literal|0
 block|,
 literal|"National Semiconductor"
 block|,
-literal|"BearPaw 1200"
+literal|"BearPaw 1200 scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_NATIONAL
+block|,
+name|USB_PRODUCT_NATIONAL_BEARPAW2400
+block|,
+literal|0
+block|,
+literal|"National Semiconductor"
+block|,
+literal|"BearPaw 2400 scanner"
 block|, 	}
 block|,
 block|{
