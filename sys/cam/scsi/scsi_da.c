@@ -2122,6 +2122,14 @@ name|PR_PREVENT
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|cam_periph_release
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+block|}
 name|cam_periph_unlock
 argument_list|(
 name|periph
