@@ -682,7 +682,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Cannot create geom %s%s."
+literal|"Cannot create geom %s."
 argument_list|,
 name|name
 argument_list|)
@@ -751,7 +751,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Cannot create provider %s%s."
+literal|"Cannot create provider %s."
 argument_list|,
 name|name
 argument_list|)
