@@ -708,12 +708,6 @@ operator|&
 name|dead_list_lock
 argument_list|)
 expr_stmt|;
-name|_pthread_cond_destroy
-argument_list|(
-operator|&
-name|_gc_cond
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -741,7 +735,7 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the active thread list lock and the 	 * dead threads list lock& associated condition variable. 	 */
+comment|/* 	 * Initialize the active thread list lock and the 	 * dead threads list lock. 	 */
 name|memset
 argument_list|(
 operator|&
@@ -761,16 +755,6 @@ name|_pthread_mutex_init
 argument_list|(
 operator|&
 name|dead_list_lock
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-operator|||
-name|_pthread_cond_init
-argument_list|(
-operator|&
-name|_gc_cond
 argument_list|,
 name|NULL
 argument_list|)

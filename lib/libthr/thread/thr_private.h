@@ -1773,24 +1773,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Garbage collector condition variable. */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|pthread_cond_t
-name|_gc_cond
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-name|NULL
-endif|#
-directive|endif
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Array of signal actions for this process.  */
 end_comment
 
@@ -2359,15 +2341,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|pthread_addr_t
-name|_thread_gc
-parameter_list|(
-name|pthread_addr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|_thread_enter_cancellation_point
 parameter_list|(
@@ -2456,6 +2429,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|adjust_prio_protection
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|deadlist_free_onethread
 parameter_list|(
 name|struct
 name|pthread

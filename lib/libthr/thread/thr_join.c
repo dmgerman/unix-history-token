@@ -412,7 +412,7 @@ operator|->
 name|ret
 expr_stmt|;
 block|}
-comment|/* Make the thread collectable by the garbage collector. */
+comment|/* Free all remaining memory allocated to the thread. */
 name|pthread
 operator|->
 name|attr
@@ -429,22 +429,22 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|THREAD_LIST_UNLOCK
-expr_stmt|;
-if|if
-condition|(
-name|pthread_cond_signal
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|_gc_cond
+name|_dead_list
+argument_list|,
+name|pthread
+argument_list|,
+name|dle
 argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
+expr_stmt|;
+name|deadlist_free_onethread
 argument_list|(
-literal|"Cannot signal gc cond"
+name|pthread
 argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
 expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
