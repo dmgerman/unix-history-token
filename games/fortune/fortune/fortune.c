@@ -1560,7 +1560,10 @@ operator|)
 condition|)
 name|nchar
 operator|=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|Seekpts
 index|[
 literal|1
@@ -1570,9 +1573,7 @@ name|Seekpts
 index|[
 literal|0
 index|]
-operator|<=
-name|SLEN
-operator|)
+argument_list|)
 expr_stmt|;
 else|else
 block|{
