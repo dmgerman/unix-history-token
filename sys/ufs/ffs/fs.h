@@ -862,7 +862,7 @@ comment|/* minimize disk fragmentation */
 end_comment
 
 begin_comment
-comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indicies clear the  * flag to indicate that the indicies need to be rebuilt (by fsck) before  * they can be used.  */
+comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indicies clear the  * flag to indicate that the indicies need to be rebuilt (by fsck) before  * they can be used.  *  * FS_ACLS indicates that ACLs are administratively enabled for the  * file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_MULTILABEL indicates that the TrustedBSD MAC Framework  * should attempt to back MAC labels into extended attributes on the  * file system rather than maintain a single mount label for all  * objects.  */
 end_comment
 
 begin_define
@@ -907,6 +907,28 @@ end_define
 
 begin_comment
 comment|/* kernel supports indexed directories */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_ACLS
+value|0x10
+end_define
+
+begin_comment
+comment|/* file system has ACLs enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_MULTILABEL
+value|0x20
+end_define
+
+begin_comment
+comment|/* file system is MAC multi-label */
 end_comment
 
 begin_comment
