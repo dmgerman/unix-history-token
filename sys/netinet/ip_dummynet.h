@@ -733,11 +733,6 @@ name|DUMMYNET_LOADED
 value|(ip_dn_io_ptr != NULL)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Return the IPFW rule associated with the dummynet tag; if any.  */
 end_comment
@@ -788,6 +783,11 @@ name|NULL
 return|;
 block|}
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
