@@ -391,6 +391,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|v_incr_usecount
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Enable Giant pushdown based on whether or not the vm is mpsafe in this  * build.  Without mpsafevm the buffer cache can not run Giant free.  */
 end_comment
@@ -2946,10 +2960,6 @@ condition|(
 name|object
 operator|->
 name|resident_page_count
-operator|||
-name|object
-operator|->
-name|ref_count
 condition|)
 block|{
 name|VM_OBJECT_UNLOCK
@@ -3829,11 +3839,12 @@ name|vpp
 operator|=
 name|vp
 expr_stmt|;
+name|v_incr_usecount
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->

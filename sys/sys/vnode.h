@@ -1561,7 +1561,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_iflag& VI_FREE)&&					\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&&			\ 	 (!(vp)->v_object ||						\ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
+value|(!((vp)->v_iflag& VI_FREE)&&					\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&&			\ 	 (!(vp)->v_object ||						\ 	  !(vp)->v_object->resident_page_count))
 end_define
 
 begin_comment
