@@ -5338,17 +5338,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*      * Delete any previous resource before setting the new one.  Note this      * will panic if the resource is still allocated but that will reveal      * any driver bugs.      */
-name|bus_delete_resource
-argument_list|(
-name|dev
-argument_list|,
-name|res_type
-argument_list|,
-operator|*
-name|rid
-argument_list|)
-expr_stmt|;
 name|bus_set_resource
 argument_list|(
 name|dev
@@ -5401,6 +5390,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+name|bus_delete_resource
+argument_list|(
+name|dev
+argument_list|,
+name|res_type
+argument_list|,
+operator|*
+name|rid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
