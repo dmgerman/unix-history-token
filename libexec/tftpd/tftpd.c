@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: tftpd.c,v 1.4.2.2 1997/03/24 06:04:52 imp Exp $  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tftpd.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
 end_include
 
@@ -169,12 +189,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -590,7 +604,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(FIONBIO): %m\n"
+literal|"ioctl(FIONBIO): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -644,7 +658,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"recvfrom: %m\n"
+literal|"recvfrom: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -760,7 +774,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fork: %m\n"
+literal|"fork: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -897,7 +911,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"socket: %m\n"
+literal|"socket: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -952,7 +966,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bind: %m\n"
+literal|"bind: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -988,7 +1002,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"connect: %m\n"
+literal|"connect: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2149,7 +2163,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"tftpd: write: %m\n"
+literal|"write: %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2209,7 +2223,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"tftpd: read: %m\n"
+literal|"read: %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2466,7 +2480,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"tftpd: write: %m\n"
+literal|"write: %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2523,7 +2537,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"tftpd: read: %m\n"
+literal|"read: %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3140,7 +3154,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"nak: %m\n"
+literal|"nak: %m"
 argument_list|)
 expr_stmt|;
 block|}
