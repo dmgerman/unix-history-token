@@ -8,7 +8,7 @@ end_expr_stmt
 
 begin_for
 for|for 4.2
-comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)r.h	1.3 (Berkeley) %G%  */
+comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)r.h	8.1 (Berkeley) %G%  */
 include|#
 directive|include
 file|<stdio.h>
