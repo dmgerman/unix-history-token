@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.5 (Berkeley) %G%"
+literal|"@(#)main.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,9 +565,6 @@ name|rip_metric
 operator|=
 name|HOPCNT_INFINITY
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|msg
 operator|->
 name|rip_nets
@@ -598,8 +595,6 @@ argument_list|(
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|toall
 argument_list|(
 name|sendmsg

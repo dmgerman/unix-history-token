@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timer.c	4.3 (Berkeley) %G%"
+literal|"@(#)timer.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,29 +278,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|rip_metric
-operator|=
-name|min
-argument_list|(
-name|rt
-operator|->
-name|rt_metric
-operator|+
-literal|1
-argument_list|,
-name|HOPCNT_INFINITY
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|msg
-operator|->
-name|rip_nets
-index|[
-literal|0
-index|]
-operator|.
 name|rip_dst
 operator|.
 name|sa_family
@@ -330,18 +307,18 @@ name|rip_metric
 operator|=
 name|htonl
 argument_list|(
-name|msg
+name|min
+argument_list|(
+name|rt
 operator|->
-name|rip_nets
-index|[
-literal|0
-index|]
-operator|.
-name|rip_metric
+name|rt_metric
+operator|+
+literal|1
+argument_list|,
+name|HOPCNT_INFINITY
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|toall
 argument_list|(
 name|sendmsg

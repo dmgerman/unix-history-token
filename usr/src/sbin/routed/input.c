@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.4 (Berkeley) %G%"
+literal|"@(#)input.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,9 +169,6 @@ expr|struct
 name|netinfo
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|msg
@@ -208,8 +205,6 @@ name|rip_metric
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/*  			 * A single entry with sa_family == AF_UNSPEC and 			 * metric ``infinity'' means ``all routes''. 			 */
 if|if
 condition|(
@@ -274,9 +269,6 @@ argument_list|,
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|msg
@@ -313,8 +305,6 @@ name|rip_metric
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|n
 operator|++
 operator|,
@@ -528,9 +518,6 @@ name|netinfo
 argument_list|)
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|msg
@@ -567,8 +554,6 @@ name|rip_metric
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|n
