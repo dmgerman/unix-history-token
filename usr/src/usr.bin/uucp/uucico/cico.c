@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.2 (Berkeley) %G%"
+literal|"@(#)cico.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2750,6 +2750,17 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|SIGIO
+comment|/* if using 4.2 signal mechanism, must unblock all signal handlers */
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|signal
 argument_list|(
 name|signo
