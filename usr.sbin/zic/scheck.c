@@ -17,7 +17,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)scheck.c	8.11"
+literal|"@(#)scheck.c	8.13"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,6 @@ modifier|*
 specifier|const
 name|string
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 specifier|const
@@ -132,12 +131,10 @@ decl_stmt|;
 specifier|static
 name|char
 name|nada
-index|[
-literal|1
-index|]
 decl_stmt|;
 name|result
 operator|=
+operator|&
 name|nada
 expr_stmt|;
 if|if
@@ -157,6 +154,10 @@ name|fbuf
 operator|=
 name|imalloc
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 literal|2
 operator|*
 name|strlen
@@ -165,6 +166,7 @@ name|format
 argument_list|)
 operator|+
 literal|4
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -244,13 +246,7 @@ name|fp
 expr_stmt|;
 while|while
 condition|(
-name|isascii
-argument_list|(
-operator|*
-name|fp
-argument_list|)
-operator|&&
-name|isdigit
+name|is_digit
 argument_list|(
 operator|*
 name|fp
