@@ -633,6 +633,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.malloc.failure_rate"
+argument_list|,
+operator|&
+name|malloc_failure_rate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_malloc
