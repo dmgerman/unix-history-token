@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.112 1995/03/03 00:43:08 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.113 1995/03/07 19:58:02 davidg Exp $  */
 end_comment
 
 begin_include
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -207,17 +213,114 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|avail_start
-decl_stmt|,
-name|avail_end
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* XXX correctly declaring all the netisr's is painful. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netns/ns.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netns/ns_if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/iso.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/iso_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netccitt/dll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netccitt/x25.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netccitt/pk.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netccitt/pk_var.h>
+end_include
 
 begin_include
 include|#
@@ -283,6 +386,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -631,19 +740,6 @@ specifier|register
 name|caddr_t
 name|v
 decl_stmt|;
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|netisrs
-index|[
-literal|32
-index|]
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 name|vm_offset_t
 name|maxaddr
 decl_stmt|;
@@ -763,7 +859,7 @@ name|isr
 parameter_list|,
 name|n
 parameter_list|)
-value|do { extern void isr(void); netisrs[n] = isr; } while(0)
+value|do { netisrs[n] = isr; } while(0)
 ifdef|#
 directive|ifdef
 name|INET
@@ -1644,19 +1740,6 @@ name|void
 name|identifycpu
 parameter_list|()
 block|{
-specifier|extern
-name|u_long
-name|cpu_id
-decl_stmt|,
-name|cpu_high
-decl_stmt|,
-name|cpu_feature
-decl_stmt|;
-specifier|extern
-name|char
-name|cpu_vendor
-index|[]
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"CPU: "
@@ -2210,14 +2293,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|kstack
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * in u. to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
@@ -3350,10 +3425,6 @@ name|int
 name|devtype
 decl_stmt|;
 comment|/* r10 == major of root dev */
-specifier|extern
-name|int
-name|cold
-decl_stmt|;
 if|if
 condition|(
 name|cold
@@ -5159,11 +5230,6 @@ name|int
 name|first
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-name|etext
-index|[]
-decl_stmt|;
 name|int
 name|x
 decl_stmt|;
@@ -5180,12 +5246,6 @@ decl_stmt|;
 name|int
 name|gsel_tss
 decl_stmt|;
-specifier|extern
-name|int
-name|sigcode
-decl_stmt|,
-name|szsigcode
-decl_stmt|;
 comment|/* table descriptors - used to load tables by microp */
 name|struct
 name|region_descriptor
@@ -5200,16 +5260,6 @@ name|pagesinext
 decl_stmt|;
 name|int
 name|target_page
-decl_stmt|;
-specifier|extern
-name|struct
-name|pte
-modifier|*
-name|CMAP1
-decl_stmt|;
-specifier|extern
-name|caddr_t
-name|CADDR1
 decl_stmt|;
 name|proc0
 operator|.

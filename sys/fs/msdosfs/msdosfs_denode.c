@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.7 1995/01/09 16:04:59 davidg Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.8 1995/01/29 01:27:58 ats Exp $ */
 end_comment
 
 begin_comment
@@ -561,15 +561,6 @@ name|pmp
 operator|->
 name|pm_mountp
 decl_stmt|;
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|msdosfs_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
 name|struct
 name|denode
 modifier|*
@@ -2107,10 +2098,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|int
-name|prtactive
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -2242,10 +2229,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|prtactive
 decl_stmt|;
 name|struct
 name|timespec

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.53 1995/03/06 05:36:59 davidg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.54 1995/03/15 14:22:10 dufault Exp $  */
 end_comment
 
 begin_define
@@ -142,6 +142,22 @@ include|#
 directive|include
 file|<sys/dkstat.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/i386/cons.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|u_int32
@@ -4320,26 +4336,11 @@ name|struct
 name|scsi_rw_big
 name|cmd
 decl_stmt|;
-specifier|extern
-name|int
-name|Maxmem
-decl_stmt|;
 specifier|static
 name|int
 name|sddoingadump
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|caddr_t
-name|CADDR1
-decl_stmt|;
-comment|/* map the page we are about to write, here */
-specifier|extern
-name|struct
-name|pte
-modifier|*
-name|CMAP1
 decl_stmt|;
 name|struct
 name|scsi_xfer
@@ -4367,23 +4368,10 @@ comment|/* starting address */
 comment|/* toss any characters present prior to dump */
 while|while
 condition|(
-operator|(
-name|c
-operator|=
 name|cncheckc
-argument_list|(
-literal|1
-argument_list|)
-operator|)
-operator|&&
-operator|(
-name|c
-operator|!=
-literal|0x100
-operator|)
+argument_list|()
 condition|)
 empty_stmt|;
-comment|/*syscons and pccons differ */
 comment|/* size of memory to dump */
 name|num
 operator|=
@@ -4574,6 +4562,7 @@ operator|*
 operator|)
 name|CMAP1
 operator|=
+comment|/* XXX use pmap_enter() */
 name|PG_V
 operator||
 name|PG_KW
@@ -4763,6 +4752,7 @@ operator|*
 operator|)
 name|CADDR1
 expr_stmt|;
+comment|/* XXX use pmap_enter() */
 name|xs
 operator|->
 name|datalen
@@ -4862,20 +4852,8 @@ expr_stmt|;
 comment|/* operator aborting dump? */
 if|if
 condition|(
-operator|(
-name|c
-operator|=
 name|cncheckc
-argument_list|(
-literal|1
-argument_list|)
-operator|)
-operator|&&
-operator|(
-name|c
-operator|!=
-literal|0x100
-operator|)
+argument_list|()
 condition|)
 return|return
 operator|(

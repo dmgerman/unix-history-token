@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_command.c,v 1.9 1995/02/05 21:09:04 phk Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_command.c,v 1.10 1995/03/05 22:56:21 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -102,6 +102,30 @@ name|boolean_t
 name|db_ed_style
 init|=
 name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|db_help_cmd
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|db_fncall
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -577,10 +601,6 @@ operator|==
 name|tEXCL
 condition|)
 block|{
-name|void
-name|db_fncall
-parameter_list|()
-function_decl|;
 name|db_fncall
 argument_list|()
 expr_stmt|;
@@ -988,12 +1008,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|db_show_help
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void		db_show_help();
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1131,20 +1156,6 @@ block|, }
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|db_help_cmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|db_fncall
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -1430,45 +1441,17 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
-name|db_help_cmd
-parameter_list|()
-block|{
-name|struct
-name|command
-modifier|*
-name|cmd
-init|=
-name|db_command_table
-decl_stmt|;
-while|while
-condition|(
-name|cmd
-operator|->
-name|name
-operator|!=
+begin_if
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|db_printf
-argument_list|(
-literal|"%-12s"
-argument_list|,
-name|cmd
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|db_end_line
-argument_list|()
-expr_stmt|;
-name|cmd
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_function
+end_if
+
+begin_endif
+unit|void db_help_cmd() { 	struct command *cmd = db_command_table;  	while (cmd->name != 0) { 	    db_printf("%-12s", cmd->name); 	    db_end_line(); 	    cmd++; 	} }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

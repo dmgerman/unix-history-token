@@ -1722,11 +1722,6 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|struct
-name|sysentvec
-name|aout_sysvec
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -1981,11 +1976,6 @@ init|=
 name|args
 operator|->
 name|lkm_vfsconf
-decl_stmt|;
-specifier|extern
-name|struct
-name|vfsconf
-name|void_vfsconf
 decl_stmt|;
 name|int
 name|i
@@ -2863,12 +2853,6 @@ name|int
 name|err
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-specifier|const
-name|struct
-name|linker_set
-name|execsw_set
 decl_stmt|;
 specifier|const
 name|struct

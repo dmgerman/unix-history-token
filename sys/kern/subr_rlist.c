@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.7 1994/10/02 17:35:23 phk Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.8 1995/01/31 06:48:53 davidg Exp $  */
 end_comment
 
 begin_include
@@ -52,15 +52,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_map.h>
+file|<vm/vm_kern.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|vm_map_t
-name|kernel_map
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<vm/vm_map.h>
+end_include
 
 begin_comment
 comment|/*  * Resource lists.  */
@@ -124,10 +123,6 @@ operator|<
 name|RLIST_MIN
 condition|)
 block|{
-specifier|extern
-name|vm_map_t
-name|kmem_map
-decl_stmt|;
 name|int
 name|s
 init|=

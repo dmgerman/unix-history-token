@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.2 1994/12/12 12:35:40 bde Exp $ */
+comment|/*	$Id: denode.h,v 1.3 1994/12/27 12:37:33 bde Exp $ */
 end_comment
 
 begin_comment
@@ -406,6 +406,18 @@ comment|/* u_long	defid_gen;	 generation number */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|msdosfs_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Prototypes for MSDOSFS vnode operations  */

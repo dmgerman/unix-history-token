@@ -93,47 +93,6 @@ file|<machine/frame.h>
 end_include
 
 begin_comment
-comment|/*  * Kernel to clock driver interface.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|inittodr
-name|__P
-argument_list|(
-operator|(
-name|time_t
-name|base
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|resettodr
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|startrtclock
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * i386 to clock driver interface.  * XXX almost all of it is misplaced.  i586 stuff is done in isa/clock.c  * and isa stuff is done in i386/microtime.s and i386/support.s.  */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.18 1995/03/01 22:24:44 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.19 1995/03/04 20:51:00 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -1582,6 +1582,22 @@ name|KERNEL
 end_ifdef
 
 begin_function_decl
+name|void
+modifier|*
+name|extend_get
+parameter_list|(
+name|struct
+name|extend_array
+modifier|*
+name|ea
+parameter_list|,
+name|int
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|scsi_type_long_name
@@ -1777,8 +1793,38 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|errval
+name|scsi_stop_unit
+parameter_list|(
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|,
+name|u_int32
+name|eject
+parameter_list|,
+name|u_int32
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|scsi_done
+parameter_list|(
+name|struct
+name|scsi_xfer
+modifier|*
+name|xs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|scsi_user_done
 parameter_list|(
 name|struct
 name|scsi_xfer
@@ -1935,6 +1981,20 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|scsi_sense_desc
+parameter_list|(
+name|int
+name|asc
+parameter_list|,
+name|int
+name|ascq
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

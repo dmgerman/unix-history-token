@@ -982,19 +982,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|legal_vif_num
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|phyint_send
@@ -9207,11 +9194,6 @@ name|old_legal_vif_num
 function_decl|)
 parameter_list|()
 function_decl|;
-specifier|extern
-name|u_char
-name|ip_protox
-index|[]
-decl_stmt|;
 specifier|extern
 name|struct
 name|protosw

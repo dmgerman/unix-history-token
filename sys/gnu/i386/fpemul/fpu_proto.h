@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  *    $Id:$  *  */
+comment|/*  *  *    $Id: fpu_proto.h,v 1.2 1994/04/29 21:16:23 gclarkii Exp $  *  */
 end_comment
 
 begin_comment
@@ -483,18 +483,17 @@ begin_comment
 comment|/* fpu_entry.c */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|math_emulate
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|extern int math_emulate(struct trapframe * info);
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* fpu_etc.c */
