@@ -525,6 +525,40 @@ argument|(
 literal|"[%d] grandchild process Vfork()'ed\n"
 argument|, 			      getpid())
 argument_list|)
+if|if
+condition|(
+name|e
+operator|->
+name|uid
+operator|==
+name|ROOT_UID
+condition|)
+name|Jitter
+operator|=
+name|RootJitter
+expr_stmt|;
+if|if
+condition|(
+name|Jitter
+operator|!=
+literal|0
+condition|)
+block|{
+name|srandom
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+name|random
+argument_list|()
+operator|%
+name|Jitter
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* write a log message.  we've waited this long to do it 		 * because it was not until now that we knew the PID that 		 * the actual user command shell was going to get and the 		 * PID is part of the log message. 		 */
 comment|/*local*/
 block|{

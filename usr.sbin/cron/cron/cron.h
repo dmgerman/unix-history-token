@@ -1446,6 +1446,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
+name|Jitter
+decl_stmt|,
+name|RootJitter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|time_t
 name|TargetTime
 decl_stmt|;
@@ -1535,6 +1543,15 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|LineNumber
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|Jitter
+decl_stmt|,
+name|RootJitter
 decl_stmt|;
 end_decl_stmt
 
