@@ -191,7 +191,7 @@ name|char
 modifier|*
 name|ohci_device_aladdin_v
 init|=
-literal|"AcerLabs M5237 (Aladdin-V) USB Host Controller"
+literal|"AcerLabs M5237 (Aladdin-V) USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,7 +209,7 @@ name|char
 modifier|*
 name|ohci_device_firelink
 init|=
-literal|"OPTi 82C861 (FireLink) USB Host Controller"
+literal|"OPTi 82C861 (FireLink) USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,7 +227,7 @@ name|char
 modifier|*
 name|ohci_device_nec
 init|=
-literal|"NEC uPD 9210 USB Host Controller"
+literal|"NEC uPD 9210 USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +245,7 @@ name|char
 modifier|*
 name|ohci_device_usb0670
 init|=
-literal|"CMD Tech 670 (USB0670) USB Host Controller"
+literal|"CMD Tech 670 (USB0670) USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,7 +263,7 @@ name|char
 modifier|*
 name|ohci_device_usb0673
 init|=
-literal|"CMD Tech 673 (USB0673) USB Host Controller"
+literal|"CMD Tech 673 (USB0673) USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +274,7 @@ name|char
 modifier|*
 name|ohci_device_generic
 init|=
-literal|"OHCI (generic) USB Host Controller"
+literal|"OHCI (generic) USB controller"
 decl_stmt|;
 end_decl_stmt
 

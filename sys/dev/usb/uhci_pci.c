@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.7 1999/05/01 23:30:06 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.8 1999/05/08 21:59:42 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|PCI_UHCI_DEVICEID_PIIX3
-value|0x70208086ul
+value|0x70208086
 end_define
 
 begin_decl_stmt
@@ -183,7 +183,7 @@ name|char
 modifier|*
 name|uhci_device_piix3
 init|=
-literal|"Intel 82371SB (PIIX3) USB Host Controller"
+literal|"Intel 82371SB (PIIX3) USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,18 +191,18 @@ begin_define
 define|#
 directive|define
 name|PCI_UHCI_DEVICEID_PIIX4
-value|0x71128086ul
+value|0x71128086
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_UHCI_DEVICEID_PIIX4E
-value|0x71128086ul
+value|0x71128086
 end_define
 
 begin_comment
-comment|/* no separate step */
+comment|/* no separate stepping */
 end_comment
 
 begin_decl_stmt
@@ -212,7 +212,7 @@ name|char
 modifier|*
 name|uhci_device_piix4
 init|=
-literal|"Intel 82371AB/EB (PIIX4) USB Host Controller"
+literal|"Intel 82371AB/EB (PIIX4) USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|PCI_UHCI_DEVICEID_VT83C572
-value|0x30381106ul
+value|0x30381106
 end_define
 
 begin_decl_stmt
@@ -230,7 +230,7 @@ name|char
 modifier|*
 name|uhci_device_vt83c572
 init|=
-literal|"VIA 83C572 USB Host Controller"
+literal|"VIA 83C572 USB controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,7 @@ name|char
 modifier|*
 name|uhci_device_generic
 init|=
-literal|"UHCI (generic) USB Controller"
+literal|"UHCI (generic) USB controller"
 decl_stmt|;
 end_decl_stmt
 
