@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	5.3 (Berkeley) %G%"
+literal|"@(#)rec_get.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,19 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -185,6 +185,14 @@ operator|->
 name|bt_nrecs
 operator|&&
 operator|(
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RINMEM
+argument_list|)
+operator|||
+operator|(
 name|status
 operator|=
 name|t
@@ -198,6 +206,7 @@ argument_list|)
 operator|)
 operator|!=
 name|RET_SUCCESS
+operator|)
 condition|)
 return|return
 operator|(
@@ -236,6 +245,10 @@ argument_list|(
 name|t
 argument_list|,
 name|e
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|data
 argument_list|)
@@ -386,6 +399,12 @@ operator|++
 name|nrec
 control|)
 block|{
+name|len
+operator|=
+name|t
+operator|->
+name|bt_reclen
+expr_stmt|;
 for|for
 control|(
 name|p
