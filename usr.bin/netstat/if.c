@@ -693,7 +693,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 name|netname
 argument_list|(
@@ -713,7 +713,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 name|netname
 argument_list|(
