@@ -6809,6 +6809,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|*
 name|mask
 condition|)
 return|return;
