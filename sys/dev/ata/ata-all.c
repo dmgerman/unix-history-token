@@ -6437,7 +6437,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100000
+literal|10000
 argument_list|)
 expr_stmt|;
 name|outb
@@ -6451,7 +6451,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|100000
 argument_list|)
 expr_stmt|;
 name|inb
