@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	2.5 %G%"
+literal|"@(#)quit.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,6 +1019,11 @@ name|obuf
 argument_list|)
 expr_stmt|;
 block|}
+name|trunc
+argument_list|(
+name|obuf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ferror
@@ -1135,6 +1140,11 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|rbuf
+argument_list|)
+expr_stmt|;
+name|trunc
+argument_list|(
+name|fbuf
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1378,6 +1388,11 @@ expr_stmt|;
 endif|#
 directive|endif
 name|fflush
+argument_list|(
+name|obuf
+argument_list|)
+expr_stmt|;
+name|trunc
 argument_list|(
 name|obuf
 argument_list|)
