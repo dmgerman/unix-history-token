@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_scalb.c 5.1 93/09/24 */
+comment|/* @(#)e_scalb.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * __ieee754_scalb(x, fn) is provide for  * passing various standard test suite. One  * should use scalbn() instead.  */
+comment|/*  * __ieee754_scalb(x, fn) is provide for  * passing various standard test suite. One   * should use scalbn() instead.  */
 end_comment
 
 begin_include
@@ -89,16 +89,12 @@ else|#
 directive|else
 if|if
 condition|(
-call|(
 name|isnan
-call|)
 argument_list|(
 name|x
 argument_list|)
 operator|||
-call|(
 name|isnan
-call|)
 argument_list|(
 name|fn
 argument_list|)
