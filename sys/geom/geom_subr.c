@@ -3332,6 +3332,16 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|g_debugflags
+operator|&
+literal|0x8
+operator|)
+condition|)
+return|return;
 name|LIST_FOREACH
 argument_list|(
 argument|mp

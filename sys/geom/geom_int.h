@@ -49,6 +49,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* 1	G_T_TOPOLOGY		*/
+end_comment
+
+begin_comment
+comment|/* 2	G_T_BIO			*/
+end_comment
+
+begin_comment
+comment|/* 4	G_T_ACCESS		*/
+end_comment
+
+begin_comment
+comment|/* 8	enable sanity checks	*/
+end_comment
+
+begin_comment
 comment|/*  * Various internal actions are tracked by tagging g_event[s] onto  * an internal eventqueue.  */
 end_comment
 
