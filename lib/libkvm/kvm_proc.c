@@ -3280,7 +3280,8 @@ name|size_t
 name|bufsz
 decl_stmt|;
 specifier|static
-name|int
+name|unsigned
+name|long
 name|buflen
 decl_stmt|;
 specifier|static
