@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.47 2000/09/24 02:08:38 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.48 2000/12/29 01:24:56 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB spec: http://www.usb.org/developers/docs.htm  */
+comment|/*  * USB spec: http://www.usb.org/developers/data/usbspec.zip  */
 end_comment
 
 begin_include
@@ -1482,6 +1482,9 @@ name|usbd_status
 name|err
 decl_stmt|;
 name|int
+name|speed
+decl_stmt|;
+name|int
 name|port
 decl_stmt|;
 name|int
@@ -1938,6 +1941,33 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Figure out device speed */
+if|if
+condition|(
+name|status
+operator|&
+name|UPS_HIGH_SPEED
+condition|)
+name|speed
+operator|=
+name|USB_SPEED_HIGH
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|status
+operator|&
+name|UPS_LOW_SPEED
+condition|)
+name|speed
+operator|=
+name|USB_SPEED_LOW
+expr_stmt|;
+else|else
+name|speed
+operator|=
+name|USB_SPEED_FULL
+expr_stmt|;
 comment|/* Get device info and set its address. */
 name|err
 operator|=
@@ -1960,9 +1990,7 @@ name|depth
 operator|+
 literal|1
 argument_list|,
-name|status
-operator|&
-name|UPS_LOW_SPEED
+name|speed
 argument_list|,
 name|port
 argument_list|,
