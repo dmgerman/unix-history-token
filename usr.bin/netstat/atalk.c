@@ -822,8 +822,6 @@ name|sat_addr
 operator|.
 name|s_net
 expr_stmt|;
-name|n
-operator|=
 name|snprintf
 argument_list|(
 name|buf
@@ -880,7 +878,12 @@ operator|.
 name|s_net
 expr_stmt|;
 name|n
-operator|+=
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -917,8 +920,14 @@ name|what
 operator|&
 literal|2
 condition|)
+block|{
 name|n
-operator|+=
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -947,6 +956,7 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|buf
