@@ -1177,6 +1177,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|DIOCBSDBB
+value|_IOW('d', 110, void *)
+end_define
+
+begin_comment
+comment|/* write bootblocks */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
