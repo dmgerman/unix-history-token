@@ -215,7 +215,7 @@ block|,
 comment|/* CCB request completed with an error */
 name|CAM_BUSY
 block|,
-comment|/* CAM subsytem is busy */
+comment|/* CAM subsystem is busy */
 name|CAM_REQ_INVALID
 block|,
 comment|/* CCB request was invalid */
