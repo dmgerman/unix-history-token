@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.23	%G%"
+literal|"@(#)parseaddr.c	3.24	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,17 +28,6 @@ end_define
 
 begin_comment
 comment|/* word delimiters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPACESUB
-value|('.'|0200)
-end_define
-
-begin_comment
-comment|/* substitution for<lwsp> */
 end_comment
 
 begin_function

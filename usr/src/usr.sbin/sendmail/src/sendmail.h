@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.39	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.40	%G% */
 end_comment
 
 begin_ifdef
@@ -64,7 +64,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* maximum line length */
+comment|/* max line length */
 end_comment
 
 begin_define
@@ -75,7 +75,7 @@ value|128
 end_define
 
 begin_comment
-comment|/* maximum length of a name */
+comment|/* max length of a name */
 end_comment
 
 begin_define
@@ -86,7 +86,7 @@ value|2500
 end_define
 
 begin_comment
-comment|/* maximum total length of a header field */
+comment|/* max total length of a hdr field */
 end_comment
 
 begin_define
@@ -97,7 +97,7 @@ value|40
 end_define
 
 begin_comment
-comment|/* maximum # of parms to mailers */
+comment|/* max # of parms to mailers */
 end_comment
 
 begin_define
@@ -108,7 +108,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* maximum value of HopCount */
+comment|/* max value of HopCount */
 end_comment
 
 begin_define
@@ -131,6 +131,17 @@ end_define
 
 begin_comment
 comment|/* maximum mailers known to system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPACESUB
+value|('.'|0200)
+end_define
+
+begin_comment
+comment|/* substitution for<lwsp> */
 end_comment
 
 begin_comment
