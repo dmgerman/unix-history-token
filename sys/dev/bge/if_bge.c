@@ -10178,7 +10178,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Process link state changes. 	 * Grrr. The link status word in the status block does 	 * not work correctly on the BCM5700 rev AX and BX chips, 	 * according to all avaibable information. Hence, we have 	 * to enable MII interrupts in order to properly obtain 	 * async link changes. Unfortunately, this also means that 	 * we have to read the MAC status register to detect link 	 * changes, thereby adding an additional register access to 	 * the interrupt handler. 	 */
+comment|/* 	 * Process link state changes. 	 * Grrr. The link status word in the status block does 	 * not work correctly on the BCM5700 rev AX and BX chips, 	 * according to all available information. Hence, we have 	 * to enable MII interrupts in order to properly obtain 	 * async link changes. Unfortunately, this also means that 	 * we have to read the MAC status register to detect link 	 * changes, thereby adding an additional register access to 	 * the interrupt handler. 	 */
 if|if
 condition|(
 name|sc
