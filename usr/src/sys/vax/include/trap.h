@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.h	4.4	81/02/26	*/
+comment|/*	trap.h	4.5	81/03/03	*/
 end_comment
 
 begin_comment
@@ -32,8 +32,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BPTFLT
+name|RESOPFLT
 value|2
+end_define
+
+begin_comment
+comment|/* reserved operand fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPTFLT
+value|3
 end_define
 
 begin_comment
@@ -44,22 +55,11 @@ begin_define
 define|#
 directive|define
 name|XFCFLT
-value|3
-end_define
-
-begin_comment
-comment|/* xfc instruction fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RESOPFLT
 value|4
 end_define
 
 begin_comment
-comment|/* reserved operand fault */
+comment|/* xfc instruction fault */
 end_comment
 
 begin_define
