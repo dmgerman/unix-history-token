@@ -1685,12 +1685,23 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INET_ADDRSTRLEN
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|INET_ADDRSTRLEN
 value|16
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IP level.  * First word of comment is data type; bool is stored in int.  */

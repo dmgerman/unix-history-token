@@ -44,6 +44,42 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|INET_ADDRSTRLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INET_ADDRSTRLEN
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INET6_ADDRSTRLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INET6_ADDRSTRLEN
+value|46
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_IN_ADDR_T_DECLARED_
 end_ifndef
 
@@ -129,7 +165,7 @@ comment|/* !_POSIX_SOURCE */
 end_comment
 
 begin_comment
-comment|/*  * XXX socklen_t is used by a POSIX.1-200x interface, but not required by  * POSIX.1-200x.  */
+comment|/*  * XXX socklen_t is used by a POSIX.1-2001 interface, but not required by  * POSIX.1-2001.  */
 end_comment
 
 begin_ifdef
@@ -183,6 +219,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * XXX missing typedefs for uint16_t and uint32_t.  */
+end_comment
 
 begin_comment
 comment|/* XXX all new diversions!! argh!! */
