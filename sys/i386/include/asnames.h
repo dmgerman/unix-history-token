@@ -672,6 +672,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_Xxmm
+value|Xxmm
+end_define
+
+begin_define
+define|#
+directive|define
 name|__default_ldt
 value|_default_ldt
 end_define
@@ -996,6 +1003,13 @@ define|#
 directive|define
 name|_cpu_feature
 value|cpu_feature
+end_define
+
+begin_define
+define|#
+directive|define
+name|_cpu_fxsr
+value|cpu_fxsr
 end_define
 
 begin_define

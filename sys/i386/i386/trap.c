@@ -1577,6 +1577,20 @@ operator|=
 name|SIGILL
 expr_stmt|;
 break|break;
+case|case
+name|T_XMMFLT
+case|:
+comment|/* SIMD floating-point exception */
+name|ucode
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+name|i
+operator|=
+name|SIGFPE
+expr_stmt|;
+break|break;
 block|}
 block|}
 else|else

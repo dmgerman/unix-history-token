@@ -231,8 +231,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_RESERVED
+name|T_XMMFLT
 value|29
+end_define
+
+begin_comment
+comment|/* SIMD floating-point exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_RESERVED
+value|30
 end_define
 
 begin_comment

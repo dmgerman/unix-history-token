@@ -92,11 +92,10 @@ name|pcb_ldt_dontuse
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|save87
-name|pcb_savefpu
+name|union
+name|savefpu
+name|pcb_save
 decl_stmt|;
-comment|/* floating point state for 287/387 */
 name|u_char
 name|pcb_flags
 decl_stmt|;

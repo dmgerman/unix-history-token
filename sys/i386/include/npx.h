@@ -152,6 +152,153 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|envxmm
+block|{
+name|u_int16_t
+name|en_cw
+decl_stmt|;
+comment|/* control word (16bits) */
+name|u_int16_t
+name|en_sw
+decl_stmt|;
+comment|/* status word (16bits) */
+name|u_int16_t
+name|en_tw
+decl_stmt|;
+comment|/* tag word (16bits) */
+name|u_int16_t
+name|en_opcode
+decl_stmt|;
+comment|/* opcode last executed (11 bits ) */
+name|u_int32_t
+name|en_fip
+decl_stmt|;
+comment|/* floating point instruction pointer */
+name|u_int16_t
+name|en_fcs
+decl_stmt|;
+comment|/* floating code segment selector */
+name|u_int16_t
+name|en_pad0
+decl_stmt|;
+comment|/* padding */
+name|u_int32_t
+name|en_foo
+decl_stmt|;
+comment|/* floating operand offset */
+name|u_int16_t
+name|en_fos
+decl_stmt|;
+comment|/* floating operand segment selector */
+name|u_int16_t
+name|en_pad1
+decl_stmt|;
+comment|/* padding */
+name|u_int32_t
+name|en_mxcsr
+decl_stmt|;
+comment|/* SSE sontorol/status register */
+name|u_int32_t
+name|en_pad2
+decl_stmt|;
+comment|/* padding */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Contents of each SSE extended accumulator */
+end_comment
+
+begin_struct
+struct|struct
+name|xmmacc
+block|{
+name|u_char
+name|xmm_bytes
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|savexmm
+block|{
+name|struct
+name|envxmm
+name|sv_env
+decl_stmt|;
+struct|struct
+block|{
+name|struct
+name|fpacc87
+name|fp_acc
+decl_stmt|;
+name|u_char
+name|fp_pad
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* padding */
+block|}
+name|sv_fp
+index|[
+literal|8
+index|]
+struct|;
+name|struct
+name|xmmacc
+name|sv_xmm
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_long
+name|sv_ex_sw
+decl_stmt|;
+comment|/* status word for last exception */
+name|u_char
+name|sv_pad
+index|[
+literal|220
+index|]
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|16
+argument_list|)
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_union
+union|union
+name|savefpu
+block|{
+name|struct
+name|save87
+name|sv_87
+decl_stmt|;
+name|struct
+name|savexmm
+name|sv_xmm
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_comment
 comment|/*  * The hardware default control word for i387's and later coprocessors is  * 0x37F, giving:  *  *	round to nearest  *	64-bit precision  *	all exceptions masked.  *  * We modify the affine mode bit and precision bits in this to give:  *  *	affine mode for 287's (if they work at all) (1 in bitfield 1<<12)  *	53-bit precision (2 in bitfield 3<<8)  *  * 64-bit precision often gives bad results with high level languages  * because it makes the results of calculations depend on whether  * intermediate values are stored in memory or in FPU registers.  */
 end_comment
@@ -235,8 +382,8 @@ name|npxsave
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|save87
+expr|union
+name|savefpu
 operator|*
 name|addr
 operator|)

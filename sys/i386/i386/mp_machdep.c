@@ -9728,6 +9728,13 @@ return|;
 comment|/* return FAILURE */
 block|}
 comment|/*  * Flush the TLB on all other CPU's  *  * XXX: Needs to handshake and wait for completion before proceding.  */
+specifier|extern
+name|void
+name|enable_sse
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
 name|void
 name|smp_invltlb
 parameter_list|(
@@ -10106,6 +10113,10 @@ name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
 argument_list|)
+expr_stmt|;
+comment|/* set up SSE registers */
+name|enable_sse
+argument_list|()
 expr_stmt|;
 comment|/* A quick check from sanity claus */
 name|apic_id
