@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.4 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,7 +408,9 @@ block|{
 name|char
 name|f_hname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -563,7 +565,9 @@ begin_decl_stmt
 name|char
 name|LocalHostName
 index|[
-literal|32
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -613,7 +617,9 @@ begin_decl_stmt
 name|char
 name|PrevHost
 index|[
-literal|32
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
