@@ -217,6 +217,30 @@ literal|"#define YYACCEPT goto yyaccept"
 block|,
 literal|"#define YYERROR goto yyerrlab"
 block|,
+literal|"/* cfront 1.2 defines \"c_plusplus\" instead of \"__cplusplus\" */"
+block|,
+literal|"#ifdef c_plusplus"
+block|,
+literal|"#ifndef __cplusplus"
+block|,
+literal|"#define __cplusplus"
+block|,
+literal|"#endif"
+block|,
+literal|"#endif"
+block|,
+literal|"#ifdef __cplusplus"
+block|,
+literal|"extern \"C\" { char *getenv(const char *); }"
+block|,
+literal|"#else"
+block|,
+literal|"extern char *getenv();"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
 literal|"int"
 block|,
 literal|"yyparse()"
@@ -228,8 +252,6 @@ block|,
 literal|"#if YYDEBUG"
 block|,
 literal|"    register char *yys;"
-block|,
-literal|"    extern char *getenv();"
 block|,
 literal|""
 block|,
