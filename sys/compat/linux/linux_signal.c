@@ -2632,11 +2632,11 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|args
+name|uap
 operator|->
 name|uss
 argument_list|,
-name|args
+name|uap
 operator|->
 name|uoss
 argument_list|)
