@@ -934,7 +934,10 @@ name|a_uio
 decl_stmt|;
 name|struct
 name|sbuf
+modifier|*
 name|sb
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -958,11 +961,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|error
+name|sb
 operator|=
 name|sbuf_new
 argument_list|(
-operator|&
 name|sb
 argument_list|,
 name|NULL
@@ -980,7 +982,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|sb
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -999,14 +1003,12 @@ name|pn
 argument_list|,
 name|curproc
 argument_list|,
-operator|&
 name|sb
 argument_list|)
 expr_stmt|;
 comment|/* XXX we should possibly detect and handle overflows */
 name|sbuf_finish
 argument_list|(
-operator|&
 name|sb
 argument_list|)
 expr_stmt|;
@@ -1014,7 +1016,6 @@ name|ps
 operator|=
 name|sbuf_data
 argument_list|(
-operator|&
 name|sb
 argument_list|)
 operator|+
@@ -1026,7 +1027,6 @@ name|xlen
 operator|=
 name|sbuf_len
 argument_list|(
-operator|&
 name|sb
 argument_list|)
 operator|-
@@ -1066,7 +1066,6 @@ operator|)
 expr_stmt|;
 name|sbuf_delete
 argument_list|(
-operator|&
 name|sb
 argument_list|)
 expr_stmt|;
