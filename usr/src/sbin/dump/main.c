@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.15 (Berkeley) %G%"
+literal|"@(#)main.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1627,6 +1627,9 @@ name|blocksperfile
 condition|)
 name|fetapes
 operator|=
+operator|(
+name|float
+operator|)
 name|tapesize
 operator|/
 name|blocksperfile

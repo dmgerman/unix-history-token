@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.17 (Berkeley) %G%"
+literal|"@(#)tape.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of blocks per output file */
+end_comment
+
+begin_decl_stmt
+name|long
+name|blocksthisvol
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of blocks on current output file */
 end_comment
 
 begin_decl_stmt
@@ -721,7 +731,7 @@ name|msg
 argument_list|(
 literal|"write error %d blocks into volume %d\n"
 argument_list|,
-name|blockswritten
+name|blocksthisvol
 argument_list|,
 name|tapeno
 argument_list|)
@@ -880,6 +890,10 @@ name|blockswritten
 operator|+=
 name|ntrec
 expr_stmt|;
+name|blocksthisvol
+operator|+=
+name|ntrec
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -889,7 +903,7 @@ operator|(
 name|blocksperfile
 condition|?
 operator|(
-name|blockswritten
+name|blocksthisvol
 operator|>=
 name|blocksperfile
 operator|)
@@ -967,7 +981,9 @@ comment|/* void */
 empty_stmt|;
 name|msg
 argument_list|(
-literal|"Tape rewinding\n"
+literal|"Closing %s\n"
+argument_list|,
+name|tape
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1048,6 +1064,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|nexttape
+condition|)
+return|return;
+if|if
+condition|(
 operator|!
 name|nogripe
 condition|)
@@ -1069,10 +1090,6 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|nexttape
-operator|==
-literal|0
-operator|&&
 operator|!
 name|query
 argument_list|(
@@ -1396,7 +1413,23 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|TDEBUG
-comment|/* 		 * If we have a name like "/dev/rmt0,/dev/rmt1", 		 * use the name before the comma first, and save 		 * the second name for next time. 		 */
+comment|/* 		 * If we have a name like "/dev/rmt0,/dev/rmt1", 		 * use the name before the comma first, and save 		 * the remaining names for subsequent volumes. 		 */
+name|tapeno
+operator|++
+expr_stmt|;
+comment|/* current tape sequence */
+if|if
+condition|(
+name|nexttape
+operator|||
+name|index
+argument_list|(
+name|tape
+argument_list|,
+literal|','
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|nexttape
@@ -1437,6 +1470,16 @@ name|nexttape
 operator|=
 name|NULL
 expr_stmt|;
+name|msg
+argument_list|(
+literal|"Dumping volume %d on %s\n"
+argument_list|,
+name|tapeno
+argument_list|,
+name|tape
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|RDUMP
@@ -1531,10 +1574,10 @@ name|asize
 operator|=
 literal|0
 expr_stmt|;
-name|tapeno
-operator|++
+name|blocksthisvol
+operator|=
+literal|0
 expr_stmt|;
-comment|/* current tape sequence */
 name|newtape
 operator|++
 expr_stmt|;
@@ -1631,7 +1674,7 @@ literal|1
 condition|)
 name|msg
 argument_list|(
-literal|"Tape %d begins with blocks from inode %d\n"
+literal|"Volume %d begins with blocks from inode %d\n"
 argument_list|,
 name|tapeno
 argument_list|,
@@ -2250,6 +2293,9 @@ name|toggle
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|nwrite
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|__STDC__
@@ -2418,6 +2464,9 @@ name|RDUMP
 if|if
 condition|(
 operator|(
+name|nwrite
+operator|=
+operator|(
 name|host
 condition|?
 name|rmtwrite
@@ -2442,6 +2491,7 @@ argument_list|,
 name|writesize
 argument_list|)
 operator|)
+operator|)
 operator|!=
 name|writesize
 condition|)
@@ -2451,6 +2501,9 @@ directive|else
 else|RDUMP
 if|if
 condition|(
+operator|(
+name|nwrite
+operator|=
 name|write
 argument_list|(
 name|tapefd
@@ -2462,6 +2515,7 @@ index|]
 argument_list|,
 name|writesize
 argument_list|)
+operator|)
 operator|!=
 name|writesize
 condition|)
@@ -2469,6 +2523,28 @@ block|{
 endif|#
 directive|endif
 endif|RDUMP
+if|if
+condition|(
+name|nwrite
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"write"
+argument_list|)
+expr_stmt|;
+else|else
+name|msg
+argument_list|(
+literal|"short write: got %d instead of %d\n"
+argument_list|,
+name|nwrite
+argument_list|,
+name|writesize
+argument_list|)
+expr_stmt|;
 name|kill
 argument_list|(
 name|master
