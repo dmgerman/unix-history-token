@@ -2020,7 +2020,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|64
+name|tlb_slot_count
 condition|;
 name|i
 operator|++

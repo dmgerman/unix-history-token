@@ -321,6 +321,13 @@ name|kernel_tlbs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tlb_slot_count
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|tlb_context_demap
@@ -365,6 +372,15 @@ name|start
 parameter_list|,
 name|vm_offset_t
 name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tlb_dump
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
