@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.35	83/01/13	*/
+comment|/*	uipc_socket2.c	4.36	83/05/01	*/
 end_comment
 
 begin_include
@@ -197,6 +197,11 @@ operator|&
 name|head
 operator|->
 name|so_timeo
+argument_list|)
+expr_stmt|;
+name|sorwakeup
+argument_list|(
+name|head
 argument_list|)
 expr_stmt|;
 block|}
