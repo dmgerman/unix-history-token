@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.11 82/03/15 */
+comment|/* in.h 4.12 82/06/05 */
 end_comment
 
 begin_comment
@@ -368,6 +368,113 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Macros for dealing with Class A/B/C network  * numbers.  High 3 bits of uppermost byte indicates  * how to interpret the remainder of the 32-bit  * Internet address.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+name|||
+name|pdp11
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA_NET
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* 8 bits of net # */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA_LNA
+value|0xffffff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB_NET
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* 16 bits of net # */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSB_LNA
+value|0xffff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSC
+value|0x0000000c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSC_NET
+value|0x00ffffff
+end_define
+
+begin_comment
+comment|/* 24 bits of net # */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSC_LNA
+value|0xff000000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|inetpart
+parameter_list|(
+name|in
+parameter_list|)
+define|\
+value|((((in).s_addr&IN_CLASSC)==IN_CLASSC)?((in).s_addr&IN_CLASSC_NET):\ 	 ((((in).s_addr&IN_CLASSB)==IN_CLASSB)?((in).s_addr&IN_CLASSB_NET):\ 	  ((in).s_addr&IN_CLASSA_NET)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|lnapart
+parameter_list|(
+name|in
+parameter_list|)
+define|\
+value|((((in).s_addr&IN_CLASSC)==IN_CLASSC)?((in).s_addr&IN_CLASSC_LNA) : \ 	 ((((in).s_addr&IN_CLASSB)==IN_CLASSB)?((in).s_addr&IN_CLASSB_LNA) : \ 	  ((in).s_addr&IN_CLASSA_LNA)))
+end_define
 
 begin_define
 define|#
