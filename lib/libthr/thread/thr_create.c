@@ -543,7 +543,7 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create the thread. 	 * 	 */
+comment|/* 	 * Create the thread. 	 */
 if|if
 condition|(
 name|pattr
@@ -552,25 +552,12 @@ name|suspend
 operator|==
 name|PTHREAD_CREATE_SUSPENDED
 condition|)
-block|{
 name|new_thread
 operator|->
 name|flags
 operator||=
 name|PTHREAD_FLAGS_SUSPENDED
 expr_stmt|;
-name|flags
-operator|=
-name|THR_SUSPENDED
-expr_stmt|;
-block|}
-else|else
-block|{
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|ret
 operator|=
 name|thr_create
@@ -635,7 +622,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Run the current thread's start routine with argument: */
+if|if
+condition|(
+operator|(
+name|curthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_SUSPENDED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|_thread_suspend
+argument_list|(
+name|curthread
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|pthread_exit
 argument_list|(
 name|curthread
