@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Proteon proNET-10 and proNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right. Thus the name is "vv".  *  * This driver is compatible with the proNET 10 meagbit and  * 80 megabit token ring interfaces (models p1000 and p1080).  *  * TRAILERS: You must turn off trailers via ifconfig if you want to share  * a ring with software using the following protocol types:  *  3: Address Resolution Protocol  *  4: HDLC (old Proteon drivers)  *  5: VAX Debugging Protocol (never used)  * This is because the protocol type values chosen for trailers  * conflict with these protocols. It's too late to change either now.  *  * HARDWARE COMPATABILITY: This driver requires that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. The old warning  * about use without Wire Centers applies only to CTL (p1002) cards with  * serial<= 057, which have not received ECO 176-743, which was  * implemented in March, 1982. Most such CTLs have received this ECO,  * but they are only compatible with the old HSBUs (<=039) anyways.  */
+comment|/*  * Proteon proNET-10 and proNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right. Thus the name is "vv".  *  * This driver is compatible with the proNET 10 meagbit and  * 80 megabit token ring interfaces (models p1000 and p1080).  * A unit may be marked as 80 megabit using "flags 1" in the  * config file.  *  * TRAILERS: You must turn off trailers via ifconfig if you want to share  * a ring with software using the following protocol types:  *  3: Address Resolution Protocol  *  4: HDLC (old Proteon drivers)  *  5: VAX Debugging Protocol (never used)  * This is because the protocol type values chosen for trailers  * conflict with these protocols. It's too late to change either now.  *  * HARDWARE COMPATABILITY: This driver prefers that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. They can be supported  * by adding "| UBA_NEED16" to the vs_ifuba.ifu_flags initialization  * in vvattach().  *  * The old warning about use without Wire Centers applies only to CTL  * (p1002) cards with serial<= 057, which have not received ECO 176-743,  * which was implemented in March, 1982. Most such CTLs have received  * this ECO.  */
 end_comment
 
 begin_include
@@ -169,14 +169,6 @@ include|#
 directive|include
 file|"../vaxuba/ubavar.h"
 end_include
-
-begin_comment
-comment|/*  * 80 megabit configuration  * Uncomment the next line if you are using the 80 megabit system. The  * only change is the disposition of packets with parity/link_data_error  * indication.  */
-end_comment
-
-begin_comment
-comment|/* #define PRONET80 */
-end_comment
 
 begin_comment
 comment|/*  *    maximum transmission unit definition --  *        you can set VVMTU at anything from 576 to 2024.  *        1536 is a popular "large" value, because it is a multiple  *	  of 512, which the trailer scheme likes.  *        The absolute maximum size is 2024, which is enforced.  */
@@ -444,6 +436,10 @@ name|short
 name|vs_oactive
 decl_stmt|;
 comment|/* is output active */
+name|short
+name|vs_is80
+decl_stmt|;
+comment|/* is 80 megabit version */
 name|short
 name|vs_olen
 decl_stmt|;
@@ -773,6 +769,22 @@ name|UBA_CANTWAIT
 operator||
 name|UBA_NEEDBDP
 expr_stmt|;
+comment|/* use flag to determine if this is proNET-80 */
+name|vs
+operator|->
+name|vs_is80
+operator|=
+call|(
+name|short
+call|)
+argument_list|(
+name|ui
+operator|->
+name|ui_flags
+operator|&
+literal|01
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1052,7 +1064,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"vv%d: host %d\n"
+literal|"vv%d: host %u\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1908,6 +1920,13 @@ block|}
 name|successes
 operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+name|failures
+operator|++
+expr_stmt|;
+block|}
 name|v
 operator|->
 name|vh_type
@@ -1915,7 +1934,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* clear to check again */
-block|}
 block|}
 if|if
 condition|(
@@ -2364,20 +2382,6 @@ name|VV_INR
 operator||
 name|VV_ENB
 expr_stmt|;
-name|vs
-operator|->
-name|vs_if
-operator|.
-name|if_timer
-operator|=
-name|VVTIMEOUT
-expr_stmt|;
-name|vs
-operator|->
-name|vs_oactive
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_block
 
@@ -2789,7 +2793,7 @@ index|]
 operator|->
 name|ui_addr
 expr_stmt|;
-comment|/* 	 * Purge BDP; drop if input error indicated. 	 */
+comment|/* 	 * Purge BDP 	 */
 if|if
 condition|(
 name|vs
@@ -2878,15 +2882,18 @@ operator|->
 name|vs_parity
 operator|++
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PRONET80
 comment|/* 		 * only on 10 megabit proNET is VV_LDE an end-to-end parity 		 * bit. On 80 megabit, it returns to the intended use of 		 * node-to-node parity. End-to-end parity errors on 80 megabit 		 * give VV_BDF. 		 */
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_is80
+operator|==
+literal|0
+condition|)
 goto|goto
 name|dropit
 goto|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Get packet length from residual word count 	 * 	 * Compute header offset if trailer protocol 	 * 	 * Pull packet off interface.  Off is nonzero if packet 	 * has trailing header; if_rubaget will then force this header 	 * information to be at the front.  The vh_info field 	 * carries the offset to the trailer data in trailer 	 * format packets. 	 */
 name|vv
@@ -3096,6 +3103,8 @@ name|vv
 operator|->
 name|vh_type
 operator|=
+name|ntohs
+argument_list|(
 operator|*
 name|vvdataaddr
 argument_list|(
@@ -3106,9 +3115,12 @@ argument_list|,
 name|u_short
 operator|*
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|resid
 operator|=
+name|ntohs
+argument_list|(
 operator|*
 operator|(
 name|vvdataaddr
@@ -3123,6 +3135,7 @@ name|u_short
 operator|*
 argument_list|)
 operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3864,7 +3877,10 @@ name|u_short
 operator|*
 argument_list|)
 operator|=
+name|htons
+argument_list|(
 name|RING_IP
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(
@@ -3879,9 +3895,12 @@ operator|+
 literal|1
 operator|)
 operator|=
+name|htons
+argument_list|(
 name|m
 operator|->
 name|m_len
+argument_list|)
 expr_stmt|;
 goto|goto
 name|gottrailertype
@@ -4092,7 +4111,10 @@ name|vv
 operator|->
 name|vh_info
 operator|=
+name|htons
+argument_list|(
 name|off
+argument_list|)
 expr_stmt|;
 name|vvtracehdr
 argument_list|(
@@ -4283,6 +4305,23 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Did self-test succeed? 		 */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|ENETDOWN
+expr_stmt|;
 comment|/*                  * Attempt to check agreement of protocol address                  * and board address.                  */
 switch|switch
 condition|(
@@ -4442,6 +4481,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
+endif|NVV
 end_endif
 
 end_unit
