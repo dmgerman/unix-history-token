@@ -766,9 +766,6 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|setdelayed
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
