@@ -279,21 +279,17 @@ name|cap
 operator|>=
 literal|50
 condition|)
-block|{
 name|state
 operator|=
 literal|0
 expr_stmt|;
 comment|/* high */
-block|}
 else|else
-block|{
 name|state
 operator|=
 literal|1
 expr_stmt|;
 comment|/* low */
-block|}
 block|}
 if|if
 condition|(
@@ -303,13 +299,11 @@ name|state
 operator|&
 name|ACPI_BATT_STAT_CRITICAL
 condition|)
-block|{
 name|state
 operator|=
 literal|2
 expr_stmt|;
 comment|/* critical */
-block|}
 if|if
 condition|(
 name|battp
@@ -318,13 +312,11 @@ name|state
 operator|&
 name|ACPI_BATT_STAT_CHARGING
 condition|)
-block|{
 name|state
 operator|=
 literal|3
 expr_stmt|;
 comment|/* charging */
-block|}
 return|return
 operator|(
 name|state
@@ -375,19 +367,15 @@ name|state
 operator|&
 name|ACPI_BATT_STAT_CRITICAL
 condition|)
-block|{
 name|flags
 operator||=
 name|APM_BATT_CRITICAL
 expr_stmt|;
-block|}
 else|else
-block|{
 name|flags
 operator||=
 name|APM_BATT_LOW
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -397,12 +385,10 @@ name|state
 operator|&
 name|ACPI_BATT_STAT_CHARGING
 condition|)
-block|{
 name|flags
 operator||=
 name|APM_BATT_CHARGING
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|battp
@@ -411,12 +397,10 @@ name|state
 operator|==
 name|ACPI_BATT_STAT_NOT_PRESENT
 condition|)
-block|{
 name|flags
 operator|=
 name|APM_BATT_NOT_PRESENT
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|flags
@@ -482,7 +466,6 @@ operator|&
 name|acline
 argument_list|)
 condition|)
-block|{
 name|aip
 operator|->
 name|ai_acline
@@ -490,9 +473,7 @@ operator|=
 literal|0xff
 expr_stmt|;
 comment|/* unknown */
-block|}
 else|else
-block|{
 name|aip
 operator|->
 name|ai_acline
@@ -500,7 +481,6 @@ operator|=
 name|acline
 expr_stmt|;
 comment|/* on/off */
-block|}
 if|if
 condition|(
 name|acpi_battery_get_battinfo
@@ -656,16 +636,13 @@ name|ap_device
 operator|==
 name|PMDV_ALLDEV
 condition|)
-block|{
 name|batt_unit
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 comment|/* all units */
-block|}
 else|else
-block|{
 name|batt_unit
 operator|=
 name|app
@@ -674,7 +651,6 @@ name|ap_device
 operator|-
 name|PMDV_BATT0
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|acpi_battery_get_battinfo
@@ -685,13 +661,11 @@ operator|&
 name|batt
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 name|app
 operator|->
 name|ap_batt_stat
@@ -750,7 +724,6 @@ operator|&
 name|acline
 argument_list|)
 condition|)
-block|{
 name|app
 operator|->
 name|ap_acline
@@ -758,9 +731,7 @@ operator|=
 literal|0xff
 expr_stmt|;
 comment|/* unknown */
-block|}
 else|else
-block|{
 name|app
 operator|->
 name|ap_acline
@@ -768,7 +739,6 @@ operator|=
 name|acline
 expr_stmt|;
 comment|/* on/off */
-block|}
 return|return
 operator|(
 literal|0
@@ -883,13 +853,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|cmd
@@ -900,12 +868,13 @@ name|APMIO_SUSPEND
 case|:
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -938,12 +907,13 @@ name|APMIO_STANDBY
 case|:
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1083,12 +1053,13 @@ name|APMIO_ENABLE
 case|:
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1107,12 +1078,13 @@ name|APMIO_DISABLE
 case|:
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1139,12 +1111,13 @@ name|APMIO_DISPLAY
 case|:
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1157,12 +1130,13 @@ name|APMIO_BIOS
 case|:
 if|if
 condition|(
-operator|!
 operator|(
 name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1307,13 +1281,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* 	 * XXX: Prevent the PnP BIOS code from interfering with 	 * our own scan of ISA devices. 	 */
 name|PnPBIOStable
 operator|=

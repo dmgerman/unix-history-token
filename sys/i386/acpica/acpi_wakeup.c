@@ -545,13 +545,11 @@ name|acpi_wakeaddr
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|AcpiSetFirmwareWakingVector
 argument_list|(
 name|sc
@@ -666,7 +664,6 @@ if|if
 condition|(
 name|oldphys
 condition|)
-block|{
 name|opage
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -674,7 +671,6 @@ argument_list|(
 name|oldphys
 argument_list|)
 expr_stmt|;
-block|}
 name|page
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -895,11 +891,9 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 name|acpi_printcpu
 argument_list|()
 expr_stmt|;
-block|}
 name|ACPI_FLUSH_CPU_CACHE
 argument_list|()
 expr_stmt|;
@@ -913,15 +907,12 @@ name|sc
 operator|->
 name|acpi_s4bios
 condition|)
-block|{
 name|status
 operator|=
 name|AcpiEnterSleepStateS4Bios
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|status
 operator|=
 name|AcpiEnterSleepState
@@ -929,7 +920,6 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -1159,7 +1149,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acpi_alloc_wakeup_handler: unable to create wake tag\n"
+literal|"acpi_alloc_wakeup_handler: can't create wake tag\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1187,7 +1177,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acpi_alloc_wakeup_handler: unable to allocate wake memory\n"
+literal|"acpi_alloc_wakeup_handler: can't alloc wake memory\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1315,9 +1305,7 @@ name|acpi_wakeaddr
 operator|==
 literal|0
 condition|)
-block|{
 return|return;
-block|}
 name|sc
 operator|->
 name|acpi_waketag
