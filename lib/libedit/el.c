@@ -19,13 +19,26 @@ name|SCCSID
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)el.c	8.2 (Berkeley) 1/3/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)el.c	8.2 (Berkeley) 1/3/94"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -250,7 +269,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-extern|extern errno;
 operator|(
 name|void
 operator|)
@@ -1068,30 +1086,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fname
-operator|=
-operator|&
-name|elpath
-index|[
-literal|1
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fp
-operator|=
-name|fopen
-argument_list|(
-name|fname
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
 if|if
 condition|(
 name|issetugid
@@ -1137,7 +1131,6 @@ name|fname
 operator|=
 name|path
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
