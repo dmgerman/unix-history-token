@@ -6406,7 +6406,7 @@ operator|=
 name|BANDLIM_UNLIMITED
 expr_stmt|;
 goto|goto
-name|dropwithreset
+name|drop
 goto|;
 block|}
 comment|/* 	 * If the ACK bit is off:  if in SYN-RECEIVED state or SENDSYN 	 * flag is on (half-synchronized state), then queue data for 	 * later processing; else drop segment and return. 	 */
