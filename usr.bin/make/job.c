@@ -91,7 +91,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -103,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utime.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -128,6 +128,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utime.h>
 end_include
 
 begin_include
@@ -3757,7 +3763,10 @@ name|lseek
 argument_list|(
 name|streamID
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -4401,6 +4410,9 @@ name|lseek
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 name|SEEK_SET
@@ -6168,19 +6180,6 @@ name|Job
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|job
-operator|==
-name|NULL
-condition|)
-block|{
-name|Punt
-argument_list|(
-literal|"JobStart out of memory"
-argument_list|)
-expr_stmt|;
-block|}
 name|flags
 operator||=
 name|JOB_FIRST
@@ -7515,7 +7514,7 @@ name|JOB
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"JobDoOutput(piperead)"
 argument_list|)

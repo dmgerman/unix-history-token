@@ -1068,7 +1068,7 @@ literal|'E'
 case|:
 name|p
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1076,16 +1076,6 @@ name|optarg
 argument_list|)
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|p
-condition|)
-name|Punt
-argument_list|(
-literal|"make: cannot allocate memory."
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2002,18 +1992,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"make: uname"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"uname"
 argument_list|)
 expr_stmt|;
-block|}
 name|machine
 operator|=
 name|utsname
@@ -3113,7 +3098,7 @@ condition|)
 block|{
 name|p1
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -3130,16 +3115,6 @@ operator|+
 literal|1
 operator|+
 literal|3
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|p1
-condition|)
-name|Punt
-argument_list|(
-literal|"make: cannot allocate memory."
 argument_list|)
 expr_stmt|;
 comment|/* This sprintf is safe, because of the malloc above */
