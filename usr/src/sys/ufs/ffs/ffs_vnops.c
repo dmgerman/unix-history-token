@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.23	82/04/19	*/
-end_comment
-
-begin_comment
-comment|/* merged into kernel:	@(#)sys3.c 2.2 4/8/82 */
+comment|/*	ffs_vnops.c	4.24	82/06/04	*/
 end_comment
 
 begin_ifdef
@@ -2227,7 +2223,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First copy from inode table 	 */
+comment|/* 	 * Copy from inode table 	 */
 name|ds
 operator|.
 name|st_dev
@@ -2318,6 +2314,16 @@ operator|=
 name|ip
 operator|->
 name|i_ctime
+expr_stmt|;
+name|ds
+operator|.
+name|st_blksize
+operator|=
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_bsize
 expr_stmt|;
 if|if
 condition|(
