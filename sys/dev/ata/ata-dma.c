@@ -417,7 +417,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"DMA limitted to UDMA33, non-ATA66 compliant cable\n"
+literal|"DMA limited to UDMA33, non-ATA66 compliant cable\n"
 argument_list|)
 expr_stmt|;
 name|udmamode

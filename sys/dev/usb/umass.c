@@ -7930,7 +7930,7 @@ modifier|*
 name|devq
 decl_stmt|;
 comment|/* Per device Queue */
-comment|/* A HBA is attached to the CAM layer. 	 * 	 * The CAM layer will then after a while start probing for 	 * devices on the bus. The number of SIMs is limitted to one. 	 */
+comment|/* A HBA is attached to the CAM layer. 	 * 	 * The CAM layer will then after a while start probing for 	 * devices on the bus. The number of SIMs is limited to one. 	 */
 name|devq
 operator|=
 name|cam_simq_alloc
