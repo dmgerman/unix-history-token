@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -2371,7 +2371,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Usage: /etc/sendmail [flags] addr..."
+literal|"Usage: /usr/lib/sendmail [flags] addr..."
 argument_list|)
 expr_stmt|;
 name|finis
