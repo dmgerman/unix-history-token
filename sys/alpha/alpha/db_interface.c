@@ -882,14 +882,6 @@ name|db_nofault
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_exit
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|longjmp
 argument_list|(
 operator|*
