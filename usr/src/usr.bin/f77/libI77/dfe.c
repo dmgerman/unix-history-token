@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dfe[] = "@(#)dfe.c	1.1";  *  * direct formatted external i/o  */
+comment|/* char id_dfe[] = "@(#)dfe.c	1.2";  *  * direct formatted external i/o  */
 end_comment
 
 begin_include
@@ -157,7 +157,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 argument|rdfe
 argument_list|)
@@ -264,7 +264,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|100
+argument|F_ERFMT
 argument_list|,
 argument|wdfe
 argument_list|)
@@ -407,7 +407,7 @@ name|err
 argument_list|(
 name|errflag
 argument_list|,
-literal|101
+name|F_ERUNIT
 argument_list|,
 name|dfe
 argument_list|)
@@ -480,7 +480,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|102
+argument|F_ERNOFIO
 argument_list|,
 argument|dfe
 argument_list|)
@@ -500,7 +500,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|104
+argument|F_ERNODIO
 argument_list|,
 argument|dfe
 argument_list|)
@@ -670,7 +670,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|110
+argument|F_EREREC
 argument_list|,
 argument|wdfe
 argument_list|)
@@ -724,7 +724,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|107
+name|F_ERBREC
 operator|)
 return|;
 block|}
@@ -752,7 +752,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|107
+name|F_ERBREC
 operator|)
 return|;
 name|n
@@ -842,7 +842,7 @@ name|err
 argument_list|(
 argument|errflag
 argument_list|,
-literal|110
+argument|F_EREREC
 argument_list|,
 argument|dfe
 argument_list|)
@@ -874,7 +874,7 @@ comment|/* /*y_rev() /*{	/*what about work done?*/
 end_comment
 
 begin_comment
-comment|/*	if(curunit->url==1) return(0); /*	while(recpos<curunit->url) (*putn)(' '); /*	recpos=0; /*	return(0); /*} /* /*y_err() /*{ /*	err(errflag, 110, dfe); /*} */
+comment|/*	if(curunit->url==1) return(0); /*	while(recpos<curunit->url) (*putn)(' '); /*	recpos=0; /*	return(0); /*} /* /*y_err() /*{ /*	err(errflag, F_EREREC, dfe); /*} */
 end_comment
 
 begin_macro
