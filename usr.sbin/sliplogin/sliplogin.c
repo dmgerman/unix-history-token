@@ -856,7 +856,7 @@ argument_list|)
 argument_list|,
 literal|"%s.%s"
 argument_list|,
-name|_PATH_LOGIN
+name|_PATH_SLIP_LOGIN
 argument_list|,
 name|name
 argument_list|)
@@ -882,7 +882,7 @@ name|strncpy
 argument_list|(
 name|loginfile
 argument_list|,
-name|_PATH_LOGIN
+name|_PATH_SLIP_LOGIN
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -924,7 +924,7 @@ literal|"access denied for %s - no %s\n"
 argument_list|,
 name|name
 argument_list|,
-name|_PATH_LOGIN
+name|_PATH_SLIP_LOGIN
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1541,7 +1541,7 @@ argument_list|)
 argument_list|,
 literal|"%s.%s"
 argument_list|,
-name|_PATH_LOGOUT
+name|_PATH_SLIP_LOGOUT
 argument_list|,
 name|loginname
 argument_list|)
@@ -1567,7 +1567,7 @@ name|strncpy
 argument_list|(
 name|logoutfile
 argument_list|,
-name|_PATH_LOGOUT
+name|_PATH_SLIP_LOGOUT
 argument_list|,
 sizeof|sizeof
 argument_list|(
