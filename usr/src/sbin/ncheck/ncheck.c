@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.8 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,7 +275,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 name|dev_bsize
 init|=
 literal|1
@@ -303,10 +303,38 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|char
+modifier|*
+name|malloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|struct
 name|htab
 modifier|*
 name|lookup
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|direct
+modifier|*
+name|nreaddir
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -327,9 +355,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|i
-expr_stmt|;
 name|long
 name|n
 decl_stmt|;
@@ -438,6 +463,9 @@ operator|++
 expr_stmt|;
 continue|continue;
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -496,9 +524,6 @@ name|j
 decl_stmt|,
 name|c
 decl_stmt|;
-name|int
-name|nfiles
-decl_stmt|;
 name|fi
 operator|=
 name|open
@@ -515,6 +540,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -533,6 +561,9 @@ name|nhent
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s:\n"
@@ -554,6 +585,9 @@ operator|)
 operator|&
 name|sblock
 argument_list|,
+operator|(
+name|long
+operator|)
 name|SBSIZE
 argument_list|)
 expr_stmt|;
@@ -566,6 +600,9 @@ operator|!=
 name|FS_MAGIC
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s: not a file system\n"
@@ -619,6 +656,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|hsize
 operator|*
 sizeof|sizeof
@@ -630,15 +670,16 @@ argument_list|)
 expr_stmt|;
 name|strngtab
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
+argument_list|(
+call|(
+name|unsigned
+call|)
 argument_list|(
 literal|30
 operator|*
 name|hsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -652,6 +693,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"not enough memory to allocate tables\n"
@@ -1027,6 +1071,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fi
@@ -1267,6 +1314,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|lookup
 argument_list|(
 name|ino
@@ -1340,7 +1390,7 @@ for|for
 control|(
 name|dp
 operator|=
-name|readdir
+name|nreaddir
 argument_list|(
 operator|&
 name|dirp
@@ -1352,7 +1402,7 @@ name|NULL
 condition|;
 name|dp
 operator|=
-name|readdir
+name|nreaddir
 argument_list|(
 operator|&
 name|dirp
@@ -1421,6 +1471,9 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|hp
@@ -1497,7 +1550,7 @@ for|for
 control|(
 name|dp
 operator|=
-name|readdir
+name|nreaddir
 argument_list|(
 operator|&
 name|dirp
@@ -1509,7 +1562,7 @@ name|NULL
 condition|;
 name|dp
 operator|=
-name|readdir
+name|nreaddir
 argument_list|(
 operator|&
 name|dirp
@@ -1589,6 +1642,9 @@ if|if
 condition|(
 name|mflg
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"mode %-6o uid %-5d gid %-5d ino "
@@ -1617,9 +1673,12 @@ argument_list|)
 expr_stmt|;
 name|pr
 label|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%-5u\t"
+literal|"%-5lu\t"
 argument_list|,
 name|dp
 operator|->
@@ -1633,6 +1692,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"/%s"
@@ -1653,11 +1715,17 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"/."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -1675,7 +1743,7 @@ begin_function
 name|struct
 name|direct
 modifier|*
-name|readdir
+name|nreaddir
 parameter_list|(
 name|dirp
 parameter_list|)
@@ -1960,6 +2028,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"???"
@@ -1974,6 +2045,9 @@ operator|>
 literal|10
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"..."
@@ -1991,6 +2065,9 @@ operator|++
 name|lev
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"/%s"
@@ -2092,11 +2169,14 @@ operator|>=
 name|hsize
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ncheck: hsize of %d is too small\n"
+literal|"ncheck: hsize of %ld is too small\n"
 argument_list|,
 name|hsize
 argument_list|)
@@ -2128,7 +2208,7 @@ argument|bno
 argument_list|,
 argument|buf
 argument_list|,
-argument|cnt
+argument|lcount
 argument_list|)
 end_macro
 
@@ -2139,6 +2219,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|char
 modifier|*
 name|buf
@@ -2146,23 +2227,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|cnt
+name|long
+name|lcount
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|,
+name|cnt
+init|=
+name|lcount
+decl_stmt|;
+specifier|register
+name|off_t
+name|off
+init|=
+name|bno
+operator|*
+name|dev_bsize
+decl_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fi
 argument_list|,
-name|bno
-operator|*
-name|dev_bsize
+name|off
 argument_list|,
 literal|0
 argument_list|)
@@ -2181,15 +2276,50 @@ operator|!=
 name|cnt
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ncheck: read error %d\n"
+literal|"ncheck: read error %ld\n"
 argument_list|,
 name|bno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|%
+name|dev_bsize
+condition|)
+block|{
+comment|/* THIS INDICATES A SERIOUS BUG */
+comment|/* bzero is probably not correct, but will do */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ncheck: bread: cnt %d not multiple of %d\n"
+argument_list|,
+name|cnt
+argument_list|,
+name|dev_bsize
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|i
@@ -2201,15 +2331,68 @@ operator|<
 name|cnt
 condition|;
 name|i
-operator|++
+operator|+=
+name|dev_bsize
 control|)
-name|buf
-index|[
-name|i
-index|]
-operator|=
+block|{
+operator|(
+name|void
+operator|)
+name|lseek
+argument_list|(
+name|fi
+argument_list|,
+name|off
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|fi
+argument_list|,
+name|buf
+argument_list|,
+name|dev_bsize
+argument_list|)
+operator|!=
+name|dev_bsize
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ncheck: re-read error %ld\n"
+argument_list|,
+name|bno
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+name|dev_bsize
+argument_list|)
+expr_stmt|;
+block|}
+name|off
+operator|+=
+name|dev_bsize
+expr_stmt|;
+name|buf
+operator|+=
+name|dev_bsize
+expr_stmt|;
+name|bno
+operator|++
+expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -2279,11 +2462,14 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ncheck: bn %d negative\n"
+literal|"ncheck: bn %ld negative\n"
 argument_list|,
 name|bn
 argument_list|)
@@ -2364,9 +2550,12 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"ncheck: bn %ld ovf, ino %u\n"
+literal|"ncheck: bn %ld ovf, ino %lu\n"
 argument_list|,
 name|bn
 argument_list|,
@@ -2401,9 +2590,12 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"ncheck: bn %ld void1, ino %u\n"
+literal|"ncheck: bn %ld void1, ino %lu\n"
 argument_list|,
 name|bn
 argument_list|,
@@ -2516,9 +2708,12 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"ncheck: bn %ld void2, ino %u\n"
+literal|"ncheck: bn %ld void2, ino %lu\n"
 argument_list|,
 name|bn
 argument_list|,
