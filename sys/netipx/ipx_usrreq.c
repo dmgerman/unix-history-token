@@ -440,6 +440,8 @@ block|,
 name|soreceive
 block|,
 name|sopoll
+block|,
+name|pru_sosetlabel_null
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -489,6 +491,8 @@ block|,
 name|soreceive
 block|,
 name|sopoll
+block|,
+name|pru_sosetlabel_null
 block|}
 decl_stmt|;
 end_decl_stmt

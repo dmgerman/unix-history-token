@@ -538,7 +538,10 @@ name|soreceive
 block|,
 comment|/* pru_soreceive */
 name|sopoll
+block|,
 comment|/* pru_sopoll */
+name|pru_sosetlabel_null
+comment|/* pru_sosetlabel */
 block|}
 decl_stmt|;
 end_decl_stmt

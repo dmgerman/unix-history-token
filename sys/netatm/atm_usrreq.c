@@ -246,6 +246,17 @@ comment|/* pru_shutdown */
 name|atm_proto_notsupp3
 block|,
 comment|/* pru_sockaddr */
+name|NULL
+block|,
+comment|/* pru_sosend */
+name|NULL
+block|,
+comment|/* pru_soreceive */
+name|NULL
+block|,
+comment|/* pru_sooll */
+name|pru_sosetlabel_null
+comment|/* pru_sosetlabel */
 block|}
 decl_stmt|;
 end_decl_stmt

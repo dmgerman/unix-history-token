@@ -342,6 +342,12 @@ name|inp_socket
 decl_stmt|;
 comment|/* back pointer to socket */
 comment|/* list for this PCB's local port */
+name|struct
+name|label
+modifier|*
+name|inp_label
+decl_stmt|;
+comment|/* MAC label */
 name|int
 name|inp_flags
 decl_stmt|;
@@ -1651,6 +1657,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|in_pcbsetsolabel
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|in_setpeeraddr
 parameter_list|(
@@ -1713,6 +1731,18 @@ name|struct
 name|in_addr
 modifier|*
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in_pcbsosetlabel
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
 parameter_list|)
 function_decl|;
 end_function_decl

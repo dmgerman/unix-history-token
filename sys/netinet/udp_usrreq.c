@@ -2161,11 +2161,9 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_socket_deliver
+name|mac_check_inpcb_deliver
 argument_list|(
 name|last
-operator|->
-name|inp_socket
 argument_list|,
 name|n
 argument_list|)
@@ -5583,6 +5581,8 @@ block|,
 name|soreceive
 block|,
 name|sopoll
+block|,
+name|in_pcbsosetlabel
 block|}
 decl_stmt|;
 end_decl_stmt

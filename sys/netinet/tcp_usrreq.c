@@ -3288,6 +3288,8 @@ block|,
 name|soreceive
 block|,
 name|sopoll
+block|,
+name|in_pcbsosetlabel
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3343,6 +3345,8 @@ block|,
 name|soreceive
 block|,
 name|sopoll
+block|,
+name|in_pcbsosetlabel
 block|}
 decl_stmt|;
 end_decl_stmt

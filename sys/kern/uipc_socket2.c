@@ -4455,6 +4455,22 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * For protocol types that don't keep cached copies of labels in their  * pcbs, provide a null sosetlabel that does a NOOP.  */
+end_comment
+
+begin_function
+name|void
+name|pru_sosetlabel_null
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+block|{  }
+end_function
+
+begin_comment
 comment|/*  * Make a copy of a sockaddr in a malloced buffer of type M_SONAME.  */
 end_comment
 
