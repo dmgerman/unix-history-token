@@ -2672,8 +2672,6 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
-operator||
-name|CTLFLAG_PRISON
 argument_list|,
 operator|&
 name|sc
@@ -2710,8 +2708,6 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
-operator||
-name|CTLFLAG_PRISON
 argument_list|,
 operator|&
 name|sc
