@@ -106,6 +106,8 @@ begin_decl_stmt
 specifier|static
 name|long
 name|devstat_generation
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,17 +1209,6 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|devstat_num_devs
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* 	 * XXX devstat_generation should really be "volatile" but that 	 * XXX freaks out the sysctl macro below.  The places where we 	 * XXX change it and inspect it are bracketed in the mutex which 	 * XXX guarantees us proper write barriers.  I don't belive the 	 * XXX compiler is allowed to optimize mygen away across calls 	 * XXX to other functions, so the following is belived to be safe. 	 */
 name|mygen
 operator|=
@@ -1238,6 +1229,17 @@ name|mygen
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|devstat_num_devs
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|error
