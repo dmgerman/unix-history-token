@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<skey.h>
+file|"skey.h"
 end_include
 
 begin_decl_stmt

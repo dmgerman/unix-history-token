@@ -85,7 +85,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Password required for %s."
+literal|"%s required for %s."
+argument_list|,
+name|pwok
+condition|?
+literal|"Password"
+else|:
+literal|"S/Key password"
 argument_list|,
 name|name
 argument_list|)

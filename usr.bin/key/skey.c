@@ -56,12 +56,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"libskey/md4.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<skey.h>
 end_include
 

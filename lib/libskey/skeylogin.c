@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   Login code for S/KEY Authentication.  S/KEY is a trademark  *   of Bellcore.  *  *   Mink is the former name of the S/KEY authentication system.  *   Many references for mink  may still be found in this program.   */
+comment|/*   Login code for S/KEY Authentication.  S/KEY is a trademark  *   of Bellcore.  *  *   Mink is the former name of the S/KEY authentication system.  *   Many references for mink  may still be found in this program.  */
 end_comment
 
 begin_include
@@ -8,23 +8,6 @@ include|#
 directive|include
 file|<sys/param.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUOTA
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/quota.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -83,15 +66,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<skey.h>
+file|"skey.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|KEYFILE
-value|"/etc/skeykeys"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_function_decl
 name|char
@@ -392,12 +374,12 @@ name|struct
 name|stat
 name|statbuf
 decl_stmt|;
-comment|/* See if the KEYFILE exists, and create it if not */
+comment|/* See if the _PATH_SKEYFILE exists, and create it if not */
 if|if
 condition|(
 name|stat
 argument_list|(
-name|KEYFILE
+name|_PATH_SKEYFILE
 argument_list|,
 operator|&
 name|statbuf
@@ -417,7 +399,7 @@ name|keyfile
 operator|=
 name|fopen
 argument_list|(
-name|KEYFILE
+name|_PATH_SKEYFILE
 argument_list|,
 literal|"w+"
 argument_list|)
@@ -427,7 +409,7 @@ name|void
 operator|)
 name|chmod
 argument_list|(
-name|KEYFILE
+name|_PATH_SKEYFILE
 argument_list|,
 literal|0644
 argument_list|)
@@ -442,7 +424,7 @@ name|keyfile
 operator|=
 name|fopen
 argument_list|(
-name|KEYFILE
+name|_PATH_SKEYFILE
 argument_list|,
 literal|"r+"
 argument_list|)

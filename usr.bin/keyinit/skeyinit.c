@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<skey.h>
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<skey.h>
 end_include
 
 begin_decl_stmt
@@ -45,33 +45,6 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|readpass
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|int
-name|skeylookup
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|skey
-operator|*
-name|mp
-operator|,
-name|char
-operator|*
-name|name
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -584,7 +557,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Enter sequence count from 1 to 10000: "
+literal|"Enter sequence count from 1 to 9999: "
 argument_list|)
 expr_stmt|;
 name|fgets
@@ -743,11 +716,6 @@ name|stdin
 argument_list|)
 expr_stmt|;
 name|rip
-argument_list|(
-name|tmp
-argument_list|)
-expr_stmt|;
-name|backspace
 argument_list|(
 name|tmp
 argument_list|)
