@@ -1418,7 +1418,7 @@ expr_stmt|;
 if|if
 condition|(
 name|t1
-operator|>
+operator|>=
 name|s
 condition|)
 block|{
