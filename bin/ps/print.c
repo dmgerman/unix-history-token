@@ -1117,12 +1117,12 @@ literal|'W'
 expr_stmt|;
 break|break;
 case|case
-name|SMTX
+name|SLOCK
 case|:
 operator|*
 name|cp
 operator|=
-literal|'M'
+literal|'L'
 expr_stmt|;
 break|break;
 case|case
@@ -2283,7 +2283,7 @@ end_function
 
 begin_function
 name|void
-name|mtxname
+name|lockname
 parameter_list|(
 name|KINFO
 modifier|*
@@ -2312,7 +2312,7 @@ name|ki_p
 operator|->
 name|ki_kiflag
 operator|&
-name|KI_MTXBLOCK
+name|KI_LOCKBLOCK
 condition|)
 block|{
 if|if
@@ -2321,7 +2321,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_mtxname
+name|ki_lockname
 index|[
 literal|0
 index|]
@@ -2347,7 +2347,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_mtxname
+name|ki_lockname
 argument_list|)
 expr_stmt|;
 else|else
@@ -2593,7 +2593,7 @@ name|ki_p
 operator|->
 name|ki_kiflag
 operator|&
-name|KI_MTXBLOCK
+name|KI_LOCKBLOCK
 condition|)
 block|{
 if|if
@@ -2602,7 +2602,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_mtxname
+name|ki_lockname
 index|[
 literal|0
 index|]
@@ -2627,7 +2627,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_mtxname
+name|ki_lockname
 argument_list|)
 expr_stmt|;
 block|}

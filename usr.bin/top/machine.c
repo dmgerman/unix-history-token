@@ -398,7 +398,7 @@ literal|"ZOMB"
 block|,
 literal|"WAIT"
 block|,
-literal|"MUTEX"
+literal|"LOCK"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -512,7 +512,7 @@ literal|" zombie, "
 block|,
 literal|" waiting, "
 block|,
-literal|" mutex, "
+literal|" lock, "
 block|,
 name|NULL
 block|}
@@ -2391,7 +2391,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SMTX
+name|SLOCK
 case|:
 if|if
 condition|(
@@ -2399,7 +2399,7 @@ name|pp
 operator|->
 name|ki_kiflag
 operator|&
-name|KI_MTXBLOCK
+name|KI_LOCKBLOCK
 condition|)
 block|{
 name|sprintf
@@ -2410,7 +2410,7 @@ literal|"*%.6s"
 argument_list|,
 name|pp
 operator|->
-name|ki_mtxname
+name|ki_lockname
 argument_list|)
 expr_stmt|;
 break|break;
