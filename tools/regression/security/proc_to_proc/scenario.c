@@ -115,7 +115,7 @@ name|sc_cred2
 decl_stmt|;
 comment|/* credentials of p1 and p2 */
 name|int
-name|sc_candebug_errno
+name|sc_canptrace_errno
 decl_stmt|;
 comment|/* desired ptrace failure */
 name|int
@@ -341,7 +341,7 @@ name|scenarios
 index|[]
 init|=
 block|{
-comment|/*	cred1		cred2		debug	sighup	sigsegv	see	sched	name */
+comment|/*	cred1		cred2		ptrace	sighup	sigsegv	see	sched	name */
 block|{
 operator|&
 name|creds
@@ -1964,7 +1964,7 @@ index|[
 name|scenario
 index|]
 operator|.
-name|sc_candebug_errno
+name|sc_canptrace_errno
 expr_stmt|;
 break|break;
 case|case
