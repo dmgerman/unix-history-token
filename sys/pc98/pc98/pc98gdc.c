@@ -2899,7 +2899,7 @@ operator|==
 name|_25L
 operator|)
 condition|?
-name|_24KHZ
+name|gdc_FH
 else|:
 name|_31KHZ
 expr_stmt|;
