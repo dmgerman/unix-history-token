@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.9 %G%"
+literal|"@(#)collect.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3182,6 +3182,8 @@ literal|1
 index|]
 argument_list|,
 name|obuf
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
