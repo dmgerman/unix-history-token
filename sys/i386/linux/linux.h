@@ -1470,21 +1470,6 @@ name|elf_linux_sysvec
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|bsd_to_linux_sigset
-parameter_list|(
-name|sigset_t
-modifier|*
-name|bss
-parameter_list|,
-name|linux_sigset_t
-modifier|*
-name|lss
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Pluggable ioctl handlers  */
 end_comment
