@@ -858,6 +858,32 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+comment|/* 	 * XXX: Make sure we don't create lock order problems. 	 * XXX: We'll grab Giant, but for that to be OK, make sure 	 * XXX: that either Giant is already held OR make sure that 	 * XXX: no other locks are held coming in.  	 * XXX: Revisit once most of the net stuff gets locks added. 	 */
+name|KASSERT
+argument_list|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+operator|||
+name|witness_list
+argument_list|(
+name|CURPROC
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"m_alloc_ref: Giant must be owned or no locks held"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_enter
 argument_list|(
 operator|&
@@ -911,7 +937,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* XXX: We must be	holding 						             it going out. */
 return|return
 operator|(
 literal|0
@@ -1090,7 +1115,6 @@ operator|*
 name|MSIZE
 argument_list|)
 expr_stmt|;
-comment|/* XXX: The letting go of the mmbfree lock here may eventually 	   be moved to only be done for M_TRYWAIT calls to kmem_malloc() */
 name|mtx_exit
 argument_list|(
 operator|&
@@ -1101,6 +1125,32 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+comment|/* 	 * XXX: Make sure we don't create lock order problems. 	 * XXX: We'll grab Giant, but for that to be OK, make sure 	 * XXX: that either Giant is already held OR make sure that 	 * XXX: no other locks are held coming in. 	 * XXX: Revisit once most of the net stuff gets locks added. 	 */
+name|KASSERT
+argument_list|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+operator|||
+name|witness_list
+argument_list|(
+name|CURPROC
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"m_mballoc: Giant must be owned or no locks held"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_enter
 argument_list|(
 operator|&
@@ -1486,6 +1536,32 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+comment|/* 	 * XXX: Make sure we don't create lock order problems. 	 * XXX: We'll grab Giant, but for that to be OK, make sure 	 * XXX: that either Giant is already held OR make sure that 	 * XXX: no other locks are held coming in. 	 * XXX: Revisit once most of the net stuff gets locks added. 	 */
+name|KASSERT
+argument_list|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+operator|||
+name|witness_list
+argument_list|(
+name|CURPROC
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"m_clalloc: Giant must be owned or no locks held"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_enter
 argument_list|(
 operator|&
@@ -1756,6 +1832,25 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+name|KASSERT
+argument_list|(
+name|witness_list
+argument_list|(
+name|CURPROC
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"m_reclaim called with locks held"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|dp
