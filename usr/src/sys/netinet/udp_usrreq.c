@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	6.11	85/04/29	*/
+comment|/*	udp_usrreq.c	6.12	85/05/27	*/
 end_comment
 
 begin_include
@@ -404,13 +404,9 @@ name|ui
 operator|->
 name|ui_len
 operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|len
-argument_list|)
+name|ui
+operator|->
+name|ui_ulen
 expr_stmt|;
 if|if
 condition|(
@@ -482,14 +478,12 @@ block|{
 comment|/* don't send ICMP response for broadcast packet */
 if|if
 condition|(
-name|in_lnaof
+name|in_broadcast
 argument_list|(
 name|ui
 operator|->
 name|ui_dst
 argument_list|)
-operator|==
-name|INADDR_ANY
 condition|)
 goto|goto
 name|bad
@@ -823,10 +817,10 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|m
-operator|=
-name|m_get
+name|MGET
 argument_list|(
+name|m
+argument_list|,
 name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
@@ -1013,13 +1007,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-else|else
-name|ui
-operator|->
-name|ui_sum
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 operator|(
 expr|struct
