@@ -131,7 +131,7 @@ name|km_udata
 decl_stmt|;
 comment|/* For use by the UTS */
 name|int
-name|tm_spare
+name|km_spare
 index|[
 literal|8
 index|]
