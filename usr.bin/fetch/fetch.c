@@ -1888,7 +1888,7 @@ operator|&
 name|xs
 argument_list|)
 expr_stmt|;
-comment|/* Set mtime of local file */
+comment|/* set mtime of local file */
 if|if
 condition|(
 operator|!
@@ -2109,6 +2109,30 @@ argument_list|,
 name|us
 operator|.
 name|size
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure_keep
+goto|;
+block|}
+comment|/*      * If the transfer timed out and we didn't know how much to      * expect, assume the worst (i.e. we didn't get all of it)      */
+if|if
+condition|(
+name|sigalrm
+operator|&&
+name|us
+operator|.
+name|size
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s may be truncated"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 goto|goto
