@@ -2051,11 +2051,6 @@ name|in4
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -2087,9 +2082,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/*NBPFILTER> 0*/
 name|M_PREPEND
 argument_list|(
 name|m
