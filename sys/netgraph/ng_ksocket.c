@@ -376,7 +376,7 @@ block|,
 block|{
 literal|"raw"
 block|,
-name|IPPROTO_IP
+name|IPPROTO_RAW
 block|,
 name|PF_INET
 block|}
