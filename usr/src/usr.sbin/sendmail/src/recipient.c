@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.21	%G%"
+literal|"@(#)recipient.c	3.22	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,7 +445,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	**  Look up this person in the recipient list.  If they 	**  are there already, return, otherwise continue. 	**  If the list is empty, just add it. 	*/
+comment|/* 	**  Look up this person in the recipient list. 	**	If they are there already, return, otherwise continue. 	**	If the list is empty, just add it.  Notice the cute 	**	hack to make from addresses suppress things correctly: 	**	the QDONTSEND bit will be set in the send list. 	**	[Please note: the emphasis is on "hack."] 	*/
 for|for
 control|(
 name|pq
@@ -526,6 +526,14 @@ name|Arpa_Info
 argument_list|,
 literal|"duplicate suppressed"
 argument_list|)
+expr_stmt|;
+name|q
+operator|->
+name|q_flags
+operator||=
+name|a
+operator|->
+name|q_flags
 expr_stmt|;
 return|return;
 block|}
