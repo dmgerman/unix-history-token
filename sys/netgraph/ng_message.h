@@ -157,8 +157,11 @@ comment|/*  == NGM_VERSION */
 name|u_char
 name|spare
 decl_stmt|;
-comment|/* pad to 2 bytes */
+comment|/* pad to 4 bytes */
 name|u_int16_t
+name|spare2
+decl_stmt|;
+name|u_int32_t
 name|arglen
 decl_stmt|;
 comment|/* length of data */
@@ -170,10 +173,6 @@ name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* message status */
-name|u_int32_t
-name|spare2
-decl_stmt|;
-comment|/* pad to 8 bytes */
 name|u_int32_t
 name|token
 decl_stmt|;
@@ -223,18 +222,18 @@ name|NG_GENERIC_NG_MESG_INFO
 parameter_list|(
 name|dtype
 parameter_list|)
-value|{			\ 	  { "version",&ng_parse_uint8_type	},	\ 	  { "spare",&ng_parse_uint8_type	},	\ 	  { "arglen",&ng_parse_uint16_type	},	\ 	  { "cmd",&ng_parse_uint32_type	},	\ 	  { "flags",&ng_parse_hint32_type	},	\ 	  { "spare2",&ng_parse_uint32_type	},	\ 	  { "token",&ng_parse_uint32_type	},	\ 	  { "typecookie",&ng_parse_uint32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL }						\ }
+value|{			\ 	  { "version",&ng_parse_uint8_type	},	\ 	  { "spare",&ng_parse_uint8_type	},	\ 	  { "spare2",&ng_parse_uint16_type	},	\ 	  { "arglen",&ng_parse_uint32_type	},	\ 	  { "cmd",&ng_parse_uint32_type	},	\ 	  { "flags",&ng_parse_hint32_type	},	\ 	  { "token",&ng_parse_uint32_type	},	\ 	  { "typecookie",&ng_parse_uint32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
-comment|/*  * Netgraph message header compatibility field  * Interfaces within the kernel are defined by a different   * value (see NG_ABI_VERSION in netgraph.g)  */
+comment|/*  * Netgraph message header compatibility field  * Interfaces within the kernel are defined by a different   * value (see NG_ABI_VERSION in netgraph.h)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_VERSION
-value|7
+value|8
 end_define
 
 begin_comment
