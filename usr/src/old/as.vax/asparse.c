@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.6 %G%"
+literal|"@(#)asparse.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1211,6 +1211,21 @@ argument|&& ! silent)  		fprintf(sink,
 literal|"Assembler:\n"
 argument|); 	anyerrs++; 	if (silent) return; 	 	fprintf(sink,
 literal|"\"%s\", line %d: "
+argument|, dotsname, lineno); 	fprintf(sink, s, a1, a2,a3,a4,a5); 	fprintf(sink,
+literal|"\n"
+argument|); }
+comment|/*VARARGS1*/
+argument|yywarning(s, a1, a2,a3,a4,a5) 	char	*s; {
+define|#
+directive|define
+name|sink
+value|stdout
+argument|if (anyerrs ==
+literal|0
+argument|&& ! silent)  		fprintf(sink,
+literal|"Assembler:\n"
+argument|); 	if (silent) return; 	 	fprintf(sink,
+literal|"\"%s\", line %d: WARNING: "
 argument|, dotsname, lineno); 	fprintf(sink, s, a1, a2,a3,a4,a5); 	fprintf(sink,
 literal|"\n"
 argument|); }
