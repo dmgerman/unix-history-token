@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.26 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,6 +1307,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* 	 * disallow names consisting only of digits/dots, unless 	 * they end in a dot. 	 */
 if|if
 condition|(
 name|isdigit
@@ -1317,7 +1318,33 @@ literal|0
 index|]
 argument_list|)
 condition|)
+for|for
+control|(
+name|cp
+operator|=
+name|name
+init|;
+condition|;
+operator|++
+name|cp
+control|)
 block|{
+if|if
+condition|(
+operator|!
+operator|*
+name|cp
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+operator|--
+name|cp
+operator|==
+literal|'.'
+condition|)
+break|break;
 name|h_errno
 operator|=
 name|HOST_NOT_FOUND
@@ -1327,6 +1354,22 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|'.'
+condition|)
+break|break;
 block|}
 name|errno
 operator|=
@@ -1410,7 +1453,7 @@ condition|)
 operator|*
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|hp
 operator|=
@@ -1432,7 +1475,7 @@ operator|&&
 operator|*
 name|cp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 operator|*
 name|cp
