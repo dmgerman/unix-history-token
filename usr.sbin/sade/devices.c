@@ -711,6 +711,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"sn"
+block|,
+literal|"SMC/Megahertz ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"ste"
 block|,
 literal|"Sundance ST201 PCI ethernet card"
