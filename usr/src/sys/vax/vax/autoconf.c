@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.35	82/04/11	*/
+comment|/*	autoconf.c	4.36	82/04/11	*/
 end_comment
 
 begin_comment
@@ -1303,7 +1303,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%s%d at mba%d drive %d"
+literal|"%s%d at mba%d drive %d\n"
 argument_list|,
 name|mi
 operator|->
@@ -1322,11 +1322,6 @@ argument_list|,
 name|ni
 operator|->
 name|mi_drive
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|mi
@@ -1393,6 +1388,39 @@ index|]
 expr_stmt|;
 name|mi
 operator|->
+name|mi_mbanum
+operator|=
+name|ni
+operator|->
+name|mi_mbanum
+expr_stmt|;
+name|mi
+operator|->
+name|mi_drive
+operator|=
+name|ni
+operator|->
+name|mi_drive
+expr_stmt|;
+comment|/* 		 * If drive has never been seen before, 		 * give it a dkn for statistics. 		 */
+if|if
+condition|(
+name|mi
+operator|->
+name|mi_driver
+operator|->
+name|md_info
+index|[
+name|mi
+operator|->
+name|mi_unit
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|mi
+operator|->
 name|mi_driver
 operator|->
 name|md_info
@@ -1403,22 +1431,6 @@ name|mi_unit
 index|]
 operator|=
 name|mi
-expr_stmt|;
-name|mi
-operator|->
-name|mi_mbanum
-operator|=
-name|ni
-operator|->
-name|mi_mbanum
-expr_stmt|;
-name|mi
-operator|->
-name|mi_drive
-operator|=
-name|ni
-operator|->
-name|mi_drive
 expr_stmt|;
 if|if
 condition|(
@@ -1445,6 +1457,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 call|(
 modifier|*
 name|mi
