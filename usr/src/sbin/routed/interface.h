@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	interface.h	4.1	83/01/11	*/
+comment|/*	interface.h	4.2	84/04/09	*/
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * 0x1 to 0x10 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined below  */
+comment|/*  * 0x1 to 0x100 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined elsewhere.  */
 end_comment
 
 begin_define
@@ -150,8 +150,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFF_LOCAL
+value|0x100
+end_define
+
+begin_comment
+comment|/* local network, host part encoded */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFF_PASSIVE
-value|0x20
+value|0x2000
 end_define
 
 begin_comment
@@ -162,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|IFF_INTERFACE
-value|0x40
+value|0x4000
 end_define
 
 begin_comment
@@ -173,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|IFF_REMOTE
-value|0x80
+value|0x8000
 end_define
 
 begin_comment
