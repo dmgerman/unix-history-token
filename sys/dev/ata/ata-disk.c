@@ -1390,16 +1390,12 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|request
-operator|->
 name|bp
 operator|->
 name|b_error
 operator|=
 name|ENXIO
 expr_stmt|;
-name|request
-operator|->
 name|bp
 operator|->
 name|b_flags
@@ -1408,8 +1404,6 @@ name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
-name|request
-operator|->
 name|bp
 argument_list|)
 expr_stmt|;
