@@ -1450,6 +1450,21 @@ operator|&
 name|lock_class_mtx_sleep
 block|}
 block|,
+comment|/* 	 * NFS server 	 */
+block|{
+literal|"nfsd_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"so_snd"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
 block|{
 name|NULL
 block|,
