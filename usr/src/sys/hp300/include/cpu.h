@@ -1,35 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.13 89/06/23$  *  *	@(#)cpu.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.13 89/06/23$  *  *	@(#)cpu.h	7.5 (Berkeley) %G%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../hp300/psl.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"machine/psl.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Exported definitions unique to hp300/68k cpu support.  */
@@ -133,7 +105,7 @@ name|CLKF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|USERMODE((framep)->ps)
+value|(((framep)->ps& PSL_S) == 0)
 end_define
 
 begin_define
@@ -143,7 +115,7 @@ name|CLKF_BASEPRI
 parameter_list|(
 name|framep
 parameter_list|)
-value|BASEPRI((framep)->ps)
+value|(((framep)->ps& PSL_IPL7) == 0)
 end_define
 
 begin_define
@@ -183,6 +155,38 @@ name|framep
 parameter_list|)
 value|{ (p)->p_flag |= SOWEUPC; aston(); }
 end_define
+
+begin_comment
+comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|signotify
+parameter_list|(
+name|p
+parameter_list|)
+value|aston()
+end_define
+
+begin_define
+define|#
+directive|define
+name|aston
+parameter_list|()
+value|(astpending++)
+end_define
+
+begin_decl_stmt
+name|int
+name|astpending
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* need to trap before returning to user mode */
+end_comment
 
 begin_decl_stmt
 name|int
