@@ -499,7 +499,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nohup [--] command [arguments]\n"
+literal|"usage: nohup [--] utility [arguments]\n"
 argument_list|)
 expr_stmt|;
 name|exit
