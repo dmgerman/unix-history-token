@@ -1389,6 +1389,28 @@ if|if
 condition|(
 name|cold
 condition|)
+block|{
+comment|/* Explore high-speed busses before others. */
+if|if
+condition|(
+name|speed
+operator|==
+name|USB_SPEED_HIGH
+condition|)
+name|dev
+operator|->
+name|hub
+operator|->
+name|explore
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|->
+name|root_hub
+argument_list|)
+expr_stmt|;
+else|else
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1399,6 +1421,7 @@ argument_list|,
 name|sc_coldexplist
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 if|if
@@ -4439,7 +4462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Explore all USB busses at the end of device configuration. */
+comment|/* Explore USB busses at the end of device configuration. */
 end_comment
 
 begin_function
