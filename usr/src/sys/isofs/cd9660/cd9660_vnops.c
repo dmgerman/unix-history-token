@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1990,8 +1990,6 @@ name|saveent
 operator|.
 name|d_namlen
 operator|=
-literal|0
-expr_stmt|;
 name|idp
 operator|->
 name|assocent
@@ -1999,6 +1997,27 @@ operator|.
 name|d_namlen
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * XXX 	 * Is it worth trying to figure out the type? 	 */
+name|idp
+operator|->
+name|saveent
+operator|.
+name|d_type
+operator|=
+name|idp
+operator|->
+name|assocent
+operator|.
+name|d_type
+operator|=
+name|idp
+operator|->
+name|current
+operator|.
+name|d_type
+operator|=
+name|DT_UNKNOWN
 expr_stmt|;
 name|idp
 operator|->
