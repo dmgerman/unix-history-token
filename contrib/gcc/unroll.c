@@ -12392,7 +12392,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* The only new registers that care created before loop iterations are      givs made from biv increments, so this should never occur.  */
+comment|/* The only new registers that are created before loop iterations      are givs made from biv increments or registers created by      load_mems.  In the latter case, it is possible that try_copy_prop      will propagate a new pseudo into the old iteration register but      this will be marked by having the REG_USERVAR_P bit set.  */
 if|if
 condition|(
 operator|(
@@ -12406,6 +12406,12 @@ operator|>=
 name|reg_iv_type
 operator|->
 name|num_elements
+operator|&&
+operator|!
+name|REG_USERVAR_P
+argument_list|(
+name|iteration_var
+argument_list|)
 condition|)
 name|abort
 argument_list|()
