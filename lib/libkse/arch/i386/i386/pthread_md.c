@@ -219,10 +219,15 @@ modifier|*
 name|kse
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|union
 name|descriptor
 name|ldt
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|kcb
 modifier|*
@@ -269,6 +274,9 @@ name|kcb_kse
 operator|=
 name|kse
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|ldt
 operator|.
 name|sd
@@ -412,6 +420,8 @@ name|NULL
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -431,6 +441,9 @@ modifier|*
 name|kcb
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 if|if
 condition|(
 name|kcb
@@ -460,6 +473,8 @@ literal|1
 expr_stmt|;
 comment|/* just in case */
 block|}
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|kcb

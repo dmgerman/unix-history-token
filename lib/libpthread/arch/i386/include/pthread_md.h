@@ -28,7 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kse.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
 end_include
 
 begin_include
@@ -422,6 +434,9 @@ modifier|*
 name|kcb
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|int
 name|val
 decl_stmt|;
@@ -438,6 +453,15 @@ operator||
 literal|7
 expr_stmt|;
 asm|__asm __volatile("movl %0, %%gs" : : "r" (val));
+else|#
+directive|else
+name|_amd64_set_gsbase
+argument_list|(
+name|kcb
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
