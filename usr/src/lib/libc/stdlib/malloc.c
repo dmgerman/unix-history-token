@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	4.5 (Berkeley) %G%"
+literal|"@(#)malloc.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -613,7 +613,20 @@ name|op
 operator|->
 name|ov_size
 operator|=
+operator|(
 name|nbytes
+operator|+
+name|RSLOP
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|RSLOP
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|op
 operator|->
@@ -636,7 +649,9 @@ operator|+
 literal|1
 argument_list|)
 operator|+
-name|nbytes
+name|op
+operator|->
+name|ov_size
 operator|)
 operator|=
 name|RMAGIC
@@ -1240,7 +1255,20 @@ name|op
 operator|->
 name|ov_size
 operator|=
+operator|(
 name|nbytes
+operator|+
+name|RSLOP
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|RSLOP
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 operator|*
 operator|(
