@@ -3070,9 +3070,15 @@ condition|(
 operator|(
 name|ofile
 operator|=
-name|creat
+name|open
 argument_list|(
 name|name
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 literal|0666
 argument_list|)
