@@ -7761,11 +7761,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 goto|goto
 name|restart
 goto|;
