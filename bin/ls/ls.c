@@ -90,23 +90,6 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COLORLS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<curses.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -161,6 +144,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -170,19 +159,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<term.h>
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
 
 begin_include
 include|#
@@ -637,6 +626,19 @@ end_decl_stmt
 begin_comment
 comment|/* ANSI sequence to reset colours */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|colorquit
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1274,6 +1276,17 @@ if|if
 condition|(
 name|f_color
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|colorquit
+argument_list|)
+expr_stmt|;
 name|parsecolors
 argument_list|(
 name|getenv
@@ -1282,6 +1295,7 @@ literal|"LSCOLORS"
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * If not -F, -i, -l, -s or -t options, don't require stat 	 * information, unless in color mode in which case we do 	 * need this to determine which colors to display. 	 */
