@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.4 (Berkeley) %G%"
+literal|"@(#)main.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,15 @@ name|bool
 name|reenter
 init|=
 name|FALSE
+decl_stmt|;
+name|char
+modifier|*
+name|argv0
+init|=
+name|argv
+index|[
+literal|0
+index|]
 decl_stmt|;
 name|char
 name|jbuf
@@ -943,6 +952,8 @@ operator|!
 name|thaw
 argument_list|(
 name|FreezeFile
+argument_list|,
+name|argv0
 argument_list|)
 expr_stmt|;
 end_if
@@ -4187,13 +4198,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  THAW -- read in the frozen configuration file. ** **	Parameters: **		freezefile -- the name of the file to thaw from. ** **	Returns: **		TRUE if it successfully read the freeze file. **		FALSE otherwise. ** **	Side Effects: **		reads freezefile in to BSS area. */
+comment|/* **  THAW -- read in the frozen configuration file. ** **	Parameters: **		freezefile -- the name of the file to thaw from. **		binfile -- the name of the sendmail binary (ok to guess). ** **	Returns: **		TRUE if it successfully read the freeze file. **		FALSE otherwise. ** **	Side Effects: **		reads freezefile in to BSS area. */
 end_comment
 
 begin_macro
 name|thaw
 argument_list|(
 argument|freezefile
+argument_list|,
+argument|binfile
 argument_list|)
 end_macro
 
@@ -4201,6 +4214,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|freezefile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|binfile
 decl_stmt|;
 end_decl_stmt
 
@@ -4223,6 +4243,12 @@ name|hbuf
 index|[
 literal|60
 index|]
+decl_stmt|;
+name|struct
+name|stat
+name|fst
+decl_stmt|,
+name|sst
 decl_stmt|;
 specifier|extern
 name|char
@@ -4284,6 +4310,109 @@ block|{
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|f
+argument_list|,
+operator|&
+name|fst
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|stat
+argument_list|(
+name|ConfFile
+argument_list|,
+operator|&
+name|sst
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|fst
+operator|.
+name|st_mtime
+operator|<
+name|sst
+operator|.
+name|st_mtime
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Freeze file older than config file"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|binfile
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+name|stat
+argument_list|(
+name|binfile
+argument_list|,
+operator|&
+name|sst
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|fst
+operator|.
+name|st_mtime
+operator|<
+name|sst
+operator|.
+name|st_mtime
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Freeze file older than binary file"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|f
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
