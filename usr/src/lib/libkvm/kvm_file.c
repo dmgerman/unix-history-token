@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_file.c	5.3 (Berkeley) %G%"
+literal|"@(#)kvm_file.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,7 +173,7 @@ parameter_list|,
 name|obj
 parameter_list|)
 define|\
-value|(kvm_read(kd, addr, (char *)(obj), sizeof(*obj)) != sizeof(*obj))
+value|(kvm_read(kd, addr, obj, sizeof(*obj)) != sizeof(*obj))
 end_define
 
 begin_comment
@@ -211,7 +211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
+name|long
 name|filehead_o
 decl_stmt|;
 end_decl_stmt
@@ -364,9 +364,6 @@ name|KREAD
 argument_list|(
 name|kd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|fp
 argument_list|,
 operator|(
@@ -404,6 +401,15 @@ argument_list|(
 expr|struct
 name|file
 argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+operator|(
+expr|struct
+name|file
+operator|*
+operator|)
+name|where
 expr_stmt|;
 name|where
 operator|+=
