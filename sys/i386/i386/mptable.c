@@ -1877,7 +1877,7 @@ name|SYSINIT
 argument_list|(
 argument|mptable_register
 argument_list|,
-argument|SI_SUB_TUNABLES -
+argument|SI_SUB_CPU -
 literal|1
 argument_list|,
 argument|SI_ORDER_FIRST

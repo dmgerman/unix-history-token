@@ -2312,7 +2312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We have to look for CPU's very, very early because certain subsystems  * want to know how many CPU's we have extremely early on in the boot  * process.  */
+comment|/*  * Probe the APIC enumerators, enumerate CPUs, and initialize the  * local APIC.  */
 end_comment
 
 begin_function
@@ -2331,6 +2331,9 @@ name|apic_enumerator
 modifier|*
 name|enumerator
 decl_stmt|;
+name|uint64_t
+name|apic_base
+decl_stmt|;
 name|int
 name|retval
 decl_stmt|,
@@ -2345,6 +2348,17 @@ name|cpu_feature
 operator|&
 name|CPUID_APIC
 operator|)
+condition|)
+return|return;
+comment|/* Don't probe if APIC mode is disabled. */
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"apic"
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 return|return;
 comment|/* First, probe all the enumerators to find the best match. */
@@ -2431,78 +2445,6 @@ operator|->
 name|apic_name
 argument_list|)
 expr_stmt|;
-comment|/* Second, probe the CPU's in the system. */
-name|retval
-operator|=
-name|best_enum
-operator|->
-name|apic_probe_cpus
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|retval
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"%s: Failed to probe CPUs: returned %d\n"
-argument_list|,
-name|best_enum
-operator|->
-name|apic_name
-argument_list|,
-name|retval
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|apic_init
-argument_list|,
-argument|SI_SUB_TUNABLES -
-literal|1
-argument_list|,
-argument|SI_ORDER_SECOND
-argument_list|,
-argument|apic_init
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*  * Setup the local APIC.  We have to do this prior to starting up the APs  * in the SMP case.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|apic_setup_local
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-name|__unused
-parameter_list|)
-block|{
-name|int
-name|retval
-decl_stmt|;
-name|uint64_t
-name|apic_base
-decl_stmt|;
-if|if
-condition|(
-name|best_enum
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	 * To work around an errata, we disable the local APIC on some 	 * CPUs during early startup.  We need to turn the local APIC back 	 * on on such CPUs now. 	 */
 if|if
 condition|(
@@ -2547,6 +2489,32 @@ name|apic_base
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Second, probe the CPU's in the system. */
+name|retval
+operator|=
+name|best_enum
+operator|->
+name|apic_probe_cpus
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Failed to probe CPUs: returned %d\n"
+argument_list|,
+name|best_enum
+operator|->
+name|apic_name
+argument_list|,
+name|retval
+argument_list|)
+expr_stmt|;
+comment|/* Third, initialize the local APIC. */
 name|retval
 operator|=
 name|best_enum
@@ -2577,13 +2545,13 @@ end_function
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|apic_setup_local
+argument|apic_init
 argument_list|,
 argument|SI_SUB_CPU
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
-argument|apic_setup_local
+argument|apic_init
 argument_list|,
 argument|NULL
 argument_list|)
