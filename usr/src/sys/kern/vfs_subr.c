@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2667,6 +2667,34 @@ decl_stmt|;
 name|long
 name|count
 decl_stmt|;
+comment|/* 	 * If a vgone (or vclean) is already in progress, 	 * wait until it is done and return. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VXLOCK
+condition|)
+block|{
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VXWANT
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vp
+argument_list|,
+name|PINOD
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Clean out the filesystem specific data. 	 */
 name|vclean
 argument_list|(
