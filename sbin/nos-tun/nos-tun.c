@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996, Nickolay Dudorov  * All rights reserved.  *  *
 end_comment
 
 begin_comment
-comment|/*  *  'nos_tun' program configure tunN interface as a point-to-point  *  connection with two "pseudo"-addresses between this host and  *  'target'.  *  *  It uses Ip-over-Ip incapsulation ( protocol number 94 - IPIP)  *  (known as NOS-incapsulation in CISCO-routers' terminology).  *  *  'nos_tun' can works with itself and CISCO-routers.  *  (It may also work with Linux 'nos_tun's, but  *  I have no Linux system here to test with).  *  *  BUGS (or features ?):  *  - you must specify ONE of the target host's addresses  *    ( nos_tun sends and accepts packets only to/from this  *      address )  *  - there can be only ONE tunnel between two hosts,  *    more precisely - between given host and (one of)  *    target hosts' address(es)  *    (and why do you want more ?)  */
+comment|/*  *  'nos-tun' program configure tunN interface as a point-to-point  *  connection with two "pseudo"-addresses between this host and  *  'target'.  *  *  It uses Ip-over-Ip incapsulation ( protocol number 94 - IPIP)  *  (known as NOS-incapsulation in CISCO-routers' terminology).  *  *  'nos-tun' can works with itself and CISCO-routers.  *  (It may also work with Linux 'nos-tun's, but  *  I have no Linux system here to test with).  *  *  BUGS (or features ?):  *  - you must specify ONE of the target host's addresses  *    ( nos-tun sends and accepts packets only to/from this  *      address )  *  - there can be only ONE tunnel between two hosts,  *    more precisely - between given host and (one of)  *    target hosts' address(es)  *    (and why do you want more ?)  */
 end_comment
 
 begin_comment
@@ -1105,7 +1105,7 @@ expr_stmt|;
 comment|/* Establish logging through 'syslog' */
 name|openlog
 argument_list|(
-literal|"nos_tun"
+literal|"nos-tun"
 argument_list|,
 name|LOG_PID
 argument_list|,
@@ -1541,7 +1541,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nos_tun -t<tun_name> -s<source_addr> -d<dest_addr> -p<protocol_number><target_addr>\n"
+literal|"usage: nos-tun -t<tun_name> -s<source_addr> -d<dest_addr> -p<protocol_number><target_addr>\n"
 argument_list|)
 expr_stmt|;
 name|exit
