@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.19 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3763,8 +3763,11 @@ name|ch
 operator|==
 literal|'\n'
 condition|)
+operator|*
 operator|--
 name|cp
+operator|=
+literal|0
 expr_stmt|;
 define|#
 directive|define
