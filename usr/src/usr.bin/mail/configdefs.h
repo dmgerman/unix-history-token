@@ -8,11 +8,29 @@ comment|/*  * This file contains the definitions of data structures used in  * c
 end_comment
 
 begin_comment
-comment|/*  * Sccs ID @(#)configdefs.h	1.2 %G%  */
+comment|/*  * Sccs ID @(#)configdefs.h	1.3 %G%  */
 end_comment
 
 begin_comment
-comment|/*  * The following data structure is the host table.  You must have  * an entry here for your own machine, plus any special stuff you  * expect the mailer to know about.  Not all hosts need be here,  * however:  Mail can dope out stuff about hosts on the fly by looking  * at addresses.  The machines needed here are:  *	1) The local machine  *	2) Any machines on the path to a network gateway  *	3) Any machines with nicknames that you want to have considered  *	   the same.  * The machine id letters can be anything you like and are not seen  * externally.  Be sure not to use characters with the 0200 bit set --  * these have special meanings.  */
+comment|/*  * The following constants are used when you are running 4.1a bsd or  * later on a local network.  Under control of the #define flag  * GETHOST, the host name is determined dynamically using the  * gethostname() system call.  The name thus found is inserted  * into the host table slot whose name was originally EMPTY.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMPTY
+value|"** empty **"
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMPTYID
+value|'E'
+end_define
+
+begin_comment
+comment|/*  * The following data structure is the host table.  You must have  * an entry here for your own machine, plus any special stuff you  * expect the mailer to know about.  If you have #define'd GETHOST  * in v7.local.h, you needn't add your machine to the host table.  * Not all hosts need be here, however:  * Mail can dope out stuff about hosts on the fly by looking  * at addresses.  The machines needed here are:  *	1) The local machine  *	2) Any machines on the path to a network gateway  *	3) Any machines with nicknames that you want to have considered  *	   the same.  * The machine id letters can be anything you like and are not seen  * externally.  Be sure not to use characters with the 0200 bit set --  * these have special meanings.  */
 end_comment
 
 begin_struct
