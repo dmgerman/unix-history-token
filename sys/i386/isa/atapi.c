@@ -4997,6 +4997,14 @@ operator|->
 name|ctrlr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ata
+operator|->
+name|tail
+operator|==
+name|ac
+condition|)
 name|tsleep
 argument_list|(
 operator|(
