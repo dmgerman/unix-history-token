@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.c 1.2 81/10/23 */
+comment|/* uipc_mbuf.c 1.4 81/10/28 */
 end_comment
 
 begin_include
@@ -1274,11 +1274,15 @@ argument_list|(
 name|mtod
 argument_list|(
 name|n
+argument_list|,
+name|caddr_t
 argument_list|)
 argument_list|,
 name|mtod
 argument_list|(
 name|m
+argument_list|,
+name|caddr_t
 argument_list|)
 operator|+
 name|m
