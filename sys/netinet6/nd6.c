@@ -6873,6 +6873,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -6940,6 +6943,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IFNET_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
