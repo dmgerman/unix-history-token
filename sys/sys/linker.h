@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: linker.h,v 1.6 1998/10/09 01:44:09 msmith Exp $  */
+comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: linker.h,v 1.7 1998/10/09 07:06:43 msmith Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,12 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/elf.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -123,7 +129,7 @@ modifier|*
 name|sym
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|symbol_values
@@ -203,7 +209,7 @@ comment|/* reference count */
 name|int
 name|userrefs
 decl_stmt|;
-comment|/* modload(2) count */
+comment|/* kldload(2) count */
 name|TAILQ_ENTRY
 argument_list|(
 argument|linker_file
@@ -512,6 +518,83 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Search the linker path for the module.  Return the full pathname in  * a malloc'ed buffer.  */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|linker_search_path
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * DDB Helpers, tuned specifically for ddb/db_kld.c  */
+end_comment
+
+begin_function_decl
+name|int
+name|linker_ddb_lookup
+parameter_list|(
+name|char
+modifier|*
+name|symstr
+parameter_list|,
+name|linker_sym_t
+modifier|*
+name|sym
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|linker_ddb_search_symbol
+parameter_list|(
+name|caddr_t
+name|value
+parameter_list|,
+name|linker_sym_t
+modifier|*
+name|sym
+parameter_list|,
+name|long
+modifier|*
+name|diffp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|linker_ddb_symbol_values
+parameter_list|(
+name|linker_sym_t
+name|sym
+parameter_list|,
+name|linker_symval_t
+modifier|*
+name|symval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_comment
 comment|/*  * Module information subtypes  */
 end_comment
 
@@ -522,12 +605,20 @@ name|MODINFO_END
 value|0x0000
 end_define
 
+begin_comment
+comment|/* End of list */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MODINFO_NAME
 value|0x0001
 end_define
+
+begin_comment
+comment|/* Name of module (string) */
+end_comment
 
 begin_define
 define|#
@@ -536,12 +627,20 @@ name|MODINFO_TYPE
 value|0x0002
 end_define
 
+begin_comment
+comment|/* Type of module (string) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MODINFO_ADDR
 value|0x0003
 end_define
+
+begin_comment
+comment|/* Loaded address */
+end_comment
 
 begin_define
 define|#
@@ -550,12 +649,31 @@ name|MODINFO_SIZE
 value|0x0004
 end_define
 
+begin_comment
+comment|/* Size of module */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFO_EMPTY
+value|0x0005
+end_define
+
+begin_comment
+comment|/* Has been deleted */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MODINFO_METADATA
 value|0x8000
 end_define
+
+begin_comment
+comment|/* Module-specfic */
+end_comment
 
 begin_define
 define|#
@@ -582,6 +700,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MODINFOMD_SSYM
+value|0x0003
+end_define
+
+begin_comment
+comment|/* start of symbols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_ESYM
+value|0x0004
+end_define
+
+begin_comment
+comment|/* end of symbols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_DYNAMIC
+value|0x0005
+end_define
+
+begin_comment
+comment|/* _DYNAMIC pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MODINFOMD_NOCOPY
 value|0x8000
 end_define
@@ -593,23 +744,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KLD_IDENT_SYMNAME
-value|"kld_identifier_"
+name|MODINFOMD_DEPLIST
+value|(0x4001 | MODINFOMD_NOCOPY)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MODINFOMD_KLDIDENT
-value|(MODINFOMD_NOCOPY | 0x4000)
-end_define
+begin_comment
+comment|/* depends on */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|MODINFOMD_KLDDEP
-value|(MODINFOMD_NOCOPY | 0x4001)
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Module lookup  */
@@ -618,14 +765,14 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|caddr_t
-name|module_metadata
+name|preload_metadata
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|extern
 name|caddr_t
-name|module_search_by_name
+name|preload_search_by_name
 parameter_list|(
 specifier|const
 name|char
@@ -638,7 +785,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|caddr_t
-name|module_search_by_type
+name|preload_search_by_type
 parameter_list|(
 specifier|const
 name|char
@@ -651,13 +798,48 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|caddr_t
-name|module_search_info
+name|preload_search_next_name
+parameter_list|(
+name|caddr_t
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|caddr_t
+name|preload_search_info
 parameter_list|(
 name|caddr_t
 name|mod
 parameter_list|,
 name|int
 name|inf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|preload_delete_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|preload_bootstrap_relocate
+parameter_list|(
+name|vm_offset_t
+name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -707,7 +889,7 @@ parameter_list|,
 name|args
 parameter_list|)
 define|\
-value|do {							\ 		if (KLD_debug& KLD_DEBUG_##cat) printf args;	\ 	} while (0)
+value|do {							\ 		if (kld_debug& KLD_DEBUG_##cat) printf args;	\ 	} while (0)
 end_define
 
 begin_else
@@ -730,6 +912,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Support functions */
+end_comment
+
+begin_function_decl
+name|int
+name|elf_reloc
+parameter_list|(
+name|linker_file_t
+name|lf
+parameter_list|,
+specifier|const
+name|Elf_Rela
+modifier|*
+name|rela
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|sym
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
