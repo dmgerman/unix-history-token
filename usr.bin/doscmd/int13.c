@@ -1178,6 +1178,15 @@ operator|.
 name|systemID
 operator|==
 literal|4
+operator|||
+name|ptab
+index|[
+name|fd
+index|]
+operator|.
+name|systemID
+operator|==
+literal|6
 operator|)
 condition|)
 break|break;
@@ -1229,7 +1238,7 @@ name|offset
 operator|=
 name|ptab
 index|[
-name|fd
+literal|0
 index|]
 operator|.
 name|relSector
