@@ -493,6 +493,30 @@ literal|"Intel Pro/100 Ethernet"
 block|}
 block|,
 block|{
+literal|0x103B
+block|,
+literal|"Intel Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|"Intel Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x103D
+block|,
+literal|"Intel Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x103E
+block|,
+literal|"Intel Pro/100 Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
