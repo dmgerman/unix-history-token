@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	8.2 (Berkeley) %G%"
+literal|"@(#)savecore.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,6 +1073,26 @@ name|dumpdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dumpdev
+operator|==
+name|NODEV
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"no core dump (no dumpdev)"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|Lseek
 argument_list|(
 name|kmem
@@ -2605,7 +2625,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|devname
 argument_list|,
