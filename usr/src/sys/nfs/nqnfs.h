@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -306,27 +306,20 @@ begin_struct
 struct|struct
 name|nqlease
 block|{
-name|struct
-name|nqlease
-modifier|*
-name|lc_chain1
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Timer queue list (must be first) */
-name|struct
-name|nqlease
-modifier|*
-name|lc_fhnext
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|nqlease
+argument_list|)
+name|lc_hash
+expr_stmt|;
 comment|/* Fhandle hash list */
-name|struct
-name|nqlease
-modifier|*
-modifier|*
-name|lc_fhprev
-decl_stmt|;
+name|CIRCLEQ_ENTRY
+argument_list|(
+argument|nqlease
+argument_list|)
+name|lc_timer
+expr_stmt|;
+comment|/* Timer queue list */
 name|time_t
 name|lc_expiry
 decl_stmt|;
@@ -650,46 +643,50 @@ begin_comment
 comment|/*  * List head for timer queue.  */
 end_comment
 
-begin_union
-specifier|extern
-union|union
-name|nqsrvthead
-block|{
-name|union
-name|nqsrvthead
-modifier|*
-name|th_head
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|struct
+begin_macro
+name|CIRCLEQ_HEAD
+argument_list|(
+argument|nqleases
+argument_list|,
+argument|nqlease
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|nqtimerhead
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * List head for the file handle hash table.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NQFHHASH
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(&nqfhhashtbl[(*((u_long *)(f)))& nqfhhash])
+end_define
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|nqfhhashhead
+argument_list|,
 name|nqlease
-modifier|*
-name|th_chain
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|nqthead
-union|;
-end_union
+argument_list|)
+operator|*
+name|nqfhhashtbl
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|nqlease
-modifier|*
-modifier|*
-name|nqfhead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_long
-name|nqfheadhash
+name|nqfhhash
 decl_stmt|;
 end_decl_stmt
 

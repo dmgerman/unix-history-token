@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -106,17 +106,15 @@ name|int
 name|nm_leaseterm
 decl_stmt|;
 comment|/* Term (sec) for NQNFS lease */
-name|struct
-name|nfsnode
-modifier|*
-name|nm_tnext
-decl_stmt|;
-comment|/* Head of lease timer queue */
-name|struct
-name|nfsnode
-modifier|*
-name|nm_tprev
-decl_stmt|;
+name|CIRCLEQ_HEAD
+argument_list|(
+argument|nfsnodes
+argument_list|,
+argument|nfsnode
+argument_list|)
+name|nm_timerhead
+expr_stmt|;
+comment|/* Lease timer queue */
 name|struct
 name|vnode
 modifier|*

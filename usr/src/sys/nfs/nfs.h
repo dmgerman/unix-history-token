@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -543,16 +543,12 @@ begin_struct
 struct|struct
 name|nfsreq
 block|{
-name|struct
-name|nfsreq
-modifier|*
-name|r_next
-decl_stmt|;
-name|struct
-name|nfsreq
-modifier|*
-name|r_prev
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|nfsreq
+argument_list|)
+name|r_chain
+expr_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -617,6 +613,24 @@ comment|/* Proc that did I/O system call */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Queue head for nfsreq's  */
+end_comment
+
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|nfsreqs
+argument_list|,
+argument|nfsreq
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|nfs_reqq
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Flag values for r_flags */
@@ -733,9 +747,12 @@ define|#
 directive|define
 name|NUIDHASH
 parameter_list|(
+name|sock
+parameter_list|,
 name|uid
 parameter_list|)
-value|((uid)& (NUIDHASHSIZ - 1))
+define|\
+value|(&(sock)->ns_uidhashtbl[(uid)& (sock)->ns_uidhash])
 end_define
 
 begin_comment
@@ -762,27 +779,20 @@ begin_struct
 struct|struct
 name|nfsuid
 block|{
-name|struct
-name|nfsuid
-modifier|*
-name|nu_lrunext
-decl_stmt|;
-comment|/* MUST be first */
-name|struct
-name|nfsuid
-modifier|*
-name|nu_lruprev
-decl_stmt|;
-name|struct
-name|nfsuid
-modifier|*
-name|nu_hnext
-decl_stmt|;
-name|struct
-name|nfsuid
-modifier|*
-name|nu_hprev
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|nfsuid
+argument_list|)
+name|nu_lru
+expr_stmt|;
+comment|/* LRU chain */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsuid
+argument_list|)
+name|nu_hash
+expr_stmt|;
+comment|/* Hash list */
 name|int
 name|nu_flag
 decl_stmt|;
@@ -834,26 +844,32 @@ begin_struct
 struct|struct
 name|nfssvc_sock
 block|{
-name|struct
+name|TAILQ_ENTRY
+argument_list|(
+argument|nfssvc_sock
+argument_list|)
+name|ns_chain
+expr_stmt|;
+comment|/* List of all nfssvc_sock's */
+name|TAILQ_HEAD
+argument_list|(
+argument|nfsuidlru
+argument_list|,
+argument|nfsuid
+argument_list|)
+name|ns_uidlruhead
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+name|nfsuidhash
+argument_list|,
 name|nfsuid
-modifier|*
-name|ns_lrunext
-decl_stmt|;
-comment|/* MUST be first */
-name|struct
-name|nfsuid
-modifier|*
-name|ns_lruprev
-decl_stmt|;
-name|struct
-name|nfssvc_sock
-modifier|*
-name|ns_next
-decl_stmt|;
-name|struct
-name|nfssvc_sock
-modifier|*
-name|ns_prev
+argument_list|)
+operator|*
+name|ns_uidhashtbl
+expr_stmt|;
+name|u_long
+name|ns_uidhash
 decl_stmt|;
 name|int
 name|ns_flag
@@ -908,14 +924,6 @@ decl_stmt|;
 name|int
 name|ns_numuids
 decl_stmt|;
-name|struct
-name|nfsuid
-modifier|*
-name|ns_uidh
-index|[
-name|NUIDHASHSIZ
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -962,22 +970,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|SLP_ALLFLAGS
+value|0xff
+end_define
+
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|nfssvc_socks
+argument_list|,
+argument|nfssvc_sock
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|nfssvc_sockhead
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|nfssvc_sockhead_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|SLP_INIT
-value|0x20
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|SLP_WANTINIT
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLP_ALLFLAGS
-value|0xff
+value|0x02
 end_define
 
 begin_comment
@@ -988,17 +1016,13 @@ begin_struct
 struct|struct
 name|nfsd
 block|{
-name|struct
-name|nfsd
-modifier|*
-name|nd_next
-decl_stmt|;
-comment|/* Must be first */
-name|struct
-name|nfsd
-modifier|*
-name|nd_prev
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|nfsd
+argument_list|)
+name|nd_chain
+expr_stmt|;
+comment|/* List of all nfsd's */
 name|int
 name|nd_flag
 decl_stmt|;
@@ -1076,6 +1100,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Bits for "nd_flag" */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1086,29 +1114,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSD_CHECKSLP
+name|NFSD_REQINPROG
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|NFSD_REQINPROG
+name|NFSD_NEEDAUTH
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|NFSD_NEEDAUTH
+name|NFSD_AUTHFAIL
 value|0x08
 end_define
+
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|nfsds
+argument_list|,
+argument|nfsd
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|nfsd_head
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|nfsd_head_flag
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|NFSD_AUTHFAIL
-value|0x10
+name|NFSD_CHECKSLP
+value|0x01
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -42,19 +42,20 @@ begin_struct
 struct|struct
 name|nfsnode
 block|{
-name|struct
-name|nfsnode
-modifier|*
-name|n_forw
-decl_stmt|;
-comment|/* hash, forward */
-name|struct
-name|nfsnode
-modifier|*
-modifier|*
-name|n_back
-decl_stmt|;
-comment|/* hash, backward */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsnode
+argument_list|)
+name|n_hash
+expr_stmt|;
+comment|/* Hash chain */
+name|CIRCLEQ_ENTRY
+argument_list|(
+argument|nfsnode
+argument_list|)
+name|n_timer
+expr_stmt|;
+comment|/* Nqnfs timer chain */
 name|nfsv2fh_t
 name|n_fh
 decl_stmt|;
@@ -116,17 +117,6 @@ name|time_t
 name|n_expiry
 decl_stmt|;
 comment|/* Lease expiry time */
-name|struct
-name|nfsnode
-modifier|*
-name|n_tnext
-decl_stmt|;
-comment|/* Nqnfs timer chain */
-name|struct
-name|nfsnode
-modifier|*
-name|n_tprev
-decl_stmt|;
 name|long
 name|spare1
 decl_stmt|;

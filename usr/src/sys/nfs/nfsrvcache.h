@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,32 +18,20 @@ begin_struct
 struct|struct
 name|nfsrvcache
 block|{
-name|struct
-name|nfsrvcache
-modifier|*
-name|rc_forw
-decl_stmt|;
-comment|/* Hash chain links */
-name|struct
-name|nfsrvcache
-modifier|*
-modifier|*
-name|rc_back
-decl_stmt|;
-comment|/* Hash chain links */
-name|struct
-name|nfsrvcache
-modifier|*
-name|rc_next
-decl_stmt|;
-comment|/* Lru list */
-name|struct
-name|nfsrvcache
-modifier|*
-modifier|*
-name|rc_prev
-decl_stmt|;
-comment|/* Lru list */
+name|TAILQ_ENTRY
+argument_list|(
+argument|nfsrvcache
+argument_list|)
+name|rc_lru
+expr_stmt|;
+comment|/* LRU chain */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsrvcache
+argument_list|)
+name|rc_hash
+expr_stmt|;
+comment|/* Hash chain */
 name|u_long
 name|rc_xid
 decl_stmt|;
