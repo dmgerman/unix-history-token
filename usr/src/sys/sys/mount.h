@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -401,6 +401,17 @@ end_define
 
 begin_comment
 comment|/* don't interpret special files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_UNION
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* union with underlying filesystem */
 end_comment
 
 begin_comment
