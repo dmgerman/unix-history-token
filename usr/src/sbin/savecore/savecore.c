@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980, 1986 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1986, 1989 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.17 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,6 +343,16 @@ begin_comment
 comment|/* name of dump device */
 end_comment
 
+begin_decl_stmt
+name|int
+name|dumpfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* read/write descriptor on block dev */
+end_comment
+
 begin_function_decl
 name|char
 modifier|*
@@ -585,6 +595,9 @@ break|break;
 case|case
 literal|'v'
 case|:
+case|case
+literal|'d'
+case|:
 name|Verbose
 operator|++
 expr_stmt|;
@@ -603,7 +616,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore [-f] [-v] dirname [ system ]\n"
+literal|"usage: savecore [-f] [-v] [-c] dirname [ system ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -701,22 +714,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|dumpfd
-decl_stmt|;
 name|int
 name|word
 decl_stmt|;
-name|dumpfd
-operator|=
-name|Open
-argument_list|(
-name|ddname
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
 name|Lseek
 argument_list|(
 name|dumpfd
@@ -758,9 +758,19 @@ name|word
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|close
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
 argument_list|(
-name|dumpfd
+literal|"dumplo = %d (%d * 512)\n"
+argument_list|,
+name|dumplo
+argument_list|,
+name|dumplo
+operator|/
+literal|512
 argument_list|)
 expr_stmt|;
 if|if
@@ -771,18 +781,6 @@ name|word
 operator|!=
 name|dumpmag
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dumplo = %d (%d bytes)\n"
-argument_list|,
-name|dumplo
-operator|/
-name|DEV_BSIZE
-argument_list|,
-name|dumplo
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"magic number mismatch: %x != %x\n"
@@ -792,7 +790,6 @@ argument_list|,
 name|dumpmag
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|word
@@ -810,24 +807,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|dumpfd
-decl_stmt|;
 name|int
 name|zero
 init|=
 literal|0
 decl_stmt|;
-name|dumpfd
-operator|=
-name|Open
-argument_list|(
-name|ddname
-argument_list|,
-name|O_WRONLY
-argument_list|)
-expr_stmt|;
 name|Lseek
 argument_list|(
 name|dumpfd
@@ -867,11 +851,6 @@ sizeof|sizeof
 argument_list|(
 name|zero
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|dumpfd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1011,10 +990,103 @@ comment|/*NOTREACHED*/
 end_comment
 
 begin_expr_stmt
-unit|}  int
+unit|}  char
+operator|*
+name|rawname
+argument_list|(
+argument|s
+argument_list|)
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|static
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|sl
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|sl
+operator|=
+name|rindex
+argument_list|(
+name|s
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|sl
+index|[
+literal|1
+index|]
+operator|==
+literal|'0'
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"can't make raw dump device name from %s?\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"%.*s/r%s"
+argument_list|,
+name|sl
+operator|-
+name|s
+argument_list|,
+name|s
+argument_list|,
+name|sl
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|name
+operator|)
+return|;
+block|}
+end_block
+
+begin_decl_stmt
+name|int
 name|cursyms
 index|[]
-operator|=
+init|=
 block|{
 name|X_DUMPDEV
 block|,
@@ -1027,8 +1099,8 @@ block|,
 operator|-
 literal|1
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1338,6 +1410,15 @@ argument_list|,
 name|S_IFBLK
 argument_list|)
 expr_stmt|;
+name|dumpfd
+operator|=
+name|Open
+argument_list|(
+name|ddname
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|fdopen
@@ -1427,9 +1508,9 @@ name|cp
 decl_stmt|;
 name|fp
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|ddname
+name|dumpfd
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1441,13 +1522,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Perror
+name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|ddname
+literal|"Can't fdopen dumpfd"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1489,11 +1568,6 @@ argument_list|(
 name|core_vers
 argument_list|)
 argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
@@ -1540,15 +1614,6 @@ name|core_vers
 argument_list|)
 expr_stmt|;
 block|}
-name|fp
-operator|=
-name|fopen
-argument_list|(
-name|ddname
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
 name|fseek
 argument_list|(
 name|fp
@@ -1629,14 +1694,21 @@ condition|(
 operator|*
 name|cp
 operator|++
+operator|&&
+name|cp
+operator|<
+operator|&
+name|panic_mesg
+index|[
+sizeof|sizeof
+argument_list|(
+name|panic_mesg
+argument_list|)
+index|]
 condition|)
 do|;
 block|}
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+comment|/* don't fclose(fp); we want the file descriptor */
 block|}
 end_block
 
@@ -1647,9 +1719,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|dumpfd
-decl_stmt|;
 name|time_t
 name|clobber
 init|=
@@ -1658,15 +1727,6 @@ name|time_t
 operator|)
 literal|0
 decl_stmt|;
-name|dumpfd
-operator|=
-name|Open
-argument_list|(
-name|ddname
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
 name|Lseek
 argument_list|(
 name|dumpfd
@@ -1704,11 +1764,6 @@ name|dumptime
 argument_list|,
 sizeof|sizeof
 name|dumptime
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|dumpfd
 argument_list|)
 expr_stmt|;
 if|if
@@ -2116,8 +2171,8 @@ end_block
 begin_define
 define|#
 directive|define
-name|BUFSIZE
-value|(256*1024)
+name|BUFPAGES
+value|(256*1024/NBPG)
 end_define
 
 begin_comment
@@ -2148,6 +2203,10 @@ name|ofd
 decl_stmt|,
 name|bounds
 decl_stmt|;
+name|char
+modifier|*
+name|bfile
+decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
@@ -2157,7 +2216,9 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
-name|BUFSIZE
+name|BUFPAGES
+operator|*
+name|NBPG
 argument_list|)
 expr_stmt|;
 if|if
@@ -2167,9 +2228,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|log
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
 literal|"savecore: Can't allocate i/o buffer.\n"
 argument_list|)
@@ -2207,7 +2268,9 @@ name|ifd
 argument_list|,
 name|cp
 argument_list|,
-name|BUFSIZE
+name|BUFPAGES
+operator|*
+name|NBPG
 argument_list|)
 operator|)
 operator|>
@@ -2232,15 +2295,43 @@ argument_list|(
 name|ofd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|ifd
 operator|=
-name|Open
+name|open
+argument_list|(
+name|rawname
 argument_list|(
 name|ddname
+argument_list|)
 argument_list|,
 name|O_RDONLY
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Can't open %s (%m); using block device"
+argument_list|,
+name|rawname
+argument_list|(
+name|ddname
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|ifd
+operator|=
+name|dumpfd
+expr_stmt|;
+block|}
 name|Lseek
 argument_list|(
 name|ifd
@@ -2401,18 +2492,27 @@ argument_list|(
 name|ofd
 argument_list|)
 expr_stmt|;
-name|fp
+name|bfile
 operator|=
-name|fopen
-argument_list|(
 name|path
 argument_list|(
 literal|"bounds"
 argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|bfile
 argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -2427,6 +2527,17 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|Perror
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Can't create bounds file %s: %m"
+argument_list|,
+name|bfile
 argument_list|)
 expr_stmt|;
 name|free
@@ -2561,6 +2672,8 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"read: %m"
+argument_list|,
+literal|"read"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2623,6 +2736,8 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"lseek: %m"
+argument_list|,
+literal|"lseek"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2753,6 +2868,8 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"write: %m"
+argument_list|,
+literal|"write"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2763,6 +2880,10 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/* VARARGS2 */
+end_comment
 
 begin_macro
 name|log
