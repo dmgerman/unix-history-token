@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.32 1999/10/19 15:18:30 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.44 2000/10/28 00:01:28 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -119,12 +136,6 @@ directive|include
 file|"pcap-int.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -186,11 +197,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"BIOCGSTATS: %s"
 argument_list|,
@@ -389,11 +402,13 @@ comment|/* fall through */
 endif|#
 directive|endif
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"read: %s"
 argument_list|,
@@ -566,7 +581,7 @@ name|char
 name|device
 index|[
 sizeof|sizeof
-expr|"/dev/bpf000"]
+expr|"/dev/bpf0000000000"]
 expr_stmt|;
 comment|/* 	 * Go through all the minors and find one that isn't in use. 	 */
 do|do
@@ -574,9 +589,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
 argument_list|,
 literal|"/dev/bpf%d"
 argument_list|,
@@ -612,11 +632,13 @@ name|fd
 operator|<
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"%s: %s"
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"(no devices found) %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -697,9 +719,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"malloc: %s"
 argument_list|,
@@ -715,9 +739,11 @@ name|NULL
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -774,9 +800,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"BIOCVERSION: %s"
 argument_list|,
@@ -805,9 +833,11 @@ operator|<
 name|BPF_MINOR_VERSION
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"kernel bpf filter out of date"
 argument_list|)
@@ -816,12 +846,23 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 	 * Try finding a good size for the buffer; 32768 may be too 	 * big, so keep cutting it in half until we find a size 	 * that works, or run out of sizes to try. 	 * 	 * XXX - there should be a user-accessible hook to set the 	 * initial buffer size. 	 */
+for|for
+control|(
 name|v
 operator|=
 literal|32768
-expr_stmt|;
-comment|/* XXX this should be a user-accessible hook */
-comment|/* Ignore the return value - this is because the call fails on 	 * BPF systems that don't have kernel malloc.  And if the call 	 * fails, it's no big deal, we just continue to use the standard 	 * buffer size. 	 */
+init|;
+name|v
+operator|!=
+literal|0
+condition|;
+name|v
+operator|>>=
+literal|1
+control|)
+block|{
+comment|/* Ignore the return value - this is because the call fails 		 * on BPF systems that don't have kernel malloc.  And if 		 * the call fails, it's no big deal, we just continue to 		 * use the standard buffer size. 		 */
 operator|(
 name|void
 operator|)
@@ -871,15 +912,25 @@ operator|)
 operator|&
 name|ifr
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
+break|break;
+comment|/* that size worked; we're done */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOBUFS
+condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
 argument_list|,
-literal|"%s: %s"
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"BIOCSETIF: %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -887,6 +938,29 @@ name|pcap_strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+block|}
+if|if
+condition|(
+name|v
+operator|==
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"BIOCSBLEN: %s: No buffer size worked"
+argument_list|,
+name|device
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -912,9 +986,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"BIOCGDLT: %s"
 argument_list|,
@@ -939,6 +1015,7 @@ block|{
 case|case
 name|DLT_LOOP
 case|:
+comment|/* 		 * XXX - DLT_LOOP has a network-byte-order, rather than 		 * a host-byte-order, AF_ value as the link-layer 		 * header; will the BPF code generator handle that 		 * correctly on little-endian machines? 		 */
 name|v
 operator|=
 name|DLT_NULL
@@ -1056,9 +1133,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"BIOCSRTIMEOUT: %s"
 argument_list|,
@@ -1073,6 +1152,58 @@ name|bad
 goto|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|_AIX
+ifdef|#
+directive|ifdef
+name|BIOCIMMEDIATE
+comment|/* 	 * Darren Reed notes that 	 * 	 *	On AIX (4.2 at least), if BIOCIMMEDIATE is not set, the 	 *	timeout appears to be ignored and it waits until the buffer 	 *	is filled before returning.  The result of not having it 	 *	set is almost worse than useless if your BPF filter 	 *	is reducing things to only a few packets (i.e. one every 	 *	second or so). 	 * 	 * so we turn BIOCIMMEDIATE mode on if this is AIX. 	 * 	 * We don't turn it on for other platforms, as that means we 	 * get woken up for every packet, which may not be what we want; 	 * in the Winter 1993 USENIX paper on BPF, they say: 	 * 	 *	Since a process might want to look at every packet on a 	 *	network and the time between packets can be only a few 	 *	microseconds, it is not possible to do a read system call 	 *	per packet and BPF must collect the data from several 	 *	packets and return it as a unit when the monitoring 	 *	application does a read. 	 * 	 * which I infer is the reason for the timeout - it means we 	 * wait that amount of time, in the hopes that more packets 	 * will arrive and we'll get them all with one read. 	 * 	 * Setting BIOCIMMEDIATE mode on FreeBSD (and probably other 	 * BSDs) causes the timeout to be ignored. 	 * 	 * On the other hand, some platforms (e.g., Linux) don't support 	 * timeouts, they just hand stuff to you as soon as it arrives; 	 * if that doesn't cause a problem on those platforms, it may 	 * be OK to have BIOCIMMEDIATE mode on BSD as well. 	 * 	 * (Note, though, that applications may depend on the read 	 * completing, even if no packets have arrived, when the timeout 	 * expires, e.g. GUI applications that have to check for input 	 * while waiting for packets to arrive; a non-zero timeout 	 * prevents "select()" from working right on FreeBSD and 	 * possibly other BSDs, as the timer doesn't start until a 	 * "read()" is done, so the timer isn't in effect if the 	 * application is blocked on a "select()", and the "select()" 	 * doesn't get woken up for a BPF device until the buffer 	 * fills up.) 	 */
+name|v
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|p
+operator|->
+name|fd
+argument_list|,
+name|BIOCIMMEDIATE
+argument_list|,
+operator|&
+name|v
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"BIOCIMMEDIATE: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* BIOCIMMEDIATE */
+endif|#
+directive|endif
+comment|/* _AIX */
 if|if
 condition|(
 name|promisc
@@ -1110,9 +1241,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"BIOCGBLEN: %s"
 argument_list|,
@@ -1156,9 +1289,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"malloc: %s"
 argument_list|,
@@ -1219,13 +1354,25 @@ if|if
 condition|(
 name|no_optimize
 condition|)
+block|{
+if|if
+condition|(
+name|install_bpf_program
+argument_list|(
 name|p
-operator|->
-name|fcode
-operator|=
-operator|*
+argument_list|,
 name|fp
-expr_stmt|;
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1237,13 +1384,25 @@ name|rfile
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|install_bpf_program
+argument_list|(
 name|p
-operator|->
-name|fcode
-operator|=
-operator|*
+argument_list|,
 name|fp
-expr_stmt|;
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1264,11 +1423,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"BIOCSETF: %s"
 argument_list|,

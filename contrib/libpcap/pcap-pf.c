@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.54.1.1 1999/10/07 23:46:40 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.62 2000/10/28 00:01:30 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -67,12 +84,6 @@ directive|include
 file|<net/pfilt.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -84,11 +95,6 @@ struct_decl|struct
 name|rtentry
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -196,12 +202,6 @@ begin_include
 include|#
 directive|include
 file|"pcap-int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
 end_include
 
 begin_ifdef
@@ -415,11 +415,18 @@ goto|goto
 name|again
 goto|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|pc
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pc
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"pf read: %s"
 argument_list|,
@@ -499,11 +506,18 @@ name|sp
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|pc
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pc
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"pf short read (%d)"
 argument_list|,
@@ -582,11 +596,18 @@ name|sp
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|pc
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pc
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"pf short stamplen (%d)"
 argument_list|,
@@ -967,9 +988,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"pcap_open_live: %s"
 argument_list|,
@@ -985,13 +1008,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|p
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1020,9 +1041,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"pf open: %s: %s\n\ your system may not be properly configured; see \"man packetfilter(4)\"\n"
 argument_list|,
@@ -1083,9 +1106,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"EIOCMBIS: %s"
 argument_list|,
@@ -1149,9 +1174,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"EIOCSETW: %s"
 argument_list|,
@@ -1186,9 +1213,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"EIOCDEVP: %s"
 argument_list|,
@@ -1314,9 +1343,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"EIOCTRUNCATE: %s"
 argument_list|,
@@ -1337,14 +1368,12 @@ operator|=
 name|snaplen
 expr_stmt|;
 comment|/* accept all packets */
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|Filter
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1386,9 +1415,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"EIOCSETF: %s"
 argument_list|,
@@ -1453,9 +1484,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"EIOCSRTIMEOUT: %s"
 argument_list|,
@@ -1587,11 +1620,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"BIOCVERSION: %s"
 argument_list|,
@@ -1655,13 +1695,25 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|install_bpf_program
+argument_list|(
 name|p
-operator|->
-name|fcode
-operator|=
-operator|*
+argument_list|,
 name|fp
-expr_stmt|;
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/*XXX this goes in tcpdump*/
 if|if
 condition|(

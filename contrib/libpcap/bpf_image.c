@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/bpf_image.c,v 1.22.1.1 1999/10/07 23:46:40 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/bpf_image.c,v 1.24 2000/07/11 00:37:04 assar Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -53,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|"pcap-int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
 end_include
 
 begin_ifdef
@@ -838,8 +849,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|operand
+argument_list|,
+sizeof|sizeof
 name|operand
 argument_list|,
 name|fmt
@@ -850,8 +864,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|image
+argument_list|,
+sizeof|sizeof
 name|image
 argument_list|,
 operator|(

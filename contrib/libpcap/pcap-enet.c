@@ -3,6 +3,45 @@ begin_comment
 comment|/*  * Stanford Enetfilter subroutines for tcpdump  *  * Based on the MERIT NNstat etherifrt.c and the Ultrix pcap-pf.c  * subroutines.  *  * Rayan Zachariassen, CA*Net  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-enet.c,v 1.5 2000/10/12 03:53:59 guy Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

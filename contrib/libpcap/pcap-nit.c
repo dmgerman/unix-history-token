@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-nit.c,v 1.31.1.1 1999/10/07 23:46:40 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-nit.c,v 1.39 2000/10/28 00:01:29 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -149,12 +166,6 @@ begin_include
 include|#
 directive|include
 file|"pcap-int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
 end_include
 
 begin_ifdef
@@ -358,11 +369,18 @@ operator|(
 literal|0
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"pcap_read: %s"
 argument_list|,
@@ -468,11 +486,18 @@ name|NIT_SEQNO
 case|:
 continue|continue;
 default|default:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"bad nit state %d"
 argument_list|,
@@ -676,14 +701,12 @@ name|struct
 name|nit_ioc
 name|nioc
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|nioc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -795,9 +818,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"SIOCSNIT: %s"
 argument_list|,
@@ -879,7 +904,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ebuf
 argument_list|,
@@ -887,6 +912,8 @@ name|pcap_strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|)
 expr_stmt|;
 return|return
@@ -906,9 +933,11 @@ name|snaplen
 operator|=
 literal|96
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -939,9 +968,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"socket: %s"
 argument_list|,
@@ -996,9 +1027,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"bind: %s: %s"
 argument_list|,
@@ -1072,7 +1105,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ebuf
 argument_list|,
@@ -1080,6 +1113,8 @@ name|pcap_strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1131,13 +1166,23 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+if|if
+condition|(
+name|install_bpf_program
+argument_list|(
 name|p
-operator|->
-name|fcode
-operator|=
-operator|*
+argument_list|,
 name|fp
-expr_stmt|;
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0

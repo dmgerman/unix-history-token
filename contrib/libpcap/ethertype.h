@@ -1,11 +1,99 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/libpcap/ethertype.h,v 1.7 1999/10/30 04:30:13 itojun Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/libpcap/ethertype.h,v 1.11 2000/10/22 04:15:55 guy Exp $ (LBL)  */
 end_comment
 
 begin_comment
-comment|/* Types missing from some systems */
+comment|/*  * Ethernet types.  *  * We wrap the declarations with #ifdef, so that if a file includes  *<netinet/if_ether.h>, which may declare some of these, we don't  * get a bunch of complaints from the C compiler about redefinitions  * of these values.  *  * We declare all of them here so that no file has to include  *<netinet/if_ether.h> if all it needs are ETHERTYPE_ values.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_PUP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_PUP
+value|0x0200
+end_define
+
+begin_comment
+comment|/* PUP protocol */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_IP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_IP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* IP protocol */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_ARP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_ARP
+value|0x0806
+end_define
+
+begin_comment
+comment|/* Addr. resolution protocol */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_REVARP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_REVARP
+value|0x8035
+end_define
+
+begin_comment
+comment|/* reverse Addr. resolution protocol */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -305,7 +393,25 @@ begin_define
 define|#
 directive|define
 name|ETHERTYPE_IPV6
-value|0x80f3
+value|0x86dd
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_8021Q
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_8021Q
+value|0x8100
 end_define
 
 begin_endif
