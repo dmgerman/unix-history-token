@@ -256,6 +256,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCPOLEN_SACK
+value|8
+end_define
+
+begin_comment
+comment|/* 2*sizeof(tcp_seq) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCPOPT_TIMESTAMP
 value|8
 end_define
@@ -285,6 +296,17 @@ name|TCPOPT_TSTAMP_HDR
 define|\
 value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_TIMESTAMP<<8|TCPOLEN_TIMESTAMP)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_TCPOPTLEN
+value|40
+end_define
+
+begin_comment
+comment|/* Absolute maximum TCP options len */
+end_comment
 
 begin_define
 define|#
@@ -353,6 +375,51 @@ directive|define
 name|TCPOLEN_SIGNATURE
 value|18
 end_define
+
+begin_comment
+comment|/* Option definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_SACK_PERMIT_HDR
+define|\
+value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_SACK_PERMITTED<<8|TCPOLEN_SACK_PERMITTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_SACK_HDR
+value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_SACK<<8)
+end_define
+
+begin_comment
+comment|/* Miscellaneous constants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SACK_BLKS
+value|6
+end_define
+
+begin_comment
+comment|/* Max # SACK blocks stored at sender side */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MAX_SACK
+value|3
+end_define
+
+begin_comment
+comment|/* MAX # SACKs sent in any segment */
+end_comment
 
 begin_comment
 comment|/*  * Default maximum segment size for TCP.  * With an IP MTU of 576, this is 536,  * but 512 is probably more convenient.  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).  */

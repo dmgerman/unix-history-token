@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_tcp_sack.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -989,6 +995,11 @@ block|}
 name|INP_LOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|tcp_free_sackholes
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2323,6 +2334,11 @@ argument_list|(
 name|tp
 operator|->
 name|tt_rexmt
+argument_list|)
+expr_stmt|;
+name|tcp_free_sackholes
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit one segment. 	 */

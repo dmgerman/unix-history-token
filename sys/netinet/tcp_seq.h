@@ -67,6 +67,30 @@ parameter_list|)
 value|((int)((a)-(b))>= 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SEQ_MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((SEQ_LT(a, b)) ? (a) : (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((SEQ_GT(a, b)) ? (a) : (b))
+end_define
+
 begin_comment
 comment|/* for modulo comparisons of timestamps */
 end_comment

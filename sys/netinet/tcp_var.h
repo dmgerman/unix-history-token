@@ -101,6 +101,48 @@ end_decl_stmt
 
 begin_struct
 struct|struct
+name|sackblk
+block|{
+name|tcp_seq
+name|start
+decl_stmt|;
+comment|/* start seq no. of sack block */
+name|tcp_seq
+name|end
+decl_stmt|;
+comment|/* end seq no. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sackhole
+block|{
+name|tcp_seq
+name|start
+decl_stmt|;
+comment|/* start seq no. of hole */
+name|tcp_seq
+name|end
+decl_stmt|;
+comment|/* end seq no. */
+name|tcp_seq
+name|rxmit
+decl_stmt|;
+comment|/* next seq. no in hole to be retransmitted */
+name|struct
+name|sackhole
+modifier|*
+name|next
+decl_stmt|;
+comment|/* next in list */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|tcptemp
 block|{
 name|u_char
@@ -545,6 +587,45 @@ name|u_long
 name|rcv_byps
 decl_stmt|;
 comment|/* received bytes per second */
+comment|/* SACK related state */
+name|int
+name|sack_enable
+decl_stmt|;
+comment|/* enable SACK for this connection */
+name|int
+name|snd_numholes
+decl_stmt|;
+comment|/* number of holes seen by sender */
+name|struct
+name|sackhole
+modifier|*
+name|snd_holes
+decl_stmt|;
+comment|/* linked list of holes (sorted) */
+name|tcp_seq
+name|rcv_laststart
+decl_stmt|;
+comment|/* start of last segment recd. */
+name|tcp_seq
+name|rcv_lastend
+decl_stmt|;
+comment|/* end of ... */
+name|tcp_seq
+name|rcv_lastsack
+decl_stmt|;
+comment|/* last seq number(+1) sack'd by rcv'r*/
+name|int
+name|rcv_numsacks
+decl_stmt|;
+comment|/* # distinct sack blks present */
+name|struct
+name|sackblk
+name|sackblks
+index|[
+name|MAX_SACK_BLKS
+index|]
+decl_stmt|;
+comment|/* seq nos. of sack blocks */
 block|}
 struct|;
 end_struct
@@ -690,6 +771,11 @@ directive|define
 name|TOF_SIGLEN
 value|0x0080
 comment|/* signature length valid (RFC2385) */
+define|#
+directive|define
+name|TOF_SACK
+value|0x0100
+comment|/* Peer sent SACK option */
 name|u_int32_t
 name|to_tsval
 decl_stmt|;
@@ -823,6 +909,11 @@ directive|define
 name|SCF_SIGNATURE
 value|0x20
 comment|/* send MD5 digests */
+define|#
+directive|define
+name|SCF_SACK
+value|0x80
+comment|/* send SACK option */
 name|TAILQ_ENTRY
 argument_list|(
 argument|syncache
@@ -1463,6 +1554,27 @@ name|u_long
 name|tcps_hc_bucketoverflow
 decl_stmt|;
 comment|/* hostcache per bucket limit hit */
+comment|/* SACK related stats */
+name|u_long
+name|tcps_sack_recovery_episode
+decl_stmt|;
+comment|/* SACK recovery episodes */
+name|u_long
+name|tcps_sack_rexmits
+decl_stmt|;
+comment|/* SACK rexmit segments   */
+name|u_long
+name|tcps_sack_rexmit_bytes
+decl_stmt|;
+comment|/* SACK rexmit bytes      */
+name|u_long
+name|tcps_sack_rcv_blocks
+decl_stmt|;
+comment|/* SACK blocks (options) received */
+name|u_long
+name|tcps_sack_send_blocks
+decl_stmt|;
+comment|/* SACK blocks (options) sent     */
 block|}
 struct|;
 end_struct
@@ -1666,8 +1778,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_MAXID
+name|TCPCTL_SACK
 value|14
+end_define
+
+begin_comment
+comment|/* Selective Acknowledgement,rfc 2018 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MAXID
+value|15
 end_define
 
 begin_define
@@ -1793,6 +1916,17 @@ name|int
 name|ss_fltsz_local
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_do_sack
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SACK enabled/disabled */
+end_comment
 
 begin_function_decl
 name|void
@@ -2514,6 +2648,171 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_sack_option
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_update_sack_list
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_del_sackholes
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_clean_sackreport
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_sack_adjust
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sackhole
+modifier|*
+name|tcp_sack_output
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_sack_partialack
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_free_sackholes
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_newreno
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_long
+name|tcp_seq_subtract
+parameter_list|(
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_SACK_DEBUG
+end_ifdef
+
+begin_function_decl
+name|void
+name|tcp_print_holes
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TCP_SACK_DEBUG */
+end_comment
 
 begin_endif
 endif|#
