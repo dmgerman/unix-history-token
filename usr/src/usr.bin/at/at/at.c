@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	5.9 (Berkeley) %G%"
+literal|"@(#)at.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1288,7 +1288,7 @@ name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Put in a line to run the proper shell using the rest of 	 * the file as input.  Note that 'exec'ing the shell will 	 * cause sh() to leave a /tmp/sh### file around.  This line 	 * depends on the shells allowing EOF to end tagged input.  The 	 * quotes also guarantee a quoting of the lines before EOF. 	 */
+comment|/* 	 * Put in a line to run the proper shell using the rest of 	 * the file as input.  Note that 'exec'ing the shell will 	 * cause sh() to leave a /tmp/sh### file around.  The quotes 	 * also guarantee a quoting of the lines before EOF. 	 */
 name|fprintf
 argument_list|(
 name|spoolfile
@@ -1319,7 +1319,14 @@ argument_list|,
 name|spoolfile
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Close all files and change the mode of the spoolfile. 	 */
+comment|/* don't put on single quotes, csh doesn't like it */
+name|fprintf
+argument_list|(
+name|spoolfile
+argument_list|,
+literal|"QAZWSXEDCRFVTGBYHNUJMIKOLP\n"
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|inputfile
