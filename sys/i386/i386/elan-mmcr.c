@@ -224,12 +224,6 @@ begin_comment
 comment|/* CPU_ELAN_PPS */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_SOEKRIS
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|u_int
@@ -307,11 +301,6 @@ name|u
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -446,12 +435,30 @@ index|]
 operator|==
 literal|'-'
 operator|&&
-operator|(
 name|buf
 index|[
 name|i
 index|]
-operator|!=
+operator|==
+literal|'.'
+condition|)
+name|buf
+index|[
+name|i
+index|]
+operator|=
+name|gpio_config
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|gpio_config
+index|[
+name|i
+index|]
+operator|==
 literal|'-'
 operator|&&
 name|buf
@@ -459,8 +466,7 @@ index|[
 name|i
 index|]
 operator|!=
-literal|'.'
-operator|)
+literal|'-'
 condition|)
 return|return
 operator|(
@@ -660,6 +666,16 @@ directive|ifdef
 name|CPU_SOEKRIS
 if|if
 condition|(
+name|i
+operator|==
+literal|9
+condition|)
+empty_stmt|;
+elseif|else
+endif|#
+directive|endif
+if|if
+condition|(
 name|buf
 index|[
 name|i
@@ -712,8 +728,6 @@ operator|~
 name|u
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|buf
@@ -855,9 +869,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* CPU_ELAN_PPS */
-ifdef|#
-directive|ifdef
-name|CPU_SOEKRIS
 case|case
 literal|'l'
 case|:
@@ -967,8 +978,6 @@ name|i
 index|]
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'.'
 case|:
