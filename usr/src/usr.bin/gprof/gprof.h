@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.8 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.9 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gmcrt0.h"
+file|"gcrt0.h"
 end_include
 
 begin_comment
@@ -151,29 +151,6 @@ name|arcstruct
 name|arctype
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*      *	a raw arc,      *	    with pointers to the calling site and the called site      *	    and a count.      */
-end_comment
-
-begin_struct
-struct|struct
-name|rawarc
-block|{
-name|unsigned
-name|long
-name|raw_frompc
-decl_stmt|;
-name|unsigned
-name|long
-name|raw_selfpc
-decl_stmt|;
-name|long
-name|raw_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * The symbol table;  * for each external in the specified file we gather  * its address, the number of calls and compute its share of cpu time.  */

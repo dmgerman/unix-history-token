@@ -5,9 +5,15 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	1.6 (Berkeley) %G%"
+literal|"@(#)gmon.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_include
 include|#
@@ -15,10 +21,16 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
+
 begin_include
 include|#
 directive|include
-file|"gmcrt0.h"
+file|"gcrt0.h"
 end_include
 
 begin_comment
@@ -229,11 +241,6 @@ end_comment
 
 begin_block
 block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 name|_mcleanup
 argument_list|()
 expr_stmt|;
@@ -570,8 +577,7 @@ end_macro
 
 begin_block
 block|{
-name|FILE
-modifier|*
+name|int
 name|fd
 decl_stmt|;
 name|int
@@ -583,6 +589,10 @@ name|frompc
 decl_stmt|;
 name|int
 name|toindex
+decl_stmt|;
+name|struct
+name|rawarc
+name|rawarc
 decl_stmt|;
 name|monitor
 argument_list|(
@@ -598,18 +608,18 @@ argument_list|)
 expr_stmt|;
 name|fd
 operator|=
-name|fopen
+name|creat
 argument_list|(
 literal|"gmon.out"
 argument_list|,
-literal|"w"
+literal|0666
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 block|{
 name|perror
@@ -636,15 +646,13 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-name|fwrite
+name|write
 argument_list|(
+name|fd
+argument_list|,
 name|sbuf
 argument_list|,
-literal|1
-argument_list|,
 name|ssiz
-argument_list|,
-name|fd
 argument_list|)
 expr_stmt|;
 for|for
@@ -737,68 +745,56 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-name|fwrite
-argument_list|(
-operator|&
+name|rawarc
+operator|.
+name|raw_frompc
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|frompc
-argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
-name|frompc
-argument_list|,
-name|fd
-argument_list|)
 expr_stmt|;
-name|fwrite
-argument_list|(
-operator|&
+name|rawarc
+operator|.
+name|raw_selfpc
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|tos
 index|[
 name|toindex
 index|]
 operator|.
 name|selfpc
-argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
+expr_stmt|;
+name|rawarc
+operator|.
+name|raw_count
+operator|=
 name|tos
 index|[
 name|toindex
 index|]
 operator|.
-name|selfpc
-argument_list|,
-name|fd
-argument_list|)
+name|count
 expr_stmt|;
-name|fwrite
+name|write
 argument_list|(
-operator|&
-name|tos
-index|[
-name|toindex
-index|]
-operator|.
-name|count
+name|fd
 argument_list|,
-literal|1
+operator|&
+name|rawarc
 argument_list|,
 sizeof|sizeof
-name|tos
-index|[
-name|toindex
-index|]
-operator|.
-name|count
-argument_list|,
-name|fd
+name|rawarc
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|fclose
+name|close
 argument_list|(
 name|fd
 argument_list|)
@@ -847,7 +843,7 @@ name|profiling
 init|=
 literal|0
 decl_stmt|;
-asm|asm( "	forgot to run ex script on gmcrt0.s" );
+asm|asm( "	forgot to run ex script on gcrt0.s" );
 asm|asm( "#define r11 r5" );
 asm|asm( "#define r10 r4" );
 asm|asm( "#define r9 r3" );
