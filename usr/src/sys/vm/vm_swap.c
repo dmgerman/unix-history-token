@@ -1,48 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dmap.h"
+file|<sys/dmap.h>
 end_include
 
 begin_comment
@@ -52,25 +52,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|<sys/specdev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -95,12 +95,10 @@ begin_comment
 comment|/*  * Set up swap devices.  * Initialize linked list of free swap  * headers. These do not actually point  * to buffers, but rather to pages that  * are being swapped in and out.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|swapinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -292,22 +290,20 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|swstrategy
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|sz
@@ -522,7 +518,7 @@ name|bp
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * System call swapon(name) enables swapping on device name,  * which must be in the swdevsw.  Return EBUSY  * if already swapping on this device.  */
@@ -532,19 +528,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|swapon
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -806,30 +800,22 @@ begin_comment
 comment|/*  * Swfree(index) frees the index'th portion of the swap map.  * Each of the nswdev devices provides 1/nswdev'th of the swap  * space, which is laid out with blocks of dmmax pages circularly  * among the devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|swfree
-argument_list|(
-argument|p
-argument_list|,
-argument|index
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|index
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|index
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1095,7 +1081,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

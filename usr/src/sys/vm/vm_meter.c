@@ -1,36 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_decl_stmt
@@ -60,12 +60,10 @@ name|SAFERSS
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|vmmeter
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|unsigned
@@ -114,7 +112,7 @@ name|proc0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Constants for averages over 1, 5, and 15 minutes  * when sampling at 5 second intervals.  */
@@ -151,20 +149,18 @@ begin_comment
 comment|/*  * Compute a tenex style load average of a quantity on  * 1, 5 and 15 minute intervals.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|loadav
-argument_list|(
+parameter_list|(
 name|avg
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|loadavg
-operator|*
+modifier|*
 name|avg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -337,7 +333,7 @@ endif|#
 directive|endif
 comment|/* COMPAT_43 */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Load average information  */
@@ -347,46 +343,38 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kinfo_loadavg
-argument_list|(
-argument|op
-argument_list|,
-argument|where
-argument_list|,
-argument|acopysize
-argument_list|,
-argument|arg
-argument_list|,
-argument|aneeded
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|op
+parameter_list|,
+name|where
+parameter_list|,
+name|acopysize
+parameter_list|,
+name|arg
+parameter_list|,
+name|aneeded
+parameter_list|)
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|where
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|acopysize
 decl_stmt|,
 name|arg
 decl_stmt|,
-modifier|*
+decl|*
 name|aneeded
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -493,44 +481,36 @@ begin_comment
 comment|/*  * Calculate and return vmtotals structure.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kinfo_meter
-argument_list|(
-argument|op
-argument_list|,
-argument|where
-argument_list|,
-argument|acopysize
-argument_list|,
-argument|arg
-argument_list|,
-argument|aneeded
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|op
+parameter_list|,
+name|where
+parameter_list|,
+name|acopysize
+parameter_list|,
+name|arg
+parameter_list|,
+name|aneeded
+parameter_list|)
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|where
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|acopysize
 decl_stmt|,
 name|arg
 decl_stmt|,
-modifier|*
+decl|*
 name|aneeded
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -630,20 +610,18 @@ begin_comment
 comment|/*  * Calculate the current state of the system.  * Done on demand from getkerninfo().  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vmtotal
-argument_list|(
+parameter_list|(
 name|totalp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vmtotal
-operator|*
+modifier|*
 name|totalp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1133,7 +1111,7 @@ operator|.
 name|v_free_count
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
