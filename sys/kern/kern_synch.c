@@ -2541,6 +2541,14 @@ name|rval
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
