@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.8 1995/10/25 15:37:47 jkh Exp $"
+literal|"$Id: main.c,v 1.9 1995/11/12 04:55:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,6 +405,26 @@ name|argv
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+comment|/* stdin? */
+name|pkgs
+index|[
+name|ch
+index|]
+operator|=
+literal|"-"
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|isURL

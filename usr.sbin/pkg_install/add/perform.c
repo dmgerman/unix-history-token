@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.31 1995/10/31 20:30:15 jkh Exp $"
+literal|"$Id: perform.c,v 1.32 1995/11/12 04:55:23 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,9 @@ name|where_to
 decl_stmt|,
 modifier|*
 name|tmp
+decl_stmt|,
+modifier|*
+name|extract
 decl_stmt|;
 name|FILE
 modifier|*
@@ -425,6 +428,16 @@ expr_stmt|;
 comment|/* copy for sanity's sake, could remove pkg_fullname */
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|pkg
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|stat
 argument_list|(
 name|pkg_fullname
@@ -447,6 +460,25 @@ goto|goto
 name|bomb
 goto|;
 block|}
+name|sprintf
+argument_list|(
+name|extract_contents
+argument_list|,
+literal|"--fast-read %s"
+argument_list|,
+name|CONTENTS_FNAME
+argument_list|)
+expr_stmt|;
+name|extract
+operator|=
+name|extract_contents
+expr_stmt|;
+block|}
+else|else
+name|extract
+operator|=
+name|NULL
+expr_stmt|;
 name|Home
 operator|=
 name|make_playpen
@@ -480,22 +512,13 @@ name|where_to
 operator|=
 name|Home
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|extract_contents
-argument_list|,
-literal|"--fast-read %s"
-argument_list|,
-name|CONTENTS_FNAME
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unpack
 argument_list|(
 name|pkg_fullname
 argument_list|,
-name|extract_contents
+name|extract
 argument_list|)
 condition|)
 block|{
@@ -683,6 +706,9 @@ block|}
 comment|/* 	     * Apply a crude heuristic to see how much space the package will 	     * take up once it's unpacked.  I've noticed that most packages 	     * compress an average of 75%, so multiply by 4 for good measure. 	     */
 if|if
 condition|(
+operator|!
+name|inPlace
+operator|&&
 name|min_free
 argument_list|(
 name|playpen
