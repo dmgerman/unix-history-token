@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1985, 1987, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1985 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985, 1987, 1988 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -33,18 +36,21 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)date.c	4.22 (Berkeley) %G%"
+literal|"@(#)date.c	4.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Date - print and set date  */
@@ -113,13 +119,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|WTMP
-value|"/usr/adm/wtmp"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATOI2
 parameter_list|(
 name|ar
@@ -179,39 +178,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|utmp
-name|wtmp
-index|[
-literal|2
-index|]
-init|=
-block|{
-block|{
-literal|"|"
-block|,
-literal|""
-block|,
-literal|""
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"{"
-block|,
-literal|""
-block|,
-literal|""
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|main
 parameter_list|(
@@ -245,32 +211,16 @@ name|char
 modifier|*
 name|ap
 decl_stmt|,
-comment|/* time string */
 modifier|*
 name|tzn
 decl_stmt|;
-comment|/* time zone */
 name|int
 name|ch
 decl_stmt|,
-comment|/* getopts char */
 name|uflag
 decl_stmt|,
-comment|/* do it in GMT */
 name|nflag
-decl_stmt|,
-comment|/* only set time locally */
-name|wf
 decl_stmt|;
-comment|/* wtmp file descriptor */
-name|long
-name|time
-parameter_list|()
-function_decl|;
-name|uid_t
-name|getuid
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|username
@@ -279,6 +229,10 @@ modifier|*
 name|getlogin
 argument_list|()
 decl_stmt|;
+name|time_t
+name|time
+parameter_list|()
+function_decl|;
 name|nflag
 operator|=
 name|uflag
@@ -323,6 +277,7 @@ block|{
 case|case
 literal|'d'
 case|:
+comment|/* daylight savings time */
 name|tz
 operator|.
 name|tz_dsttime
@@ -340,6 +295,7 @@ break|break;
 case|case
 literal|'n'
 case|:
+comment|/* don't set network */
 name|nflag
 operator|=
 literal|1
@@ -348,6 +304,7 @@ break|break;
 case|case
 literal|'u'
 case|:
+comment|/* do it in GMT */
 name|uflag
 operator|=
 literal|1
@@ -356,6 +313,7 @@ break|break;
 case|case
 literal|'t'
 case|:
+comment|/* minutes west of GMT */
 comment|/* error check; we can't allow "PST" */
 if|if
 condition|(
@@ -482,17 +440,6 @@ condition|)
 goto|goto
 name|display
 goto|;
-name|wtmp
-index|[
-literal|0
-index|]
-operator|.
-name|ut_time
-operator|=
-name|tv
-operator|.
-name|tv_sec
-expr_stmt|;
 if|if
 condition|(
 name|gtime
@@ -568,6 +515,15 @@ name|tv
 argument_list|)
 condition|)
 block|{
+name|logwtmp
+argument_list|(
+literal|"|"
+argument_list|,
+literal|"date"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|settimeofday
@@ -580,7 +536,7 @@ expr|struct
 name|timezone
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -597,79 +553,15 @@ goto|goto
 name|display
 goto|;
 block|}
-if|if
-condition|(
-operator|(
-name|wf
-operator|=
-name|open
+name|logwtmp
 argument_list|(
-name|WTMP
+literal|"{"
 argument_list|,
-name|O_WRONLY
-operator||
-name|O_APPEND
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fputs
-argument_list|(
-literal|"date: can't write wtmp file.\n"
+literal|"date"
 argument_list|,
-name|stderr
+literal|""
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-operator|&
-name|wtmp
-index|[
-literal|1
-index|]
-operator|.
-name|ut_time
-argument_list|)
-expr_stmt|;
-comment|/*NOSTRICT*/
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|wf
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|wtmp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|wtmp
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|wf
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|username
 operator|=
@@ -716,7 +608,7 @@ expr|struct
 name|timezone
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -831,10 +723,6 @@ name|ap
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* user argument */
-end_comment
-
 begin_block
 block|{
 specifier|register
@@ -848,7 +736,6 @@ name|char
 modifier|*
 name|C
 decl_stmt|;
-comment|/* pointer into time argument */
 name|struct
 name|tm
 modifier|*
@@ -1308,17 +1195,19 @@ begin_comment
 comment|/*  * Set the date in the machines controlled by timedaemons  * by communicating the new date to the local timedaemon.   * If the timedaemon is in the master state, it performs the  * correction on all slaves.  If it is in the slave state, it  * notifies the master that a correction is needed.  * Returns 1 on success, 0 on failure.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|netsettime
 argument_list|(
 argument|ntv
 argument_list|)
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|timeval
 name|ntv
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
