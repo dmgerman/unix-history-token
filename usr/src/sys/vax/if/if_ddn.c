@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	6.2 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	6.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -125,23 +125,6 @@ include|#
 directive|include
 file|"../net/route.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BBNNET
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INET
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -358,17 +358,9 @@ name|pupdomain
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BBNNET
-argument_list|)
 specifier|extern
 name|struct
 name|domain
@@ -429,17 +421,9 @@ name|pupdomain
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BBNNET
-argument_list|)
 name|inetdomain
 operator|.
 name|dom_next
@@ -704,17 +688,9 @@ expr_stmt|;
 name|rawintr
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BBNNET
-argument_list|)
 name|ipintr
 argument_list|()
 expr_stmt|;
