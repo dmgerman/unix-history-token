@@ -622,12 +622,27 @@ operator|-
 literal|1
 condition|)
 block|{
-name|panic
+name|printf
 argument_list|(
 literal|"ofw_pci_init_intr: could not get "
-literal|"interrupt map properties"
+literal|"interrupt map properties\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nintrmap
+operator|!=
+operator|-
+literal|1
+condition|)
+name|free
+argument_list|(
+name|intrmap
+argument_list|,
+name|M_OFWPROP
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|intrmapmsk
 operator|=
