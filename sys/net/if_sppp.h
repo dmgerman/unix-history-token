@@ -126,14 +126,14 @@ name|notdef
 define|#
 directive|define
 name|IPV6CP_MYIFID_DYN
-value|2
+value|8
 comment|/* my ifid is dynamically assigned */
 endif|#
 directive|endif
 define|#
 directive|define
 name|IPV6CP_MYIFID_SEEN
-value|4
+value|0x10
 comment|/* have seen his ifid already */
 block|}
 struct|;
