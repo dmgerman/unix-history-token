@@ -1797,12 +1797,22 @@ name|unp_ino
 operator|==
 literal|0
 condition|)
+comment|/* make up a non-zero inode number */
 name|unp
 operator|->
 name|unp_ino
 operator|=
-name|unp_ino
+operator|(
 operator|++
+name|unp_ino
+operator|==
+literal|0
+operator|)
+condition|?
+operator|++
+name|unp_ino
+else|:
+name|unp_ino
 expr_stmt|;
 name|sb
 operator|->
