@@ -994,6 +994,13 @@ begin_comment
 comment|/* parent sleeps until child exits (vfork) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RFKERNELONLY
+value|RFPPWAIT
+end_define
+
 begin_endif
 endif|#
 directive|endif
