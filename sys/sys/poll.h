@@ -254,29 +254,26 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 comment|/*  * XXX logically, poll() should be declared in<poll.h>, but SVR4 at  * least has it here in<sys/poll.h>.  * XXX poll() has "unsigned long" nfds on SVR4, not unsigned as on the  * other BSDs.  */
 name|int
 name|poll
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|pollfd
-operator|*
+modifier|*
 name|_pfd
-operator|,
+parameter_list|,
 name|unsigned
 name|int
 name|_nfds
-operator|,
+parameter_list|,
 name|int
 name|_timeout
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

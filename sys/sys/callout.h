@@ -72,17 +72,15 @@ name|c_arg
 decl_stmt|;
 comment|/* function argument */
 name|void
-argument_list|(
-argument|*c_func
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|c_func
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* function to call */
 name|int
 name|c_flags
@@ -229,21 +227,18 @@ parameter_list|)
 value|((c)->c_flags&= ~CALLOUT_ACTIVE)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|callout_init
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|callout
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -255,47 +250,41 @@ parameter_list|)
 value|((c)->c_flags& CALLOUT_PENDING)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|callout_reset
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|callout
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-operator|,
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|callout_stop
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|callout
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

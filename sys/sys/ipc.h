@@ -238,25 +238,22 @@ name|proc
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ipcperm
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|thread
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|ipc_perm
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -311,22 +308,19 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 name|key_t
 name|ftok
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

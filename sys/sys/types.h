@@ -951,7 +951,7 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 name|__BEGIN_DECLS
 ifndef|#
 directive|ifndef
@@ -961,16 +961,13 @@ directive|define
 name|_FTRUNCATE_DECLARED
 name|int
 name|ftruncate
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|off_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -989,21 +986,18 @@ directive|define
 name|_LSEEK_DECLARED
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|off_t
 name|lseek
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|off_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1022,29 +1016,26 @@ directive|define
 name|_MMAP_DECLARED
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 modifier|*
 name|mmap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|off_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1063,21 +1054,18 @@ directive|define
 name|_TRUNCATE_DECLARED
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|truncate
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|off_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

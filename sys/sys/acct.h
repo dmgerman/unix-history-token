@@ -173,20 +173,17 @@ name|thread
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|acct_process
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|thread
-operator|*
+modifier|*
 name|td
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

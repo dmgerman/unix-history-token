@@ -25,18 +25,15 @@ begin_comment
 comment|/*  * System calls associated with regression testing functions in kernel.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|__setugid
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|_flag
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -4237,17 +4237,14 @@ directive|ifndef
 name|USE_SIMPLE_MACROS
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|seqbuf_dump
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This function must be provided by programs */
