@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	8.2 (Berkeley) %G%"
+literal|"@(#)lpd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,6 +673,19 @@ argument_list|,
 name|mcleanup
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|un
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|un
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|un
 operator|.
 name|sun_family
@@ -852,6 +865,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|sin
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_family
