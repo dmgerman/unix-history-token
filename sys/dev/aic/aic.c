@@ -1890,6 +1890,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Start another command if the controller is not busy.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2025,6 +2029,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Start a selection.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2158,6 +2166,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * We have successfully selected a target, prepare for the information  * transfer phases.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2314,6 +2326,7 @@ operator||=
 name|AIC_MSG_SDTR
 expr_stmt|;
 block|}
+comment|/* mark target/lun busy only for untagged operations */
 if|if
 condition|(
 operator|(
@@ -2399,6 +2412,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * We are re-selected by a target, save the target id and wait for the  * target to further identify itself.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2427,6 +2444,7 @@ literal|"aic_reselected\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we have started a selection, it must have lost out in 	 * the arbitration, put the command back to the pending queue. 	 */
 if|if
 condition|(
 name|aic
@@ -2484,7 +2502,16 @@ literal|1
 operator|)
 condition|)
 block|{
-empty_stmt|;
+comment|/* this should never have happened */
+name|aic_reset
+argument_list|(
+name|aic
+argument_list|,
+comment|/*initiate_reset*/
+name|TRUE
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|aic
 operator|->
@@ -2585,6 +2612,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Wait for SPIORDY (SCSI PIO ready) flag, or a phase change.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -2646,6 +2677,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read messages.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2709,6 +2744,7 @@ literal|0
 expr_stmt|;
 do|do
 block|{
+comment|/* 		 * If a parity error is detected, drop the remaining 		 * bytes and inform the target so it could resend 		 * the messages. 		 */
 if|if
 condition|(
 name|aic_inb
@@ -2764,6 +2800,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* read the message byte without ACKing on it */
 name|aic
 operator|->
 name|msg_buf
@@ -2899,6 +2936,7 @@ name|msglen
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 		 * If we have a complete message, handle it before the final 		 * ACK (in case we decide to reject the message). 		 */
 if|if
 condition|(
 name|aic
@@ -2920,6 +2958,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* ACK on the message byte */
 operator|(
 name|void
 operator|)
@@ -2963,6 +3002,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Handle a message.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3018,6 +3061,7 @@ operator|->
 name|target
 index|]
 expr_stmt|;
+comment|/* 		 * We expect to see an IDENTIFY message, possibly followed 		 * by a tagged queue message. 		 */
 if|if
 condition|(
 name|MSG_ISIDENTIFY
@@ -3103,6 +3147,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Find the nexus */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ccb_h
@@ -3156,6 +3201,7 @@ operator|)
 condition|)
 break|break;
 block|}
+comment|/* ABORT if nothing is found */
 if|if
 condition|(
 operator|!
@@ -3172,6 +3218,7 @@ expr_stmt|;
 comment|/* MSG_ABORT_TAG?*/
 return|return;
 block|}
+comment|/* Reestablish the nexus */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3270,6 +3317,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* auto REQUEST SENSE command */
 name|scb
 operator|->
 name|flags
@@ -3302,11 +3350,7 @@ name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
-name|scsi_sense_print
-argument_list|(
-name|csio
-argument_list|)
-expr_stmt|;
+comment|/*scsi_sense_print(csio);*/
 block|}
 else|else
 block|{
@@ -3356,6 +3400,7 @@ operator|==
 name|SCSI_STATUS_OK
 condition|)
 block|{
+comment|/* everything goes well */
 name|ccb_h
 operator|->
 name|status
@@ -3391,6 +3436,7 @@ name|SCSI_STATUS_CMD_TERMINATED
 operator|)
 condition|)
 block|{
+comment|/* try to retrieve sense information */
 name|scb
 operator|->
 name|flags
@@ -3558,6 +3604,7 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 				 * The target initiated the negotiation, 				 * send back a response. 				 */
 name|aic_sched_msgout
 argument_list|(
 name|aic
@@ -3816,6 +3863,16 @@ operator|&=
 operator|~
 name|TINFO_TAG_ENB
 expr_stmt|;
+name|ti
+operator|->
+name|lubusy
+operator||=
+literal|1
+operator|<<
+name|scb
+operator|->
+name|lun
+expr_stmt|;
 break|break;
 case|case
 name|AIC_MSG_SDTR
@@ -3987,6 +4044,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Raise ATNO to signal the target that we have a message for it.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -4046,6 +4107,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Send messages.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4111,6 +4176,7 @@ operator||
 name|SPIOEN
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the previous phase is also the message out phase, 	 * we need to retransmit all the messages, probably 	 * because the target has detected a parity error during 	 * the past transmission. 	 */
 if|if
 condition|(
 name|aic
@@ -4149,6 +4215,7 @@ operator|->
 name|msg_len
 condition|)
 block|{
+comment|/* complete message sent, start the next one */
 name|q
 operator|&=
 operator|-
@@ -4184,6 +4251,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* setup the message */
 switch|switch
 condition|(
 name|q
@@ -4396,6 +4464,7 @@ break|break;
 case|case
 name|AIC_MSG_MSGBUF
 case|:
+comment|/* a single message already in the buffer */
 if|if
 condition|(
 name|aic
@@ -4434,6 +4503,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 		 * If this is the last message byte of all messages, 		 * clear ATNO to signal transmission complete. 		 */
 if|if
 condition|(
 operator|(
@@ -4465,6 +4535,7 @@ argument_list|,
 name|CLRATNO
 argument_list|)
 expr_stmt|;
+comment|/* transmit the message byte */
 name|aic_outb
 argument_list|(
 name|aic
@@ -4513,6 +4584,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read data bytes.  */
+end_comment
 
 begin_function
 specifier|static
@@ -4590,6 +4665,7 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* wait for the fifo the fill up or a phase change */
 name|dmastat
 operator|=
 name|aic_inb
@@ -4625,6 +4701,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * No more data, wait for the remaining bytes in 			 * the scsi fifo to be transfer to the host fifo. 			 */
 while|while
 condition|(
 operator|!
@@ -4854,6 +4931,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Send data bytes.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -4930,6 +5011,7 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* wait for the fifo to clear up or a phase change */
 name|dmastat
 operator|=
 name|aic_inb
@@ -5142,6 +5224,7 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* wait until all bytes in the fifos are transmitted */
 name|dmastat
 operator|=
 name|aic_inb
@@ -5204,6 +5287,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Send the scsi command.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5237,6 +5324,7 @@ operator|&
 name|SCB_SENSE
 condition|)
 block|{
+comment|/* autosense request */
 name|sense_cmd
 operator|.
 name|opcode
@@ -5424,6 +5512,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Finish off a command. The caller is responsible to remove the ccb  * from any queue.  */
+end_comment
 
 begin_function
 specifier|static
@@ -6340,6 +6432,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* a device-initiated bus reset */
 name|aic_outb
 argument_list|(
 name|aic
@@ -6844,6 +6937,7 @@ operator|&
 name|SCB_SENSE
 condition|)
 block|{
+comment|/* autosense request */
 name|aic
 operator|->
 name|flags
@@ -6917,6 +7011,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Reset ourselves.  */
+end_comment
 
 begin_function
 specifier|static
@@ -7084,6 +7182,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Reset the SCSI bus  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -7125,6 +7227,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Reset. Abort all pending commands.  */
+end_comment
 
 begin_function
 specifier|static
