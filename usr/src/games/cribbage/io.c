@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.1 (Berkeley) %G%"
+literal|"@(#)io.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,11 +95,15 @@ parameter_list|)
 value|('X' - 'A' + 1)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|attron
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/* defined in curses.h */
+end_comment
 
 begin_define
 define|#
@@ -120,7 +124,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|attron
 end_endif
 
 begin_decl_stmt
