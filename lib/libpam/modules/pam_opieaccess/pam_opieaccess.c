@@ -227,6 +227,15 @@ name|NULL
 condition|)
 name|rhost
 operator|=
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+literal|"allow_local"
+argument_list|)
+condition|?
+literal|""
+else|:
 literal|"localhost"
 expr_stmt|;
 if|if
