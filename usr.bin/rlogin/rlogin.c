@@ -657,7 +657,7 @@ block|}
 define|#
 directive|define
 name|OPTIONS
-value|"468DEKde:i:l:"
+value|"468DEde:i:l:"
 while|while
 condition|(
 operator|(
