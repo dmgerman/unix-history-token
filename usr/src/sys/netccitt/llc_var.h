@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)llc_var.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)llc_var.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1827,6 +1827,20 @@ name|int
 name|llc_DACTION_timer
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|af_link_rts_init_done
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|USES_AF_LINK_RTS
+value|{ \ 	if (!af_link_rts_init_done) { \ 	       rn_inithead((void **)&rt_tables[AF_LINK], 32); \ 	       af_link_rts_init_done++; \ 	       } \ 	 }
+end_define
 
 begin_decl_stmt
 name|struct
