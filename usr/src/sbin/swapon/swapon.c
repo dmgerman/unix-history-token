@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swapon.c	5.1 (Berkeley) %G%"
+literal|"@(#)swapon.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,13 +63,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|VSWAPON
-value|85
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -191,10 +184,8 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|syscall
+name|swapon
 argument_list|(
-name|VSWAPON
-argument_list|,
 name|fsp
 operator|->
 name|fs_spec
@@ -272,10 +263,8 @@ do|do
 block|{
 if|if
 condition|(
-name|syscall
+name|swapon
 argument_list|(
-name|VSWAPON
-argument_list|,
 operator|*
 name|argv
 operator|++
