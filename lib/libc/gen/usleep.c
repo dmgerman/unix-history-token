@@ -81,8 +81,7 @@ name|usleep
 parameter_list|(
 name|useconds
 parameter_list|)
-name|unsigned
-name|int
+name|useconds_t
 name|useconds
 decl_stmt|;
 block|{

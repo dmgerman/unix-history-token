@@ -79,17 +79,17 @@ comment|/*  * Generate a SIGALRM signal in ``usecs'' microseconds.  * If ``reloa
 end_comment
 
 begin_function
-name|unsigned
+name|useconds_t
 name|ualarm
 parameter_list|(
 name|usecs
 parameter_list|,
 name|reload
 parameter_list|)
-name|unsigned
+name|useconds_t
 name|usecs
 decl_stmt|;
-name|unsigned
+name|useconds_t
 name|reload
 decl_stmt|;
 block|{
