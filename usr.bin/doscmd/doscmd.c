@@ -499,6 +499,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|debugf
+operator|=
+name|stderr
+expr_stmt|;
 comment|/* XXX should only be for tty mode */
 name|fd
 operator|=

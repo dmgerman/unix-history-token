@@ -29,8 +29,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|debugf
-init|=
-name|stderr
 decl_stmt|;
 end_decl_stmt
 
