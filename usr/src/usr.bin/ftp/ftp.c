@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.24.1.3 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2140,6 +2140,8 @@ argument_list|,
 argument|local
 argument_list|,
 argument|remote
+argument_list|,
+argument|printnames
 argument_list|)
 end_macro
 
@@ -2153,6 +2155,12 @@ name|local
 decl_stmt|,
 modifier|*
 name|remote
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|printnames
 decl_stmt|;
 end_decl_stmt
 
@@ -2238,6 +2246,41 @@ name|char
 modifier|*
 name|mode
 decl_stmt|;
+if|if
+condition|(
+name|verbose
+operator|&&
+name|printnames
+condition|)
+block|{
+if|if
+condition|(
+name|local
+operator|&&
+operator|*
+name|local
+operator|!=
+literal|'-'
+condition|)
+name|printf
+argument_list|(
+literal|"local: %s "
+argument_list|,
+name|local
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|remote
+condition|)
+name|printf
+argument_list|(
+literal|"remote: %s\n"
+argument_list|,
+name|remote
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|proxy
@@ -3270,10 +3313,6 @@ name|start
 argument_list|,
 operator|&
 name|stop
-argument_list|,
-name|local
-argument_list|,
-name|remote
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3413,10 +3452,6 @@ name|start
 argument_list|,
 operator|&
 name|stop
-argument_list|,
-name|local
-argument_list|,
-name|remote
 argument_list|)
 expr_stmt|;
 block|}
@@ -3476,6 +3511,8 @@ argument_list|,
 argument|remote
 argument_list|,
 argument|mode
+argument_list|,
+argument|printnames
 argument_list|)
 end_macro
 
@@ -3616,6 +3653,43 @@ argument_list|)
 operator|==
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|is_retr
+operator|&&
+name|verbose
+operator|&&
+name|printnames
+condition|)
+block|{
+if|if
+condition|(
+name|local
+operator|&&
+operator|*
+name|local
+operator|!=
+literal|'-'
+condition|)
+name|printf
+argument_list|(
+literal|"local: %s "
+argument_list|,
+name|local
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|remote
+condition|)
+name|printf
+argument_list|(
+literal|"remote: %s\n"
+argument_list|,
+name|remote
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|proxy
@@ -4943,10 +5017,6 @@ name|start
 argument_list|,
 operator|&
 name|stop
-argument_list|,
-name|local
-argument_list|,
-name|remote
 argument_list|)
 expr_stmt|;
 end_if
@@ -5504,10 +5574,6 @@ name|start
 argument_list|,
 operator|&
 name|stop
-argument_list|,
-name|local
-argument_list|,
-name|remote
 argument_list|)
 expr_stmt|;
 end_if
@@ -6070,10 +6136,6 @@ argument_list|,
 argument|t0
 argument_list|,
 argument|t1
-argument_list|,
-argument|local
-argument_list|,
-argument|remote
 argument_list|)
 end_macro
 
@@ -6081,12 +6143,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|direction
-decl_stmt|,
-modifier|*
-name|local
-decl_stmt|,
-modifier|*
-name|remote
 decl_stmt|;
 end_decl_stmt
 
@@ -6176,36 +6232,6 @@ argument_list|,
 name|bs
 operator|/
 literal|1024.
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|local
-operator|&&
-operator|*
-name|local
-operator|!=
-literal|'-'
-condition|)
-name|printf
-argument_list|(
-literal|"local: %s "
-argument_list|,
-name|local
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|remote
-condition|)
-name|printf
-argument_list|(
-literal|"remote: %s\n"
-argument_list|,
-name|remote
 argument_list|)
 expr_stmt|;
 block|}
