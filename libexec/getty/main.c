@@ -736,7 +736,9 @@ begin_function_decl
 specifier|static
 name|void
 name|defttymode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
