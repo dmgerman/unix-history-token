@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -263,6 +269,24 @@ condition|)
 name|usage
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|srandomdev
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|srandom
+argument_list|(
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|^
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* Increase our data size to the max */
