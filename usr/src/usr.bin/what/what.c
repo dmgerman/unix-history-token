@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)what.c	5.2 (Berkeley) %G%"
+literal|"@(#)what.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,8 @@ operator|!=
 name|EOF
 condition|)
 block|{
+name|loop
+label|:
 if|if
 condition|(
 name|c
@@ -187,7 +189,9 @@ operator|)
 operator|!=
 literal|'('
 condition|)
-continue|continue;
+goto|goto
+name|loop
+goto|;
 if|if
 condition|(
 operator|(
@@ -199,7 +203,9 @@ operator|)
 operator|!=
 literal|'#'
 condition|)
-continue|continue;
+goto|goto
+name|loop
+goto|;
 if|if
 condition|(
 operator|(
@@ -211,7 +217,9 @@ operator|)
 operator|!=
 literal|')'
 condition|)
-continue|continue;
+goto|goto
+name|loop
+goto|;
 name|putchar
 argument_list|(
 literal|'\t'
