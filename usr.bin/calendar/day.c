@@ -627,7 +627,10 @@ condition|)
 name|day
 operator|=
 name|v1
+operator|-
+literal|1
 expr_stmt|;
+comment|/* days since January 1 [0-365] */
 comment|/*  	  * 1. {Weekday,Day} XYZ ...  	  * 	  *    where Day is> 12  	  */
 elseif|else
 if|if
@@ -1035,7 +1038,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"day2: yday %d %d\n"
+literal|"day2: day %d yday %d\n"
 argument_list|,
 name|day
 argument_list|,
@@ -1113,8 +1116,6 @@ name|v1
 operator|-
 literal|1
 index|]
-operator|-
-literal|1
 expr_stmt|;
 operator|*
 name|varp
