@@ -3119,18 +3119,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
-block|}
 comment|/* 	 * Don't recycle if we still have cached pages. 	 */
 if|if
 condition|(
@@ -8275,26 +8268,13 @@ operator|->
 name|v_iflag
 operator|&
 name|VI_XLOCK
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|vp
 operator|->
 name|v_vxproc
-operator|==
+operator|!=
 name|curthread
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* this can now occur in normal operation */
-block|log(LOG_INFO, "VXLOCK interlock avoided\n");
-endif|#
-directive|endif
-block|}
-else|else
 block|{
 name|vp
 operator|->
@@ -8320,9 +8300,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mp_fixme
+name|VI_UNLOCK
 argument_list|(
-literal|"interlock not released."
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -8330,7 +8310,6 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 block|}
 name|vp
 operator|->

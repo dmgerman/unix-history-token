@@ -4032,17 +4032,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Since we're just going to return, unlock interlock 			 * if the caller didn't call us with it held. 			 */
+comment|/* 			 * Since we're just going to return, unlock interlock. 			 */
 if|if
 condition|(
 operator|(
 name|flags
 operator|&
-operator|(
-name|LK_INTERLOCK
-operator||
 name|LK_RETRY
-operator|)
 operator|)
 operator|==
 literal|0
