@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.37 1998/04/29 09:10:58 jb Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.38 1998/06/09 08:30:32 jb Exp $  *  */
 end_comment
 
 begin_comment
@@ -1486,6 +1486,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|int
+name|errnosave
+decl_stmt|;
 name|INIT_MMAP
 argument_list|()
 expr_stmt|;
@@ -1520,6 +1523,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|errnosave
+operator|=
+name|errno
+expr_stmt|;
 name|j
 operator|=
 name|readlink
@@ -1533,6 +1540,10 @@ name|b
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|errnosave
 expr_stmt|;
 if|if
 condition|(
