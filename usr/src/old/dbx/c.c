@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c 1.4 %G%"
+literal|"@(#)c.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test if two types are compatible.  *  * Integers and reals are not compatible since they cannot always be mixed.  */
+comment|/*  * Test if two types are compatible.  */
 end_comment
 
 begin_function
@@ -269,13 +269,19 @@ name|t1
 operator|->
 name|type
 operator|==
+name|t_char
+name|or
+name|t1
+operator|->
+name|type
+operator|==
 name|t_int
 name|or
 name|t1
 operator|->
 name|type
 operator|==
-name|t_char
+name|t_real
 condition|)
 block|{
 name|tmp
@@ -314,6 +320,10 @@ argument_list|(
 argument|isrange(t1,
 literal|"char"
 argument|) and 		(t2->type == t_char or t2->type == t_int)
+argument_list|)
+name|or
+argument_list|(
+argument|t1->class == RANGE and isdouble(t1) and t2->type == t_real
 argument_list|)
 name|or
 argument_list|(
