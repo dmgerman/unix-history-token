@@ -902,17 +902,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|mac_destroy_vnode_label
-parameter_list|(
-name|struct
-name|label
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Labeling event operations: file system objects, and things that  * look a lot like file system objects.  */
 end_comment
