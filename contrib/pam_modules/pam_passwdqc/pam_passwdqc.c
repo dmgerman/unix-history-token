@@ -2268,7 +2268,7 @@ name|enforce
 operator|)
 condition|)
 return|return
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 return|;
 name|reason
 operator|=
@@ -2308,7 +2308,7 @@ name|enforce
 condition|)
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 expr_stmt|;
 block|}
 return|return
@@ -2692,7 +2692,7 @@ name|MESSAGE_RANDOMFAILED
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 return|;
 block|}
 name|status
@@ -2727,7 +2727,7 @@ operator|)
 condition|)
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 expr_stmt|;
 if|if
 condition|(
@@ -2781,7 +2781,7 @@ name|randompass
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 return|;
 block|}
 if|if
@@ -2801,7 +2801,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 expr_stmt|;
 name|retry_wanted
 operator|=
@@ -2886,7 +2886,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 expr_stmt|;
 name|retry_wanted
 operator|=
@@ -2962,7 +2962,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 expr_stmt|;
 name|retry_wanted
 operator|=
@@ -2981,7 +2981,7 @@ block|}
 else|else
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_ERR
 expr_stmt|;
 block|}
 if|if
