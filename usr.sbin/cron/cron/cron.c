@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cron.c,v 2.11 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: cron.c,v 1.1.1.1 1994/08/27 13:43:03 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,11 @@ name|void
 name|usage
 parameter_list|()
 block|{
+name|char
+modifier|*
+modifier|*
+name|dflags
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -175,6 +180,44 @@ argument_list|,
 literal|"usage:  %s [-x debugflag[,...]]\n"
 argument_list|,
 name|ProgramName
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\ndebugflags: "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|dflags
+operator|=
+name|DebugFlagNames
+init|;
+operator|*
+name|dflags
+condition|;
+name|dflags
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s "
+argument_list|,
+operator|*
+name|dflags
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -445,15 +488,7 @@ block|{
 if|#
 directive|if
 name|DEBUGGING
-if|if
-condition|(
-operator|!
-operator|(
-name|DebugFlags
-operator|&
-name|DTEST
-operator|)
-condition|)
+comment|/* if (!(DebugFlags& DTEST)) */
 endif|#
 directive|endif
 comment|/*DEBUGGING*/
@@ -1092,10 +1127,6 @@ condition|(
 name|argch
 condition|)
 block|{
-default|default:
-name|usage
-argument_list|()
-expr_stmt|;
 case|case
 literal|'x'
 case|:
@@ -1111,6 +1142,10 @@ name|usage
 argument_list|()
 expr_stmt|;
 break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 block|}
