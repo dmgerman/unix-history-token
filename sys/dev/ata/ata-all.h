@@ -947,6 +947,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_BMDEVSPEC_0
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_BMSTAT_PORT
 value|0x02
 end_define
@@ -998,6 +1005,13 @@ define|#
 directive|define
 name|ATA_BMSTAT_DMA_SIMPLEX
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_BDDEVSPEC_1
+value|0x03
 end_define
 
 begin_define

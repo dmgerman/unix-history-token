@@ -1740,14 +1740,6 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
-case|case
-literal|0x4d68105a
-case|:
-comment|/* Promise TX2 ATA100 */
-case|case
-literal|0x6268105a
-case|:
-comment|/* Promise TX2v2 ATA100 */
 if|if
 condition|(
 operator|!
@@ -1778,6 +1770,45 @@ literal|0x00004000
 else|:
 literal|0x00000400
 operator|)
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+break|break;
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA100 */
+case|case
+literal|0x6268105a
+case|:
+comment|/* Promise TX2v2 ATA100 */
+name|ATA_OUTB
+argument_list|(
+name|scp
+operator|->
+name|r_bmio
+argument_list|,
+name|ATA_BMDEVSPEC_0
+argument_list|,
+literal|0x0b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ATA_INB
+argument_list|(
+name|scp
+operator|->
+name|r_bmio
+argument_list|,
+name|ATA_BDDEVSPEC_1
+argument_list|)
+operator|&
+literal|0x20
 operator|)
 condition|)
 return|return
