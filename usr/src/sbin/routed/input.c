@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.2 %G%"
+literal|"@(#)input.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +273,8 @@ name|af_output
 call|)
 argument_list|(
 name|s
+argument_list|,
+literal|0
 argument_list|,
 name|from
 argument_list|,
