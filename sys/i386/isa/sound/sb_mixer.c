@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_mixer.c  *  * The low level mixer driver for the SoundBlaster Pro and SB16 cards.  *  * Copyright by Hannu Savolainen 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *      Hunyue Yau      Jan 6 1994  *      Added code to support the Sound Galaxy NX Pro mixer.  *  */
+comment|/*  * sound/sb_mixer.c  *   * The low level mixer driver for the SoundBlaster Pro and SB16 cards.  *   * Copyright by Hannu Savolainen 1994  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified: Hunyue Yau      Jan 6 1994 Added code to support the Sound Galaxy  * NX Pro mixer.  *   */
 end_comment
 
 begin_include
@@ -12,21 +12,15 @@ end_include
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CONFIGURE_SOUNDCARD
-argument_list|)
+operator|(
+name|NSB
+operator|>
+literal|0
+operator|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SB
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_SBPRO
+name|CONFIG_SBPRO
 argument_list|)
 end_if
 
@@ -39,7 +33,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/sb_defs.h>
+file|<i386/isa/sound/sbcard.h>
 end_include
 
 begin_include
@@ -64,14 +58,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|sbc_major
+name|Jazz16_detected
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|Jazz16_detected
+name|sound_os_info
+modifier|*
+name|sb_osp
 decl_stmt|;
 end_decl_stmt
 
@@ -133,62 +128,62 @@ begin_function
 name|void
 name|sb_setmixer
 parameter_list|(
-name|unsigned
-name|int
+name|u_int
 name|port
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|value
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
-name|OUTB
+comment|/* XXX ouch... */
+name|outb
 argument_list|(
+name|MIXER_ADDR
+argument_list|,
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 name|port
 operator|&
 literal|0xff
 argument_list|)
-argument_list|,
-name|MIXER_ADDR
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Select register 							 */
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-name|OUTB
+comment|/* Select register */
+name|DELAY
 argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|MIXER_DATA
+argument_list|,
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 name|value
 operator|&
 literal|0xff
 argument_list|)
-argument_list|,
-name|MIXER_DATA
 argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -200,53 +195,54 @@ begin_function
 name|int
 name|sb_getmixer
 parameter_list|(
-name|unsigned
-name|int
+name|u_int
 name|port
 parameter_list|)
 block|{
 name|int
 name|val
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
+name|MIXER_ADDR
+argument_list|,
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 name|port
 operator|&
 literal|0xff
 argument_list|)
-argument_list|,
-name|MIXER_ADDR
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Select register 							 */
-name|tenmicrosec
-argument_list|()
+comment|/* Select register */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|MIXER_DATA
 argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -300,7 +296,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns:  *      0       No mixer detected.  *      1       Only a plain Sound Blaster Pro style mixer detected.  *      2       The Sound Galaxy NX Pro mixer detected.  */
+comment|/*  * Returns:  *	0       No mixer detected.  *	1       Only a plain Sound Blaster Pro style mixer detected.  *	2       The Sound Galaxy NX Pro mixer detected.  */
 end_comment
 
 begin_function
@@ -319,6 +315,10 @@ name|oldbass
 decl_stmt|,
 name|oldtreble
 decl_stmt|;
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
 endif|#
 directive|endif
 name|int
@@ -326,7 +326,7 @@ name|retcode
 init|=
 literal|1
 decl_stmt|;
-comment|/*    * Detect the mixer by changing parameters of two volume channels. If the    * values read back match with the values written, the mixer is there (is    * it?)    */
+comment|/*      * Detect the mixer by changing parameters of two volume channels. If      * the values read back match with the values written, the mixer is      * there (is it?)      */
 name|sb_setmixer
 argument_list|(
 name|FM_VOL
@@ -353,7 +353,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 				 * No match 				 */
+comment|/* No match */
 if|if
 condition|(
 name|sb_getmixer
@@ -369,7 +369,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|__SGNXPRO__
-comment|/* Attempt to detect the SG NX Pro by check for valid bass/treble      * registers.    */
+comment|/*      * Attempt to detect the SG NX Pro by check for valid bass/treble      * registers.      */
 name|oldbass
 operator|=
 name|sb_getmixer
@@ -431,7 +431,7 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* 2 == SG NX Pro detected */
-comment|/* Restore register in either case since SG NX Pro has EEPROM with    * 'preferred' values stored.    */
+comment|/*      * Restore register in either case since SG NX Pro has EEPROM with      * 'preferred' values stored.      */
 name|sb_setmixer
 argument_list|(
 name|BASS_LVL
@@ -446,7 +446,7 @@ argument_list|,
 name|oldtreble
 argument_list|)
 expr_stmt|;
-comment|/*      * If the SB version is 3.X (SB Pro), assume we have a SG NX Pro 16.      * In this case it's good idea to disable the Disney Sound Source      * compatibility mode. It's useless and just causes noise every time the      * LPT-port is accessed.      *      * Also place the card into WSS mode.    */
+comment|/*      * If the SB version is 3.X (SB Pro), assume we have a SG NX Pro 16.      * In this case it's good idea to disable the Disney Sound Source      * compatibility mode. It's useless and just causes noise every time      * the LPT-port is accessed.      *       * Also place the card into WSS mode.      */
 if|if
 condition|(
 name|sbc_major
@@ -454,22 +454,22 @@ operator|==
 literal|3
 condition|)
 block|{
-name|OUTB
+name|outb
 argument_list|(
-literal|0x01
-argument_list|,
 name|sbc_base
 operator|+
 literal|0x1c
+argument_list|,
+literal|0x01
 argument_list|)
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-literal|0x00
-argument_list|,
 name|sbc_base
 operator|+
 literal|0x1a
+argument_list|,
+literal|0x00
 argument_list|)
 expr_stmt|;
 block|}
@@ -486,8 +486,7 @@ specifier|static
 name|void
 name|change_bits
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|regval
 parameter_list|,
@@ -501,8 +500,7 @@ name|int
 name|newval
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|mask
 decl_stmt|;
 name|int
@@ -546,7 +544,7 @@ argument_list|)
 operator|/
 literal|100
 expr_stmt|;
-comment|/* 						 * Scale it 						 */
+comment|/* Scale it */
 name|shift
 operator|=
 operator|(
@@ -587,7 +585,7 @@ operator|<<
 name|shift
 operator|)
 expr_stmt|;
-comment|/* 				 * Filter out the previous value 				 */
+comment|/* Filter out the previous value */
 operator|*
 name|regval
 operator||=
@@ -599,7 +597,7 @@ operator|)
 operator|<<
 name|shift
 expr_stmt|;
-comment|/* 					 * Set the new value 					 */
+comment|/* Set the new value */
 block|}
 end_function
 
@@ -626,10 +624,10 @@ name|supported_devices
 operator|)
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 return|return
 name|levels
@@ -852,10 +850,10 @@ operator|>
 literal|31
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -872,10 +870,10 @@ operator|)
 condition|)
 comment|/* Not supported */
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 switch|switch
 condition|(
@@ -1052,10 +1050,10 @@ operator|==
 literal|0
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 name|sb_setmixer
 argument_list|(
@@ -1162,8 +1160,7 @@ decl_stmt|;
 name|int
 name|regoffs
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|val
 decl_stmt|;
 ifdef|#
@@ -1212,10 +1209,10 @@ operator|>
 literal|31
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -1230,12 +1227,12 @@ name|dev
 operator|)
 operator|)
 condition|)
-comment|/* 						 * Not supported 						 */
+comment|/* Not supported */
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 name|regoffs
 operator|=
@@ -1259,10 +1256,10 @@ operator|==
 literal|0
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 name|val
 operator|=
@@ -1313,8 +1310,8 @@ name|regno
 operator|!=
 name|regoffs
 condition|)
-comment|/* 							 * Change register 							 */
 block|{
+comment|/* Change register */
 name|sb_setmixer
 argument_list|(
 name|regoffs
@@ -1322,7 +1319,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Save the old one 					 */
+comment|/* Save the old one */
 name|regoffs
 operator|=
 operator|(
@@ -1353,7 +1350,7 @@ operator|<<
 literal|8
 operator|)
 return|;
-comment|/* 					 * Just left channel present 					 */
+comment|/* Just left channel present */
 name|val
 operator|=
 name|sb_getmixer
@@ -1361,7 +1358,7 @@ argument_list|(
 name|regoffs
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Read the new one 					 */
+comment|/* Read the new one */
 block|}
 name|change_bits
 argument_list|(
@@ -1454,8 +1451,7 @@ name|devmask
 decl_stmt|,
 name|i
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|regimageL
 decl_stmt|,
 name|regimageR
@@ -1489,7 +1485,7 @@ operator|!=
 name|SOUND_MASK_CD
 condition|)
 block|{
-comment|/* 				 * More than one devices selected. Drop the * 				 * previous selection 				 */
+comment|/* 	     * More than one devices selected. Drop the previous 	     * selection 	     */
 name|devmask
 operator|&=
 operator|~
@@ -1511,7 +1507,7 @@ operator|!=
 name|SOUND_MASK_CD
 condition|)
 block|{
-comment|/* 				 * More than one devices selected. Default to 				 * * mic 				 */
+comment|/* More than one devices selected. Default to mic */
 name|devmask
 operator|=
 name|SOUND_MASK_MIC
@@ -1523,8 +1519,8 @@ name|devmask
 operator|^
 name|recmask
 condition|)
-comment|/* 				 * Input source changed 				 */
 block|{
+comment|/* Input source changed */
 switch|switch
 condition|(
 name|devmask
@@ -1657,12 +1653,10 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
@@ -1698,37 +1692,49 @@ case|case
 name|SOUND_MIXER_RECSRC
 case|:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|set_recmask
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 break|break;
 default|default:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|sb_mixer_set
 argument_list|(
 name|cmd
 operator|&
 literal|0xff
 argument_list|,
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 block|}
@@ -1739,30 +1745,34 @@ name|cmd
 operator|&
 literal|0xff
 condition|)
-comment|/* 				 * Return parameters 				 */
 block|{
+comment|/* Return parameters */
 case|case
 name|SOUND_MIXER_RECSRC
 case|:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|recmask
-argument_list|)
 return|;
 break|break;
 case|case
 name|SOUND_MIXER_DEVMASK
 case|:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|supported_devices
-argument_list|)
 return|;
 break|break;
 case|case
@@ -1773,19 +1783,24 @@ condition|(
 name|Jazz16_detected
 condition|)
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|supported_devices
-argument_list|)
 return|;
 else|else
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|supported_devices
 operator|&
 operator|~
@@ -1794,55 +1809,60 @@ name|SOUND_MASK_MIC
 operator||
 name|SOUND_MASK_SPEAKER
 operator|)
-argument_list|)
 return|;
 break|break;
 case|case
 name|SOUND_MIXER_RECMASK
 case|:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|supported_rec_devices
-argument_list|)
 return|;
 break|break;
 case|case
 name|SOUND_MIXER_CAPS
 case|:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|mixer_caps
-argument_list|)
 return|;
 break|break;
 default|default:
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|sb_mixer_get
 argument_list|(
 name|cmd
 operator|&
 literal|0xff
 argument_list|)
-argument_list|)
 return|;
 block|}
 block|}
 else|else
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1904,7 +1924,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns a code depending on whether a SG NX Pro was detected.  * 1 == Plain SB Pro  * 2 == SG NX Pro detected.  * 3 == SB16  *  * Used to update message.  */
+comment|/*  * Returns a code depending on whether a SG NX Pro was detected. 1 == Plain  * SB Pro 2 == SG NX Pro detected. 3 == SB16  *   * Used to update message.  */
 end_comment
 
 begin_function
@@ -1971,8 +1991,8 @@ name|Jazz16_detected
 operator|==
 literal|2
 condition|)
-comment|/* SM Wave */
 block|{
+comment|/* SM Wave */
 name|supported_devices
 operator|=
 literal|0
@@ -2006,8 +2026,8 @@ name|mixer_type
 operator|==
 literal|2
 condition|)
-comment|/* A SGNXPRO was detected */
 block|{
+comment|/* A SGNXPRO was detected */
 name|supported_devices
 operator|=
 name|SGNXPRO_MIXER_DEVICES
@@ -2071,7 +2091,7 @@ literal|3
 expr_stmt|;
 break|break;
 default|default:
-name|printk
+name|printf
 argument_list|(
 literal|"SB Warning: Unsupported mixer type\n"
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/uart6850.c  *  * Copyright by Hannu Savolainen 1993  *  * Mon Nov 22 22:38:35 MET 1993 marco@driq.home.usn.nl:  *      added 6850 support, used with COVOX SoundMaster II and custom cards.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/uart6850.c  *   * Copyright by Hannu Savolainen 1993  *   * Mon Nov 22 22:38:35 MET 1993 marco@driq.home.usn.nl: added 6850 support, used  * with COVOX SoundMaster II and custom cards.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -9,27 +9,23 @@ directive|include
 file|<i386/isa/sound/sound_config.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIGURE_SOUNDCARD
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NSND
+operator|>
+literal|0
+end_if
 
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_UART6850
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_MIDI
-argument_list|)
+literal|1
 end_if
+
+begin_comment
+comment|/* #if defined(CONFIG_UART6850)&& defined(CONFIG_MIDI) */
+end_comment
 
 begin_define
 define|#
@@ -39,7 +35,7 @@ value|(uart6850_base)
 end_define
 
 begin_comment
-comment|/* 					   * * * Midi6850 Data I/O Port on IBM 					   *  */
+comment|/* * * Midi6850 Data I/O Port on IBM */
 end_comment
 
 begin_define
@@ -50,7 +46,7 @@ value|(uart6850_base+1)
 end_define
 
 begin_comment
-comment|/* 					   * * * Midi6850 Command Port on IBM   */
+comment|/* * * Midi6850 Command Port on IBM   */
 end_comment
 
 begin_define
@@ -61,7 +57,7 @@ value|(uart6850_base+1)
 end_define
 
 begin_comment
-comment|/* 					   * * * Midi6850 Status Port on IBM   */
+comment|/* * * Midi6850 Status Port on IBM   */
 end_comment
 
 begin_define
@@ -69,7 +65,7 @@ define|#
 directive|define
 name|uart6850_status
 parameter_list|()
-value|INB(STATPORT)
+value|inb( STATPORT)
 end_define
 
 begin_define
@@ -77,7 +73,7 @@ define|#
 directive|define
 name|input_avail
 parameter_list|()
-value|((uart6850_status()&INPUT_AVAIL))
+value|(uart6850_status()&INPUT_AVAIL)
 end_define
 
 begin_define
@@ -85,7 +81,7 @@ define|#
 directive|define
 name|output_ready
 parameter_list|()
-value|((uart6850_status()&OUTPUT_READY))
+value|(uart6850_status()&OUTPUT_READY)
 end_define
 
 begin_define
@@ -95,7 +91,7 @@ name|uart6850_cmd
 parameter_list|(
 name|cmd
 parameter_list|)
-value|OUTB(cmd, COMDPORT)
+value|outb( COMDPORT,  cmd)
 end_define
 
 begin_define
@@ -103,7 +99,7 @@ define|#
 directive|define
 name|uart6850_read
 parameter_list|()
-value|INB(DATAPORT)
+value|inb( DATAPORT)
 end_define
 
 begin_define
@@ -113,7 +109,7 @@ name|uart6850_write
 parameter_list|(
 name|byte
 parameter_list|)
-value|OUTB(byte, DATAPORT)
+value|outb( DATAPORT,  byte)
 end_define
 
 begin_define
@@ -124,7 +120,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* 				   * * * Mask for Data Read Ready Bit   */
+comment|/* * * Mask for Data Read Ready Bit   */
 end_comment
 
 begin_define
@@ -135,7 +131,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* 				   * * * Mask for Data Send Ready Bit   */
+comment|/* * * Mask for Data Send Ready Bit   */
 end_comment
 
 begin_define
@@ -146,7 +142,7 @@ value|0x95
 end_define
 
 begin_comment
-comment|/* 				   * * * 6850 Total Reset Command   */
+comment|/* * * 6850 Total Reset Command   */
 end_comment
 
 begin_define
@@ -157,7 +153,7 @@ value|0x03
 end_define
 
 begin_comment
-comment|/* 				   * * * 6850 Send/Receive UART Mode   */
+comment|/* * * 6850 Send/Receive UART Mode   */
 end_comment
 
 begin_decl_stmt
@@ -222,12 +218,30 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|poll_uart6850
+parameter_list|(
+name|u_long
+name|dummy
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|sound_os_info
+modifier|*
+name|uart6850_osp
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -248,15 +262,14 @@ while|while
 condition|(
 name|count
 condition|)
-comment|/* 				 * Not timed out 				 */
+comment|/* Not timed out */
 if|if
 condition|(
 name|input_avail
 argument_list|()
 condition|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|c
 init|=
 name|uart6850_read
@@ -300,7 +313,7 @@ name|void
 name|m6850intr
 parameter_list|(
 name|int
-name|unit
+name|irq
 parameter_list|)
 block|{
 if|if
@@ -323,22 +336,13 @@ specifier|static
 name|void
 name|poll_uart6850
 parameter_list|(
-name|void
-modifier|*
+name|u_long
 name|dummy
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|DEFINE_TIMER
-argument_list|(
-name|uart6850_timer
-argument_list|,
-name|poll_uart6850
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -349,11 +353,11 @@ name|OPEN_READ
 operator|)
 condition|)
 return|return;
-comment|/* 				 * No longer required 				 */
-name|DISABLE_INTR
-argument_list|(
+comment|/* Device has been closed */
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -363,17 +367,21 @@ condition|)
 name|uart6850_input_loop
 argument_list|()
 expr_stmt|;
-name|ACTIVATE_TIMER
+name|timeout
 argument_list|(
-name|uart6850_timer
-argument_list|,
+operator|(
+name|timeout_func_t
+operator|)
 name|poll_uart6850
+argument_list|,
+literal|0
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Come back later 							 */
-name|RESTORE_INTR
+empty_stmt|;
+comment|/* Come back later */
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -401,8 +409,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 parameter_list|,
@@ -422,16 +429,16 @@ condition|(
 name|uart6850_opened
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Midi6850: Midi busy\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
 name|uart6850_cmd
@@ -455,7 +462,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Enable input polling 				 */
+comment|/* Enable input polling */
 return|return
 literal|0
 return|;
@@ -491,23 +498,21 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|midi_byte
 parameter_list|)
 block|{
 name|int
 name|timeout
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-comment|/*    * Test for input since pending input seems to block the output.    */
-name|DISABLE_INTR
-argument_list|(
+comment|/*      * Test for input since pending input seems to block the output.      */
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -517,12 +522,12 @@ condition|)
 name|uart6850_input_loop
 argument_list|()
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/*    * Sometimes it takes about 13000 loops before the output becomes ready    * (After reset). Normally it takes just about 10 loops.    */
+comment|/*      * Sometimes it takes about 13000 loops before the output becomes      * ready (After reset). Normally it takes just about 10 loops.      */
 for|for
 control|(
 name|timeout
@@ -541,7 +546,7 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
-comment|/* 									 * Wait 									 */
+comment|/* Wait */
 if|if
 condition|(
 operator|!
@@ -549,7 +554,7 @@ name|output_ready
 argument_list|()
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Midi6850: Timeout\n"
 argument_list|)
@@ -577,8 +582,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|midi_byte
 parameter_list|)
@@ -627,18 +631,18 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -666,7 +670,7 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* 				 * No data in buffers 				 */
+comment|/* No data in buffers */
 block|}
 end_function
 
@@ -736,12 +740,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|long
+name|void
 name|attach_uart6850
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
@@ -753,8 +754,7 @@ name|ok
 decl_stmt|,
 name|timeout
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 if|if
@@ -764,20 +764,24 @@ operator|>=
 name|MAX_MIDI_DEV
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Sound: Too many midi devices detected\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return ;
 block|}
 name|uart6850_base
 operator|=
 name|hw_config
 operator|->
 name|io_base
+expr_stmt|;
+name|uart6850_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
 expr_stmt|;
 name|uart6850_irq
 operator|=
@@ -790,16 +794,11 @@ condition|(
 operator|!
 name|uart6850_detected
 condition|)
-return|return
-name|RET_ERROR
-argument_list|(
-name|EIO
-argument_list|)
-return|;
-name|DISABLE_INTR
-argument_list|(
+return|return ;
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -819,7 +818,7 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
-comment|/* 									 * Wait 									 */
+comment|/* Wait */
 name|uart6850_cmd
 argument_list|(
 name|UART_MODE_ON
@@ -829,31 +828,18 @@ name|ok
 operator|=
 literal|1
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
+name|conf_printf
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|printk
-argument_list|(
-literal|"uart0:<6850 Midi Interface>"
+literal|"6850 Midi Interface"
+argument_list|,
+name|hw_config
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printk
-argument_list|(
-literal|"<6850 Midi Interface>"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|std_midi_synth
 operator|.
 name|midi_dev
@@ -871,9 +857,7 @@ operator|=
 operator|&
 name|uart6850_operations
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return ;
 block|}
 end_function
 
@@ -891,7 +875,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-comment|/* 				 * OK 				 */
+comment|/* OK */
 block|}
 end_function
 
@@ -910,6 +894,12 @@ name|ok
 init|=
 literal|0
 decl_stmt|;
+name|uart6850_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 name|uart6850_base
 operator|=
 name|hw_config
@@ -930,7 +920,7 @@ name|uart6850_irq
 argument_list|,
 name|m6850intr
 argument_list|,
-literal|"MIDI6850"
+name|uart6850_osp
 argument_list|)
 operator|<
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_dsp.c  *  * The low level driver for the SoundBlaster DS chips.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/sb_dsp.c  *   * The low level driver for the SoundBlaster DS chips.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -12,28 +12,27 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
+name|NSND
+operator|>
+literal|0
+operator|)
+operator|&&
 name|defined
 argument_list|(
-name|CONFIGURE_SOUNDCARD
+name|CONFIG_SB
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SB
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_MIDI
+name|CONFIG_MIDI
 argument_list|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/sb_defs.h>
+file|<i386/isa/sound/sbcard.h>
 end_include
 
 begin_undef
@@ -79,7 +78,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   				 * *  * * 1 if the process has output to MIDI 				 * 				 */
+comment|/* 1 if the process has output to MIDI */
 end_comment
 
 begin_decl_stmt
@@ -119,7 +118,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|input_opened
 init|=
@@ -134,6 +132,14 @@ name|my_dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|sound_os_info
+modifier|*
+name|sb_osp
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 function_decl|(
@@ -144,8 +150,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 function_decl|;
@@ -171,8 +176,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|data
 parameter_list|)
 parameter_list|,
@@ -196,16 +200,16 @@ operator|!
 name|sb_dsp_ok
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: MIDI hardware not installed\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
 block|}
 if|if
@@ -213,10 +217,10 @@ condition|(
 name|sb_midi_busy
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -234,16 +238,16 @@ name|num_midis
 operator|==
 literal|1
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|"SoundBlaster: Midi input not currently supported\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EPERM
-argument_list|)
+operator|)
 return|;
 block|}
 name|sb_midi_mode
@@ -264,10 +268,10 @@ operator|||
 name|sb_intr_active
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 name|sb_midi_mode
 operator|=
@@ -279,16 +283,16 @@ condition|(
 name|sb_dsp_highspeed
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: Midi output not possible during stereo or high speed audio\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
 if|if
@@ -314,36 +318,16 @@ literal|0x35
 argument_list|)
 condition|)
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EIO
-argument_list|)
+operator|)
 return|;
-comment|/* 				 * Enter the UART mode 				 */
+comment|/* Enter the UART mode */
 name|sb_intr_active
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ret
-operator|=
-name|sb_get_irq
-argument_list|()
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|sb_reset_dsp
-argument_list|()
-expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* 				 * IRQ not free 				 */
-block|}
 name|input_opened
 operator|=
 literal|1
@@ -382,10 +366,7 @@ block|{
 name|sb_reset_dsp
 argument_list|()
 expr_stmt|;
-comment|/* 				 * The only way to kill the UART mode 				 */
-name|sb_free_irq
-argument_list|()
-expr_stmt|;
+comment|/* The only way to kill the UART mode */
 block|}
 name|sb_intr_active
 operator|=
@@ -410,13 +391,11 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|midi_byte
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 if|if
@@ -426,10 +405,10 @@ operator|==
 name|NORMAL_MIDI
 condition|)
 block|{
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -444,12 +423,12 @@ name|midi_byte
 argument_list|)
 expr_stmt|;
 else|else
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: Unable to send a MIDI byte\n"
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -461,7 +440,7 @@ argument_list|(
 name|midi_byte
 argument_list|)
 expr_stmt|;
-comment|/* 				 * UART write 				 */
+comment|/* UART write */
 return|return
 literal|1
 return|;
@@ -484,16 +463,16 @@ operator|!=
 name|UART_MIDI
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SoundBlaster: MIDI input not implemented.\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EPERM
-argument_list|)
+operator|)
 return|;
 block|}
 return|return
@@ -540,18 +519,18 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
+name|ioctl_arg
 name|arg
 parameter_list|)
 block|{
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EPERM
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -564,22 +543,20 @@ name|int
 name|dummy
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|data
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|data
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|DSP_READ
 argument_list|)
@@ -595,7 +572,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -661,13 +638,13 @@ name|sb_midi_end_read
 block|,
 name|NULL
 block|,
-comment|/* 				 * Kick 				 */
+comment|/* Kick */
 name|NULL
 block|,
-comment|/* 				 * command 				 */
+comment|/* command */
 name|NULL
 block|,
-comment|/* 				 * buffer_status 				 */
+comment|/* buffer_status */
 name|NULL
 block|}
 decl_stmt|;
@@ -688,7 +665,7 @@ operator|>=
 name|MAX_MIDI_DEV
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"Sound: Too many midi devices detected\n"
 argument_list|)

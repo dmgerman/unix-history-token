@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_dsp.c  *  * The low level driver for the SoundBlaster DSP chip (SB1.0 to 2.1, SB Pro).  *  * Copyright by Hannu Savolainen 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *      Hunyue Yau      Jan 6 1994  *      Added code to support Sound Galaxy NX Pro  *  *      JRA Gibson      April 1995  *      Code added for MV ProSonic/Jazz 16 in 16 bit mode  */
+comment|/*  * sound/sb_dsp.c  *   * The low level driver for the SoundBlaster DSP chip (SB1.0 to 2.1, SB Pro).  *   * Copyright by Hannu Savolainen 1994  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified: Hunyue Yau      Jan 6 1994 Added code to support Sound Galaxy NX  * Pro  *   * JRA Gibson      April 1995 Code added for MV ProSonic/Jazz 16 in 16 bit mode  */
 end_comment
 
 begin_include
@@ -12,22 +12,34 @@ end_include
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CONFIGURE_SOUNDCARD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_SB
-argument_list|)
+operator|(
+name|NSB
+operator|>
+literal|0
+operator|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SM_WAVE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|JAZZ16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/sb_defs.h>
+file|<i386/isa/sound/sbcard.h>
 end_include
 
 begin_include
@@ -36,11 +48,21 @@ directive|include
 file|<i386/isa/sound/sb_mixer.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
 name|SB_TEST_IRQ
 end_undef
+
+begin_comment
+comment|/*  * XXX note -- only one sb-like device is supported until these  * variables are put in a struct sb_unit[] array  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -51,7 +73,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|sbc_irq
 init|=
@@ -80,6 +101,30 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|sb_no_recording
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dsp_count
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|trigger_bits
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The DSP channel can be used either for input or output. Variable  * 'sb_irq_mode' will be set when the program calls read or write first time  * after open. Current version doesn't support mode changes without closing  * and reopening the device. Support for this feature may be implemented in a  * future version of this driver.  */
 end_comment
@@ -93,7 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   				 * *  * * Set to 1 after successful 				 * initialization  *  */
+comment|/* Set to 1 after successful init */
 end_comment
 
 begin_decl_stmt
@@ -126,7 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   						   * *  * * DSP version   */
+comment|/* DSP version   */
 end_comment
 
 begin_decl_stmt
@@ -157,15 +202,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|irq_verified
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|sb_midi_mode
 init|=
@@ -182,7 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   					 * *  * * 1 if the process has output 					 * to *  * MIDI   */
+comment|/* 1 if the process has output to *  * 					 * MIDI   */
 end_comment
 
 begin_decl_stmt
@@ -203,16 +239,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   						 * *  * * IMODE_INPUT, * 						 * IMODE_OUTPUT * * or * 						 * IMODE_NONE   */
+comment|/* or IMODE_INPUT or IMODE_OUTPUT */
 end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|volatile
 name|int
-name|irq_ok
+name|dma8
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +258,7 @@ name|JAZZ16
 end_ifdef
 
 begin_comment
-comment|/* 16 bit support  */
+comment|/* 16 bit support for JAZZ16 */
 end_comment
 
 begin_decl_stmt
@@ -232,15 +267,6 @@ name|int
 name|dsp_16bit
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|dma8
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -274,14 +300,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* end of 16 bit support  */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* end of 16 bit support for JAZZ16 */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -330,19 +356,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|sb_dsp_reset
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|sound_os_info
+modifier|*
+name|sb_osp
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_MIDI
+name|CONFIG_MIDI
 argument_list|)
 operator|||
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_AUDIO
+name|CONFIG_AUDIO
 argument_list|)
 end_if
 
@@ -354,29 +398,27 @@ begin_function
 name|int
 name|sb_dsp_command
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 name|val
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|limit
 decl_stmt|;
 name|limit
 operator|=
-name|GET_TIME
+name|get_time
 argument_list|()
 operator|+
-name|HZ
+name|hz
 operator|/
 literal|10
 expr_stmt|;
-comment|/* 					   * The timeout is 0.1 secods 					 */
-comment|/*    * Note! the i<500000 is an emergency exit. The sb_dsp_command() is sometimes    * called while interrupts are disabled. This means that the timer is    * disabled also. However the timeout situation is a abnormal condition.    * Normally the DSP should be ready to accept commands after just couple of    * loops.    */
+comment|/* The timeout is 0.1 secods */
+comment|/*      * Note! the i<500000 is an emergency exit. The sb_dsp_command() is      * sometimes called while interrupts are disabled. This means that      * the timer is disabled also. However the timeout situation is a      * abnormal condition. Normally the DSP should be ready to accept      * commands after just couple of loops.      */
 for|for
 control|(
 name|i
@@ -387,7 +429,7 @@ name|i
 operator|<
 literal|500000
 operator|&&
-name|GET_TIME
+name|get_time
 argument_list|()
 operator|<
 name|limit
@@ -399,7 +441,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|INB
+name|inb
 argument_list|(
 name|DSP_STATUS
 argument_list|)
@@ -410,11 +452,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|OUTB
+name|outb
 argument_list|(
-name|val
-argument_list|,
 name|DSP_COMMAND
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 return|return
@@ -422,16 +464,11 @@ literal|1
 return|;
 block|}
 block|}
-name|printk
+name|printf
 argument_list|(
-literal|"SoundBlaster: DSP Command(%x) Timeout.\n"
+literal|"SoundBlaster: DSP Command(0x%02x) timeout. IRQ conflict ?\n"
 argument_list|,
 name|val
-argument_list|)
-expr_stmt|;
-name|printk
-argument_list|(
-literal|"IRQ conflict???\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -440,31 +477,26 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|sbintr
-argument_list|(
-name|INT_HANDLER_PARMS
-argument_list|(
+parameter_list|(
+name|int
 name|irq
-argument_list|,
-name|dummy
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 name|int
 name|status
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|EXCLUDE_SBPRO
+ifdef|#
+directive|ifdef
+name|CONFIG_SBPRO
 if|if
 condition|(
 name|sb16
 condition|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|src
 init|=
 name|sb_getmixer
@@ -473,9 +505,9 @@ name|IRQ_STAT
 argument_list|)
 decl_stmt|;
 comment|/* Interrupt source register */
-ifndef|#
-directive|ifndef
-name|EXCLUDE_SB16
+ifdef|#
+directive|ifdef
+name|CONFIG_SB16
 if|if
 condition|(
 name|src
@@ -487,9 +519,9 @@ argument_list|(
 name|irq
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|EXCLUDE_MIDI
+ifdef|#
+directive|ifdef
+name|CONFIG_MIDI
 if|if
 condition|(
 name|src
@@ -501,11 +533,13 @@ argument_list|(
 name|irq
 argument_list|)
 expr_stmt|;
-comment|/* 				 * SB MPU401 interrupt 				 */
+comment|/* SB MPU401 interrupt */
 endif|#
 directive|endif
+comment|/* CONFIG_MIDI */
 endif|#
 directive|endif
+comment|/* CONFIG_SB16 */
 if|if
 condition|(
 operator|!
@@ -516,18 +550,19 @@ literal|1
 operator|)
 condition|)
 return|return;
-comment|/* 				 * Not a DSP interupt 				 */
+comment|/* Not a DSP interupt */
 block|}
 endif|#
 directive|endif
+comment|/* CONFIG_SBPRO */
 name|status
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|DSP_DATA_AVAIL
 argument_list|)
 expr_stmt|;
-comment|/* 					   * Clear interrupt 					 */
+comment|/* Clear interrupt */
 if|if
 condition|(
 name|sb_intr_active
@@ -564,7 +599,7 @@ argument_list|(
 name|my_dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A complete buffer has been input. Let's start new one 	 */
+comment|/* 	     * A complete buffer has been input. Let's start new one 	     */
 break|break;
 case|case
 name|IMODE_INIT
@@ -573,17 +608,13 @@ name|sb_intr_active
 operator|=
 literal|0
 expr_stmt|;
-name|irq_ok
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|IMODE_MIDI
 case|:
-ifndef|#
-directive|ifndef
-name|EXCLUDE_MIDI
+ifdef|#
+directive|ifdef
+name|CONFIG_MIDI
 name|sb_midi_interrupt
 argument_list|(
 name|irq
@@ -593,94 +624,12 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|printk
+name|printf
 argument_list|(
 literal|"SoundBlaster: Unexpected interrupt\n"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|sb_irq_usecount
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|int
-name|sb_get_irq
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|ok
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|sb_irq_usecount
-condition|)
-if|if
-condition|(
-operator|(
-name|ok
-operator|=
-name|snd_set_irq_handler
-argument_list|(
-name|sbc_irq
-argument_list|,
-name|sbintr
-argument_list|,
-literal|"SoundBlaster"
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-name|ok
-return|;
-name|sb_irq_usecount
-operator|++
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sb_free_irq
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|sb_irq_usecount
-condition|)
-return|return;
-name|sb_irq_usecount
-operator|--
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sb_irq_usecount
-condition|)
-name|snd_release_irq
-argument_list|(
-name|sbc_irq
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -694,31 +643,29 @@ block|{
 name|int
 name|loopc
 decl_stmt|;
-name|OUTB
+name|outb
 argument_list|(
+name|DSP_RESET
+argument_list|,
 literal|1
-argument_list|,
-name|DSP_RESET
 argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-name|OUTB
+name|DELAY
 argument_list|(
-literal|0
-argument_list|,
-name|DSP_RESET
+literal|10
 argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
+name|outb
+argument_list|(
+name|DSP_RESET
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-name|tenmicrosec
-argument_list|()
+name|DELAY
+argument_list|(
+literal|30
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -728,11 +675,11 @@ literal|0
 init|;
 name|loopc
 operator|<
-literal|1000
+literal|100
 operator|&&
 operator|!
 operator|(
-name|INB
+name|inb
 argument_list|(
 name|DSP_DATA_AVAIL
 argument_list|)
@@ -743,21 +690,31 @@ condition|;
 name|loopc
 operator|++
 control|)
-empty_stmt|;
-comment|/* 										 * Wait 										 * for 										 * data 										 * * 										 * available 										 * status 										 */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|INB
+name|inb
 argument_list|(
 name|DSP_READ
 argument_list|)
 operator|!=
 literal|0xAA
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sb_reset_dsp failed\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* 				 * Sorry 				 */
+comment|/* Sorry */
+block|}
 return|return
 literal|1
 return|;
@@ -769,14 +726,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_AUDIO
+end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|dsp_speaker
 parameter_list|(
@@ -811,12 +767,10 @@ name|int
 name|speed
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|tconst
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|int
@@ -824,6 +778,14 @@ name|max_speed
 init|=
 literal|44100
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"dsp_speed %d\n"
+argument_list|,
+name|speed
+argument_list|)
+expr_stmt|;
+comment|/* XXX lr 970601 */
 if|if
 condition|(
 name|speed
@@ -834,7 +796,7 @@ name|speed
 operator|=
 literal|4000
 expr_stmt|;
-comment|/*      * Older SB models don't support higher speeds than 22050.    */
+comment|/*      * Older SB models don't support higher speeds than 22050.      */
 if|if
 condition|(
 name|sbc_major
@@ -855,7 +817,7 @@ name|max_speed
 operator|=
 literal|22050
 expr_stmt|;
-comment|/*      * SB models earlier than SB Pro have low limit for the input speed.    */
+comment|/*      * SB models earlier than SB Pro have low limit for the input speed.      */
 if|if
 condition|(
 name|open_mode
@@ -899,8 +861,8 @@ name|speed
 operator|=
 name|max_speed
 expr_stmt|;
-comment|/* 				 * Invalid speed 				 */
-comment|/* Logitech SoundMan Games and Jazz16 cards can support 44.1kHz stereo */
+comment|/* Invalid speed */
+comment|/*      * Logitech SoundMan Games and Jazz16 cards can support 44.1kHz      * stereo      */
 if|#
 directive|if
 operator|!
@@ -908,7 +870,7 @@ name|defined
 argument_list|(
 name|SM_GAMES
 argument_list|)
-comment|/*    * Max. stereo speed is 22050    */
+comment|/*      * Max. stereo speed is 22050      */
 if|if
 condition|(
 name|dsp_stereo
@@ -938,7 +900,7 @@ operator|&&
 name|sb_midi_busy
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SB Warning: High speed DSP not possible simultaneously with MIDI output\n"
 argument_list|)
@@ -956,7 +918,7 @@ name|speed
 operator|*=
 literal|2
 expr_stmt|;
-comment|/*    * Now the speed should be valid    */
+comment|/*      * Now the speed should be valid      */
 if|if
 condition|(
 name|speed
@@ -964,15 +926,14 @@ operator|>
 literal|22050
 condition|)
 block|{
-comment|/* 				 * High speed mode 				 */
+comment|/* High speed mode */
 name|int
 name|tmp
 decl_stmt|;
 name|tconst
 operator|=
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 operator|(
@@ -998,16 +959,16 @@ name|sb_dsp_highspeed
 operator|=
 literal|1
 expr_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_command
 argument_list|(
-literal|0x40
+name|DSP_CMD_TCONST
 argument_list|)
 condition|)
 name|sb_dsp_command
@@ -1015,7 +976,7 @@ argument_list|(
 name|tconst
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1072,25 +1033,25 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_command
 argument_list|(
-literal|0x40
+name|DSP_CMD_TCONST
 argument_list|)
 condition|)
-comment|/* 					 * Set time constant 					 */
+comment|/* Set time constant */
 name|sb_dsp_command
 argument_list|(
 name|tconst
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1126,6 +1087,13 @@ name|dsp_current_speed
 operator|=
 name|speed
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"dsp_speed done %d\n"
+argument_list|,
+name|speed
+argument_list|)
+expr_stmt|;
 return|return
 name|speed
 return|;
@@ -1145,9 +1113,9 @@ name|dsp_stereo
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EXCLUDE_SBPRO
+ifndef|#
+directive|ifndef
+name|CONFIG_SBPRO
 return|return
 literal|0
 return|;
@@ -1164,7 +1132,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 				 * Sorry no stereo 				 */
+comment|/* Sorry no stereo */
 if|if
 condition|(
 name|mode
@@ -1172,7 +1140,7 @@ operator|&&
 name|sb_midi_busy
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SB Warning: Stereo DSP not possible simultaneously with MIDI output\n"
 argument_list|)
@@ -1203,8 +1171,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|buf
 parameter_list|,
 name|int
@@ -1217,8 +1184,7 @@ name|int
 name|restart_dma
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 if|if
@@ -1231,10 +1197,6 @@ argument_list|(
 name|ON
 argument_list|)
 expr_stmt|;
-name|sb_irq_mode
-operator|=
-name|IMODE_OUTPUT
-expr_stmt|;
 name|DMAbuf_start_dma
 argument_list|(
 name|dev
@@ -1243,8 +1205,12 @@ name|buf
 argument_list|,
 name|count
 argument_list|,
-name|DMA_MODE_WRITE
+literal|1
 argument_list|)
+expr_stmt|;
+name|sb_irq_mode
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1253,7 +1219,7 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmachan
+name|dmachan1
 operator|>
 literal|3
 condition|)
@@ -1264,33 +1230,40 @@ expr_stmt|;
 name|count
 operator|--
 expr_stmt|;
+name|dsp_count
+operator|=
+name|count
+expr_stmt|;
+name|sb_irq_mode
+operator|=
+name|IMODE_OUTPUT
+expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_highspeed
 condition|)
 block|{
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_command
 argument_list|(
-literal|0x48
+name|DSP_CMD_HSSIZE
 argument_list|)
 condition|)
-comment|/* 					   * High speed size 					 */
 block|{
+comment|/* High speed size */
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
-name|count
+name|dsp_count
 operator|&
 literal|0xff
 argument_list|)
@@ -1299,12 +1272,11 @@ expr_stmt|;
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 operator|(
-name|count
+name|dsp_count
 operator|>>
 literal|8
 operator|)
@@ -1315,18 +1287,18 @@ argument_list|)
 expr_stmt|;
 name|sb_dsp_command
 argument_list|(
-literal|0x91
+name|DSP_CMD_HSDAC
 argument_list|)
 expr_stmt|;
-comment|/* 					   * High speed 8 bit DAC 					 */
+comment|/* High speed 8 bit DAC */
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: Unable to start (high speed) DAC\n"
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1334,28 +1306,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_command
 argument_list|(
-literal|0x14
+name|DSP_CMD_DAC8
 argument_list|)
 condition|)
-comment|/* 					   * 8-bit DAC (DMA) 					 */
 block|{
+comment|/* 8-bit DAC (DMA) */
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
-name|count
+name|dsp_count
 operator|&
 literal|0xff
 argument_list|)
@@ -1364,12 +1335,11 @@ expr_stmt|;
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 operator|(
-name|count
+name|dsp_count
 operator|>>
 literal|8
 operator|)
@@ -1380,12 +1350,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: Unable to start DAC\n"
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1406,8 +1376,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|buf
 parameter_list|,
 name|int
@@ -1420,11 +1389,22 @@ name|int
 name|restart_dma
 parameter_list|)
 block|{
-comment|/*    * Start a DMA input to the buffer pointed by dmaqtail    */
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
+if|if
+condition|(
+name|sb_no_recording
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SB Error: This device doesn't support recording\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*      * Start a DMA input to the buffer pointed by dmaqtail      */
 if|if
 condition|(
 operator|!
@@ -1435,10 +1415,6 @@ argument_list|(
 name|OFF
 argument_list|)
 expr_stmt|;
-name|sb_irq_mode
-operator|=
-name|IMODE_INPUT
-expr_stmt|;
 name|DMAbuf_start_dma
 argument_list|(
 name|dev
@@ -1447,8 +1423,12 @@ name|buf
 argument_list|,
 name|count
 argument_list|,
-name|DMA_MODE_READ
+literal|0
 argument_list|)
+expr_stmt|;
+name|sb_irq_mode
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1457,7 +1437,7 @@ index|[
 name|dev
 index|]
 operator|->
-name|dmachan
+name|dmachan1
 operator|>
 literal|3
 condition|)
@@ -1468,33 +1448,40 @@ expr_stmt|;
 name|count
 operator|--
 expr_stmt|;
+name|dsp_count
+operator|=
+name|count
+expr_stmt|;
+name|sb_irq_mode
+operator|=
+name|IMODE_INPUT
+expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_highspeed
 condition|)
 block|{
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_command
 argument_list|(
-literal|0x48
+name|DSP_CMD_HSSIZE
 argument_list|)
 condition|)
-comment|/* 					   * High speed size 					 */
 block|{
+comment|/* High speed size */
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
-name|count
+name|dsp_count
 operator|&
 literal|0xff
 argument_list|)
@@ -1503,12 +1490,11 @@ expr_stmt|;
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 operator|(
-name|count
+name|dsp_count
 operator|>>
 literal|8
 operator|)
@@ -1519,18 +1505,18 @@ argument_list|)
 expr_stmt|;
 name|sb_dsp_command
 argument_list|(
-literal|0x99
+name|DSP_CMD_HSADC
 argument_list|)
 expr_stmt|;
-comment|/* 					   * High speed 8 bit ADC 					 */
+comment|/* High speed 8 bit ADC */
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: Unable to start (high speed) ADC\n"
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1538,28 +1524,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_command
 argument_list|(
-literal|0x24
+name|DSP_CMD_ADC8
 argument_list|)
 condition|)
-comment|/* 					   * 8-bit ADC (DMA) 					 */
 block|{
+comment|/* 8-bit ADC (DMA) */
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
-name|count
+name|dsp_count
 operator|&
 literal|0xff
 argument_list|)
@@ -1568,12 +1553,11 @@ expr_stmt|;
 name|sb_dsp_command
 argument_list|(
 call|(
-name|unsigned
-name|char
+name|u_char
 call|)
 argument_list|(
 operator|(
-name|count
+name|dsp_count
 operator|>>
 literal|8
 operator|)
@@ -1584,12 +1568,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: Unable to start ADC\n"
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -1598,6 +1582,56 @@ block|}
 name|sb_intr_active
 operator|=
 literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sb_dsp_trigger
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|bits
+parameter_list|)
+block|{
+if|if
+condition|(
+name|bits
+operator|==
+name|trigger_bits
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|bits
+condition|)
+name|sb_dsp_command
+argument_list|(
+literal|0xd0
+argument_list|)
+expr_stmt|;
+comment|/* Halt DMA */
+elseif|else
+if|if
+condition|(
+name|bits
+operator|&
+name|sb_irq_mode
+condition|)
+name|sb_dsp_command
+argument_list|(
+literal|0xd4
+argument_list|)
+expr_stmt|;
+comment|/* Continue DMA */
+name|trigger_bits
+operator|=
+name|bits
 expr_stmt|;
 block|}
 end_function
@@ -1646,18 +1680,18 @@ name|sbc_major
 operator|==
 literal|3
 condition|)
-comment|/* 				 * SB Pro 				 */
 block|{
+comment|/* SB Pro */
 ifdef|#
 directive|ifdef
 name|JAZZ16
-comment|/* Select correct dma channel          * for 16/8 bit acccess        */
+comment|/* 	 * Select correct dma channel for 16/8 bit acccess 	 */
 name|audio_devs
 index|[
 name|my_dev
 index|]
 operator|->
-name|dmachan
+name|dmachan1
 operator|=
 name|dsp_16bit
 condition|?
@@ -1690,7 +1724,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 8 bit only cards use this        */
+comment|/* 	 * 8 bit only cards use this 	 */
 if|if
 condition|(
 name|dsp_stereo
@@ -1713,8 +1747,18 @@ argument_list|(
 name|dsp_current_speed
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Speed must be recalculated if 					 * #channels * changes 					 */
+comment|/* Speed must be recalculated 					 * if #channels * changes */
 block|}
+name|trigger_bits
+operator|=
+literal|0
+expr_stmt|;
+name|sb_dsp_command
+argument_list|(
+name|DSP_CMD_DMAHALT
+argument_list|)
+expr_stmt|;
+comment|/* Halt DMA */
 return|return
 literal|0
 return|;
@@ -1744,27 +1788,27 @@ argument_list|(
 name|ON
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|EXCLUDE_SBPRO
+ifdef|#
+directive|ifdef
+name|CONFIG_SBPRO
 if|if
 condition|(
 name|sbc_major
 operator|==
 literal|3
 condition|)
-comment|/* 				 * SB Pro 				 */
 block|{
+comment|/* SB Pro */
 ifdef|#
 directive|ifdef
 name|JAZZ16
-comment|/* 16 bit specific instructions        */
+comment|/* 	 * 16 bit specific instructions 	 */
 name|audio_devs
 index|[
 name|my_dev
 index|]
 operator|->
-name|dmachan
+name|dmachan1
 operator|=
 name|dsp_16bit
 condition|?
@@ -1821,10 +1865,20 @@ argument_list|(
 name|dsp_current_speed
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Speed must be recalculated if 					 * #channels * changes 					 */
+comment|/* Speed must be recalculated 					 * if #channels * changes */
 block|}
 endif|#
 directive|endif
+name|trigger_bits
+operator|=
+literal|0
+expr_stmt|;
+name|sb_dsp_command
+argument_list|(
+name|DSP_CMD_DMAHALT
+argument_list|)
+expr_stmt|;
+comment|/* Halt DMA */
 return|return
 literal|0
 return|;
@@ -1840,34 +1894,6 @@ name|int
 name|dev
 parameter_list|)
 block|{ }
-end_function
-
-begin_function
-specifier|static
-name|int
-name|verify_irq
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-block|DEFINE_WAIT_QUEUE (testq, testf);    irq_ok = 0;    if (sb_get_irq () == -1)     {       printk ("*** SB Error: Irq %d already in use\n", sbc_irq);       return 0;     }     sb_irq_mode = IMODE_INIT;    sb_dsp_command (0xf2);
-comment|/* 				 * This should cause immediate interrupt 				 */
-block|DO_SLEEP (testq, testf, HZ / 5);    sb_free_irq ();    if (!irq_ok)     {       printk ("SB Warning: IRQ%d test not passed!", sbc_irq);       irq_ok = 1;     }
-else|#
-directive|else
-name|irq_ok
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-name|irq_ok
-return|;
-block|}
 end_function
 
 begin_function
@@ -1891,17 +1917,32 @@ operator|!
 name|sb_dsp_ok
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SB Error: SoundBlaster board not installed\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|ENXIO
-argument_list|)
+operator|)
 return|;
+block|}
+if|if
+condition|(
+name|sb_no_recording
+operator|&&
+name|mode
+operator|&
+name|OPEN_READ
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SB Warning: Recording not supported by this device\n"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1916,87 +1957,32 @@ name|UART_MIDI
 operator|)
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SB: PCM not possible during MIDI input\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|!
-name|irq_verified
-condition|)
-block|{
-name|verify_irq
-argument_list|()
-expr_stmt|;
-name|irq_verified
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|irq_ok
-condition|)
-name|printk
-argument_list|(
-literal|"SB Warning: Incorrect IRQ setting %d\n"
-argument_list|,
-name|sbc_irq
-argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-name|sb_get_irq
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|retval
-condition|)
-return|return
-name|retval
-return|;
-comment|/* Allocate 8 bit dma    */
-if|if
-condition|(
-name|DMAbuf_open_dma
-argument_list|(
-name|dev
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|sb_free_irq
-argument_list|()
-expr_stmt|;
-name|printk
-argument_list|(
-literal|"SB: DMA Busy\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|RET_ERROR
-argument_list|(
-name|EBUSY
-argument_list|)
-return|;
-block|}
+comment|/*      * Allocate 8 bit dma      */
 ifdef|#
 directive|ifdef
 name|JAZZ16
-comment|/* Allocate 16 bit dma    */
+name|audio_devs
+index|[
+name|my_dev
+index|]
+operator|->
+name|dmachan1
+operator|=
+name|dma8
+expr_stmt|;
+comment|/*      * Allocate 16 bit dma      */
 if|if
 condition|(
 name|Jazz16_detected
@@ -2012,27 +1998,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|ALLOC_DMA_CHN
-argument_list|(
-name|dma16
-argument_list|,
-literal|"Jazz16 16 bit"
-argument_list|)
+literal|0
 condition|)
 block|{
-name|sb_free_irq
-argument_list|()
-expr_stmt|;
-name|RELEASE_DMA_CHN
-argument_list|(
-name|dma8
-argument_list|)
-expr_stmt|;
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EBUSY
-argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -2068,26 +2041,24 @@ block|{
 ifdef|#
 directive|ifdef
 name|JAZZ16
-comment|/* Release 16 bit dma channel    */
+comment|/*      * Release 16 bit dma channel      */
 if|if
 condition|(
 name|Jazz16_detected
 condition|)
-name|RELEASE_DMA_CHN
-argument_list|(
-name|dma16
-argument_list|)
+block|{
+name|audio_devs
+index|[
+name|my_dev
+index|]
+operator|->
+name|dmachan1
+operator|=
+name|dma8
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-name|DMAbuf_close_dma
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|sb_free_irq
-argument_list|()
-expr_stmt|;
 name|dsp_cleanup
 argument_list|()
 expr_stmt|;
@@ -2118,7 +2089,7 @@ name|JAZZ16
 end_ifdef
 
 begin_comment
-comment|/* Function dsp_set_bits() only required for 16 bit cards  */
+comment|/*  * Function dsp_set_bits() only required for 16 bit cards  */
 end_comment
 
 begin_function
@@ -2199,12 +2170,10 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|cmd
 parameter_list|,
-name|unsigned
-name|int
+name|ioctl_arg
 name|arg
 parameter_list|,
 name|int
@@ -2226,21 +2195,30 @@ condition|)
 return|return
 name|dsp_speed
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 argument_list|)
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_speed
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 break|break;
@@ -2255,12 +2233,14 @@ return|return
 name|dsp_current_speed
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_current_speed
-argument_list|)
 return|;
 break|break;
 case|case
@@ -2273,6 +2253,9 @@ condition|)
 return|return
 name|dsp_set_stereo
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 operator|-
 literal|1
@@ -2281,22 +2264,28 @@ operator|+
 literal|1
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_set_stereo
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
+operator|)
 operator|-
 literal|1
 argument_list|)
 operator|+
 literal|1
-argument_list|)
 return|;
 break|break;
 case|case
@@ -2312,14 +2301,16 @@ operator|+
 literal|1
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_stereo
 operator|+
 literal|1
-argument_list|)
 return|;
 break|break;
 case|case
@@ -2332,28 +2323,37 @@ condition|)
 return|return
 name|dsp_set_stereo
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 argument_list|)
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_set_stereo
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 break|break;
 ifdef|#
 directive|ifdef
 name|JAZZ16
-comment|/* Word size specific cases here.          * SNDCTL_DSP_SETFMT=SOUND_PCM_WRITE_BITS        */
+comment|/*      * Word size specific cases here.      * SNDCTL_DSP_SETFMT=SOUND_PCM_WRITE_BITS      */
 case|case
 name|SNDCTL_DSP_SETFMT
 case|:
@@ -2364,21 +2364,30 @@ condition|)
 return|return
 name|dsp_set_bits
 argument_list|(
+operator|(
+name|int
+operator|)
 name|arg
 argument_list|)
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_set_bits
 argument_list|(
-name|IOCTL_IN
-argument_list|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 return|;
 break|break;
@@ -2397,16 +2406,18 @@ else|:
 literal|8
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
 name|arg
-argument_list|,
+operator|=
 name|dsp_16bit
 condition|?
 literal|16
 else|:
 literal|8
-argument_list|)
 return|;
 break|break;
 else|#
@@ -2425,14 +2436,19 @@ return|return
 literal|8
 return|;
 return|return
-name|IOCTL_OUT
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+name|int
+operator|)
 name|arg
-argument_list|,
+operator|=
 literal|8
-argument_list|)
 return|;
-comment|/* 					   * Only 8 bits/sample supported 					 */
+comment|/* Only 8 bits/sample supported */
 break|break;
 endif|#
 directive|endif
@@ -2444,25 +2460,20 @@ case|case
 name|SOUND_PCM_READ_FILTER
 case|:
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 break|break;
 default|default:
-return|return
-name|RET_ERROR
-argument_list|(
-name|EINVAL
-argument_list|)
-return|;
+empty_stmt|;
 block|}
 return|return
-name|RET_ERROR
-argument_list|(
+operator|-
+operator|(
 name|EINVAL
-argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2476,14 +2487,13 @@ name|int
 name|dev
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 name|sb_reset_dsp
 argument_list|()
@@ -2496,7 +2506,7 @@ expr_stmt|;
 name|dsp_cleanup
 argument_list|()
 expr_stmt|;
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2516,52 +2526,11 @@ name|JAZZ16
 end_ifdef
 
 begin_comment
-comment|/*  * Initialization of a Media Vision ProSonic 16 Soundcard.  * The function initializes a ProSonic 16 like PROS.EXE does for DOS. It sets  * the base address, the DMA-channels, interrupts and enables the joystickport.  *  * Also used by Jazz 16 (same card, different name)  *  * written 1994 by Rainer Vranken  * E-Mail: rvranken@polaris.informatik.uni-essen.de  */
+comment|/*  * Initialization of a Media Vision ProSonic 16 Soundcard. The function  * initializes a ProSonic 16 like PROS.EXE does for DOS. It sets the base  * address, the DMA-channels, interrupts and enables the joystickport.  *   * Also used by Jazz 16 (same card, different name)  *   * written 1994 by Rainer Vranken E-Mail:  * rvranken@polaris.informatik.uni-essen.de  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MPU_BASE
-end_ifndef
-
-begin_comment
-comment|/* take default values if not specified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPU_BASE
-value|0x330
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MPU_IRQ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MPU_IRQ
-value|9
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
-name|unsigned
-name|int
+name|u_int
 name|get_sb_byte
 parameter_list|(
 name|void
@@ -2583,7 +2552,7 @@ operator|--
 control|)
 if|if
 condition|(
-name|INB
+name|inb
 argument_list|(
 name|DSP_DATA_AVAIL
 argument_list|)
@@ -2592,7 +2561,7 @@ literal|0x80
 condition|)
 block|{
 return|return
-name|INB
+name|inb
 argument_list|(
 name|DSP_READ
 argument_list|)
@@ -2611,7 +2580,7 @@ name|SM_WAVE
 end_ifdef
 
 begin_comment
-comment|/*  * Logitech Soundman Wave detection and initialization by Hannu Savolainen.  *  * There is a microcontroller (8031) in the SM Wave card for MIDI emulation.  * it's located at address MPU_BASE+4.  MPU_BASE+7 is a SM Wave specific  * control register for MC reset, SCSI, OPL4 and DSP (future expansion)  * address decoding. Otherwise the SM Wave is just a ordinary MV Jazz16  * based soundcard.  */
+comment|/*  * Logitech Soundman Wave detection and initialization by Hannu Savolainen.  *   * There is a microcontroller (8031) in the SM Wave card for MIDI emulation.  * it's located at address MPU_BASE+4.  MPU_BASE+7 is a SM Wave specific  * control register for MC reset, SCSI, OPL4 and DSP (future expansion)  * address decoding. Otherwise the SM Wave is just a ordinary MV Jazz16 based  * soundcard.  */
 end_comment
 
 begin_function
@@ -2625,53 +2594,51 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|val
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-name|addr
-operator|&
-literal|0xff
-argument_list|,
 name|base
 operator|+
 literal|1
+argument_list|,
+name|addr
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Low address bits */
-name|OUTB
+name|outb
 argument_list|(
-name|addr
-operator|>>
-literal|8
-argument_list|,
 name|base
 operator|+
 literal|2
+argument_list|,
+name|addr
+operator|>>
+literal|8
 argument_list|)
 expr_stmt|;
 comment|/* High address bits */
-name|OUTB
+name|outb
 argument_list|(
-name|val
-argument_list|,
 name|base
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
 comment|/* Data */
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2681,8 +2648,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|smw_getmem
 parameter_list|(
 name|int
@@ -2692,52 +2658,50 @@ name|int
 name|addr
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|val
 decl_stmt|;
-name|DISABLE_INTR
-argument_list|(
 name|flags
-argument_list|)
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-name|addr
-operator|&
-literal|0xff
-argument_list|,
 name|base
 operator|+
 literal|1
+argument_list|,
+name|addr
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Low address bits */
-name|OUTB
+name|outb
 argument_list|(
-name|addr
-operator|>>
-literal|8
-argument_list|,
 name|base
 operator|+
 literal|2
+argument_list|,
+name|addr
+operator|>>
+literal|8
 argument_list|)
 expr_stmt|;
 comment|/* High address bits */
 name|val
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|base
 argument_list|)
 expr_stmt|;
 comment|/* Data */
-name|RESTORE_INTR
+name|splx
 argument_list|(
 name|flags
 argument_list|)
@@ -2748,40 +2712,58 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|initialize_smw
-parameter_list|(
-name|void
-parameter_list|)
-block|{
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SMW_MIDI0001_INCLUDED
+end_ifdef
+
+begin_include
 include|#
 directive|include
-file|<i386/isa/sound/smw-midi0001.h>
+file|</sys/i386/isa/sound/smw-midi0001.h>
+end_include
+
+begin_else
 else|#
 directive|else
-name|unsigned
-name|char
+end_else
+
+begin_decl_stmt
+name|u_char
+modifier|*
 name|smw_ucode
-index|[
-literal|1
-index|]
+init|=
+name|NULL
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|smw_ucodeLen
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|int
+name|initialize_smw
+parameter_list|(
+name|int
+name|mpu_base
+parameter_list|)
+block|{
 name|int
 name|mp_base
 init|=
-name|MPU_BASE
+name|mpu_base
 operator|+
 literal|4
 decl_stmt|;
@@ -2789,34 +2771,37 @@ comment|/* Microcontroller base */
 name|int
 name|i
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|control
 decl_stmt|;
-comment|/*      *  Reset the microcontroller so that the RAM can be accessed    */
+comment|/*      * Reset the microcontroller so that the RAM can be accessed      */
 name|control
 operator|=
-name|INB
+name|inb
 argument_list|(
-name|MPU_BASE
+name|mpu_base
 operator|+
 literal|7
 argument_list|)
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
+name|mpu_base
+operator|+
+literal|7
+argument_list|,
 name|control
 operator||
 literal|3
-argument_list|,
-name|MPU_BASE
-operator|+
-literal|7
 argument_list|)
 expr_stmt|;
 comment|/* Set last two bits to 1 (?) */
-name|OUTB
+name|outb
 argument_list|(
+name|mpu_base
+operator|+
+literal|7
+argument_list|,
 operator|(
 name|control
 operator|&
@@ -2824,43 +2809,28 @@ literal|0xfe
 operator|)
 operator||
 literal|2
-argument_list|,
-name|MPU_BASE
-operator|+
-literal|7
 argument_list|)
 expr_stmt|;
 comment|/* xxxxxxx0 resets the mc */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|300
-condition|;
-name|i
-operator|++
-control|)
-comment|/* Wait at least 1ms */
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-name|OUTB
+name|DELAY
 argument_list|(
+literal|3000
+argument_list|)
+expr_stmt|;
+comment|/* Wait at least 1ms */
+name|outb
+argument_list|(
+name|mpu_base
+operator|+
+literal|7
+argument_list|,
 name|control
 operator|&
 literal|0xfc
-argument_list|,
-name|MPU_BASE
-operator|+
-literal|7
 argument_list|)
 expr_stmt|;
 comment|/* xxxxxx00 enables RAM */
-comment|/*      *  Detect microcontroller by probing the 8k RAM area    */
+comment|/*      * Detect microcontroller by probing the 8k RAM area      */
 name|smw_putmem
 argument_list|(
 name|mp_base
@@ -2879,8 +2849,10 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|tenmicrosec
-argument_list|()
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2903,7 +2875,7 @@ operator|!=
 literal|0xff
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"\nSM Wave: No microcontroller RAM detected (%02x, %02x)\n"
 argument_list|,
@@ -2927,10 +2899,14 @@ literal|0
 return|;
 comment|/* No RAM */
 block|}
-comment|/*      *  There is RAM so assume it's really a SM Wave    */
-ifdef|#
-directive|ifdef
-name|SMW_MIDI0001_INCLUDED
+comment|/*      * There is RAM so assume it's really a SM Wave      */
+if|if
+condition|(
+name|smw_ucodeLen
+operator|>
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|smw_ucodeLen
@@ -2938,7 +2914,7 @@ operator|!=
 literal|8192
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"\nSM Wave: Invalid microcode (MIDI0001.BIN) length\n"
 argument_list|)
@@ -2947,9 +2923,7 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
-comment|/*      *  Download microcode    */
+comment|/* 	 * Download microcode 	 */
 for|for
 control|(
 name|i
@@ -2975,7 +2949,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*      *  Verify microcode    */
+comment|/* 	 * Verify microcode 	 */
 for|for
 control|(
 name|i
@@ -3004,7 +2978,7 @@ name|i
 index|]
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"SM Wave: Microcode verification failed\n"
 argument_list|)
@@ -3013,6 +2987,7 @@ return|return
 literal|0
 return|;
 block|}
+block|}
 name|control
 operator|=
 literal|0
@@ -3020,11 +2995,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMW_SCSI_IRQ
-comment|/*      * Set the SCSI interrupt (IRQ2/9, IRQ3 or IRQ10). The SCSI interrupt      * is disabled by default.      *      * Btw the Zilog 5380 SCSI controller is located at MPU base + 0x10.    */
+comment|/*      * Set the SCSI interrupt (IRQ2/9, IRQ3 or IRQ10). The SCSI interrupt      * is disabled by default.      *       * Btw the Zilog 5380 SCSI controller is located at MPU base + 0x10.      */
 block|{
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|scsi_irq_bits
 index|[]
 init|=
@@ -3077,7 +3051,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SMW_OPL4_ENABLE
-comment|/*      *  Make the OPL4 chip visible on the PC bus at 0x380.      *      *  There is no need to enable this feature since VoxWare      *  doesn't support OPL4 yet. Also there is no RAM in SM Wave so      *  enabling OPL4 is pretty useless.    */
+comment|/*      * Make the OPL4 chip visible on the PC bus at 0x380.      *       * There is no need to enable this feature since VoxWare doesn't support      * OPL4 yet. Also there is no RAM in SM Wave so enabling OPL4 is      * pretty useless.      */
 name|control
 operator||=
 literal|0x10
@@ -3086,15 +3060,15 @@ comment|/* Uses IRQ12 if bit 0x20 == 0 */
 comment|/* control |= 0x20;      Uncomment this if you want to use IRQ7 */
 endif|#
 directive|endif
-name|OUTB
+name|outb
 argument_list|(
+name|mpu_base
+operator|+
+literal|7
+argument_list|,
 name|control
 operator||
 literal|0x03
-argument_list|,
-name|MPU_BASE
-operator|+
-literal|7
 argument_list|)
 expr_stmt|;
 comment|/* xxxxxx11 restarts */
@@ -3121,8 +3095,7 @@ name|int
 name|x
 decl_stmt|;
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|int_translat
 index|[
 literal|16
@@ -3185,40 +3158,75 @@ block|,
 literal|4
 block|}
 decl_stmt|;
-name|OUTB
+name|struct
+name|address_info
+modifier|*
+name|mpu_config
+decl_stmt|;
+name|int
+name|mpu_base
+decl_stmt|,
+name|mpu_irq
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|mpu_config
+operator|=
+name|sound_getconf
 argument_list|(
-literal|0xAF
-argument_list|,
+name|SNDCARD_MPU401
+argument_list|)
+operator|)
+condition|)
+block|{
+name|mpu_base
+operator|=
+name|mpu_config
+operator|->
+name|io_base
+expr_stmt|;
+name|mpu_irq
+operator|=
+name|mpu_config
+operator|->
+name|irq
+expr_stmt|;
+block|}
+else|else
+block|{
+name|mpu_base
+operator|=
+name|mpu_irq
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|outb
+argument_list|(
 literal|0x201
+argument_list|,
+literal|0xAF
 argument_list|)
 expr_stmt|;
 comment|/* ProSonic/Jazz16 wakeup */
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|<
-literal|1000
-condition|;
-operator|++
-name|x
-control|)
-comment|/* wait 10 milliseconds */
-name|tenmicrosec
-argument_list|()
-expr_stmt|;
-name|OUTB
+name|DELAY
 argument_list|(
-literal|0x50
-argument_list|,
-literal|0x201
+literal|15000
 argument_list|)
 expr_stmt|;
-name|OUTB
+comment|/* wait at least 10 milliseconds */
+name|outb
 argument_list|(
+literal|0x201
+argument_list|,
+literal|0x50
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0x201
+argument_list|,
 operator|(
 name|sbc_base
 operator|&
@@ -3227,15 +3235,13 @@ operator|)
 operator||
 operator|(
 operator|(
-name|MPU_BASE
+name|mpu_base
 operator|&
 literal|0x30
 operator|)
 operator|>>
 literal|4
 operator|)
-argument_list|,
-literal|0x201
 argument_list|)
 expr_stmt|;
 if|if
@@ -3288,7 +3294,7 @@ operator|)
 operator||
 name|dma_translat
 index|[
-name|SBC_DMA
+name|dma8
 index|]
 argument_list|)
 operator|&&
@@ -3297,7 +3303,7 @@ argument_list|(
 operator|(
 name|int_translat
 index|[
-name|MPU_IRQ
+name|mpu_irq
 index|]
 operator|<<
 literal|4
@@ -3314,13 +3320,32 @@ name|Jazz16_detected
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|mpu_base
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Jazz16: No MPU401 devices configured - MIDI port not initialized\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SM_WAVE
 if|if
 condition|(
+name|mpu_base
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
 name|initialize_smw
-argument_list|()
+argument_list|(
+name|mpu_base
+argument_list|)
 condition|)
 name|Jazz16_detected
 operator|=
@@ -3375,6 +3400,12 @@ name|hw_config
 operator|->
 name|irq
 expr_stmt|;
+name|sb_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 if|if
 condition|(
 name|sb_dsp_ok
@@ -3382,16 +3413,16 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 				 * Already initialized 				 */
-ifdef|#
-directive|ifdef
-name|JAZZ16
+comment|/* Already initialized */
 name|dma8
 operator|=
 name|hw_config
 operator|->
 name|dma
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|JAZZ16
 name|dma16
 operator|=
 name|JAZZ_DMA16
@@ -3418,92 +3449,18 @@ literal|0
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PC98
-switch|switch
-condition|(
-name|sbc_irq
-condition|)
-block|{
-case|case
-literal|3
-case|:
-name|sb_setmixer
-argument_list|(
-name|IRQ_NR
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|5
-case|:
-name|sb_setmixer
-argument_list|(
-name|IRQ_NR
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|10
-case|:
-name|sb_setmixer
-argument_list|(
-name|IRQ_NR
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-switch|switch
-condition|(
-name|hw_config
-operator|->
-name|dma
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|sb_setmixer
-argument_list|(
-name|DMA_NR
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-name|sb_setmixer
-argument_list|(
-name|DMA_NR
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-endif|#
-directive|endif
 return|return
-literal|0x10
+literal|1
 return|;
-comment|/* 				 * Detected 				 */
+comment|/* Detected */
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_AUDIO
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3543,7 +3500,13 @@ name|NULL
 block|,
 comment|/* local_qlen */
 name|NULL
+block|,
 comment|/* copy_from_user */
+name|NULL
+block|,
+name|NULL
+block|,
+name|sb_dsp_trigger
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3554,12 +3517,9 @@ directive|endif
 end_endif
 
 begin_function
-name|long
+name|void
 name|sb_dsp_init
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
@@ -3569,11 +3529,28 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|fmt
+init|=
+name|NULL
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_SBPRO
 name|int
 name|mixer_type
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
+name|sb_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 name|sbc_major
 operator|=
 name|sbc_minor
@@ -3582,15 +3559,15 @@ literal|0
 expr_stmt|;
 name|sb_dsp_command
 argument_list|(
-literal|0xe1
+name|DSP_CMD_GETVER
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Get version 				 */
+comment|/* Get version */
 for|for
 control|(
 name|i
 operator|=
-literal|1000
+literal|10000
 init|;
 name|i
 condition|;
@@ -3598,9 +3575,10 @@ name|i
 operator|--
 control|)
 block|{
+comment|/* perhaps wait longer on a fast machine ? */
 if|if
 condition|(
-name|INB
+name|inb
 argument_list|(
 name|DSP_DATA_AVAIL
 argument_list|)
@@ -3608,7 +3586,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-comment|/* 				 * wait for Data Ready 				 */
+comment|/* wait for Data Ready */
 if|if
 condition|(
 name|sbc_major
@@ -3617,7 +3595,7 @@ literal|0
 condition|)
 name|sbc_major
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|DSP_READ
 argument_list|)
@@ -3626,7 +3604,7 @@ else|else
 block|{
 name|sbc_minor
 operator|=
-name|INB
+name|inb
 argument_list|(
 name|DSP_READ
 argument_list|)
@@ -3634,6 +3612,34 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+else|else
+name|DELAY
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sbc_major
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\nFailed to get SB version (%x) - possible I/O conflict\n\n"
+argument_list|,
+name|inb
+argument_list|(
+name|DSP_DATA_AVAIL
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sbc_major
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3659,9 +3665,152 @@ name|sb16
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|EXCLUDE_SBPRO
+if|if
+condition|(
+name|sbc_major
+operator|==
+literal|3
+operator|&&
+name|sbc_minor
+operator|==
+literal|1
+condition|)
+block|{
+name|int
+name|ess_major
+init|=
+literal|0
+decl_stmt|,
+name|ess_minor
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Try to detect ESS chips. 	 */
+name|sb_dsp_command
+argument_list|(
+name|DSP_CMD_GETID
+argument_list|)
+expr_stmt|;
+comment|/* Return identification bytes. */
+for|for
+control|(
+name|i
+operator|=
+literal|1000
+init|;
+name|i
+condition|;
+name|i
+operator|--
+control|)
+block|{
+if|if
+condition|(
+name|inb
+argument_list|(
+name|DSP_DATA_AVAIL
+argument_list|)
+operator|&
+literal|0x80
+condition|)
+block|{
+comment|/* wait for Data Ready */
+if|if
+condition|(
+name|ess_major
+operator|==
+literal|0
+condition|)
+name|ess_major
+operator|=
+name|inb
+argument_list|(
+name|DSP_READ
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|ess_minor
+operator|=
+name|inb
+argument_list|(
+name|DSP_READ
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|ess_major
+operator|==
+literal|0x48
+operator|&&
+operator|(
+name|ess_minor
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x80
+condition|)
+name|printf
+argument_list|(
+literal|"Hmm... Could this be an ESS488 based card (rev %d)\n"
+argument_list|,
+name|ess_minor
+operator|&
+literal|0x0f
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ess_major
+operator|==
+literal|0x68
+operator|&&
+operator|(
+name|ess_minor
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x80
+condition|)
+name|printf
+argument_list|(
+literal|"Hmm... Could this be an ESS688 based card (rev %d)\n"
+argument_list|,
+name|ess_minor
+operator|&
+literal|0x0f
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|snd_set_irq_handler
+argument_list|(
+name|sbc_irq
+argument_list|,
+name|sbintr
+argument_list|,
+name|sb_osp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"sb_dsp: Can't allocate IRQ\n"
+argument_list|)
+expr_stmt|;
+empty_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_SBPRO
 if|if
 condition|(
 name|sbc_major
@@ -3683,76 +3832,16 @@ name|sbc_major
 operator|>=
 literal|3
 condition|)
-name|printk
+name|printf
 argument_list|(
-literal|"\n\n\n\nNOTE! SB Pro support is required with your soundcard!\n\n\n"
+literal|"\nNOTE! SB Pro support required with your soundcard!\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EXCLUDE_YM3812
 ifdef|#
 directive|ifdef
-name|PC98
-if|if
-condition|(
-name|sbc_major
-operator|>
-literal|3
-operator|||
-operator|(
-name|sbc_major
-operator|==
-literal|3
-operator|&&
-name|INB
-argument_list|(
-literal|0x28d2
-argument_list|)
-operator|==
-literal|0x00
-operator|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|sbc_major
-operator|>
-literal|3
-operator|||
-operator|(
-name|sbc_major
-operator|==
-literal|3
-operator|&&
-name|INB
-argument_list|(
-literal|0x388
-argument_list|)
-operator|==
-literal|0x00
-operator|)
-condition|)
-comment|/* Should be 0x06 if not OPL-3 */
-endif|#
-directive|endif
-name|enable_opl3_mode
-argument_list|(
-name|OPL3_LEFT
-argument_list|,
-name|OPL3_RIGHT
-argument_list|,
-name|OPL3_BOTH
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|EXCLUDE_AUDIO
+name|CONFIG_AUDIO
 if|if
 condition|(
 name|sbc_major
@@ -3771,32 +3860,14 @@ name|Jazz16_detected
 operator|==
 literal|2
 condition|)
-name|sprintf
-argument_list|(
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|,
+name|fmt
+operator|=
 literal|"SoundMan Wave %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
-argument_list|(
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|,
+name|fmt
+operator|=
 literal|"MV Jazz16 %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
 expr_stmt|;
 name|sb_dsp_operations
 operator|.
@@ -3804,7 +3875,7 @@ name|format_mask
 operator||=
 name|AFMT_S16_LE
 expr_stmt|;
-comment|/* Hurrah, 16 bits          */
+comment|/* 16 bits */
 block|}
 elseif|else
 ifdef|#
@@ -3816,127 +3887,79 @@ name|mixer_type
 operator|==
 literal|2
 condition|)
-block|{
-name|sprintf
-argument_list|(
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|,
+name|fmt
+operator|=
 literal|"Sound Galaxy NX Pro %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 endif|#
 directive|endif
+comment|/* __SGNXPRO__ */
 if|if
 condition|(
 name|sbc_major
 operator|==
 literal|4
 condition|)
-block|{
-name|sprintf
-argument_list|(
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|,
+name|fmt
+operator|=
 literal|"SoundBlaster 16 %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|sprintf
-argument_list|(
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|,
+name|fmt
+operator|=
 literal|"SoundBlaster Pro %d.%d"
-argument_list|,
-name|sbc_major
-argument_list|,
-name|sbc_minor
-argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
+name|fmt
+operator|=
+literal|"SoundBlaster %d.%d"
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|sb_dsp_operations
 operator|.
 name|name
 argument_list|,
-literal|"SoundBlaster %d.%d"
+name|fmt
 argument_list|,
 name|sbc_major
 argument_list|,
 name|sbc_minor
 argument_list|)
 expr_stmt|;
-block|}
+name|conf_printf
+argument_list|(
+name|sb_dsp_operations
+operator|.
+name|name
+argument_list|,
+name|hw_config
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|printk
-argument_list|(
-literal|"sb0:<%s>"
-argument_list|,
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printk
-argument_list|(
-literal|"<%s>"
-argument_list|,
-name|sb_dsp_operations
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_SB16
+name|CONFIG_SB16
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SBPRO
+name|CONFIG_SBPRO
 argument_list|)
 if|if
 condition|(
 operator|!
 name|sb16
 condition|)
-comment|/* 				 * There is a better driver for SB16 				 */
+comment|/* There is a better driver for SB16 */
 endif|#
 directive|endif
+comment|/* CONFIG_SB16&& CONFIG_SBPRO */
 if|if
 condition|(
 name|num_audiodevs
@@ -3960,69 +3983,86 @@ index|[
 name|my_dev
 index|]
 operator|->
-name|buffcount
-operator|=
-name|DSP_BUFFCOUNT
-expr_stmt|;
-name|audio_devs
-index|[
-name|my_dev
-index|]
-operator|->
 name|buffsize
 operator|=
-operator|(
-operator|(
-name|sbc_major
-operator|>
-literal|2
-operator|||
-name|sbc_major
-operator|==
-literal|2
-operator|&&
-name|sbc_minor
-operator|>
-literal|0
-operator|)
-condition|?
-literal|16
-else|:
-literal|8
-operator|)
-operator|*
-literal|1024
+name|DSP_BUFFSIZE
 expr_stmt|;
+name|dma8
+operator|=
 name|audio_devs
 index|[
 name|my_dev
 index|]
 operator|->
-name|dmachan
+name|dmachan1
 operator|=
 name|hw_config
 operator|->
 name|dma
 expr_stmt|;
+name|audio_devs
+index|[
+name|my_dev
+index|]
+operator|->
+name|dmachan2
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|JAZZ16
+comment|/* 	     * Allocate 16 bit dma 	     */
+if|if
+condition|(
+name|Jazz16_detected
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
+name|dma16
+operator|!=
+name|dma8
+condition|)
+block|{
+if|if
+condition|(
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Jazz16: Can't allocate 16 bit DMA channel\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* JAZZ16 */
 block|}
 else|else
-name|printk
+name|printf
 argument_list|(
 literal|"SB: Too many DSP devices available\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printk
+name|conf_printf
 argument_list|(
-literal|"<SoundBlaster (configured without audio support)>"
+literal|"SoundBlaster (configured without audio support)"
+argument_list|,
+name|hw_config
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|EXCLUDE_MIDI
+ifdef|#
+directive|ifdef
+name|CONFIG_MIDI
 if|if
 condition|(
 operator|!
@@ -4031,21 +4071,21 @@ operator|&&
 operator|!
 name|sb16
 condition|)
-comment|/* 				 * Midi don't work in the SB emulation mode * 				 * of PAS, SB16 has better midi interface 				 */
+block|{
+comment|/* 	 * Midi don't work in the SB emulation mode of PAS, 	 * SB16 has better midi interface 	 */
 name|sb_midi_init
 argument_list|(
 name|sbc_major
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
+comment|/* CONFIG_MIDI */
 name|sb_dsp_ok
 operator|=
 literal|1
 expr_stmt|;
-return|return
-name|mem_start
-return|;
 block|}
 end_function
 

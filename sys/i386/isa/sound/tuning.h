@@ -6,7 +6,6 @@ name|SEQUENCER_C
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|unsigned
 name|short
 name|semitone_tuning
@@ -70,7 +69,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|unsigned
 name|short
 name|cent_tuning
@@ -292,6 +290,33 @@ literal|10582
 block|,
 literal|10589
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|short
+name|semitone_tuning
+index|[
+literal|24
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|short
+name|cent_tuning
+index|[
+literal|100
+index|]
 decl_stmt|;
 end_decl_stmt
 

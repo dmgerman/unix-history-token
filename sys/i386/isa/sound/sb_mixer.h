@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_mixer.h  *   * Definitions for the SB Pro and SB16 mixers  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *	Hunyue Yau	Jan 6 1994  *	Added defines for the Sound Galaxy NX Pro mixer.  *   */
+comment|/*  * sound/sb_mixer.h  *   * Definitions for the SB Pro and SB16 mixers  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * Modified: Hunyue Yau	Jan 6 1994 Added defines for the Sound Galaxy NX Pro  * mixer.  *   */
 end_comment
 
 begin_define
@@ -29,7 +29,7 @@ value|(SOUND_MASK_SYNTH | SOUND_MASK_PCM | SOUND_MASK_LINE | SOUND_MASK_MIC | \ 
 end_define
 
 begin_comment
-comment|/* SG NX Pro has treble and bass settings on the mixer. The 'speaker'  * channel is the COVOX/DisneySoundSource emulation volume control  * on the mixer. It does NOT control speaker volume. Should have own  * mask eventually?  */
+comment|/*  * SG NX Pro has treble and bass settings on the mixer. The 'speaker' channel  * is the COVOX/DisneySoundSource emulation volume control on the mixer. It  * does NOT control speaker volume. Should have own mask eventually?  */
 end_comment
 
 begin_define
@@ -58,7 +58,7 @@ comment|/*  * Mixer registers  *   * NOTE!	RECORD_SRC == IN_FILTER  */
 end_comment
 
 begin_comment
-comment|/*   * Mixer registers of SB Pro  */
+comment|/*  * Mixer registers of SB Pro  */
 end_comment
 
 begin_define
@@ -160,7 +160,7 @@ value|0x3c
 end_define
 
 begin_comment
-comment|/*  * Additional registers on the SG NX Pro   */
+comment|/*  * Additional registers on the SG NX Pro  */
 end_comment
 
 begin_define
@@ -348,7 +348,6 @@ name|__SB_MIXER_C__
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|mixer_tab
 name|sbpro_mix
 init|=
@@ -567,7 +566,6 @@ name|__SGNXPRO__
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|mixer_tab
 name|sgnxpro_mix
 init|=
@@ -819,7 +817,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|mixer_tab
 name|sb16_mix
 init|=
@@ -1073,7 +1070,7 @@ name|SM_GAMES
 end_ifdef
 
 begin_comment
-comment|/* Master volume is lower and PCM& FM volumes 			     higher than with SB Pro. This improves the 			     sound quality */
+comment|/* Master volume is lower and PCM& FM 				 * volumes higher than with SB Pro. This 				 * improves the sound quality */
 end_comment
 
 begin_decl_stmt
@@ -1222,45 +1219,45 @@ init|=
 block|{
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_VOLUME	*/
+comment|/* SOUND_MIXER_VOLUME	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_BASS	*/
+comment|/* SOUND_MIXER_BASS	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_TREBLE	*/
+comment|/* SOUND_MIXER_TREBLE	 */
 literal|0x40
 block|,
-comment|/* SOUND_MIXER_SYNTH	*/
+comment|/* SOUND_MIXER_SYNTH	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_PCM	*/
+comment|/* SOUND_MIXER_PCM	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_SPEAKER	*/
+comment|/* SOUND_MIXER_SPEAKER	 */
 literal|0x10
 block|,
-comment|/* SOUND_MIXER_LINE	*/
+comment|/* SOUND_MIXER_LINE	 */
 literal|0x01
 block|,
-comment|/* SOUND_MIXER_MIC	*/
+comment|/* SOUND_MIXER_MIC	 */
 literal|0x04
 block|,
-comment|/* SOUND_MIXER_CD	*/
+comment|/* SOUND_MIXER_CD	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_IMIX	*/
+comment|/* SOUND_MIXER_IMIX	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_ALTPCM	*/
+comment|/* SOUND_MIXER_ALTPCM	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_RECLEV	*/
+comment|/* SOUND_MIXER_RECLEV	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_IGAIN	*/
+comment|/* SOUND_MIXER_IGAIN	 */
 literal|0x00
-comment|/* SOUND_MIXER_OGAIN	*/
+comment|/* SOUND_MIXER_OGAIN	 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1277,51 +1274,51 @@ init|=
 block|{
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_VOLUME	*/
+comment|/* SOUND_MIXER_VOLUME	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_BASS	*/
+comment|/* SOUND_MIXER_BASS	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_TREBLE	*/
+comment|/* SOUND_MIXER_TREBLE	 */
 literal|0x20
 block|,
-comment|/* SOUND_MIXER_SYNTH	*/
+comment|/* SOUND_MIXER_SYNTH	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_PCM	*/
+comment|/* SOUND_MIXER_PCM	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_SPEAKER	*/
+comment|/* SOUND_MIXER_SPEAKER	 */
 literal|0x08
 block|,
-comment|/* SOUND_MIXER_LINE	*/
+comment|/* SOUND_MIXER_LINE	 */
 literal|0x01
 block|,
-comment|/* SOUND_MIXER_MIC	*/
+comment|/* SOUND_MIXER_MIC	 */
 literal|0x02
 block|,
-comment|/* SOUND_MIXER_CD	*/
+comment|/* SOUND_MIXER_CD	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_IMIX	*/
+comment|/* SOUND_MIXER_IMIX	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_ALTPCM	*/
+comment|/* SOUND_MIXER_ALTPCM	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_RECLEV	*/
+comment|/* SOUND_MIXER_RECLEV	 */
 literal|0x00
 block|,
-comment|/* SOUND_MIXER_IGAIN	*/
+comment|/* SOUND_MIXER_IGAIN	 */
 literal|0x00
-comment|/* SOUND_MIXER_OGAIN	*/
+comment|/* SOUND_MIXER_OGAIN	 */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Recording sources (SB Pro)  */
+comment|/*  * Recording sources (SB Pro)  */
 end_comment
 
 begin_define

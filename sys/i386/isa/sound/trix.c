@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/trix.c  *  * Low level driver for the MediaTriX AudioTriX Pro  * (MT-0002-PC Control Chip)  *  * Copyright by Hannu Savolainen 1995  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/trix.c  *   * Low level driver for the MediaTriX AudioTriX Pro (MT-0002-PC Control Chip)  *   * Copyright by Hannu Savolainen 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -12,16 +12,9 @@ end_include
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CONFIGURE_SOUNDCARD
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_TRIX
-argument_list|)
+name|NTRIX
+operator|>
+literal|0
 end_if
 
 begin_ifdef
@@ -35,6 +28,28 @@ include|#
 directive|include
 file|<i386/isa/sound/trix_boot.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|NSB
+operator|>
+literal|0
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sb_no_recording
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -65,37 +80,36 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|mpu_initialized
+name|sound_os_info
+modifier|*
+name|trix_osp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|trix_read
 parameter_list|(
 name|int
 name|addr
 parameter_list|)
 block|{
-name|OUTB
+name|outb
 argument_list|(
+literal|0x390
+argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|addr
-argument_list|,
-literal|0x390
 argument_list|)
 expr_stmt|;
 comment|/* MT-0002-PC ASIC address */
 return|return
-name|INB
+name|inb
 argument_list|(
 literal|0x391
 argument_list|)
@@ -116,27 +130,25 @@ name|int
 name|data
 parameter_list|)
 block|{
-name|OUTB
+name|outb
 argument_list|(
+literal|0x390
+argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|addr
-argument_list|,
-literal|0x390
 argument_list|)
 expr_stmt|;
 comment|/* MT-0002-PC ASIC address */
-name|OUTB
+name|outb
 argument_list|(
+literal|0x391
+argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|data
-argument_list|,
-literal|0x391
 argument_list|)
 expr_stmt|;
 comment|/* MT-0002-PC ASIC data */
@@ -152,6 +164,9 @@ name|int
 name|base
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INCLUDE_TRIX_BOOT
 name|int
 name|i
 init|=
@@ -172,42 +187,42 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* ??????? */
-name|OUTB
+name|outb
 argument_list|(
-literal|0x01
-argument_list|,
 name|base
 operator|+
 literal|6
+argument_list|,
+literal|0x01
 argument_list|)
 expr_stmt|;
 comment|/* Clear the internal data pointer */
-name|OUTB
+name|outb
 argument_list|(
-literal|0x00
-argument_list|,
 name|base
 operator|+
 literal|6
+argument_list|,
+literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* Restart */
-comment|/*      *  Write the boot code to the RAM upload/download register.      *  Each write increments the internal data pointer.    */
-name|OUTB
+comment|/*      * Write the boot code to the RAM upload/download register. Each      * write increments the internal data pointer.      */
+name|outb
 argument_list|(
-literal|0x01
-argument_list|,
 name|base
 operator|+
 literal|6
+argument_list|,
+literal|0x01
 argument_list|)
 expr_stmt|;
 comment|/* Clear the internal data pointer */
-name|OUTB
+name|outb
 argument_list|(
-literal|0x1A
-argument_list|,
 literal|0x390
+argument_list|,
+literal|0x1A
 argument_list|)
 expr_stmt|;
 comment|/* Select RAM download/upload port */
@@ -224,14 +239,14 @@ condition|;
 name|i
 operator|++
 control|)
-name|OUTB
+name|outb
 argument_list|(
+literal|0x391
+argument_list|,
 name|trix_boot
 index|[
 name|i
 index|]
-argument_list|,
-literal|0x391
 argument_list|)
 expr_stmt|;
 for|for
@@ -248,31 +263,33 @@ name|i
 operator|++
 control|)
 comment|/* Clear up to first 16 bytes of data RAM */
-name|OUTB
+name|outb
 argument_list|(
-literal|0x00
-argument_list|,
 literal|0x391
+argument_list|,
+literal|0x00
 argument_list|)
 expr_stmt|;
-name|OUTB
+name|outb
 argument_list|(
-literal|0x00
-argument_list|,
 name|base
 operator|+
 literal|6
+argument_list|,
+literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* Reset */
-name|OUTB
+name|outb
 argument_list|(
-literal|0x50
-argument_list|,
 literal|0x390
+argument_list|,
+literal|0x50
 argument_list|)
 expr_stmt|;
 comment|/* ?????? */
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -287,10 +304,23 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|addr_bits
 decl_stmt|;
+if|if
+condition|(
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"AudioTriX: Config port I/O conflict\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|kilroy_was_here
@@ -299,10 +329,6 @@ comment|/* Already initialized */
 return|return
 literal|0
 return|;
-name|kilroy_was_here
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|trix_read
@@ -312,38 +338,40 @@ argument_list|)
 operator|!=
 literal|0x71
 condition|)
+block|{
 comment|/* No asic signature */
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"No AudioTriX ASIC signature found\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/*      * Disable separate wave playback and recording DMA channels since      * the driver doesn't support duplex mode yet.    */
+block|}
+name|kilroy_was_here
+operator|=
+literal|1
+expr_stmt|;
+comment|/*      * Reset some registers.      */
 name|trix_write
 argument_list|(
 literal|0x13
 argument_list|,
-name|trix_read
-argument_list|(
-literal|0x13
-argument_list|)
-operator|&
-operator|~
-literal|0x80
+literal|0
 argument_list|)
 expr_stmt|;
 name|trix_write
 argument_list|(
 literal|0x14
 argument_list|,
-name|trix_read
-argument_list|(
-literal|0x14
-argument_list|)
-operator|&
-operator|~
-literal|0x80
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/*      * Configure the ASIC to place the codec to the proper I/O location    */
+comment|/*      * Configure the ASIC to place the codec to the proper I/O location      */
 switch|switch
 condition|(
 name|hw_config
@@ -411,7 +439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *    Probe and attach routines for the Windows Sound System mode of  *      AudioTriX Pro  */
+comment|/*  * Probe and attach routines for the Windows Sound System mode of AudioTriX  * Pro  */
 end_comment
 
 begin_function
@@ -424,7 +452,27 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-comment|/*      * Check if the IO port returns valid signature. The original MS Sound      * system returns 0x04 while some cards (AudioTriX Pro for example)      * return 0x00.    */
+comment|/*      * Check if the IO port returns valid signature. The original MS      * Sound system returns 0x04 while some cards (AudioTriX Pro for      * example) return 0x00.      */
+if|if
+condition|(
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"AudioTriX: MSS I/O port conflict\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|trix_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -439,7 +487,7 @@ return|;
 if|if
 condition|(
 operator|(
-name|INB
+name|inb
 argument_list|(
 name|hw_config
 operator|->
@@ -456,7 +504,7 @@ condition|)
 block|{
 name|DDB
 argument_list|(
-name|printk
+name|printf
 argument_list|(
 literal|"No MSS signature detected on port 0x%x\n"
 argument_list|,
@@ -479,7 +527,7 @@ operator|>
 literal|11
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"AudioTriX: Bad WSS IRQ %d\n"
 argument_list|,
@@ -513,7 +561,7 @@ operator|!=
 literal|3
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"AudioTriX: Bad WSS DMA %d\n"
 argument_list|,
@@ -526,7 +574,50 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*      * Check that DMA0 is not in use with a 8 bit board.    */
+if|if
+condition|(
+name|hw_config
+operator|->
+name|dma2
+operator|!=
+operator|-
+literal|1
+condition|)
+if|if
+condition|(
+name|hw_config
+operator|->
+name|dma2
+operator|!=
+literal|0
+operator|&&
+name|hw_config
+operator|->
+name|dma2
+operator|!=
+literal|1
+operator|&&
+name|hw_config
+operator|->
+name|dma2
+operator|!=
+literal|3
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"AudioTriX: Bad capture DMA %d\n"
+argument_list|,
+name|hw_config
+operator|->
+name|dma2
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/*      * Check that DMA0 is not in use with a 8 bit board.      */
 if|if
 condition|(
 name|hw_config
@@ -535,7 +626,7 @@ name|dma
 operator|==
 literal|0
 operator|&&
-name|INB
+name|inb
 argument_list|(
 name|hw_config
 operator|->
@@ -547,7 +638,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"AudioTriX: Can't use DMA0 with a 8 bit card\n"
 argument_list|)
@@ -570,7 +661,7 @@ name|irq
 operator|!=
 literal|9
 operator|&&
-name|INB
+name|inb
 argument_list|(
 name|hw_config
 operator|->
@@ -582,7 +673,7 @@ operator|&
 literal|0x80
 condition|)
 block|{
-name|printk
+name|printf
 argument_list|(
 literal|"AudioTriX: Can't use IRQ%d with a 8 bit card\n"
 argument_list|,
@@ -603,18 +694,21 @@ operator|->
 name|io_base
 operator|+
 literal|4
+argument_list|,
+name|NULL
+argument_list|,
+name|hw_config
+operator|->
+name|osp
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_function
-name|long
+name|void
 name|attach_trix_wss
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
@@ -622,8 +716,7 @@ name|hw_config
 parameter_list|)
 block|{
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|interrupt_bits
 index|[
 literal|12
@@ -667,8 +760,7 @@ name|char
 name|bits
 decl_stmt|;
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|dma_bits
 index|[
 literal|4
@@ -701,15 +793,42 @@ name|io_base
 operator|+
 literal|3
 decl_stmt|;
+name|int
+name|dma1
+init|=
+name|hw_config
+operator|->
+name|dma
+decl_stmt|,
+name|dma2
+init|=
+name|hw_config
+operator|->
+name|dma2
+decl_stmt|;
+name|trix_osp
+operator|=
+name|hw_config
+operator|->
+name|osp
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|kilroy_was_here
 condition|)
-return|return
-name|mem_start
-return|;
-comment|/*      * Set the IRQ and DMA addresses.    */
+block|{
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"AudioTriX: Attach called but not probed yet???\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+comment|/*      * Set the IRQ and DMA addresses.      */
 name|bits
 operator|=
 name|interrupt_bits
@@ -726,22 +845,31 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-name|mem_start
-return|;
-name|OUTB
+block|{
+name|printf
 argument_list|(
+literal|"AudioTriX: Bad IRQ (%d)\n"
+argument_list|,
+name|hw_config
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
+name|outb
+argument_list|(
+name|config_port
+argument_list|,
 name|bits
 operator||
 literal|0x40
-argument_list|,
-name|config_port
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|INB
+name|inb
 argument_list|(
 name|version_port
 argument_list|)
@@ -751,23 +879,95 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printk
+name|printf
 argument_list|(
 literal|"[IRQ Conflict?]"
 argument_list|)
 expr_stmt|;
-name|OUTB
-argument_list|(
-name|bits
-operator||
-name|dma_bits
-index|[
+if|if
+condition|(
 name|hw_config
 operator|->
-name|dma
+name|dma2
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* Single DMA mode */
+name|bits
+operator||=
+name|dma_bits
+index|[
+name|dma1
 index|]
+expr_stmt|;
+name|dma2
+operator|=
+name|dma1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|u_char
+name|tmp
+decl_stmt|;
+name|tmp
+operator|=
+name|trix_read
+argument_list|(
+literal|0x13
+argument_list|)
+operator|&
+operator|~
+literal|30
+expr_stmt|;
+name|trix_write
+argument_list|(
+literal|0x13
 argument_list|,
+name|tmp
+operator||
+literal|0x80
+operator||
+operator|(
+name|dma1
+operator|<<
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|trix_read
+argument_list|(
+literal|0x14
+argument_list|)
+operator|&
+operator|~
+literal|30
+expr_stmt|;
+name|trix_write
+argument_list|(
+literal|0x14
+argument_list|,
+name|tmp
+operator||
+literal|0x80
+operator||
+operator|(
+name|dma2
+operator|<<
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|outb
+argument_list|(
 name|config_port
+argument_list|,
+name|bits
 argument_list|)
 expr_stmt|;
 comment|/* Write IRQ+DMA setup */
@@ -785,18 +985,18 @@ name|hw_config
 operator|->
 name|irq
 argument_list|,
-name|hw_config
-operator|->
-name|dma
+name|dma1
+argument_list|,
+name|dma2
+argument_list|,
+literal|0
 argument_list|,
 name|hw_config
 operator|->
-name|dma
+name|osp
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
+return|return ;
 block|}
 end_function
 
@@ -813,8 +1013,7 @@ block|{
 name|int
 name|tmp
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|conf
 decl_stmt|;
 specifier|static
@@ -871,11 +1070,13 @@ literal|0
 return|;
 if|if
 condition|(
+operator|(
 name|hw_config
 operator|->
 name|io_base
 operator|&
 literal|0xffffff8f
+operator|)
 operator|!=
 literal|0x200
 condition|)
@@ -989,50 +1190,76 @@ block|}
 end_function
 
 begin_function
-name|long
+name|void
 name|attach_trix_sb
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|printk
+if|#
+directive|if
+operator|(
+name|NSB
+operator|>
+literal|0
+operator|)
+name|sb_dsp_disable_midi
+argument_list|()
+expr_stmt|;
+name|sb_no_recording
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+name|conf_printf
 argument_list|(
-literal|"<AudioTriX>"
+literal|"AudioTriX (SB)"
+argument_list|,
+name|hw_config
 argument_list|)
 expr_stmt|;
-return|return
-name|mem_start
-return|;
 block|}
 end_function
 
 begin_function
-name|long
+name|void
 name|attach_trix_mpu
 parameter_list|(
-name|long
-name|mem_start
-parameter_list|,
 name|struct
 name|address_info
 modifier|*
 name|hw_config
 parameter_list|)
 block|{
-return|return
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|CONFIG_MPU401
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_MPU_EMU
+argument_list|)
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_MIDI
+argument_list|)
 name|attach_mpu401
 argument_list|(
-name|mem_start
-argument_list|,
 name|hw_config
 argument_list|)
-return|;
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1046,8 +1273,25 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|unsigned
-name|char
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|CONFIG_MPU401
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_MPU_EMU
+argument_list|)
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_MIDI
+argument_list|)
+name|u_char
 name|conf
 decl_stmt|;
 specifier|static
@@ -1087,25 +1331,55 @@ condition|(
 operator|!
 name|kilroy_was_here
 condition|)
+block|{
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"Trix: WSS and SB modes must be initialized before MPU\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 comment|/* AudioTriX Pro has not been detected earlier */
+block|}
 if|if
 condition|(
 operator|!
 name|sb_initialized
 condition|)
+block|{
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"Trix: SB mode must be initialized before MPU\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|mpu_initialized
 condition|)
+block|{
+name|DDB
+argument_list|(
+name|printf
+argument_list|(
+literal|"Trix: MPU mode already initialized\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|hw_config
@@ -1114,9 +1388,20 @@ name|irq
 operator|>
 literal|9
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"AudioTriX: Bad MPU IRQ %d\n"
+argument_list|,
+name|hw_config
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|irq_bits
@@ -1129,9 +1414,20 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"AudioTriX: Bad MPU IRQ %d\n"
+argument_list|,
+name|hw_config
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 switch|switch
 condition|(
 name|hw_config
@@ -1214,6 +1510,13 @@ argument_list|(
 name|hw_config
 argument_list|)
 return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
