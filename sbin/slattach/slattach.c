@@ -317,7 +317,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* uucp lock */
+comment|/* uucp lock active */
 end_comment
 
 begin_decl_stmt
@@ -454,6 +454,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|uucp_lock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do uucp locking */
+end_comment
+
+begin_decl_stmt
+name|int
 name|exiting
 init|=
 literal|0
@@ -546,7 +558,7 @@ name|char
 name|usage_str
 index|[]
 init|=
-literal|"\ usage: %s [-acfhlnz] [-e command] [-r command] [-s speed] [-u command] \\\n\ 	  [-K timeout] [-O timeout] [-S unit] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n\   -K #    -- set SLIP \"keep alive\" timeout (default 0)\n\   -O #    -- set SLIP \"out fill\" timeout (default 0)\n\   -S #    -- set SLIP unit number (default is dynamic)\n\ "
+literal|"\ usage: %s [-acfhlnz] [-e command] [-r command] [-s speed] [-u command] \\\n\ 	  [-L] [-K timeout] [-O timeout] [-S unit] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n\   -L      -- do uucp-style device locking\n\   -K #    -- set SLIP \"keep alive\" timeout (default 0)\n\   -O #    -- set SLIP \"out fill\" timeout (default 0)\n\   -S #    -- set SLIP unit number (default is dynamic)\n\ "
 decl_stmt|;
 end_decl_stmt
 
@@ -586,7 +598,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ace:fhlnr:s:u:zK:O:S:"
+literal|"ace:fhlnr:s:u:zLK:O:S:"
 argument_list|)
 operator|)
 operator|!=
@@ -717,6 +729,14 @@ case|case
 literal|'z'
 case|:
 name|redial_on_startup
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+name|uucp_lock
 operator|=
 literal|1
 expr_stmt|;
@@ -1349,6 +1369,11 @@ argument_list|,
 literal|"cannot install SIGHUP handler: %m"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uucp_lock
+condition|)
+block|{
 comment|/* unlock not needed here, always re-lock with new pid */
 if|if
 condition|(
@@ -1377,6 +1402,7 @@ name|locked
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2184,6 +2210,15 @@ argument_list|,
 name|redial_cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+block|{
+if|if
+condition|(
+name|uucp_lock
+condition|)
 name|uu_unlock
 argument_list|(
 name|dvname
@@ -2194,6 +2229,7 @@ name|locked
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|system
@@ -2204,6 +2240,11 @@ condition|)
 goto|goto
 name|again
 goto|;
+if|if
+condition|(
+name|uucp_lock
+condition|)
+block|{
 if|if
 condition|(
 name|uu_lock
@@ -2233,6 +2274,7 @@ name|locked
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* Now check again for carrier (dial command is done): */
 if|if
 condition|(
@@ -2653,6 +2695,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|uucp_lock
+operator|&&
 name|locked
 condition|)
 name|uu_unlock
