@@ -176,6 +176,48 @@ begin_comment
 comment|/* first in sharing list */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RF_ALIGNMENT_SHIFT
+value|10
+end_define
+
+begin_comment
+comment|/* alignment size bit starts bit 10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_ALIGNMENT_MASK
+value|(0x003F<< RF_ALIGNMENT_SHIFT)
+end_define
+
+begin_comment
+comment|/* resource address alignemnt size bit mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_ALIGNMENT_LOG2
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< RF_ALIGNMENT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RF_ALIGNMENT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& RF_ALIGNMENT_MASK)>> RF_ALIGNMENT_SHIFT)
+end_define
+
 begin_enum
 enum|enum
 name|rman_type
@@ -374,6 +416,16 @@ name|struct
 name|device
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|rman_make_alignment_flags
+parameter_list|(
+name|uint32_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
