@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ftp_var.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ftp_var.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -119,6 +119,188 @@ end_decl_stmt
 
 begin_comment
 comment|/* establish user account on connection */
+end_comment
+
+begin_decl_stmt
+name|int
+name|proxy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* proxy server connection active */
+end_comment
+
+begin_decl_stmt
+name|int
+name|proxflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* proxy connection exists */
+end_comment
+
+begin_decl_stmt
+name|int
+name|sunique
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* store files on server with unique name */
+end_comment
+
+begin_decl_stmt
+name|int
+name|runique
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* store local files with unique name */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mcase
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* map upper to lower case for mget names */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ntflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use ntin ntout tables for name translation */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mapflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use mapin mapout templates on file names */
+end_comment
+
+begin_decl_stmt
+name|int
+name|code
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* return/reply code for ftp command */
+end_comment
+
+begin_decl_stmt
+name|int
+name|macroflg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* active macro */
+end_comment
+
+begin_decl_stmt
+name|int
+name|crflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if 1, strip car. rets. on ascii gets */
+end_comment
+
+begin_decl_stmt
+name|char
+name|pasv
+index|[
+literal|64
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* passive port for proxy data connection */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|altarg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* argv[1] with no shell-like preprocessing  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|ntin
+index|[
+literal|17
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input translation table */
+end_comment
+
+begin_decl_stmt
+name|char
+name|ntout
+index|[
+literal|17
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output translation table */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_decl_stmt
+name|char
+name|mapin
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input map template */
+end_comment
+
+begin_decl_stmt
+name|char
+name|mapout
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output map template */
 end_comment
 
 begin_decl_stmt
@@ -349,6 +531,26 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|cpend
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag: if != 0, then pending server reply */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag: if != 0, then active multi command */
+end_comment
+
+begin_decl_stmt
+name|int
 name|options
 decl_stmt|;
 end_decl_stmt
@@ -383,6 +585,10 @@ name|char
 name|c_conn
 decl_stmt|;
 comment|/* must be connected to use command */
+name|char
+name|c_proxy
+decl_stmt|;
+comment|/* proxy server may execute */
 name|int
 function_decl|(
 modifier|*
@@ -394,6 +600,63 @@ comment|/* function to call */
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|macel
+block|{
+name|char
+name|mac_name
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* macro name */
+name|char
+modifier|*
+name|mac_start
+decl_stmt|;
+comment|/* start of macro in macbuf */
+name|char
+modifier|*
+name|mac_end
+decl_stmt|;
+comment|/* end of macro in macbuf */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+name|macnum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of defined macros */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|macel
+name|macros
+index|[
+literal|16
+index|]
+decl_stmt|,
+modifier|*
+name|macpt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|macbuf
+index|[
+literal|4096
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern

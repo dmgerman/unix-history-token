@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"ftp_var.h"
 end_include
 
 begin_include
@@ -108,12 +108,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ftp_var.h"
 end_include
 
 begin_function_decl
@@ -407,6 +401,21 @@ condition|)
 name|verbose
 operator|++
 expr_stmt|;
+name|cpend
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no pending replies */
+name|proxy
+operator|=
+literal|0
+expr_stmt|;
+comment|/* proxy not active */
+name|crflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* strip c.r. on ascii gets */
 comment|/* 	 * Set up the home directory in case we're globbing. 	 */
 name|cp
 operator|=
@@ -419,6 +428,7 @@ name|cp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|pw
 operator|=
 name|getpwnam
@@ -426,6 +436,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pw
@@ -656,11 +667,57 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|longjmp
+name|pswitch
 argument_list|(
-name|toplevel
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|connected
+condition|)
+block|{
+if|if
+condition|(
+name|cout
+operator|!=
+name|NULL
+condition|)
+block|{
+name|shutdown
+argument_list|(
+name|fileno
+argument_list|(
+name|cout
+argument_list|)
 argument_list|,
 literal|1
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|cout
+argument_list|)
+expr_stmt|;
+name|cout
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|connected
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|proxflag
+operator|=
+literal|0
+expr_stmt|;
+name|pswitch
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -824,9 +881,26 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|fromatty
+condition|)
 name|quit
 argument_list|()
 expr_stmt|;
+name|clearerr
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
@@ -848,7 +922,9 @@ name|margc
 operator|==
 literal|0
 condition|)
+block|{
 continue|continue;
+block|}
 name|c
 operator|=
 name|getcmd
@@ -948,6 +1024,20 @@ name|help
 condition|)
 break|break;
 block|}
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|intr
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|lostpeer
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1120,6 +1210,12 @@ begin_comment
 comment|/*  * Slice a string up into argc/argv.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|slrflag
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|makeargv
 argument_list|()
@@ -1155,88 +1251,10 @@ operator|=
 name|argbuf
 expr_stmt|;
 comment|/* store from first of buffer */
-while|while
-condition|(
-operator|*
-name|stringbase
-operator|==
-literal|' '
-operator|||
-operator|*
-name|stringbase
-operator|==
-literal|'\t'
-condition|)
-name|stringbase
-operator|++
-expr_stmt|;
-comment|/* skip initial white space */
-if|if
-condition|(
-operator|*
-name|stringbase
-operator|==
-literal|'!'
-condition|)
-block|{
-comment|/* handle shell escapes specially */
-name|stringbase
-operator|++
-expr_stmt|;
-operator|*
-name|argp
-operator|++
+name|slrflag
 operator|=
-literal|"!"
+literal|0
 expr_stmt|;
-comment|/* command name is "!" */
-name|margc
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|stringbase
-operator|==
-literal|' '
-operator|||
-operator|*
-name|stringbase
-operator|==
-literal|'\t'
-condition|)
-name|stringbase
-operator|++
-expr_stmt|;
-comment|/* skip white space */
-if|if
-condition|(
-operator|*
-name|stringbase
-operator|!=
-literal|'\0'
-condition|)
-block|{
-operator|*
-name|argp
-operator|++
-operator|=
-name|stringbase
-expr_stmt|;
-comment|/* argument is entire command string */
-name|margc
-operator|++
-expr_stmt|;
-block|}
-operator|*
-name|argp
-operator|++
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
 while|while
 condition|(
 operator|*
@@ -1249,7 +1267,6 @@ condition|)
 name|margc
 operator|++
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1289,6 +1306,65 @@ init|=
 name|argbase
 decl_stmt|;
 comment|/* will return this if token found */
+if|if
+condition|(
+operator|*
+name|sb
+operator|==
+literal|'!'
+operator|||
+operator|*
+name|sb
+operator|==
+literal|'$'
+condition|)
+block|{
+comment|/* recognize ! as a token for shell */
+switch|switch
+condition|(
+name|slrflag
+condition|)
+block|{
+comment|/* and $ as token for macro invoke */
+case|case
+literal|0
+case|:
+name|slrflag
+operator|++
+expr_stmt|;
+name|stringbase
+operator|++
+expr_stmt|;
+return|return
+operator|(
+operator|(
+operator|*
+name|sb
+operator|==
+literal|'!'
+operator|)
+condition|?
+literal|"!"
+else|:
+literal|"$"
+operator|)
+return|;
+break|break;
+case|case
+literal|1
+case|:
+name|slrflag
+operator|++
+expr_stmt|;
+name|altarg
+operator|=
+name|stringbase
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
 name|S0
 label|:
 switch|switch
@@ -1316,6 +1392,32 @@ goto|goto
 name|S0
 goto|;
 default|default:
+switch|switch
+condition|(
+name|slrflag
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|slrflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|slrflag
+operator|++
+expr_stmt|;
+name|altarg
+operator|=
+name|sb
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 goto|goto
 name|S1
 goto|;
@@ -1476,11 +1578,43 @@ if|if
 condition|(
 name|got_one
 condition|)
+block|{
 return|return
 operator|(
 name|tmp
 operator|)
 return|;
+block|}
+switch|switch
+condition|(
+name|slrflag
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|slrflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|slrflag
+operator|++
+expr_stmt|;
+name|altarg
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 return|return
 operator|(
 operator|(
@@ -1549,6 +1683,8 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|w
+decl_stmt|,
+name|k
 decl_stmt|;
 name|int
 name|columns
@@ -1689,7 +1825,17 @@ condition|(
 name|c
 operator|->
 name|c_name
+operator|&&
+operator|(
+operator|!
+name|proxy
+operator|||
+name|c
+operator|->
+name|c_proxy
+operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s"
@@ -1699,6 +1845,41 @@ operator|->
 name|c_name
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|->
+name|c_name
+condition|)
+block|{
+for|for
+control|(
+name|k
+operator|=
+literal|0
+init|;
+name|k
+operator|<
+name|strlen
+argument_list|(
+name|c
+operator|->
+name|c_name
+argument_list|)
+condition|;
+name|k
+operator|++
+control|)
+block|{
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|c
