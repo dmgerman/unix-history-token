@@ -4913,13 +4913,6 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"BRDCTL = 0x%x\n"
-argument_list|,
-name|brdctl
-argument_list|)
-expr_stmt|;
 operator|*
 name|eeprom_present
 operator|=
