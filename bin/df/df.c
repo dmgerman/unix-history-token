@@ -2902,6 +2902,10 @@ block|}
 block|}
 if|if
 condition|(
+name|cnt
+operator|==
+literal|0
+operator|||
 operator|(
 name|str
 operator|=
@@ -2927,6 +2931,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|cnt
+operator|>
+literal|0
+condition|)
 name|warnx
 argument_list|(
 literal|"malloc failed"
