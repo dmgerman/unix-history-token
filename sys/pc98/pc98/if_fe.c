@@ -825,6 +825,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -889,11 +898,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -5988,6 +5992,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_comment
 comment|/*  * Probe and initialization for Gateway Communications' old cards.  */
 end_comment
@@ -6780,15 +6793,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98 */
-end_comment
 
 begin_endif
 endif|#
