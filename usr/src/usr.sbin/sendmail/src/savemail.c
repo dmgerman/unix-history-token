@@ -23,20 +23,13 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	2.1	%G%"
+literal|"@(#)savemail.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. ** **		WARNING: the user id is reset to the original user. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MY_NAME
-value|"~MAILER~DAEMON~"
-end_define
 
 begin_macro
 name|savemail
@@ -149,6 +142,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|exclusive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|DaemonName
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +296,7 @@ name|printf
 argument_list|(
 literal|"\r\nMessage from %s\r\n"
 argument_list|,
-name|MY_NAME
+name|DaemonName
 argument_list|)
 expr_stmt|;
 name|printf
@@ -409,7 +410,7 @@ if|if
 condition|(
 name|parse
 argument_list|(
-name|MY_NAME
+name|DaemonName
 argument_list|,
 operator|&
 name|From

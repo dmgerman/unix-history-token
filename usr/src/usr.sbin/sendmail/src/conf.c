@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	2.2	%G%"
+literal|"@(#)conf.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,15 @@ literal|"Ing70"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"Ing70:~MAILER~DAEMON~"
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -214,6 +223,15 @@ modifier|*
 name|MyLocName
 init|=
 literal|"IngVax"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"IngVax:~MAILER~DAEMON~"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +292,15 @@ literal|"CSVAX"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"CSVAX:~MAILER~DAEMON~"
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -298,10 +325,6 @@ directive|ifdef
 name|CORY
 end_ifdef
 
-begin_comment
-comment|/* untested */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -325,6 +348,15 @@ modifier|*
 name|MyLocName
 init|=
 literal|"Cory"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"Cory:~MAILER~DAEMON~"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,6 +402,15 @@ literal|"Image"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"Image:~MAILER~DAEMON~"
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -387,10 +428,6 @@ ifdef|#
 directive|ifdef
 name|ESVAX
 end_ifdef
-
-begin_comment
-comment|/* untested */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -415,6 +452,15 @@ modifier|*
 name|MyLocName
 init|=
 literal|"ESVAX"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"ESVAX:~MAILER~DAEMON~"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,6 +503,15 @@ modifier|*
 name|MyLocName
 init|=
 literal|"EECS40"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"EECS40:~MAILER~DAEMON~"
 decl_stmt|;
 end_decl_stmt
 
