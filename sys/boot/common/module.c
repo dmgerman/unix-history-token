@@ -134,7 +134,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|file_load_dependancies
+name|file_load_dependencies
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -1179,7 +1179,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|file_load_dependancies
+name|file_load_dependencies
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -2038,7 +2038,7 @@ expr_stmt|;
 comment|/* Add to the list of loaded files */
 if|if
 condition|(
-name|file_load_dependancies
+name|file_load_dependencies
 argument_list|(
 name|fp
 argument_list|)

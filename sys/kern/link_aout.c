@@ -1280,7 +1280,7 @@ name|a_bss
 expr_stmt|;
 name|error
 operator|=
-name|linker_load_dependancies
+name|linker_load_dependencies
 argument_list|(
 name|lf
 argument_list|)

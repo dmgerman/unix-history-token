@@ -2288,7 +2288,7 @@ end_function
 
 begin_function
 name|int
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 parameter_list|(
 name|linker_file_t
 name|file
@@ -2526,7 +2526,7 @@ name|value
 operator|==
 literal|0
 condition|)
-comment|/* 	     * For commons, first look them up in the dependancies and 	     * only allocate space if not found there. 	     */
+comment|/* 	     * For commons, first look them up in the dependencies and 	     * only allocate space if not found there. 	     */
 name|common_size
 operator|=
 name|symval
@@ -2621,7 +2621,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 	 * This is a common symbol which was not found in the 	 * dependancies.  We maintain a simple common symbol table in 	 * the file object. 	 */
+comment|/* 	 * This is a common symbol which was not found in the 	 * dependencies.  We maintain a simple common symbol table in 	 * the file object. 	 */
 name|struct
 name|common_symbol
 modifier|*
@@ -5847,7 +5847,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 argument_list|(
 name|lf
 argument_list|,
@@ -5957,7 +5957,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 argument_list|(
 name|lf
 argument_list|,
@@ -7822,7 +7822,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 argument_list|(
 name|parent
 argument_list|,
@@ -7875,7 +7875,7 @@ end_comment
 
 begin_function
 name|int
-name|linker_load_dependancies
+name|linker_load_dependencies
 parameter_list|(
 name|linker_file_t
 name|lf
@@ -7948,7 +7948,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 argument_list|(
 name|lf
 argument_list|,
@@ -8211,7 +8211,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 argument_list|(
 name|lf
 argument_list|,

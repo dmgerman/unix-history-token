@@ -211,12 +211,12 @@ comment|/* size of file */
 name|int
 name|ndeps
 decl_stmt|;
-comment|/* number of dependancies */
+comment|/* number of dependencies */
 name|linker_file_t
 modifier|*
 name|deps
 decl_stmt|;
-comment|/* list of dependancies */
+comment|/* list of dependencies */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -414,12 +414,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Add a dependancy to a file.  */
+comment|/*  * Add a dependency to a file.  */
 end_comment
 
 begin_function_decl
 name|int
-name|linker_file_add_dependancy
+name|linker_file_add_dependency
 parameter_list|(
 name|linker_file_t
 name|_file
@@ -431,7 +431,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Lookup a symbol in a file.  If deps is TRUE, look in dependancies  * if not found in file.  */
+comment|/*  * Lookup a symbol in a file.  If deps is TRUE, look in dependencies  * if not found in file.  */
 end_comment
 
 begin_function_decl
@@ -489,7 +489,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|linker_load_dependancies
+name|linker_load_dependencies
 parameter_list|(
 name|linker_file_t
 name|_lf
