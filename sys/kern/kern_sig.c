@@ -5837,7 +5837,27 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/* 	 * Note that this layout means that limit checking is done 	 * AFTER the corefile name is created.  This could happen 	 * other ways as well, so I'm not too worried about it, but 	 * it is potentially confusing. 	 */
+comment|/* 	 * Note that the bulk of limit checking is done after 	 * the corefile is created.  The exception is if the limit 	 * for corefiles is 0, in which case we don't bother 	 * creating the corefile at all.  This layout means that 	 * a corefile is truncated instead of not being created, 	 * if it is larger than the limit. 	 */
+name|limit
+operator|=
+name|p
+operator|->
+name|p_rlimit
+index|[
+name|RLIMIT_CORE
+index|]
+operator|.
+name|rlim_cur
+expr_stmt|;
+if|if
+condition|(
+name|limit
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|name
 operator|=
 name|expand_name
@@ -5989,17 +6009,6 @@ operator|->
 name|p_acflag
 operator||=
 name|ACORE
-expr_stmt|;
-name|limit
-operator|=
-name|p
-operator|->
-name|p_rlimit
-index|[
-name|RLIMIT_CORE
-index|]
-operator|.
-name|rlim_cur
 expr_stmt|;
 name|error
 operator|=
