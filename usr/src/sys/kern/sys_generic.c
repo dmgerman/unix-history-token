@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.37	83/06/02	*/
+comment|/*	sys_generic.c	5.38	83/06/10	*/
 end_comment
 
 begin_include
@@ -1551,22 +1551,38 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
+comment|/* this should be timercmp(&time,&atv,>=) */
 if|if
 condition|(
 name|uap
 operator|->
 name|tv
 operator|&&
-name|timercmp
-argument_list|(
-operator|&
+operator|(
 name|time
-argument_list|,
-operator|&
+operator|.
+name|tv_sec
+operator|>
 name|atv
-argument_list|,
+operator|.
+name|tv_sec
+operator|||
+name|time
+operator|.
+name|tv_sec
+operator|==
+name|atv
+operator|.
+name|tv_sec
+operator|&&
+name|time
+operator|.
+name|tv_usec
 operator|>=
-argument_list|)
+name|atv
+operator|.
+name|tv_usec
+operator|)
 condition|)
 block|{
 name|splx
