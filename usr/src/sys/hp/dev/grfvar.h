@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grfvar.h 1.1 90/07/09$  *  *	@(#)grfvar.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grfvar.h 1.9 91/01/21$  *  *	@(#)grfvar.h	7.3 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/* internal structure of lock page */
 end_comment
 
 begin_define
@@ -8,6 +12,27 @@ define|#
 directive|define
 name|GRFMAXLCK
 value|256
+end_define
+
+begin_struct
+struct|struct
+name|grf_lockpage
+block|{
+name|u_char
+name|gl_locks
+index|[
+name|GRFMAXLCK
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|gl_lockslot
+value|gl_locks[0]
 end_define
 
 begin_comment
@@ -26,31 +51,44 @@ name|int
 name|g_type
 decl_stmt|;
 comment|/* type of display */
+name|caddr_t
+name|g_regkva
+decl_stmt|;
+comment|/* KVA of registers */
+name|caddr_t
+name|g_fbkva
+decl_stmt|;
+comment|/* KVA of framebuffer */
 name|struct
 name|grfinfo
 name|g_display
 decl_stmt|;
-comment|/* hardware description */
+comment|/* hardware description (for ioctl) */
+name|struct
+name|grf_lockpage
+modifier|*
+name|g_lock
+decl_stmt|;
+comment|/* lock page associated with device */
 name|struct
 name|proc
 modifier|*
 name|g_lockp
 decl_stmt|;
 comment|/* process holding lock */
-name|int
-name|g_lockpslot
-decl_stmt|;
-comment|/* g_pid entry of g_lockp */
-name|u_char
-modifier|*
-name|g_locks
-decl_stmt|;
-comment|/* lock page associated with device */
 name|short
 modifier|*
 name|g_pid
 decl_stmt|;
 comment|/* array of pids with device open */
+name|int
+name|g_lockpslot
+decl_stmt|;
+comment|/* g_pid entry of g_lockp */
+name|caddr_t
+name|g_data
+decl_stmt|;
+comment|/* device dependent data */
 block|}
 struct|;
 end_struct

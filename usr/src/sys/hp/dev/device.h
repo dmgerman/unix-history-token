@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -154,49 +154,15 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|hp_hw
-block|{
-name|char
-modifier|*
-name|hw_addr
-decl_stmt|;
-comment|/* physical address of registers */
-name|short
-name|hw_sc
-decl_stmt|;
-comment|/* select code (if applicable) */
-name|short
-name|hw_type
-decl_stmt|;
-comment|/* type (defined below) */
-name|short
-name|hw_id
-decl_stmt|;
-comment|/* HW returned id */
-name|short
-name|hw_id2
-decl_stmt|;
-comment|/* secondary HW id (displays) */
-name|char
-modifier|*
-name|hw_name
-decl_stmt|;
-comment|/* HP product name */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
-name|MAX_CTLR
+name|MAXCTLRS
 value|16
 end_define
 
 begin_comment
-comment|/* Totally arbitrary */
+comment|/* Size of HW table (arbitrary) */
 end_comment
 
 begin_define
@@ -207,145 +173,240 @@ value|8
 end_define
 
 begin_comment
-comment|/* Currently the HPIB limit */
+comment|/* Slaves per controller (HPIB/SCSI limit) */
+end_comment
+
+begin_struct
+struct|struct
+name|hp_hw
+block|{
+name|caddr_t
+name|hw_pa
+decl_stmt|;
+comment|/* physical address of control space */
+name|int
+name|hw_size
+decl_stmt|;
+comment|/* size of control space */
+name|caddr_t
+name|hw_kva
+decl_stmt|;
+comment|/* kernel virtual address of control space */
+name|short
+name|hw_id
+decl_stmt|;
+comment|/* HW returned id */
+name|short
+name|hw_secid
+decl_stmt|;
+comment|/* secondary HW id (displays) */
+name|short
+name|hw_type
+decl_stmt|;
+comment|/* type (defined below) */
+name|short
+name|hw_sc
+decl_stmt|;
+comment|/* select code (if applicable) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* bus types */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WILD_CARD_CTLR
-value|0
+name|B_MASK
+value|0xE000
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_DIO
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_DIOII
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_VME
+value|0x6000
 end_define
 
 begin_comment
-comment|/* A controller is a card which can have one or more slaves attached */
+comment|/* controller types */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CONTROLLER
-value|0x10
+name|C_MASK
+value|0x8F
 end_define
 
 begin_define
 define|#
 directive|define
-name|HPIB
-value|0x16
+name|C_FLAG
+value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCSI
-value|0x17
+name|C_HPIB
+value|0x81
 end_define
 
 begin_define
 define|#
 directive|define
-name|VME
-value|0x18
+name|C_SCSI
+value|0x82
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLINK
-value|0x19
+name|C_VME
+value|0x83
 end_define
 
 begin_comment
-comment|/* Slaves are devices which attach to controllers, e.g. disks, tapes */
+comment|/* device types (controllers with no slaves) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RD
-value|0x2a
+name|D_MASK
+value|0x8F
 end_define
 
 begin_define
 define|#
 directive|define
-name|PPI
-value|0x2b
+name|D_BITMAP
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|CT
-value|0x2c
-end_define
-
-begin_comment
-comment|/* These are not controllers, but may have their own HPIB address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITMAP
-value|1
+name|D_LAN
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|NET
-value|2
+name|D_FPA
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|FPA
-value|4
+name|D_KEYBOARD
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|MISC
-value|5
+name|D_COMMDCA
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|KEYBOARD
-value|6
+name|D_COMMDCM
+value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMMDCA
-value|7
+name|D_COMMDCL
+value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMMDCM
-value|8
+name|D_PPORT
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMMDCL
-value|9
+name|D_MISC
+value|0x7F
 end_define
 
 begin_define
 define|#
 directive|define
-name|PPORT
-value|10
+name|HW_ISCTLR
+parameter_list|(
+name|hw
+parameter_list|)
+value|((hw)->hw_type& C_FLAG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW_ISDIOII
+parameter_list|(
+name|hw
+parameter_list|)
+value|((hw)->hw_type& B_DIOII)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW_ISHPIB
+parameter_list|(
+name|hw
+parameter_list|)
+value|(((hw)->hw_type& C_MASK) == C_HPIB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW_ISSCSI
+parameter_list|(
+name|hw
+parameter_list|)
+value|(((hw)->hw_type& C_MASK) == C_SCSI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW_ISDEV
+parameter_list|(
+name|hw
+parameter_list|,
+name|d
+parameter_list|)
+value|(((hw)->hw_type& D_MASK) == (d))
 end_define
 
 begin_ifdef
@@ -353,6 +414,15 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|hp_hw
+name|sc_table
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -374,10 +444,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|hp_hw
-name|sc_table
-index|[]
+name|caddr_t
+name|sctova
+argument_list|()
+decl_stmt|,
+name|sctopa
+argument_list|()
+decl_stmt|,
+name|iomap
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 

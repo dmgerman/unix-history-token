@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilreg.h 1.1 90/07/09$  *  *	@(#)hilreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilreg.h 1.9 91/01/21$  *  *	@(#)hilreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -33,14 +33,14 @@ begin_define
 define|#
 directive|define
 name|HILADDR
-value|((struct hil_dev *)IOV(0x428000))
+value|((struct hil_dev *)IIOV(0x428000))
 end_define
 
 begin_define
 define|#
 directive|define
 name|BBCADDR
-value|((struct hil_dev *)IOV(0x420000))
+value|((struct hil_dev *)IIOV(0x420000))
 end_define
 
 begin_define
@@ -630,7 +630,7 @@ begin_define
 define|#
 directive|define
 name|KBDNMISTAT
-value|((volatile char *)IOV(0x478005))
+value|((volatile char *)IIOV(0x478005))
 end_define
 
 begin_define
