@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2628,7 +2628,7 @@ begin_struct
 struct|struct
 name|select_args
 block|{
-name|int
+name|u_int
 name|nd
 decl_stmt|;
 name|fd_set
@@ -2705,13 +2705,14 @@ name|s
 decl_stmt|,
 name|ncoll
 decl_stmt|,
-name|ni
-decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|,
 name|timo
+decl_stmt|;
+name|u_int
+name|ni
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -2745,6 +2746,19 @@ name|uap
 operator|->
 name|nd
 operator|>
+name|FD_SETSIZE
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|uap
+operator|->
+name|nd
+operator|>
 name|p
 operator|->
 name|p_fd
@@ -2772,6 +2786,11 @@ name|nd
 argument_list|,
 name|NFDBITS
 argument_list|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
 expr_stmt|;
 define|#
 directive|define
@@ -2782,7 +2801,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    (unsigned)(ni * sizeof(fd_mask))); \ 		if (error) \ 			goto done; \ 	}
+value|if (uap->name&& \ 	    (error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], ni))) \ 		goto done;
 name|getbits
 argument_list|(
 name|in
@@ -3102,7 +3121,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		int error2 = copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    (unsigned)(ni * sizeof(fd_mask))); \ 		if (error2) \ 			error = error2; \ 	}
+value|if (uap->name&& \ 	    (error2 = copyout((caddr_t)&obits[x], (caddr_t)uap->name, ni))) \ 		error = error2;
 if|if
 condition|(
 name|error
@@ -3110,6 +3129,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|error2
+decl_stmt|;
 name|putbits
 argument_list|(
 name|in
