@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chmod.c	4.1 %G%"
+literal|"@(#)chmod.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -748,34 +748,6 @@ expr_stmt|;
 block|}
 name|ret
 label|:
-if|if
-condition|(
-operator|(
-name|savem
-operator|&
-name|S_IFDIR
-operator|)
-operator|||
-operator|(
-name|savem
-operator|&
-name|S_IEXEC
-operator|)
-condition|)
-name|nm
-operator|=
-name|nm
-operator||
-operator|(
-operator|(
-name|nm
-operator|&
-literal|0444
-operator|)
-operator|>>
-literal|2
-operator|)
-expr_stmt|;
 return|return
 operator|(
 name|nm
