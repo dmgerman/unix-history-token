@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.13 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,7 +328,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|skip
 decl_stmt|;
 end_decl_stmt
@@ -2747,32 +2747,32 @@ name|PAGE
 modifier|*
 name|rval
 decl_stmt|;
+name|void
+modifier|*
+name|src
+decl_stmt|;
 name|indx_t
 name|full
 decl_stmt|,
 name|half
 decl_stmt|,
+name|nxt
+decl_stmt|,
+name|off
+decl_stmt|,
 name|skip
+decl_stmt|,
+name|top
 decl_stmt|,
 name|used
 decl_stmt|;
 name|size_t
 name|nbytes
 decl_stmt|;
-name|void
-modifier|*
-name|src
-decl_stmt|;
 name|int
 name|bigkeycnt
 decl_stmt|,
 name|isbigkey
-decl_stmt|,
-name|nxt
-decl_stmt|,
-name|off
-decl_stmt|,
-name|top
 decl_stmt|;
 comment|/* 	 * Split the data to the left and right pages.  Leave the skip index 	 * open.  Additionally, make some effort not to split on an overflow 	 * key.  This makes internal page processing faster and can save 	 * space as overflow keys used by internal pages are never deleted. 	 */
 name|bigkeycnt
