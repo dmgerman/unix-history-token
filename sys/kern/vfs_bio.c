@@ -2938,7 +2938,7 @@ name|b_xflags
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"biord"
+literal|"bwrbg"
 argument_list|,
 literal|0
 argument_list|)
