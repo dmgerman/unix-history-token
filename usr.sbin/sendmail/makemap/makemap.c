@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.35 (Berkeley) 6/10/97"
+literal|"@(#)makemap.c	8.37 (Berkeley) 7/10/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1209,9 +1209,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ignoresafeties
-operator|&&
 operator|(
 name|st
 operator|=
@@ -1235,6 +1232,9 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|ignoresafeties
 condition|)
 block|{
 name|fprintf
@@ -1268,9 +1268,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ignoresafeties
-operator|&&
 operator|(
 name|st
 operator|=
@@ -1294,6 +1291,9 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|ignoresafeties
 condition|)
 block|{
 name|fprintf
@@ -1313,6 +1313,40 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|EX_CANTCREAT
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|std
+operator|.
+name|st_dev
+operator|==
+name|stp
+operator|.
+name|st_dev
+operator|&&
+name|std
+operator|.
+name|st_ino
+operator|==
+name|stp
+operator|.
+name|st_ino
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: cannot run with GDBM\n"
+argument_list|,
+name|mapname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_CONFIG
 argument_list|)
 expr_stmt|;
 block|}
