@@ -4866,6 +4866,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|A_MICIDX
+value|0x64
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_MICIDX_IDX
+value|0x10000064
+end_define
+
+begin_define
+define|#
+directive|define
 name|FXIDX
 value|0x65
 end_define
@@ -5759,7 +5773,7 @@ name|unsigned
 name|int
 name|translation
 decl_stmt|;
-comment|/* translation type (EMU10K1_GRP_TRANSLATION*) */
+comment|/* translation type (EMU10K1_GPR_TRANSLATION*) */
 name|snd_kcontrol_t
 modifier|*
 name|kcontrol
@@ -6112,6 +6126,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* APS flag */
+name|no_ac97
+range|:
+literal|1
+decl_stmt|,
+comment|/* no AC'97 */
 name|tos_link
 range|:
 literal|1
@@ -7861,6 +7880,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|FXBUS_PCM_LEFT_FRONT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXBUS_PCM_RIGHT_FRONT
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
 name|FXBUS_MIDI_REVERB
 value|0x0c
 end_define
@@ -7870,6 +7903,20 @@ define|#
 directive|define
 name|FXBUS_MIDI_CHORUS
 value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXBUS_PT_LEFT
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXBUS_PT_RIGHT
+value|0x15
 end_define
 
 begin_comment
@@ -8294,23 +8341,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|A_EXTIN_RCA_SPDIF_L
+name|A_EXTIN_ADC_L
 value|0x0a
 end_define
 
 begin_comment
-comment|/* audigy drive RCA SPDIF - left */
+comment|/* Philips ADC - left */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A_EXTIN_RCA_SPDIF_R
+name|A_EXTIN_ADC_R
 value|0x0b
 end_define
 
 begin_comment
-comment|/*                          right */
+comment|/*               right */
 end_comment
 
 begin_define
@@ -8545,6 +8592,17 @@ begin_comment
 comment|/*                    right */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|A_EXTOUT_MIC_CAP
+value|0x18
+end_define
+
+begin_comment
+comment|/* Mic capture buffer */
+end_comment
+
 begin_comment
 comment|/* Audigy constants */
 end_comment
@@ -8703,12 +8761,26 @@ name|A_C_00100000
 value|0xd5
 end_define
 
-begin_comment
-comment|/* 0xd6 = 0x7fffffff  (?) ACCUM? */
-end_comment
+begin_define
+define|#
+directive|define
+name|A_GPR_ACCU
+value|0xd6
+end_define
 
 begin_comment
-comment|/* 0xd7 = 0x0000000   CCR */
+comment|/* ACCUM, accumulator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_GPR_COND
+value|0xd7
+end_define
+
+begin_comment
+comment|/* CCR, condition register */
 end_comment
 
 begin_comment
@@ -8946,14 +9018,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|EMU10K1_GRP_TRANSLATION_BASS
+name|EMU10K1_GPR_TRANSLATION_BASS
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|EMU10K1_GRP_TRANSLATION_TREBLE
+name|EMU10K1_GPR_TRANSLATION_TREBLE
 value|3
 end_define
 
@@ -9012,7 +9084,7 @@ name|unsigned
 name|int
 name|translation
 decl_stmt|;
-comment|/* translation type (EMU10K1_GRP_TRANSLATION*) */
+comment|/* translation type (EMU10K1_GPR_TRANSLATION*) */
 block|}
 name|emu10k1_fx8010_control_gpr_t
 typedef|;
@@ -9369,7 +9441,7 @@ begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_CODE_PEEK
-value|_IOW ('H', 0x12, emu10k1_fx8010_code_t)
+value|_IOWR('H', 0x12, emu10k1_fx8010_code_t)
 end_define
 
 begin_define
@@ -9390,7 +9462,7 @@ begin_define
 define|#
 directive|define
 name|SNDRV_EMU10K1_IOCTL_TRAM_PEEK
-value|_IOR ('H', 0x22, emu10k1_fx8010_tram_t)
+value|_IOWR('H', 0x22, emu10k1_fx8010_tram_t)
 end_define
 
 begin_define
