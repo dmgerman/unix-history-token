@@ -6,27 +6,56 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PROTOCOLS_ROUTED_H_
+name|_ROUTED_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PROTOCOLS_ROUTED_H_
+name|_ROUTED_H_
 end_define
 
-begin_comment
-comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_define
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+empty|#ident "$Revision: 1.7 $"
+comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
+define|#
+directive|define
+name|RIPv1
+value|1
+define|#
+directive|define
+name|RIPv2
+value|2
+ifndef|#
+directive|ifndef
+name|RIPVERSION
 define|#
 directive|define
 name|RIPVERSION
-value|1
-end_define
-
-begin_struct
+value|RIPv1
+endif|#
+directive|endif
+define|#
+directive|define
+name|RIP_PORT
+value|520
+if|#
+directive|if
+name|RIPVERSION
+operator|==
+literal|1
+comment|/* Note that this so called sockaddr has a 2-byte sa_family and no sa_len.  * It is not a UNIX sockaddr, but the shape of an address as defined  * in RIPv1.  */
 struct|struct
 name|netinfo
 block|{
@@ -41,9 +70,83 @@ decl_stmt|;
 comment|/* cost of route */
 block|}
 struct|;
-end_struct
-
-begin_struct
+else|#
+directive|else
+struct|struct
+name|netinfo
+block|{
+name|u_short
+name|n_family
+decl_stmt|;
+define|#
+directive|define
+name|RIP_AF_INET
+value|htons(AF_INET)
+define|#
+directive|define
+name|RIP_AF_UNSPEC
+value|0
+define|#
+directive|define
+name|RIP_AF_AUTH
+value|0xffff
+name|u_short
+name|n_tag
+decl_stmt|;
+comment|/* optional in RIPv2 */
+name|u_int
+name|n_dst
+decl_stmt|;
+comment|/* destination net or host */
+define|#
+directive|define
+name|RIP_DEFAULT
+value|0
+name|u_int
+name|n_mask
+decl_stmt|;
+comment|/* netmask in RIPv2 */
+name|u_int
+name|n_nhop
+decl_stmt|;
+comment|/* optional next hop in RIPv2 */
+name|u_int
+name|n_metric
+decl_stmt|;
+comment|/* cost of route */
+block|}
+struct|;
+endif|#
+directive|endif
+comment|/* RIPv2 authentication */
+struct|struct
+name|netauth
+block|{
+name|u_short
+name|a_type
+decl_stmt|;
+define|#
+directive|define
+name|RIP_AUTH_PW
+value|htons(2)
+comment|/* password type */
+union|union
+block|{
+define|#
+directive|define
+name|RIP_AUTH_PW_LEN
+value|16
+name|char
+name|au_pw
+index|[
+name|RIP_AUTH_PW_LEN
+index|]
+decl_stmt|;
+block|}
+name|au
+union|;
+block|}
+struct|;
 struct|struct
 name|rip
 block|{
@@ -55,15 +158,13 @@ name|u_char
 name|rip_vers
 decl_stmt|;
 comment|/* protocol version # */
-name|u_char
+name|u_short
 name|rip_res1
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* pad to 32-bit boundary */
 union|union
 block|{
+comment|/* variable length... */
 name|struct
 name|netinfo
 name|ru_nets
@@ -71,14 +172,19 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* variable length... */
 name|char
 name|ru_tracefile
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* ditto ... */
+name|struct
+name|netauth
+name|ru_auth
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 name|ripun
 union|;
@@ -92,70 +198,39 @@ name|rip_tracefile
 value|ripun.ru_tracefile
 block|}
 struct|;
-end_struct
-
-begin_comment
-comment|/*  * Packet types.  */
-end_comment
-
-begin_define
+comment|/* Packet types.  */
 define|#
 directive|define
 name|RIPCMD_REQUEST
 value|1
-end_define
-
-begin_comment
 comment|/* want info */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RIPCMD_RESPONSE
 value|2
-end_define
-
-begin_comment
 comment|/* responding to request */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RIPCMD_TRACEON
 value|3
-end_define
-
-begin_comment
 comment|/* turn tracing on */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RIPCMD_TRACEOFF
 value|4
-end_define
-
-begin_comment
 comment|/* turn it off */
-end_comment
-
-begin_define
+comment|/* Gated extended RIP to include a "poll" command instead of using  * RIPCMD_REQUEST with (RIP_AF_UNSPEC, RIP_DEFAULT).  RFC 1058 says  * command 5 is used by Sun Microsystems for its own purposes.  */
+define|#
+directive|define
+name|RIPCMD_POLL
+value|5
 define|#
 directive|define
 name|RIPCMD_MAX
-value|5
-end_define
-
-begin_ifdef
+value|6
 ifdef|#
 directive|ifdef
 name|RIPCMDS
-end_ifdef
-
-begin_decl_stmt
 name|char
 modifier|*
 name|ripcmds
@@ -175,104 +250,77 @@ block|,
 literal|"TRACEOFF"
 block|}
 decl_stmt|;
-end_decl_stmt
+endif|#
+directive|endif
+define|#
+directive|define
+name|HOPCNT_INFINITY
+value|16
+define|#
+directive|define
+name|MAXPACKETSIZE
+value|512
+comment|/* max broadcast size */
+define|#
+directive|define
+name|NETS_LEN
+value|((MAXPACKETSIZE-sizeof(struct rip))	\ 		      / sizeof(struct netinfo) +1)
+define|#
+directive|define
+name|INADDR_RIP_GROUP
+value|(u_long)0xe0000009
+comment|/* 224.0.0.9 */
+comment|/* Timer values used in managing the routing table.  *  * Complete tables are broadcast every SUPPLY_INTERVAL seconds.  * If changes occur between updates, dynamic updates containing only changes  * may be sent.  When these are sent, a timer is set for a random value  * between MIN_WAITTIME and MAX_WAITTIME, and no additional dynamic updates  * are sent until the timer expires.  *  * Every update of a routing entry forces an entry's timer to be reset.  * After EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may see it, to  * "poison" the bad route.  */
+define|#
+directive|define
+name|SUPPLY_INTERVAL
+value|30
+comment|/* time to supply tables */
+define|#
+directive|define
+name|MIN_WAITTIME
+value|2
+comment|/* min sec until next flash updates */
+define|#
+directive|define
+name|MAX_WAITTIME
+value|5
+comment|/* max sec until flash update */
+define|#
+directive|define
+name|STALE_TIME
+value|90
+comment|/* switch to a new gateway */
+define|#
+directive|define
+name|EXPIRE_TIME
+value|180
+comment|/* time to mark entry invalid */
+define|#
+directive|define
+name|GARBAGE_TIME
+value|240
+comment|/* time to garbage collect */
+comment|/* It is good to continue advertising bad routes this long so other  * routers notice.  This is fairly cheap, so it can be long.  It  * should be long to combat bogus holddowns implemented by major  * router vendors.  */
+define|#
+directive|define
+name|POISON_TIME
+value|120
+comment|/* Do not switch to a new route for this long after a route has gone  * bad, to ensure that the new route is not a remanent of the old route.  */
+define|#
+directive|define
+name|HOLD_TIME
+value|(MAX_WAITTIME*2)
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|HOPCNT_INFINITY
-value|16
-end_define
-
-begin_comment
-comment|/* per Xerox NS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXPACKETSIZE
-value|512
-end_define
-
-begin_comment
-comment|/* max broadcast size */
-end_comment
-
-begin_comment
-comment|/*  * Timer values used in managing the routing table.  * Complete tables are broadcast every SUPPLY_INTERVAL seconds.  * If changes occur between updates, dynamic updates containing only changes  * may be sent.  When these are sent, a timer is set for a random value  * between MIN_WAITTIME and MAX_WAITTIME, and no additional dynamic updates  * are sent until the timer expires.  *  * Every update of a routing entry forces an entry's timer to be reset.  * After EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_RATE
-value|30
-end_define
-
-begin_comment
-comment|/* alarm clocks every 30 seconds */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUPPLY_INTERVAL
-value|30
-end_define
-
-begin_comment
-comment|/* time to supply tables */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIN_WAITTIME
-value|2
-end_define
-
-begin_comment
-comment|/* min. interval to broadcast changes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_WAITTIME
-value|5
-end_define
-
-begin_comment
-comment|/* max. time to delay changes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXPIRE_TIME
-value|180
-end_define
-
-begin_comment
-comment|/* time to mark entry invalid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GARBAGE_TIME
-value|240
-end_define
-
-begin_comment
-comment|/* time to garbage collect */
-end_comment
 
 begin_endif
 endif|#
