@@ -391,6 +391,52 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  *      int bus_space_map (bus_space_tag_t t, bus_addr_t addr,  *          bus_size_t size, int flag, bus_space_handle_t *bshp);  *  * Map a region of bus space.  */
+end_comment
+
+begin_function_decl
+name|int
+name|i386_memio_map
+parameter_list|(
+name|bus_space_tag_t
+name|t
+parameter_list|,
+name|bus_addr_t
+name|addr
+parameter_list|,
+name|bus_size_t
+name|size
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|bus_space_handle_t
+modifier|*
+name|bshp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|bus_space_map
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|s
+parameter_list|,
+name|f
+parameter_list|,
+name|hp
+parameter_list|)
+define|\
+value|i386_memio_map((t), (a), (s), (f), (hp))
+end_define
+
+begin_comment
 comment|/*  *      int bus_space_unmap (bus_space_tag_t t,  *          bus_space_handle_t bsh, bus_size_t size);  *  * Unmap a region of bus space.  */
 end_comment
 
