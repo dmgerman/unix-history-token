@@ -5895,6 +5895,9 @@ decl_stmt|;
 name|unsigned
 name|len
 decl_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MD_ROOT_SIZE
@@ -5912,9 +5915,6 @@ directive|endif
 name|mod
 operator|=
 name|NULL
-expr_stmt|;
-name|g_topology_unlock
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
