@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: scsi.c,v 1.17 1998/01/12 07:57:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1537,14 +1537,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: wrote only %d bytes out of %d.\n"
+literal|"Warning: wrote only %lu bytes out of %lu.\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|scsireq
 operator|->
 name|datalen
 operator|-
 name|count
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|scsireq
 operator|->
 name|datalen

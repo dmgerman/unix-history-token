@@ -1258,7 +1258,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"dumplo = %d (%d * %d)\n"
+literal|"dumplo = %ld (%ld * %d)\n"
 argument_list|,
 name|dumplo
 argument_list|,

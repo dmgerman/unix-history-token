@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.30 1998/01/25 09:16:55 jb Exp $"
+literal|"$Id: slattach.c,v 1.31 1998/02/20 07:28:50 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1310,6 +1310,9 @@ name|pidfile
 argument_list|,
 literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
