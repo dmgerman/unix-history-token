@@ -355,6 +355,16 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+else|#
+directive|else
 name|int
 name|i
 init|=
@@ -364,6 +374,8 @@ name|j
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|chunk
 modifier|*
@@ -404,6 +416,9 @@ operator|!=
 name|unused
 condition|)
 continue|continue;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|c1
@@ -415,6 +430,8 @@ condition|)
 name|j
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|++
 expr_stmt|;
@@ -441,6 +458,9 @@ argument_list|,
 name|NDOSPART
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|j
@@ -459,6 +479,8 @@ argument_list|,
 literal|"Too many active children of 'whole'"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -544,6 +566,23 @@ name|flags
 operator||=
 name|CHUNK_ALIGN
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+operator|!
+name|Cyl_Aligned
+argument_list|(
+name|d
+argument_list|,
+name|c1
+operator|->
+name|offset
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -556,6 +595,8 @@ operator|->
 name|offset
 argument_list|)
 condition|)
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 name|msg
@@ -565,8 +606,17 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
+ifdef|#
+directive|ifdef
+name|PC98
+literal|"chunk '%s' [%ld..%ld] does not start on a cylinder boundary\n"
+argument_list|,
+else|#
+directive|else
 literal|"chunk '%s' [%ld..%ld] does not start on a track boundary\n"
 argument_list|,
+endif|#
+directive|endif
 name|c1
 operator|->
 name|name
@@ -662,6 +712,9 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|i
 decl_stmt|;
@@ -733,6 +786,8 @@ literal|"Max one 'fat' allowed as child of 'whole'\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -759,6 +814,9 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|i
 decl_stmt|;
@@ -830,6 +888,8 @@ literal|"Max one 'extended' allowed as child of 'whole'\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -917,6 +977,9 @@ block|{
 name|k
 operator|++
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|c1
@@ -937,6 +1000,8 @@ argument_list|,
 literal|"Root filesystem extends past cylinder 1024, and cannot be booted from\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|i
 operator|++
@@ -1083,6 +1148,9 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|c
@@ -1113,6 +1181,8 @@ operator|&=
 operator|~
 name|CHUNK_PAST_1024
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1202,6 +1272,9 @@ name|msg
 operator|=
 literal|'\0'
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|c
@@ -1232,6 +1305,8 @@ name|msg
 argument_list|)
 return|;
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|c1
@@ -1311,6 +1386,9 @@ operator|->
 name|part
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|c1
@@ -1341,6 +1419,8 @@ name|msg
 argument_list|)
 return|;
 block|}
+endif|#
+directive|endif
 return|return
 name|NULL
 return|;
