@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.6 82/12/05"
+literal|"@(#)inet.c	4.7 82/12/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,23 +1068,6 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-name|port
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|port
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1131,7 +1114,13 @@ name|cp
 argument_list|,
 literal|"%d"
 argument_list|,
+name|ntohs
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|port
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
