@@ -477,6 +477,8 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
+operator||
+name|M_PANIC
 argument_list|)
 expr_stmt|;
 name|sc
