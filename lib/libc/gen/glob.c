@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -111,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"collate.h"
 end_include
 
 begin_define
@@ -3335,7 +3335,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|CHAR
 argument_list|(
@@ -3350,7 +3350,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|CHAR
 argument_list|(

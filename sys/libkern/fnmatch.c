@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -69,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"collate.h"
 end_include
 
 begin_define
@@ -815,7 +815,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|c
 argument_list|,
@@ -824,7 +824,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|test
 argument_list|,
