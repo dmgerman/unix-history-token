@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.18	82/07/24	*/
+comment|/*	raw_usrreq.c	4.19	82/10/09	*/
 end_comment
 
 begin_include
@@ -42,19 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/netisr.h"
 end_include
 
 begin_include
@@ -195,12 +189,6 @@ operator|->
 name|m_next
 operator|=
 name|m0
-expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
 expr_stmt|;
 name|m
 operator|->
@@ -671,7 +659,9 @@ argument|req
 argument_list|,
 argument|m
 argument_list|,
-argument|addr
+argument|nam
+argument_list|,
+argument|opt
 argument_list|)
 end_macro
 
@@ -694,12 +684,17 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|,
+modifier|*
+name|nam
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|caddr_t
-name|addr
+name|struct
+name|socketopt
+modifier|*
+name|opt
 decl_stmt|;
 end_decl_stmt
 
@@ -776,13 +771,6 @@ operator|=
 name|raw_attach
 argument_list|(
 name|so
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -828,12 +816,7 @@ name|raw_connaddr
 argument_list|(
 name|rp
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|addr
+name|nam
 argument_list|)
 expr_stmt|;
 name|soisconnected
@@ -889,7 +872,7 @@ name|PRU_SEND
 case|:
 if|if
 condition|(
-name|addr
+name|nam
 condition|)
 block|{
 if|if
@@ -909,12 +892,7 @@ name|raw_connaddr
 argument_list|(
 name|rp
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|addr
+name|nam
 argument_list|)
 expr_stmt|;
 block|}
@@ -954,7 +932,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
+name|nam
 condition|)
 name|rp
 operator|->
@@ -1012,8 +990,6 @@ name|PRU_SOCKADDR
 case|:
 name|bcopy
 argument_list|(
-name|addr
-argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -1022,11 +998,30 @@ name|rp
 operator|->
 name|rcb_laddr
 argument_list|,
+name|mtod
+argument_list|(
+name|nam
+argument_list|,
+expr|struct
+name|sockaddr
+operator|*
+argument_list|)
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sockaddr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|nam
+operator|->
+name|m_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
 argument_list|)
 expr_stmt|;
 break|break;

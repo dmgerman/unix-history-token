@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.11	82/06/20	*/
+comment|/*	route.c	4.12	82/10/09	*/
 end_comment
 
 begin_include
@@ -37,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|"../h/ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in_systm.h"
 end_include
 
 begin_include

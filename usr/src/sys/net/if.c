@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.19	82/09/12	*/
+comment|/*	if.c	4.20	82/10/09	*/
 end_comment
 
 begin_include
@@ -25,18 +25,6 @@ begin_include
 include|#
 directive|include
 file|"../h/protosw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in_systm.h"
 end_include
 
 begin_include
@@ -134,6 +122,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|vax
+end_if
+
 begin_comment
 comment|/*  * Call each interface on a Unibus reset.  */
 end_comment
@@ -191,6 +185,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Attach an interface to the  * list of "active" interfaces.  */
@@ -383,7 +382,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|af
 init|=
 name|addr
