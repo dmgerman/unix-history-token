@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.6	(Berkeley)	83/03/05"
+literal|"@(#)tape.c	3.7	(Berkeley)	83/03/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -839,16 +839,15 @@ argument_list|)
 expr_stmt|;
 name|map
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 literal|1
 argument_list|,
 operator|(
-name|int
+name|unsigned
 operator|)
 name|howmany
 argument_list|(
@@ -918,16 +917,15 @@ expr_stmt|;
 block|}
 name|map
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|calloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 literal|1
 argument_list|,
 operator|(
-name|int
+name|unsigned
 operator|)
 name|howmany
 argument_list|(
@@ -1310,6 +1308,7 @@ literal|"Wrong dump date (%s)\n"
 argument_list|,
 name|ctime
 argument_list|(
+operator|&
 name|tmpbuf
 operator|.
 name|c_date
@@ -2676,9 +2675,10 @@ decl_stmt|;
 name|long
 name|rd
 decl_stmt|,
-name|cnt
-decl_stmt|,
 name|newvol
+decl_stmt|;
+name|int
+name|cnt
 decl_stmt|;
 if|if
 condition|(
@@ -3789,7 +3789,7 @@ specifier|static
 name|ino_t
 name|previno
 init|=
-literal|0xffffffff
+literal|0x7fffffff
 decl_stmt|;
 specifier|static
 name|int
@@ -3826,7 +3826,7 @@ if|if
 condition|(
 name|previno
 operator|==
-literal|0xffffffff
+literal|0x7fffffff
 condition|)
 goto|goto
 name|newcalc
@@ -4428,6 +4428,9 @@ argument_list|)
 operator|==
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -4446,6 +4449,9 @@ argument_list|)
 operator|==
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM

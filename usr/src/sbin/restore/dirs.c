@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.3	(Berkeley)	83/02/28"
+literal|"@(#)dirs.c	3.4	(Berkeley)	83/03/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,6 +266,9 @@ argument_list|,
 literal|"Extract directories from tape\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mktemp
 argument_list|(
 name|dirfile
@@ -457,6 +460,33 @@ condition|)
 name|fclose
 argument_list|(
 name|mf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|psearch
+argument_list|(
+literal|"."
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+name|BIT
+argument_list|(
+name|i
+argument_list|,
+name|dumpmap
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Root directory is not on tape\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1635,7 +1665,6 @@ name|malloc
 argument_list|(
 operator|(
 name|unsigned
-name|long
 operator|)
 sizeof|sizeof
 argument_list|(
@@ -2153,6 +2182,9 @@ argument_list|(
 name|mf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|modefile
@@ -2746,6 +2778,9 @@ block|{
 name|closemt
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|dirfile
