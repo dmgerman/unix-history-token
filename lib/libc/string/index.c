@@ -93,6 +93,11 @@ name|int
 name|ch
 parameter_list|)
 block|{
+name|char
+name|c
+init|=
+name|ch
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -106,7 +111,7 @@ condition|(
 operator|*
 name|p
 operator|==
-name|ch
+name|c
 condition|)
 return|return
 operator|(

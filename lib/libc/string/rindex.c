@@ -97,6 +97,11 @@ name|char
 modifier|*
 name|save
 decl_stmt|;
+name|char
+name|c
+init|=
+name|ch
+decl_stmt|;
 for|for
 control|(
 name|save
@@ -113,7 +118,7 @@ condition|(
 operator|*
 name|p
 operator|==
-name|ch
+name|c
 condition|)
 name|save
 operator|=
