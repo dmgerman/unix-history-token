@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utime.c	5.2 (Berkeley) %G%"
+literal|"@(#)utime.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -40,30 +43,33 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_comment
-comment|/*  * Backwards compatible utime.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<utime.h>
+end_include
 
 begin_macro
 name|utime
 argument_list|(
-argument|name
+argument|path
 argument_list|,
-argument|otv
+argument|times
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|name
+name|path
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|otv
-index|[]
+name|struct
+name|utimbuf
+modifier|*
+name|times
 decl_stmt|;
 end_decl_stmt
 
@@ -83,19 +89,9 @@ index|]
 operator|.
 name|tv_sec
 operator|=
-name|otv
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|tv
-index|[
-literal|0
-index|]
-operator|.
-name|tv_usec
-operator|=
-literal|0
+name|times
+operator|->
+name|actime
 expr_stmt|;
 name|tv
 index|[
@@ -104,11 +100,17 @@ index|]
 operator|.
 name|tv_sec
 operator|=
-name|otv
-index|[
-literal|1
-index|]
+name|times
+operator|->
+name|modtime
 expr_stmt|;
+name|tv
+index|[
+literal|0
+index|]
+operator|.
+name|tv_usec
+operator|=
 name|tv
 index|[
 literal|1
@@ -122,7 +124,7 @@ return|return
 operator|(
 name|utimes
 argument_list|(
-name|name
+name|path
 argument_list|,
 name|tv
 argument_list|)
