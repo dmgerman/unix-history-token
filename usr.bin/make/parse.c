@@ -2390,7 +2390,6 @@ name|p
 operator|==
 literal|':'
 condition|)
-empty_stmt|;
 name|p
 operator|++
 expr_stmt|;
