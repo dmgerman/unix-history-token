@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.17 1995/02/14 06:17:23 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.18 1995/03/01 22:24:44 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -355,6 +355,12 @@ name|scsi_xfer
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * These entry points are called by the low-end drivers to get services from  * whatever high-end drivers they are attached to.  Each device type has one  * of these statically allocated.  *  * XXX dufault@hda.com: Each adapter driver has a scsi_device structure  *     that I don't think should be there.  *     This structure should be rearranged and cleaned up once the  *     instance down in the adapter drivers is removed.  */
 end_comment
@@ -442,6 +448,12 @@ name|sc_link
 parameter_list|)
 function_decl|;
 comment|/* 44*/
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* Description of device */
+comment|/* 48*/
 name|int
 function_decl|(
 modifier|*
@@ -453,18 +465,26 @@ name|dev
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
-comment|/* 48*/
+comment|/* 52*/
 name|int
 name|sizeof_scsi_data
 decl_stmt|;
-comment|/* 52*/
+comment|/* 56*/
 name|int
 name|type
 decl_stmt|;
 comment|/* Type of device this supports */
-comment|/* 56*/
+comment|/* 60*/
 name|int
 function_decl|(
 modifier|*
@@ -475,7 +495,7 @@ name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
-comment|/* 60*/
+comment|/* 64*/
 name|dev_t
 function_decl|(
 modifier|*
@@ -489,8 +509,8 @@ name|int
 name|unit
 parameter_list|)
 function_decl|;
-comment|/* 64*/
-name|errval
+comment|/* 68*/
+name|int
 function_decl|(
 modifier|*
 name|dev_open
@@ -502,14 +522,22 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
 name|sc_link
 parameter_list|)
 function_decl|;
-comment|/* 68*/
-name|errval
+comment|/* 72*/
+name|int
 function_decl|(
 modifier|*
 name|dev_ioctl
@@ -528,20 +556,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|scsi_link
+name|proc
 modifier|*
-name|sc_link
-parameter_list|)
-function_decl|;
-comment|/* 72*/
-name|errval
-function_decl|(
-modifier|*
-name|dev_close
-function_decl|)
-parameter_list|(
-name|dev_t
-name|dev
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -550,6 +567,33 @@ name|sc_link
 parameter_list|)
 function_decl|;
 comment|/* 76*/
+name|int
+function_decl|(
+modifier|*
+name|dev_close
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+comment|/* 80*/
 name|void
 function_decl|(
 modifier|*
@@ -619,7 +663,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|errval NAME##attach(struct scsi_link *sc_link);	\ extern struct scsi_device NAME##_switch;	\ void NAME##init(void)	\ {	\ 	scsi_device_register(&NAME##_switch);	\ }	\ errval NAME##open(dev_t dev, int flags)	\ {	\ 	return scsi_open(dev, flags,&NAME##_switch);	\ }	\ errval NAME##ioctl(dev_t dev, int cmd, caddr_t addr, int flag)	\ {	\ 	return scsi_ioctl(dev, cmd, addr, flag,&NAME##_switch);	\ }	\ errval NAME##close(dev_t dev)	\ {	\ 	return scsi_close(dev,&NAME##_switch);	\ }	\ void NAME##minphys(struct buf *bp)	\ {	\ 	scsi_minphys(bp,&NAME##_switch);	\ } \ void NAME##strategy(struct buf *bp)	\ {	\ 	scsi_strategy(bp,&NAME##_switch);	\ }
+value|errval NAME##attach(struct scsi_link *sc_link);	\ extern struct scsi_device NAME##_switch;	\ void NAME##init(void)	\ {	\ 	scsi_device_register(&NAME##_switch);	\ }	\ int NAME##open(dev_t dev, int flags, int fmt, struct proc *p)	\ {	\ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch);	\ }	\ int NAME##ioctl(dev_t dev, int cmd, caddr_t addr, int flag, struct proc *p) \ {	\ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch);	\ }	\ int NAME##close(dev_t dev, int flag, int fmt, struct proc *p)	\ {	\ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch);	\ }	\ void NAME##minphys(struct buf *bp)	\ {	\ 	scsi_minphys(bp,&NAME##_switch);	\ } \ void NAME##strategy(struct buf *bp)	\ {	\ 	scsi_strategy(bp,&NAME##_switch);	\ }
 end_define
 
 begin_ifdef
@@ -1611,20 +1655,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|u_int32
-name|scsi_size
-parameter_list|(
-name|struct
+name|scsi_read_capacity
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_link
-modifier|*
+operator|*
 name|sc_link
-parameter_list|,
+operator|,
+name|u_int32
+operator|*
+name|blk_size
+operator|,
 name|u_int32
 name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|errval
@@ -1779,7 +1830,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|errval
+name|int
 name|scsi_do_ioctl
 name|__P
 argument_list|(
@@ -1794,7 +1845,12 @@ name|caddr_t
 name|addr
 operator|,
 name|int
-name|f
+name|mode
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|,
 expr|struct
 name|scsi_link
@@ -1842,6 +1898,14 @@ name|dev
 operator|,
 name|int
 name|flags
+operator|,
+name|int
+name|fmt
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 operator|)
 argument_list|)
@@ -1955,6 +2019,68 @@ end_decl_stmt
 begin_decl_stmt
 name|int32
 name|scsi_3btoi
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+name|bytes
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|scsi_uto4b
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+name|val
+operator|,
+name|u_char
+operator|*
+name|bytes
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32
+name|scsi_4btou
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+name|bytes
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|scsi_uto2b
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+name|val
+operator|,
+name|u_char
+operator|*
+name|bytes
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32
+name|scsi_2btou
 name|__P
 argument_list|(
 operator|(
@@ -2246,35 +2372,6 @@ begin_define
 define|#
 directive|define
 name|CDSETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|SH3SETUNIT((DEV), (U))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDUNITSHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|SH3_UNIT(DEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDSETUNIT
 parameter_list|(
 name|DEV
 parameter_list|,

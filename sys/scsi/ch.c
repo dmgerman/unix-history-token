@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.13 1995/01/19 21:02:54 ats Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.14 1995/03/01 22:24:40 dufault Exp $  */
 end_comment
 
 begin_include
@@ -184,9 +184,6 @@ name|u_char
 name|stor
 decl_stmt|;
 comment|/* posible Storage locations */
-name|u_int32
-name|initialized
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -242,6 +239,14 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
@@ -267,6 +272,11 @@ name|int
 name|flag
 parameter_list|,
 name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
 name|scsi_link
 modifier|*
 name|sc_link
@@ -280,6 +290,17 @@ name|ch_close
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -325,6 +346,8 @@ block|,
 comment|/* Link flags */
 name|chattach
 block|,
+literal|"Medium-Changer"
+block|,
 name|chopen
 block|,
 sizeof|sizeof
@@ -355,13 +378,6 @@ define|#
 directive|define
 name|CH_OPEN
 value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|CH_KNOWN
-value|0x02
 end_define
 
 begin_function
@@ -447,7 +463,6 @@ comment|/* parentdata */
 name|DC_UNKNOWN
 block|,
 comment|/* not supported */
-literal|"SCSI media changer"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -501,6 +516,14 @@ name|kdc_unit
 operator|=
 name|unit
 expr_stmt|;
+name|kdc
+operator|->
+name|kdc_description
+operator|=
+name|ch_switch
+operator|.
+name|desc
+expr_stmt|;
 name|dev_attach
 argument_list|(
 name|kdc
@@ -527,8 +550,6 @@ name|u_int32
 name|unit
 decl_stmt|,
 name|i
-decl_stmt|,
-name|stat
 decl_stmt|;
 name|unsigned
 name|char
@@ -568,19 +589,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"scsi changer :- offline\n"
+literal|"offline\n"
 argument_list|)
-expr_stmt|;
-name|stat
-operator|=
-name|CH_OPEN
 expr_stmt|;
 block|}
 else|else
 block|{
 name|printf
 argument_list|(
-literal|"scsi changer, %d slot(s) %d drive(s) %d arm(s) %d i/e-slot(s)\n"
+literal|"%d slot(s) %d drive(s) %d arm(s) %d i/e-slot(s)\n"
 argument_list|,
 name|ch
 operator|->
@@ -599,17 +616,7 @@ operator|->
 name|imexs
 argument_list|)
 expr_stmt|;
-name|stat
-operator|=
-name|CH_KNOWN
-expr_stmt|;
 block|}
-name|ch
-operator|->
-name|initialized
-operator|=
-literal|1
-expr_stmt|;
 name|ch_registerdev
 argument_list|(
 name|unit
@@ -634,6 +641,14 @@ name|dev
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -697,19 +712,6 @@ return|return
 name|EBUSY
 return|;
 block|}
-comment|/* 	 * Make sure the device has been initialised 	 */
-if|if
-condition|(
-operator|!
-name|cd
-operator|->
-name|initialized
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* 	 * Catch any unit attention errors. 	 */
 name|scsi_test_unit_ready
 argument_list|(
@@ -817,6 +819,17 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
@@ -865,6 +878,11 @@ name|arg
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -1229,6 +1247,8 @@ argument_list|,
 name|arg
 argument_list|,
 name|mode
+argument_list|,
+name|p
 argument_list|,
 name|sc_link
 argument_list|)

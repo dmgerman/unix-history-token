@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.19 1995/02/14 06:18:06 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.20 1995/03/01 22:24:43 dufault Exp $  */
 end_comment
 
 begin_include
@@ -1308,13 +1308,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* XXX dufault@hda.com  * This scsi_device doesn't have the scsi_data_size.  * This is used during probe and used to be "probe_switch".  */
+comment|/* XXX dufault@hda.com  * This scsi_device doesn't have the scsi_data_size.  * This is used during probe.  */
 end_comment
 
 begin_decl_stmt
 name|struct
 name|scsi_device
-name|inval_switch
+name|probe_switch
 init|=
 block|{
 name|NULL
@@ -1325,7 +1325,7 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|"??"
+literal|"probe"
 block|,
 literal|0
 block|,
@@ -1851,7 +1851,7 @@ define|#
 directive|define
 name|CONFIGD
 parameter_list|()
-value|printf(" config'd at ")
+value|printf(" is configured at ")
 end_define
 
 begin_comment
@@ -2011,17 +2011,6 @@ decl_stmt|;
 name|int
 name|found
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|sc_link
-operator|->
-name|device
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|found
 operator|=
 literal|0
@@ -2120,9 +2109,6 @@ operator|.
 name|cunit
 condition|)
 block|{
-name|CONFIGD
-argument_list|()
-expr_stmt|;
 name|sc_link
 operator|->
 name|dev_unit
@@ -2138,6 +2124,26 @@ name|found
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIGD
+name|printf
+argument_list|(
+literal|"%s is configured at %d\n"
+argument_list|,
+name|sc_link
+operator|->
+name|device
+operator|->
+name|name
+argument_list|,
+name|sc_link
+operator|->
+name|dev_unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -2156,15 +2162,6 @@ name|device
 operator|->
 name|free_unit
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%d: "
-argument_list|,
-name|sc_link
-operator|->
-name|dev_unit
-argument_list|)
 expr_stmt|;
 return|return
 name|sc_link
@@ -2679,6 +2676,9 @@ decl_stmt|;
 name|boolean
 name|maybe_more
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2924,7 +2924,7 @@ operator|->
 name|device
 operator|=
 operator|&
-name|inval_switch
+name|probe_switch
 expr_stmt|;
 name|sc_link
 operator|->
@@ -2952,6 +2952,9 @@ name|sc_link
 argument_list|,
 operator|&
 name|maybe_more
+argument_list|,
+operator|&
+name|type
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3008,8 +3011,6 @@ name|device
 operator|=
 name|scsi_device_lookup
 argument_list|(
-name|bestmatch
-operator|->
 name|type
 argument_list|)
 expr_stmt|;
@@ -3175,6 +3176,8 @@ parameter_list|(
 name|sc_link
 parameter_list|,
 name|maybe_more
+parameter_list|,
+name|type_p
 parameter_list|)
 name|boolean
 modifier|*
@@ -3184,6 +3187,10 @@ name|struct
 name|scsi_link
 modifier|*
 name|sc_link
+decl_stmt|;
+name|int
+modifier|*
+name|type_p
 decl_stmt|;
 block|{
 name|u_int8
@@ -3799,19 +3806,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|sc_print_addr
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d targ %d lun %d: type %ld(%s) %s SCSI%d\n"
-argument_list|,
-name|scsi_adapter
-operator|->
-name|name
-argument_list|,
-name|unit
-argument_list|,
-name|target
-argument_list|,
-name|lu
+literal|"type %ld(%s) %s SCSI%d\n"
 argument_list|,
 name|type
 argument_list|,
@@ -3830,19 +3832,14 @@ operator|&
 name|SID_ANSII
 argument_list|)
 expr_stmt|;
+name|sc_print_addr
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d targ %d lun %d:<%s%s%s>\n"
-argument_list|,
-name|scsi_adapter
-operator|->
-name|name
-argument_list|,
-name|unit
-argument_list|,
-name|target
-argument_list|,
-name|lu
+literal|"<%s%s%s>\n"
 argument_list|,
 name|manu
 argument_list|,
@@ -3859,19 +3856,14 @@ literal|0
 index|]
 condition|)
 block|{
+name|sc_print_addr
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d targ %d lun %d: qualifier %ld(%s)\n"
-argument_list|,
-name|scsi_adapter
-operator|->
-name|name
-argument_list|,
-name|unit
-argument_list|,
-name|target
-argument_list|,
-name|lu
+literal|"qualifier %ld(%s)\n"
 argument_list|,
 name|qualifier
 argument_list|,
@@ -3924,6 +3916,27 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* If the device is unknown then we should be trying to look up a 	 * type driver based on the inquiry type. 	 */
+if|if
+condition|(
+name|bestmatch
+operator|==
+operator|&
+name|unknowndev
+condition|)
+operator|*
+name|type_p
+operator|=
+name|type
+expr_stmt|;
+else|else
+operator|*
+name|type_p
+operator|=
+name|bestmatch
+operator|->
+name|type
+expr_stmt|;
 return|return
 name|bestmatch
 return|;
@@ -4581,12 +4594,6 @@ operator|)
 literal|0
 condition|)
 block|{
-comment|/* XXX At this point we should default to a base type driver. 	 */
-name|printf
-argument_list|(
-literal|"No explicit driver match.  Attaching as unknown.\n"
-argument_list|)
-expr_stmt|;
 name|bestmatch
 operator|=
 operator|&

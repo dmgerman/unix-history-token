@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.33 1995/01/08 13:38:28 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.34 1995/03/01 22:24:39 dufault Exp $  */
 end_comment
 
 begin_define
@@ -537,6 +537,14 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
@@ -562,6 +570,11 @@ name|int
 name|flag
 parameter_list|,
 name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
 name|scsi_link
 modifier|*
 name|sc_link
@@ -575,6 +588,17 @@ name|cd_close
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -642,6 +666,8 @@ literal|0
 block|,
 comment|/* Link flags */
 name|cdattach
+block|,
+literal|"CD-ROM"
 block|,
 name|cdopen
 block|,
@@ -772,7 +798,6 @@ comment|/* parentdata */
 name|DC_UNKNOWN
 block|,
 comment|/* not supported */
-literal|"SCSI CD-ROM drive"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -825,6 +850,14 @@ operator|->
 name|kdc_unit
 operator|=
 name|unit
+expr_stmt|;
+name|kdc
+operator|->
+name|kdc_description
+operator|=
+name|cd_switch
+operator|.
+name|desc
 expr_stmt|;
 comment|/* XXX should set parentdata */
 name|dev_attach
@@ -1096,6 +1129,14 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
@@ -1169,7 +1210,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"cdopen: dev=0x%x (unit %d,partition %d)\n"
+literal|"cd_open: dev=0x%x (unit %d,partition %d)\n"
 operator|,
 name|dev
 operator|,
@@ -1204,7 +1245,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Check that it is still responding and ok. 	 * if the media has been changed this will result in a 	 * "unit attention" error which the error code will 	 * disregard because the SDEV_MEDIA_LOADED flag is not yet set 	 */
+comment|/* 	 * Check that it is still responding and ok. 	 * if the media has been changed this will result in a 	 * "unit attention" error which the error code will 	 * disregard because the SDEV_OPEN flag is not yet set 	 */
 name|scsi_test_unit_ready
 argument_list|(
 name|sc_link
@@ -1518,6 +1559,17 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
@@ -1722,20 +1774,6 @@ name|EROFS
 expr_stmt|;
 goto|goto
 name|bad
-goto|;
-block|}
-comment|/* 	 * If it's a null transfer, return immediatly 	 */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_bcount
-operator|==
-literal|0
-condition|)
-block|{
-goto|goto
-name|done
 goto|;
 block|}
 comment|/* 	 * Decide which unit and partition we are talking about 	 */
@@ -2337,6 +2375,11 @@ name|addr
 parameter_list|,
 name|int
 name|flag
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -4342,6 +4385,8 @@ argument_list|,
 name|addr
 argument_list|,
 name|flag
+argument_list|,
+name|p
 argument_list|,
 name|sc_link
 argument_list|)

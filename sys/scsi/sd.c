@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.50 1995/01/31 11:41:46 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.51 1995/03/01 22:24:45 dufault Exp $  */
 end_comment
 
 begin_define
@@ -182,6 +182,35 @@ end_define
 begin_comment
 comment|/* 1 page at a time */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SDUNITSHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDUNIT
+parameter_list|(
+name|DEV
+parameter_list|)
+value|SH3_UNIT(DEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDSETUNIT
+parameter_list|(
+name|DEV
+parameter_list|,
+name|U
+parameter_list|)
+value|SH3SETUNIT((DEV), (U))
+end_define
 
 begin_define
 define|#
@@ -453,6 +482,14 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
 name|struct
 name|scsi_link
 modifier|*
@@ -478,6 +515,11 @@ name|int
 name|flag
 parameter_list|,
 name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
 name|scsi_link
 modifier|*
 name|sc_link
@@ -491,6 +533,17 @@ name|sd_close
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -555,6 +608,8 @@ literal|0
 block|,
 comment|/* Link flags */
 name|sdattach
+block|,
+literal|"Direct-Access"
 block|,
 name|sdopen
 block|,
@@ -672,7 +727,6 @@ comment|/* parentdata */
 name|DC_UNKNOWN
 block|,
 comment|/* not supported */
-literal|"SCSI disk"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -725,6 +779,14 @@ operator|->
 name|kdc_unit
 operator|=
 name|unit
+expr_stmt|;
+name|kdc
+operator|->
+name|kdc_description
+operator|=
+name|sd_switch
+operator|.
+name|desc
 expr_stmt|;
 name|dev_attach
 argument_list|(
@@ -1021,6 +1083,14 @@ name|dev
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -1457,6 +1527,17 @@ name|sd_close
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|,
 name|struct
 name|scsi_link
@@ -2356,6 +2437,11 @@ name|int
 name|flag
 parameter_list|,
 name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
 name|scsi_link
 modifier|*
 name|sc_link
@@ -2779,6 +2865,8 @@ argument_list|,
 name|addr
 argument_list|,
 name|flag
+argument_list|,
+name|p
 argument_list|,
 name|sc_link
 argument_list|)
@@ -4046,7 +4134,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX: By rights sdopen should be called like: 		 * sdopen(MAKESDDEV(major(dev), unit, RAWPART), FREAD, S_IFBLK, 0); 		 */
 name|val
 operator|=
 name|sdopen
@@ -4064,6 +4151,10 @@ name|RAWPART
 argument_list|)
 argument_list|,
 name|FREAD
+argument_list|,
+name|S_IFBLK
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

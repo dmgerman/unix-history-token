@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.6 1995/01/08 13:38:38 dufault Exp $  */
+comment|/*   * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.7 1995/03/01 22:24:47 dufault Exp $  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
 end_comment
 
 begin_include
@@ -55,7 +55,9 @@ block|,
 name|SDEV_ONCE_ONLY
 block|,
 comment|/* Only one open allowed */
-name|ukattach
+literal|0
+block|,
+literal|"Unknown"
 block|,
 name|ukopen
 block|,
@@ -77,31 +79,6 @@ literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * The routine called by the low level scsi routine when it discovers  * a device suitable for this driver.  */
-end_comment
-
-begin_function
-name|errval
-name|ukattach
-parameter_list|(
-name|struct
-name|scsi_link
-modifier|*
-name|sc_link
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"unknown device\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
 
 end_unit
 
