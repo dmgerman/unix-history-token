@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.8 (Berkeley) %G%"
+literal|"@(#)iso.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3086,19 +3086,11 @@ block|,
 literal|" LOCAL, PDN"
 block|}
 decl_stmt|;
-define|#
-directive|define
-name|factor
-parameter_list|(
-name|i
-parameter_list|)
-define|\
-value|div = (s->ts_rtt[(i)].tv_sec * 1000000) + \ 		s->ts_rtt[(i)].tv_usec ;\ 	if(div) {\ 		f = ((s->ts_rtv[(i)].tv_sec * 1000000) + \ 				s->ts_rtv[(i)].tv_usec)/div;  \ 		div = (int) (f + 0.5);\ 	}
 name|fprintf
 argument_list|(
 name|OUT
 argument_list|,
-literal|"\n%*sRound trip times, listed in (sec: usec):\n"
+literal|"\n%*sRound trip times, listed in ticks:\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -3138,16 +3130,11 @@ name|j
 operator|++
 control|)
 block|{
-name|factor
-argument_list|(
-name|j
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|OUT
 argument_list|,
-literal|"\t%*s%11.11s: %5d:%-6d | %5d:%-6d | %-6d\n"
+literal|"\t%*s%11.11s: %-11d | %-11d | %-11d | %-11d\n"
 argument_list|,
 name|indent
 argument_list|,
@@ -3164,8 +3151,6 @@ name|ts_rtt
 index|[
 name|j
 index|]
-operator|.
-name|tv_sec
 argument_list|,
 name|s
 operator|->
@@ -3173,8 +3158,6 @@ name|ts_rtt
 index|[
 name|j
 index|]
-operator|.
-name|tv_usec
 argument_list|,
 name|s
 operator|->
@@ -3182,8 +3165,6 @@ name|ts_rtv
 index|[
 name|j
 index|]
-operator|.
-name|tv_sec
 argument_list|,
 name|s
 operator|->
@@ -3191,10 +3172,6 @@ name|ts_rtv
 index|[
 name|j
 index|]
-operator|.
-name|tv_usec
-argument_list|,
-name|div
 argument_list|)
 expr_stmt|;
 block|}
