@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.30 1999/08/08 18:42:41 phk Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.24 1999/07/05 01:53:14 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -110,18 +110,6 @@ name|struct
 name|plex
 modifier|*
 name|plex
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|freerq
-parameter_list|(
-name|struct
-name|request
-modifier|*
-name|rq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -434,6 +422,36 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|loginfo_lockwait
+case|:
+case|case
+name|loginfo_lock
+case|:
+case|case
+name|loginfo_unlock
+case|:
+name|bcopy
+argument_list|(
+name|info
+operator|.
+name|lockinfo
+argument_list|,
+operator|&
+name|rqip
+operator|->
+name|info
+operator|.
+name|lockinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rangelock
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|loginfo_unused
 case|:
 break|break;
@@ -699,7 +717,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * XXX In these routines, we're assuming that      * we will always be called with bp->b_bcount      * which is a multiple of the sector size.  This      * is a reasonable assumption, since we are only      * called from system routines.  Should we check      * anyway?      */
 if|if
 condition|(
 operator|(
@@ -953,7 +970,7 @@ condition|(
 name|vol
 operator|->
 name|last_plex_read
-operator|==
+operator|>=
 name|vol
 operator|->
 name|plexes
@@ -1428,7 +1445,6 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 endif|#
 directive|endif
 return|return
@@ -1536,7 +1552,6 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|vinum_conf
 operator|.
 name|lastrq
@@ -1613,12 +1628,6 @@ operator|->
 name|count
 expr_stmt|;
 comment|/* they're all active */
-name|rq
-operator|->
-name|active
-operator|++
-expr_stmt|;
-comment|/* one more active request group */
 for|for
 control|(
 name|rqno
@@ -1660,21 +1669,9 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* one less active request */
-elseif|else
-if|if
-condition|(
-operator|(
-name|rqe
-operator|->
-name|flags
-operator|&
-name|XFR_BAD_SUBDISK
-operator|)
-operator|==
-literal|0
-condition|)
+else|else
 block|{
-comment|/* subdisk isn't bad, we can do it */
+comment|/* we can do it */
 if|if
 condition|(
 operator|(
@@ -1707,7 +1704,7 @@ name|b_flags
 operator||=
 name|B_ORDERED
 expr_stmt|;
-comment|/* XXX chase SCSI driver */
+comment|/* stick to the request order */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -1790,7 +1787,6 @@ operator|.
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|debug
@@ -1862,6 +1858,19 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|rqg
+operator|->
+name|active
+condition|)
+comment|/* we have at least one active request, */
+name|rq
+operator|->
+name|active
+operator|++
+expr_stmt|;
+comment|/* one more active request group */
 block|}
 name|splx
 argument_list|(
@@ -2253,6 +2262,13 @@ name|REQUEST_DOWN
 condition|)
 block|{
 comment|/* down? */
+name|rqe
+operator|->
+name|flags
+operator|=
+name|XFR_BAD_SUBDISK
+expr_stmt|;
+comment|/* yup */
 if|if
 condition|(
 name|rq
@@ -2269,12 +2285,6 @@ name|REQUEST_DEGRADED
 return|;
 comment|/* give up here */
 comment|/* 			 * If we're writing, don't give up 			 * because of a bad subdisk.  Go 			 * through to the bitter end, but note 			 * which ones we can't access. 			 */
-name|rqe
-operator|->
-name|flags
-operator|=
-name|XFR_BAD_SUBDISK
-expr_stmt|;
 name|status
 operator|=
 name|REQUEST_DEGRADED
@@ -2290,21 +2300,6 @@ operator|->
 name|datalen
 expr_stmt|;
 comment|/* bump the address */
-if|if
-condition|(
-operator|(
-name|rqe
-operator|->
-name|flags
-operator|&
-name|XFR_BAD_SUBDISK
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* subdisk OK, */
-comment|/* 		     * We could build the buffer anyway, even if the 		     * subdisk is down, but it's a waste of time and 		     * space. 		     */
 if|if
 condition|(
 name|build_rq_buffer
@@ -2342,7 +2337,6 @@ return|return
 name|REQUEST_ENOMEM
 return|;
 comment|/* can't do it */
-block|}
 block|}
 block|}
 if|if
@@ -2647,6 +2641,13 @@ name|REQUEST_DOWN
 condition|)
 block|{
 comment|/* down? */
+name|rqe
+operator|->
+name|flags
+operator|=
+name|XFR_BAD_SUBDISK
+expr_stmt|;
+comment|/* yup */
 if|if
 condition|(
 name|rq
@@ -2663,13 +2664,6 @@ name|REQUEST_DEGRADED
 return|;
 comment|/* give up here */
 comment|/* 			 * If we're writing, don't give up 			 * because of a bad subdisk.  Go through 			 * to the bitter end, but note which 			 * ones we can't access. 			 */
-name|rqe
-operator|->
-name|flags
-operator|=
-name|XFR_BAD_SUBDISK
-expr_stmt|;
-comment|/* yup */
 name|status
 operator|=
 name|REQUEST_DEGRADED
@@ -2763,20 +2757,6 @@ directive|endif
 block|}
 if|if
 condition|(
-operator|(
-name|rqe
-operator|->
-name|flags
-operator|&
-name|XFR_BAD_SUBDISK
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* subdisk OK, */
-if|if
-condition|(
 name|build_rq_buffer
 argument_list|(
 name|rqe
@@ -2812,7 +2792,6 @@ return|return
 name|REQUEST_ENOMEM
 return|;
 comment|/* can't do it */
-block|}
 block|}
 operator|*
 name|diskaddr
@@ -2965,10 +2944,6 @@ modifier|*
 name|vol
 decl_stmt|;
 comment|/* volume in question */
-name|off_t
-name|oldstart
-decl_stmt|;
-comment|/* note where we started */
 name|int
 name|recovered
 init|=
@@ -3159,11 +3134,6 @@ operator|=
 name|startaddr
 expr_stmt|;
 comment|/* start at the beginning again */
-name|oldstart
-operator|=
-name|startaddr
-expr_stmt|;
-comment|/* and note where that was */
 if|if
 condition|(
 name|plexmask
@@ -3198,7 +3168,7 @@ if|if
 condition|(
 name|diskaddr
 operator|>
-name|oldstart
+name|startaddr
 condition|)
 block|{
 comment|/* we satisfied another part */
@@ -3216,6 +3186,16 @@ break|break;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|diskaddr
+operator|==
+name|startaddr
+condition|)
+comment|/* didn't get any further, */
+return|return
+name|status
+return|;
 block|}
 if|if
 condition|(
@@ -3499,7 +3479,6 @@ name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
-comment|/*      * XXX Should we check for reviving plexes here, and      * set B_ORDERED if so?      */
 name|bp
 operator|->
 name|b_iodone
@@ -3507,6 +3486,21 @@ operator|=
 name|complete_rqe
 expr_stmt|;
 comment|/* by calling us here */
+comment|/*      * You'd think that we wouldn't need to even      * build the request buffer for a dead subdisk,      * but in some cases we need information like      * the user buffer address.  Err on the side of      * generosity and supply what we can.  That      * obviously doesn't include drive information      * when the drive is dead.      */
+if|if
+condition|(
+operator|(
+name|rqe
+operator|->
+name|flags
+operator|&
+name|XFR_BAD_SUBDISK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* subdisk is accessible, */
 name|bp
 operator|->
 name|b_dev
@@ -3523,6 +3517,21 @@ operator|->
 name|v_rdev
 expr_stmt|;
 comment|/* drive device */
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|DRIVE
+index|[
+name|rqe
+operator|->
+name|driveno
+index|]
+operator|.
+name|vp
+expr_stmt|;
+comment|/* drive vnode */
+block|}
 name|bp
 operator|->
 name|b_blkno
@@ -3565,20 +3574,6 @@ operator|->
 name|b_bcount
 expr_stmt|;
 comment|/* and buffer size */
-name|bp
-operator|->
-name|b_vp
-operator|=
-name|DRIVE
-index|[
-name|rqe
-operator|->
-name|driveno
-index|]
-operator|.
-name|vp
-expr_stmt|;
-comment|/* drive vnode */
 name|bp
 operator|->
 name|b_rcred
@@ -3625,11 +3620,6 @@ name|NULL
 condition|)
 block|{
 comment|/* failed */
-name|Debugger
-argument_list|(
-literal|"XXX"
-argument_list|)
-expr_stmt|;
 name|abortrequest
 argument_list|(
 name|rqe
@@ -3805,7 +3795,6 @@ modifier|*
 name|rq
 parameter_list|)
 block|{
-comment|/* XXX */
 return|return
 literal|1
 return|;
@@ -3872,73 +3861,6 @@ operator|->
 name|driveno
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|drive
-operator|->
-name|state
-operator|!=
-name|drive_up
-condition|)
-block|{
-comment|/* XXX until we get the states fixed */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_WRITE
-condition|)
-comment|/* writing, */
-name|set_sd_state
-argument_list|(
-name|Sdno
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
-name|sd_stale
-argument_list|,
-name|setstate_force
-argument_list|)
-expr_stmt|;
-else|else
-name|set_sd_state
-argument_list|(
-name|Sdno
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
-name|sd_crashed
-argument_list|,
-name|setstate_force
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EIO
-expr_stmt|;
-name|biodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|sd
@@ -4023,7 +3945,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* start with nothing */
-comment|/*      * XXX Should we check for reviving plexes here, and      * set B_ORDERED if so?      */
 name|sbp
 operator|->
 name|b
@@ -4245,19 +4166,6 @@ operator|->
 name|b_bcount
 expr_stmt|;
 comment|/* nothing transferred */
-comment|/* 	     * XXX Grrr.  This doesn't seem to work.  Return 	     * an error after all 	     */
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|ENOSPC
-expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
@@ -4381,7 +4289,6 @@ operator|.
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|debug
@@ -4836,6 +4743,19 @@ operator|->
 name|rqg
 decl_stmt|;
 comment|/* point to the request chain */
+if|if
+condition|(
+name|rqg
+operator|->
+name|lock
+condition|)
+comment|/* got a lock? */
+name|unlockrange
+argument_list|(
+name|rqg
+argument_list|)
+expr_stmt|;
+comment|/* yes, free it */
 if|if
 condition|(
 name|rqgc
