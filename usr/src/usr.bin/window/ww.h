@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.33 84/05/23	  */
+comment|/*  *	@(#)ww.h	3.32 84/05/23	  */
 end_comment
 
 begin_include
@@ -309,7 +309,7 @@ struct|struct
 block|{
 ifndef|#
 directive|ifndef
-name|O_SUN
+name|mc68000
 name|char
 name|C_c
 decl_stmt|;
