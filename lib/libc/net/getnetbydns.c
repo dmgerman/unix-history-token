@@ -409,6 +409,15 @@ name|bp
 operator|=
 name|netbuf
 expr_stmt|;
+name|ep
+operator|=
+name|netbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|netbuf
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|answer
