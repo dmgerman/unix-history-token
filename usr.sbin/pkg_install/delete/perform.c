@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.2 1993/09/04 05:06:39 jkh Exp $"
+literal|"$Id: perform.c,v 1.2 1993/09/03 23:01:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"%s %s DEINSTALL"
+literal|"./%s %s DEINSTALL"
 argument_list|,
 name|REQUIRE_FNAME
 argument_list|,
@@ -369,7 +369,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"%s %s DEINSTALL"
+literal|"./%s %s DEINSTALL"
 argument_list|,
 name|DEINSTALL_FNAME
 argument_list|,
