@@ -2492,6 +2492,7 @@ operator|&
 literal|0xff
 operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"pnpbios: error %d/%x getting device count/size limit\n"
@@ -2505,6 +2506,8 @@ operator|.
 name|eax
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|ndevs
 operator|&=
 literal|0xff
@@ -2548,6 +2551,20 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|devnodebuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pnpbios: cannot allocate memory, bailing\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|pda
 operator|=
 operator|(
