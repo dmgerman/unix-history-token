@@ -176,7 +176,7 @@ parameter_list|(
 name|struct
 name|mount
 modifier|*
-name|mountp
+name|mp
 parameter_list|,
 name|struct
 name|ucred
@@ -2653,7 +2653,7 @@ specifier|static
 name|int
 name|ext2_reload
 parameter_list|(
-name|mountp
+name|mp
 parameter_list|,
 name|cred
 parameter_list|,
@@ -2662,7 +2662,7 @@ parameter_list|)
 name|struct
 name|mount
 modifier|*
-name|mountp
+name|mp
 decl_stmt|;
 name|struct
 name|ucred
@@ -2712,7 +2712,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|mountp
+name|mp
 operator|->
 name|mnt_flag
 operator|&
@@ -2731,7 +2731,7 @@ name|devvp
 operator|=
 name|VFSTOEXT2
 argument_list|(
-name|mountp
+name|mp
 argument_list|)
 operator|->
 name|um_devvp
@@ -2829,7 +2829,7 @@ name|fs
 operator|=
 name|VFSTOEXT2
 argument_list|(
-name|mountp
+name|mp
 argument_list|)
 operator|->
 name|um_e2fs
@@ -2916,7 +2916,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|mountp
+name|mp
 operator|->
 name|mnt_nvnodelist
 argument_list|)
@@ -2936,7 +2936,7 @@ name|vp
 operator|->
 name|v_mount
 operator|!=
-name|mountp
+name|mp
 condition|)
 block|{
 name|MNT_IUNLOCK
