@@ -130,7 +130,7 @@ name|_META
 block|,
 literal|0
 block|,
-name|_Q
+name|_Q2
 block|,
 name|_META
 block|,
@@ -143,7 +143,7 @@ name|_META
 operator||
 name|_CMD
 block|,
-name|_Q
+name|_Q2
 block|,
 comment|/*	(		)		*		+	*/
 name|_META

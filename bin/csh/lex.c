@@ -1296,7 +1296,7 @@ name|c
 argument_list|,
 name|_META
 operator||
-name|_Q
+name|_Q2
 operator||
 name|_Q1
 operator||
@@ -1364,7 +1364,7 @@ name|cmap
 argument_list|(
 name|c
 argument_list|,
-name|_Q
+name|_Q2
 operator||
 name|_Q1
 argument_list|)
@@ -1532,7 +1532,7 @@ name|c
 argument_list|,
 name|_META
 operator||
-name|_Q
+name|_Q2
 operator||
 name|_Q1
 argument_list|)

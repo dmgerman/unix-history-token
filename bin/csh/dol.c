@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|QUOTES
-value|(_Q|_Q1|_ESC)
+value|(_Q2|_Q1|_ESC)
 end_define
 
 begin_comment
@@ -805,7 +805,7 @@ name|_SP
 operator||
 name|_NL
 operator||
-name|_Q
+name|_Q2
 operator||
 name|_Q1
 argument_list|)

@@ -44,7 +44,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|_Q
+name|_Q2
 value|0x0001
 end_define
 
