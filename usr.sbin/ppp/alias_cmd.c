@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: alias_cmd.c,v 1.6 1997/10/26 01:02:00 brian Exp $  */
+comment|/*  * $Id: alias_cmd.c,v 1.7 1997/11/22 03:37:21 brian Exp $  */
 end_comment
 
 begin_include
@@ -189,6 +189,9 @@ argument_list|,
 literal|"Alias not enabled\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 elseif|else
 if|if
@@ -475,32 +478,13 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|VarTerm
-condition|)
-name|fprintf
-argument_list|(
-name|VarTerm
-argument_list|,
-literal|"Usage: alias %s %s\n"
-argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|name
-argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+else|else
 return|return
+operator|-
 literal|1
+return|;
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -537,6 +521,9 @@ argument_list|,
 literal|"alias not enabled\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 elseif|else
 if|if
@@ -701,32 +688,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|VarTerm
-condition|)
-name|fprintf
-argument_list|(
-name|VarTerm
-argument_list|,
-literal|"Usage: alias %s %s\n"
-argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|name
-argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|syntax
-argument_list|)
-expr_stmt|;
+else|else
 return|return
+operator|-
 literal|1
+return|;
+return|return
+literal|0
 return|;
 block|}
 end_function
