@@ -3713,6 +3713,10 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|stdoffset
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3739,7 +3743,6 @@ return|return
 operator|-
 literal|1
 return|;
-block|}
 if|if
 condition|(
 operator|*
@@ -3774,6 +3777,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 name|load_result
 operator|=
