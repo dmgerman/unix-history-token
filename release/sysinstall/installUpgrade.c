@@ -1356,7 +1356,7 @@ name|cp
 init|=
 name|msgGetInput
 argument_list|(
-literal|"/usr/tmp/etc"
+literal|"/var/tmp/etc"
 argument_list|,
 literal|"Under which directory do you wish to save your current /etc?"
 argument_list|)
@@ -1998,7 +1998,7 @@ return|;
 block|}
 name|saved_etc
 operator|=
-literal|"/usr/tmp/etc"
+literal|"/var/tmp/etc"
 expr_stmt|;
 name|Mkdir
 argument_list|(

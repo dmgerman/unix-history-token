@@ -4967,7 +4967,7 @@ name|variable_set2
 argument_list|(
 name|VAR_PKG_TMPDIR
 argument_list|,
-literal|"/usr/tmp"
+literal|"/var/tmp"
 argument_list|,
 literal|0
 argument_list|)

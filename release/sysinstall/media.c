@@ -1036,7 +1036,7 @@ name|val
 operator|=
 name|msgGetInput
 argument_list|(
-literal|"/usr/tmp"
+literal|"/var/tmp"
 argument_list|,
 literal|"Please enter the name of a temporary directory containing\n"
 literal|"sufficient space for holding the contents of this tape (or\n"
