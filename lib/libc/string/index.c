@@ -95,9 +95,11 @@ parameter_list|)
 block|{
 name|char
 name|c
-init|=
-name|ch
 decl_stmt|;
+name|c
+operator|=
+name|ch
+expr_stmt|;
 for|for
 control|(
 init|;

@@ -99,9 +99,11 @@ name|save
 decl_stmt|;
 name|char
 name|c
-init|=
-name|ch
 decl_stmt|;
+name|c
+operator|=
+name|ch
+expr_stmt|;
 for|for
 control|(
 name|save
