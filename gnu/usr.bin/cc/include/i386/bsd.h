@@ -14,6 +14,16 @@ file|"i386/unix.h"
 end_include
 
 begin_comment
+comment|/* Don't assume anything about the header files. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_IMPLICIT_EXTERN_C
+end_define
+
+begin_comment
 comment|/* Use the Sequent Symmetry assembler syntax.  */
 end_comment
 
