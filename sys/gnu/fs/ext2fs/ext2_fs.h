@@ -2101,7 +2101,7 @@ begin_define
 define|#
 directive|define
 name|EXT2_FEATURE_RO_COMPAT_SUPP
-value|EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER
+value|(EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER| \ 					 EXT2_FEATURE_RO_COMPAT_LARGE_FILE)
 end_define
 
 begin_endif
