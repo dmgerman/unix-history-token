@@ -1,16 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	domain.h	5.1	5.1	*/
+comment|/*	domain.h	5.2	82/08/01	*/
 end_comment
 
 begin_comment
-comment|/*  * Structure for a communications domain.  * Each communications domain supports a set or protocols,  * which are contained in a protocol table located through  * this structure.  */
+comment|/*  * Structure per communications domain.  */
 end_comment
 
 begin_struct
 struct|struct
 name|domain
 block|{
+name|int
+name|dom_family
+decl_stmt|;
+comment|/* AF_xxx */
 name|char
 modifier|*
 name|dom_name
@@ -18,10 +22,15 @@ decl_stmt|;
 name|struct
 name|protosw
 modifier|*
-name|dom_proto
+name|dom_protosw
+decl_stmt|,
+modifier|*
+name|dom_protoswNPROTOSW
 decl_stmt|;
-name|int
-name|dom_nproto
+name|struct
+name|domain
+modifier|*
+name|dom_next
 decl_stmt|;
 block|}
 struct|;
