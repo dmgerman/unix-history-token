@@ -366,6 +366,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|semconfig
 parameter_list|(
@@ -1205,6 +1206,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|semctl
 parameter_list|(
@@ -2550,6 +2552,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|semget
 parameter_list|(
@@ -3266,6 +3269,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|semop
 parameter_list|(

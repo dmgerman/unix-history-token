@@ -676,6 +676,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|msgctl
 parameter_list|(
@@ -1394,6 +1395,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|msgget
 parameter_list|(
@@ -3316,6 +3318,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|msgrcv
 parameter_list|(
