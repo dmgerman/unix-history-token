@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|TZDIR
-value|"/usr/local/etc/zoneinfo"
+value|"/usr/share/zoneinfo"
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|TZDEFAULT
-value|"localtime"
+value|"/etc/localtime"
 end_define
 
 begin_endif
