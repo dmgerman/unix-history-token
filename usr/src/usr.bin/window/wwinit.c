@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.24 %G%"
+literal|"@(#)wwinit.c	3.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,17 +104,6 @@ name|wwdtablesize
 operator|=
 name|getdtablesize
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|wwdtablesize
-operator|>
-literal|32
-condition|)
-comment|/* XXX */
-name|wwdtablesize
-operator|=
-literal|32
 expr_stmt|;
 name|wwhead
 operator|.
