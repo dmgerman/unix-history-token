@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.25 1995/10/31 20:24:08 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.26 1995/11/01 00:58:42 peter Exp $ */
 end_comment
 
 begin_comment
@@ -2861,9 +2861,22 @@ name|IPX
 case|case
 name|AF_IPX
 case|:
+comment|/* 	 * This is pretty bogus.. We dont have an ipxcp module in pppd 	 * yet to configure the link parameters.  Sigh. I guess a 	 * manual ifconfig would do....  -Peter 	 */
+name|address
+operator|=
+name|PPP_ALLSTATIONS
+expr_stmt|;
+name|control
+operator|=
+name|PPP_UI
+expr_stmt|;
 name|protocol
 operator|=
 name|PPP_IPX
+expr_stmt|;
+name|mode
+operator|=
+name|NPMODE_PASS
 expr_stmt|;
 break|break;
 endif|#
