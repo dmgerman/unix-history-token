@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.20 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,23 +1090,35 @@ name|lfsp
 operator|->
 name|lfs_bshift
 expr_stmt|;
-comment|/*  	 * The number of free blocks is set from the number of segments times 	 * the segment size.  Then we'll subtract off the room for the 	 * superblocks ifile entries and segment usage table. 	 */
+comment|/*  	 * The number of free blocks is set from the number of segments times 	 * the segment size - 2 (that we never write because we need to make 	 * sure the cleaner can run).  Then we'll subtract off the room for the 	 * superblocks ifile entries and segment usage table. 	 */
 name|lfsp
 operator|->
-name|lfs_bfree
+name|lfs_dsize
 operator|=
 name|fsbtodb
 argument_list|(
 name|lfsp
 argument_list|,
+operator|(
 name|lfsp
 operator|->
 name|lfs_nseg
+operator|-
+literal|2
+operator|)
 operator|*
 name|lfsp
 operator|->
 name|lfs_ssize
 argument_list|)
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_bfree
+operator|=
+name|lfsp
+operator|->
+name|lfs_dsize
 expr_stmt|;
 name|lfsp
 operator|->
