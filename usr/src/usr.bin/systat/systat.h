@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      systat.h     1.1     83/10/01     */
+comment|/*      systat.h     1.2     83/10/02     */
 end_comment
 
 begin_include
@@ -48,6 +48,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/text.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pte.h>
 end_include
 
@@ -86,14 +104,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_decl_stmt
-name|struct
-name|nlist
-name|nlst
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
@@ -170,6 +180,88 @@ index|]
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|cmdtab
+block|{
+name|char
+modifier|*
+name|c_name
+decl_stmt|;
+comment|/* command name */
+name|int
+function_decl|(
+modifier|*
+name|c_refresh
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* display refresh */
+name|int
+function_decl|(
+modifier|*
+name|c_fetch
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* sets up data structures */
+name|int
+function_decl|(
+modifier|*
+name|c_label
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* label display */
+name|int
+function_decl|(
+modifier|*
+name|c_init
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* initialize namelist, etc. */
+name|WINDOW
+modifier|*
+function_decl|(
+modifier|*
+name|c_open
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* open display */
+name|int
+function_decl|(
+modifier|*
+name|c_close
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* close display */
+name|char
+name|c_flags
+decl_stmt|;
+comment|/* been initialized (right now) */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|cmdtab
+modifier|*
+name|curcmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cmdtab
+name|cmdtab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -211,18 +303,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pcbpf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|argaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|col
 decl_stmt|;
 end_decl_stmt
@@ -236,6 +316,34 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|procp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|kprocp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|ntext
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|textp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|text
+modifier|*
+name|xtext
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +363,14 @@ begin_function_decl
 name|char
 modifier|*
 name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|calloc
 parameter_list|()
 function_decl|;
 end_function_decl

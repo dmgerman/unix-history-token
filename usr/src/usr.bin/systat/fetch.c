@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fetch.c	1.2 (Lucasfilm) %G%"
+literal|"@(#)fetch.c	1.3 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +387,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|int
+name|argaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pcbpf
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|getu
