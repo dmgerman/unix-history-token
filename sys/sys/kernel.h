@@ -340,9 +340,14 @@ init|=
 literal|0x2700000
 block|,
 comment|/* mbuf subsystem */
-name|SI_SUB_SOFTINTR
+name|SI_SUB_INTR
 init|=
 literal|0x2800000
+block|,
+comment|/* interrupt threads */
+name|SI_SUB_SOFTINTR
+init|=
+literal|0x2800001
 block|,
 comment|/* start soft interrupt thread */
 name|SI_SUB_DRIVERS
