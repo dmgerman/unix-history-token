@@ -70,6 +70,7 @@ typedef|typedef
 struct|struct
 name|moduledata
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
