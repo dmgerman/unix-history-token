@@ -85,6 +85,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|utmp_len
+init|=
+name|MAXHOSTNAMELEN
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -96,18 +104,6 @@ include|#
 directive|include
 file|<initreq.h>
 end_include
-
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-name|MAXHOSTNAMELEN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sizeof(init_request.host) */
-end_comment
 
 begin_else
 else|#
@@ -164,24 +160,31 @@ begin_comment
 comment|/* UTMPX */
 end_comment
 
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-sizeof|sizeof
-argument_list|(
-name|wtmp
-operator|.
-name|ut_host
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|PARENT_DOES_UTMP
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_WTMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|wtmpf
+index|[]
+init|=
+name|_PATH_WTMP
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|char
@@ -192,6 +195,31 @@ literal|"/usr/adm/wtmp"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_UTMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|utmpf
+index|[]
+init|=
+name|_PATH_UTMP
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 name|utmpf
@@ -200,6 +228,11 @@ init|=
 literal|"/etc/utmp"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -2598,7 +2631,7 @@ for|for
 control|(
 name|cp
 operator|=
-literal|"pqrstuvwxyzPQRST"
+literal|"pqrsPQRS"
 init|;
 operator|*
 name|cp
@@ -2644,7 +2677,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+literal|32
 condition|;
 name|i
 operator|++
@@ -2653,7 +2686,7 @@ block|{
 operator|*
 name|p2
 operator|=
-literal|"0123456789abcdef"
+literal|"0123456789abcdefghijklmnopqrstuv"
 index|[
 name|i
 index|]
@@ -7127,8 +7160,11 @@ name|char
 modifier|*
 modifier|*
 name|addarg
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|user
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -7855,12 +7891,41 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|user
+operator|=
 name|getenv
 argument_list|(
 literal|"USER"
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|user
+argument_list|,
+literal|'-'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tried to pass user \"%s\" to login"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"invalid user"
+argument_list|)
+expr_stmt|;
+block|}
 name|argv
 operator|=
 name|addarg
