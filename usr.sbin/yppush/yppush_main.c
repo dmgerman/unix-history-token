@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yppush_main.c,v 1.9 1997/11/03 07:53:44 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2515,10 +2515,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* set initial transaction ID */
+name|yppush_transid
+operator|=
 name|time
 argument_list|(
-operator|&
-name|yppush_transid
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
