@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine erases everything on the window.  *  * %G% (Berkeley) @(#)erase.c	1.1  */
+comment|/*  *	This routine erases everything on the window.  *  * %G% (Berkeley) @(#)erase.c	1.2  */
 end_comment
 
 begin_macro
@@ -48,6 +48,20 @@ name|reg
 name|int
 name|minx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|outf
+argument_list|,
+literal|"WERASE(%0.2o)\n"
+argument_list|,
+name|win
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|y
