@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	4.9 %G%"
+literal|"@(#)trpt.c	4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1409,7 +1409,7 @@ name|win
 condition|)
 name|printf
 argument_list|(
-literal|"(win=%d)"
+literal|"(win=%x)"
 argument_list|,
 name|win
 argument_list|)
