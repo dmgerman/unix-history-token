@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.2 (Berkeley) %G%"
+literal|"@(#)option.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,16 +266,7 @@ literal|"a"
 block|,
 name|T_AND
 block|,
-operator|(
-name|PLAN
-operator|*
-call|(
-modifier|*
-call|)
-argument_list|()
-operator|)
-operator|-
-literal|1
+name|NULL
 block|,
 name|O_NONE
 operator||
@@ -285,16 +276,7 @@ literal|"and"
 block|,
 name|T_AND
 block|,
-operator|(
-name|PLAN
-operator|*
-call|(
-modifier|*
-call|)
-argument_list|()
-operator|)
-operator|-
-literal|1
+name|NULL
 block|,
 name|O_NONE
 operator||
@@ -708,6 +690,14 @@ operator|&
 name|O_MASK
 condition|)
 block|{
+case|case
+name|O_NONE
+case|:
+name|new
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
 case|case
 name|O_ZERO
 case|:

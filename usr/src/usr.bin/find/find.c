@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.31 (Berkeley) %G%"
+literal|"@(#)find.c	4.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -404,6 +404,10 @@ name|argv
 condition|;
 control|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|new
 operator|=
 name|find_create
@@ -411,7 +415,9 @@ argument_list|(
 operator|&
 name|argv
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|plan
