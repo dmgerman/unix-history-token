@@ -4,7 +4,7 @@ name|char
 name|id_mkvers
 index|[]
 init|=
-literal|"@(#)mkvers.c	1.1"
+literal|"@(#)mkvers.c	1.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,67 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'.'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|V
+argument_list|,
+literal|"char *"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|s
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+init|;
+operator|*
+name|s
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'.'
+condition|;
+name|s
+operator|++
+control|)
+name|fputc
+argument_list|(
+operator|*
+name|s
+argument_list|,
+name|V
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|V
+argument_list|,
+literal|"_id[] = {\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|fprintf
 argument_list|(
 name|V
