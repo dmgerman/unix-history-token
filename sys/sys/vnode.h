@@ -229,7 +229,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list mutex.  * v_mntvnodes is locked by the global mntvnodes mutex.  * v_iflag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  * V vnode lock  * I inter lock  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  * V		vnode lock  * I		inter lock  * F		freelist mutex  * M		mntvnodes mutex  * P		pollinfo lock  */
 end_comment
 
 begin_struct
@@ -263,14 +263,14 @@ modifier|*
 name|v_vxproc
 decl_stmt|;
 comment|/* I thread owning VXLOCK */
+name|int
+name|v_holdcnt
+decl_stmt|;
+comment|/* I page& buffer references */
 name|u_long
 name|v_vflag
 decl_stmt|;
 comment|/* V vnode flags */
-name|int
-name|v_holdcnt
-decl_stmt|;
-comment|/* page& buffer references */
 name|u_long
 name|v_id
 decl_stmt|;
@@ -293,14 +293,14 @@ argument|vnode
 argument_list|)
 name|v_freelist
 expr_stmt|;
-comment|/* vnode freelist */
+comment|/* F vnode freelist */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
 name|v_nmntvnodes
 expr_stmt|;
-comment|/* vnodes for mount point */
+comment|/* M vnodes for mount point */
 name|struct
 name|buflists
 name|v_cleanblkhd
@@ -449,6 +449,7 @@ name|vpollinfo
 modifier|*
 name|v_pollinfo
 decl_stmt|;
+comment|/* P Poll events */
 name|struct
 name|label
 name|v_label
