@@ -2128,7 +2128,7 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|MTX_RECURSE
+name|MTX_RECURSECNT
 argument_list|,
 name|offsetof
 argument_list|(
