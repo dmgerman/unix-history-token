@@ -4949,6 +4949,7 @@ name|ucred
 modifier|*
 name|newcred
 decl_stmt|,
+modifier|*
 name|oldcred
 decl_stmt|;
 name|uid
