@@ -261,7 +261,7 @@ literal|"AdvanSys ASC1200A SCSI controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|PCI_DEVICE_ID_ADVANSYS_1200B
@@ -274,7 +274,7 @@ literal|"AdvanSys ASC1200B SCSI controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|PCI_DEVICE_ID_ADVANSYS_3000
@@ -294,7 +294,7 @@ literal|"AdvanSys ASC3150 SCSI controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 elseif|else
@@ -313,7 +313,7 @@ literal|"AdvanSys ASC3030/50 SCSI controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 elseif|else
@@ -332,7 +332,7 @@ literal|"Unknown AdvanSys controller"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 break|break;
