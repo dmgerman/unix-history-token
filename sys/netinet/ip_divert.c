@@ -27,6 +27,12 @@ directive|include
 file|"opt_ipsec.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_mac.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -66,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -833,6 +845,18 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX is it necessary ? */
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_socket
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|control
