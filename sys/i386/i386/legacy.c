@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: nexus.c,v 1.10 1999/05/18 20:48:41 peter Exp $  */
+comment|/*  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: nexus.c,v 1.11 1999/05/30 10:50:57 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -192,6 +192,28 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|device_t
+name|nexus_add_child
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|int
+name|order
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -393,6 +415,13 @@ argument_list|(
 name|bus_print_child
 argument_list|,
 name|nexus_print_child
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|nexus_add_child
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -802,30 +831,17 @@ argument_list|(
 literal|"nexus_probe apm"
 argument_list|)
 expr_stmt|;
-name|child
-operator|=
-name|device_add_child
+name|bus_generic_probe
 argument_list|(
 name|dev
-argument_list|,
-literal|"pcib"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|child
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"nexus_probe pcib"
-argument_list|)
-expr_stmt|;
+block|child = device_add_child(dev, "pcib", 0, 0); 	if (child == 0) 		panic("nexus_probe pcib");
+endif|#
+directive|endif
 name|child
 operator|=
 name|device_add_child
@@ -897,6 +913,43 @@ argument_list|(
 literal|" on motherboard"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|device_t
+name|nexus_add_child
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|int
+name|order
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+block|{
+return|return
+name|device_add_child_ordered
+argument_list|(
+name|bus
+argument_list|,
+name|order
+argument_list|,
+name|name
+argument_list|,
+name|unit
+argument_list|,
+literal|0
+argument_list|)
+return|;
 block|}
 end_function
 
