@@ -50,15 +50,6 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int
-name|type
-decl_stmt|;
-comment|/* UART type */
-block|}
-name|sio
-struct|;
-struct|struct
-block|{
 name|uint8_t
 name|nid
 index|[
@@ -66,28 +57,6 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* MAC address */
-name|uint8_t
-name|tech
-decl_stmt|;
-comment|/* technology */
-name|uint8_t
-name|contype
-decl_stmt|;
-comment|/* connector type */
-name|uint32_t
-name|speed
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* available speeds */
-name|uint8_t
-name|media
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* media types */
 block|}
 name|lan
 struct|;

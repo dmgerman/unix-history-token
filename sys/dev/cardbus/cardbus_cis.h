@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Cardbus CIS definitions  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|cis_tupleinfo
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|cardbus_do_cis
@@ -23,6 +17,12 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|cis_tupleinfo
+struct_decl|;
+end_struct_decl
 
 begin_define
 define|#
@@ -76,172 +76,6 @@ directive|define
 name|TPL_BAR_REG_BELOW1MB
 value|0x80
 end_define
-
-begin_comment
-comment|/* CISTPL_FUNC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_MF
-value|0
-end_define
-
-begin_comment
-comment|/* multi function tuple */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_MEM
-value|1
-end_define
-
-begin_comment
-comment|/* memory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_SERIAL
-value|2
-end_define
-
-begin_comment
-comment|/* serial, including modem and fax */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_PARALLEL
-value|3
-end_define
-
-begin_comment
-comment|/* parallel, including printer and SCSI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_DISK
-value|4
-end_define
-
-begin_comment
-comment|/* Disk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_VIDEO
-value|5
-end_define
-
-begin_comment
-comment|/* Video Adaptor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_LAN
-value|6
-end_define
-
-begin_comment
-comment|/* LAN Adaptor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNC_AIMS
-value|7
-end_define
-
-begin_comment
-comment|/* Auto Inclement Mass Strages */
-end_comment
-
-begin_comment
-comment|/* TPL_FUNC_LAN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNCE_LAN_TECH
-value|1
-end_define
-
-begin_comment
-comment|/* technology */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNCE_LAN_SPEED
-value|2
-end_define
-
-begin_comment
-comment|/* speed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNCE_LAN_MEDIA
-value|3
-end_define
-
-begin_comment
-comment|/* which media do you use? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNCE_LAN_NID
-value|4
-end_define
-
-begin_comment
-comment|/* node id (address) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNCE_LAN_CONN
-value|5
-end_define
-
-begin_comment
-comment|/* connector type (shape) */
-end_comment
-
-begin_comment
-comment|/* TPL_FUNC_SERIAL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPL_FUNCE_SER_UART
-value|0
-end_define
-
-begin_comment
-comment|/* UART type */
-end_comment
 
 end_unit
 
