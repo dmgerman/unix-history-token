@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)stdio.h	1.2 (Berkeley) %G%	*/
+comment|/*	@(#)stdio.h	1.3 (Berkeley) %G%	*/
 end_comment
 
 begin_define
@@ -271,6 +271,14 @@ begin_function_decl
 name|char
 modifier|*
 name|fgets
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
