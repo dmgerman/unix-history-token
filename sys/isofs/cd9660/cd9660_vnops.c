@@ -1892,33 +1892,6 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|n
-operator|+
-name|on
-operator|==
-name|imp
-operator|->
-name|logical_block_size
-operator|||
-name|uio
-operator|->
-name|uio_offset
-operator|==
-operator|(
-name|off_t
-operator|)
-name|ip
-operator|->
-name|i_size
-condition|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_AGE
-expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
@@ -5735,12 +5708,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FIFO
-end_ifdef
-
 begin_decl_stmt
 name|vop_t
 modifier|*
@@ -6301,15 +6268,6 @@ name|cd9660_fifoop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FIFO */
-end_comment
 
 end_unit
 
