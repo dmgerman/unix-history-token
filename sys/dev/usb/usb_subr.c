@@ -3107,7 +3107,6 @@ name|index
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX check that all interfaces are idle */
 if|if
 condition|(
 name|dev
@@ -3117,14 +3116,6 @@ operator|!=
 name|USB_UNCONFIG_NO
 condition|)
 block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"usbd_set_config_index: free old config\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Free all configuration data structures. */
 name|nifc
 operator|=
 name|dev
@@ -3133,6 +3124,58 @@ name|cdesc
 operator|->
 name|bNumInterface
 expr_stmt|;
+comment|/* Check that all interfaces are idle */
+for|for
+control|(
+name|ifcidx
+operator|=
+literal|0
+init|;
+name|ifcidx
+operator|<
+name|nifc
+condition|;
+name|ifcidx
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|ifaces
+index|[
+name|ifcidx
+index|]
+operator|.
+name|pipes
+argument_list|)
+condition|)
+continue|continue;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: open pipes exist\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USBD_IN_USE
+operator|)
+return|;
+block|}
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: free old config\n"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Free all configuration data structures. */
 for|for
 control|(
 name|ifcidx
