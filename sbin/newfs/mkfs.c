@@ -1692,6 +1692,25 @@ operator|+=
 name|sizepb
 expr_stmt|;
 block|}
+comment|/* XXX - hack to prevent overflow of a 32bit block number */
+name|sblock
+operator|.
+name|fs_maxfilesize
+operator|=
+name|MIN
+argument_list|(
+name|sblock
+operator|.
+name|fs_maxfilesize
+argument_list|,
+operator|(
+name|u_quad_t
+operator|)
+literal|1
+operator|<<
+literal|39
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Validate specified/determined secpercyl 	 * and calculate minimum cylinders per group. 	 */
 name|sblock
 operator|.
