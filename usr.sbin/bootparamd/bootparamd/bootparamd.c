@@ -29,6 +29,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -46,6 +52,11 @@ include|#
 directive|include
 file|<rpcsvc/ypclnt.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1249,11 +1260,16 @@ decl_stmt|;
 name|int
 name|resultlen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
 specifier|static
 name|char
 modifier|*
 name|yp_domain
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ch
 decl_stmt|,
@@ -1386,6 +1402,9 @@ literal|'+'
 condition|)
 block|{
 comment|/* NIS */
+ifdef|#
+directive|ifdef
+name|YP
 if|if
 condition|(
 name|yp_get_default_domain
@@ -1529,6 +1548,16 @@ operator|(
 literal|1
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* ENOTSUP */
+endif|#
+directive|endif
 block|}
 comment|/* skip to next entry */
 if|if
@@ -1861,11 +1890,16 @@ decl_stmt|;
 name|int
 name|resultlen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
 specifier|static
 name|char
 modifier|*
 name|yp_domain
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*  struct hostent *cmp_he;*/
 name|bpf
 operator|=
@@ -1978,6 +2012,9 @@ literal|'+'
 condition|)
 block|{
 comment|/* NIS */
+ifdef|#
+directive|ifdef
+name|YP
 if|if
 condition|(
 name|yp_get_default_domain
@@ -2091,6 +2128,16 @@ operator|(
 name|res
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* ENOTSUP */
+endif|#
+directive|endif
 block|}
 comment|/* skip to next entry */
 name|pch

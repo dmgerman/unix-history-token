@@ -156,6 +156,12 @@ literal|"unix"
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -165,6 +171,11 @@ init|=
 literal|"netid.byname"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
