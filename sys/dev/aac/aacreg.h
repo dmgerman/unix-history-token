@@ -1680,6 +1680,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AAC_MONITOR_PANIC
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|AAC_UP_AND_RUNNING
 value|0x00000080
 end_define
