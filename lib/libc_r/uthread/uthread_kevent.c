@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -31,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -65,7 +53,7 @@ end_include
 
 begin_function
 name|int
-name|_kevent
+name|kevent
 parameter_list|(
 name|int
 name|kq
@@ -261,16 +249,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_kevent
-argument_list|,
-name|kevent
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
