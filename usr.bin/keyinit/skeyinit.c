@@ -6,19 +6,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -33,20 +51,11 @@ directive|include
 file|<skey.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_define
 define|#
@@ -958,23 +967,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: key crunch failed\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"key crunch failed"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 name|nn
 operator|=
 name|n
