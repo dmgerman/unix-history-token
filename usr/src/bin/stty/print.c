@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.5 (Berkeley) %G%"
+literal|"@(#)print.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,15 +447,6 @@ argument_list|)
 expr_stmt|;
 name|put
 argument_list|(
-literal|"-mdmbuf"
-argument_list|,
-name|MDMBUF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|put
-argument_list|(
 literal|"-flusho"
 argument_list|,
 name|FLUSHO
@@ -774,6 +765,15 @@ argument_list|(
 literal|"-crtscts"
 argument_list|,
 name|CRTSCTS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|put
+argument_list|(
+literal|"-mdmbuf"
+argument_list|,
+name|MDMBUF
 argument_list|,
 literal|0
 argument_list|)
