@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.26 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1065,6 +1065,13 @@ name|se_next
 control|)
 if|if
 condition|(
+name|sep
+operator|->
+name|se_fd
+operator|!=
+operator|-
+literal|1
+operator|&&
 name|FD_ISSET
 argument_list|(
 name|sep
@@ -1381,6 +1388,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fork: %m"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sep
@@ -1506,6 +1520,24 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%d execl %s\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+name|sep
+operator|->
+name|se_server
+argument_list|)
+expr_stmt|;
 name|dup2
 argument_list|(
 name|ctrl
@@ -1632,24 +1664,6 @@ name|pw_uid
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%d execl %s\n"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|,
-name|sep
-operator|->
-name|se_server
-argument_list|)
-expr_stmt|;
 name|execv
 argument_list|(
 name|sep
@@ -1724,8 +1738,7 @@ name|void
 name|reapchild
 parameter_list|()
 block|{
-name|union
-name|wait
+name|int
 name|status
 decl_stmt|;
 name|int
@@ -1747,10 +1760,6 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|status
 argument_list|,
@@ -1810,8 +1819,6 @@ block|{
 if|if
 condition|(
 name|status
-operator|.
-name|w_status
 condition|)
 name|syslog
 argument_list|(
@@ -2193,6 +2200,32 @@ name|sep
 operator|->
 name|se_proto
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sep
+operator|->
+name|se_fd
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|sep
+operator|->
+name|se_fd
+argument_list|)
+expr_stmt|;
+name|sep
+operator|->
+name|se_fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -3664,6 +3697,10 @@ operator|=
 name|strdup
 argument_list|(
 name|cp
+condition|?
+name|cp
+else|:
+literal|""
 argument_list|)
 condition|)
 return|return
@@ -3675,7 +3712,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%m"
+literal|"strdup: %m"
 argument_list|)
 expr_stmt|;
 name|exit
