@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.30 1994/01/31 04:18:32 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.31 1994/01/31 10:26:55 davidg Exp $  */
 end_comment
 
 begin_include
@@ -285,6 +285,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|test_page
+parameter_list|(
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -411,20 +424,24 @@ decl_stmt|,
 name|Maxmem
 init|=
 literal|0
+decl_stmt|,
+name|maxmem
+init|=
+literal|0
+decl_stmt|,
+name|badpages
+init|=
+literal|0
+decl_stmt|,
+name|physmem
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|long
 name|dumplo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|physmem
-decl_stmt|,
-name|maxmem
 decl_stmt|;
 end_decl_stmt
 
@@ -543,7 +560,7 @@ name|int
 name|firstaddr
 decl_stmt|;
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
-comment|/* avail_end was pre-decremented in pmap_bootstrap to compensate */
+comment|/* avail_end was pre-decremented in init_386() to compensate */
 for|for
 control|(
 name|i
@@ -600,12 +617,30 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"real mem  = %d\n"
+literal|"real memory  = %d (%d pages)\n"
 argument_list|,
-name|ctob
+name|ptoa
 argument_list|(
 name|physmem
 argument_list|)
+argument_list|,
+name|physmem
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|badpages
+condition|)
+name|printf
+argument_list|(
+literal|"bad memory   = %d (%d pages)\n"
+argument_list|,
+name|ptoa
+argument_list|(
+name|badpages
+argument_list|)
+argument_list|,
+name|badpages
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate space for system data structures. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * As pages of memory are allocated and cleared, 	 * "firstaddr" is incremented. 	 * An index into the kernel page table corresponding to the 	 * virtual memory address maintained in "v" is kept in "mapaddr". 	 */
@@ -1105,12 +1140,14 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avail mem = %d\n"
+literal|"avail memory = %d (%d pages)\n"
 argument_list|,
 name|ptoa
 argument_list|(
 name|vm_page_free_count
 argument_list|)
+argument_list|,
+name|vm_page_free_count
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2830,7 +2867,7 @@ condition|)
 return|return;
 name|dumpsize
 operator|=
-name|physmem
+name|Maxmem
 expr_stmt|;
 name|printf
 argument_list|(
@@ -4128,6 +4165,12 @@ name|pagesinext
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|target_page
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|proc0
 operator|.
@@ -5200,7 +5243,7 @@ name|pagesinext
 operator|+
 literal|0x100000
 operator|/
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 end_expr_stmt
 
@@ -5233,47 +5276,13 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|maxmem
-operator|=
-name|Maxmem
-operator|-
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* highest page of usable memory */
-end_comment
-
-begin_expr_stmt
 name|physmem
 operator|=
-name|maxmem
+name|pagesinbase
+operator|+
+name|pagesinext
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* number of pages of physmem addr space */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|Maxmem
-operator|<
-literal|2048
-operator|/
-literal|4
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"Too little memory (2MB required)"
-argument_list|)
-expr_stmt|;
-comment|/* NOT REACHED */
-block|}
-end_if
 
 begin_comment
 comment|/* call pmap initialization to make new kernel address space */
@@ -5290,11 +5299,274 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* 	 * Do simple memory test over range of extended memory that BIOS 	 *	indicates exists. Adjust Maxmem to the highest page of 	 *	good memory. 	 */
+end_comment
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"Testing memory (%dMB)..."
+argument_list|,
+name|ptoa
+argument_list|(
+name|Maxmem
+argument_list|)
+operator|/
+literal|1024
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|target_page
+operator|=
+name|Maxmem
+operator|-
+literal|1
+init|;
+name|target_page
+operator|>=
+name|atop
+argument_list|(
+name|first
+argument_list|)
+condition|;
+name|target_page
+operator|--
+control|)
+block|{
+specifier|extern
+name|struct
+name|pte
+modifier|*
+name|CMAP1
+decl_stmt|;
+specifier|extern
+name|caddr_t
+name|CADDR1
+decl_stmt|;
+comment|/* 		 * map page into kernel: valid, read/write, non-cacheable 		 */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|CMAP1
+operator|=
+name|PG_V
+operator||
+name|PG_KW
+operator||
+name|PG_N
+operator||
+name|ptoa
+argument_list|(
+name|target_page
+argument_list|)
+expr_stmt|;
+name|tlbflush
+argument_list|()
+expr_stmt|;
+comment|/* 		 * Test for alternating 1's and 0's 		 */
+name|filli
+argument_list|(
+literal|0xaaaaaaaa
+argument_list|,
+name|CADDR1
+argument_list|,
+name|PAGE_SIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|test_page
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|CADDR1
+argument_list|,
+literal|0xaaaaaaaa
+argument_list|)
+condition|)
+block|{
+name|Maxmem
+operator|=
+name|target_page
+expr_stmt|;
+name|badpages
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Test for alternating 0's and 1's 		 */
+name|filli
+argument_list|(
+literal|0x55555555
+argument_list|,
+name|CADDR1
+argument_list|,
+name|PAGE_SIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|test_page
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|CADDR1
+argument_list|,
+literal|0x55555555
+argument_list|)
+condition|)
+block|{
+name|Maxmem
+operator|=
+name|target_page
+expr_stmt|;
+name|badpages
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Test for all 1's 		 */
+name|filli
+argument_list|(
+literal|0xffffffff
+argument_list|,
+name|CADDR1
+argument_list|,
+name|PAGE_SIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|test_page
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|CADDR1
+argument_list|,
+literal|0xffffffff
+argument_list|)
+condition|)
+block|{
+name|Maxmem
+operator|=
+name|target_page
+expr_stmt|;
+name|badpages
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Test zeroing of page 		 */
+name|bzero
+argument_list|(
+name|CADDR1
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|test_page
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|CADDR1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * test of page failed 			 */
+name|Maxmem
+operator|=
+name|target_page
+expr_stmt|;
+name|badpages
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+block|}
+end_for
+
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"done.\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|maxmem
+operator|=
+name|Maxmem
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* highest page of usable memory */
+end_comment
+
+begin_expr_stmt
+name|avail_end
+operator|=
+operator|(
+name|maxmem
+operator|<<
+name|PAGE_SHIFT
+operator|)
+operator|-
+name|i386_round_page
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msgbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Initialize pointers to the two chunks of memory; for use 	 *	later in vm_page_startup. 	 */
 end_comment
 
 begin_comment
-comment|/* avail_start and avail_end are initialized in pmap_bootstrap */
+comment|/* avail_start is initialized in pmap_bootstrap */
 end_comment
 
 begin_expr_stmt
@@ -5673,18 +5945,90 @@ name|IdlePTD
 expr_stmt|;
 end_expr_stmt
 
+begin_macro
+unit|}  int
+name|test_page
+argument_list|(
+argument|address
+argument_list|,
+argument|pattern
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|address
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pattern
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+modifier|*
+name|x
+decl_stmt|;
+for|for
+control|(
+name|x
+operator|=
+name|address
+init|;
+name|x
+operator|<
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|address
+operator|+
+name|PAGE_SIZE
+operator|)
+condition|;
+name|x
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|x
+operator|!=
+name|pattern
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
 begin_comment
-unit|}
 comment|/*aston() { 	schednetisr(NETISR_AST); }*/
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|setsoftclock
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|schednetisr
 argument_list|(
@@ -5692,7 +6036,7 @@ name|NETISR_SCLK
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * insert an element into a queue   */
