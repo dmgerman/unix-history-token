@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inventory.c	5.1 (Berkeley) %G%"
+literal|"@(#)inventory.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,7 +363,7 @@ literal|'n'
 block|,
 literal|"n       down& right"
 block|,
-literal|'300'
+name|NULL
 block|,
 literal|"<SHIFT><dir>: run that way"
 block|,
@@ -371,7 +371,7 @@ literal|')'
 block|,
 literal|")       print current weapon"
 block|,
-literal|'300'
+name|NULL
 block|,
 literal|"<CTRL><dir>: run till adjacent"
 block|,
