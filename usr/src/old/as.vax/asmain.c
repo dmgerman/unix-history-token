@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.6 %G%"
+literal|"@(#)asmain.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.6"
+value|"VAX/UNIX Assembler V%G% 4.7"
 end_define
 
 begin_endif
@@ -685,7 +685,7 @@ comment|/* open a.out */
 name|roundsegments
 argument_list|()
 expr_stmt|;
-comment|/* round segments to FW */
+comment|/* round segments to DW */
 name|build_hdr
 argument_list|()
 expr_stmt|;
@@ -708,7 +708,7 @@ expr_stmt|;
 name|fillsegments
 argument_list|()
 expr_stmt|;
-comment|/* fill segments with 0 to FW */
+comment|/* fill segments with 0 to DW */
 name|reloc_syms
 argument_list|()
 expr_stmt|;
@@ -1676,7 +1676,7 @@ index|]
 operator|.
 name|e_xvalue
 argument_list|,
-name|FW
+name|DW
 argument_list|)
 expr_stmt|;
 name|usedot
@@ -1778,7 +1778,7 @@ name|round
 argument_list|(
 name|tsize
 argument_list|,
-name|FW
+name|DW
 argument_list|)
 expr_stmt|;
 for|for
@@ -1808,7 +1808,7 @@ index|]
 operator|.
 name|e_xvalue
 argument_list|,
-name|FW
+name|DW
 argument_list|)
 expr_stmt|;
 name|usedot
@@ -2145,7 +2145,7 @@ block|{
 name|int
 name|locindex
 decl_stmt|;
-comment|/* 	 *	Round text and data segments to FW by appending zeros 	 */
+comment|/* 	 *	Round text and data segments to DW by appending zeros 	 */
 for|for
 control|(
 name|locindex
@@ -2194,7 +2194,7 @@ index|]
 operator|.
 name|e_xvalue
 operator|&
-name|FW
+name|DW
 condition|)
 name|outb
 argument_list|(
