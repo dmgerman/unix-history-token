@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.2 1994/07/19 19:23:49 g89r4222 Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_destroy.c,v 1.2 1994/07/19 19:23:49 g89r4222 Exp $"
+literal|"$Id: kdb_destroy.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,9 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* database path and name */
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|char
 modifier|*
 name|file1
@@ -82,6 +85,15 @@ modifier|*
 name|file2
 decl_stmt|;
 comment|/* database file names */
+else|#
+directive|else
+name|char
+modifier|*
+name|file
+decl_stmt|;
+comment|/* database file names */
+endif|#
+directive|endif
 name|strcpy
 argument_list|(
 name|dbm
@@ -89,6 +101,9 @@ argument_list|,
 name|DBM_FILE
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|strcpy
 argument_list|(
 name|dbm1
@@ -114,6 +129,19 @@ argument_list|,
 literal|".pag"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|file
+operator|=
+name|strcat
+argument_list|(
+name|dbm
+argument_list|,
+literal|".db"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"You are about to destroy the Kerberos database "
@@ -158,6 +186,9 @@ operator|==
 literal|'Y'
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|unlink
@@ -174,6 +205,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|file
+argument_list|)
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
