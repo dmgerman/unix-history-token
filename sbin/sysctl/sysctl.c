@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.19 1998/11/08 19:27:43 phk Exp $"
+literal|"$Id: sysctl.c,v 1.20 1999/01/10 02:10:08 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2473,6 +2473,7 @@ name|j
 operator|<
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|errno
@@ -2494,6 +2495,7 @@ argument_list|,
 name|l2
 argument_list|)
 expr_stmt|;
+block|}
 name|l2
 operator|/=
 sizeof|sizeof

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.18 1999/06/21 06:21:05 jkoshy Exp $"
+literal|"$Id: shutdown.c,v 1.19 1999/06/21 16:06:21 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2029,6 +2029,7 @@ operator|*
 name|p
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -2076,6 +2077,7 @@ else|else
 name|badtime
 argument_list|()
 expr_stmt|;
+block|}
 name|unsetenv
 argument_list|(
 literal|"TZ"
