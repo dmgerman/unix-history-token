@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	3.22 (Berkeley) %G%"
+literal|"@(#)startup.c	3.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,9 @@ name|home
 operator|=
 literal|"."
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
