@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.4	82/02/15	*/
+comment|/*	raw_imp.c	4.5	82/02/16	*/
 end_comment
 
 begin_include
@@ -397,23 +397,6 @@ operator|->
 name|sin_addr
 operator|.
 name|s_imp
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"imp_output: net=%x, host=%x, imp=%x\n"
-argument_list|,
-name|ip
-operator|->
-name|il_network
-argument_list|,
-name|ip
-operator|->
-name|il_host
-argument_list|,
-name|ip
-operator|->
-name|il_impno
-argument_list|)
 expr_stmt|;
 name|ifp
 operator|=
