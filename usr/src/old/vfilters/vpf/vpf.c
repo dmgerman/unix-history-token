@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vpf.c	4.7 (Berkeley) %G%"
+literal|"@(#)vpf.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* default line length */
+end_comment
+
+begin_decl_stmt
+name|int
+name|indent
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default indent length */
 end_comment
 
 begin_decl_stmt
@@ -347,6 +359,40 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+operator|)
+operator|>=
+literal|0
+operator|&&
+name|i
+operator|<
+name|LINELN
+operator|-
+literal|1
+condition|)
+name|indent
+operator|=
+name|i
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 comment|/* Print input without throwing away 					   control chars and without putting 					   in page breaks. */
@@ -547,7 +593,7 @@ expr_stmt|;
 block|}
 name|col
 operator|=
-literal|0
+name|indent
 expr_stmt|;
 name|maxcol
 operator|=

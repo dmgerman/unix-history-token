@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vpsf.c	4.5 (Berkeley) %G%"
+literal|"@(#)vpsf.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,17 +118,39 @@ name|origin
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* first column of a page */
+end_comment
+
+begin_decl_stmt
+name|int
+name|origin_ind
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* origin plus indent */
+end_comment
+
 begin_decl_stmt
 name|int
 name|outline
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* current line number */
+end_comment
+
 begin_decl_stmt
 name|int
 name|outcol
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* current column number */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -145,7 +167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* page width */
+comment|/* default page width */
 end_comment
 
 begin_decl_stmt
@@ -157,7 +179,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* page length */
+comment|/* default page length */
+end_comment
+
+begin_decl_stmt
+name|int
+name|indent
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default indent */
 end_comment
 
 begin_decl_stmt
@@ -339,6 +373,40 @@ name|i
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+operator|)
+operator|>=
+literal|0
+operator|&&
+name|i
+operator|<
+name|LINELN
+operator|-
+literal|1
+condition|)
+name|indent
+operator|=
+name|i
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 comment|/* Print input without throwing away 					   control chars and without putting 					   in page breaks. */
@@ -355,6 +423,26 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+name|indent
+operator|+=
+name|literal
+condition|?
+literal|1
+else|:
+name|LMARG
+expr_stmt|;
+if|if
+condition|(
+name|indent
+operator|>=
+name|width
+condition|)
+name|indent
+operator|=
+name|width
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 	 * input file is open on file descriptor 0. 	 * vp should be open on file descriptor 1. 	 * The error log file is open on file descriptor 2. 	 */
 name|ioctl
 argument_list|(
@@ -454,16 +542,12 @@ block|}
 end_function
 
 begin_macro
-name|process
+name|set_up
 argument_list|()
 end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|c
-decl_stmt|;
 name|clear
 argument_list|(
 name|screen
@@ -476,16 +560,41 @@ argument_list|)
 expr_stmt|;
 name|origin
 operator|=
-name|LMARG
+literal|0
 expr_stmt|;
+name|origin_ind
+operator|=
 name|outcol
 operator|=
-name|LMARG
+name|origin
+operator|+
+name|indent
+expr_stmt|;
+name|outline
+operator|=
+literal|0
 expr_stmt|;
 name|cutmark
 argument_list|(
-name|LMARG
+name|origin
 argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|process
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|c
+decl_stmt|;
+name|set_up
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -519,13 +628,13 @@ operator|(
 operator|(
 name|outcol
 operator|-
-name|origin
+name|origin_ind
 operator|)
 operator||
 literal|07
 operator|)
 operator|+
-name|origin
+name|origin_ind
 operator|+
 literal|1
 expr_stmt|;
@@ -537,7 +646,7 @@ if|if
 condition|(
 name|outcol
 operator|>
-name|origin
+name|origin_ind
 condition|)
 name|outcol
 operator|--
@@ -548,7 +657,7 @@ literal|'\r'
 case|:
 name|outcol
 operator|=
-name|origin
+name|origin_ind
 expr_stmt|;
 break|break;
 case|case
@@ -573,21 +682,31 @@ block|{
 name|origin
 operator|+=
 name|width
+operator|+
+literal|1
+expr_stmt|;
+name|origin_ind
+operator|+=
+name|width
+operator|+
+literal|1
+expr_stmt|;
+name|cutmark
+argument_list|(
+name|origin
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|origin
 operator|+
 name|width
-operator|>
+operator|+
+literal|1
+operator|>=
 name|LINELN
 condition|)
 block|{
-name|cutmark
-argument_list|(
-name|origin
-argument_list|)
-expr_stmt|;
 name|oflush
 argument_list|()
 expr_stmt|;
@@ -597,15 +716,10 @@ name|outline
 operator|=
 literal|0
 expr_stmt|;
-name|cutmark
-argument_list|(
-name|origin
-argument_list|)
-expr_stmt|;
 block|}
 name|outcol
 operator|=
-name|origin
+name|origin_ind
 expr_stmt|;
 break|break;
 default|default:
@@ -621,8 +735,6 @@ condition|(
 name|outline
 operator|||
 name|origin
-operator|!=
-name|LMARG
 condition|)
 block|{
 name|cutmark
@@ -630,6 +742,8 @@ argument_list|(
 name|origin
 operator|+
 name|width
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|oflush
@@ -686,7 +800,11 @@ if|if
 condition|(
 name|outcol
 operator|>=
-name|LINELN
+name|origin
+operator|+
+name|width
+operator|+
+literal|1
 condition|)
 block|{
 name|outcol
@@ -875,32 +993,8 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|clear
-argument_list|(
-name|screen
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|screen
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|outline
-operator|=
-literal|0
-expr_stmt|;
-name|outcol
-operator|=
-name|LMARG
-expr_stmt|;
-name|origin
-operator|=
-name|LMARG
-expr_stmt|;
-name|cutmark
-argument_list|(
-name|LMARG
-argument_list|)
+name|set_up
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -973,8 +1067,6 @@ literal|0
 index|]
 index|[
 name|o
-operator|-
-name|LMARG
 index|]
 operator|=
 literal|'|'
@@ -985,8 +1077,6 @@ literal|1
 index|]
 index|[
 name|o
-operator|-
-name|LMARG
 index|]
 operator|=
 literal|'|'
@@ -999,8 +1089,6 @@ literal|1
 index|]
 index|[
 name|o
-operator|-
-name|LMARG
 index|]
 operator|=
 literal|'|'
@@ -1013,8 +1101,6 @@ literal|2
 index|]
 index|[
 name|o
-operator|-
-name|LMARG
 index|]
 operator|=
 literal|'|'
