@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.25 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2540,6 +2540,18 @@ name|nfrontp
 operator|++
 operator|=
 name|c
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\r'
+condition|)
+operator|*
+name|nfrontp
+operator|++
+operator|=
+literal|'\n'
 expr_stmt|;
 block|}
 if|if
