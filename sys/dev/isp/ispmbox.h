@@ -3115,21 +3115,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RATE_ONEGB
+name|ICBZOPT_RATE_ONEGB
 value|(MBGSD_ONEGB<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RATE_TWOGB
+name|ICBZOPT_RATE_TWOGB
 value|(MBGSD_TWOGB<< 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RATE_AUTO
+name|ICBZOPT_RATE_AUTO
 value|(MBGSD_AUTO<< 14)
 end_define
 

@@ -2285,7 +2285,23 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for everything to finish firing up... 	 */
+comment|/* 	 * Wait for everything to finish firing up. 	 * 	 * Avoid doing this on the 2312 because you can generate a PCI 	 * parity error (chip breakage). 	 */
+if|if
+condition|(
+name|IS_2300
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|USEC_DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|loops
 operator|=
 name|MBOX_DELAY_COUNT
@@ -2325,6 +2341,7 @@ literal|"MBOX_BUSY never cleared on reset"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 comment|/* 	 * Up until this point we've done everything by just reading or 	 * setting registers. From this point on we rely on at least *some* 	 * kind of firmware running in the card. 	 */
@@ -5250,9 +5267,9 @@ condition|)
 block|{
 name|icbp
 operator|->
-name|icb_xfwoptions
+name|icb_zfwoptions
 operator||=
-name|ICBXOPT_RATE_ONEGB
+name|ICBZOPT_RATE_ONEGB
 expr_stmt|;
 block|}
 elseif|else
@@ -5267,18 +5284,18 @@ condition|)
 block|{
 name|icbp
 operator|->
-name|icb_xfwoptions
+name|icb_zfwoptions
 operator||=
-name|ICBXOPT_RATE_TWOGB
+name|ICBZOPT_RATE_TWOGB
 expr_stmt|;
 block|}
 else|else
 block|{
 name|icbp
 operator|->
-name|icb_xfwoptions
+name|icb_zfwoptions
 operator||=
-name|ICBXOPT_RATE_AUTO
+name|ICBZOPT_RATE_AUTO
 expr_stmt|;
 block|}
 block|}
