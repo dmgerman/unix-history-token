@@ -6241,10 +6241,9 @@ name|rootdev
 operator|!=
 name|NULL
 operator|&&
-name|devsw
-argument_list|(
 name|rootdev
-argument_list|)
+operator|->
+name|si_devsw
 operator|!=
 name|NULL
 condition|)
