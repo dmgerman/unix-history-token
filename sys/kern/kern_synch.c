@@ -1232,25 +1232,6 @@ argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-operator|||
-name|mtx
-operator|==
-operator|&
-name|vm_mtx
-argument_list|,
-operator|(
-literal|"sleeping with vm_mtx held."
-operator|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
