@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.37 (Berkeley) %G%"
+literal|"@(#)print.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,19 +43,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fts.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fts.h>
 end_include
 
 begin_include
@@ -73,19 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -97,13 +85,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -740,16 +746,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|0
-argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printscol
@@ -1091,6 +1090,9 @@ name|printf
 argument_list|(
 literal|"%*lu "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|inodefield
 argument_list|,
 name|sp
@@ -1108,6 +1110,9 @@ name|printf
 argument_list|(
 literal|"%*qd "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sizefield
 argument_list|,
 name|howmany
