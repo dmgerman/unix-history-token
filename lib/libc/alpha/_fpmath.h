@@ -54,5 +54,23 @@ parameter_list|)
 value|((void)0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LDBL_IMPLICIT_NBIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDBL_TO_ARRAY32
+parameter_list|(
+name|u
+parameter_list|,
+name|a
+parameter_list|)
+value|do {			\ 	(a)[0] = (uint32_t)(u).bits.manl;		\ 	(a)[1] = (uint32_t)(u).bits.manh;		\ } while(0)
+end_define
+
 end_unit
 
