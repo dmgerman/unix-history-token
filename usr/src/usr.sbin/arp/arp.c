@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.14 (Berkeley) %G%"
+literal|"@(#)arp.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1033,10 +1033,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|flags
+operator||=
+name|RTF_ANNOUNCE
+expr_stmt|;
 name|doing_proxy
 operator|=
 name|SIN_PROXY
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
