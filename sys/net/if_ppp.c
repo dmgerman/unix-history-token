@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.10 1995/02/13 02:09:13 ache Exp $ */
+comment|/* $Id: if_ppp.c,v 1.11 1995/03/20 19:20:42 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -6315,12 +6315,25 @@ name|sc_bytesrcvd
 expr_stmt|;
 if|if
 condition|(
-name|c
+operator|!
+operator|(
+name|tp
+operator|->
+name|t_state
 operator|&
-name|TTY_FE
+name|TS_CARR_ON
+operator|)
+operator|&&
+operator|!
+operator|(
+name|tp
+operator|->
+name|t_cflag
+operator|&
+name|CLOCAL
+operator|)
 condition|)
 block|{
-comment|/* framing error or overrun on this char - abort packet */
 if|if
 condition|(
 name|sc
@@ -6331,7 +6344,37 @@ name|SC_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"ppp%d: bad char %x\n"
+literal|"ppp%d: no carrier\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|flush
+goto|;
+block|}
+if|if
+condition|(
+name|c
+operator|&
+name|TTY_ERRORMASK
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|SC_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"ppp%d: line error %x\n"
 argument_list|,
 name|sc
 operator|->
@@ -6340,6 +6383,8 @@ operator|.
 name|if_unit
 argument_list|,
 name|c
+operator|&
+name|TTY_ERRORMASK
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6348,7 +6393,7 @@ goto|;
 block|}
 name|c
 operator|&=
-literal|0xff
+name|TTY_CHARMASK
 expr_stmt|;
 if|if
 condition|(
