@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Grand digital clock for curses compatible terminals  * Usage: grdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $FreeBSD$  */
+comment|/*  * Grand digital clock for curses compatible terminals  * Usage: grdc [-st] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *        -t: output time in 12-hour format  *  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * modified 03-25-03 for 12 hour option  *     - Samy Al Bahra<samy@kerneled.com>  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -275,6 +275,11 @@ decl_stmt|;
 name|int
 name|scrol
 decl_stmt|;
+name|int
+name|t12
+decl_stmt|;
+name|t12
+operator|=
 name|scrol
 operator|=
 literal|0
@@ -290,7 +295,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s"
+literal|"ts"
 argument_list|)
 operator|)
 operator|!=
@@ -306,6 +311,14 @@ case|case
 literal|'s'
 case|:
 name|scrol
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|t12
 operator|=
 literal|1
 expr_stmt|;
@@ -646,6 +659,55 @@ argument_list|,
 literal|14
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t12
+condition|)
+block|{
+if|if
+condition|(
+name|tm
+operator|->
+name|tm_hour
+operator|>
+literal|12
+condition|)
+block|{
+name|tm
+operator|->
+name|tm_hour
+operator|-=
+literal|12
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|YBASE
+operator|+
+literal|5
+argument_list|,
+name|XBASE
+operator|+
+literal|52
+argument_list|,
+literal|"PM"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|mvaddstr
+argument_list|(
+name|YBASE
+operator|+
+literal|5
+argument_list|,
+name|XBASE
+operator|+
+literal|52
+argument_list|,
+literal|"AM"
+argument_list|)
+expr_stmt|;
+block|}
 name|set
 argument_list|(
 name|tm
@@ -1220,7 +1282,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: grdc [-s] [n]\n"
+literal|"usage: grdc [-st] [n]\n"
 argument_list|)
 expr_stmt|;
 name|exit
