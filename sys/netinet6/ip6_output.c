@@ -3392,13 +3392,15 @@ operator|*
 argument_list|)
 decl_stmt|;
 name|u_int32_t
-name|dummy1
+name|dummy
 decl_stmt|;
 comment|/* XXX unused */
 name|u_int32_t
-name|dummy2
+name|plen
+init|=
+literal|0
 decl_stmt|;
-comment|/* XXX unused */
+comment|/* XXX: ip6_process will check the value */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -3477,10 +3479,10 @@ name|ip6_hbh
 argument_list|)
 argument_list|,
 operator|&
-name|dummy1
+name|dummy
 argument_list|,
 operator|&
-name|dummy2
+name|plen
 argument_list|)
 operator|<
 literal|0
