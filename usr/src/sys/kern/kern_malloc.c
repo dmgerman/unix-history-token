@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -130,7 +130,8 @@ comment|/*  * Allocate a block of memory  */
 end_comment
 
 begin_function
-name|qaddr_t
+name|void
+modifier|*
 name|malloc
 parameter_list|(
 name|size
@@ -264,7 +265,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
 operator|)
 return|;
 block|}
@@ -389,7 +394,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
 operator|)
 return|;
 block|}
@@ -773,7 +782,8 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|qaddr_t
+name|void
+operator|*
 operator|)
 name|va
 operator|)
@@ -909,7 +919,8 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|addr
 decl_stmt|;
 name|int
