@@ -1202,7 +1202,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*-  * mbuf external reference count management macros.  *  * MEXT_IS_REF(m): true if (m) is not the only mbuf referencing  *     the external buffer ext_buf.  *  * MEXT_REM_REF(m): remove reference to m_ext object.  *  * MEXT_ADD_REF(m): add reference to m_ext object already  *     referred to by (m).  */
+comment|/*-  * mbuf external reference count management macros.  *  * MEXT_IS_REF(m): true if (m) is not the only mbuf referencing  *     the external buffer ext_buf.  *  * MEXT_REM_REF(m): remove reference to m_ext object.  *  * MEXT_ADD_REF(m): add reference to m_ext object already  *     referred to by (m). XXX Note that it is VERY important that you  *     always set the second mbuf's m_ext.ref_cnt to point to the first  *     one's (i.e., n->m_ext.ref_cnt = m->m_ext.ref_cnt) AFTER you run  *     MEXT_ADD_REF(m).  This is because m might have a lazy initialized  *     ref_cnt (NULL) before this is run and it will only be looked up  *     from here.  We should make MEXT_ADD_REF() always take two mbufs  *     as arguments so that it can take care of this itself.  */
 end_comment
 
 begin_define
@@ -1212,7 +1212,7 @@ name|MEXT_IS_REF
 parameter_list|(
 name|m
 parameter_list|)
-value|(*((m)->m_ext.ref_cnt)> 1)
+value|(((m)->m_ext.ref_cnt != NULL)			\&& (*((m)->m_ext.ref_cnt)> 1))
 end_define
 
 begin_define
@@ -1222,7 +1222,7 @@ name|MEXT_REM_REF
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	KASSERT(*((m)->m_ext.ref_cnt)> 0, ("m_ext refcnt< 0"));	\ 	atomic_subtract_int((m)->m_ext.ref_cnt, 1);			\ } while(0)
+value|do {						\ 	KASSERT((m)->m_ext.ref_cnt != NULL, ("m_ext refcnt lazy NULL")); \ 	KASSERT(*((m)->m_ext.ref_cnt)> 0, ("m_ext refcnt< 0"));	\ 	atomic_subtract_int((m)->m_ext.ref_cnt, 1);			\ } while(0)
 end_define
 
 begin_define
@@ -1232,7 +1232,7 @@ name|MEXT_ADD_REF
 parameter_list|(
 name|m
 parameter_list|)
-value|atomic_add_int((m)->m_ext.ref_cnt, 1)
+value|do {						\ 	if ((m)->m_ext.ref_cnt == NULL) {				\ 		KASSERT((m)->m_ext.ext_type == EXT_CLUSTER ||		\ 		    (m)->m_ext.ext_type == EXT_PACKET,			\ 		    ("Unexpected mbuf type has lazy refcnt"));		\ 		(m)->m_ext.ref_cnt = (u_int *)uma_find_refcnt(		\ 		    zone_clust, (m)->m_ext.ext_buf);			\ 		*((m)->m_ext.ref_cnt) = 2;				\ 	} else								\ 		atomic_add_int((m)->m_ext.ref_cnt, 1);			\ } while (0)
 end_define
 
 begin_ifdef
