@@ -265,6 +265,35 @@ begin_comment
 comment|/* ms = 5 s */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USB_CDEV_MAJOR
+value|108
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cdevsw
+name|usb_cdevsw
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|usbd_status
 name|usbd_open_pipe

@@ -528,8 +528,7 @@ comment|/* parms */
 name|noparms
 block|,
 comment|/* maj */
-operator|-
-literal|1
+name|USB_CDEV_MAJOR
 block|,
 comment|/* dump */
 name|nodump
