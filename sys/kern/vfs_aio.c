@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_vfs_aio.h"
 end_include
 
