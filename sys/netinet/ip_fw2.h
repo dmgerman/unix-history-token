@@ -131,9 +131,6 @@ comment|/* u32 = icmp bitmap		*/
 name|O_TCPOPTS
 block|,
 comment|/* arg1 = 2*u8 bitmap		*/
-name|O_IPOPTS
-block|,
-comment|/* arg1 = 2*u8 bitmap		*/
 name|O_PROBE_STATE
 block|,
 comment|/* none				*/
@@ -537,7 +534,11 @@ name|u_int16_t
 name|rulenum
 decl_stmt|;
 comment|/* rule number			*/
-name|u_int16_t
+name|u_int8_t
+name|set
+decl_stmt|;
+comment|/* rule set (0..31)		*/
+name|u_int8_t
 name|_pad
 decl_stmt|;
 comment|/* padding			*/
