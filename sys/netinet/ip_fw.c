@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.48 1996/08/13 19:43:40 pst Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.49 1996/08/31 21:05:20 alex Exp $  */
 end_comment
 
 begin_comment
@@ -529,6 +529,11 @@ name|ip
 operator|,
 name|int
 name|counter
+operator|,
+expr|struct
+name|ifnet
+operator|*
+name|rif
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1155,6 +1160,11 @@ name|ip
 parameter_list|,
 name|int
 name|counter
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|rif
 parameter_list|)
 block|{
 name|struct
@@ -1417,6 +1427,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|printf
+argument_list|(
+literal|" via %s%d"
+argument_list|,
+name|rif
+operator|->
+name|if_name
+argument_list|,
+name|rif
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2031,6 +2054,8 @@ argument_list|,
 name|ip
 argument_list|,
 name|frag_counter
+argument_list|,
+name|rif
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2250,6 +2275,8 @@ argument_list|,
 name|f
 operator|->
 name|fw_pcnt
+argument_list|,
+name|rif
 argument_list|)
 expr_stmt|;
 block|}
@@ -2292,6 +2319,8 @@ argument_list|,
 name|f
 operator|->
 name|fw_pcnt
+argument_list|,
+name|rif
 argument_list|)
 expr_stmt|;
 block|}
@@ -2322,6 +2351,8 @@ argument_list|,
 name|f
 operator|->
 name|fw_pcnt
+argument_list|,
+name|rif
 argument_list|)
 expr_stmt|;
 block|}
@@ -2340,6 +2371,8 @@ argument_list|,
 name|f
 operator|->
 name|fw_pcnt
+argument_list|,
+name|rif
 argument_list|)
 expr_stmt|;
 block|}
