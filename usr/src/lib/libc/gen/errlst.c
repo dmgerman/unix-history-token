@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1985 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1982, 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.12 (Berkeley) %G%"
+literal|"@(#)errlst.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sigsetops.c	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sigsetops.c	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sigsetops.c	5.5 (Berkeley) %G%"
+literal|"@(#)sigsetops.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
