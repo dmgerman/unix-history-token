@@ -328,6 +328,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|PREEMPTION
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOPAGES
 value|2
 end_define

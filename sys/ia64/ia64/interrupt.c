@@ -1852,11 +1852,8 @@ operator|=
 name|ithread_schedule
 argument_list|(
 name|ithd
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX:no preemption for now */
 name|KASSERT
 argument_list|(
 name|error

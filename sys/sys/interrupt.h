@@ -591,9 +591,6 @@ name|struct
 name|ithd
 modifier|*
 name|ithread
-parameter_list|,
-name|int
-name|do_switch
 parameter_list|)
 function_decl|;
 end_function_decl

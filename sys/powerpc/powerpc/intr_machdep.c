@@ -1265,8 +1265,6 @@ argument_list|(
 name|ih
 operator|->
 name|ih_ithd
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

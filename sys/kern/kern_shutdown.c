@@ -1072,9 +1072,14 @@ name|nbusy
 decl_stmt|,
 name|pbusy
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PREEMPTION
 name|int
 name|subiter
 decl_stmt|;
+endif|#
+directive|endif
 name|waittime
 operator|=
 literal|0
@@ -1214,13 +1219,26 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|curthread
-operator|!=
-name|NULL
-condition|)
-block|{
+ifdef|#
+directive|ifdef
+name|PREEMPTION
+comment|/* 			 * Drop Giant and spin for a while to allow 			 * interrupt threads to run. 			 */
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|50000
+operator|*
+name|iter
+argument_list|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+comment|/* 			 * Drop Giant and context switch several times to 			 * allow interrupt threads to run. 			 */
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
@@ -1246,7 +1264,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Allow interrupt threads to run 					 */
 name|mi_switch
 argument_list|(
 name|SW_VOL
@@ -1269,15 +1286,8 @@ block|}
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-name|DELAY
-argument_list|(
-literal|50000
-operator|*
-name|iter
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|printf
 argument_list|(

@@ -850,9 +850,6 @@ operator|=
 name|ithread_schedule
 argument_list|(
 name|it
-argument_list|,
-operator|!
-name|cold
 argument_list|)
 expr_stmt|;
 block|}

@@ -1809,9 +1809,6 @@ operator|=
 name|ithread_schedule
 argument_list|(
 name|ithd
-argument_list|,
-operator|!
-name|cold
 argument_list|)
 expr_stmt|;
 name|KASSERT

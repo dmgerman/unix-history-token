@@ -2956,6 +2956,9 @@ name|turnstile
 modifier|*
 name|ts
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PREEMPTION
 name|struct
 name|thread
 modifier|*
@@ -2964,6 +2967,8 @@ decl_stmt|,
 modifier|*
 name|td1
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mtx_recursed
@@ -3112,6 +3117,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|PREEMPTION
 comment|/* XXX */
 name|td1
 operator|=
@@ -3120,6 +3128,8 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MUTEX_WAKE_ALL
@@ -3207,6 +3217,9 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PREEMPTION
 comment|/* 	 * XXX: This is just a hack until preemption is done.  However, 	 * once preemption is done we need to either wrap the 	 * turnstile_signal() and release of the actual lock in an 	 * extra critical section or change the preemption code to 	 * always just set a flag and never do instant-preempts. 	 */
 name|td
 operator|=
@@ -3378,6 +3391,8 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _rel_spin_lock() macro for the details.  */

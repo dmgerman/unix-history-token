@@ -346,6 +346,12 @@ begin_comment
 comment|/* increment of stack/NBPG */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PREEMPTION
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

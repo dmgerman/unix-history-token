@@ -846,6 +846,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_OWEPREEMPT
+value|0x000200
+end_define
+
+begin_comment
+comment|/* Thread has a pending preemption. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_ASTPENDING
 value|0x000800
 end_define
@@ -3832,6 +3843,18 @@ name|struct
 name|proc
 modifier|*
 name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|maybe_preempt
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

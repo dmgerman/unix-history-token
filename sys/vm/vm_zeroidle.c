@@ -577,6 +577,9 @@ operator|+=
 name|vm_page_zero_idle
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PREEMPTION
 if|if
 condition|(
 name|pages
@@ -611,6 +614,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
