@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_put.c	5.5 (Berkeley) %G%"
+literal|"@(#)bt_put.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1217,7 +1217,13 @@ name|bt_last
 operator|.
 name|index
 operator|=
+name|cmp
+condition|?
 operator|++
+name|e
+operator|.
+name|index
+else|:
 name|e
 operator|.
 name|index
