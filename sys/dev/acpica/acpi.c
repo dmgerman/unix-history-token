@@ -5317,22 +5317,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
-comment|/* Create any static children by calling device identify methods. */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OBJECTS
-operator|,
-literal|"device identify routines\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|bus_generic_probe
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-comment|/*      * Scan the namespace and insert placeholders for all the devices that      * we find.      *      * Note that we use AcpiWalkNamespace rather than AcpiGetDevices because      * we want to create nodes for all devices, not just those that are      * currently present. (This assumes that we don't want to create/remove      * devices as they appear, which might be smarter.)      */
+comment|/*      * Scan the namespace and insert placeholders for all the devices that      * we find.  We also probe/attach any early devices.      *      * Note that we use AcpiWalkNamespace rather than AcpiGetDevices because      * we want to create nodes for all devices, not just those that are      * currently present. (This assumes that we don't want to create/remove      * devices as they appear, which might be smarter.)      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -5399,7 +5384,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Scan all of the child devices we have created and let them probe/attach.      */
+comment|/* Create any static children by calling device identify methods. */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OBJECTS
+operator|,
+literal|"device identify routines\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|bus_generic_probe
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
+comment|/* Probe/attach all children, created staticly and from the namespace. */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
