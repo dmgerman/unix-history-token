@@ -1014,7 +1014,7 @@ parameter_list|(
 name|fp
 parameter_list|)
 define|\
-value|do {								\ 		FILE_LOCK(fp);						\ 		fhold_locked(fp);					\ 		FILE_UNLOCK(fp);					\ 	} while (0)
+value|do {								\ 		FILE_LOCK(fp);						\ 		(fp)->f_count++;					\ 		FILE_UNLOCK(fp);					\ 	} while (0)
 end_define
 
 begin_decl_stmt
