@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.71	83/02/27	*/
+comment|/*	hp.c	4.72	83/03/11	*/
 end_comment
 
 begin_ifdef
@@ -312,23 +312,11 @@ block|,
 literal|759
 block|,
 comment|/* F=cyl 759 thru 822 */
-ifdef|#
-directive|ifdef
-name|ARPA
-literal|81984
-block|,
-literal|310
-block|,
-comment|/* G=cyl 310 thru 822 */
-else|#
-directive|else
 literal|82144
 block|,
 literal|309
 block|,
 comment|/* G=cyl 309 thru 822 */
-endif|#
-directive|endif
 literal|0
 block|,
 literal|0
