@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.14 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.15 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.14 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.15 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,6 +733,15 @@ goto|goto
 name|tempfail2
 goto|;
 block|}
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_CLOSED
+condition|)
+block|{
 name|mci
 operator|->
 name|mci_state
@@ -740,6 +749,8 @@ operator|=
 name|MCIS_OPEN
 expr_stmt|;
 return|return;
+block|}
+comment|/* got a 421 error code during startup */
 name|tempfail1
 label|:
 name|tempfail2
