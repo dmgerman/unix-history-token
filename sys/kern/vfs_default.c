@@ -1133,7 +1133,7 @@ decl_stmt|;
 name|int
 name|maxretry
 init|=
-literal|100
+literal|1000
 decl_stmt|;
 comment|/* large, arbitrarily chosen */
 name|VI_LOCK
@@ -1177,7 +1177,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Flush all dirty buffers associated with a block device. 	 */
+comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
 name|loop2
 label|:
 name|s
@@ -1388,13 +1388,6 @@ goto|goto
 name|loop1
 goto|;
 block|}
-name|vprint
-argument_list|(
-literal|"fsync: giving up on dirty"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EAGAIN
@@ -1403,6 +1396,19 @@ block|}
 block|}
 name|VI_UNLOCK
 argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EAGAIN
+condition|)
+name|vprint
+argument_list|(
+literal|"fsync: giving up on dirty"
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
