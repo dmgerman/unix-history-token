@@ -84,21 +84,6 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_struct
-struct|struct
-name|cpu_nameclass
-block|{
-name|char
-modifier|*
-name|cpu_name
-decl_stmt|;
-name|int
-name|cpu_class
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|int

@@ -307,10 +307,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_struct
 specifier|static
-name|struct
-name|cpu_nameclass
+struct|struct
+block|{
+name|char
+modifier|*
+name|cpu_name
+decl_stmt|;
+name|int
+name|cpu_class
+decl_stmt|;
+block|}
 name|amd64_cpus
 index|[]
 init|=
@@ -330,8 +338,8 @@ block|}
 block|,
 comment|/* CPU_SLEDGEHAMMER */
 block|}
-decl_stmt|;
-end_decl_stmt
+struct|;
+end_struct
 
 begin_function
 name|void
