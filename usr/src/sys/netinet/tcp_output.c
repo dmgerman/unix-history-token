@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1486,37 +1486,6 @@ name|ip_ttl
 operator|=
 name|TCP_TTL
 expr_stmt|;
-if|if
-condition|(
-name|so
-operator|->
-name|so_options
-operator|&
-name|SO_DONTROUTE
-condition|)
-name|error
-operator|=
-name|ip_output
-argument_list|(
-name|m
-argument_list|,
-name|tp
-operator|->
-name|t_inpcb
-operator|->
-name|inp_options
-argument_list|,
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|IP_ROUTETOIF
-argument_list|)
-expr_stmt|;
-else|else
 name|error
 operator|=
 name|ip_output
@@ -1536,7 +1505,11 @@ name|t_inpcb
 operator|->
 name|inp_route
 argument_list|,
-literal|0
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DONTROUTE
 argument_list|)
 expr_stmt|;
 if|if

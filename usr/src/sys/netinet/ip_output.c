@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -342,7 +342,8 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
-comment|/* 		 * If routing to interface only, 		 * short circuit routing lookup. 		 */
+block|}
+comment|/* 	 * If routing to interface only, 	 * short circuit routing lookup. 	 */
 if|if
 condition|(
 name|flags
@@ -388,19 +389,17 @@ name|ia
 operator|->
 name|ia_ifp
 expr_stmt|;
-goto|goto
-name|gotif
-goto|;
 block|}
-name|rtalloc
-argument_list|(
-name|ro
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
+else|else
+block|{
+comment|/* 		 * If there is a cached route, 		 * check that it is to the same destination 		 * and is still up.  If not, free it and try again. 		 */
 if|if
 condition|(
+name|ro
+operator|->
+name|ro_rt
+operator|&&
+operator|(
 operator|(
 name|ro
 operator|->
@@ -412,10 +411,22 @@ name|RTF_UP
 operator|)
 operator|==
 literal|0
+operator|||
+name|dst
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|)
 condition|)
 block|{
-comment|/* 		 * The old route has gone away; try for a new one. 		 */
-name|rtfree
+name|RTFREE
 argument_list|(
 name|ro
 operator|->
@@ -426,14 +437,35 @@ name|ro
 operator|->
 name|ro_rt
 operator|=
-name|NULL
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|)
+literal|0
 expr_stmt|;
+name|dst
+operator|->
+name|sin_addr
+operator|=
+name|ip
+operator|->
+name|ip_dst
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+operator|==
+literal|0
+condition|)
 name|rtalloc
 argument_list|(
 name|ro
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ro
@@ -498,8 +530,7 @@ name|ro_rt
 operator|->
 name|rt_gateway
 expr_stmt|;
-name|gotif
-label|:
+block|}
 ifndef|#
 directive|ifndef
 name|notdef
