@@ -1375,7 +1375,13 @@ name|flags
 operator|&
 name|RPAD
 operator|&&
+operator|(
 name|size
+operator|+
+name|chdr
+operator|.
+name|lname
+operator|)
 operator|&
 literal|1
 operator|&&
