@@ -475,15 +475,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|char
-name|bootpath
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef

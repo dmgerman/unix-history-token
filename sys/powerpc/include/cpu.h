@@ -120,14 +120,6 @@ parameter_list|)
 value|delay(n)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|bootpath
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
