@@ -275,8 +275,6 @@ argument_list|(
 name|device
 argument_list|,
 name|O_WRONLY
-argument_list|,
-literal|0660
 argument_list|)
 operator|)
 operator|<
