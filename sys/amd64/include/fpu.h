@@ -244,18 +244,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|fpusave
-parameter_list|(
-name|struct
-name|savefpu
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|fpusetregs
 parameter_list|(
 name|struct
