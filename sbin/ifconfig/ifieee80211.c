@@ -1696,19 +1696,16 @@ argument_list|,
 operator|&
 name|ireq
 argument_list|)
-operator|<
-literal|0
-operator|||
+operator|!=
+operator|-
+literal|1
+operator|&&
 name|ireq
 operator|.
 name|i_val
-operator|==
+operator|!=
 name|IEEE80211_WEP_NOSUP
 condition|)
-goto|goto
-name|nowep
-goto|;
-else|else
 block|{
 name|printf
 argument_list|(
@@ -1941,14 +1938,18 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|spacer
+operator|==
+literal|' '
+condition|)
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|nowep
-label|:
 name|end
 label|:
 return|return;
