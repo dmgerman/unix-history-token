@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mouse.h,v 1.12 1998/11/22 11:57:59 yokota Exp $  *	from: i386/include mouse.h,v 1.10  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mouse.h,v 1.13 1999/07/12 15:16:13 yokota Exp $  *	from: i386/include mouse.h,v 1.10  */
 end_comment
 
 begin_ifndef
@@ -511,6 +511,13 @@ name|MOUSE_MODEL_KIDSPAD
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_VERSAPAD
+value|9
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -727,6 +734,17 @@ end_define
 
 begin_comment
 comment|/* Genius Kidspad */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_VERSAPAD
+value|15
+end_define
+
+begin_comment
+comment|/* Interlink VersaPad, 6 bytes */
 end_comment
 
 begin_define
@@ -1312,6 +1330,164 @@ define|#
 directive|define
 name|MOUSE_PS2PLUS_SYNC
 value|0x48
+end_define
+
+begin_comment
+comment|/* Interlink VersaPad (serial I/F) data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_PACKETSIZE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_IN_USE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_SYNCMASK
+value|0xc3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_SYNC
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_BUTTONS
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_BUTTON1DOWN
+value|0x20
+end_define
+
+begin_comment
+comment|/* left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_BUTTON2DOWN
+value|0x00
+end_define
+
+begin_comment
+comment|/* middle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_BUTTON3DOWN
+value|0x10
+end_define
+
+begin_comment
+comment|/* right */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VERSA_TAP
+value|0x08
+end_define
+
+begin_comment
+comment|/* Interlink VersaPad (PS/2 I/F) data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_PACKETSIZE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_IN_USE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_SYNCMASK
+value|0xe8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_SYNC
+value|0xc8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_BUTTONS
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_BUTTON1DOWN
+value|0x04
+end_define
+
+begin_comment
+comment|/* left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_BUTTON2DOWN
+value|0x00
+end_define
+
+begin_comment
+comment|/* middle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_BUTTON3DOWN
+value|0x01
+end_define
+
+begin_comment
+comment|/* right */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2VERSA_TAP
+value|0x02
 end_define
 
 begin_comment
