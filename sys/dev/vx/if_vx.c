@@ -3871,6 +3871,7 @@ name|NS
 case|case
 name|AF_NS
 case|:
+block|{
 specifier|register
 name|struct
 name|ns_addr
@@ -3959,6 +3960,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 endif|#
 directive|endif
 default|default:
