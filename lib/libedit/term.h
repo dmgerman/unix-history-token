@@ -517,7 +517,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|protected
-name|void
+name|int
 name|term__putc
 name|__P
 argument_list|(

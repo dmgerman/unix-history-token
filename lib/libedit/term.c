@@ -81,12 +81,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"termcap.h"
+file|<termcap.h>
 end_include
-
-begin_comment
-comment|/* XXX: should be<termcap.h> */
-end_comment
 
 begin_include
 include|#
@@ -6173,7 +6169,7 @@ end_comment
 
 begin_function
 name|protected
-name|void
+name|int
 name|term__putc
 parameter_list|(
 name|c
@@ -6182,16 +6178,14 @@ name|int
 name|c
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
+return|return
 name|fputc
 argument_list|(
 name|c
 argument_list|,
 name|term_outfile
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
