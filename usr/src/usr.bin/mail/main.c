@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)main.c	2.14 (Berkeley) %G%"
+literal|"@(#)main.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,6 +592,15 @@ literal|"verbose"
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+comment|/* 			 * We're interactive 			 */
+name|intty
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
