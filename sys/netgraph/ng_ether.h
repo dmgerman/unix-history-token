@@ -96,6 +96,15 @@ comment|/* get the interface name */
 name|NGM_ETHER_GET_IFINDEX
 block|,
 comment|/* get the interface global index # */
+name|NGM_ETHER_GET_ENADDR
+block|,
+comment|/* get Ethernet address */
+name|NGM_ETHER_SET_PROMISC
+block|,
+comment|/* enable/disable promiscuous mode */
+name|NGM_ETHER_SET_AUTOSRC
+block|,
+comment|/* enable/disable src addr override */
 block|}
 enum|;
 end_enum
