@@ -1558,6 +1558,14 @@ name|km_curthread
 operator|=
 name|NULL
 expr_stmt|;
+name|curthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator||=
+name|PTHREAD_SCOPE_SYSTEM
+expr_stmt|;
 name|_thr_active_threads
 operator|=
 literal|1
@@ -6689,7 +6697,7 @@ name|restart
 operator|=
 name|_thread_sigact
 index|[
-literal|1
+name|i
 operator|-
 literal|1
 index|]
