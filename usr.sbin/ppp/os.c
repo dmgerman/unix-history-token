@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.22 1997/06/09 03:27:31 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.23 1997/06/13 02:07:30 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -213,25 +213,21 @@ specifier|static
 name|int
 name|SetIpDevice
 parameter_list|(
-name|myaddr
-parameter_list|,
-name|hisaddr
-parameter_list|,
-name|netmask
-parameter_list|,
-name|updown
-parameter_list|)
 name|struct
 name|in_addr
 name|myaddr
-decl_stmt|,
+parameter_list|,
+name|struct
+name|in_addr
 name|hisaddr
-decl_stmt|,
+parameter_list|,
+name|struct
+name|in_addr
 name|netmask
-decl_stmt|;
+parameter_list|,
 name|int
 name|updown
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in
@@ -482,7 +478,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      *  Set interface address      */
+comment|/*      * Set interface address      */
 name|sin
 operator|=
 operator|(
@@ -521,7 +517,7 @@ operator|*
 name|sin
 argument_list|)
 expr_stmt|;
-comment|/*      *  Set destination address      */
+comment|/*      * Set destination address      */
 name|sin
 operator|=
 operator|(
@@ -560,7 +556,7 @@ operator|*
 name|sin
 argument_list|)
 expr_stmt|;
-comment|/*      */
+comment|/*      * */
 name|addr
 operator|=
 name|ntohl
@@ -598,7 +594,7 @@ name|mask
 operator|=
 name|IN_CLASSC_NET
 expr_stmt|;
-comment|/*      *  if subnet mask is given, use it instead of class mask.      */
+comment|/*      * if subnet mask is given, use it instead of class mask.      */
 if|if
 condition|(
 name|netmask
@@ -889,20 +885,18 @@ begin_function
 name|int
 name|OsSetIpaddress
 parameter_list|(
-name|myaddr
-parameter_list|,
-name|hisaddr
-parameter_list|,
-name|netmask
-parameter_list|)
 name|struct
 name|in_addr
 name|myaddr
-decl_stmt|,
+parameter_list|,
+name|struct
+name|in_addr
 name|hisaddr
-decl_stmt|,
+parameter_list|,
+name|struct
+name|in_addr
 name|netmask
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1248,11 +1242,9 @@ begin_function
 name|int
 name|OsInterfaceDown
 parameter_list|(
-name|final
-parameter_list|)
 name|int
 name|final
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|in_addr
@@ -1398,19 +1390,15 @@ begin_function
 name|void
 name|OsSetInterfaceParams
 parameter_list|(
-name|type
-parameter_list|,
-name|mtu
-parameter_list|,
-name|speed
-parameter_list|)
 name|int
 name|type
-decl_stmt|,
+parameter_list|,
+name|int
 name|mtu
-decl_stmt|,
+parameter_list|,
+name|int
 name|speed
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|tuninfo
@@ -1498,12 +1486,10 @@ begin_function
 name|int
 name|OpenTunnel
 parameter_list|(
-name|ptun
-parameter_list|)
 name|int
 modifier|*
 name|ptun
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -1769,7 +1755,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*    *  Now, bring up the interface.    */
+comment|/*    * Now, bring up the interface.    */
 if|if
 condition|(
 name|ioctl
@@ -1932,11 +1918,9 @@ begin_function
 name|void
 name|OsCloseLink
 parameter_list|(
-name|flag
-parameter_list|)
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|HangupModem
 argument_list|(
@@ -1950,11 +1934,9 @@ begin_function
 name|void
 name|OsAddInOctets
 parameter_list|(
-name|cnt
-parameter_list|)
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -1962,11 +1944,9 @@ begin_function
 name|void
 name|OsAddOutOctets
 parameter_list|(
-name|cnt
-parameter_list|)
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 

@@ -49,20 +49,14 @@ begin_function
 name|int
 name|PasswdAuth
 parameter_list|(
-name|name
-parameter_list|,
-name|key
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|key
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -131,12 +125,12 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* false - failed to authenticate (password not in file) */
+comment|/* false - failed to authenticate (password 				 * not in file) */
 block|}
 ifdef|#
 directive|ifdef
 name|LOCALHACK
-comment|/*    * All our PPP usernames start with 'P' so i check that here... if you    * don't do this i suggest all your PPP users be members of a group    * and you check the guid    */
+comment|/*    * All our PPP usernames start with 'P' so i check that here... if you    * don't do this i suggest all your PPP users be members of a group and you    * check the guid    */
 if|if
 condition|(
 name|name
@@ -207,9 +201,9 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* false - failed to authenticate (didn't match up) */
+comment|/* false - failed to authenticate (didn't 				 * match up) */
 block|}
-comment|/*    * now we log them in... we have a static login flag so we don't    * do it twice :)    */
+comment|/*    * now we log them in... we have a static login flag so we don't do it    * twice :)    */
 if|if
 condition|(
 operator|!
@@ -246,7 +240,7 @@ name|ut_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * if the first three chacters are "pap" trim them off before doing      * utmp entry (see sample.ppp-pap-dialup       */
+comment|/*      * if the first three chacters are "pap" trim them off before doing utmp      * entry (see sample.ppp-pap-dialup      */
 if|if
 condition|(
 name|strncmp
@@ -363,7 +357,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

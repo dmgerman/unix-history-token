@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.15 1997/05/26 00:43:59 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.16 1997/06/09 03:27:22 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -752,6 +752,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_char
+name|EscMap
+index|[
+literal|33
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|HdlcInit
@@ -976,7 +985,7 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-comment|/*    *  If possible, compress protocol field.    */
+comment|/*    * If possible, compress protocol field.    */
 if|if
 condition|(
 name|LcpInfo
@@ -1920,7 +1929,7 @@ operator|.
 name|want_acfcomp
 condition|)
 block|{
-comment|/*      *  We expect that packet is not compressed.      */
+comment|/*      * We expect that packet is not compressed.      */
 name|addr
 operator|=
 operator|*
@@ -2032,7 +2041,7 @@ operator|==
 name|HDLC_UI
 condition|)
 block|{
-comment|/*      *  We can receive compressed packet, but peer still send      *  uncompressed packet to me.      */
+comment|/*      * We can receive compressed packet, but peer still send uncompressed      * packet to me.      */
 name|cp
 operator|+=
 literal|2

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.12 1997/05/26 00:44:08 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.13 1997/06/09 03:27:32 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -108,11 +108,9 @@ begin_function
 name|void
 name|SendPapChallenge
 parameter_list|(
-name|papid
-parameter_list|)
 name|int
 name|papid
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|fsmheader
@@ -301,22 +299,16 @@ specifier|static
 name|void
 name|SendPapCode
 parameter_list|(
-name|id
-parameter_list|,
-name|code
-parameter_list|,
-name|message
-parameter_list|)
 name|int
 name|id
-decl_stmt|;
+parameter_list|,
+name|int
+name|code
+parameter_list|,
 name|char
 modifier|*
 name|message
-decl_stmt|;
-name|int
-name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|fsmheader
@@ -469,20 +461,14 @@ specifier|static
 name|int
 name|PapValidate
 parameter_list|(
-name|name
-parameter_list|,
-name|key
-parameter_list|)
 name|u_char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+parameter_list|,
+name|u_char
+modifier|*
 name|key
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|nlen
@@ -570,19 +556,17 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|PapInput
 parameter_list|(
-name|bp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len

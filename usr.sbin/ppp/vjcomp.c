@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.7 1997/05/07 23:30:50 brian Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.8 1997/06/09 03:27:43 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -81,13 +81,11 @@ begin_function
 name|void
 name|SendPppFrame
 parameter_list|(
-name|bp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|type
@@ -244,18 +242,14 @@ name|mbuf
 modifier|*
 name|VjUncompressTcp
 parameter_list|(
-name|bp
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 name|u_char
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -298,7 +292,7 @@ operator|==
 name|TYPE_UNCOMPRESSED_TCP
 condition|)
 block|{
-comment|/*      * Uncompressed packet does NOT change its size, so that we can      * use mbuf space for uncompression job.      */
+comment|/*      * Uncompressed packet does NOT change its size, so that we can use mbuf      * space for uncompression job.      */
 name|bufp
 operator|=
 name|MBUF_CTOP
@@ -344,7 +338,7 @@ name|bp
 operator|)
 return|;
 block|}
-comment|/*    *  Handle compressed packet.    *    1) Read upto MAX_VJHEADER bytes into work space.    *	2) Try to uncompress it.    *    3) Compute amount of necesary space.    *    4) Copy unread data info there.    */
+comment|/*    * Handle compressed packet. 1) Read upto MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necesary space. 4)    * Copy unread data info there.    */
 if|if
 condition|(
 name|len
@@ -456,18 +450,14 @@ name|mbuf
 modifier|*
 name|VjCompInput
 parameter_list|(
-name|bp
-parameter_list|,
-name|proto
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 name|int
 name|proto
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 name|type

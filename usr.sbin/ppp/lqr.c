@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.15 1997/06/09 03:27:27 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.16 1997/07/02 19:18:42 phk Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -229,13 +229,11 @@ begin_function
 name|void
 name|RecvEchoLqr
 parameter_list|(
-name|bp
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|echolqr
@@ -319,21 +317,16 @@ begin_function
 name|void
 name|LqrChangeOrder
 parameter_list|(
-name|src
-parameter_list|,
-name|dst
-parameter_list|)
 name|struct
 name|lqrdata
 modifier|*
 name|src
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|lqrdata
+modifier|*
 name|dst
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|u_long
 modifier|*
@@ -395,7 +388,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -704,7 +697,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* we have received LQR from peer */
-comment|/*      *  Generate LQR responce to peer, if      *    i) We are not running LQR timer.      *   ii) Two successive LQR's PeerInLQRs are same.      */
+comment|/*      * Generate LQR responce to peer, if i) We are not running LQR timer. ii)      * Two successive LQR's PeerInLQRs are same.      */
 if|if
 condition|(
 name|LqrTimer
@@ -817,7 +810,7 @@ operator|->
 name|want_lqrperiod
 condition|)
 block|{
-comment|/*      *  We need to run timer. Let's figure out period.      */
+comment|/*      * We need to run timer. Let's figure out period.      */
 name|period
 operator|=
 name|lcp
@@ -901,9 +894,7 @@ end_function
 begin_function
 name|void
 name|StopLqrTimer
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|StopTimer
 argument_list|(
@@ -918,11 +909,9 @@ begin_function
 name|void
 name|StopLqr
 parameter_list|(
-name|method
-parameter_list|)
 name|int
 name|method
-decl_stmt|;
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -985,19 +974,15 @@ begin_function
 name|void
 name|LqrDump
 parameter_list|(
-name|message
-parameter_list|,
-name|lqr
-parameter_list|)
 name|char
 modifier|*
 name|message
-decl_stmt|;
+parameter_list|,
 name|struct
 name|lqrdata
 modifier|*
 name|lqr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

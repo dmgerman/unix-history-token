@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.8 1997/02/22 16:10:54 peter Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.9 1997/06/09 03:27:37 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ specifier|const
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slcompress.c,v 1.8 1997/02/22 16:10:54 peter Exp $"
+literal|"$Id: slcompress.c,v 1.9 1997/06/09 03:27:37 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,13 +140,11 @@ begin_function
 name|void
 name|sl_compress_init
 parameter_list|(
-name|comp
-parameter_list|)
 name|struct
 name|slcompress
 modifier|*
 name|comp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|u_int
@@ -331,33 +329,24 @@ begin_function
 name|u_char
 name|sl_compress_tcp
 parameter_list|(
-name|m
-parameter_list|,
-name|ip
-parameter_list|,
-name|comp
-parameter_list|,
-name|compress_cid
-parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|slcompress
 modifier|*
 name|comp
-decl_stmt|;
+parameter_list|,
 name|int
 name|compress_cid
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -416,7 +405,7 @@ name|cp
 init|=
 name|new_seq
 decl_stmt|;
-comment|/* 	 * Bail if this is an IP fragment or if the TCP packet isn't 	 * `compressible' (i.e., ACK isn't set or some other control bit is 	 * set).  (We assume that the caller has already made sure the 	 * packet is IP proto TCP). 	 */
+comment|/*    * Bail if this is an IP fragment or if the TCP packet isn't `compressible'    * (i.e., ACK isn't set or some other control bit is set).  (We assume that    * the caller has already made sure the packet is IP proto TCP).    */
 if|if
 condition|(
 operator|(
@@ -533,7 +522,7 @@ name|TYPE_IP
 operator|)
 return|;
 block|}
-comment|/* 	 * Packet is compressible -- we're going to send either a 	 * COMPRESSED_TCP or UNCOMPRESSED_TCP packet.  Either way we need 	 * to locate (or create) the connection state.  Special case the 	 * most recently used connection since it's most likely to be used 	 * again& we don't have to do any reordering if it's used. 	 */
+comment|/*    * Packet is compressible -- we're going to send either a COMPRESSED_TCP or    * UNCOMPRESSED_TCP packet.  Either way we need to locate (or create) the    * connection state.  Special case the most recently used connection since    * it's most likely to be used again& we don't have to do any reordering    * if it's used.    */
 name|INCR
 argument_list|(
 argument|sls_packets
@@ -594,7 +583,7 @@ name|ip_hl
 index|]
 condition|)
 block|{
-comment|/* 		 * Wasn't the first -- search for it. 		 * 		 * States are kept in a circularly linked list with 		 * last_cs pointing to the end of the list.  The 		 * list is kept in lru order by moving a state to the 		 * head of the list whenever it is referenced.  Since 		 * the list is short and, empirically, the connection 		 * we want is almost always near the front, we locate 		 * states via linear search.  If we don't find a state 		 * for the datagram, the oldest state is (re-)used. 		 */
+comment|/*      * Wasn't the first -- search for it.      *       * States are kept in a circularly linked list with last_cs pointing to the      * end of the list.  The list is kept in lru order by moving a state to      * the head of the list whenever it is referenced.  Since the list is      * short and, empirically, the connection we want is almost always near      * the front, we locate states via linear search.  If we don't find a      * state for the datagram, the oldest state is (re-)used.      */
 specifier|register
 name|struct
 name|cstate
@@ -693,7 +682,7 @@ operator|!=
 name|lastcs
 condition|)
 do|;
-comment|/* 		 * Didn't find it -- re-use oldest cstate.  Send an 		 * uncompressed packet that tells the other side what 		 * connection number we're using for this conversation. 		 * Note that since the state list is circular, the oldest 		 * state points to the newest and we only need to set 		 * last_cs to update the lru linkage. 		 */
+comment|/*      * Didn't find it -- re-use oldest cstate.  Send an uncompressed packet      * that tells the other side what connection number we're using for this      * conversation. Note that since the state list is circular, the oldest      * state points to the newest and we only need to set last_cs to update      * the lru linkage.      */
 name|INCR
 argument_list|(
 argument|sls_misses
@@ -739,7 +728,7 @@ name|uncompressed
 goto|;
 name|found
 label|:
-comment|/* 		 * Found it -- move to the front on the connection list. 		 */
+comment|/*      * Found it -- move to the front on the connection list.      */
 if|if
 condition|(
 name|cs
@@ -778,7 +767,7 @@ name|cs
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Make sure that only what we expect to change changed. The first 	 * line of the `if' checks the IP protocol version, header length& 	 * type of service.  The 2nd line checks the "Don't fragment" bit. 	 * The 3rd line checks the time-to-live and protocol (the protocol 	 * check is unnecessary but costless).  The 4th line checks the TCP 	 * header length.  The 5th line checks IP options, if any.  The 6th 	 * line checks TCP options, if any.  If any of these things are 	 * different between the previous& current datagram, we send the 	 * current datagram `uncompressed'. 	 */
+comment|/*    * Make sure that only what we expect to change changed. The first line of    * the `if' checks the IP protocol version, header length& type of    * service.  The 2nd line checks the "Don't fragment" bit. The 3rd line    * checks the time-to-live and protocol (the protocol check is unnecessary    * but costless).  The 4th line checks the TCP header length.  The 5th line    * checks IP options, if any.  The 6th line checks TCP options, if any.  If    * any of these things are different between the previous& current    * datagram, we send the current datagram `uncompressed'.    */
 name|oth
 operator|=
 operator|(
@@ -979,7 +968,7 @@ goto|goto
 name|uncompressed
 goto|;
 block|}
-comment|/* 	 * Figure out which of the changing fields changed.  The 	 * receiver expects changes in the order: urgent, window, 	 * ack, seq (the order minimizes the number of temporaries 	 * needed in this section of code). 	 */
+comment|/*    * Figure out which of the changing fields changed.  The receiver expects    * changes in the order: urgent, window, ack, seq (the order minimizes the    * number of temporaries needed in this section of code).    */
 if|if
 condition|(
 name|th
@@ -1020,7 +1009,7 @@ operator|->
 name|th_urp
 condition|)
 block|{
-comment|/* argh! URG not set but urp changed -- a sensible 		 * implementation should never do this but RFC793 		 * doesn't prohibit the change so we have to deal 		 * with it. */
+comment|/*      * argh! URG not set but urp changed -- a sensible implementation should      * never do this but RFC793 doesn't prohibit the change so we have to      * deal with it.      */
 goto|goto
 name|uncompressed
 goto|;
@@ -1153,7 +1142,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 		 * Nothing changed. If this packet contains data and the 		 * last one didn't, this is probably a data packet following 		 * an ack (normal on an interactive connection) and we send 		 * it compressed.  Otherwise it's probably a retransmit, 		 * retransmitted ack or window probe.  Send it uncompressed 		 * in case the other side missed the compressed version. 		 */
+comment|/*      * Nothing changed. If this packet contains data and the last one didn't,      * this is probably a data packet following an ack (normal on an      * interactive connection) and we send it compressed.  Otherwise it's      * probably a retransmit, retransmitted ack or window probe.  Send it      * uncompressed in case the other side missed the compressed version.      */
 if|if
 condition|(
 name|ip
@@ -1185,7 +1174,7 @@ case|:
 case|case
 name|SPECIAL_D
 case|:
-comment|/* 		 * actual changes match one of our special case encodings -- 		 * send packet uncompressed. 		 */
+comment|/*      * actual changes match one of our special case encodings -- send packet      * uncompressed.      */
 goto|goto
 name|uncompressed
 goto|;
@@ -1303,7 +1292,7 @@ name|changes
 operator||=
 name|TCP_PUSH_BIT
 expr_stmt|;
-comment|/* 	 * Grab the cksum before we overwrite it below.  Then update our 	 * state with this packet's header. 	 */
+comment|/*    * Grab the cksum before we overwrite it below.  Then update our state with    * this packet's header.    */
 name|deltaA
 operator|=
 name|ntohs
@@ -1325,7 +1314,7 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We want to use the original packet as our compressed packet. 	 * (cp - new_seq) is the number of bytes we need for compressed 	 * sequence numbers.  In addition we need one byte for the change 	 * mask, one for the connection id and two for the tcp checksum. 	 * So, (cp - new_seq) + 4 bytes of header are needed.  hlen is how 	 * many bytes of the original packet to toss so subtract the two to 	 * get the new packet size. 	 */
+comment|/*    * We want to use the original packet as our compressed packet. (cp -    * new_seq) is the number of bytes we need for compressed sequence numbers.    * In addition we need one byte for the change mask, one for the connection    * id and two for the tcp checksum. So, (cp - new_seq) + 4 bytes of header    * are needed.  hlen is how many bytes of the original packet to toss so    * subtract the two to get the new packet size.    */
 name|deltaS
 operator|=
 name|cp
@@ -1340,7 +1329,7 @@ operator|*
 operator|)
 name|ip
 expr_stmt|;
-comment|/*          * Since fastq traffic can jump ahead of the background traffic,          * we don't know what order packets will go on the line.  In this          * case, we always send a "new" connection id so the receiver state          * stays synchronized.          */
+comment|/*    * Since fastq traffic can jump ahead of the background traffic, we don't    * know what order packets will go on the line.  In this case, we always    * send a "new" connection id so the receiver state stays synchronized.    */
 ifdef|#
 directive|ifdef
 name|SL_NOFASTQ
@@ -1455,7 +1444,7 @@ operator|(
 name|TYPE_COMPRESSED_TCP
 operator|)
 return|;
-comment|/* 	 * Update connection state cs& send uncompressed packet ('uncompressed' 	 * means a regular ip/tcp packet but with the 'conversation id' we hope 	 * to use on future compressed packets in the protocol field). 	 */
+comment|/*    * Update connection state cs& send uncompressed packet ('uncompressed'    * means a regular ip/tcp packet but with the 'conversation id' we hope to    * use on future compressed packets in the protocol field).    */
 name|uncompressed
 label|:
 name|BCOPY
@@ -1498,30 +1487,22 @@ begin_function
 name|int
 name|sl_uncompress_tcp
 parameter_list|(
-name|bufp
-parameter_list|,
-name|len
-parameter_list|,
-name|type
-parameter_list|,
-name|comp
-parameter_list|)
 name|u_char
 modifier|*
 modifier|*
 name|bufp
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|slcompress
 modifier|*
 name|comp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|u_char
@@ -1610,7 +1591,7 @@ name|ip_p
 operator|=
 name|IPPROTO_TCP
 expr_stmt|;
-comment|/* 		 * Calculate the size of the TCP/IP header and make sure that 		 * we don't overflow the space we have available for it. 		*/
+comment|/*      * Calculate the size of the TCP/IP header and make sure that we don't      * overflow the space we have available for it.      */
 name|hlen
 operator|=
 name|ip
@@ -1747,7 +1728,7 @@ operator|&
 name|NEW_C
 condition|)
 block|{
-comment|/* Make sure the state index is in range, then grab the state. 		 * If we have a good state index, clear the 'discard' flag. */
+comment|/*      * Make sure the state index is in range, then grab the state. If we have      * a good state index, clear the 'discard' flag.      */
 if|if
 condition|(
 operator|*
@@ -1782,7 +1763,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* this packet has an implicit state index.  If we've 		 * had a line error since the last time we got an 		 * explicit state index, we have to toss the packet. */
+comment|/*      * this packet has an implicit state index.  If we've had a line error      * since the last time we got an explicit state index, we have to toss      * the packet.      */
 if|if
 condition|(
 name|comp
@@ -2117,7 +2098,7 @@ name|th_seq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At this point, cp points to the first byte of data in the 	 * packet.  If we're not aligned on a 4-byte boundary, copy the 	 * data down so the ip& tcp headers will be aligned.  Then back up 	 * cp by the tcp/ip header length to make room for the reconstructed 	 * header (we assume the packet we were handed has enough space to 	 * prepend 128 bytes of header).  Adjust the length to account for 	 * the new header& fill in the IP total length. 	 */
+comment|/*    * At this point, cp points to the first byte of data in the packet.  If    * we're not aligned on a 4-byte boundary, copy the data down so the ip&    * tcp headers will be aligned.  Then back up cp by the tcp/ip header    * length to make room for the reconstructed header (we assume the packet    * we were handed has enough space to prepend 128 bytes of header).  Adjust    * the length to account for the new header& fill in the IP total length.    */
 name|len
 operator|-=
 operator|(
@@ -2133,7 +2114,7 @@ name|len
 operator|<
 literal|0
 condition|)
-comment|/* we must have dropped some characters (crc should detect 		 * this but the old slip framing won't) */
+comment|/*      * we must have dropped some characters (crc should detect this but the      * old slip framing won't)      */
 goto|goto
 name|bad
 goto|;

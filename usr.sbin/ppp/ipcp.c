@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.24 1997/08/19 01:10:20 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.25 1997/08/20 23:47:44 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -858,7 +858,7 @@ operator|.
 name|s_addr
 expr_stmt|;
 block|}
-comment|/*    * Some implementation of PPP are:    *  Starting a negotiaion by require sending *special* value as my address,    *  even though standard of PPP is defined full negotiation based.    *  (e.g. "0.0.0.0" or Not "0.0.0.0")    */
+comment|/*    * Some implementation of PPP are: Starting a negotiaion by require sending    * *special* value as my address, even though standard of PPP is defined    * full negotiation based. (e.g. "0.0.0.0" or Not "0.0.0.0")    */
 if|if
 condition|(
 name|HaveTriggerAddress
@@ -941,13 +941,11 @@ specifier|static
 name|void
 name|IpcpInitRestartCounter
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|fp
 operator|->
@@ -973,13 +971,11 @@ specifier|static
 name|void
 name|IpcpSendConfigReq
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -1121,13 +1117,11 @@ specifier|static
 name|void
 name|IpcpSendTerminateReq
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* XXX: No code yet */
 block|}
@@ -1138,13 +1132,11 @@ specifier|static
 name|void
 name|IpcpSendTerminateAck
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -1177,13 +1169,11 @@ specifier|static
 name|void
 name|IpcpLayerStart
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -1200,13 +1190,11 @@ specifier|static
 name|void
 name|IpcpLayerFinish
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -1236,13 +1224,11 @@ specifier|static
 name|void
 name|IpcpLayerDown
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -1269,13 +1255,11 @@ specifier|static
 name|void
 name|IpcpLayerUp
 parameter_list|(
-name|fp
-parameter_list|)
 name|struct
 name|fsm
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|tbuff
@@ -1376,7 +1360,7 @@ name|mode
 operator|&
 name|MODE_ALIAS
 condition|)
-name|VarSetPacketAliasAddress
+name|VarPacketAliasSetAddress
 argument_list|(
 name|IpcpInfo
 operator|.
@@ -1435,19 +1419,15 @@ specifier|static
 name|int
 name|AcceptableAddr
 parameter_list|(
-name|prange
-parameter_list|,
-name|ipaddr
-parameter_list|)
 name|struct
 name|in_range
 modifier|*
 name|prange
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 name|ipaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -1569,22 +1549,16 @@ specifier|static
 name|void
 name|IpcpDecodeConfig
 parameter_list|(
-name|cp
-parameter_list|,
-name|plen
-parameter_list|,
-name|mode
-parameter_list|)
 name|u_char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|,
 name|int
 name|plen
-decl_stmt|;
+parameter_list|,
 name|int
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|type
@@ -1766,7 +1740,7 @@ name|ipaddr
 argument_list|)
 condition|)
 block|{
-comment|/*            * If destination address is not acceptable, insist to use            * what we want to use.            */
+comment|/* 	   * If destination address is not acceptable, insist to use what we 	   * want to use. 	   */
 name|bcopy
 argument_list|(
 name|cp
@@ -1832,7 +1806,7 @@ name|ipaddr
 argument_list|)
 condition|)
 block|{
-comment|/*            * Use address suggested by peer.            */
+comment|/* 	   * Use address suggested by peer. 	   */
 name|snprintf
 argument_list|(
 name|tbuff2
@@ -2394,7 +2368,7 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-comment|/*   * MS extensions for MS's PPP    */
+comment|/*        * MS extensions for MS's PPP        */
 ifndef|#
 directive|ifndef
 name|NOMSEXT
@@ -2505,7 +2479,7 @@ operator|.
 name|s_addr
 condition|)
 block|{
-comment|/* 	   So the client has got the DNS stuff wrong (first request) 	   so well tell 'em how it is            	  */
+comment|/* 	   * So the client has got the DNS stuff wrong (first request) so 	   * well tell 'em how it is 	   */
 name|bcopy
 argument_list|(
 name|cp
@@ -2553,7 +2527,7 @@ name|length
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	   Otherwise they have it right (this time) so we send 	   a ack packet back confirming it... end of story 	  */
+comment|/* 	 * Otherwise they have it right (this time) so we send a ack packet 	 * back confirming it... end of story 	 */
 name|LogPrintf
 argument_list|(
 name|LogIPCP

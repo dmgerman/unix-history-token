@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.30 1997/08/17 20:38:43 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.31 1997/08/17 22:47:07 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -400,7 +400,7 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
-comment|/* Shouldn't return here. Need to null terminate below */
+comment|/* Shouldn't return here. Need to null 				 * terminate below */
 block|}
 else|else
 name|instring
@@ -1209,7 +1209,7 @@ operator|&
 name|rfds
 argument_list|)
 expr_stmt|;
-comment|/*      *  Because it is not clear whether select() modifies timeout value,      *  it is better to initialize timeout values everytime.      */
+comment|/*      * Because it is not clear whether select() modifies timeout value, it is      * better to initialize timeout values everytime.      */
 name|timeout
 operator|.
 name|tv_sec
@@ -1401,7 +1401,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* shuffle down next part*/
+comment|/* shuffle down next 							 * part */
 name|length
 operator|=
 name|strlen
@@ -2537,7 +2537,7 @@ operator|*
 name|str
 condition|)
 block|{
-comment|/*      *  Check whether if string contains sub-send-expect.      */
+comment|/*      * Check whether if string contains sub-send-expect.      */
 for|for
 control|(
 name|minus
@@ -2692,7 +2692,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*        *  Simple case. Wait for string.        */
+comment|/*        * Simple case. Wait for string.        */
 return|return
 operator|(
 name|WaitforString

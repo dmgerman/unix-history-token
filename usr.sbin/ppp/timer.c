@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.16 1997/05/10 01:22:19 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.17 1997/06/09 03:27:40 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -111,13 +111,11 @@ begin_function
 name|void
 name|StartTimer
 parameter_list|(
-name|tp
-parameter_list|)
 name|struct
 name|pppTimer
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pppTimer
@@ -341,13 +339,11 @@ begin_function
 name|void
 name|StopTimerNoBlock
 parameter_list|(
-name|tp
-parameter_list|)
 name|struct
 name|pppTimer
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pppTimer
@@ -357,7 +353,7 @@ decl_stmt|,
 modifier|*
 name|pt
 decl_stmt|;
-comment|/*    * A Running Timer should be removing TimerList,    * But STOPPED/EXPIRED is already removing TimerList.    * So just marked as TIMER_STOPPED.    * Do not change tp->enext!! (Might be Called by expired proc)    */
+comment|/*    * A Running Timer should be removing TimerList, But STOPPED/EXPIRED is    * already removing TimerList. So just marked as TIMER_STOPPED. Do not    * change tp->enext!! (Might be Called by expired proc)    */
 name|LogPrintf
 argument_list|(
 name|LogDEBUG
@@ -676,7 +672,7 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/*          * Just Removing each item from expired list          * And exp->enext will be intialized at next expire          * in this funtion.          */
+comment|/* 	 * Just Removing each item from expired list And exp->enext will be 	 * intialized at next expire in this funtion. 	 */
 name|exp
 operator|=
 name|exp
