@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.1 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * return 0 on success  *	  1 if Kerberos not around (try local)  *	  2 on failure  */
+comment|/*  * Attempt to log the user in using Kerberos authentication  *  * return 0 on success (will be logged in)  *	  1 if Kerberos failed (try local password in login)  */
 end_comment
 
 begin_macro
@@ -116,9 +116,7 @@ argument|pw
 argument_list|,
 argument|localhost
 argument_list|,
-argument|name
-argument_list|,
-argument|tty
+argument|password
 argument_list|)
 end_macro
 
@@ -136,10 +134,7 @@ modifier|*
 name|localhost
 decl_stmt|,
 modifier|*
-name|name
-decl_stmt|,
-modifier|*
-name|tty
+name|password
 decl_stmt|;
 end_decl_stmt
 
@@ -164,11 +159,6 @@ name|long
 name|faddr
 decl_stmt|;
 name|char
-name|tkfile
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|,
 name|realm
 index|[
 name|REALM_SZ
@@ -177,6 +167,12 @@ decl_stmt|,
 name|savehost
 index|[
 name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+name|char
+name|tkt_location
+index|[
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* 	 * If we aren't Kerberos-authenticated, try the normal pw file 	 * for a password.  If that's ok, log the user in without issueing 	 * any tickets. 	 */
@@ -196,56 +192,36 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * get TGT for local realm; by convention, store tickets in file 	 * associated with tty name, which should be available. 	 */
+comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file determined by calling tkt_string() 	 */
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|tkfile
+name|tkt_location
 argument_list|,
-literal|"%s_%s"
+literal|"%s%d"
 argument_list|,
 name|TKT_ROOT
 argument_list|,
-name|tty
+name|pw
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|setenv
-argument_list|(
-literal|"KRBTKFILE"
-argument_list|,
-name|tkfile
-argument_list|,
-literal|1
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|kerror
-operator|=
-name|INTK_ERR
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"couldn't set tkfile environ"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 operator|(
 name|void
 operator|)
-name|unlink
+name|krb_set_tkt_string
 argument_list|(
-name|tkfile
+name|tkt_location
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dest_tkt
+argument_list|()
 expr_stmt|;
 name|kerror
 operator|=
@@ -263,10 +239,21 @@ name|realm
 argument_list|,
 name|DEFAULT_TKT_LIFE
 argument_list|,
-name|name
+name|password
 argument_list|)
 expr_stmt|;
-block|}
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"retval of get_pw_in_tkt: %s"
+argument_list|,
+name|krb_err_txt
+index|[
+name|kerror
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we got a TGT, get a local "rcmd" ticket and check it so as to 	 * ensure that we are not talking to a bogus Kerberos server. 	 * 	 * There are 2 cases where we still allow a login: 	 *	1: the VERIFY_SERVICE doesn't exist in the KDC 	 *	2: local host has no srvtab, as (hopefully) indicated by a 	 *	   return value of RD_AP_UNDEC from krb_rd_req(). 	 */
 if|if
 condition|(
@@ -275,13 +262,8 @@ operator|!=
 name|INTK_OK
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|tkfile
-argument_list|)
+name|dest_tkt
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -307,7 +289,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|2
+literal|1
 operator|)
 return|;
 block|}
@@ -315,7 +297,7 @@ if|if
 condition|(
 name|chown
 argument_list|(
-name|tkfile
+name|TKT_FILE
 argument_list|,
 name|pw
 operator|->
@@ -332,7 +314,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chown tkfile: %m"
+literal|"chown tkfile (%s): %m"
+argument_list|,
+name|TKT_FILE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -365,6 +349,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * if the "VERIFY_SERVICE" doesn't exist in the KDC for this host, 	 * still allow login with tickets, but log the error condition. 	 */
 name|kerror
 operator|=
 name|krb_mk_req
@@ -381,7 +366,6 @@ argument_list|,
 literal|33
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if the "VERIFY_SERVICE" doesn't exist in the KDC for this host, 	 * still allow login with tickets, but log the error condition. 	 */
 if|if
 condition|(
 name|kerror
@@ -448,7 +432,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|2
+literal|1
 operator|)
 return|;
 block|}
@@ -472,9 +456,12 @@ argument_list|,
 literal|"couldn't get local host address"
 argument_list|)
 expr_stmt|;
+name|dest_tkt
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
-literal|2
+literal|1
 operator|)
 return|;
 block|}
@@ -537,6 +524,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* undecipherable: probably didn't have a srvtab on the local host */
 if|if
 condition|(
 name|kerror
@@ -556,16 +544,16 @@ name|kerror
 index|]
 argument_list|)
 expr_stmt|;
-name|notickets
-operator|=
-literal|0
+name|dest_tkt
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
+comment|/* failed for some other reason */
 operator|(
 name|void
 operator|)
@@ -595,9 +583,12 @@ name|kerror
 index|]
 argument_list|)
 expr_stmt|;
+name|dest_tkt
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
-literal|2
+literal|1
 operator|)
 return|;
 block|}
