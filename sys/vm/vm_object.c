@@ -1150,18 +1150,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_allocate:  *  *	Returns a new object with the given size.  */
+comment|/*  *	vm_object_allocate_wait  *  *	Return a new object with the given size, and give the user the  *	option of waiting for it to complete or failing if the needed  *	memory isn't available.  */
 end_comment
 
 begin_function
 name|vm_object_t
-name|vm_object_allocate
+name|vm_object_allocate_wait
 parameter_list|(
 name|objtype_t
 name|type
 parameter_list|,
 name|vm_pindex_t
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|vm_object_t
@@ -1176,9 +1179,15 @@ name|uma_zalloc
 argument_list|(
 name|obj_zone
 argument_list|,
-name|M_WAITOK
+name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|NULL
+condition|)
 name|_vm_object_allocate
 argument_list|(
 name|type
@@ -1191,6 +1200,36 @@ expr_stmt|;
 return|return
 operator|(
 name|result
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_object_allocate:  *  *	Returns a new object with the given size.  */
+end_comment
+
+begin_function
+name|vm_object_t
+name|vm_object_allocate
+parameter_list|(
+name|objtype_t
+name|type
+parameter_list|,
+name|vm_pindex_t
+name|size
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm_object_allocate_wait
+argument_list|(
+name|type
+argument_list|,
+name|size
+argument_list|,
+name|M_WAITOK
+argument_list|)
 operator|)
 return|;
 block|}

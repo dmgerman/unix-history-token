@@ -158,6 +158,10 @@ decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks */
 endif|#
 directive|endif
+name|u_int
+name|cow
+decl_stmt|;
+comment|/* page cow mapping count */
 block|}
 struct|;
 end_struct
@@ -1593,6 +1597,33 @@ name|void
 name|vm_page_zero_idle_wakeup
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_cowfault
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_cowsetup
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_cowclear
+parameter_list|(
+name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl

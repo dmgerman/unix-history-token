@@ -1047,6 +1047,8 @@ argument_list|,
 name|uio
 argument_list|,
 name|object
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

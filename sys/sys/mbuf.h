@@ -575,6 +575,17 @@ begin_comment
 comment|/* custom module's ext_buf type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXT_DISPOSABLE
+value|300
+end_define
+
+begin_comment
+comment|/* can throw this buffer away w/page flipping */
+end_comment
+
 begin_comment
 comment|/*  * Flags copied when copying m_pkthdr.  */
 end_comment

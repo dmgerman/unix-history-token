@@ -431,7 +431,7 @@ begin_define
 define|#
 directive|define
 name|TI_FIRMWARE_FIX
-value|0xd
+value|0xb
 end_define
 
 begin_comment
@@ -1571,6 +1571,13 @@ begin_comment
 comment|/* not yet implimented */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TI_OPMODE_JUMBO_HDRSPLIT
+value|0x00008000
+end_define
+
 begin_comment
 comment|/*  * DMA configuration thresholds.  */
 end_comment
@@ -1891,6 +1898,289 @@ value|0x7FFFFF
 end_define
 
 begin_comment
+comment|/*  * Maximum register address on the Tigon.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_REG_MAX
+value|0x3fff
+end_define
+
+begin_comment
+comment|/*  * These values were taken from Alteon's tg.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_SRAM
+value|0x0
+end_define
+
+begin_comment
+comment|/* host thinks it's here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_SCRATCH
+value|0xc00000
+end_define
+
+begin_comment
+comment|/* beg of scratch pad area */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SRAM_II
+value|0x800000
+end_define
+
+begin_comment
+comment|/* end of SRAM, for 2 MB stuffed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SCRATCH_II
+value|0xc04000
+end_define
+
+begin_comment
+comment|/* end of scratch pad CPU A (16KB) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SCRATCH_B
+value|0xc02000
+end_define
+
+begin_comment
+comment|/* end of scratch pad CPU B (8KB) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_SCRATCH_B_DEBUG
+value|0xd00000
+end_define
+
+begin_comment
+comment|/* beg of scratch pad for ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SCRATCH_B_DEBUG
+value|0xd02000
+end_define
+
+begin_comment
+comment|/* end of scratch pad for ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_SCRATCH_DEBUG_OFF
+value|0x100000
+end_define
+
+begin_comment
+comment|/* offset for ioctl usage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SRAM_I
+value|0x200000
+end_define
+
+begin_comment
+comment|/* end of SRAM, for 2 MB stuffed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SCRATCH_I
+value|0xc00800
+end_define
+
+begin_comment
+comment|/* end of scratch pad area (2KB) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_PROM
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* beg of PROM, special access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_FLASH
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* beg of EEPROM, special access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_FLASH
+value|0x80100000
+end_define
+
+begin_comment
+comment|/* end of EEPROM for 1 MB stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_SER_EEPROM
+value|0xa0000000
+end_define
+
+begin_comment
+comment|/* beg of Serial EEPROM (fake out) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_SER_EEPROM
+value|0xa0002000
+end_define
+
+begin_comment
+comment|/* end of Serial EEPROM (fake out) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_REGS
+value|0xc0000000
+end_define
+
+begin_comment
+comment|/* beg of register area */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_REGS
+value|0xc0000400
+end_define
+
+begin_comment
+comment|/* end of register area */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_END_WRITE_REGS
+value|0xc0000180
+end_define
+
+begin_comment
+comment|/* can't write GPRs currently */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BEG_REGS2
+value|0xc0000200
+end_define
+
+begin_comment
+comment|/* beg of second writeable reg area */
+end_comment
+
+begin_comment
+comment|/* the EEPROM is byte addressable in a pretty odd way */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_BYTE_LOC
+value|0xff000000
+end_define
+
+begin_comment
+comment|/*  * From Alteon's tg.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_PROCESSOR_A
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_PROCESSOR_B
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_CPU_A
+value|TG_PROCESSOR_A
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_CPU_B
+value|TG_PROCESSOR_B
+end_define
+
+begin_comment
+comment|/*  * Following macro can be used to access to any of the CPU registers  * It will adjust the address appropriately.  * Parameters:  *      reg - The register to access, e.g TI_CPU_CONTROL  *      cpu - cpu, i.e PROCESSOR_A or PROCESSOR_B (or TI_CPU_A or TI_CPU_B)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_REG
+parameter_list|(
+name|reg
+parameter_list|,
+name|cpu
+parameter_list|)
+value|((reg) + (cpu) * 0x100)
+end_define
+
+begin_comment
 comment|/*  * Even on the alpha, pci addresses are 32-bit quantities  */
 end_comment
 
@@ -2068,686 +2358,6 @@ name|ti_idx
 decl_stmt|;
 name|u_int32_t
 name|ti_unused
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Tigon statistics counters.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ti_stats
-block|{
-comment|/* 	 * MAC stats, taken from RFC 1643, ethernet-like MIB 	 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsAlignmentErrors
-decl_stmt|;
-comment|/* 0 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsFCSErrors
-decl_stmt|;
-comment|/* 1 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsSingleCollisionFrames
-decl_stmt|;
-comment|/* 2 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsMultipleCollisionFrames
-decl_stmt|;
-comment|/* 3 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsSQETestErrors
-decl_stmt|;
-comment|/* 4 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsDeferredTransmissions
-decl_stmt|;
-comment|/* 5 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsLateCollisions
-decl_stmt|;
-comment|/* 6 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsExcessiveCollisions
-decl_stmt|;
-comment|/* 7 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsInternalMacTransmitErrors
-decl_stmt|;
-comment|/* 8 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsCarrierSenseErrors
-decl_stmt|;
-comment|/* 9 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsFrameTooLongs
-decl_stmt|;
-comment|/* 10 */
-specifier|volatile
-name|u_int32_t
-name|dot3StatsInternalMacReceiveErrors
-decl_stmt|;
-comment|/* 11 */
-comment|/* 	 * interface stats, taken from RFC 1213, MIB-II, interfaces group 	 */
-specifier|volatile
-name|u_int32_t
-name|ifIndex
-decl_stmt|;
-comment|/* 12 */
-specifier|volatile
-name|u_int32_t
-name|ifType
-decl_stmt|;
-comment|/* 13 */
-specifier|volatile
-name|u_int32_t
-name|ifMtu
-decl_stmt|;
-comment|/* 14 */
-specifier|volatile
-name|u_int32_t
-name|ifSpeed
-decl_stmt|;
-comment|/* 15 */
-specifier|volatile
-name|u_int32_t
-name|ifAdminStatus
-decl_stmt|;
-comment|/* 16 */
-define|#
-directive|define
-name|IF_ADMIN_STATUS_UP
-value|1
-define|#
-directive|define
-name|IF_ADMIN_STATUS_DOWN
-value|2
-define|#
-directive|define
-name|IF_ADMIN_STATUS_TESTING
-value|3
-specifier|volatile
-name|u_int32_t
-name|ifOperStatus
-decl_stmt|;
-comment|/* 17 */
-define|#
-directive|define
-name|IF_OPER_STATUS_UP
-value|1
-define|#
-directive|define
-name|IF_OPER_STATUS_DOWN
-value|2
-define|#
-directive|define
-name|IF_OPER_STATUS_TESTING
-value|3
-define|#
-directive|define
-name|IF_OPER_STATUS_UNKNOWN
-value|4
-define|#
-directive|define
-name|IF_OPER_STATUS_DORMANT
-value|5
-specifier|volatile
-name|u_int32_t
-name|ifLastChange
-decl_stmt|;
-comment|/* 18 */
-specifier|volatile
-name|u_int32_t
-name|ifInDiscards
-decl_stmt|;
-comment|/* 19 */
-specifier|volatile
-name|u_int32_t
-name|ifInErrors
-decl_stmt|;
-comment|/* 20 */
-specifier|volatile
-name|u_int32_t
-name|ifInUnknownProtos
-decl_stmt|;
-comment|/* 21 */
-specifier|volatile
-name|u_int32_t
-name|ifOutDiscards
-decl_stmt|;
-comment|/* 22 */
-specifier|volatile
-name|u_int32_t
-name|ifOutErrors
-decl_stmt|;
-comment|/* 23 */
-specifier|volatile
-name|u_int32_t
-name|ifOutQLen
-decl_stmt|;
-comment|/* deprecated */
-comment|/* 24 */
-specifier|volatile
-name|u_int8_t
-name|ifPhysAddress
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* 8 bytes */
-comment|/* 25 - 26 */
-specifier|volatile
-name|u_int8_t
-name|ifDescr
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* 27 - 34 */
-name|u_int32_t
-name|alignIt
-decl_stmt|;
-comment|/* align to 64 bit for u_int64_ts following */
-comment|/* 	 * more interface stats, taken from RFC 1573, MIB-IIupdate, 	 * interfaces group 	 */
-specifier|volatile
-name|u_int64_t
-name|ifHCInOctets
-decl_stmt|;
-comment|/* 36 - 37 */
-specifier|volatile
-name|u_int64_t
-name|ifHCInUcastPkts
-decl_stmt|;
-comment|/* 38 - 39 */
-specifier|volatile
-name|u_int64_t
-name|ifHCInMulticastPkts
-decl_stmt|;
-comment|/* 40 - 41 */
-specifier|volatile
-name|u_int64_t
-name|ifHCInBroadcastPkts
-decl_stmt|;
-comment|/* 42 - 43 */
-specifier|volatile
-name|u_int64_t
-name|ifHCOutOctets
-decl_stmt|;
-comment|/* 44 - 45 */
-specifier|volatile
-name|u_int64_t
-name|ifHCOutUcastPkts
-decl_stmt|;
-comment|/* 46 - 47 */
-specifier|volatile
-name|u_int64_t
-name|ifHCOutMulticastPkts
-decl_stmt|;
-comment|/* 48 - 49 */
-specifier|volatile
-name|u_int64_t
-name|ifHCOutBroadcastPkts
-decl_stmt|;
-comment|/* 50 - 51 */
-specifier|volatile
-name|u_int32_t
-name|ifLinkUpDownTrapEnable
-decl_stmt|;
-comment|/* 52 */
-specifier|volatile
-name|u_int32_t
-name|ifHighSpeed
-decl_stmt|;
-comment|/* 53 */
-specifier|volatile
-name|u_int32_t
-name|ifPromiscuousMode
-decl_stmt|;
-comment|/* 54 */
-specifier|volatile
-name|u_int32_t
-name|ifConnectorPresent
-decl_stmt|;
-comment|/* follow link state 55 */
-comment|/* 	 * Host Commands 	 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsHostState
-decl_stmt|;
-comment|/* 56 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsFDRFiltering
-decl_stmt|;
-comment|/* 57 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsSetRecvProdIndex
-decl_stmt|;
-comment|/* 58 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsUpdateGencommStats
-decl_stmt|;
-comment|/* 59 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsResetJumboRing
-decl_stmt|;
-comment|/* 60 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsAddMCastAddr
-decl_stmt|;
-comment|/* 61 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsDelMCastAddr
-decl_stmt|;
-comment|/* 62 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsSetPromiscMode
-decl_stmt|;
-comment|/* 63 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsLinkNegotiate
-decl_stmt|;
-comment|/* 64 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsSetMACAddr
-decl_stmt|;
-comment|/* 65 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsClearProfile
-decl_stmt|;
-comment|/* 66 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsSetMulticastMode
-decl_stmt|;
-comment|/* 67 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsClearStats
-decl_stmt|;
-comment|/* 68 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsSetRecvJumboProdIndex
-decl_stmt|;
-comment|/* 69 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsSetRecvMiniProdIndex
-decl_stmt|;
-comment|/* 70 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsRefreshStats
-decl_stmt|;
-comment|/* 71 */
-specifier|volatile
-name|u_int32_t
-name|nicCmdsUnknown
-decl_stmt|;
-comment|/* 72 */
-comment|/* 	 * NIC Events 	 */
-specifier|volatile
-name|u_int32_t
-name|nicEventsNICFirmwareOperational
-decl_stmt|;
-comment|/* 73 */
-specifier|volatile
-name|u_int32_t
-name|nicEventsStatsUpdated
-decl_stmt|;
-comment|/* 74 */
-specifier|volatile
-name|u_int32_t
-name|nicEventsLinkStateChanged
-decl_stmt|;
-comment|/* 75 */
-specifier|volatile
-name|u_int32_t
-name|nicEventsError
-decl_stmt|;
-comment|/* 76 */
-specifier|volatile
-name|u_int32_t
-name|nicEventsMCastListUpdated
-decl_stmt|;
-comment|/* 77 */
-specifier|volatile
-name|u_int32_t
-name|nicEventsResetJumboRing
-decl_stmt|;
-comment|/* 78 */
-comment|/* 	 * Ring manipulation 	 */
-specifier|volatile
-name|u_int32_t
-name|nicRingSetSendProdIndex
-decl_stmt|;
-comment|/* 79 */
-specifier|volatile
-name|u_int32_t
-name|nicRingSetSendConsIndex
-decl_stmt|;
-comment|/* 80 */
-specifier|volatile
-name|u_int32_t
-name|nicRingSetRecvReturnProdIndex
-decl_stmt|;
-comment|/* 81 */
-comment|/* 	 * Interrupts 	 */
-specifier|volatile
-name|u_int32_t
-name|nicInterrupts
-decl_stmt|;
-comment|/* 82 */
-specifier|volatile
-name|u_int32_t
-name|nicAvoidedInterrupts
-decl_stmt|;
-comment|/* 83 */
-comment|/* 	 * BD Coalessing Thresholds 	 */
-specifier|volatile
-name|u_int32_t
-name|nicEventThresholdHit
-decl_stmt|;
-comment|/* 84 */
-specifier|volatile
-name|u_int32_t
-name|nicSendThresholdHit
-decl_stmt|;
-comment|/* 85 */
-specifier|volatile
-name|u_int32_t
-name|nicRecvThresholdHit
-decl_stmt|;
-comment|/* 86 */
-comment|/* 	 * DMA Attentions 	 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaRdOverrun
-decl_stmt|;
-comment|/* 87 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaRdUnderrun
-decl_stmt|;
-comment|/* 88 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaWrOverrun
-decl_stmt|;
-comment|/* 89 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaWrUnderrun
-decl_stmt|;
-comment|/* 90 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaWrMasterAborts
-decl_stmt|;
-comment|/* 91 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaRdMasterAborts
-decl_stmt|;
-comment|/* 92 */
-comment|/* 	 * NIC Resources 	 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaWriteRingFull
-decl_stmt|;
-comment|/* 93 */
-specifier|volatile
-name|u_int32_t
-name|nicDmaReadRingFull
-decl_stmt|;
-comment|/* 94 */
-specifier|volatile
-name|u_int32_t
-name|nicEventRingFull
-decl_stmt|;
-comment|/* 95 */
-specifier|volatile
-name|u_int32_t
-name|nicEventProducerRingFull
-decl_stmt|;
-comment|/* 96 */
-specifier|volatile
-name|u_int32_t
-name|nicTxMacDescrRingFull
-decl_stmt|;
-comment|/* 97 */
-specifier|volatile
-name|u_int32_t
-name|nicOutOfTxBufSpaceFrameRetry
-decl_stmt|;
-comment|/* 98 */
-specifier|volatile
-name|u_int32_t
-name|nicNoMoreWrDMADescriptors
-decl_stmt|;
-comment|/* 99 */
-specifier|volatile
-name|u_int32_t
-name|nicNoMoreRxBDs
-decl_stmt|;
-comment|/* 100 */
-specifier|volatile
-name|u_int32_t
-name|nicNoSpaceInReturnRing
-decl_stmt|;
-comment|/* 101 */
-specifier|volatile
-name|u_int32_t
-name|nicSendBDs
-decl_stmt|;
-comment|/* current count 102 */
-specifier|volatile
-name|u_int32_t
-name|nicRecvBDs
-decl_stmt|;
-comment|/* current count 103 */
-specifier|volatile
-name|u_int32_t
-name|nicJumboRecvBDs
-decl_stmt|;
-comment|/* current count 104 */
-specifier|volatile
-name|u_int32_t
-name|nicMiniRecvBDs
-decl_stmt|;
-comment|/* current count 105 */
-specifier|volatile
-name|u_int32_t
-name|nicTotalRecvBDs
-decl_stmt|;
-comment|/* current count 106 */
-specifier|volatile
-name|u_int32_t
-name|nicTotalSendBDs
-decl_stmt|;
-comment|/* current count 107 */
-specifier|volatile
-name|u_int32_t
-name|nicJumboSpillOver
-decl_stmt|;
-comment|/* 108 */
-specifier|volatile
-name|u_int32_t
-name|nicSbusHangCleared
-decl_stmt|;
-comment|/* 109 */
-specifier|volatile
-name|u_int32_t
-name|nicEnqEventDelayed
-decl_stmt|;
-comment|/* 110 */
-comment|/* 	 * Stats from MAC rx completion 	 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxLateColls
-decl_stmt|;
-comment|/* 111 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxLinkLostDuringPkt
-decl_stmt|;
-comment|/* 112 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxPhyDecodeErr
-decl_stmt|;
-comment|/* 113 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxMacAbort
-decl_stmt|;
-comment|/* 114 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxTruncNoResources
-decl_stmt|;
-comment|/* 115 */
-comment|/* 	 * Stats from the mac_stats area 	 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxDropUla
-decl_stmt|;
-comment|/* 116 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxDropMcast
-decl_stmt|;
-comment|/* 117 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxFlowControl
-decl_stmt|;
-comment|/* 118 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxDropSpace
-decl_stmt|;
-comment|/* 119 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxColls
-decl_stmt|;
-comment|/* 120 */
-comment|/*  	 * MAC RX Attentions 	 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxTotalAttns
-decl_stmt|;
-comment|/* 121 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxLinkAttns
-decl_stmt|;
-comment|/* 122 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxSyncAttns
-decl_stmt|;
-comment|/* 123 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxConfigAttns
-decl_stmt|;
-comment|/* 124 */
-specifier|volatile
-name|u_int32_t
-name|nicMacReset
-decl_stmt|;
-comment|/* 125 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxBufDescrAttns
-decl_stmt|;
-comment|/* 126 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxBufAttns
-decl_stmt|;
-comment|/* 127 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxZeroFrameCleanup
-decl_stmt|;
-comment|/* 128 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxOneFrameCleanup
-decl_stmt|;
-comment|/* 129 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxMultipleFrameCleanup
-decl_stmt|;
-comment|/* 130 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxTimerCleanup
-decl_stmt|;
-comment|/* 131 */
-specifier|volatile
-name|u_int32_t
-name|nicMacRxDmaCleanup
-decl_stmt|;
-comment|/* 132 */
-comment|/* 	 * Stats from the mac_stats area 	 */
-specifier|volatile
-name|u_int32_t
-name|nicMacTxCollisionHistogram
-index|[
-literal|15
-index|]
-decl_stmt|;
-comment|/* 133 */
-comment|/* 	 * MAC TX Attentions 	 */
-specifier|volatile
-name|u_int32_t
-name|nicMacTxTotalAttns
-decl_stmt|;
-comment|/* 134 */
-comment|/* 	 * NIC Profile 	 */
-specifier|volatile
-name|u_int32_t
-name|nicProfile
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* 135 */
-comment|/* 	 * Pat to 1024 bytes. 	 */
-name|u_int32_t
-name|pad
-index|[
-literal|75
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -4163,6 +3773,9 @@ index|[
 name|TI_STD_RX_RING_CNT
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PRIVATE_JUMBOS
 name|struct
 name|ti_rx_desc
 name|ti_rx_jumbo_ring
@@ -4170,6 +3783,17 @@ index|[
 name|TI_JUMBO_RX_RING_CNT
 index|]
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|ti_rx_desc_ext
+name|ti_rx_jumbo_ring
+index|[
+name|TI_JUMBO_RX_RING_CNT
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|ti_rx_desc
 name|ti_rx_mini_ring
@@ -4389,10 +4013,36 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|TI_FLAG_NONE
+init|=
+literal|0x00
+block|,
+name|TI_FLAG_DEBUGING
+init|=
+literal|0x01
+block|,
+name|TI_FLAG_WAIT_FOR_LINK
+init|=
+literal|0x02
+block|}
+name|ti_flag_vals
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ti_softc
 block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|ti_softc
+argument_list|)
+name|ti_links
+expr_stmt|;
 name|struct
 name|arpcom
 name|arpcom
@@ -4442,6 +4092,10 @@ name|u_int8_t
 name|ti_linkstat
 decl_stmt|;
 comment|/* Link state */
+name|int
+name|ti_hdrsplit
+decl_stmt|;
+comment|/* enable header splitting */
 name|struct
 name|ti_ring_data
 modifier|*
@@ -4540,6 +4194,12 @@ decl_stmt|;
 name|struct
 name|mtx
 name|ti_mtx
+decl_stmt|;
+name|ti_flag_vals
+name|ti_flags
+decl_stmt|;
+name|dev_t
+name|dev
 decl_stmt|;
 block|}
 struct|;

@@ -222,7 +222,6 @@ argument_list|)
 end_macro
 
 begin_function_decl
-specifier|static
 name|struct
 name|sf_buf
 modifier|*
@@ -234,7 +233,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
 name|sf_buf_free
 parameter_list|(
@@ -384,14 +382,12 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|static
 name|vm_offset_t
 name|sf_base
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|sf_buf
 modifier|*
@@ -400,7 +396,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|sf_buf_alloc_want
 decl_stmt|;
@@ -7667,7 +7662,6 @@ comment|/*  * Get an sf_buf from the freelist. Will block if none are available.
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|sf_buf
 modifier|*
@@ -7788,7 +7782,6 @@ comment|/*  * Detatch mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|sf_buf_free
 parameter_list|(

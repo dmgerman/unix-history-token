@@ -1694,6 +1694,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|socow_setup
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|socreate
 parameter_list|(
 name|int
