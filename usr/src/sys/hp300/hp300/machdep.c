@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -197,6 +197,23 @@ include|#
 directive|include
 file|<vm/vm_kern.h>
 end_include
+
+begin_comment
+comment|/* the following is used externally (sysctl_hw) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|machine
+index|[]
+init|=
+literal|"hp300"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cpu "architecture" */
+end_comment
 
 begin_decl_stmt
 name|vm_map_t
@@ -1356,6 +1373,37 @@ directive|endif
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|machine
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|cpu_model
+index|[
+literal|120
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ostype
+index|[]
+decl_stmt|,
+name|osrelease
+index|[]
+decl_stmt|,
+name|version
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|identifycpu
 argument_list|()
@@ -1363,11 +1411,16 @@ end_macro
 
 begin_block
 block|{
-name|printf
-argument_list|(
-literal|"HP9000/"
-argument_list|)
-expr_stmt|;
+name|char
+modifier|*
+name|t
+decl_stmt|,
+modifier|*
+name|mc
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 switch|switch
 condition|(
 name|machineid
@@ -1376,82 +1429,73 @@ block|{
 case|case
 name|HP_320
 case|:
-name|printf
-argument_list|(
-literal|"320 (16.67Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"320 (16.67MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_330
 case|:
-name|printf
-argument_list|(
-literal|"318/319/330 (16.67Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"318/319/330 (16.67MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_340
 case|:
-name|printf
-argument_list|(
-literal|"340 (16.67Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"340 (16.67MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_350
 case|:
-name|printf
-argument_list|(
-literal|"350 (25Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"350 (25MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_360
 case|:
-name|printf
-argument_list|(
-literal|"360 (25Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"360 (25MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_370
 case|:
-name|printf
-argument_list|(
-literal|"370 (33.33Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"370 (33.33MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_375
 case|:
-name|printf
-argument_list|(
-literal|"345/375 (50Mhz"
-argument_list|)
+name|t
+operator|=
+literal|"345/375 (50MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_380
 case|:
-name|printf
-argument_list|(
-literal|"380/425 (25Mhz)"
-argument_list|)
+name|t
+operator|=
+literal|"380/425 (25MHz"
 expr_stmt|;
 break|break;
 case|case
 name|HP_433
 case|:
-name|printf
-argument_list|(
-literal|"433 (33Mhz)"
-argument_list|)
+name|t
+operator|=
+literal|"433 (33MHz"
 expr_stmt|;
 break|break;
 default|default:
@@ -1468,10 +1512,9 @@ literal|"startup"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|" MC680%s CPU"
-argument_list|,
+name|mc
+operator|=
+operator|(
 name|mmutype
 operator|==
 name|MMU_68040
@@ -1487,6 +1530,17 @@ literal|"30"
 else|:
 literal|"20"
 operator|)
+operator|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"HP9000/%s MC680%s CPU"
+argument_list|,
+name|t
+argument_list|,
+name|mc
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1500,8 +1554,10 @@ case|:
 case|case
 name|MMU_68030
 case|:
-name|printf
+name|strcat
 argument_list|(
+name|cpu_model
+argument_list|,
 literal|"+MMU"
 argument_list|)
 expr_stmt|;
@@ -1509,8 +1565,10 @@ break|break;
 case|case
 name|MMU_68851
 case|:
-name|printf
+name|strcat
 argument_list|(
+name|cpu_model
+argument_list|,
 literal|", MC68851 MMU"
 argument_list|)
 expr_stmt|;
@@ -1518,8 +1576,10 @@ break|break;
 case|case
 name|MMU_HP
 case|:
-name|printf
+name|strcat
 argument_list|(
+name|cpu_model
+argument_list|,
 literal|", HP MMU"
 argument_list|)
 expr_stmt|;
@@ -1527,7 +1587,9 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"\nunknown MMU type %d\n"
+literal|"%s\nunknown MMU type %d\n"
+argument_list|,
+name|cpu_model
 argument_list|,
 name|mmutype
 argument_list|)
@@ -1538,14 +1600,27 @@ literal|"startup"
 argument_list|)
 expr_stmt|;
 block|}
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|cpu_model
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mmutype
 operator|==
 name|MMU_68040
 condition|)
-name|printf
+name|len
+operator|+=
+name|sprintf
 argument_list|(
+name|cpu_model
+operator|+
+name|len
+argument_list|,
 literal|"+FPU, 4k on-chip physical I/D caches"
 argument_list|)
 expr_stmt|;
@@ -1556,9 +1631,15 @@ name|mmutype
 operator|==
 name|MMU_68030
 condition|)
-name|printf
+name|len
+operator|+=
+name|sprintf
 argument_list|(
-literal|", %sMhz MC68882 FPU"
+name|cpu_model
+operator|+
+name|len
+argument_list|,
+literal|", %sMHz MC68882 FPU"
 argument_list|,
 name|machineid
 operator|==
@@ -1586,9 +1667,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|len
+operator|+=
+name|sprintf
 argument_list|(
-literal|", %sMhz MC68881 FPU"
+name|cpu_model
+operator|+
+name|len
+argument_list|,
+literal|", %sMHz MC68881 FPU"
 argument_list|,
 name|machineid
 operator|==
@@ -1607,8 +1694,12 @@ block|{
 case|case
 name|EC_VIRT
 case|:
-name|printf
+name|sprintf
 argument_list|(
+name|cpu_model
+operator|+
+name|len
+argument_list|,
 literal|", %dK virtual-address cache"
 argument_list|,
 name|machineid
@@ -1624,8 +1715,12 @@ break|break;
 case|case
 name|EC_PHYS
 case|:
-name|printf
+name|sprintf
 argument_list|(
+name|cpu_model
+operator|+
+name|len
+argument_list|,
 literal|", %dK physical-address cache"
 argument_list|,
 name|machineid
@@ -1639,9 +1734,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|")"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|")\n"
+literal|"%s\n"
+argument_list|,
+name|cpu_model
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
