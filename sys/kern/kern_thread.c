@@ -804,7 +804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * reap any  zombie threads for this Processor.  */
+comment|/*   * reap any  zombie threads.  */
 end_comment
 
 begin_function
