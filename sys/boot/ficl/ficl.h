@@ -65,19 +65,13 @@ define|#
 directive|define
 name|FICL_VER
 value|"2.02"
-ifdef|#
-directive|ifdef
-name|TESTMAIN
+ifndef|#
+directive|ifndef
+name|FICL_PROMPT
 define|#
 directive|define
 name|FICL_PROMPT
 value|"ok> "
-else|#
-directive|else
-define|#
-directive|define
-name|FICL_PROMPT
-value|""
 endif|#
 directive|endif
 comment|/* ** ANS Forth requires false to be zero, and true to be the ones ** complement of false... that unifies logical and bitwise operations ** nicely. */
