@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)siglist.c	5.3 (Berkeley) %G%"
+literal|"@(#)siglist.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,9 +69,9 @@ comment|/* SIGILL */
 literal|"Trace/BPT trap"
 block|,
 comment|/* SIGTRAP */
-literal|"IOT trap"
+literal|"Abort trap"
 block|,
-comment|/* SIGIOT */
+comment|/* SIGABRT */
 literal|"EMT trap"
 block|,
 comment|/* SIGEMT */
@@ -138,8 +138,9 @@ comment|/* SIGPROF */
 literal|"Window size changes"
 block|,
 comment|/* SIGWINCH */
-literal|"Signal 29"
+literal|"Information request"
 block|,
+comment|/* SIGINFO */
 literal|"User defined signal 1"
 block|,
 comment|/* SIGUSR1 */
