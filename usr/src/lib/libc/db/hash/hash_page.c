@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.18 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2098,6 +2098,16 @@ literal|2
 index|]
 operator|<
 name|REAL_KEY
+operator|&&
+name|bp
+index|[
+name|bp
+index|[
+literal|0
+index|]
+index|]
+operator|!=
+name|OVFLPAGE
 condition|)
 block|{
 comment|/* This is a big-keydata pair */
