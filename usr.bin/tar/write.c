@@ -830,6 +830,9 @@ case|case
 literal|0
 case|:
 break|break;
+ifdef|#
+directive|ifdef
+name|HAVE_LIBBZ2
 case|case
 literal|'j'
 case|:
@@ -842,6 +845,11 @@ name|a
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_LIBZ
 case|case
 literal|'z'
 case|:
@@ -851,6 +859,8 @@ name|a
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|bsdtar_errc
 argument_list|(
