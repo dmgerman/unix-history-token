@@ -110,10 +110,6 @@ name|bus_size_t
 name|realsize
 decl_stmt|;
 comment|/* how much we really allocated */
-name|long
-name|offset
-decl_stmt|;
-comment|/* mapped Offset on card */
 name|bus_addr_t
 name|cardaddr
 decl_stmt|;
