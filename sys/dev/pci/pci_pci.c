@@ -1815,6 +1815,14 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|PCI_INTERRUPT_VALID
+argument_list|(
+name|intnum
+argument_list|)
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|pcib
@@ -1835,6 +1843,7 @@ argument_list|,
 name|intnum
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|intnum

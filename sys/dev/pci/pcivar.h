@@ -928,6 +928,20 @@ name|PCIB_ACCESSOR
 end_undef
 
 begin_comment
+comment|/*  * PCI interrupt validation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_INTERRUPT_VALID
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) != 0)&& ((x) != 255))
+end_define
+
+begin_comment
 comment|/*  * Convenience functions.  *  * These should be used in preference to manually manipulating  * configuration space.  */
 end_comment
 
