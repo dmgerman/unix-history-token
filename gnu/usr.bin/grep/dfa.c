@@ -6082,9 +6082,6 @@ name|parens
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|ENABLE_NLS
 name|hard_LC_COLLATE
 operator|=
 name|hard_locale
@@ -6092,8 +6089,6 @@ argument_list|(
 name|LC_COLLATE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MBS_SUPPORT
