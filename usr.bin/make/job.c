@@ -7497,7 +7497,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * The user didn't specify a shell to use, so we are using the 	 * default one... Both the absolute path and the last component 	 * must be set. The last component is taken from the 'name' field 	 * of the default shell description pointed-to by commandShell. 	 * All default shells are located in _PATH_DEFSHELLDIR. 	 */
+comment|/* 	 * The user didn't specify a shell to use, so we are using the 	 * default one... Both the absolute path and the last component 	 * must be set. The last component is taken from the 'name' field 	 * of the default shell description pointed-to by commandShell. 	 * All default shells are located in PATH_DEFSHELLDIR. 	 */
 name|shellName
 operator|=
 name|commandShell
@@ -7508,7 +7508,7 @@ name|shellPath
 operator|=
 name|str_concat
 argument_list|(
-name|_PATH_DEFSHELLDIR
+name|PATH_DEFSHELLDIR
 argument_list|,
 name|shellName
 argument_list|,

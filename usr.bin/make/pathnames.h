@@ -18,13 +18,13 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_OBJDIR
+name|PATH_OBJDIR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PATH_OBJDIR
+name|PATH_OBJDIR
 value|"obj"
 end_define
 
@@ -34,19 +34,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _PATH_OBJDIR */
+comment|/* ! PATH_OBJDIR */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_OBJDIRPREFIX
+name|PATH_OBJDIRPREFIX
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PATH_OBJDIRPREFIX
+name|PATH_OBJDIRPREFIX
 value|"/usr/obj"
 end_define
 
@@ -56,19 +56,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _PATH_OBJDIRPREFIX */
+comment|/* ! PATH_OBJDIRPREFIX */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_DEFSHELLDIR
+name|PATH_DEFSHELLDIR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PATH_DEFSHELLDIR
+name|PATH_DEFSHELLDIR
 value|"/bin"
 end_define
 
@@ -78,19 +78,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _PATH_DEFSHELLDIR */
+comment|/* ! PATH_DEFSHELLDIR */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_DEFSYSMK
+name|PATH_DEFSYSMK
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PATH_DEFSYSMK
+name|PATH_DEFSYSMK
 value|"sys.mk"
 end_define
 
@@ -100,19 +100,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _PATH_DEFSYSMK */
+comment|/* ! PATH_DEFSYSMK */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_DEFSYSPATH
+name|PATH_DEFSYSPATH
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PATH_DEFSYSPATH
+name|PATH_DEFSYSPATH
 value|"/usr/share/mk"
 end_define
 
@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _PATH_DEFSYSPATH */
+comment|/* ! PATH_DEFSYSPATH */
 end_comment
 
 begin_endif

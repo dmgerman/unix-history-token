@@ -1869,7 +1869,7 @@ name|char
 name|syspath
 index|[]
 init|=
-name|_PATH_DEFSYSPATH
+name|PATH_DEFSYSPATH
 decl_stmt|;
 block|{
 comment|/* 	 * Catch SIGCHLD so that we get kicked out of select() when we 	 * need to look at a child.  This is only known to matter for the 	 * -j case (perhaps without -P). 	 * 	 * XXX this is intentionally misplaced. 	 */
@@ -2366,7 +2366,7 @@ name|curdir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. _PATH_OBJDIR.${MACHINE} 	 *	4. _PATH_OBJDIR 	 *	5. _PATH_OBJDIRPREFIX`cwd` 	 * 	 * If one of the first two fails, use the current directory. 	 * If the remaining three all fail, use the current directory. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
+comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. PATH_OBJDIR.${MACHINE} 	 *	4. PATH_OBJDIR 	 *	5. PATH_OBJDIRPREFIX`cwd` 	 * 	 * If one of the first two fails, use the current directory. 	 * If the remaining three all fail, use the current directory. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
 if|if
 condition|(
 operator|!
@@ -2395,11 +2395,11 @@ condition|)
 block|{
 name|path
 operator|=
-name|_PATH_OBJDIR
+name|PATH_OBJDIR
 expr_stmt|;
 name|pathp
 operator|=
-name|_PATH_OBJDIRPREFIX
+name|PATH_OBJDIRPREFIX
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -2783,7 +2783,7 @@ name|ln
 decl_stmt|;
 name|Dir_Expand
 argument_list|(
-name|_PATH_DEFSYSMK
+name|PATH_DEFSYSMK
 argument_list|,
 operator|&
 name|sysIncPath
@@ -2804,7 +2804,7 @@ name|Fatal
 argument_list|(
 literal|"make: no system rules (%s)."
 argument_list|,
-name|_PATH_DEFSYSMK
+name|PATH_DEFSYSMK
 argument_list|)
 expr_stmt|;
 name|ln
