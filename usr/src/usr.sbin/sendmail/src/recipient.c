@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.22 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2792,15 +2792,15 @@ condition|)
 block|{
 name|uid
 operator|=
-literal|0
+name|DefUid
 expr_stmt|;
 name|gid
 operator|=
-literal|0
+name|DefGid
 expr_stmt|;
 name|uname
 operator|=
-name|NULL
+name|DefUser
 expr_stmt|;
 name|saveduid
 operator|=
