@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	8.8 (Berkeley) %G%"
+literal|"@(#)mkfs.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5541,24 +5541,18 @@ comment|/* 	 * initialize the node 	 */
 name|node
 operator|.
 name|di_atime
-operator|.
-name|ts_sec
 operator|=
 name|utime
 expr_stmt|;
 name|node
 operator|.
 name|di_mtime
-operator|.
-name|ts_sec
 operator|=
 name|utime
 expr_stmt|;
 name|node
 operator|.
 name|di_ctime
-operator|.
-name|ts_sec
 operator|=
 name|utime
 expr_stmt|;
