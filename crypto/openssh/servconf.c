@@ -3573,9 +3573,9 @@ break|break;
 case|case
 name|sConnectionsPerPeriod
 case|:
-name|fatal
+name|error
 argument_list|(
-literal|"ConnectionsPerPeriod has been deprecated."
+literal|"ConnectionsPerPeriod has been deprecated!"
 argument_list|)
 expr_stmt|;
 break|break;
