@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1991, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1991, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd.c	8.1 (Berkeley) %G%"
+literal|"@(#)pwd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +131,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * Flags for pwd are a bit strange.  The POSIX 1003.2B/D9 document 	 * has an optional -P flag for physical, which is what this program 	 * will produce by default.  The logical flag, -L, should fail, as 	 * there's no way to display a logical path after forking.  We don't 	 * document either flag, only adding -P for future portability. 	 */
 while|while
 condition|(
 operator|(
@@ -142,7 +143,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|""
+literal|"P"
 argument_list|)
 operator|)
 operator|!=
@@ -153,6 +154,10 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'P'
+case|:
+break|break;
 case|case
 literal|'?'
 case|:
@@ -193,7 +198,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -201,12 +205,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
