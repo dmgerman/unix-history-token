@@ -12876,9 +12876,7 @@ name|indent
 argument_list|,
 name|disk
 operator|->
-name|d_sync
-operator|.
-name|ds_syncid
+name|d_priority
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
