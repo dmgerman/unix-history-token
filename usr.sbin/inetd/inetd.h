@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -224,6 +230,10 @@ name|struct
 name|sockaddr_in6
 name|se_un_ctrladdr6
 decl_stmt|;
+name|struct
+name|sockaddr_un
+name|se_un_ctrladdr_un
+decl_stmt|;
 block|}
 name|se_un
 union|;
@@ -239,9 +249,25 @@ define|#
 directive|define
 name|se_ctrladdr6
 value|se_un.se_un_ctrladdr6
+define|#
+directive|define
+name|se_ctrladdr_un
+value|se_un.se_un_ctrladdr_un
 name|socklen_t
 name|se_ctrladdr_size
 decl_stmt|;
+name|uid_t
+name|se_sockuid
+decl_stmt|;
+comment|/* Owner for unix domain socket */
+name|gid_t
+name|se_sockgid
+decl_stmt|;
+comment|/* Group for unix domain socket */
+name|mode_t
+name|se_sockmode
+decl_stmt|;
+comment|/* Mode for unix domain socket */
 name|u_char
 name|se_type
 decl_stmt|;
