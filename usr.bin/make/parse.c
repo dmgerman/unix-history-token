@@ -7539,10 +7539,6 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* finish the last line also (if there was one) */
-name|ParseFinishLine
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Reached EOF, but it may be just EOF of an include file... 	 */
 block|}
 do|while
