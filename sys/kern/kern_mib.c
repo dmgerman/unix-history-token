@@ -63,6 +63,12 @@ directive|include
 file|<sys/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(,
@@ -491,12 +497,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<sys/_posix.h>
-end_include
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -510,7 +510,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-name|_KPOSIX_VERSION
+name|_POSIX_VERSION
 argument_list|,
 literal|"Version of POSIX attempting to comply to"
 argument_list|)
