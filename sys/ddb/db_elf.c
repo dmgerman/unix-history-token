@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: db_elf.c,v 1.1 1998/06/28 00:57:27 dfr Exp $ */
 end_comment
 
 begin_comment
