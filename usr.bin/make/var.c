@@ -5925,6 +5925,9 @@ name|Var
 operator|*
 operator|)
 name|NIL
+operator|&&
+operator|!
+name|haveModifier
 condition|)
 block|{
 comment|/* 			 * No need for nested expansion or anything, as we're 			 * the only one who sets these things and we sure don't 			 * put nested invocations in them... 			 */
