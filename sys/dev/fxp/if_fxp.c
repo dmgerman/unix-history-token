@@ -481,6 +481,12 @@ literal|"Intel Pro/100 Ethernet"
 block|}
 block|,
 block|{
+literal|0x1039
+block|,
+literal|"Intel Pro/100 Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
