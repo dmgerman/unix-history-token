@@ -956,6 +956,54 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Memory Mapped PCI config space base allocation structure */
+end_comment
+
+begin_struct
+struct|struct
+name|MCFGbody
+block|{
+name|uint8_t
+name|rsvd
+index|[
+literal|8
+index|]
+decl_stmt|;
+struct|struct
+block|{
+name|uint64_t
+name|baseaddr
+decl_stmt|;
+comment|/* Base Address */
+name|uint16_t
+name|seg_grp
+decl_stmt|;
+comment|/* Segment group number */
+name|uint8_t
+name|start
+decl_stmt|;
+comment|/* Starting bus number */
+name|uint8_t
+name|end
+decl_stmt|;
+comment|/* Ending bus number */
+name|uint8_t
+name|rsvd
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Reserved */
+block|}
+name|s
+index|[]
+struct|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Addresses to scan on ia32 for the RSD PTR.  According to section 5.2.2  * of the ACPI spec, we only consider two regions for the base address:  * 1. EBDA (1 KB area addressed to by 16 bit pointer at 0x40E)  * 2. High memory (0xE0000 - 0xFFFFF)  */
 end_comment
 
