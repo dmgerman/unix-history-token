@@ -1,31 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_dereg.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_dereg.h	6.3 (Berkeley) %G%  */
 end_comment
 
-begin_expr_stmt
-operator|*
-name|DEC
-name|DEUNA
-name|interface
-operator|*
-operator|/
-expr|struct
+begin_comment
+comment|/*  * DEC DEUNA interface  */
+end_comment
+
+begin_struct
+struct|struct
 name|dedevice
 block|{
-expr|union
+union|union
 block|{
 name|short
 name|p0_w
-block|;
+decl_stmt|;
 name|char
 name|p0_b
 index|[
 literal|2
 index|]
-block|; 	}
+decl_stmt|;
+block|}
 name|u_p0
-block|;
+union|;
 define|#
 directive|define
 name|pcsr0
@@ -40,15 +39,16 @@ name|pchigh
 value|u_p0.p0_b[1]
 name|short
 name|pcsr1
-block|;
+decl_stmt|;
 name|short
 name|pcsr2
-block|;
+decl_stmt|;
 name|short
 name|pcsr3
-block|; }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * PCSR 0 bit descriptions  */
