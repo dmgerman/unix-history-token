@@ -6188,6 +6188,7 @@ comment|/*  * increase_maxtable  *  * inputs	- loc location in table  * output	-
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|increase_maxtable
 parameter_list|(
