@@ -483,7 +483,7 @@ name|so
 operator|->
 name|so_upcallarg
 argument_list|,
-name|M_TRYWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 block|}
