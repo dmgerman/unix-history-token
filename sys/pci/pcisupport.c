@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.28 1996/01/23 21:31:51 wollman Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.29 1996/01/25 20:38:31 wollman Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -3659,6 +3659,18 @@ block|,
 literal|"\n"
 block|}
 block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+name|M_TR
+block|,
+literal|"\tInterrupt Routing: "
+block|}
+block|,
 define|#
 directive|define
 name|PIRQ
@@ -3668,54 +3680,144 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ 0x00, 0x00, 0x00, M_TR, "\t" n " Routing: " }, \     { x, 0x80, 0x80, M_EQ, "disabled" }, \     { x, 0xc0, 0x40, M_EQ, "[shared] " }, \     { x, 0x8f, 0x03, M_EQ, "IRQ3" }, \     { x, 0x8f, 0x04, M_EQ, "IRQ4" }, \     { x, 0x8f, 0x05, M_EQ, "IRQ5" }, \     { x, 0x8f, 0x06, M_EQ, "IRQ6" }, \     { x, 0x8f, 0x07, M_EQ, "IRQ7" }, \     { x, 0x8f, 0x09, M_EQ, "IRQ9" }, \     { x, 0x8f, 0x0a, M_EQ, "IRQ10" }, \     { x, 0x8f, 0x0b, M_EQ, "IRQ11" }, \     { x, 0x8f, 0x0c, M_EQ, "IRQ12" }, \     { x, 0x8f, 0x0e, M_EQ, "IRQ14" }, \     { x, 0x8f, 0x0f, M_EQ, "IRQ15" }, \     { 0x00, 0x00, 0x00, M_TR, "\n" }
+value|{ 0x00, 0x00, 0x00, M_TR, n ": " }, \     { x, 0x80, 0x80, M_EQ, "disabled" }, \     { x, 0xc0, 0x40, M_EQ, "[shared] " }, \     { x, 0x8f, 0x03, M_EQ, "IRQ3" }, \     { x, 0x8f, 0x04, M_EQ, "IRQ4" }, \     { x, 0x8f, 0x05, M_EQ, "IRQ5" }, \     { x, 0x8f, 0x06, M_EQ, "IRQ6" }, \     { x, 0x8f, 0x07, M_EQ, "IRQ7" }, \     { x, 0x8f, 0x09, M_EQ, "IRQ9" }, \     { x, 0x8f, 0x0a, M_EQ, "IRQ10" }, \     { x, 0x8f, 0x0b, M_EQ, "IRQ11" }, \     { x, 0x8f, 0x0c, M_EQ, "IRQ12" }, \     { x, 0x8f, 0x0e, M_EQ, "IRQ14" }, \     { x, 0x8f, 0x0f, M_EQ, "IRQ15" }
 comment|/* Interrupt routing */
 name|PIRQ
 argument_list|(
 literal|0x60
 argument_list|,
-literal|"INTA"
+literal|"A"
 argument_list|)
 block|,
 name|PIRQ
 argument_list|(
 literal|0x61
 argument_list|,
-literal|"INTB"
+literal|", B"
 argument_list|)
 block|,
 name|PIRQ
 argument_list|(
 literal|0x62
 argument_list|,
-literal|"INTC"
+literal|", C"
 argument_list|)
 block|,
 name|PIRQ
 argument_list|(
 literal|0x63
 argument_list|,
-literal|"INTD"
+literal|", D"
 argument_list|)
 block|,
 name|PIRQ
 argument_list|(
 literal|0x70
 argument_list|,
-literal|"MBIRQ0"
+literal|"\n\t\tMB0"
 argument_list|)
 block|,
 name|PIRQ
 argument_list|(
 literal|0x71
 argument_list|,
-literal|"MBIRQ1"
+literal|", MB1"
 argument_list|)
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+name|M_TR
+block|,
+literal|"\n"
+block|}
 block|,
 undef|#
 directive|undef
 name|PIRQ
 comment|/* XXX - do DMA routing, too? */
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|condmsg
+name|conf82371fb2
+index|[]
+init|=
+block|{
+comment|/* IDETM -- IDE Timing Register */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+name|M_TR
+block|,
+literal|"\tPrimary IDE: "
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|0x80
+block|,
+literal|0x80
+block|,
+name|M_EN
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+name|M_TR
+block|,
+literal|"\n\tSecondary IDE: "
+block|}
+block|,
+block|{
+literal|0x43
+block|,
+literal|0x80
+block|,
+literal|0x80
+block|,
+name|M_EN
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+name|M_TR
+block|,
+literal|"\n"
+block|}
+block|,
+comment|/* end of list */
 block|{
 literal|0
 block|}
@@ -4086,6 +4188,34 @@ argument_list|(
 name|config_id
 argument_list|,
 name|conf82371fb
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x12308086
+case|:
+name|printf
+argument_list|(
+literal|"\tI/O Base Address: %#lx\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+literal|0x20
+argument_list|)
+operator|&
+literal|0xfff0
+argument_list|)
+expr_stmt|;
+name|writeconfig
+argument_list|(
+name|config_id
+argument_list|,
+name|conf82371fb2
 argument_list|)
 expr_stmt|;
 break|break;
