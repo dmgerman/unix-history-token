@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.5 1999/01/14 06:14:15 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.6 1999/03/05 23:35:47 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -38,11 +38,61 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<sys/bus.h>
 end_include
 
 begin_comment
-comment|/* for pcici_t */
+comment|/* For device_t */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)> (b)) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)< (b)) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The maximum transfer per S/G segment.  */
 end_comment
 
 begin_define
@@ -56,16 +106,16 @@ begin_comment
 comment|/* limited by 24bit counter */
 end_comment
 
+begin_comment
+comment|/*  * The number of dma segments supported.  The current implementation limits  * us to 255 S/G entries (this may change to be unlimited at some point).  * To reduce the driver's memory consumption, we further limit the number  * supported to be sufficient to handle the largest mapping supported by  * the kernel, MAXPHYS.  Assuming the transfer is as fragmented as possible  * and unaligned, this turns out to be the number of paged sized transfers  * in MAXPHYS plus an extra element to handle any unaligned residual.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AHC_NSEG
-value|32
+value|(MIN(btoc(MAXPHYS) + 1, 255))
 end_define
-
-begin_comment
-comment|/* The number of dma segments supported. 				 * AHC_NSEG can be maxed out at 256 entries, 				 * but the kernel will never need to transfer 				 * such a large (1MB) request.  To reduce the 				 * driver's memory consumption, we reduce the 				 * max to 32.  16 would work if all transfers 				 * are paged alined since the kernel will only 				 * generate at most a 64k transfer, but to 				 * handle non-page aligned transfers, you need 				 * 17, so we round to the next power of two 				 * to make allocating SG space easy and 				 * efficient. 				 */
-end_comment
 
 begin_define
 define|#
@@ -88,27 +138,6 @@ end_define
 begin_comment
 comment|/* 				* Ring Buffer of incoming target commands. 				* We allocate 256 to simplify the logic 				* in the sequencer by using the natural 				* wrap point of an 8bit counter. 				*/
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|ahc_unit
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -333,10 +362,6 @@ init|=
 literal|0x004
 block|,
 comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default target 					 * settings. 					 */
-name|AHC_INDIRECT_PAGING
-init|=
-literal|0x008
-block|,
 name|AHC_SHARED_SRAM
 init|=
 literal|0x010
@@ -562,7 +587,7 @@ name|hardware_scb
 modifier|*
 name|hscb
 decl_stmt|;
-name|STAILQ_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|scb
 argument_list|)
@@ -584,59 +609,15 @@ decl_stmt|;
 name|struct
 name|ahc_dma_seg
 modifier|*
-name|ahc_dma
+name|sg_list
 decl_stmt|;
-comment|/* Pointer to SG segments */
-name|u_int32_t
-name|ahc_dmaphys
+name|bus_addr_t
+name|sg_list_phys
 decl_stmt|;
-comment|/* Phsical address of SG list */
 name|u_int
 name|sg_count
 decl_stmt|;
 comment|/* How full ahc_dma_seg is */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|scb_data
-block|{
-name|struct
-name|hardware_scb
-modifier|*
-name|hscbs
-decl_stmt|;
-comment|/* Array of hardware SCBs */
-name|struct
-name|scb
-modifier|*
-name|scbarray
-index|[
-name|AHC_SCB_MAX
-index|]
-decl_stmt|;
-comment|/* Array of kernel SCBs */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
-name|free_scbs
-expr_stmt|;
-comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
-name|u_int8_t
-name|numscbs
-decl_stmt|;
-name|u_int8_t
-name|maxhscbs
-decl_stmt|;
-comment|/* Number of SCBs on the card */
-name|u_int8_t
-name|maxscbs
-decl_stmt|;
-comment|/* 					 * Max SCBs we allocate total including 					 * any that will force us to page SCBs 					 */
 block|}
 struct|;
 end_struct
@@ -1089,6 +1070,107 @@ end_typedef
 
 begin_struct
 struct|struct
+name|sg_map_node
+block|{
+name|bus_dmamap_t
+name|sg_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|sg_physaddr
+decl_stmt|;
+name|struct
+name|ahc_dma_seg
+modifier|*
+name|sg_vaddr
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|sg_map_node
+argument_list|)
+name|links
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scb_data
+block|{
+name|struct
+name|hardware_scb
+modifier|*
+name|hscbs
+decl_stmt|;
+comment|/* Array of hardware SCBs */
+name|struct
+name|scb
+modifier|*
+name|scbarray
+decl_stmt|;
+comment|/* Array of kernel SCBs */
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|free_scbs
+expr_stmt|;
+comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
+name|struct
+name|scsi_sense_data
+modifier|*
+name|sense
+decl_stmt|;
+comment|/* Per SCB sense data */
+comment|/* 	 * "Bus" addresses of our data structures. 	 */
+name|bus_dma_tag_t
+name|hscb_dmat
+decl_stmt|;
+comment|/* dmat for our hardware SCB array */
+name|bus_dmamap_t
+name|hscb_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|hscb_busaddr
+decl_stmt|;
+name|bus_dma_tag_t
+name|sense_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|sense_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|sense_busaddr
+decl_stmt|;
+name|bus_dma_tag_t
+name|sg_dmat
+decl_stmt|;
+comment|/* dmat for our sg segments */
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|sg_map_node
+argument_list|)
+name|sg_maps
+expr_stmt|;
+name|u_int8_t
+name|numscbs
+decl_stmt|;
+name|u_int8_t
+name|maxhscbs
+decl_stmt|;
+comment|/* Number of SCBs on the card */
+name|u_int8_t
+name|init_level
+decl_stmt|;
+comment|/* 					 * How far we've initialized 					 * this structure. 					 */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ahc_softc
 block|{
 name|bus_space_tag_t
@@ -1098,8 +1180,9 @@ name|bus_space_handle_t
 name|bsh
 decl_stmt|;
 name|bus_dma_tag_t
-name|dmat
+name|buffer_dmat
 decl_stmt|;
+comment|/* dmat for buffer I/O */
 name|struct
 name|scb_data
 modifier|*
@@ -1159,23 +1242,17 @@ name|u_int8_t
 name|qinfifonext
 decl_stmt|;
 name|u_int8_t
+modifier|*
 name|qoutfifo
-index|[
-literal|256
-index|]
 decl_stmt|;
 name|u_int8_t
+modifier|*
 name|qinfifo
-index|[
-literal|256
-index|]
 decl_stmt|;
 comment|/* 	 * 256 byte array storing the SCBID of outstanding 	 * untagged SCBs indexed by TCL. 	 */
 name|u_int8_t
+modifier|*
 name|untagged_scbs
-index|[
-literal|256
-index|]
 decl_stmt|;
 comment|/* 	 * Hooks into the XPT. 	 */
 name|struct
@@ -1223,8 +1300,8 @@ comment|/* 	 * PCI error detection and data for running the 	 * PCI error interr
 name|int
 name|unsolicited_ints
 decl_stmt|;
-name|pcici_t
-name|pci_config_id
+name|device_t
+name|device
 decl_stmt|;
 comment|/* 	 * Target incoming command FIFO. 	 */
 name|struct
@@ -1268,13 +1345,48 @@ name|u_int
 name|msgin_index
 decl_stmt|;
 comment|/* Current index in msgin */
+name|int
+name|regs_res_type
+decl_stmt|;
+name|int
+name|regs_res_id
+decl_stmt|;
+name|int
+name|irq_res_type
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|regs
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|irq
+decl_stmt|;
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+name|bus_dma_tag_t
+name|parent_dmat
+decl_stmt|;
+name|bus_dma_tag_t
+name|shared_data_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|shared_data_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|shared_data_busaddr
+decl_stmt|;
 comment|/* Number of enabled target mode device on this card */
 name|u_int
 name|enabled_luns
 decl_stmt|;
-comment|/* 	 * "Bus" addresses of our data structures. 	 */
-name|u_int32_t
-name|hscb_busaddr
+comment|/* Initialization level of this data structure */
+name|u_int
+name|init_level
 decl_stmt|;
 block|}
 struct|;
@@ -1387,14 +1499,22 @@ name|ahc_softc
 modifier|*
 name|ahc_alloc
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|regs
+parameter_list|,
 name|int
-name|unit
+name|regs_type
 parameter_list|,
-name|u_int32_t
-name|io_base
+name|int
+name|regs_id
 parameter_list|,
-name|vm_offset_t
-name|maddr
+name|bus_dma_tag_t
+name|parent_dmat
 parameter_list|,
 name|ahc_chip
 name|chip
