@@ -171,14 +171,7 @@ name|dev
 decl_stmt|,
 modifier|*
 name|dir
-decl_stmt|,
-modifier|*
-name|options
 decl_stmt|;
-name|options
-operator|=
-name|NULL
-expr_stmt|;
 name|mntflags
 operator|=
 name|opts
@@ -228,7 +221,7 @@ literal|'o'
 case|:
 name|getmntopts
 argument_list|(
-name|options
+name|optarg
 argument_list|,
 name|mopts
 argument_list|,
