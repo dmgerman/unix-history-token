@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: iptests.c,v 2.0.2.13.2.2 1997/12/21 12:17:38 darrenr Exp $"
+literal|"@(#)$Id: iptests.c,v 2.1 1999/08/04 17:31:09 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,18 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
 begin_if
 if|#
 directive|if
@@ -104,24 +116,39 @@ name|__sgi
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|_KERNEL
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|solaris
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/dditypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -133,6 +160,28 @@ undef|#
 directive|undef
 name|KERNEL
 end_undef
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|solaris
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
+end_if
 
 begin_include
 include|#

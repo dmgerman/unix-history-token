@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1992-1997 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * (C)opyright 1992-1998 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -198,7 +198,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sdlpi.c,v 2.0.2.6 1997/10/15 14:49:14 darrenr Exp $"
+literal|"@(#)$Id: sdlpi.c,v 2.1 1999/08/04 17:31:13 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

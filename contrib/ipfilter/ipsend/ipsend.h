@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipsend.h (C) 1997 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  *  */
+comment|/*  * ipsend.h (C) 1997-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  *  */
 end_comment
 
 begin_ifndef
@@ -700,12 +700,23 @@ parameter_list|)
 value|kmemcpy((char *)(a), (void *)(b), (int)(c))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPT_RAW
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|OPT_RAW
 value|0x80000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

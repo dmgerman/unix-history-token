@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  * (C)opyright 1997 by Marc Boucher.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original authors and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  * (C)opyright 1997 by Marc Boucher.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original authors and the contributors.  */
 end_comment
 
 begin_comment
@@ -215,7 +215,9 @@ name|ipl_mutex
 decl_stmt|,
 name|ipf_mutex
 decl_stmt|,
-name|ipfs_mutex
+name|ipfi_mutex
+decl_stmt|,
+name|ipf_rw
 decl_stmt|;
 end_decl_stmt
 
@@ -421,7 +423,7 @@ decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 comment|/* sets interrupt priority level to splhi */
@@ -451,7 +453,7 @@ break|break;
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -1245,7 +1247,7 @@ return|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 comment|/* sets interrupt priority level to splhi */
@@ -1361,7 +1363,7 @@ comment|/* enable ipfilter_kernel */
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 else|#
@@ -1416,7 +1418,7 @@ decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 comment|/* sets interrupt priority level to splhi */
@@ -1528,12 +1530,6 @@ name|nif
 argument_list|,
 name|nif_t
 operator|*
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|nif
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1899,7 +1895,7 @@ expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1946,7 +1942,7 @@ decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 comment|/* sets interrupt priority level to splhi */
@@ -2216,7 +2212,7 @@ block|}
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 name|nifattach
@@ -2257,7 +2253,7 @@ decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 comment|/* sets interrupt priority level to splhi */
@@ -2433,7 +2429,7 @@ block|}
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2454,7 +2450,7 @@ name|IPFILTER_LKM
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 comment|/* sets interrupt priority level to splhi */
@@ -2493,7 +2489,7 @@ block|}
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 else|#
@@ -2582,7 +2578,7 @@ block|{
 name|MUTEX_ENTER
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -2596,7 +2592,7 @@ comment|/* if the number of interfaces has changed, resync */
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 name|ipfsync
@@ -2607,7 +2603,7 @@ else|else
 name|MUTEX_EXIT
 argument_list|(
 operator|&
-name|ipfs_mutex
+name|ipfi_mutex
 argument_list|)
 expr_stmt|;
 block|}
@@ -2652,6 +2648,13 @@ argument_list|)
 expr_stmt|;
 name|LOCK_DEALLOC
 argument_list|(
+name|ipf_rw
+operator|.
+name|l
+argument_list|)
+expr_stmt|;
+name|LOCK_DEALLOC
+argument_list|(
 name|ipf_auth
 operator|.
 name|l
@@ -2694,7 +2697,7 @@ argument_list|)
 expr_stmt|;
 name|LOCK_DEALLOC
 argument_list|(
-name|ipfs_mutex
+name|ipfi_mutex
 operator|.
 name|l
 argument_list|)
@@ -2728,7 +2731,7 @@ name|error
 decl_stmt|;
 endif|#
 directive|endif
-name|ipfs_mutex
+name|ipfi_mutex
 operator|.
 name|l
 operator|=
@@ -2873,6 +2876,30 @@ name|KM_NOSLEEP
 argument_list|)
 expr_stmt|;
 name|ipf_auth
+operator|.
+name|l
+operator|=
+name|LOCK_ALLOC
+argument_list|(
+operator|(
+name|uchar_t
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|IPF_LOCK_PL
+argument_list|,
+operator|(
+name|lkinfo_t
+operator|*
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|KM_NOSLEEP
+argument_list|)
+expr_stmt|;
+name|ipf_rw
 operator|.
 name|l
 operator|=
@@ -2923,7 +2950,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ipfs_mutex
+name|ipfi_mutex
 operator|.
 name|l
 operator|||
@@ -2954,6 +2981,11 @@ name|l
 operator|||
 operator|!
 name|ipf_auth
+operator|.
+name|l
+operator|||
+operator|!
+name|ipf_rw
 operator|.
 name|l
 operator|||

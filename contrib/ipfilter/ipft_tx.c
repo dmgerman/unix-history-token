@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -248,7 +248,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.0.2.11.2.3 1998/05/23 19:20:32 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.1 1999/08/04 17:30:05 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,7 +1142,7 @@ condition|)
 if|#
 directive|if
 literal|0
-then|return sizeof(struct tcpiphdr);
+then|return sizeof(*ip) + sizeof(tcphdr_t);
 else|#
 directive|else
 return|return
@@ -1615,6 +1615,40 @@ name|cpp
 operator|++
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+operator|*
+name|cpp
+argument_list|)
+operator|&&
+operator|!
+name|index
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|'.'
+argument_list|)
+condition|)
+block|{
+name|ip
+operator|->
+name|ip_p
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|cpp
+argument_list|)
+expr_stmt|;
+name|cpp
+operator|++
+expr_stmt|;
+block|}
 else|else
 name|ip
 operator|->
@@ -1891,6 +1925,27 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+name|tcp
+operator|->
+name|th_win
+operator|=
+name|htons
+argument_list|(
+literal|4096
+argument_list|)
+expr_stmt|;
+name|tcp
+operator|->
+name|th_off
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp
+argument_list|)
+operator|>>
+literal|2
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2165,6 +2220,17 @@ argument_list|(
 operator|*
 name|ic
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|htons
+argument_list|(
+name|ip
+operator|->
+name|ip_len
 argument_list|)
 expr_stmt|;
 return|return

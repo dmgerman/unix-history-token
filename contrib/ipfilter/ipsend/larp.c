@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * larp.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * larp.c (C) 1995-1998 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: larp.c,v 2.0.2.3 1997/09/28 07:13:31 darrenr Exp $"
+literal|"@(#)$Id: larp.c,v 2.1 1999/08/04 17:31:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,18 @@ begin_include
 include|#
 directive|include
 file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iplang/iplang.h"
 end_include
 
 begin_comment
@@ -252,6 +264,25 @@ modifier|*
 name|inet_ntoa
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|IP_SEND
+if|if
+condition|(
+name|arp_getipv4
+argument_list|(
+name|ip
+argument_list|,
+name|ether
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 operator|(

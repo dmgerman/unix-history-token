@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.0.2.14.2.6 1998/05/24 05:18:04 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.1 1999/08/04 17:30:00 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -103,6 +103,25 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|tcpdata
+block|{
+name|u_32_t
+name|td_end
+decl_stmt|;
+name|u_32_t
+name|td_maxend
+decl_stmt|;
+name|u_short
+name|td_maxwin
+decl_stmt|;
+block|}
+name|tcpdata_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|tcpstate
 block|{
 name|u_short
@@ -111,17 +130,11 @@ decl_stmt|;
 name|u_short
 name|ts_dport
 decl_stmt|;
-name|u_long
-name|ts_seq
-decl_stmt|;
-name|u_long
-name|ts_ack
-decl_stmt|;
-name|u_short
-name|ts_swin
-decl_stmt|;
-name|u_short
-name|ts_dwin
+name|tcpdata_t
+name|ts_data
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|u_char
 name|ts_state
@@ -164,6 +177,10 @@ name|void
 modifier|*
 name|is_ifpout
 decl_stmt|;
+name|frentry_t
+modifier|*
+name|is_rule
+decl_stmt|;
 name|struct
 name|in_addr
 name|is_src
@@ -175,27 +192,38 @@ decl_stmt|;
 name|u_char
 name|is_p
 decl_stmt|;
+comment|/* Protocol */
 name|u_char
+name|is_rout
+decl_stmt|;
+comment|/* Is rule in/out ? */
+name|u_32_t
 name|is_flags
 decl_stmt|;
 name|u_32_t
 name|is_opt
 decl_stmt|;
+comment|/* packet options set */
 name|u_32_t
 name|is_optmsk
 decl_stmt|;
+comment|/*    "      "    mask */
 name|u_short
 name|is_sec
 decl_stmt|;
+comment|/* security options set */
 name|u_short
 name|is_secmsk
 decl_stmt|;
+comment|/*    "        "    mask */
 name|u_short
 name|is_auth
 decl_stmt|;
+comment|/* authentication options set */
 name|u_short
 name|is_authmsk
 decl_stmt|;
+comment|/*    "              "    mask */
 union|union
 block|{
 name|icmpstate_t
@@ -225,6 +253,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|is_type
+value|is_icmp.ics_type
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_code
+value|is_icmp.ics_code
+end_define
+
+begin_define
+define|#
+directive|define
 name|is_tcp
 value|is_ps.is_ts
 end_define
@@ -239,29 +281,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|is_seq
-value|is_tcp.ts_seq
+name|is_send
+value|is_tcp.ts_data[0].td_end
 end_define
 
 begin_define
 define|#
 directive|define
-name|is_ack
-value|is_tcp.ts_ack
+name|is_dend
+value|is_tcp.ts_data[1].td_end
 end_define
 
 begin_define
 define|#
 directive|define
-name|is_dwin
-value|is_tcp.ts_dwin
+name|is_maxswin
+value|is_tcp.ts_data[0].td_maxwin
 end_define
 
 begin_define
 define|#
 directive|define
-name|is_swin
-value|is_tcp.ts_swin
+name|is_maxdwin
+value|is_tcp.ts_data[1].td_maxwin
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_maxsend
+value|is_tcp.ts_data[0].td_maxend
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_maxdend
+value|is_tcp.ts_data[1].td_maxend
 end_define
 
 begin_define
@@ -292,6 +348,10 @@ name|TH_OPENING
 value|(TH_SYN|TH_ACK)
 end_define
 
+begin_comment
+comment|/*  * is_flags:  * Bits 0 - 3 are use as a mask with the current packet's bits to check for  * whether it is short, tcp/udp, a fragment or the presence of IP options.  * Bits 4 - 7 are set from the initial packet and contain what the packet  * anded with bits 0-3 must match.  * Bits 8,9 are used to indicate wildcard source/destination port matching.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -316,6 +376,12 @@ name|isl_p
 decl_stmt|;
 name|u_char
 name|isl_flags
+decl_stmt|;
+name|u_char
+name|isl_state
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|u_short
 name|isl_type
@@ -428,6 +494,9 @@ decl_stmt|;
 name|u_long
 name|iss_logfail
 decl_stmt|;
+name|u_long
+name|iss_inuse
+decl_stmt|;
 name|ipstate_t
 modifier|*
 modifier|*
@@ -490,6 +559,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|fr_stateinit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|fr_tcpstate
 name|__P
 argument_list|(
@@ -512,7 +594,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|ipstate_t
+modifier|*
 name|fr_addstate
 name|__P
 argument_list|(
@@ -531,7 +614,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|frentry_t
+modifier|*
 name|fr_checkstate
 name|__P
 argument_list|(
@@ -608,7 +692,7 @@ expr|struct
 name|ipstate
 operator|*
 operator|,
-name|u_short
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;

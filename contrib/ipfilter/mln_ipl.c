@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_comment
@@ -338,6 +338,38 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OpenBSD
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|int
+name|if_ipl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|xxxinit
@@ -355,6 +387,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -551,6 +588,9 @@ operator|)
 name|nullop
 block|,
 comment|/* stop */
+ifndef|#
+directive|ifndef
+name|OpenBSD
 operator|(
 name|void
 operator|*
@@ -558,6 +598,8 @@ operator|)
 name|nullop
 block|,
 comment|/* reset */
+endif|#
+directive|endif
 operator|(
 name|void
 operator|*
@@ -663,6 +705,23 @@ name|ver
 argument_list|)
 else|#
 directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OpenBSD
+argument_list|)
+name|int
+name|if_ipl
+argument_list|(
+name|lkmtp
+argument_list|,
+name|cmd
+argument_list|,
+name|ver
+argument_list|)
+else|#
+directive|else
 name|int
 name|xxxinit
 argument_list|(
@@ -672,6 +731,8 @@ name|cmd
 argument_list|,
 name|ver
 argument_list|)
+endif|#
+directive|endif
 endif|#
 directive|endif
 decl|struct
@@ -708,6 +769,35 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OpenBSD
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|lkmexists
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* defined in /sys/kern/kern_lkm.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -968,6 +1058,24 @@ argument_list|,
 name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OpenBSD
+name|VOP_LOCK
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|curproc
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|vn_lock
 argument_list|(
 name|nd
@@ -979,6 +1087,8 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|VOP_LEASE
 argument_list|(
 name|nd

@@ -1,7 +1,65 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|SOLARIS2
+operator|>=
+literal|7
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_SYS_VARARGS_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|_VARARGS_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -248,7 +306,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: misc.c,v 2.0.2.8.2.1 1997/11/12 10:58:26 darrenr Exp $"
+literal|"@(#)$Id: misc.c,v 2.1 1999/08/04 17:30:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,8 +333,7 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-name|struct
-name|tcphdr
+name|tcphdr_t
 modifier|*
 name|tcp
 decl_stmt|;
@@ -305,7 +362,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ip %d(%d) %d "
+literal|"ip %d(%d) %d"
 argument_list|,
 name|ip
 operator|->
@@ -328,11 +385,11 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-literal|0x1fff
+name|IP_OFFMASK
 condition|)
 name|printf
 argument_list|(
-literal|"@%d"
+literal|" @%d"
 argument_list|,
 name|ip
 operator|->
@@ -364,7 +421,7 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-literal|0x1fff
+name|IP_OFFMASK
 operator|)
 condition|)
 if|if
@@ -427,7 +484,7 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-literal|0x1fff
+name|IP_OFFMASK
 operator|)
 condition|)
 if|if
@@ -467,11 +524,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+end_if
 
 begin_function
 name|void

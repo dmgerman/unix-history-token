@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_comment
@@ -162,13 +162,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ipt.h"
+file|"snoop.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"snoop.h"
+file|"ipt.h"
 end_include
 
 begin_if
@@ -188,7 +188,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_sn.c,v 2.0.2.6.2.1 1997/11/12 10:56:09 darrenr Exp $"
+literal|"@(#)$Id: ipft_sn.c,v 2.1 1999/08/04 17:30:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

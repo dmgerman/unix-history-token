@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.0.2.12 1997/09/28 07:11:50 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.1.2.1 1999/10/05 12:59:25 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -37,14 +37,14 @@ begin_define
 define|#
 directive|define
 name|OPT_REMOVE
-value|0x00001
+value|0x000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_DEBUG
-value|0x00002
+value|0x000002
 end_define
 
 begin_define
@@ -55,7 +55,7 @@ value|FR_OUTQUE
 end_define
 
 begin_comment
-comment|/* 0x0004 */
+comment|/* 0x00004 */
 end_comment
 
 begin_define
@@ -66,7 +66,7 @@ value|FR_INQUE
 end_define
 
 begin_comment
-comment|/* 0x0008 */
+comment|/* 0x00008 */
 end_comment
 
 begin_define
@@ -77,42 +77,42 @@ value|FR_LOG
 end_define
 
 begin_comment
-comment|/* 0x0010 */
+comment|/* 0x00010 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPT_SHOWLIST
-value|0x00020
+value|0x000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_VERBOSE
-value|0x00040
+value|0x000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_DONOTHING
-value|0x00080
+value|0x000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_HITS
-value|0x00100
+value|0x000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_BRIEF
-value|0x00200
+value|0x000200
 end_define
 
 begin_define
@@ -163,42 +163,56 @@ begin_define
 define|#
 directive|define
 name|OPT_SHOWLINENO
-value|0x04000
+value|0x004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_PRINTFR
-value|0x08000
+value|0x008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_ZERORULEST
-value|0x10000
+value|0x010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_SAVEOUT
-value|0x20000
+value|0x020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_AUTHSTATS
-value|0x40000
+value|0x040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPT_RAW
-value|0x80000
+value|0x080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_NAT
+value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_GROUPS
+value|0x200000
 end_define
 
 begin_ifndef
@@ -285,6 +299,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -330,13 +346,18 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_short
+name|int
 name|portnum
 name|__P
 argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|u_short
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -394,6 +415,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -413,6 +436,8 @@ operator|*
 operator|,
 name|u_short
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -457,16 +482,51 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|gethostname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sync
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|sun
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|SOLARIS
+end_if
 
 begin_define
 define|#
