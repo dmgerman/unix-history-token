@@ -373,7 +373,7 @@ comment|/* 18 */
 literal|"Olicom PCMCIA 16/4 Adapter (OC-3250)"
 block|,
 comment|/* 19 */
-literal|"Olicom RapidFire 3540 4/16/100 Adapter (OC-3540)"
+literal|"Olicom RapidFire 3540 100/16/4 Adapter (OC-3540)"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2151,9 +2151,7 @@ name|work_memory
 operator|=
 name|malloc
 argument_list|(
-literal|32
-operator|*
-literal|1024
+name|work_size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -4056,9 +4054,7 @@ name|work_memory
 operator|=
 name|malloc
 argument_list|(
-literal|32
-operator|*
-literal|1024
+name|work_size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
