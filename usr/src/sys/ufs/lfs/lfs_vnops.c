@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5291,6 +5291,27 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 		 * If the target directory is in the same 		 * directory as the source directory, 		 * decrement the link count on the parent 		 * of the target directory. 		 */
+if|if
+condition|(
+name|doingdirectory
+operator|&&
+operator|!
+name|newparent
+condition|)
+block|{
+name|dp
+operator|->
+name|i_nlink
+operator|--
+expr_stmt|;
+name|dp
+operator|->
+name|i_flag
+operator||=
+name|ICHG
+expr_stmt|;
+block|}
 name|vput
 argument_list|(
 name|ITOV
