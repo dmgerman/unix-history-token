@@ -590,6 +590,12 @@ operator|*
 operator|)
 name|ia
 expr_stmt|;
+name|ifa
+operator|->
+name|ifa_refcnt
+operator|=
+literal|1
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
