@@ -913,9 +913,16 @@ name|rv
 operator|!=
 name|KERN_SUCCESS
 condition|)
+block|{
+name|vm_object_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 comment|/* prefault the page tables */
 name|pmap_object_init_pt
 argument_list|(
