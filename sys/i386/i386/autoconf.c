@@ -285,84 +285,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FFS_ROOT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|FFS
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|``options FFS_ROOT'' requires ``options FFS''
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NFS_ROOT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NFS
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|``options NFS_ROOT'' requires ``options NFS''
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CD9660_ROOT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|CD9660
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|``options CD9660_ROOT'' requires ``options CD9660''
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -448,6 +370,11 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|CD9660
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|CD9660_ROOT
@@ -758,7 +685,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CD9660_ROOT */
+comment|/* CD9660 || CD9660_ROOT */
 end_comment
 
 begin_decl_stmt
@@ -1065,6 +992,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|CD9660
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|CD9660_ROOT
 argument_list|)
 if|if
@@ -1186,6 +1118,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|NFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|NFS_ROOT
 argument_list|)
 if|if
@@ -1215,6 +1152,11 @@ directive|endif
 comment|/* NFS */
 if|#
 directive|if
+name|defined
+argument_list|(
+name|FFS
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|FFS_ROOT
