@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	2.1 %G%"
+literal|"@(#)optim.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2313,6 +2313,33 @@ block|{
 name|printf
 argument_list|(
 literal|"Made up bad net name\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Machine code %c (0%o)\n"
+argument_list|,
+name|cp
+index|[
+operator|-
+literal|1
+index|]
+argument_list|,
+name|cp
+index|[
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Sorry -- dumping now.  Alert K. Shoens\n"
+argument_list|)
+expr_stmt|;
+name|core
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
