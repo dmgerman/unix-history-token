@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cards.c	5.4 (Berkeley) %G%"
+literal|"@(#)cards.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +386,7 @@ comment|/*  * remove the card a from the deck d of n cards  */
 end_comment
 
 begin_macro
-name|remove
+name|cremove
 argument_list|(
 argument|a
 argument_list|,

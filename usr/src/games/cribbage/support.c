@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	5.5 (Berkeley) %G%"
+literal|"@(#)support.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1320,7 +1320,7 @@ operator|++
 control|)
 block|{
 comment|/* get all other cards */
-name|remove
+name|cremove
 argument_list|(
 name|known
 index|[
@@ -1435,7 +1435,7 @@ index|[
 name|k
 index|]
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|chand
 index|[
@@ -1447,7 +1447,7 @@ argument_list|,
 name|FULLHAND
 argument_list|)
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|chand
 index|[
@@ -1593,7 +1593,7 @@ index|[
 name|k
 index|]
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|h
 index|[
@@ -1608,7 +1608,7 @@ argument_list|,
 name|FULLHAND
 argument_list|)
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|h
 index|[

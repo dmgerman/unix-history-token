@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crib.c	5.5 (Berkeley) %G%"
+literal|"@(#)crib.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1442,7 +1442,7 @@ name|prompt
 argument_list|)
 index|]
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|crd
 argument_list|,
@@ -1486,7 +1486,7 @@ name|prompt
 argument_list|)
 index|]
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|crd
 argument_list|,
@@ -2269,7 +2269,7 @@ index|[
 name|j
 index|]
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|crd
 argument_list|,
@@ -2528,7 +2528,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|remove
+name|cremove
 argument_list|(
 name|crd
 argument_list|,

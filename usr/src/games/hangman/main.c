@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,10 @@ begin_function
 name|main
 parameter_list|()
 block|{
+name|void
+name|die
+parameter_list|()
+function_decl|;
 name|initscr
 argument_list|()
 expr_stmt|;
@@ -116,12 +120,10 @@ begin_comment
 comment|/*  * die:  *	Die properly.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|mvcur
 argument_list|(
@@ -152,7 +154,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

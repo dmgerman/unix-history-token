@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)instr.c	5.1 (Berkeley) %G%"
+literal|"@(#)instr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -91,9 +103,6 @@ name|pstat
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|,
-name|waitpid
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -101,18 +110,6 @@ name|pager
 decl_stmt|,
 modifier|*
 name|path
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -261,6 +258,10 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pstat
 argument_list|,
