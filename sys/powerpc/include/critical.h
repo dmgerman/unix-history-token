@@ -83,11 +83,7 @@ expr_stmt|;
 name|msr
 operator|&=
 operator|~
-operator|(
 name|PSL_EE
-operator||
-name|PSL_RI
-operator|)
 expr_stmt|;
 name|mtmsr
 argument_list|(
