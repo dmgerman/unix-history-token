@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rtprio.c,v 1.2.8.1 1997/11/06 07:34:33 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ literal|"%s"
 argument_list|,
 name|argv
 index|[
-literal|0
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
