@@ -35,6 +35,13 @@ name|FALSE
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|FATAL
+value|1
+end_define
+
 begin_comment
 comment|/* imports from dver.c */
 end_comment
@@ -1132,6 +1139,8 @@ operator|++
 condition|)
 empty_stmt|;
 comment|/* copy what's left to the beginning */
+if|if
+condition|(
 name|fgets
 argument_list|(
 operator|(
@@ -1149,6 +1158,15 @@ name|buf
 operator|)
 argument_list|,
 name|fp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"unexpected end of input"
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -2396,7 +2414,7 @@ while|while
 condition|(
 name|ny
 operator|>=
-literal|0
+name|y
 condition|)
 block|{
 if|if
