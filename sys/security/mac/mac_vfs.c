@@ -7163,7 +7163,6 @@ comment|/*  * When relabeling a process, call out to the policies for the maximu
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mac_cred_mmapped_drop_perms
 parameter_list|(
