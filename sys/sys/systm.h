@@ -1213,7 +1213,6 @@ unit|)
 name|__P
 argument_list|(
 operator|(
-specifier|volatile
 name|void
 operator|*
 name|buf
