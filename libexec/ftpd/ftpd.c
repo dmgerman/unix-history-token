@@ -8241,7 +8241,7 @@ name|int
 name|status
 decl_stmt|;
 block|{
-comment|/* 	 * Prevent reception of SIGURG from resulting in a resumption 	 * back to the main program loop. 	*/
+comment|/* 	 * Prevent reception of SIGURG from resulting in a resumption 	 * back to the main program loop. 	 */
 name|transflag
 operator|=
 literal|0
