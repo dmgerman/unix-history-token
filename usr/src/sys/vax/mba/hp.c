@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -707,6 +707,54 @@ literal|82
 block|,
 comment|/* H=cyl 82 thru 561 */
 block|}
+struct|,
+name|fj2361_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 12 */
+literal|66880
+block|,
+literal|13
+block|,
+comment|/* B=cyl 13 thru 65 */
+literal|1077760
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 841 */
+literal|15884
+block|,
+literal|294
+block|,
+comment|/* D=cyl 294 thru 306 */
+literal|307200
+block|,
+literal|307
+block|,
+comment|/* E=cyl 307 thru 546 */
+literal|377408
+block|,
+literal|547
+block|,
+comment|/* F=cyl 547 thru 841 */
+literal|701248
+block|,
+literal|294
+block|,
+comment|/* G=cyl 294 thru 841 */
+literal|291346
+block|,
+literal|66
+block|,
+comment|/* H=cyl 66 thru 293 */
+block|}
 struct|;
 end_struct
 
@@ -715,7 +763,7 @@ comment|/* END OF STUFF WHICH SHOULD BE READ IN PER DISK */
 end_comment
 
 begin_comment
-comment|/*  * Table for converting Massbus drive types into  * indices into the partition tables.  Slots are  * left for those drives devined from other means  * (e.g. SI, AMPEX, etc.).  */
+comment|/*  * Table for converting Massbus drive types into  * indices into the partition tables.  Slots are  * left for those drives divined from other means  * (e.g. SI, AMPEX, etc.).  */
 end_comment
 
 begin_decl_stmt
@@ -819,7 +867,14 @@ name|HPDT_RM02
 value|14
 name|MBDT_RM02
 block|,
-comment|/* beware, actually capricorn or eagle */
+comment|/* beware, actually mapped */
+define|#
+directive|define
+name|HPDT_2361
+value|15
+operator|-
+literal|1
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -923,6 +978,11 @@ name|short
 name|mindist
 decl_stmt|;
 comment|/* preceding the target sector */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of disk type */
 block|}
 name|hpst
 index|[]
@@ -946,9 +1006,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"RM03"
 block|}
 block|,
-comment|/* RM03 */
 block|{
 literal|32
 block|,
@@ -967,9 +1028,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"RM05"
 block|}
 block|,
-comment|/* RM05 */
 block|{
 literal|22
 block|,
@@ -988,9 +1050,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"RP06"
 block|}
 block|,
-comment|/* RP06 */
 block|{
 literal|31
 block|,
@@ -1009,9 +1072,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"RM80"
 block|}
 block|,
-comment|/* RM80 */
 block|{
 literal|22
 block|,
@@ -1030,9 +1094,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"RP04"
 block|}
 block|,
-comment|/* RP04 */
 block|{
 literal|22
 block|,
@@ -1051,9 +1116,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"RP05"
 block|}
 block|,
-comment|/* RP05 */
 block|{
 literal|50
 block|,
@@ -1072,9 +1138,10 @@ block|,
 literal|8
 block|,
 literal|3
+block|,
+literal|"RP07"
 block|}
 block|,
-comment|/* RP07 */
 block|{
 literal|1
 block|,
@@ -1091,9 +1158,10 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|"ML11A"
 block|}
 block|,
-comment|/* ML11A */
 block|{
 literal|1
 block|,
@@ -1110,9 +1178,10 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|"ML11B"
 block|}
 block|,
-comment|/* ML11B */
 block|{
 literal|32
 block|,
@@ -1131,9 +1200,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"9775"
 block|}
 block|,
-comment|/* 9775 */
 block|{
 literal|32
 block|,
@@ -1152,9 +1222,10 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"9730-160"
 block|}
 block|,
-comment|/* 9730 */
 block|{
 literal|32
 block|,
@@ -1173,9 +1244,10 @@ block|,
 literal|4
 block|,
 literal|3
+block|,
+literal|"capricorn"
 block|}
 block|,
-comment|/* Capricorn */
 block|{
 literal|48
 block|,
@@ -1194,9 +1266,10 @@ block|,
 literal|8
 block|,
 literal|3
+block|,
+literal|"eagle"
 block|}
 block|,
-comment|/* EAGLE */
 block|{
 literal|32
 block|,
@@ -1215,10 +1288,32 @@ block|,
 literal|4
 block|,
 literal|1
+block|,
+literal|"9300"
 block|}
 block|,
-comment|/* 9300 */
+block|{
+literal|64
+block|,
+literal|20
+block|,
+literal|64
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|fj2361_sizes
+block|,
+literal|15
+block|,
+literal|8
+block|,
+literal|3
+block|,
+literal|"2361"
 block|}
+block|, }
 struct|;
 end_struct
 
@@ -1635,13 +1730,12 @@ operator|=
 name|HPDT_9730
 expr_stmt|;
 break|break;
-comment|/* 		 * Beware, since the only SI controller we 		 * have has a 9300 instead of a 9766, we map the 		 * drive type into the 9300.  This means that 		 * on a 9766 you lose the last 8 cylinders (argh). 		 */
 case|case
 name|SI9766
 case|:
 name|printf
 argument_list|(
-literal|"hp%d: 9300\n"
+literal|"hp%d: 9766\n"
 argument_list|,
 name|mi
 operator|->
@@ -1650,7 +1744,7 @@ argument_list|)
 expr_stmt|;
 name|type
 operator|=
-name|HPDT_9300
+name|HPDT_RM05
 expr_stmt|;
 break|break;
 case|case
@@ -1720,9 +1814,11 @@ name|HPDT_RM02
 condition|)
 block|{
 name|int
+name|nsectors
+decl_stmt|,
 name|ntracks
 decl_stmt|,
-name|nsectors
+name|ncyl
 decl_stmt|;
 name|hpaddr
 operator|->
@@ -1758,54 +1854,11 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|ntracks
-operator|==
-literal|16
-condition|)
-block|{
-name|printf
+name|DELAY
 argument_list|(
-literal|"hp%d: capricorn\n"
-argument_list|,
-name|mi
-operator|->
-name|mi_unit
+literal|100
 argument_list|)
 expr_stmt|;
-name|type
-operator|=
-name|HPDT_CAPRICORN
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-if|if
-condition|(
-name|ntracks
-operator|==
-literal|19
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hp%d: 9300\n"
-argument_list|,
-name|mi
-operator|->
-name|mi_unit
-argument_list|)
-expr_stmt|;
-name|type
-operator|=
-name|HPDT_9300
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 name|hpaddr
 operator|->
 name|hpcs1
@@ -1829,49 +1882,126 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|ntracks
-operator|==
-literal|20
-operator|&&
-name|nsectors
-operator|==
-literal|48
-condition|)
-block|{
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_NOP
+expr_stmt|;
+name|hpaddr
+operator|->
+name|hphr
+operator|=
+name|HPHR_MAXCYL
+expr_stmt|;
+name|ncyl
+operator|=
+name|MASKREG
+argument_list|(
+name|hpaddr
+operator|->
+name|hphr
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+for|for
+control|(
 name|type
 operator|=
-name|HPDT_EAGLE
-expr_stmt|;
+literal|0
+init|;
+name|hptypes
+index|[
+name|type
+index|]
+operator|!=
+literal|0
+condition|;
+name|type
+operator|++
+control|)
+if|if
+condition|(
+name|hpst
+index|[
+name|type
+index|]
+operator|.
+name|nsect
+operator|==
+name|nsectors
+operator|&&
+name|hpst
+index|[
+name|type
+index|]
+operator|.
+name|ntrak
+operator|==
+name|ntracks
+operator|&&
+name|hpst
+index|[
+name|type
+index|]
+operator|.
+name|ncyl
+operator|==
+name|ncyl
+condition|)
+break|break;
+if|if
+condition|(
+name|hptypes
+index|[
+name|type
+index|]
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"hp%d: eagle\n"
+literal|"hp%d: %d sectors, %d tracks, %d cylinders: unknown device\n"
 argument_list|,
 name|mi
 operator|->
 name|mi_unit
+argument_list|,
+name|nsectors
+argument_list|,
+name|ntracks
+argument_list|,
+name|ncyl
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+name|type
+operator|=
+name|HPDT_RM02
+expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"hp%d: ntracks %d, nsectors %d: unknown device\n"
+literal|"hp%d: %s\n"
 argument_list|,
 name|mi
 operator|->
 name|mi_unit
 argument_list|,
-name|ntracks
-argument_list|,
-name|nsectors
+name|hpst
+index|[
+name|type
+index|]
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 name|hpaddr
 operator|->
 name|hpcs1
