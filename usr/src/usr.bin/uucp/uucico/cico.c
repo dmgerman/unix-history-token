@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.17	(Berkeley) %G%"
+literal|"@(#)cico.c	5.18	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +688,7 @@ end_comment
 begin_expr_stmt
 name|signal
 argument_list|(
-name|SIGFPE
+name|SIGUSR1
 argument_list|,
 name|dbg_signal
 argument_list|)
@@ -4355,7 +4355,7 @@ literal|"(conversation complete %ld sent %ld received)"
 argument|, 		Bytes_Sent, Bytes_Received); 	logent(str, _FAILED); 	if (inter == SIGPIPE&& !onesys) 		longjmp(Pipebuf,
 literal|1
 argument|); 	cleanup(inter); }
-comment|/*  * Catch a special signal  * (SIGFPE, ugh), and toggle debugging between 0 and 30.  * Handy for looking in on long running uucicos.  */
+comment|/*  * Catch a special signal  * (SIGUSR1), and toggle debugging between 0 and 30.  * Handy for looking in on long running uucicos.  */
 argument|dbg_signal() { 	Debug = (Debug ==
 literal|0
 argument|) ?
