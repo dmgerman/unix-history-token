@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.8 1994/04/21 14:21:50 sos Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.9 1994/08/13 03:50:14 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1498,6 +1498,14 @@ argument_list|(
 name|pitchtab
 argument_list|)
 operator|/
+sizeof|sizeof
+argument_list|(
+name|pitchtab
+index|[
+literal|0
+index|]
+argument_list|)
+operator|/
 name|OCTAVE_NOTES
 condition|)
 name|octave
@@ -1520,6 +1528,14 @@ operator|<
 sizeof|sizeof
 argument_list|(
 name|pitchtab
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|pitchtab
+index|[
+literal|0
+index|]
 argument_list|)
 operator|/
 name|OCTAVE_NOTES
