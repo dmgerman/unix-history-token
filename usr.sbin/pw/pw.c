@@ -1476,6 +1476,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|help
 index|[
 name|which
