@@ -111,6 +111,12 @@ name|rflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -244,6 +250,10 @@ break|break;
 case|case
 literal|'s'
 case|:
+name|sflag
+operator|=
+literal|1
+expr_stmt|;
 name|MDString
 argument_list|(
 name|optarg
@@ -358,6 +368,10 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|sflag
+operator|&&
+operator|(
 name|optind
 operator|==
 literal|1
@@ -365,6 +379,7 @@ operator|||
 name|qflag
 operator|||
 name|rflag
+operator|)
 condition|)
 name|MDFilter
 argument_list|(
@@ -654,11 +669,14 @@ operator|)
 operator|!=
 literal|0
 condition|?
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|endTime
 operator|-
 name|startTime
-operator|)
+argument_list|)
 else|:
 literal|1
 operator|)
