@@ -18,7 +18,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		V6 -- running on a version 6 system.  This determines **			whether to define certain routines between **			the two systems.  If you are running a funny **			system, e.g., V6 with long tty names, this **			should be checked carefully. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which can be: **			- H_EOH -- this field is equivalent to a blank **			  line; i.e., it signifies end of header. **			- H_DELETE -- delete this field. **			There is also a field pointing to a pointer **			that should be set to point to this header. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
+comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		V6 -- running on a version 6 system.  This determines **			whether to define certain routines between **			the two systems.  If you are running a funny **			system, e.g., V6 with long tty names, this **			should be checked carefully. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
 end_comment
 
 begin_decl_stmt
@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.16	%G%"
+literal|"@(#)conf.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ comment|/* definitions of machine id's at berkeley */
 end_comment
 
 begin_comment
-comment|/* **  Header info table **	Final (null) entry contains the flags used for any other field. */
+comment|/* **  Header info table **	Final (null) entry contains the flags used for any other field. ** **	Not all of these are actually handled specially by sendmail **	at this time.  They are included as placeholders, to let **	you know that "someday" I intend to have sendmail do **	something with them. */
 end_comment
 
 begin_decl_stmt
@@ -64,6 +64,12 @@ name|H_CHECK
 block|,
 name|M_NEEDFROM
 block|,
+literal|"sender"
+block|,
+literal|0
+block|,
+literal|0
+block|,
 literal|"full-name"
 block|,
 name|H_ACHECK
@@ -74,19 +80,19 @@ literal|"to"
 block|,
 literal|0
 block|,
-name|NULL
+literal|0
 block|,
 literal|"cc"
 block|,
 literal|0
 block|,
-name|NULL
+literal|0
 block|,
-literal|"subject"
+literal|"bcc"
 block|,
 literal|0
 block|,
-name|NULL
+literal|0
 block|,
 literal|"message-id"
 block|,
@@ -98,13 +104,55 @@ literal|"message"
 block|,
 name|H_EOH
 block|,
-name|NULL
+literal|0
+block|,
+literal|"text"
+block|,
+name|H_EOH
+block|,
+literal|0
+block|,
+literal|"posted-date"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"return-receipt-to"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"received-date"
+block|,
+name|H_CHECK
+block|,
+name|M_FINAL
+block|,
+literal|"received-from"
+block|,
+name|H_CHECK
+block|,
+name|M_FINAL
+block|,
+literal|"precedence"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"via"
+block|,
+name|H_FORCE
+block|,
+literal|0
 block|,
 name|NULL
 block|,
 literal|0
 block|,
-name|NULL
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -121,12 +169,6 @@ end_ifdef
 begin_comment
 comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 6 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -408,12 +450,6 @@ end_ifndef
 begin_comment
 comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 7 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
