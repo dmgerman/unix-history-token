@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.12 (Berkeley) %G%"
+literal|"@(#)quit.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1863,7 +1863,7 @@ name|strcat
 argument_list|(
 name|tempname
 argument_list|,
-literal|"/mboxXXXXXX"
+literal|"mboxXXXXXX"
 argument_list|)
 expr_stmt|;
 name|mktemp

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.12 (Berkeley) %G%"
+literal|"@(#)temp.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ name|strcat
 argument_list|(
 name|tempMail
 argument_list|,
-literal|"/RsXXXXXX"
+literal|"RsXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -134,7 +134,7 @@ name|strcat
 argument_list|(
 name|tempResid
 argument_list|,
-literal|"/RqXXXXXX"
+literal|"RqXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -151,7 +151,7 @@ name|strcat
 argument_list|(
 name|tempQuit
 argument_list|,
-literal|"/RmXXXXXX"
+literal|"RmXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -168,7 +168,7 @@ name|strcat
 argument_list|(
 name|tempEdit
 argument_list|,
-literal|"/ReXXXXXX"
+literal|"ReXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -185,7 +185,7 @@ name|strcat
 argument_list|(
 name|tempSet
 argument_list|,
-literal|"/RxXXXXXX"
+literal|"RxXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -202,7 +202,7 @@ name|strcat
 argument_list|(
 name|tempMesg
 argument_list|,
-literal|"/RxXXXXXX"
+literal|"RxXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
