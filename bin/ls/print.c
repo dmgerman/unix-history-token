@@ -1532,10 +1532,6 @@ name|blocksize
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|f_sortacross
-condition|)
 name|base
 operator|=
 literal|0
