@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.c,v 1.8 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.c,v 1.12 1999/09/05 21:22:39 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -126,18 +126,6 @@ block|}
 block|}
 block|,
 block|{
-name|USB_VENDOR_TI
-block|,
-name|USB_PRODUCT_TI_UTUSB41
-block|,
-literal|0x100
-block|,
-block|{
-name|UQ_HUB_POWER
-block|}
-block|}
-block|,
-block|{
 name|USB_VENDOR_BTC
 block|,
 name|USB_PRODUCT_BTC_BTC7932
@@ -182,6 +170,18 @@ literal|0x0a2
 block|,
 block|{
 name|UQ_BAD_ADC
+block|}
+block|}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_USBPS2
+block|,
+literal|0x110
+block|,
+block|{
+name|UQ_MS_REVZ
 block|}
 block|}
 block|,
@@ -295,7 +295,7 @@ name|quirks
 operator|.
 name|uq_flags
 condition|)
-name|printf
+name|logprintf
 argument_list|(
 literal|"usbd_find_quirk 0x%04x/0x%04x/%x: %d\n"
 argument_list|,

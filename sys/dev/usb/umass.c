@@ -202,7 +202,7 @@ typedef|typedef
 struct|struct
 name|umass_softc
 block|{
-name|bdevice
+name|USBBASEDEVICE
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
@@ -827,7 +827,7 @@ operator|->
 name|bEndpointAddress
 argument_list|)
 operator|==
-name|UE_IN
+name|UE_DIR_IN
 operator|&&
 operator|(
 name|ed
@@ -859,7 +859,7 @@ operator|->
 name|bEndpointAddress
 argument_list|)
 operator|==
-name|UE_OUT
+name|UE_DIR_OUT
 operator|&&
 operator|(
 name|ed
@@ -1134,6 +1134,9 @@ modifier|*
 name|xfer_size
 parameter_list|)
 block|{
+name|usbd_device_handle
+name|dev
+decl_stmt|;
 name|usbd_request_handle
 name|reqh
 decl_stmt|;
@@ -1151,10 +1154,20 @@ name|usbd_status
 name|err
 decl_stmt|;
 comment|/* A transfer is done synchronously. We create and schedule the 	 * transfer and then wait for it to complete 	 */
+name|usbd_interface2device_handle
+argument_list|(
+name|iface
+argument_list|,
+operator|&
+name|dev
+argument_list|)
+expr_stmt|;
 name|reqh
 operator|=
 name|usbd_alloc_request
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

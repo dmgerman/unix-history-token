@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.4 1998/12/26 12:53:01 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.8 1999/08/22 23:41:00 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -17,7 +17,6 @@ struct|struct
 name|ohci_soft_ed
 block|{
 name|ohci_ed_t
-modifier|*
 name|ed
 decl_stmt|;
 name|struct
@@ -36,8 +35,15 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|OHCI_ED_CHUNK
-value|256
+name|OHCI_SED_SIZE
+value|((sizeof (struct ohci_soft_ed) + OHCI_ED_ALIGN - 1) / OHCI_ED_ALIGN * OHCI_ED_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_SED_CHUNK
+value|128
 end_define
 
 begin_typedef
@@ -46,7 +52,6 @@ struct|struct
 name|ohci_soft_td
 block|{
 name|ohci_td_t
-modifier|*
 name|td
 decl_stmt|;
 name|struct
@@ -70,13 +75,23 @@ argument|ohci_soft_td
 argument_list|)
 name|hnext
 expr_stmt|;
-comment|/*ohci_soft_ed_t *sed;*/
 name|usbd_request_handle
 name|reqh
 decl_stmt|;
 name|u_int16_t
 name|len
 decl_stmt|;
+name|u_int16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|OHCI_CALL_DONE
+value|0x0001
+define|#
+directive|define
+name|OHCI_SET_LEN
+value|0x0002
 block|}
 name|ohci_soft_td_t
 typedef|;
@@ -85,8 +100,15 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|OHCI_TD_CHUNK
-value|256
+name|OHCI_STD_SIZE
+value|((sizeof (struct ohci_soft_td) + OHCI_TD_ALIGN - 1) / OHCI_TD_ALIGN * OHCI_TD_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_STD_CHUNK
+value|128
 end_define
 
 begin_define
@@ -125,6 +147,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|void
 modifier|*
 name|sc_ih
@@ -137,7 +164,7 @@ comment|/* DMA tag */
 comment|/* XXX should keep track of all DMA memory */
 endif|#
 directive|endif
-comment|/* __FreeBSD__ */
+comment|/* __NetBSD__ || defined(__OpenBSD__) */
 name|usb_dma_t
 name|sc_hccadma
 decl_stmt|;
@@ -210,6 +237,9 @@ name|sc_vendor
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|int
+name|sc_id_vendor
 decl_stmt|;
 block|}
 name|ohci_softc_t

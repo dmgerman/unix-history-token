@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_port.h,v 1.5 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: usb_port.h,v 1.11 1999/09/11 08:19:27 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -12,11 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Macro's to cope with the differences between operating systems.  */
-end_comment
-
-begin_comment
-comment|/*  * NetBSD  */
+comment|/*   * Macro's to cope with the differences between operating systems.  */
 end_comment
 
 begin_if
@@ -28,11 +24,41 @@ name|__NetBSD__
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * NetBSD  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"opt_usbverbose.h"
 end_include
+
+begin_typedef
+typedef|typedef
+name|struct
+name|device
+modifier|*
+name|device_ptr_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|USBBASEDEVICE
+value|struct device
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEV
+parameter_list|(
+name|bdev
+parameter_list|)
+value|(&(bdev))
+end_define
 
 begin_define
 define|#
@@ -44,17 +70,23 @@ parameter_list|)
 value|((bdev).dv_xname)
 end_define
 
-begin_typedef
-typedef|typedef
-name|struct
-name|device
-name|bdevice
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|USBDEVPTRNAME
+parameter_list|(
+name|bdevptr
+parameter_list|)
+value|((bdevptr)->dv_xname)
+end_define
 
-begin_comment
-comment|/* base device */
-end_comment
+begin_define
+define|#
+directive|define
+name|DECLARE_USB_DMA_T
+define|\
+value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 	} usb_dma_t
+end_define
 
 begin_define
 define|#
@@ -89,14 +121,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_DECLARE_DRIVER_INIT
+name|logprintf
+value|printf
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DECLARE_DRIVER_NAME_INIT
 parameter_list|(
+name|_1
+parameter_list|,
 name|dname
 parameter_list|,
 name|_2
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match) __P((struct device *, struct cfdata *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach) \ }
+value|int __CONCAT(dname,_match) __P((struct device *, struct cfdata *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ int __CONCAT(dname,_detach) __P((struct device *, int)); \ int __CONCAT(dname,_activate) __P((struct device *, enum devact)); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
 end_define
 
 begin_define
@@ -177,6 +218,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_DETACH
+parameter_list|(
+name|dname
+parameter_list|)
+define|\
+value|int \ __CONCAT(dname,_detach)(self, flags) \ 	struct device *self; \ 	int flags;
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DETACH_START
+parameter_list|(
+name|dname
+parameter_list|,
+name|sc
+parameter_list|)
+define|\
+value|struct __CONCAT(dname,_softc) *sc = \ 		(struct __CONCAT(dname,_softc) *)self
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_GET_SC_OPEN
 parameter_list|(
 name|dname
@@ -222,14 +287,341 @@ parameter_list|,
 name|sub
 parameter_list|)
 define|\
-value|((dev)->softc = config_found_sm(parent, args, print, sub))
+value|(config_found_sm(parent, args, print, sub))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/*  * OpenBSD  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|memcpy
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|,
+name|l
+parameter_list|)
+value|bcopy((s),(d),(l))
 end_define
 
 begin_define
 define|#
 directive|define
-name|logprintf
-value|printf
+name|memset
+parameter_list|(
+name|d
+parameter_list|,
+name|v
+parameter_list|,
+name|l
+parameter_list|)
+value|bzero((d),(l))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bswap32
+parameter_list|(
+name|x
+parameter_list|)
+value|swap32(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kthread_create1
+value|kthread_create
+end_define
+
+begin_define
+define|#
+directive|define
+name|kthread_create
+value|kthread_create_deferred
+end_define
+
+begin_define
+define|#
+directive|define
+name|usbpoll
+value|usbselect
+end_define
+
+begin_define
+define|#
+directive|define
+name|uhidpoll
+value|uhidselect
+end_define
+
+begin_define
+define|#
+directive|define
+name|ugenpoll
+value|ugenselect
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|device
+name|device_ptr_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|USBBASEDEVICE
+value|struct device
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEV
+parameter_list|(
+name|bdev
+parameter_list|)
+value|(&(bdev))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEVNAME
+parameter_list|(
+name|bdev
+parameter_list|)
+value|((bdev).dv_xname)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEVPTRNAME
+parameter_list|(
+name|bdevptr
+parameter_list|)
+value|((bdevptr)->dv_xname)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_USB_DMA_T
+define|\
+value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 	} usb_dma_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_timeout
+parameter_list|(
+name|f
+parameter_list|,
+name|d
+parameter_list|,
+name|t
+parameter_list|,
+name|h
+parameter_list|)
+value|timeout((f), (d), (t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|usb_untimeout
+parameter_list|(
+name|f
+parameter_list|,
+name|d
+parameter_list|,
+name|h
+parameter_list|)
+value|untimeout((f), (d))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DECLARE_DRIVER_NAME_INIT
+parameter_list|(
+name|_1
+parameter_list|,
+name|dname
+parameter_list|,
+name|_2
+parameter_list|)
+define|\
+value|int __CONCAT(dname,_match) __P((struct device *, void *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ int __CONCAT(dname,_detach) __P((struct device *, int)); \ int __CONCAT(dname,_activate) __P((struct device *, enum devact)); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MATCH
+parameter_list|(
+name|dname
+parameter_list|)
+define|\
+value|int \ __CONCAT(dname,_match)(parent, match, aux) \ 	struct device *parent; \ 	void *match; \ 	void *aux;
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MATCH_START
+parameter_list|(
+name|dname
+parameter_list|,
+name|uaa
+parameter_list|)
+define|\
+value|struct usb_attach_arg *uaa = aux
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_ATTACH
+parameter_list|(
+name|dname
+parameter_list|)
+define|\
+value|void \ __CONCAT(dname,_attach)(parent, self, aux) \ 	struct device *parent; \ 	struct device *self; \ 	void *aux;
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_ATTACH_START
+parameter_list|(
+name|dname
+parameter_list|,
+name|sc
+parameter_list|,
+name|uaa
+parameter_list|)
+define|\
+value|struct __CONCAT(dname,_softc) *sc = \ 		(struct __CONCAT(dname,_softc) *)self; \ 	struct usb_attach_arg *uaa = aux
+end_define
+
+begin_comment
+comment|/* Returns from attach */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_ATTACH_ERROR_RETURN
+value|return
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_ATTACH_SUCCESS_RETURN
+value|return
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_ATTACH_SETUP
+value|printf("\n")
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DETACH
+parameter_list|(
+name|dname
+parameter_list|)
+define|\
+value|int \ __CONCAT(dname,_detach)(self, flags) \ 	struct device *self; \ 	int flags;
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DETACH_START
+parameter_list|(
+name|dname
+parameter_list|,
+name|sc
+parameter_list|)
+define|\
+value|struct __CONCAT(dname,_softc) *sc = \ 		(struct __CONCAT(dname,_softc) *)self
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_SC_OPEN
+parameter_list|(
+name|dname
+parameter_list|,
+name|unit
+parameter_list|,
+name|sc
+parameter_list|)
+define|\
+value|struct __CONCAT(dname,_softc) *sc; \ 	if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_SC
+parameter_list|(
+name|dname
+parameter_list|,
+name|unit
+parameter_list|,
+name|sc
+parameter_list|)
+define|\
+value|struct __CONCAT(dname,_softc) *sc = __CONCAT(dname,_cd).cd_devs[unit]
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DO_ATTACH
+parameter_list|(
+name|dev
+parameter_list|,
+name|bdev
+parameter_list|,
+name|parent
+parameter_list|,
+name|args
+parameter_list|,
+name|print
+parameter_list|,
+name|sub
+parameter_list|)
+define|\
+value|(config_found_sm(parent, args, print, sub))
 end_define
 
 begin_elif
@@ -251,15 +643,34 @@ directive|include
 file|"opt_usb.h"
 end_include
 
-begin_comment
-comment|/*  * The following is not a type def to avoid error messages  * because of includes in the wrong order.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|USBVERBOSE
+end_define
 
 begin_define
 define|#
 directive|define
-name|bdevice
+name|device_ptr_t
 value|device_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBBASEDEVICE
+value|device_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEV
+parameter_list|(
+name|bdev
+parameter_list|)
+value|(bdev)
 end_define
 
 begin_define
@@ -269,12 +680,43 @@ name|USBDEVNAME
 parameter_list|(
 name|bdev
 parameter_list|)
-value|(bdev? device_get_nameunit(bdev):"-")
+value|device_get_nameunit(bdev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBDEVPTRNAME
+parameter_list|(
+name|bdev
+parameter_list|)
+value|device_get_nameunit(bdev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_USB_DMA_T
+value|typedef void * usb_dma_t
 end_define
 
 begin_comment
 comment|/* XXX Change this when FreeBSD has memset  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|memcpy
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|,
+name|l
+parameter_list|)
+value|bcopy((s),(d),(l))
+end_define
 
 begin_define
 define|#
@@ -285,10 +727,35 @@ name|d
 parameter_list|,
 name|v
 parameter_list|,
-name|s
+name|l
 parameter_list|)
-define|\
-value|do{			\ 		if ((v) == 0)		\ 			bzero((d), (s));\ 		else			\ 			panic("Non zero filler for memset, cannot handle!"); \ 		} while (0)
+value|bzero((d),(l))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bswap32
+parameter_list|(
+name|x
+parameter_list|)
+value|swap32(x)
+end_define
+
+begin_comment
+comment|/* XXX not available in FreeBSD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kthread_create1
+end_define
+
+begin_define
+define|#
+directive|define
+name|kthread_create
 end_define
 
 begin_define
@@ -324,15 +791,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_DECLARE_DRIVER_INIT
+name|USB_DECLARE_DRIVER_NAME_INIT
 parameter_list|(
+name|name
+parameter_list|,
 name|dname
 parameter_list|,
 name|init
 modifier|...
 parameter_list|)
 define|\
-value|static device_probe_t __CONCAT(dname,_match); \ static device_attach_t __CONCAT(dname,_attach); \ static device_detach_t __CONCAT(dname,_detach); \ \ static devclass_t __CONCAT(dname,_devclass); \ \ static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }
+value|static device_probe_t __CONCAT(dname,_match); \ static device_attach_t __CONCAT(dname,_attach); \ static device_detach_t __CONCAT(dname,_detach); \ \ static devclass_t __CONCAT(dname,_devclass); \ \ static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ static driver_t __CONCAT(dname,_driver) = { \         name, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }
 end_define
 
 begin_define
@@ -414,6 +883,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_DETACH
+parameter_list|(
+name|dname
+parameter_list|)
+define|\
+value|static int \ __CONCAT(dname,_detach)(device_t self)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DETACH_START
+parameter_list|(
+name|dname
+parameter_list|,
+name|sc
+parameter_list|)
+define|\
+value|struct __CONCAT(dname,_softc) *sc = device_get_softc(self)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_GET_SC_OPEN
 parameter_list|(
 name|dname
@@ -459,18 +952,29 @@ parameter_list|,
 name|sub
 parameter_list|)
 define|\
-value|(device_probe_and_attach((bdev)) == 0 ?			\ 		((dev)->softc = device_get_softc(bdev)) : 0)
+value|(device_probe_and_attach((bdev)) == 0 ? (bdev) : 0)
 end_define
 
 begin_comment
 comment|/* conversion from one type of queue to the other */
 end_comment
 
+begin_comment
+comment|/* XXX In FreeBSD SIMPLEQ_REMOVE_HEAD only removes the head element.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SIMPLEQ_REMOVE_HEAD
-value|STAILQ_REMOVE_HEAD
+parameter_list|(
+name|h
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|)
+value|do {				\ 		if ( (e) != SIMPLEQ_FIRST((h)) )			\ 			panic("Removing other than first element");	\ 		STAILQ_REMOVE_HEAD(h, f);				\ } while (0)
 end_define
 
 begin_define
@@ -518,6 +1022,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIMPLEQ_HEAD_INITIALIZER
+value|STAILQ_HEAD_INITIALIZER
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIMPLEQ_ENTRY
 value|STAILQ_ENTRY
 end_define
@@ -528,15 +1039,15 @@ directive|include
 file|<sys/syslog.h>
 end_include
 
+begin_comment
+comment|/* #define logprintf(args...)	log(LOG_DEBUG, args) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|logprintf
-parameter_list|(
-name|args
-modifier|...
-parameter_list|)
-value|log(LOG_DEBUG, args);
+value|printf
 end_define
 
 begin_endif
@@ -551,13 +1062,75 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NONE
+value|{0,0}
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DECLARE_DRIVER_NAME
+parameter_list|(
+name|name
+parameter_list|,
+name|dname
+parameter_list|)
+define|\
+value|USB_DECLARE_DRIVER_NAME_INIT(#name, dname, NONE )
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DECLARE_DRIVER_INIT
+parameter_list|(
+name|dname
+parameter_list|,
+name|init
+modifier|...
+parameter_list|)
+define|\
+value|USB_DECLARE_DRIVER_NAME_INIT(#dname, dname, init)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_DECLARE_DRIVER
 parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|USB_DECLARE_DRIVER_INIT(dname, {0,0} )
+value|USB_DECLARE_DRIVER_NAME_INIT(#dname, dname, NONE )
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

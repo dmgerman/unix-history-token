@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.h,v 1.5 1998/12/29 15:23:59 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.h,v 1.7 1999/06/26 00:09:15 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -31,9 +31,9 @@ value|0x02
 comment|/* has some Unicode strings swapped. */
 define|#
 directive|define
-name|UQ_HUB_POWER
+name|UQ_MS_REVZ
 value|0x04
-comment|/* does not respond correctly to get 				   device status; use get hub status. */
+comment|/* mouse has Z-axis reversed */
 define|#
 directive|define
 name|UQ_NO_STRINGS

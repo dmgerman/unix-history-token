@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbcdc.h,v 1.3 1999/01/03 01:09:18 augustss Exp $	*/
+comment|/*	$NetBSD: usbcdc.h,v 1.4 1999/08/16 20:20:19 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -27,18 +27,14 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_HEADER
-value|0x00
+value|0
 end_define
-
-begin_comment
-comment|/* Header */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_CM
-value|0x01
+value|1
 end_define
 
 begin_comment
@@ -49,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_ACM
-value|0x02
+value|2
 end_define
 
 begin_comment
@@ -60,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_DLM
-value|0x03
+value|3
 end_define
 
 begin_comment
@@ -71,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_TRF
-value|0x04
+value|4
 end_define
 
 begin_comment
@@ -82,29 +78,25 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_TCLSR
-value|0x05
+value|5
 end_define
 
 begin_comment
-comment|/* Tel. Call and Line State Rep. Cap. */
+comment|/* Telephone Call ... */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_UNION
-value|0x06
+value|6
 end_define
-
-begin_comment
-comment|/* Union */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_CS
-value|0x07
+value|7
 end_define
 
 begin_comment
@@ -115,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_TOM
-value|0x08
+value|8
 end_define
 
 begin_comment
@@ -126,88 +118,11 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_USBT
-value|0x09
+value|9
 end_define
 
 begin_comment
 comment|/* USB Terminal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_NCT
-value|0x0a
-end_define
-
-begin_comment
-comment|/* Network Channel Terminal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_PU
-value|0x0b
-end_define
-
-begin_comment
-comment|/* Protocol Unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_EU
-value|0x0c
-end_define
-
-begin_comment
-comment|/* Extention Unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_MCM
-value|0x0d
-end_define
-
-begin_comment
-comment|/* Multi-Channel Management */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_CCM
-value|0x0e
-end_define
-
-begin_comment
-comment|/* CAPI Control Management */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_EN
-value|0x0f
-end_define
-
-begin_comment
-comment|/* Ethernet Networking */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDESCSUB_CDC_AN
-value|0x10
-end_define
-
-begin_comment
-comment|/* ATM Networking */
 end_comment
 
 begin_typedef
@@ -358,13 +273,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UCDC_CLEAR_COMM_FEATURE
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
 name|UCDC_ABSTRACT_STATE
 value|0x01
 end_define
@@ -379,6 +287,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UCDC_CLEAR_COMM_FEATURE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|UCDC_SET_LINE_CODING
 value|0x20
 end_define
@@ -388,6 +303,48 @@ define|#
 directive|define
 name|UCDC_GET_LINE_CODING
 value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_SET_CONTROL_LINE_STATE
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_LINE_DTR
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_LINE_RTS
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_SEND_BREAK
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_BREAK_ON
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_BREAK_OFF
+value|0x0000
 end_define
 
 begin_typedef
@@ -409,6 +366,13 @@ block|}
 name|usb_cdc_abstract_state_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|UCDC_ABSTRACT_STATE_LENGTH
+value|2
+end_define
 
 begin_typedef
 typedef|typedef
@@ -462,6 +426,13 @@ block|}
 name|usb_cdc_line_state_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|UCDC_LINE_STATE_LENGTH
+value|7
+end_define
 
 begin_typedef
 typedef|typedef

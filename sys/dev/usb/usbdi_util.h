@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.h,v 1.16 1999/08/22 20:12:40 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.h,v 1.17 1999/09/05 19:32:19 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -583,8 +583,7 @@ name|usb_detach_wait
 name|__P
 argument_list|(
 operator|(
-name|bdevice
-operator|*
+name|device_ptr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -596,8 +595,7 @@ name|usb_detach_wakeup
 name|__P
 argument_list|(
 operator|(
-name|bdevice
-operator|*
+name|device_ptr_t
 operator|)
 argument_list|)
 decl_stmt|;

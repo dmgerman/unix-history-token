@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_mem.h,v 1.4 1999/01/09 12:16:54 augustss Exp $	*/
+comment|/*	$NetBSD: usb_mem.h,v 1.7 1999/09/09 12:26:47 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -18,12 +18,17 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|usb_block_dma
+name|usb_dma_block
 block|{
 name|bus_dma_tag_t
 name|tag
@@ -54,28 +59,12 @@ name|fullblock
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|usb_block_dma
+argument|usb_dma_block
 argument_list|)
 name|next
 expr_stmt|;
 block|}
 name|usb_dma_block_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|usb_dma_block_t
-modifier|*
-name|block
-decl_stmt|;
-name|u_int
-name|offs
-decl_stmt|;
-block|}
-name|usb_dma_t
 typedef|;
 end_typedef
 
@@ -209,14 +198,6 @@ end_include
 begin_comment
 comment|/* for vtophys */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|usb_dma_t
-typedef|;
-end_typedef
 
 begin_define
 define|#

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.7 1998/12/10 23:16:47 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.8 1999/08/22 23:41:00 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -896,12 +896,9 @@ name|ohci_ed_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|OHCI_ED_SIZE
-value|16
-end_define
+begin_comment
+comment|/* #define OHCI_ED_SIZE 16 */
+end_comment
 
 begin_define
 define|#
@@ -1007,12 +1004,9 @@ name|ohci_td_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|OHCI_TD_SIZE
-value|16
-end_define
+begin_comment
+comment|/* #define OHCI_TD_SIZE 16 */
+end_comment
 
 begin_define
 define|#

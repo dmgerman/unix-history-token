@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.17 1999/01/03 01:09:18 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.33 1999/09/11 08:19:27 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -43,20 +48,6 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
 
 begin_if
 if|#
@@ -91,12 +82,6 @@ name|__FreeBSD__
 argument_list|)
 end_elif
 
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -105,6 +90,12 @@ argument_list|(
 name|KERNEL
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
 
 begin_expr_stmt
 name|MALLOC_DECLARE
@@ -118,6 +109,14 @@ begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|M_USBDEV
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_USBHC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -460,6 +459,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UT_READ_CLASS_ENDPOINT
+value|(UT_READ  | UT_CLASS | UT_ENDPOINT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UT_WRITE_CLASS_DEVICE
 value|(UT_WRITE | UT_CLASS | UT_DEVICE)
 end_define
@@ -476,6 +482,13 @@ define|#
 directive|define
 name|UT_WRITE_CLASS_OTHER
 value|(UT_WRITE | UT_CLASS | UT_OTHER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_WRITE_CLASS_ENDPOINT
+value|(UT_WRITE | UT_CLASS | UT_ENDPOINT)
 end_define
 
 begin_define
@@ -502,6 +515,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UT_READ_VENDOR_ENDPOINT
+value|(UT_READ  | UT_VENDOR | UT_ENDPOINT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UT_WRITE_VENDOR_DEVICE
 value|(UT_WRITE | UT_VENDOR | UT_DEVICE)
 end_define
@@ -518,6 +538,13 @@ define|#
 directive|define
 name|UT_WRITE_VENDOR_OTHER
 value|(UT_WRITE | UT_VENDOR | UT_OTHER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_WRITE_VENDOR_ENDPOINT
+value|(UT_WRITE | UT_VENDOR | UT_ENDPOINT)
 end_define
 
 begin_comment
@@ -565,10 +592,6 @@ directive|define
 name|UDESC_DEVICE
 value|0x01
 end_define
-
-begin_comment
-comment|/* descriptor types */
-end_comment
 
 begin_define
 define|#
@@ -907,16 +930,27 @@ name|bEndpointAddress
 decl_stmt|;
 define|#
 directive|define
-name|UE_DIR
-value|0x80
-comment|/* mask */
+name|UE_GET_DIR
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& 0x80)
 define|#
 directive|define
-name|UE_IN
+name|UE_SET_DIR
+parameter_list|(
+name|a
+parameter_list|,
+name|d
+parameter_list|)
+value|((a) | (((d)&1)<< 7))
+define|#
+directive|define
+name|UE_DIR_IN
 value|0x80
 define|#
 directive|define
-name|UE_OUT
+name|UE_DIR_OUT
 value|0x00
 define|#
 directive|define
@@ -929,21 +963,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)& UE_ADDR)
-define|#
-directive|define
-name|UE_GET_IN
-parameter_list|(
-name|a
-parameter_list|)
-value|(((a)>> 7)& 1)
-comment|/* XXX should be removed */
-define|#
-directive|define
-name|UE_GET_DIR
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)& UE_DIR)
 name|uByte
 name|bmAttributes
 decl_stmt|;
@@ -967,6 +986,13 @@ define|#
 directive|define
 name|UE_INTERRUPT
 value|0x03
+define|#
+directive|define
+name|UE_GET_XFERTYPE
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& UE_XFERTYPE)
 define|#
 directive|define
 name|UE_ISO_TYPE
@@ -1365,20 +1391,12 @@ name|UCLASS_UNSPEC
 value|0
 end_define
 
-begin_comment
-comment|/* Unspecified */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UCLASS_AUDIO
 value|1
 end_define
-
-begin_comment
-comment|/* Audio */
-end_comment
 
 begin_define
 define|#
@@ -1397,12 +1415,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|USUBCLASS_MIDISTREAM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|UCLASS_CDC
 value|2
 end_define
 
 begin_comment
-comment|/* Communication */
+comment|/* communication */
 end_comment
 
 begin_define
@@ -1430,52 +1455,29 @@ begin_define
 define|#
 directive|define
 name|USUBCLASS_MULTICHANNEL_CONTROL_MODEL
+value|4
 end_define
-
-begin_comment
-comment|/*TBD*/
-end_comment
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_CAPI_CONTROL_MODEL
+name|USUBCLASS_CAPI_CONTROLMODEL
+value|5
 end_define
-
-begin_comment
-comment|/*TBD*/
-end_comment
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_ETHERNET_CONTROL_MODEL
+name|USUBCLASS_ETHERNET_NETWORKING_CONTROL_MODEL
+value|6
 end_define
-
-begin_comment
-comment|/*TBD*/
-end_comment
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_ATM_CONTROL_MODEL
+name|USUBCLASS_ATM_NETWORKING_CONTROL_MODEL
+value|7
 end_define
-
-begin_comment
-comment|/*TBD*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPROTO_CDC_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* No class spec. protocol required */
-end_comment
 
 begin_define
 define|#
@@ -1484,20 +1486,12 @@ name|UPROTO_CDC_AT
 value|1
 end_define
 
-begin_comment
-comment|/* V25.ter (AT commands) */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UCLASS_HID
 value|3
 end_define
-
-begin_comment
-comment|/* Human Interface Device */
-end_comment
 
 begin_define
 define|#
@@ -1513,10 +1507,6 @@ name|UCLASS_PRINTER
 value|7
 end_define
 
-begin_comment
-comment|/* Printer/Parallel Port */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1531,20 +1521,12 @@ name|UPROTO_PRINTER_UNI
 value|1
 end_define
 
-begin_comment
-comment|/* Unidirectional */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UPROTO_PRINTER_BI
 value|2
 end_define
-
-begin_comment
-comment|/* Bidirectional */
-end_comment
 
 begin_define
 define|#
@@ -1553,20 +1535,12 @@ name|UCLASS_MASS
 value|8
 end_define
 
-begin_comment
-comment|/* Mass Storage */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|USUBCLASS_RBC
 value|1
 end_define
-
-begin_comment
-comment|/* Reduced Block comm. (e.g. Flash ) */
-end_comment
 
 begin_define
 define|#
@@ -1575,20 +1549,12 @@ name|USUBCLASS_SFF8020I
 value|2
 end_define
 
-begin_comment
-comment|/* (e.g. CD ROM) */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|USUBCLASS_QIC157
 value|3
 end_define
-
-begin_comment
-comment|/* (e.g. tape drives) */
-end_comment
 
 begin_define
 define|#
@@ -1597,20 +1563,12 @@ name|USUBCLASS_UFI
 value|4
 end_define
 
-begin_comment
-comment|/* (e.g. floppy drives) */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|USUBCLASS_SFF8070I
 value|5
 end_define
-
-begin_comment
-comment|/* (e.g. floppy drives) */
-end_comment
 
 begin_define
 define|#
@@ -1619,20 +1577,12 @@ name|USUBCLASS_SCSI
 value|6
 end_define
 
-begin_comment
-comment|/* SCSI transparent comman set */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UPROTO_MASS_CBI_I
 value|0
 end_define
-
-begin_comment
-comment|/* CBI protocol with comm. compl. int */
-end_comment
 
 begin_define
 define|#
@@ -1641,34 +1591,22 @@ name|UPROTO_MASS_CBI
 value|1
 end_define
 
-begin_comment
-comment|/* CBI protocol */
-end_comment
-
-begin_comment
-comment|/*  * XXX Pat LaVarre (Iomega): there are Bulk-Only devices using 0x02,  * but recent versions of the Mass Storage spec. require it to be 0x50.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UPROTO_MASS_BULK
-value|80
+value|2
 end_define
-
-begin_comment
-comment|/* 'P' for prototype, used by ZIP 100 */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_BULK2
-value|2
+name|UPROTO_MASS_BULK_P
+value|80
 end_define
 
 begin_comment
-comment|/* Bulk only transport */
+comment|/* 'P' for the Iomega Zip drive */
 end_comment
 
 begin_define
@@ -1677,10 +1615,6 @@ directive|define
 name|UCLASS_HUB
 value|9
 end_define
-
-begin_comment
-comment|/* Hub */
-end_comment
 
 begin_define
 define|#
@@ -1696,21 +1630,10 @@ name|UCLASS_DATA
 value|10
 end_define
 
-begin_comment
-comment|/* Data pipe for CDC */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|USUBCLASS_DATA
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPROTO_DATA_NONE
 value|0
 end_define
 
@@ -1722,7 +1645,7 @@ value|0x30
 end_define
 
 begin_comment
-comment|/* Physical iface ISDN BRI */
+comment|/* Physical iface */
 end_comment
 
 begin_define
@@ -1944,6 +1867,39 @@ begin_comment
 comment|/* ms */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_RESUME_TIME
+value|(20*5)
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_RESUME_WAIT
+value|10
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_RESUME_RECOVERY
+value|10
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -1997,6 +1953,39 @@ begin_comment
 comment|/* ms */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_RESUME_DELAY
+value|(50*5)
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_RESUME_WAIT
+value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_RESUME_RECOVERY
+value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -2035,17 +2024,6 @@ begin_comment
 comment|/* ms XXX?*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_RESUME_DELAY
-value|10
-end_define
-
-begin_comment
-comment|/* ms XXX?*/
-end_comment
-
 begin_comment
 comment|/*** ioctl() related stuff ***/
 end_comment
@@ -2067,11 +2045,11 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-comment|/* XXX must match flags in usbdi.h */
 define|#
 directive|define
 name|USBD_SHORT_XFER_OK
 value|0x04
+comment|/* allow short reads */
 name|int
 name|actlen
 decl_stmt|;
@@ -2242,7 +2220,7 @@ name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
 name|char
-name|revision
+name|release
 index|[
 literal|8
 index|]
@@ -2493,6 +2471,31 @@ define|#
 directive|define
 name|USB_SET_SHORT_XFER
 value|_IOW ('U', 113, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_TIMEOUT
+value|_IOW ('U', 114, int)
+end_define
+
+begin_comment
+comment|/* Modem device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_GET_CM_OVER_DATA
+value|_IOR ('U', 130, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_CM_OVER_DATA
+value|_IOW ('U', 131, int)
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.c,v 1.19 1999/08/22 20:12:40 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.c,v 1.21 1999/09/09 12:26:48 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -47,6 +47,11 @@ directive|if
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 end_if
 
@@ -2481,8 +2486,6 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-name|r
-operator|=
 name|usbd_setup_request
 argument_list|(
 name|reqh
@@ -2503,17 +2506,6 @@ argument_list|,
 name|usbd_bulk_transfer_cb
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
-condition|)
-return|return
-operator|(
-name|r
-operator|)
-return|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -2667,8 +2659,7 @@ name|usb_detach_wait
 parameter_list|(
 name|dv
 parameter_list|)
-name|bdevice
-modifier|*
+name|device_ptr_t
 name|dv
 decl_stmt|;
 block|{
@@ -2677,9 +2668,8 @@ argument_list|(
 operator|(
 literal|"usb_detach_wait: waiting for %s\n"
 operator|,
-name|USBDEVNAME
+name|USBDEVPTRNAME
 argument_list|(
-operator|*
 name|dv
 argument_list|)
 operator|)
@@ -2704,9 +2694,8 @@ name|printf
 argument_list|(
 literal|"usb_detach_wait: %s didn't detach\n"
 argument_list|,
-name|USBDEVNAME
+name|USBDEVPTRNAME
 argument_list|(
-operator|*
 name|dv
 argument_list|)
 argument_list|)
@@ -2716,9 +2705,8 @@ argument_list|(
 operator|(
 literal|"usb_detach_wait: %s done\n"
 operator|,
-name|USBDEVNAME
+name|USBDEVPTRNAME
 argument_list|(
-operator|*
 name|dv
 argument_list|)
 operator|)
@@ -2733,8 +2721,7 @@ name|usb_detach_wakeup
 parameter_list|(
 name|dv
 parameter_list|)
-name|bdevice
-modifier|*
+name|device_ptr_t
 name|dv
 decl_stmt|;
 block|{
@@ -2743,9 +2730,8 @@ argument_list|(
 operator|(
 literal|"usb_detach_wakeup: for %s\n"
 operator|,
-name|USBDEVNAME
+name|USBDEVPTRNAME
 argument_list|(
-operator|*
 name|dv
 argument_list|)
 operator|)

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: hid.h,v 1.3 1998/11/25 22:32:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment

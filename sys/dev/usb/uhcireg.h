@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcireg.h,v 1.5 1998/12/27 23:40:52 augustss Exp $	*/
+comment|/*	$NetBSD: uhcireg.h,v 1.7 1999/08/22 23:19:57 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -439,25 +439,6 @@ name|UHCI_PTR_VF
 value|0x00000004
 end_define
 
-begin_typedef
-typedef|typedef
-union|union
-block|{
-name|struct
-name|uhci_soft_qh
-modifier|*
-name|sqh
-decl_stmt|;
-name|struct
-name|uhci_soft_td
-modifier|*
-name|std
-decl_stmt|;
-block|}
-name|uhci_soft_td_qh_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * The Queue Heads and Transfer Descriptors and accessed  * by both the CPU and the USB controller which runs  * concurrently.  This means that they have to be accessed  * with great care.  As long as the data structures are  * not linked into the controller's frame list they cannot  * be accessed by it and anything goes.  As soon as a  * TD is accessible by the controller it "owns" the td_status  * field; it will not be written by the CPU.  Similarly  * the controller "owns" the qh_elink field.  */
 end_comment
@@ -524,7 +505,7 @@ name|UHCI_TD_IOS
 value|0x02000000
 define|#
 directive|define
-name|UHCI_TD_LOWSPEED
+name|UHCI_TD_LS
 value|0x04000000
 define|#
 directive|define
@@ -605,9 +586,9 @@ define|#
 directive|define
 name|UHCI_TD_GET_DT
 parameter_list|(
-name|t
+name|s
 parameter_list|)
-value|(((t)>> 19)& 1)
+value|(((s)>> 19)& 1)
 define|#
 directive|define
 name|UHCI_TD_SET_MAXLEN
@@ -629,22 +610,10 @@ value|0xffe00000
 name|u_int32_t
 name|td_buffer
 decl_stmt|;
-name|uhci_soft_td_qh_t
-name|link
-decl_stmt|;
-comment|/* link to next TD (points to soft version of TD */
-comment|/* padding to 32 bytes */
 block|}
 name|uhci_td_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|UHCI_TD_SIZE
-value|32
-end_define
 
 begin_define
 define|#
@@ -709,30 +678,10 @@ decl_stmt|;
 name|uhci_physaddr_t
 name|qh_elink
 decl_stmt|;
-name|struct
-name|uhci_soft_qh
-modifier|*
-name|hlink
-decl_stmt|;
-comment|/* soft version of qh_hlink */
-name|struct
-name|uhci_soft_td
-modifier|*
-name|elink
-decl_stmt|;
-comment|/* soft version of qh_elink */
-comment|/* padding to 32 bytes */
 block|}
 name|uhci_qh_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|UHCI_QH_SIZE
-value|32
-end_define
 
 begin_endif
 endif|#

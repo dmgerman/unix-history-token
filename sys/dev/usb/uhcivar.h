@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.5 1998/12/26 12:53:02 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.12 1999/08/22 23:41:00 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * The framelist:  *  * To avoid having 1024 TDs for each isochronous transfer we introduce  * a virtual frame list. Every UHCI_VFRAMELIST_COUNT'th entry in the real  * frame list points to a non-active TD. This TD is  * UHCI_FRAMELIST_COUNT/UHCI_VFRAMELIST_COUNT times the start of the  * virtual frame list for a queue of isochroneous transfers.  *  * The last isochroneous transfer in the list points to a QH for the   * interrupt transfer in that timeslot. The QHs for interrupt transfers  * all point to the single QH for control transfers, which in turn   * points at the QH for control transfers.  *  * UHCI_VFRAMELIST_COUNT should be a power of 2 and UHCI_FRAMELIST_COUNT  * should be a multiple of UHCI_VFRAMELIST_COUNT.  */
+comment|/*  * To avoid having 1024 TDs for each isochronous transfer we introduce  * a virtual frame list.  Every UHCI_VFRAMELIST_COUNT entries in the real  * frame list points to a non-active TD.  These, in turn, which form the   * starts of the virtual frame list.  This also has the advantage that it   * simplifies linking in/out TD/QH in the schedule.  * Furthermore, initially each of the inactive TDs point to an inactive  * QH that forms the start of the interrupt traffic for that slot.  * Each of these QHs point to the same QH that is the start of control  * traffic.  *  * UHCI_VFRAMELIST_COUNT should be a power of 2 and<= UHCI_FRAMELIST_COUNT.  */
 end_comment
 
 begin_define
@@ -35,6 +35,25 @@ typedef|typedef
 name|struct
 name|uhci_soft_td
 name|uhci_soft_td_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|struct
+name|uhci_soft_qh
+modifier|*
+name|sqh
+decl_stmt|;
+name|struct
+name|uhci_soft_td
+modifier|*
+name|std
+decl_stmt|;
+block|}
+name|uhci_soft_td_qh_t
 typedef|;
 end_typedef
 
@@ -104,22 +123,36 @@ struct|struct
 name|uhci_soft_td
 block|{
 name|uhci_td_t
-modifier|*
 name|td
 decl_stmt|;
-comment|/* The real TD */
+comment|/* The real TD, must be first */
+name|uhci_soft_td_qh_t
+name|link
+decl_stmt|;
+comment|/* soft version of the td_link field */
 name|uhci_physaddr_t
 name|physaddr
 decl_stmt|;
-comment|/* and its physical address. */
+comment|/* TD's physical address. */
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*   * Make the size such that it is a multiple of UHCI_TD_ALIGN.  This way  * we can pack a number of soft TD together and have the real TS well  * aligned.  * NOTE: Minimum size is 32 bytes.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|UHCI_TD_CHUNK
+name|UHCI_STD_SIZE
+value|((sizeof (struct uhci_soft_td) + UHCI_TD_ALIGN - 1) / UHCI_TD_ALIGN * UHCI_TD_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHCI_STD_CHUNK
 value|128
 end_define
 
@@ -136,14 +169,23 @@ struct|struct
 name|uhci_soft_qh
 block|{
 name|uhci_qh_t
-modifier|*
 name|qh
 decl_stmt|;
-comment|/* The real QH */
+comment|/* The real QH, must be first */
+name|uhci_soft_qh_t
+modifier|*
+name|hlink
+decl_stmt|;
+comment|/* soft version of qh_hlink */
+name|uhci_soft_td_t
+modifier|*
+name|elink
+decl_stmt|;
+comment|/* soft version of qh_elink */
 name|uhci_physaddr_t
 name|physaddr
 decl_stmt|;
-comment|/* and its physical address. */
+comment|/* QH's physical address. */
 name|int
 name|pos
 decl_stmt|;
@@ -153,54 +195,31 @@ modifier|*
 name|intr_info
 decl_stmt|;
 comment|/* Who to call on completion. */
+comment|/* XXX should try to shrink with 4 bytes to fit into 32 bytes */
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* See comment about UHCI_STD_SIZE. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|UHCI_QH_CHUNK
+name|UHCI_SQH_SIZE
+value|((sizeof (struct uhci_soft_qh) + UHCI_QH_ALIGN - 1) / UHCI_QH_ALIGN * UHCI_QH_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHCI_SQH_CHUNK
 value|128
 end_define
 
 begin_comment
 comment|/*(PAGE_SIZE / UHCI_QH_SIZE)*/
-end_comment
-
-begin_comment
-comment|/* Only used for buffer free list. */
-end_comment
-
-begin_struct
-struct|struct
-name|uhci_buffer
-block|{
-name|struct
-name|uhci_buffer
-modifier|*
-name|next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|UHCI_BUFFER_SIZE
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|UHCI_BUFFER_CHUNK
-value|64
-end_define
-
-begin_comment
-comment|/*(PAGE_SIZE / UHCI_BUFFER_SIZE)*/
 end_comment
 
 begin_comment
@@ -249,19 +268,6 @@ name|usbd_bus
 name|sc_bus
 decl_stmt|;
 comment|/* base device */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|void
-modifier|*
-name|sc_ih
-decl_stmt|;
-comment|/* interrupt vectoring */
-endif|#
-directive|endif
 name|bus_space_tag_t
 name|iot
 decl_stmt|;
@@ -274,6 +280,16 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+name|void
+modifier|*
+name|sc_ih
+decl_stmt|;
+comment|/* interrupt vectoring */
 name|bus_dma_tag_t
 name|sc_dmatag
 decl_stmt|;
@@ -281,12 +297,13 @@ comment|/* DMA tag */
 comment|/* XXX should keep track of all DMA memory */
 endif|#
 directive|endif
+comment|/* defined(__FreeBSD__) */
 name|uhci_physaddr_t
 modifier|*
 name|sc_pframes
 decl_stmt|;
-name|vm_offset_t
-name|sc_flbase
+name|usb_dma_t
+name|sc_dma
 decl_stmt|;
 name|struct
 name|uhci_vframe
@@ -323,11 +340,6 @@ name|uhci_soft_qh_t
 modifier|*
 name|sc_freeqhs
 decl_stmt|;
-name|struct
-name|uhci_buffer
-modifier|*
-name|sc_freebuffers
-decl_stmt|;
 name|u_int8_t
 name|sc_addr
 decl_stmt|;
@@ -338,6 +350,20 @@ decl_stmt|;
 comment|/* device configuration */
 name|char
 name|sc_isreset
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|char
+name|sc_suspend
+decl_stmt|;
+endif|#
+directive|endif
+name|usbd_request_handle
+name|sc_has_timo
 decl_stmt|;
 name|int
 name|sc_intrs
@@ -364,23 +390,14 @@ define|#
 directive|define
 name|UHCI_WANT_LOCK
 value|2
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|usb_dma_t
-modifier|*
-name|sc_mallocs
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|sc_vendor
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|int
+name|sc_id_vendor
 decl_stmt|;
 block|}
 name|uhci_softc_t
@@ -413,18 +430,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|usbd_status
-name|uhci_reset
-name|__P
-argument_list|(
-operator|(
-name|uhci_softc_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void		uhci_reset __P((void *));
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
