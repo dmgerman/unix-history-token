@@ -2163,7 +2163,7 @@ argument_list|)
 expr_stmt|;
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|i
 argument_list|,
@@ -3945,7 +3945,7 @@ name|PSL_T
 expr_stmt|;
 name|trapsignal
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGTRAP
 argument_list|,
