@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.30.2.7 1995/10/20 07:02:51 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Gary J Palmer  *	for the FreeBSD Project.  * 4. The name of Gary J Palmer or the FreeBSD Project may  *    not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.30.2.8 1995/10/20 15:40:52 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Gary J Palmer  *	for the FreeBSD Project.  * 4. The name of Gary J Palmer or the FreeBSD Project may  *    not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -833,13 +833,13 @@ name|variable_get
 argument_list|(
 name|string_concat3
 argument_list|(
-name|dp
-operator|->
-name|name
+name|VAR_IPADDR
 argument_list|,
 literal|"_"
 argument_list|,
-name|VAR_IPADDR
+name|dp
+operator|->
+name|name
 argument_list|)
 argument_list|)
 operator|)
@@ -862,17 +862,17 @@ name|variable_get
 argument_list|(
 name|string_concat3
 argument_list|(
-name|dp
-operator|->
-name|name
+name|VAR_NETMASK
 argument_list|,
 literal|"_"
 argument_list|,
-name|VAR_NETMASK
+name|dp
+operator|->
+name|name
 argument_list|)
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|netmask
@@ -891,17 +891,17 @@ name|variable_get
 argument_list|(
 name|string_concat3
 argument_list|(
-name|dp
-operator|->
-name|name
+name|VAR_EXTRAS
 argument_list|,
 literal|"_"
 argument_list|,
-name|VAR_EXTRAS
+name|dp
+operator|->
+name|name
 argument_list|)
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|extras
@@ -956,6 +956,10 @@ argument_list|,
 name|ipaddr
 argument_list|,
 name|extras
+condition|?
+name|extras
+else|:
+literal|""
 argument_list|,
 name|netmask
 argument_list|)
