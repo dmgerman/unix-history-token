@@ -7488,7 +7488,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|int
+name|long
 name|jobref
 decl_stmt|;
 name|struct
@@ -7872,7 +7872,7 @@ name|s
 decl_stmt|,
 name|timo
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|ijoblist
 decl_stmt|;
@@ -9122,7 +9122,7 @@ name|kaioinfo
 modifier|*
 name|ki
 decl_stmt|;
-name|int
+name|long
 name|jobref
 decl_stmt|;
 name|ki
