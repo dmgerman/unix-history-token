@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.15	82/05/31	*/
+comment|/*	buf.h	4.16	82/05/31	*/
 end_comment
 
 begin_comment
@@ -652,6 +652,70 @@ comment|/* bad block revectoring in progress */
 end_comment
 
 begin_comment
+comment|/*  * Insq/Remq for the buffer hash lists.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bremhash
+parameter_list|(
+name|bp
+parameter_list|)
+value|{ \ 	(bp)->b_back->b_forw = (bp)->b_forw; \ 	(bp)->b_forw->b_back = (bp)->b_back; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|binshash
+parameter_list|(
+name|bp
+parameter_list|,
+name|dp
+parameter_list|)
+value|{ \ 	(bp)->b_forw = (dp)->b_forw; \ 	(bp)->b_back = (dp); \ 	(dp)->b_forw->b_back = (bp); \ 	(dp)->b_forw = (bp); \ }
+end_define
+
+begin_comment
+comment|/*  * Insq/Remq for the buffer free lists.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bremfree
+parameter_list|(
+name|bp
+parameter_list|)
+value|{ \ 	(bp)->av_back->av_forw = (bp)->av_forw; \ 	(bp)->av_forw->av_back = (bp)->av_back; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|binsheadfree
+parameter_list|(
+name|bp
+parameter_list|,
+name|dp
+parameter_list|)
+value|{ \ 	(dp)->av_forw->av_back = (bp); \ 	(bp)->av_forw = (dp)->av_forw; \ 	(dp)->av_forw = (bp); \ 	(bp)->av_back = (dp); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|binstailfree
+parameter_list|(
+name|bp
+parameter_list|,
+name|dp
+parameter_list|)
+value|{ \ 	(dp)->av_back->av_forw = (bp); \ 	(bp)->av_back = (dp)->av_back; \ 	(dp)->av_back = (bp); \ 	(bp)->av_forw = (dp); \ }
+end_define
+
+begin_comment
 comment|/*  * Take a buffer off the free list it's on and  * mark it as being use (B_BUSY) by a device.  */
 end_comment
 
@@ -662,7 +726,35 @@ name|notavail
 parameter_list|(
 name|bp
 parameter_list|)
-value|{ \ 	int x = spl6(); \ 	(bp)->av_back->av_forw = (bp)->av_forw; \ 	(bp)->av_forw->av_back = (bp)->av_back; \ 	(bp)->b_flags |= B_BUSY; \ 	splx(x); \ }
+value|{ \ 	int x = spl6(); \ 	bremfree(bp); \ 	(bp)->b_flags |= B_BUSY; \ 	splx(x); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|iodone
+value|biodone
+end_define
+
+begin_define
+define|#
+directive|define
+name|iowait
+value|biowait
+end_define
+
+begin_comment
+comment|/*  * Zero out a buffer's data portion.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|clrbuf
+parameter_list|(
+name|bp
+parameter_list|)
+value|{ \ 	blkclr(bp->b_un.b_addr, bp->b_bcount); \ 	bp->b_resid = 0; \ }
 end_define
 
 end_unit
