@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	6.3	83/10/01	*/
+comment|/*	tty_pty.c	6.4	84/02/15	*/
 end_comment
 
 begin_comment
@@ -2257,20 +2257,8 @@ operator|<
 name|ce
 condition|)
 block|{
-while|while
+if|if
 condition|(
-operator|(
-name|tp
-operator|->
-name|t_delct
-operator|||
-name|tp
-operator|->
-name|t_canq
-operator|.
-name|c_cc
-operator|)
-operator|&&
 operator|(
 name|tp
 operator|->
@@ -2288,6 +2276,16 @@ operator|>=
 name|TTYHOG
 operator|-
 literal|2
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_canq
+operator|.
+name|c_cc
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 name|wakeup

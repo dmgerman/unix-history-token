@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.8	83/12/16	*/
+comment|/*	tty.c	6.9	84/02/15	*/
 end_comment
 
 begin_include
@@ -1301,12 +1301,6 @@ condition|)
 empty_stmt|;
 name|tp
 operator|->
-name|t_delct
-operator|=
-literal|0
-expr_stmt|;
-name|tp
-operator|->
 name|t_rocount
 operator|=
 literal|0
@@ -1407,12 +1401,6 @@ operator|/
 literal|2
 operator|&&
 operator|(
-name|tp
-operator|->
-name|t_delct
-operator|>
-literal|0
-operator|||
 operator|(
 name|tp
 operator|->
@@ -1423,6 +1411,16 @@ name|RAW
 operator||
 name|CBREAK
 operator|)
+operator|)
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_canq
+operator|.
+name|c_cc
+operator|>
+literal|0
 operator|)
 operator|)
 condition|)
