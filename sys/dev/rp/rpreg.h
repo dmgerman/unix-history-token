@@ -58,85 +58,673 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|sOutB
+name|rp_readio
 parameter_list|(
-name|a
+name|size
 parameter_list|,
-name|b
-parameter_list|)
-value|outb(a, b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sOutW
-parameter_list|(
-name|a
+name|ctlp
 parameter_list|,
-name|b
-parameter_list|)
-value|outw(a, b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sOutDW
-parameter_list|(
-name|a
+name|rid
 parameter_list|,
-name|b
+name|offset
 parameter_list|)
-value|outl(a, b)
+define|\
+value|(bus_space_read_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sInB
+name|rp_readmultiio
 parameter_list|(
-name|a
-parameter_list|)
-value|(inb(a))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sInW
-parameter_list|(
-name|a
-parameter_list|)
-value|(inw(a))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sOutStrW
-parameter_list|(
-name|port
+name|size
+parameter_list|,
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
 parameter_list|,
 name|addr
 parameter_list|,
 name|count
 parameter_list|)
-value|outsw(port, addr, count)
+define|\
+value|(bus_space_read_multi_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset, addr, count))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sInStrW
+name|rp_writeio
 parameter_list|(
-name|port
+name|size
+parameter_list|,
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(bus_space_write_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset, data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiio
+parameter_list|(
+name|size
+parameter_list|,
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
 parameter_list|,
 name|addr
 parameter_list|,
 name|count
 parameter_list|)
-value|insw(port, addr, count)
+define|\
+value|(bus_space_write_multi_##size(rman_get_bustag(ctlp->io[rid]), rman_get_bushandle(ctlp->io[rid]), offset, addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readio1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|)
+value|rp_readio(1, ctlp, rid, offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readio2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|)
+value|rp_readio(2, ctlp, rid, offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readio4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|)
+value|rp_readio(4, ctlp, rid, offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writeio1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+value|rp_writeio(1, ctlp, rid, offset, data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writeio2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+value|rp_writeio(2, ctlp, rid, offset, data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writeio4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+value|rp_writeio(4, ctlp, rid, offset, data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultiio1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+value|rp_readmultiio(1, ctlp, rid, offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultiio2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+value|rp_readmultiio(2, ctlp, rid, offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultiio4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+value|rp_readmultiio(4, ctlp, rid, offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiio1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+value|rp_writemultiio(1, ctlp, rid, offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiio2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+value|rp_writemultiio(2, ctlp, rid, offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiio4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|rid
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+value|rp_writemultiio(4, ctlp, rid, offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readaiop1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|(rp_readio1((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readaiop2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|(rp_readio2((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readaiop4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|(rp_readio4((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultiaiop1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_readmultiio1((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultiaiop2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_readmultiio2((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultiaiop4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_readmultiio4((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writeaiop1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(rp_writeio1((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writeaiop2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(rp_writeio2((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writeaiop4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(rp_writeio4((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiaiop1
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_writemultiio1((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiaiop2
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_writemultiio2((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultiaiop4
+parameter_list|(
+name|ctlp
+parameter_list|,
+name|aiop
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_writemultiio4((ctlp), (ctlp)->aiop2rid(aiop, offset), (ctlp)->aiop2off(aiop, offset), addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readch1
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|(rp_readaiop1((chp)->CtlP, (chp)->AiopNum, offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readch2
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|(rp_readaiop2((chp)->CtlP, (chp)->AiopNum, offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readch4
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|(rp_readaiop4((chp)->CtlP, (chp)->AiopNum, offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultich1
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_readmultiaiop1((chp)->CtlP, (chp)->AiopNum, offset, addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultich2
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_readmultiaiop2((chp)->CtlP, (chp)->AiopNum, offset, addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_readmultich4
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_readmultiaiop4((chp)->CtlP, (chp)->AiopNum, offset, addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writech1
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(rp_writeaiop1((chp)->CtlP, (chp)->AiopNum, offset, data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writech2
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(rp_writeaiop2((chp)->CtlP, (chp)->AiopNum, offset, data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writech4
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|(rp_writeaiop4((chp)->CtlP, (chp)->AiopNum, offset, data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultich1
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_writemultiaiop1((chp)->CtlP, (chp)->AiopNum, offset, addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultich2
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_writemultiaiop2((chp)->CtlP, (chp)->AiopNum, offset, addr, count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rp_writemultich4
+parameter_list|(
+name|chp
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|(rp_writemultiaiop4((chp)->CtlP, (chp)->AiopNum, offset, addr, count))
 end_define
 
 begin_comment
@@ -192,31 +780,6 @@ value|32
 end_define
 
 begin_comment
-comment|/* Bus Type ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|isISA
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|isPCI
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|isMC
-value|2
-end_define
-
-begin_comment
 comment|/* Controller ID numbers */
 end_comment
 
@@ -241,45 +804,6 @@ end_define
 begin_comment
 comment|/* controller release 1 */
 end_comment
-
-begin_comment
-comment|/* PCI IDs  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RP_VENDOR_ID
-value|0x11FE
-end_define
-
-begin_define
-define|#
-directive|define
-name|RP_DEVICE_ID_8OCTA
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|RP_DEVICE_ID_8INTF
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|RP_DEVICE_ID_16INTF
-value|0x0003
-end_define
-
-begin_define
-define|#
-directive|define
-name|RP_DEVICE_ID_32INTF
-value|0x0004
-end_define
 
 begin_comment
 comment|/* AIOP ID numbers, identifies AIOP type implementing channel */
@@ -1711,38 +2235,6 @@ begin_comment
 comment|/* strobe and clear interrupt line (EOI) */
 end_comment
 
-begin_comment
-comment|/**************************************************************************   MUDBAC remapped for PCI **************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_CFG_INT_PCI
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PCI_INT_FUNC
-value|0x3A
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_STROB
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTR_EN_PCI
-value|0x0010
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1872,58 +2364,108 @@ name|RREGDATASIZE
 value|52
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|CONTROLLER_str
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|CHANNEL_str
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/* Controller level information structure */
+comment|/* The types of bus-specific methods */
 end_comment
 
 begin_typedef
 typedef|typedef
+name|int
+name|rp_aiop2rid_t
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|rp_aiop2off_t
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|rp_ctlmask_t
+parameter_list|(
+name|struct
+name|CONTROLLER_str
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* Controller level information structure */
+end_comment
+
+begin_struct
 struct|struct
+name|CONTROLLER_str
 block|{
 name|int
 name|CtlID
 decl_stmt|;
 name|int
-name|CtlNum
-decl_stmt|;
-name|int
-name|BusType
-decl_stmt|;
-name|WordIO_t
-name|PCIIO
-decl_stmt|;
-name|ByteIO_t
-name|MBaseIO
-decl_stmt|;
-name|ByteIO_t
-name|MReg1IO
-decl_stmt|;
-name|ByteIO_t
-name|MReg2IO
-decl_stmt|;
-name|ByteIO_t
-name|MReg3IO
-decl_stmt|;
-name|Byte_t
-name|MReg2
-decl_stmt|;
-name|Byte_t
-name|MReg3
-decl_stmt|;
-name|int
 name|NumAiop
-decl_stmt|;
-name|WordIO_t
-name|AiopIO
-index|[
-name|AIOP_CTL_SIZE
-index|]
-decl_stmt|;
-name|ByteIO_t
-name|AiopIntChanIO
-index|[
-name|AIOP_CTL_SIZE
-index|]
 decl_stmt|;
 name|int
 name|AiopID
@@ -1937,7 +2479,73 @@ index|[
 name|AIOP_CTL_SIZE
 index|]
 decl_stmt|;
+comment|/* Device and resource management */
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* device */
+name|int
+name|io_num
+decl_stmt|;
+comment|/* Number of IO resources */
+name|int
+modifier|*
+name|io_rid
+decl_stmt|;
+comment|/* IO resource IDs */
+name|struct
+name|resource
+modifier|*
+modifier|*
+name|io
+decl_stmt|;
+comment|/* IO resources */
+name|struct
+name|rp_port
+modifier|*
+name|rp
+decl_stmt|;
+comment|/* port */
+name|struct
+name|tty
+modifier|*
+name|tty
+decl_stmt|;
+comment|/* tty */
+comment|/* Device nodes */
+name|dev_t
+modifier|*
+name|dev_nodes
+decl_stmt|;
+comment|/* Bus-specific properties */
+name|void
+modifier|*
+name|bus_ctlp
+decl_stmt|;
+comment|/* Bus-specific methods */
+name|rp_aiop2rid_t
+modifier|*
+name|aiop2rid
+decl_stmt|;
+comment|/* (aiop, offset) -> rid */
+name|rp_aiop2off_t
+modifier|*
+name|aiop2off
+decl_stmt|;
+comment|/* (aiop, offset) -> off */
+name|rp_ctlmask_t
+modifier|*
+name|ctlmask
+decl_stmt|;
+comment|/* Int status */
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|CONTROLLER_str
 name|CONTROLLER_T
 typedef|;
 end_typedef
@@ -1953,11 +2561,11 @@ begin_comment
 comment|/* Channel level information structure */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|CHANNEL_str
 block|{
-name|CONTROLLER_T
+name|CONTROLLER_t
 modifier|*
 name|CtlP
 decl_stmt|;
@@ -1969,33 +2577,6 @@ name|ChanID
 decl_stmt|;
 name|int
 name|ChanNum
-decl_stmt|;
-name|ByteIO_t
-name|Cmd
-decl_stmt|;
-name|ByteIO_t
-name|IntChan
-decl_stmt|;
-name|ByteIO_t
-name|IntMask
-decl_stmt|;
-name|DWordIO_t
-name|IndexAddr
-decl_stmt|;
-name|WordIO_t
-name|IndexData
-decl_stmt|;
-name|WordIO_t
-name|TxRxData
-decl_stmt|;
-name|WordIO_t
-name|ChanStat
-decl_stmt|;
-name|WordIO_t
-name|TxRxCount
-decl_stmt|;
-name|ByteIO_t
-name|IntID
 decl_stmt|;
 name|Word_t
 name|TxFIFO
@@ -2067,6 +2648,13 @@ literal|4
 index|]
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|CHANNEL_str
 name|CHANNEL_T
 typedef|;
 end_typedef
@@ -2086,6 +2674,46 @@ name|CHANPTR_T
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|CHNOFF_TXRXDATA
+parameter_list|(
+name|chp
+parameter_list|)
+value|((chp)->ChanNum * 2 + _TD0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHNOFF_CHANSTAT
+parameter_list|(
+name|chp
+parameter_list|)
+value|((chp)->ChanNum * 2 + _CHN_STAT0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHNOFF_TXRXCOUNT
+parameter_list|(
+name|chp
+parameter_list|)
+value|((chp)->ChanNum * 2 + _FIFO_CNT0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHNOFF_INTID
+parameter_list|(
+name|chp
+parameter_list|)
+value|((chp)->ChanNum     + _INT_ID0)
+end_define
+
 begin_comment
 comment|/*************************************************************************** Function: sClrBreak Purpose:  Stop sending a transmit BREAK signal Call:	  sClrBreak(ChP) 	  CHANNEL_T *ChP; Ptr to channel structure */
 end_comment
@@ -2098,7 +2726,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~SETBREAK; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~SETBREAK; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2113,7 +2741,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~SET_DTR; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~SET_DTR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2128,7 +2756,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~SET_RTS; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2143,66 +2771,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    sOutB((ChP)->Cmd,TXOVERIDE | (Byte_t)(ChP)->ChanNum); \    sOutB((ChP)->Cmd,(Byte_t)(ChP)->ChanNum); \ }
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sCtlNumToCtlPtr Purpose:  Convert a controller number to controller structure pointer Call:	  sCtlNumToCtlPtr(CtlNum) 	  int CtlNum; Controller number Return:   CONTROLLER_T *: Ptr to controller structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sCtlNumToCtlPtr
-parameter_list|(
-name|CTLNUM
-parameter_list|)
-value|&sController[CTLNUM]
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sControllerEOI Purpose:  Strobe the MUDBAC's End Of Interrupt bit. Call:	  sControllerEOI(CtlP) 	  CONTROLLER_T *CtlP; Ptr to controller structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sControllerEOI
-parameter_list|(
-name|CTLP
-parameter_list|)
-value|sOutB((CTLP)->MReg2IO,(CTLP)->MReg2 | INT_STROB)
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sPCIControllerEOI Purpose:  Strobe the MUDBAC's End Of Interrupt bit. Call:	  sPCIControllerEOI(CtlP) 	  CONTROLLER_T *CtlP; Ptr to controller structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sPCIControllerEOI
-parameter_list|(
-name|CTLP
-parameter_list|)
-value|sOutW((CTLP)->PCIIO, PCI_STROB)
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sDisAiop Purpose:  Disable I/O access to an AIOP Call:	  sDisAiop(CltP) 	  CONTROLLER_T *CtlP; Ptr to controller structure 	  int AiopNum; Number of AIOP on controller */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sDisAiop
-parameter_list|(
-name|CTLP
-parameter_list|,
-name|AIOPNUM
-parameter_list|)
-define|\
-value|{ \    (CTLP)->MReg3&= sBitMapClrTbl[AIOPNUM]; \    sOutB((CTLP)->MReg3IO,(CTLP)->MReg3); \ }
+value|{ \    rp_writech1(ChP,_CMD_REG,TXOVERIDE | (Byte_t)(ChP)->ChanNum); \    rp_writech1(ChP,_CMD_REG,(Byte_t)(ChP)->ChanNum); \ }
 end_define
 
 begin_comment
@@ -2217,7 +2786,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~CTSFC_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~CTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2232,7 +2801,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~PARITY_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~PARITY_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2247,7 +2816,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->R[0x32] = 0x0a; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->R[0x30]); \ }
+value|{ \    (ChP)->R[0x32] = 0x0a; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0x30]); \ }
 end_define
 
 begin_comment
@@ -2261,7 +2830,7 @@ name|sDisRxStatusMode
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sOutW((ChP)->ChanStat,0)
+value|rp_writech2(ChP,CHNOFF_CHANSTAT(ChP),0)
 end_define
 
 begin_comment
@@ -2276,7 +2845,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3]&= ~TX_ENABLE; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3]&= ~TX_ENABLE; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2291,24 +2860,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->R[0x06] = 0x8a; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->R[0x04]); \ }
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sEnAiop Purpose:  Enable I/O access to an AIOP Call:	  sEnAiop(CltP) 	  CONTROLLER_T *CtlP; Ptr to controller structure 	  int AiopNum; Number of AIOP on controller */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sEnAiop
-parameter_list|(
-name|CTLP
-parameter_list|,
-name|AIOPNUM
-parameter_list|)
-define|\
-value|{ \    (CTLP)->MReg3 |= sBitMapSetTbl[AIOPNUM]; \    sOutB((CTLP)->MReg3IO,(CTLP)->MReg3); \ }
+value|{ \    (ChP)->R[0x06] = 0x8a; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0x04]); \ }
 end_define
 
 begin_comment
@@ -2323,7 +2875,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= CTSFC_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= CTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2338,7 +2890,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= PARITY_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= PARITY_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2353,7 +2905,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \ 	(ChP)->TxControl[2]&= ~RTSTOG_EN; \ 	(ChP)->TxControl[3]&= ~SET_RTS; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ 	(ChP)->RxControl[2] |= RTSFC_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \ 	(ChP)->TxControl[2]&= ~RTSTOG_EN; \ 	(ChP)->TxControl[3]&= ~SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ 	(ChP)->RxControl[2] |= RTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2368,7 +2920,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \ 	(ChP)->RxControl[2]&= ~RTSFC_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \ 	(ChP)->RxControl[2]&= ~RTSFC_EN; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2383,7 +2935,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->R[0x32] = 0x08; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->R[0x30]); \ }
+value|{ \    (ChP)->R[0x32] = 0x08; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0x30]); \ }
 end_define
 
 begin_comment
@@ -2398,7 +2950,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->RxControl[2] |= RXPROC_EN; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \    (ChP)->RxControl[2] |= RXPROC_EN; \    rp_writech2(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2412,7 +2964,7 @@ name|sEnRxStatusMode
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sOutW((ChP)->ChanStat,STATMODE)
+value|rp_writech2(ChP,CHNOFF_CHANSTAT(ChP),STATMODE)
 end_define
 
 begin_comment
@@ -2427,7 +2979,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= TX_ENABLE; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= TX_ENABLE; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2439,11 +2991,11 @@ define|#
 directive|define
 name|sGetAiopIntStatus
 parameter_list|(
-name|CTLP
+name|CtlP
 parameter_list|,
 name|AIOPNUM
 parameter_list|)
-value|sInB((CTLP)->AiopIntChanIO[AIOPNUM])
+value|rp_readaiop1(CtlP,AIOPNUM,_INT_CHAN)
 end_define
 
 begin_comment
@@ -2455,11 +3007,11 @@ define|#
 directive|define
 name|sGetAiopNumChan
 parameter_list|(
-name|CTLP
+name|CtlP
 parameter_list|,
 name|AIOPNUM
 parameter_list|)
-value|(CTLP)->AiopNumChan[AIOPNUM]
+value|CtlP->AiopNumChan[AIOPNUM]
 end_define
 
 begin_comment
@@ -2473,7 +3025,7 @@ name|sGetChanIntID
 parameter_list|(
 name|ChP
 parameter_list|)
-value|(sInB((ChP)->IntID)& (RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR))
+value|(rp_readch1(ChP,(ChP)->ChanNum+_INT_ID0)& (RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR))
 end_define
 
 begin_comment
@@ -2501,7 +3053,7 @@ name|sGetChanStatus
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sInW((ChP)->ChanStat)
+value|rp_readch2(ChP,CHNOFF_CHANSTAT(ChP))
 end_define
 
 begin_comment
@@ -2515,35 +3067,7 @@ name|sGetChanStatusLo
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sInB((ByteIO_t)(ChP)->ChanStat)
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sGetControllerIntStatus Purpose:  Get the controller interrupt status Call:	  sGetControllerIntStatus(CtlP) 	  CONTROLLER_T *CtlP; Ptr to controller structure Return:   Byte_t: The controller interrupt status in the lower 4 			 bits.	Bits 0 through 3 represent AIOP's 0 			 through 3 respectively.  If a bit is set that 			 AIOP is interrupting.	Bits 4 through 7 will 			 always be cleared. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sGetControllerIntStatus
-parameter_list|(
-name|CTLP
-parameter_list|)
-value|(sInB((CTLP)->MReg1IO)& 0x0f)
-end_define
-
-begin_comment
-comment|/*************************************************************************** Function: sPCIGetControllerIntStatus Purpose:  Get the controller interrupt status Call:	  sPCIGetControllerIntStatus(CtlP) 	  CONTROLLER_T *CtlP; Ptr to controller structure Return:   Byte_t: The controller interrupt status in the lower 4 			 bits.	Bits 0 through 3 represent AIOP's 0 			 through 3 respectively.  If a bit is set that 			 AIOP is interrupting.	Bits 4 through 7 will 			 always be cleared. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sPCIGetControllerIntStatus
-parameter_list|(
-name|CTLP
-parameter_list|)
-value|((sInW((CTLP)->PCIIO)>> 8)& 0x1f)
+value|rp_readch1(ChP,CHNOFF_CHANSTAT(ChP))
 end_define
 
 begin_comment
@@ -2557,7 +3081,7 @@ name|sGetRxCnt
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sInW((ChP)->TxRxCount)
+value|rp_readch2(ChP,CHNOFF_TXRXCOUNT(ChP))
 end_define
 
 begin_comment
@@ -2571,11 +3095,11 @@ name|sGetTxCnt
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sInB((ByteIO_t)(ChP)->TxRxCount)
+value|rp_readch1(ChP,CHNOFF_TXRXCOUNT(ChP))
 end_define
 
 begin_comment
-comment|/***************************************************************************** Function: sGetTxRxDataIO Purpose:  Get the I/O address of a channel's TxRx Data register Call:	  sGetTxRxDataIO(ChP) 	  CHANNEL_T *ChP; Ptr to channel structure Return:   WordIO_t: I/O address of a channel's TxRx Data register */
+comment|/***************************************************************************** Function: sGetTxRxDataIO Purpose:  Get the offset of a channel's TxRx Data register Call:	  sGetTxRxDataIO(ChP) 	  CHANNEL_T *ChP; Ptr to channel structure Return:   WordIO_t: offset of a channel's TxRx Data register */
 end_comment
 
 begin_define
@@ -2585,7 +3109,7 @@ name|sGetTxRxDataIO
 parameter_list|(
 name|ChP
 parameter_list|)
-value|(ChP)->TxRxData
+value|CHNOFF_TXRXDATA(ChP)
 end_define
 
 begin_comment
@@ -2617,7 +3141,7 @@ parameter_list|,
 name|AIOPNUM
 parameter_list|)
 define|\
-value|{ \    sOutB((CTLP)->AiopIO[(AIOPNUM)]+_CMD_REG,RESET_ALL); \    sOutB((CTLP)->AiopIO[(AIOPNUM)]+_CMD_REG,0x0); \ }
+value|{ \    rp_writeaiop1(CTLP,AIOPNUM,_CMD_REG,RESET_ALL); \    rp_writeaiop1(CTLP,AIOPNUM,_CMD_REG,0x0); \ }
 end_define
 
 begin_comment
@@ -2632,7 +3156,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= SETBREAK; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= SETBREAK; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2649,7 +3173,7 @@ parameter_list|,
 name|DIVISOR
 parameter_list|)
 define|\
-value|{ \    (ChP)->BaudDiv[2] = (Byte_t)(DIVISOR); \    (ChP)->BaudDiv[3] = (Byte_t)((DIVISOR)>> 8); \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->BaudDiv[0]); \ }
+value|{ \    (ChP)->BaudDiv[2] = (Byte_t)(DIVISOR); \    (ChP)->BaudDiv[3] = (Byte_t)((DIVISOR)>> 8); \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->BaudDiv[0]); \ }
 end_define
 
 begin_comment
@@ -2664,7 +3188,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~DATA8BIT; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~DATA8BIT; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2679,7 +3203,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= DATA8BIT; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= DATA8BIT; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2694,7 +3218,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= SET_DTR; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= SET_DTR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2709,7 +3233,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= EVEN_PAR; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= EVEN_PAR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2724,7 +3248,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~EVEN_PAR; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~EVEN_PAR; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2739,7 +3263,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[3] |= SET_RTS; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[3] |= SET_RTS; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2756,7 +3280,7 @@ parameter_list|,
 name|LEVEL
 parameter_list|)
 define|\
-value|{ \    (ChP)->RxControl[2]&= ~TRIG_MASK; \    (ChP)->RxControl[2] |= LEVEL; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->RxControl[0]); \ }
+value|{ \    (ChP)->RxControl[2]&= ~TRIG_MASK; \    (ChP)->RxControl[2] |= LEVEL; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->RxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2771,7 +3295,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2]&= ~STOP2; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2]&= ~STOP2; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2786,7 +3310,7 @@ parameter_list|(
 name|ChP
 parameter_list|)
 define|\
-value|{ \    (ChP)->TxControl[2] |= STOP2; \    sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->TxControl[0]); \ }
+value|{ \    (ChP)->TxControl[2] |= STOP2; \    rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->TxControl[0]); \ }
 end_define
 
 begin_comment
@@ -2800,11 +3324,11 @@ name|sStartRxProcessor
 parameter_list|(
 name|ChP
 parameter_list|)
-value|sOutDW((ChP)->IndexAddr,*(DWord_t *)&(ChP)->R[0])
+value|rp_writech4(ChP,_INDX_ADDR,*(DWord_t *)&(ChP)->R[0])
 end_define
 
 begin_comment
-comment|/*************************************************************************** Function: sWriteTxByte Purpose:  Write a transmit data byte to a channel. 	  ByteIO_t io: Channel transmit register I/O address.  This can 			   be obtained with sGetTxRxDataIO(). 	  Byte_t Data; The transmit data byte. Warnings: This function writes the data byte without checking to see if 	  sMaxTxSize is exceeded in the Tx FIFO. */
+comment|/*************************************************************************** Function: sWriteTxByte Purpose:  Write a transmit data byte to a channel. 	  CHANNEL_T *ChP; Ptr to channel structure 	  ByteIO_t io: Channel transmit register I/O address.  This can 			   be obtained with sGetTxRxDataIO(). 	  Byte_t Data; The transmit data byte. Warnings: This function writes the data byte without checking to see if 	  sMaxTxSize is exceeded in the Tx FIFO. */
 end_comment
 
 begin_define
@@ -2812,82 +3336,25 @@ define|#
 directive|define
 name|sWriteTxByte
 parameter_list|(
+name|ChP
+parameter_list|,
 name|IO
 parameter_list|,
 name|DATA
 parameter_list|)
-value|sOutB(IO,DATA)
+value|rp_writech1(ChP,IO,DATA)
 end_define
-
-begin_function_decl
-name|int
-name|sInitController
-parameter_list|(
-name|CONTROLLER_T
-modifier|*
-name|CtlP
-parameter_list|,
-name|int
-name|CtlNum
-parameter_list|,
-name|ByteIO_t
-name|MudbacIO
-parameter_list|,
-name|ByteIO_t
-modifier|*
-name|AiopIOList
-parameter_list|,
-name|int
-name|AiopIOListSize
-parameter_list|,
-name|int
-name|IRQNum
-parameter_list|,
-name|Byte_t
-name|Frequency
-parameter_list|,
-name|int
-name|PeriodicOnly
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sPCIInitController
-parameter_list|(
-name|CONTROLLER_T
-modifier|*
-name|CtlP
-parameter_list|,
-name|int
-name|CtlNum
-parameter_list|,
-name|ByteIO_t
-modifier|*
-name|AiopIOList
-parameter_list|,
-name|int
-name|AiopIOListSize
-parameter_list|,
-name|int
-name|IRQNum
-parameter_list|,
-name|Byte_t
-name|Frequency
-parameter_list|,
-name|int
-name|PeriodicOnly
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
 name|sReadAiopID
 parameter_list|(
-name|ByteIO_t
-name|io
+name|CONTROLLER_T
+modifier|*
+name|CtlP
+parameter_list|,
+name|int
+name|aiop
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2896,8 +3363,12 @@ begin_function_decl
 name|int
 name|sReadAiopNumChan
 parameter_list|(
-name|WordIO_t
-name|io
+name|CONTROLLER_T
+modifier|*
+name|CtlP
+parameter_list|,
+name|int
+name|aiop
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3020,6 +3491,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|rp_attachcommon
+parameter_list|(
+name|CONTROLLER_T
+modifier|*
+name|ctlp
+parameter_list|,
+name|int
+name|num_aiops
+parameter_list|,
+name|int
+name|num_ports
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rp_releaseresource
+parameter_list|(
+name|CONTROLLER_t
+modifier|*
+name|ctlp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3056,30 +3555,30 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|Byte_t
-name|sBitMapClrTbl
-index|[
-literal|8
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Byte_t
-name|sBitMapSetTbl
-index|[
-literal|8
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|Byte_t
+name|rp_sBitMapClrTbl
+index|[
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Byte_t
+name|rp_sBitMapSetTbl
+index|[
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
