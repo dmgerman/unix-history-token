@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.35	83/02/10	*/
+comment|/*	vfs_lookup.c	4.36	83/03/21	*/
 end_comment
 
 begin_include
@@ -2066,7 +2066,7 @@ decl_stmt|;
 name|int
 name|loc
 decl_stmt|,
-name|freespace
+name|spacefree
 decl_stmt|,
 name|error
 init|=
@@ -2282,7 +2282,7 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
-name|freespace
+name|spacefree
 operator|=
 name|ep
 operator|->
@@ -2354,7 +2354,7 @@ block|}
 else|else
 block|{
 comment|/* overwrite; nothing there; header is ours */
-name|freespace
+name|spacefree
 operator|+=
 name|dsize
 expr_stmt|;
@@ -2366,7 +2366,7 @@ argument_list|(
 name|nep
 argument_list|)
 expr_stmt|;
-name|freespace
+name|spacefree
 operator|+=
 name|nep
 operator|->
@@ -2408,7 +2408,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|freespace
+name|spacefree
 operator|+
 name|dsize
 operator|<
@@ -2425,7 +2425,7 @@ name|u_dent
 operator|.
 name|d_reclen
 operator|=
-name|freespace
+name|spacefree
 operator|+
 name|dsize
 expr_stmt|;
@@ -2434,7 +2434,7 @@ else|else
 block|{
 if|if
 condition|(
-name|freespace
+name|spacefree
 operator|<
 name|newentrysize
 condition|)
@@ -2449,7 +2449,7 @@ name|u_dent
 operator|.
 name|d_reclen
 operator|=
-name|freespace
+name|spacefree
 expr_stmt|;
 name|ep
 operator|->
