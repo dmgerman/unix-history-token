@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.14 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,9 +235,17 @@ define|#
 directive|define
 name|X_END
 value|10
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
 define|#
 directive|define
 name|X_HPDINIT

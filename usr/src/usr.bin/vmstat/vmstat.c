@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.36 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,9 +380,17 @@ name|X_END
 value|14
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
 define|#
 directive|define
 name|X_HPDINIT
