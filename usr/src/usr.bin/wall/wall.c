@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.2 (Berkeley) %G%"
+literal|"@(#)wall.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,8 +389,7 @@ name|sprintf
 argument_list|(
 name|mesg
 argument_list|,
-literal|"\n
-literal|Broadcast Message from %s@%s (%.*s) at %d:%02d ...\r\n\n"
+literal|"\n\007\007Broadcast Message from %s@%s (%.*s) at %d:%02d ...\r\n\n"
 argument_list|,
 name|who
 argument_list|,
