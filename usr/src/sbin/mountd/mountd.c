@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.3 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2340,6 +2340,10 @@ decl_stmt|,
 modifier|*
 name|ep2
 decl_stmt|;
+name|struct
+name|ufs_args
+name|args
+decl_stmt|;
 name|FILE
 modifier|*
 name|inf
@@ -2539,7 +2543,7 @@ condition|)
 block|{
 name|exflags
 operator|=
-literal|0
+name|M_EXPORTED
 expr_stmt|;
 name|rootuid
 operator|=
@@ -3025,17 +3029,38 @@ operator|-
 name|cp
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|fspec
+operator|=
+literal|0
+expr_stmt|;
+name|args
+operator|.
+name|exflags
+operator|=
+name|exflags
+expr_stmt|;
+name|args
+operator|.
+name|exroot
+operator|=
+name|rootuid
+expr_stmt|;
 if|if
 condition|(
-name|exportfs
+name|mount
 argument_list|(
+name|MOUNT_UFS
+argument_list|,
 name|ep
 operator|->
 name|ex_dirp
 argument_list|,
-name|rootuid
+name|M_UPDATE
 argument_list|,
-name|exflags
+operator|&
+name|args
 argument_list|)
 operator|<
 literal|0
