@@ -4467,6 +4467,7 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Bzero already done in thread_alloc_spare() because we can't 	 * do the crhold here because we are in schedlock already. 	 */
 name|bcopy
 argument_list|(
 operator|&
@@ -4798,7 +4799,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Release ownership of upcall, and schedule an upcall 		 * thread, this new upcall thread becomes the owner of 		 * the upcall structure. 		 */
+comment|/* 		 * Release ownership of upcall, and schedule an upcall 		 * thread, this new upcall thread becomes the owner of 		 * the upcall structure. It will be ahead of us in the 		 * run queue, so as we are stopping, it should either 		 * start up immediatly, or at least before us if 		 * we release our slot. 		 */
 name|ku
 operator|=
 name|td
