@@ -574,6 +574,10 @@ argument_list|,
 literal|"INFORMATION; SEE fsck(8)."
 argument_list|)
 expr_stmt|;
+name|bflag
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -586,6 +590,10 @@ literal|"USING ALTERNATE SUPERBLOCK AT %d\n"
 argument_list|,
 name|bflag
 argument_list|)
+expr_stmt|;
+name|bflag
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|maxfsblock
