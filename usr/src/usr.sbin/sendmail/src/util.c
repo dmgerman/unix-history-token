@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.12 (Berkeley) %G%"
+literal|"@(#)util.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3852,6 +3852,10 @@ name|stbuf
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EOPNOTSUPP
 condition|)
 block|{
 comment|/* oops.... */
