@@ -1216,9 +1216,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|ultrix
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BSD__
+argument_list|)
 name|set_733
 argument_list|(
 operator|(

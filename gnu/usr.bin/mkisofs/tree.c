@@ -239,7 +239,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|trans_tbl
 index|[]

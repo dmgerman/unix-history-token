@@ -1263,7 +1263,6 @@ name|FDECL2
 parameter_list|(
 name|compare_dirs
 parameter_list|,
-specifier|const
 name|struct
 name|directory_entry
 modifier|*
@@ -1271,7 +1270,6 @@ modifier|*
 parameter_list|,
 name|r
 parameter_list|,
-specifier|const
 name|struct
 name|directory_entry
 modifier|*
@@ -1561,6 +1559,10 @@ name|directory_entry
 operator|*
 argument_list|)
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|compare_dirs
 argument_list|)
 expr_stmt|;
@@ -3563,6 +3565,10 @@ name|directory
 operator|*
 argument_list|)
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|compare_paths
 argument_list|)
 expr_stmt|;
