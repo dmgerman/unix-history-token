@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_usrreq.c	8.3 (Berkeley) 1/4/94  * $Id: uipc_usrreq.c,v 1.4 1994/09/28 19:55:10 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_usrreq.c	8.3 (Berkeley) 1/4/94  * $Id: uipc_usrreq.c,v 1.5 1994/10/02 17:35:36 phk Exp $  */
 end_comment
 
 begin_include
@@ -570,6 +570,9 @@ break|break;
 case|case
 name|PRU_SEND
 case|:
+case|case
+name|PRU_SEND_EOF
+case|:
 if|if
 condition|(
 name|control
@@ -746,6 +749,37 @@ define|#
 directive|define
 name|snd
 value|(&so->so_snd)
+comment|/* Connect if not connected yet. */
+comment|/* 			 * Note: A better implementation would complain 			 * if already connected, nam non-zero and not 			 * equal to the peer's address. 			 */
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_ISCONNECTED
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|error
+operator|=
+name|unp_connect
+argument_list|(
+name|so
+argument_list|,
+name|nam
+argument_list|,
+name|p
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
+comment|/* XXX */
 if|if
 condition|(
 name|so
@@ -880,6 +914,25 @@ default|default:
 name|panic
 argument_list|(
 literal|"uipc 4"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * SEND_EOF is equivalent to a SEND followed by 		 * a SHUTDOWN. 		 */
+if|if
+condition|(
+name|req
+operator|==
+name|PRU_SEND_EOF
+condition|)
+block|{
+name|socantsendmore
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|unp_shutdown
+argument_list|(
+name|unp
 argument_list|)
 expr_stmt|;
 block|}
