@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.35 (Berkeley) %G%"
+literal|"@(#)ps.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,43 +261,68 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|DFMT
-value|"pid tt state time command"
-end_define
+begin_decl_stmt
+name|char
+name|dfmt
+index|[]
+init|=
+literal|"pid tt state time command"
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|JFMT
-value|"user pid ppid pgid sess jobc state tt time command"
-end_define
+begin_decl_stmt
+name|char
+name|jfmt
+index|[]
+init|=
+literal|"user pid ppid pgid sess jobc state tt time command"
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|LFMT
-define|\
-value|"uid pid ppid cpu pri nice vsz rss wchan state tt time command"
-end_define
+begin_decl_stmt
+name|char
+name|lfmt
+index|[]
+init|=
+literal|"uid pid ppid cpu pri nice vsz rss wchan state tt time command"
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|UFMT
-define|\
-value|"user pid %cpu %mem vsz rss tt state start time command"
-end_define
+begin_decl_stmt
+name|char
+name|o1
+index|[]
+init|=
+literal|"pid"
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|VFMT
-define|\
-value|"pid state time sl re pagein vsz rss lim tsiz trs %cpu %mem command"
-end_define
+begin_decl_stmt
+name|char
+name|o2
+index|[]
+init|=
+literal|"tt state time command"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|ufmt
+index|[]
+init|=
+literal|"user pid %cpu %mem vsz rss tt state start time command"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|vfmt
+index|[]
+init|=
+literal|"pid state time sl re pagein vsz rss lim tsiz trs %cpu %mem command"
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -563,7 +588,7 @@ literal|'j'
 case|:
 name|parsefmt
 argument_list|(
-name|JFMT
+name|jfmt
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -587,7 +612,7 @@ literal|'l'
 case|:
 name|parsefmt
 argument_list|(
-name|LFMT
+name|lfmt
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -608,7 +633,7 @@ literal|'O'
 case|:
 name|parsefmt
 argument_list|(
-literal|"pid"
+name|o1
 argument_list|)
 expr_stmt|;
 name|parsefmt
@@ -618,7 +643,7 @@ argument_list|)
 expr_stmt|;
 name|parsefmt
 argument_list|(
-literal|"tt state time command"
+name|o2
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -821,7 +846,7 @@ literal|'u'
 case|:
 name|parsefmt
 argument_list|(
-name|UFMT
+name|ufmt
 argument_list|)
 expr_stmt|;
 name|sortby
@@ -838,7 +863,7 @@ literal|'v'
 case|:
 name|parsefmt
 argument_list|(
-name|VFMT
+name|vfmt
 argument_list|)
 expr_stmt|;
 name|sortby
@@ -973,7 +998,7 @@ name|fmt
 condition|)
 name|parsefmt
 argument_list|(
-name|DFMT
+name|dfmt
 argument_list|)
 expr_stmt|;
 if|if
