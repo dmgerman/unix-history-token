@@ -168,6 +168,12 @@ directive|include
 file|<i386/apm/apm_setup.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/apm/apm.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
