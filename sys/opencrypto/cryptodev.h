@@ -808,6 +808,11 @@ value|0x08
 comment|/* Compute SHA-1 of buffer for DSA */
 define|#
 directive|define
+name|CRD_F_KEY_EXPLICIT
+value|0x10
+comment|/* Key explicitly provided */
+define|#
+directive|define
 name|CRD_F_COMP
 value|0x0f
 comment|/* Set when doing compression */
