@@ -2106,7 +2106,7 @@ name|semid
 operator|>=
 name|seminfo
 operator|.
-name|semmsl
+name|semmni
 condition|)
 return|return
 operator|(
@@ -3980,7 +3980,7 @@ name|semid
 operator|>=
 name|seminfo
 operator|.
-name|semmsl
+name|semmni
 condition|)
 return|return
 operator|(
