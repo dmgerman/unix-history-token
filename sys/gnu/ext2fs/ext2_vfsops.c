@@ -2983,6 +2983,12 @@ argument_list|,
 name|v_mntvnodes
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|mntvnode_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Step 4: invalidate all inactive vnodes. 		 */
 if|if
 condition|(
@@ -2990,8 +2996,7 @@ name|vrecycle
 argument_list|(
 name|vp
 argument_list|,
-operator|&
-name|mntvnode_mtx
+name|NULL
 argument_list|,
 name|p
 argument_list|)
@@ -3000,12 +3005,6 @@ goto|goto
 name|loop
 goto|;
 comment|/* 		 * Step 5: invalidate all cached file data. 		 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|mntvnode_mtx
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
