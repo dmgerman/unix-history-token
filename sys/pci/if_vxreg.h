@@ -1238,6 +1238,13 @@ name|INTERNAL_CONNECTOR_BITS
 value|20
 end_define
 
+begin_define
+define|#
+directive|define
+name|INTERNAL_CONNECTOR_MASK
+value|0x00700000
+end_define
+
 begin_comment
 comment|/* Resource configuration register.  * Window 0/Port 08  *  */
 end_comment
