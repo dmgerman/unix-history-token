@@ -93,6 +93,9 @@ name|RUSERSVERS_IDLE
 argument_list|,
 name|RUSERSPROC_NAMES
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -101,6 +104,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_utmpidlearr
 argument_list|,
 operator|(
@@ -140,6 +146,9 @@ name|RUSERSVERS_ORIG
 argument_list|,
 name|RUSERSPROC_NUM
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -148,6 +157,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_u_long
 argument_list|,
 operator|(

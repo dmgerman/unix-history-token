@@ -96,6 +96,9 @@ name|WALLVERS
 argument_list|,
 name|WALLPROC_WALL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_wrapstring
 argument_list|,
 operator|(
@@ -105,6 +108,9 @@ operator|)
 operator|&
 name|msg
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(

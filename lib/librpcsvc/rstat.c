@@ -98,6 +98,9 @@ name|RSTATVERS_TIME
 argument_list|,
 name|RSTATPROC_STATS
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -106,6 +109,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_statstime
 argument_list|,
 operator|(
@@ -145,6 +151,9 @@ name|RSTATVERS_SWTCH
 argument_list|,
 name|RSTATPROC_HAVEDISK
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -153,6 +162,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_long
 argument_list|,
 operator|(

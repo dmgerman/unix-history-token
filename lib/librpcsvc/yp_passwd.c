@@ -181,6 +181,9 @@ name|YPPASSWDVERS
 argument_list|,
 name|YPPASSWDPROC_UPDATE
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_yppasswd
 argument_list|,
 operator|(
@@ -190,6 +193,9 @@ operator|)
 operator|&
 name|yppasswd
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_int
 argument_list|,
 operator|(
