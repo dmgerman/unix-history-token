@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.70	83/02/24	*/
+comment|/*	hp.c	4.71	83/02/27	*/
 end_comment
 
 begin_ifdef
@@ -1614,6 +1614,17 @@ name|nsectors
 decl_stmt|;
 name|hpaddr
 operator|->
+name|hpof
+operator|=
+name|HPOF_FMT22
+expr_stmt|;
+name|mbclrattn
+argument_list|(
+name|mi
+argument_list|)
+expr_stmt|;
+name|hpaddr
+operator|->
 name|hpcs1
 operator|=
 name|HP_NOP
@@ -1659,24 +1670,6 @@ goto|goto
 name|done
 goto|;
 block|}
-if|if
-condition|(
-name|ntracks
-operator|!=
-literal|20
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hp%d: ntracks %d: unknown device\n"
-argument_list|,
-name|ntracks
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 name|hpaddr
 operator|->
 name|hpcs1
@@ -1702,6 +1695,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|ntracks
+operator|==
+literal|20
+operator|&&
 name|nsectors
 operator|==
 literal|48
@@ -1720,7 +1717,19 @@ operator|->
 name|mi_unit
 argument_list|)
 expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
+name|printf
+argument_list|(
+literal|"hp%d: ntracks %d, nsectors %d: unknown device\n"
+argument_list|,
+name|ntracks
+argument_list|,
+name|nsectors
+argument_list|)
+expr_stmt|;
 name|done
 label|:
 name|hpaddr
@@ -1731,6 +1740,12 @@ name|HP_DCLR
 operator||
 name|HP_GO
 expr_stmt|;
+name|mbclrattn
+argument_list|(
+name|mi
+argument_list|)
+expr_stmt|;
+comment|/* conservative */
 return|return
 operator|(
 name|type
@@ -2230,14 +2245,6 @@ name|struct
 name|hpst
 modifier|*
 name|st
-init|=
-operator|&
-name|hpst
-index|[
-name|mi
-operator|->
-name|mi_type
-index|]
 decl_stmt|;
 name|struct
 name|hpsoftc
@@ -2260,6 +2267,16 @@ name|sn
 decl_stmt|,
 name|dist
 decl_stmt|;
+name|st
+operator|=
+operator|&
+name|hpst
+index|[
+name|mi
+operator|->
+name|mi_type
+index|]
+expr_stmt|;
 name|hpaddr
 operator|->
 name|hpcs1
@@ -2900,14 +2917,6 @@ name|struct
 name|hpst
 modifier|*
 name|st
-init|=
-operator|&
-name|hpst
-index|[
-name|mi
-operator|->
-name|mi_type
-index|]
 decl_stmt|;
 specifier|register
 name|int
@@ -2933,6 +2942,16 @@ name|retry
 init|=
 literal|0
 decl_stmt|;
+name|st
+operator|=
+operator|&
+name|hpst
+index|[
+name|mi
+operator|->
+name|mi_type
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -2940,10 +2959,7 @@ operator|->
 name|b_flags
 operator|&
 name|B_BAD
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|hpecc
 argument_list|(
 name|mi
@@ -2956,7 +2972,6 @@ operator|(
 name|MBD_RESTARTED
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|hpaddr
@@ -3413,7 +3428,6 @@ operator|(
 name|MBD_RESTARTED
 operator|)
 return|;
-else|else
 goto|goto
 name|hard
 goto|;
