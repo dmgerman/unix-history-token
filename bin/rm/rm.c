@@ -349,8 +349,8 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|==
-literal|0
+operator|!=
+literal|1
 condition|)
 name|usage
 argument_list|()
