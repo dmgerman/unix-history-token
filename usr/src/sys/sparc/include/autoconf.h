@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.h	7.2 (Berkeley) %G%  *  * from: $Header: autoconf.h,v 1.8 92/06/24 08:55:42 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.h	7.3 (Berkeley) %G%  *  * from: $Header: autoconf.h,v 1.10 92/11/26 02:04:32 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ name|int
 name|ra_nintr
 decl_stmt|;
 comment|/* number of interrupt info elements */
+name|struct
+name|bootpath
+modifier|*
+name|ra_bp
+decl_stmt|;
+comment|/* used for locating boot device */
 block|}
 struct|;
 end_struct
@@ -331,6 +337,44 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Openprom V2 style boot path */
+end_comment
+
+begin_struct
+struct|struct
+name|bootpath
+block|{
+name|char
+name|name
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* name of this node */
+name|int
+name|val
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* up to two optional values */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|device
+modifier|*
+name|bootdv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* found during autoconfiguration */
+end_comment
 
 end_unit
 
