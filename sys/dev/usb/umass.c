@@ -12558,6 +12558,9 @@ case|case
 name|MODE_SENSE_10
 case|:
 case|case
+name|READ_BUFFER
+case|:
+case|case
 literal|0x42
 case|:
 comment|/* READ_SUBCHANNEL */
