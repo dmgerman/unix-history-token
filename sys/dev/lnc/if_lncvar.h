@@ -247,6 +247,79 @@ name|DEPCA_ADDR_ROM_SIZE
 value|32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_comment
+comment|/* C-NET(98)S port addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_RDP
+value|0x400
+end_define
+
+begin_comment
+comment|/* Register Data Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_RAP
+value|0x402
+end_define
+
+begin_comment
+comment|/* Register Address Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_RESET
+value|0x404
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNET98S_IDP
+value|0x406
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNET98S_EEPROM
+value|0x40e
+end_define
+
+begin_comment
+comment|/*  * XXX - The I/O address range is fragmented in the C-NET(98)S.  *       This is the number of regs at iobase.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_IOSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* # of i/o addresses used. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Chip types */
 end_comment
@@ -394,6 +467,17 @@ directive|define
 name|DEPCA
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|CNET98S
+value|4
+end_define
+
+begin_comment
+comment|/* PC-98 */
+end_comment
 
 begin_comment
 comment|/* mem_mode values */
