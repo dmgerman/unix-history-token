@@ -581,7 +581,9 @@ argument_list|(
 name|argv
 argument_list|)
 argument_list|,
-literal|1
+name|PARSE_REDUCE
+operator||
+name|PARSE_NOHASH
 argument_list|)
 operator|)
 operator|<

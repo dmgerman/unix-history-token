@@ -519,7 +519,7 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|,
-literal|1
+name|PARSE_REDUCE
 argument_list|)
 operator|)
 operator|<
@@ -827,7 +827,7 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|,
-literal|1
+name|PARSE_REDUCE
 argument_list|)
 operator|)
 operator|<
@@ -1172,7 +1172,7 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|,
-literal|1
+name|PARSE_REDUCE
 argument_list|)
 operator|)
 operator|<
@@ -1417,7 +1417,7 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|,
-literal|1
+name|PARSE_REDUCE
 argument_list|)
 operator|)
 operator|<

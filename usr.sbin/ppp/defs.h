@@ -556,6 +556,31 @@ name|PHYS_ALL
 value|127
 end_define
 
+begin_comment
+comment|/* flags passed to findblank() and MakeArgs() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSE_NORMAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PARSE_REDUCE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PARSE_NOHASH
+value|2
+end_define
+
 begin_function_decl
 specifier|extern
 name|void

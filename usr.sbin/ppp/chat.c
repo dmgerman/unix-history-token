@@ -3257,7 +3257,7 @@ operator|->
 name|argv
 argument_list|)
 argument_list|,
-literal|0
+name|PARSE_NOHASH
 argument_list|)
 expr_stmt|;
 block|}
@@ -3878,7 +3878,9 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|,
-literal|1
+name|PARSE_REDUCE
+operator||
+name|PARSE_NOHASH
 argument_list|)
 operator|)
 operator|<=

@@ -6039,7 +6039,7 @@ name|argv
 argument_list|,
 name|MAXARGS
 argument_list|,
-literal|1
+name|PARSE_REDUCE
 argument_list|)
 return|;
 block|}

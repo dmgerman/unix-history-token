@@ -1055,7 +1055,7 @@ modifier|*
 name|p
 parameter_list|,
 name|int
-name|reduce
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -1081,7 +1081,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|reduce
+name|flags
+operator|&
+name|PARSE_REDUCE
 condition|)
 block|{
 name|memmove
@@ -1154,10 +1156,19 @@ operator|*
 name|p
 argument_list|)
 operator|||
+operator|(
 operator|*
 name|p
 operator|==
 literal|'#'
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|PARSE_NOHASH
+operator|)
+operator|)
 operator|)
 condition|)
 return|return
@@ -1194,7 +1205,7 @@ name|int
 name|maxargs
 parameter_list|,
 name|int
-name|reduce
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -1249,7 +1260,7 @@ name|findblank
 argument_list|(
 name|script
 argument_list|,
-name|reduce
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
