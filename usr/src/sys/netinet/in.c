@@ -2811,6 +2811,16 @@ break|break;
 block|}
 block|}
 comment|/* 	 * Add route for the network. 	 */
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_metric
+operator|=
+name|ifp
+operator|->
+name|if_metric
+expr_stmt|;
 if|if
 condition|(
 name|ifp
