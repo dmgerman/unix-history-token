@@ -345,6 +345,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|tcp_do_newreno
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|newreno
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_do_newreno
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable NewReno Algorithms"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Tcp output routine: figure out what should be sent and send it.  */
 end_comment
@@ -444,6 +473,11 @@ name|int
 name|idle
 decl_stmt|,
 name|sendalot
+decl_stmt|;
+name|int
+name|maxburst
+init|=
+name|TCP_MAXBURST
 decl_stmt|;
 name|struct
 name|rmxp_tao
@@ -3771,6 +3805,14 @@ expr_stmt|;
 if|if
 condition|(
 name|sendalot
+operator|&&
+operator|(
+operator|!
+name|tcp_do_newreno
+operator|||
+operator|--
+name|maxburst
+operator|)
 condition|)
 goto|goto
 name|again
