@@ -192,6 +192,9 @@ block|{
 case|case
 name|FBYTES
 case|:
+case|case
+name|RBYTES
+case|:
 name|bytes
 argument_list|(
 name|fp
@@ -202,6 +205,9 @@ expr_stmt|;
 break|break;
 case|case
 name|FLINES
+case|:
+case|case
+name|RLINES
 case|:
 name|lines
 argument_list|(
@@ -272,9 +278,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -287,13 +290,6 @@ name|st_size
 operator|)
 condition|)
 return|return;
-name|fd
-operator|=
-name|fileno
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -309,7 +305,10 @@ name|PROT_READ
 argument_list|,
 name|MAP_FILE
 argument_list|,
-name|fd
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
 argument_list|,
 operator|(
 name|off_t
