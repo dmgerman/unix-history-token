@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -799,7 +805,7 @@ name|getgrent
 argument_list|()
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|(
 name|void
@@ -841,7 +847,7 @@ name|getpwent
 argument_list|()
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 operator|(
 name|void
@@ -2142,7 +2148,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\tinodes %d -> %d"
+literal|"\tinodes %ld -> %ld"
 argument_list|,
 name|dqbuf
 operator|.
@@ -2168,7 +2174,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\tblocks %d -> %d"
+literal|"\tblocks %ld -> %ld"
 argument_list|,
 name|dqbuf
 operator|.
@@ -2267,6 +2273,9 @@ name|fseek
 argument_list|(
 name|qfo
 argument_list|,
+operator|(
+name|long
+operator|)
 name|offset
 argument_list|,
 name|SEEK_SET
@@ -2499,12 +2508,16 @@ name|gr
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|gr
 operator|=
 name|getgrnam
 argument_list|(
 name|quotagroup
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2670,6 +2683,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -2678,6 +2692,9 @@ name|opt
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|cp
@@ -2896,6 +2913,7 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|fup
 operator|=
 name|lookup
@@ -2904,6 +2922,9 @@ name|id
 argument_list|,
 name|type
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
