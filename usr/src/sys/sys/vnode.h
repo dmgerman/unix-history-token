@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -390,17 +390,17 @@ name|va_blocksize
 decl_stmt|;
 comment|/* blocksize preferred for i/o */
 name|struct
-name|timeval
+name|timespec
 name|va_atime
 decl_stmt|;
 comment|/* time of last access */
 name|struct
-name|timeval
+name|timespec
 name|va_mtime
 decl_stmt|;
 comment|/* time of last modification */
 name|struct
-name|timeval
+name|timespec
 name|va_ctime
 decl_stmt|;
 comment|/* time file changed */

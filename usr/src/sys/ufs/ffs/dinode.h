@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -65,17 +65,17 @@ name|di_qsize
 decl_stmt|;
 comment|/*   8: number of bytes in file */
 name|struct
-name|timeval
+name|timespec
 name|di_atime
 decl_stmt|;
 comment|/*  16: time last accessed */
 name|struct
-name|timeval
+name|timespec
 name|di_mtime
 decl_stmt|;
 comment|/*  24: time last modified */
 name|struct
-name|timeval
+name|timespec
 name|di_ctime
 decl_stmt|;
 comment|/*  32: last time inode changed */
