@@ -709,9 +709,7 @@ decl_stmt|;
 name|char
 name|p
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 comment|/* Open terminal device and setup H4 line discipline */

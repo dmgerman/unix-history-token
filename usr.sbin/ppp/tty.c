@@ -1128,9 +1128,7 @@ decl_stmt|;
 name|char
 name|asyncpath
 index|[
-name|NG_PATHLEN
-operator|+
-literal|1
+name|NG_PATHSIZ
 index|]
 decl_stmt|;
 name|struct
@@ -1314,9 +1312,7 @@ decl_stmt|;
 name|char
 name|ttypath
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 name|struct
