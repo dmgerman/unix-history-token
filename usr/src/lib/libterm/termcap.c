@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termcap.c	4.1 (Berkeley) %G%"
+literal|"@(#)termcap.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,6 +578,7 @@ name|tcname
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|q
 operator|&&
 operator|*
