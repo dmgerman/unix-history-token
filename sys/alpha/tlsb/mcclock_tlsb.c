@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mcclock_tlsb.c,v 1.3 1998/07/31 09:20:01 dfr Exp $ */
+comment|/* $Id: mcclock_tlsb.c,v 1.4 1999/05/08 21:58:53 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -213,6 +213,13 @@ argument_list|(
 name|clock_set
 argument_list|,
 name|mcclock_set
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|clock_getsecs
+argument_list|,
+name|mcclock_getsecs
 argument_list|)
 block|,
 block|{
