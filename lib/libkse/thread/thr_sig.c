@@ -1883,7 +1883,7 @@ name|shi
 operator|.
 name|sa_flags
 operator|=
-name|sig
+name|sa_flags
 expr_stmt|;
 name|shi
 operator|.
