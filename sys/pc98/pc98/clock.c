@@ -3178,8 +3178,11 @@ name|tsc_present
 condition|)
 name|printf
 argument_list|(
-literal|"TSC clock: %u Hz, "
+literal|"TSC clock: %ju Hz, "
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tsc_freq
 argument_list|)
 expr_stmt|;
@@ -3696,8 +3699,11 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"TSC clock: %u Hz (Method B)\n"
+literal|"TSC clock: %ju Hz (Method B)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tsc_freq
 argument_list|)
 expr_stmt|;
@@ -6148,7 +6154,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|freq
 decl_stmt|;
 if|if
@@ -6226,7 +6232,7 @@ name|OID_AUTO
 argument_list|,
 name|tsc_freq
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_QUAD
 operator||
 name|CTLFLAG_RW
 argument_list|,
