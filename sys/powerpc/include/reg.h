@@ -19,6 +19,10 @@ directive|define
 name|_POWERPC_REG_H_
 end_define
 
+begin_comment
+comment|/* Must match struct trapframe */
+end_comment
+
 begin_struct
 struct|struct
 name|reg
@@ -47,6 +51,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Must match pcb.pcb_fpu */
+end_comment
 
 begin_struct
 struct|struct
