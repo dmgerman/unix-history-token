@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /a/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.1.1.1 1995/03/02 06:41:39 wpaul Exp $ (LBL)"
+literal|"@(#) $Header: /a/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.2 1995/03/03 22:20:13 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,24 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ether_ntohost
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|ether_addr
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2461,6 +2479,11 @@ name|ether_ntohost
 argument_list|(
 name|ename
 argument_list|,
+operator|(
+expr|struct
+name|ether_addr
+operator|*
+operator|)
 operator|&
 name|ep
 operator|->
