@@ -387,7 +387,7 @@ name|_PWSCAN_WARN
 condition|)
 name|warnx
 argument_list|(
-literal|"%s> max uid value (%u)"
+literal|"%s> max uid value (%lu)"
 argument_list|,
 name|p
 argument_list|,
@@ -518,7 +518,7 @@ name|_PWSCAN_WARN
 condition|)
 name|warnx
 argument_list|(
-literal|"%s> max gid value (%u)"
+literal|"%s> max gid value (%lu)"
 argument_list|,
 name|p
 argument_list|,
