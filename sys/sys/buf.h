@@ -299,13 +299,6 @@ argument_list|)
 name|b_freelist
 expr_stmt|;
 comment|/* Free list position if not active. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|buf
-argument_list|)
-name|b_act
-expr_stmt|;
-comment|/* Device driver queue when active. *new* */
 name|long
 name|b_flags
 decl_stmt|;
