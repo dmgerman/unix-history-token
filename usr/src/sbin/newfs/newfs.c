@@ -1,28 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -36,15 +15,42 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.18 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1983, 1989 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * newfs: friendly front end to mkfs  */
@@ -90,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -208,14 +220,14 @@ value|((bsize) / sizeof(daddr_t))
 end_define
 
 begin_comment
-comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NBPI bytes, expecting this  * to be far more than we will ever need.  */
+comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NFPI fragments, expecting this  * to be far more than we will ever need.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NBPI
-value|2048
+name|NFPI
+value|4
 end_define
 
 begin_comment
@@ -231,6 +243,16 @@ end_define
 
 begin_comment
 comment|/* number distinct rotational positions */
+end_comment
+
+begin_decl_stmt
+name|int
+name|memfs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* run as the memory based filesystem */
 end_comment
 
 begin_decl_stmt
@@ -476,8 +498,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|density
-init|=
-name|NBPI
 decl_stmt|;
 end_decl_stmt
 
@@ -555,6 +575,26 @@ begin_comment
 comment|/* superblock size */
 end_comment
 
+begin_decl_stmt
+name|u_long
+name|memleft
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual memory available */
+end_comment
+
+begin_decl_stmt
+name|caddr_t
+name|membase
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start address of memory based filesystem */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -578,6 +618,13 @@ name|device
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|progname
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +673,10 @@ name|cp
 decl_stmt|,
 modifier|*
 name|special
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
 decl_stmt|;
 specifier|register
 name|struct
@@ -650,6 +701,10 @@ name|partition
 name|oldpartition
 decl_stmt|;
 name|struct
+name|mfs_args
+name|args
+decl_stmt|;
+name|struct
 name|stat
 name|st
 decl_stmt|;
@@ -665,6 +720,57 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|progname
+operator|=
+name|rindex
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'/'
+argument_list|)
+operator|+
+literal|1
+operator|)
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+literal|1
+condition|)
+name|progname
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|progname
+argument_list|,
+literal|"memfs"
+argument_list|)
+condition|)
+block|{
+name|Nflag
+operator|++
+expr_stmt|;
+name|memfs
+operator|++
+expr_stmt|;
+block|}
 name|argc
 operator|--
 operator|,
@@ -1630,6 +1736,20 @@ operator|<
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|memfs
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: memfs [ fsoptions ] special-device %s\n"
+argument_list|,
+literal|"mount-point"
+argument_list|)
+expr_stmt|;
+else|else
 ifdef|#
 directive|ifdef
 name|COMPAT
@@ -1637,7 +1757,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newfs [ fsoptions ] special-device [device-type]\n"
+literal|"usage: %s\n"
+argument_list|,
+literal|"newfs [ fsoptions ] special-device [device-type]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -1913,7 +2035,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -1947,7 +2069,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|3
 argument_list|)
 expr_stmt|;
 block|}
@@ -1968,7 +2090,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"newfs: "
+literal|"%s: "
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1978,7 +2102,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -2152,6 +2276,9 @@ operator|>
 name|pp
 operator|->
 name|p_size
+operator|&&
+operator|!
+name|memfs
 condition|)
 name|fatal
 argument_list|(
@@ -2399,6 +2526,18 @@ name|fsize
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|density
+operator|==
+literal|0
+condition|)
+name|density
+operator|=
+name|NFPI
+operator|*
+name|fsize
+expr_stmt|;
 if|if
 condition|(
 name|minfree
@@ -2668,6 +2807,88 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Nflag
+condition|)
+name|close
+argument_list|(
+name|fso
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fsi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memfs
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"memfs:%d"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|args
+operator|.
+name|name
+operator|=
+name|buf
+expr_stmt|;
+name|args
+operator|.
+name|base
+operator|=
+name|membase
+expr_stmt|;
+name|args
+operator|.
+name|size
+operator|=
+name|fssize
+operator|*
+name|sectorsize
+expr_stmt|;
+if|if
+condition|(
+name|mount
+argument_list|(
+name|MOUNT_MFS
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|args
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"memfs: mount"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -3046,7 +3267,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+literal|6
 argument_list|)
 expr_stmt|;
 block|}
@@ -3143,7 +3364,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|30
+literal|7
 argument_list|)
 expr_stmt|;
 block|}
@@ -3192,6 +3413,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|close
+argument_list|(
+name|cfd
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -3226,7 +3452,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"newfs: "
+literal|"%s: "
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3249,7 +3477,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|10
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
