@@ -1155,7 +1155,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|6
+literal|3
 argument_list|)
 expr_stmt|;
 name|wrefresh
@@ -1425,7 +1425,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 name|wrefresh
