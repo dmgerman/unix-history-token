@@ -2519,6 +2519,9 @@ directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|CODA_VERBOSE
 name|printf
 argument_list|(
 literal|"coda_call: tsleep returns %d, cnt %d\n"
@@ -2528,6 +2531,8 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|notyet
