@@ -113,6 +113,15 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|curproc
+operator|->
+name|p_flag
+operator||=
+name|P_INMEM
+operator||
+name|P_SYSTEM
+expr_stmt|;
+comment|/* we're a system process */
 name|daemon_save_config
 argument_list|()
 expr_stmt|;
