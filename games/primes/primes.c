@@ -132,7 +132,7 @@ file|"primes.h"
 end_include
 
 begin_comment
-comment|/*  * Eratosthenes sieve table  *  * We only sieve the odd numbers.  The base of our sieve windows are always  * odd.  If the base of table is 1, table[i] represents 2*i-1.  After the  * sieve, table[i] == 1 if and only iff 2*i-1 is prime.  *  * We make TABSIZE large to reduce the overhead of inner loop setup.  */
+comment|/*  * Eratosthenes sieve table  *  * We only sieve the odd numbers.  The base of our sieve windows are always  * odd.  If the base of table is 1, table[i] represents 2*i-1.  After the  * sieve, table[i] == 1 if and only if 2*i-1 is prime.  *  * We make TABSIZE large to reduce the overhead of inner loop setup.  */
 end_comment
 
 begin_decl_stmt
