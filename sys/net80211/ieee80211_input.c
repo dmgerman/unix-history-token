@@ -3743,16 +3743,6 @@ if|if
 condition|(
 name|allocbs
 condition|)
-block|{
-comment|/* XXX just use free? */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|==
-name|IEEE80211_M_HOSTAP
-condition|)
 name|ieee80211_free_node
 argument_list|(
 name|ic
@@ -3760,14 +3750,6 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
-else|else
-name|ieee80211_unref_node
-argument_list|(
-operator|&
-name|ni
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
