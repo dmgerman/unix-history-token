@@ -1619,7 +1619,7 @@ define|#
 directive|define
 name|WXIENABLE_DEFAULT
 define|\
-value|(WXISR_RXO | WXISR_RXT0 | WXISR_RXDMT0 | WXISR_RXSEQ |	WXISR_TXQE |\ 		    WXISR_LSC | WXISR_PCIE | WXISR_GPI_EN1)
+value|(WXISR_RXO | WXISR_RXT0 | WXISR_RXDMT0 | WXISR_RXSEQ |	WXISR_TXDW |\ 		    WXISR_LSC | WXISR_PCIE | WXISR_GPI_EN1)
 end_define
 
 begin_define

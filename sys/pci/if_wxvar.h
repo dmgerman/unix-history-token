@@ -202,6 +202,12 @@ directive|include
 file|<dev/mii/miivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -714,7 +720,11 @@ decl_stmt|;
 comment|/* 	 * misc goodies 	 */
 name|u_int32_t
 label|:
-literal|23
+literal|22
+operator|,
+name|wx_needreinit
+operator|:
+literal|1
 operator|,
 name|wx_mii
 operator|:
@@ -761,7 +771,7 @@ name|u_int16_t
 name|wx_cfg1
 decl_stmt|;
 name|u_int16_t
-name|wx_txint_delay
+name|wx_unused
 decl_stmt|;
 name|u_int32_t
 name|wx_ienable
@@ -786,6 +796,9 @@ name|u_int32_t
 name|wx_rxintr
 decl_stmt|;
 name|u_int32_t
+name|wx_txqe
+decl_stmt|;
+name|u_int32_t
 name|wx_xmitgc
 decl_stmt|;
 name|u_int32_t
@@ -804,13 +817,13 @@ name|u_int32_t
 name|wx_xmitblocked
 decl_stmt|;
 name|u_int32_t
-name|wx_xmitblocked1
-decl_stmt|;
-name|u_int32_t
 name|wx_xmitrunt
 decl_stmt|;
 name|u_int32_t
 name|wx_rxnobuf
+decl_stmt|;
+name|u_int32_t
+name|wx_oddpkt
 decl_stmt|;
 comment|/* 	 * Soft copies of multicast addresses. We're only 	 * using (right now) the rest of the receive address 	 * registers- not the hashed multicast table. 	 */
 name|u_int8_t
