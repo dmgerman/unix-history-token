@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	4.12 (Berkeley) 82/12/23"
+literal|"@(#)arff.c	4.13 (Berkeley) 83/04/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -555,13 +555,6 @@ literal|2
 condition|)
 name|usage
 argument_list|()
-expr_stmt|;
-name|cp
-operator|=
-name|argv
-index|[
-literal|1
-index|]
 expr_stmt|;
 for|for
 control|(
@@ -1872,6 +1865,27 @@ name|rt_axhead
 operator|.
 name|rt_numseg
 expr_stmt|;
+comment|/* check for blank/uninitialized diskette */
+if|if
+condition|(
+name|dirnum
+operator|<=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"arff: bad directory format\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dirnum
@@ -4937,10 +4951,6 @@ operator|-
 literal|1
 control|)
 block|{
-name|dirdirty
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|de
@@ -4970,11 +4980,12 @@ name|rt_stat
 operator|==
 name|RT_NULL
 operator|&&
+operator|(
 name|de
-index|[
+operator|+
 literal|1
-index|]
-operator|.
+operator|)
+operator|->
 name|rt_stat
 operator|==
 name|RT_NULL
@@ -5028,15 +5039,7 @@ expr_stmt|;
 name|rt_nleft
 operator|++
 expr_stmt|;
-name|dirdirty
-operator|=
-literal|1
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|dirdirty
-condition|)
 name|lwrite
 argument_list|(
 operator|(
@@ -5065,6 +5068,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|dirdirty
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
