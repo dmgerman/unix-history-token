@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.16	(Berkeley)	83/08/11"
+literal|"@(#)dirs.c	3.17	(Berkeley)	83/12/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,7 +398,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"restor: %s - cannot create directory temporary\n"
+literal|"restore: %s - cannot create directory temporary\n"
 argument_list|,
 name|dirfile
 argument_list|)
@@ -453,7 +453,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"restor: %s - cannot create modefile \n"
+literal|"restore: %s - cannot create modefile \n"
 argument_list|,
 name|modefile
 argument_list|)
@@ -2231,6 +2231,18 @@ argument_list|,
 literal|"Set directory mode, owner, and times.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|modefile
+argument_list|,
+literal|"/tmp/rstmode%d"
+argument_list|,
+name|dumpdate
+argument_list|)
+expr_stmt|;
 name|mf
 operator|=
 name|fopen
@@ -2252,13 +2264,23 @@ argument_list|(
 literal|"fopen"
 argument_list|)
 expr_stmt|;
-name|panic
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"cannot open mode file %s\n"
 argument_list|,
 name|modefile
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"directory mode, owner, and times not set\n"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|clearerr
 argument_list|(
