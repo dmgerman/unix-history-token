@@ -474,16 +474,11 @@ init|=
 literal|0xb200000
 block|,
 comment|/* Find dump devices */
-name|SI_SUB_VINUM
-init|=
-literal|0xb300000
-block|,
-comment|/* Configure vinum */
 name|SI_SUB_RAID
 init|=
 literal|0xb380000
 block|,
-comment|/* Configure RAIDframe */
+comment|/* Configure RAIDframe or Vinum */
 name|SI_SUB_MOUNT_ROOT
 init|=
 literal|0xb400000
@@ -493,7 +488,7 @@ name|SI_SUB_SWAP
 init|=
 literal|0xc000000
 block|,
-comment|/* swap*/
+comment|/* swap */
 name|SI_SUB_INTRINSIC_POST
 init|=
 literal|0xd000000
