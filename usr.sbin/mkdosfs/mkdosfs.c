@@ -4,7 +4,33 @@ comment|/*  * Copyright (c) 1995, 1996 Joerg Wunsch  *  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * Create an MS-DOS (FAT) file system.  *  * $Id: mkdosfs.c,v 1.4 1997/02/22 16:06:38 peter Exp $  */
+comment|/*  * Create an MS-DOS (FAT) file system.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -17,6 +43,30 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
 end_include
 
 begin_include
@@ -41,30 +91,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -305,6 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -315,14 +342,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: "
+literal|"usage: mkdosfs [-f kbytes] [-L label] device\n"
 argument_list|)
 expr_stmt|;
-name|errx
+name|exit
 argument_list|(
 literal|2
-argument_list|,
-literal|"[-f kbytes] [-L label] device"
 argument_list|)
 expr_stmt|;
 block|}
@@ -358,7 +383,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Huh? Cannot fstat()"
+literal|"huh? cannot fstat()"
 argument_list|)
 expr_stmt|;
 comment|/* Cannot happen */
