@@ -168,18 +168,12 @@ comment|/* 	 * find unit and check we have that many defined 	 */
 name|struct
 name|aha_softc
 modifier|*
-modifier|*
-name|sc
+name|aha
 init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|struct
-name|aha_softc
-modifier|*
-name|aha
 decl_stmt|;
 name|int
 name|port_index
@@ -209,10 +203,6 @@ decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
-name|aha
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Check isapnp ids */
 if|if
 condition|(
@@ -365,10 +355,10 @@ name|port_res
 condition|)
 continue|continue;
 comment|/* Allocate a softc for use during probing */
-name|aha
-operator|=
 name|aha_alloc
 argument_list|(
+name|aha
+argument_list|,
 name|device_get_unit
 argument_list|(
 name|dev
@@ -385,26 +375,6 @@ name|port_res
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|aha
-operator|==
-name|NULL
-condition|)
-block|{
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-name|port_rid
-argument_list|,
-name|port_res
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 comment|/* See if there is really a card present */
 if|if
 condition|(
@@ -612,14 +582,6 @@ condition|)
 return|return
 name|error
 return|;
-operator|*
-name|sc
-operator|=
-name|aha
-expr_stmt|;
-name|aha_unit
-operator|++
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -650,18 +612,12 @@ block|{
 name|struct
 name|aha_softc
 modifier|*
-modifier|*
-name|sc
+name|aha
 init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|struct
-name|aha_softc
-modifier|*
-name|aha
 decl_stmt|;
 name|bus_dma_filter_t
 modifier|*
@@ -681,11 +637,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|aha
-operator|=
-operator|*
-name|sc
-expr_stmt|;
 name|aha
 operator|->
 name|portrid
@@ -1279,11 +1230,9 @@ name|aha_softc
 modifier|*
 name|aha
 init|=
-operator|*
 operator|(
 expr|struct
 name|aha_softc
-operator|*
 operator|*
 operator|)
 name|device_get_softc
@@ -1479,7 +1428,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|aha_softc
-operator|*
 argument_list|)
 block|, }
 decl_stmt|;
