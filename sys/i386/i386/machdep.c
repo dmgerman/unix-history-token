@@ -1853,9 +1853,12 @@ literal|"startup: bad cpu id"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
+argument_list|)
 if|if
 condition|(
 name|cpu_class
@@ -1876,6 +1879,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -1953,6 +1967,12 @@ argument_list|,
 literal|"i486 "
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
 block|}
 elseif|else
 if|if
@@ -1973,6 +1993,8 @@ argument_list|,
 literal|"Pentium "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2079,9 +2101,12 @@ literal|"DX4"
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
+argument_list|)
 case|case
 literal|0x510
 case|:
@@ -2177,6 +2202,8 @@ directive|endif
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s ("
@@ -2198,6 +2225,12 @@ literal|"286"
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
 case|case
 name|CPUCLASS_386
 case|:
@@ -2207,6 +2240,14 @@ literal|"386"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
 case|case
 name|CPUCLASS_486
 case|:
@@ -2216,6 +2257,14 @@ literal|"486"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
 case|case
 name|CPUCLASS_586
 case|:
@@ -2225,6 +2274,8 @@ literal|"Pentium"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|printf
 argument_list|(
@@ -2238,6 +2289,17 @@ argument_list|(
 literal|"-class CPU)\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
 if|if
 condition|(
 operator|*
@@ -2308,6 +2370,8 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
 switch|switch
 condition|(
