@@ -1,16 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.25 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PROC_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PROC_H_
+end_define
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<machine/proc.h>
 end_include
 
 begin_comment
-comment|/* XXX */
+comment|/* machine-dependent proc substruct */
 end_comment
 
 begin_comment
@@ -309,7 +321,7 @@ name|char
 name|p_nice
 decl_stmt|;
 comment|/* nice for cpu usage */
-comment|/*	char	p_space; */
+comment|/*	char	p_space1; */
 name|struct
 name|pgrp
 modifier|*
@@ -351,6 +363,11 @@ modifier|*
 name|p_regs
 decl_stmt|;
 comment|/* saved registers during syscall/trap */
+name|struct
+name|mdproc
+name|p_md
+decl_stmt|;
+comment|/* any machine-dependent fields */
 name|u_short
 name|p_xstat
 decl_stmt|;
@@ -363,7 +380,7 @@ name|u_short
 name|p_acflag
 decl_stmt|;
 comment|/* accounting flags */
-comment|/*	u_short	p_space; */
+comment|/*	short	p_space2; */
 name|struct
 name|rusage
 modifier|*
@@ -438,123 +455,315 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * getkerninfo() proc ops return arrays of augmented proc structures:  */
+comment|/* stat codes */
 end_comment
 
-begin_struct
-struct|struct
-name|kinfo_proc
-block|{
-name|struct
-name|proc
-name|kp_proc
-decl_stmt|;
-comment|/* proc structure */
-struct|struct
-name|eproc
-block|{
-name|struct
-name|proc
-modifier|*
-name|e_paddr
-decl_stmt|;
-comment|/* address of proc */
-name|struct
-name|session
-modifier|*
-name|e_sess
-decl_stmt|;
-comment|/* session pointer */
-name|struct
-name|pcred
-name|e_pcred
-decl_stmt|;
-comment|/* process credentials */
-name|struct
-name|ucred
-name|e_ucred
-decl_stmt|;
-comment|/* current credentials */
-name|struct
-name|vmspace
-name|e_vm
-decl_stmt|;
-comment|/* address space */
-name|pid_t
-name|e_pgid
-decl_stmt|;
-comment|/* process group id */
-name|short
-name|e_jobc
-decl_stmt|;
-comment|/* job control counter */
-name|dev_t
-name|e_tdev
-decl_stmt|;
-comment|/* controlling tty dev */
-name|pid_t
-name|e_tpgid
-decl_stmt|;
-comment|/* tty process group id */
-name|struct
-name|session
-modifier|*
-name|e_tsess
-decl_stmt|;
-comment|/* tty session pointer */
+begin_define
 define|#
 directive|define
-name|WMESGLEN
-value|7
-name|char
-name|e_wmesg
-index|[
-name|WMESGLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* wchan message */
-name|segsz_t
-name|e_xsize
-decl_stmt|;
-comment|/* text size */
-name|short
-name|e_xrssize
-decl_stmt|;
-comment|/* text rss */
-name|short
-name|e_xccount
-decl_stmt|;
-comment|/* text references */
-name|short
-name|e_xswrss
-decl_stmt|;
-name|long
-name|e_flag
-decl_stmt|;
+name|SSLEEP
+value|1
+end_define
+
+begin_comment
+comment|/* awaiting an event */
+end_comment
+
+begin_define
 define|#
 directive|define
-name|EPROC_CTTY
-value|0x01
-comment|/* controlling tty vnode active */
+name|SWAIT
+value|2
+end_define
+
+begin_comment
+comment|/* (abandoned state) */
+end_comment
+
+begin_define
 define|#
 directive|define
-name|EPROC_SLEADER
-value|0x02
-comment|/* session leader */
-name|long
-name|e_spare
-index|[
-literal|7
-index|]
-decl_stmt|;
-block|}
-name|kp_eproc
-struct|;
-block|}
-struct|;
-end_struct
+name|SRUN
+value|3
+end_define
+
+begin_comment
+comment|/* running */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIDL
+value|4
+end_define
+
+begin_comment
+comment|/* intermediate state in process creation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SZOMB
+value|5
+end_define
+
+begin_comment
+comment|/* intermediate state in process termination */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSTOP
+value|6
+end_define
+
+begin_comment
+comment|/* process being traced */
+end_comment
+
+begin_comment
+comment|/* flag codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLOAD
+value|0x0000001
+end_define
+
+begin_comment
+comment|/* in core */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSYS
+value|0x0000002
+end_define
+
+begin_comment
+comment|/* swapper or pager process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSINTR
+value|0x0000004
+end_define
+
+begin_comment
+comment|/* sleep is interruptible */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTTY
+value|0x0000008
+end_define
+
+begin_comment
+comment|/* has a controlling terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPPWAIT
+value|0x0000010
+end_define
+
+begin_comment
+comment|/* parent is waiting for child to exec/exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEXEC
+value|0x0000020
+end_define
+
+begin_comment
+comment|/* process called exec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STIMO
+value|0x0000040
+end_define
+
+begin_comment
+comment|/* timing out during sleep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSEL
+value|0x0000080
+end_define
+
+begin_comment
+comment|/* selecting; wakeup/waiting danger */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWEXIT
+value|0x0000100
+end_define
+
+begin_comment
+comment|/* working on exiting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNOCLDSTOP
+value|0x0000200
+end_define
+
+begin_comment
+comment|/* no SIGCHLD when children stop */
+end_comment
+
+begin_comment
+comment|/* the following three should probably be changed into a hold count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLOCK
+value|0x0000400
+end_define
+
+begin_comment
+comment|/* process being swapped out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SKEEP
+value|0x0000800
+end_define
+
+begin_comment
+comment|/* another flag to prevent swap out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPHYSIO
+value|0x0001000
+end_define
+
+begin_comment
+comment|/* doing physical i/o */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRC
+value|0x0004000
+end_define
+
+begin_comment
+comment|/* process is being traced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWTED
+value|0x0008000
+end_define
+
+begin_comment
+comment|/* another tracing flag */
+end_comment
+
+begin_comment
+comment|/* the following should be moved to machine-dependent areas */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOWEUPC
+value|0x0002000
+end_define
+
+begin_comment
+comment|/* owe process an addupc() call at next ast */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HPUXCOMPAT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SHPUX
+value|0x0010000
+end_define
+
+begin_comment
+comment|/* HP-UX process (HPUXCOMPAT) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SHPUX
+value|0
+end_define
+
+begin_comment
+comment|/* not HP-UX process (HPUXCOMPAT) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not currently in use (never set) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPAGE
+value|0x0020000
+end_define
+
+begin_comment
+comment|/* process in page wait state */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -588,6 +797,36 @@ parameter_list|(
 name|pid
 parameter_list|)
 value|((pid)& pidhashmask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESS_LEADER
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_session->s_leader == (p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESSHOLD
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_count++)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESSRELE
+parameter_list|(
+name|s
+parameter_list|)
+value|{ \ 		if (--(s)->s_count == 0) \ 			FREE(s, M_SESSION); \ 	}
 end_define
 
 begin_decl_stmt
@@ -666,6 +905,10 @@ name|allproc
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* lists of procs in various states */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -693,13 +936,8 @@ begin_comment
 comment|/* process slots for init, pager */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_decl_stmt
+specifier|extern
 name|struct
 name|proc
 modifier|*
@@ -709,15 +947,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* current running proc */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lists of procs in various states */
 end_comment
 
 begin_decl_stmt
@@ -777,35 +1006,14 @@ begin_comment
 comment|/* bit mask summarizing non-empty qs's */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SESS_LEADER
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->p_session->s_leader == (p))
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_define
-define|#
-directive|define
-name|SESSHOLD
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->s_count++)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SESSRELE
-parameter_list|(
-name|s
-parameter_list|)
-value|{ \ 		if (--(s)->s_count == 0) \ 			FREE(s, M_SESSION); \ 		}
-end_define
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#
@@ -813,368 +1021,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* stat codes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSLEEP
-value|1
-end_define
-
-begin_comment
-comment|/* awaiting an event */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWAIT
-value|2
-end_define
-
-begin_comment
-comment|/* (abandoned state) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRUN
-value|3
-end_define
-
-begin_comment
-comment|/* running */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIDL
-value|4
-end_define
-
-begin_comment
-comment|/* intermediate state in process creation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SZOMB
-value|5
-end_define
-
-begin_comment
-comment|/* intermediate state in process termination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTOP
-value|6
-end_define
-
-begin_comment
-comment|/* process being traced */
-end_comment
-
-begin_comment
-comment|/* flag codes */
-end_comment
-
-begin_comment
-comment|/* NEED TO CHECK which of these are still used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLOAD
-value|0x0000001
-end_define
-
-begin_comment
-comment|/* in core */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSYS
-value|0x0000002
-end_define
-
-begin_comment
-comment|/* swapper or pager process */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLOCK
-value|0x0000004
-end_define
-
-begin_comment
-comment|/* process being swapped out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSWAP
-value|0x0000008
-end_define
-
-begin_comment
-comment|/* save area flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRC
-value|0x0000010
-end_define
-
-begin_comment
-comment|/* process is being traced */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWTED
-value|0x0000020
-end_define
-
-begin_comment
-comment|/* another tracing flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSINTR
-value|0x0000040
-end_define
-
-begin_comment
-comment|/* sleep is interruptible */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPAGE
-value|0x0000080
-end_define
-
-begin_comment
-comment|/* process in page wait state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SKEEP
-value|0x0000100
-end_define
-
-begin_comment
-comment|/* another flag to prevent swap out */
-end_comment
-
-begin_comment
-comment|/*#define SOMASK	0x0000200	/* restore old mask after taking signal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWEXIT
-value|0x0000400
-end_define
-
-begin_comment
-comment|/* working on exiting */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPHYSIO
-value|0x0000800
-end_define
-
-begin_comment
-comment|/* doing physical i/o */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPPWAIT
-value|0x0001000
-end_define
-
-begin_comment
-comment|/* parent is waiting for child to exec/exit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SVFORK
-value|SPARSYNC
-end_define
-
-begin_comment
-comment|/* process resulted from vfork() XXX */
-end_comment
-
-begin_comment
-comment|/*#define SVFDONE	0x0002000	/* another vfork flag XXX */
-end_comment
-
-begin_comment
-comment|/*#define SNOVM	0x0004000	/* no vm, parent in a vfork() XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPAGV
-value|0x0008000
-end_define
-
-begin_comment
-comment|/* init data space on demand, from vnode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSEQL
-value|0x0010000
-end_define
-
-begin_comment
-comment|/* user warned of sequential vm behavior */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUANOM
-value|0x0020000
-end_define
-
-begin_comment
-comment|/* user warned of random vm behavior */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STIMO
-value|0x0040000
-end_define
-
-begin_comment
-comment|/* timing out during sleep */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNOCLDSTOP
-value|0x0080000
-end_define
-
-begin_comment
-comment|/* no SIGCHLD when children stop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTTY
-value|0x0100000
-end_define
-
-begin_comment
-comment|/* has a controlling terminal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOWEUPC
-value|0x0200000
-end_define
-
-begin_comment
-comment|/* owe process an addupc() call at next ast */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSEL
-value|0x0400000
-end_define
-
-begin_comment
-comment|/* selecting; wakeup/waiting danger */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEXEC
-value|0x0800000
-end_define
-
-begin_comment
-comment|/* process called exec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHPUX
-value|0x1000000
-end_define
-
-begin_comment
-comment|/* HP-UX process (HPUXCOMPAT) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SULOCK
-value|0x2000000
-end_define
-
-begin_comment
-comment|/* locked in core after swap error XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPTECHG
-value|0x4000000
-end_define
-
-begin_comment
-comment|/* pte's for process have changed XXX */
+comment|/* !_PROC_H_ */
 end_comment
 
 end_unit
