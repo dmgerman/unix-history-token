@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_files.c,v 1.21 2001/11/01 05:35:46 marka Exp $"
+literal|"$Id: ev_files.c,v 1.22 2002/07/08 05:50:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ name|ctx
 argument_list|,
 literal|1
 argument_list|,
-literal|"evSelectFD(ctx %#x, fd %d, mask 0x%x, func %#x, uap %#x)\n"
+literal|"evSelectFD(ctx %p, fd %d, mask 0x%x, func %p, uap %p)\n"
 argument_list|,
 name|ctx
 argument_list|,

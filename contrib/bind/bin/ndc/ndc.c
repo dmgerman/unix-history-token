@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ndc.c,v 1.22 2002/06/24 07:28:55 marka Exp $"
+literal|"$Id: ndc.c,v 1.25 2003/04/03 05:42:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,8 +623,17 @@ modifier|*
 parameter_list|,
 name|va_list
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|0
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -1716,7 +1725,7 @@ condition|(
 operator|*
 name|cp
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 block|{
 name|c
@@ -1943,7 +1952,7 @@ condition|(
 operator|*
 name|cp
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 block|{
 name|c
@@ -2209,6 +2218,16 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+name|len
+operator|=
+literal|1
+expr_stmt|;
 name|rest
 operator|=
 name|malloc
@@ -2298,9 +2317,11 @@ operator|!=
 name|rest
 condition|)
 name|p
+operator|--
+expr_stmt|;
+name|p
 index|[
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
 literal|'\0'

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_update.c,v 8.104 2002/05/18 01:02:59 marka Exp $"
+literal|"$Id: ns_update.c,v 8.106 2002/07/19 22:44:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5710,7 +5710,7 @@ condition|)
 block|{
 name|ns_notice
 argument_list|(
-name|ns_log_security
+name|ns_log_update_security
 argument_list|,
 literal|"denied update from %s for \"%s\" %s"
 argument_list|,
@@ -13096,6 +13096,10 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|strtoul
@@ -13110,6 +13114,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|n
 operator|>
 literal|0xffff

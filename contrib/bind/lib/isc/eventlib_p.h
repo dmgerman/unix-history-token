@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Perm
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.30 2001/11/01 05:35:50 marka Exp $  */
+comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.31 2003/04/03 05:37:56 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -770,8 +770,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* ev_timers.c */

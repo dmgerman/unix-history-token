@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_srvr.c,v 8.25 2001/05/29 05:49:27 marka Exp $"
+literal|"$Id: ctl_srvr.c,v 8.26 2002/07/08 05:10:25 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1352,10 +1352,6 @@ literal|"%s: evListen(fd %d): %s"
 argument_list|,
 name|me
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ctx
 operator|->
 name|sock

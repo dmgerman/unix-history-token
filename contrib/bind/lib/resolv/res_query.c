@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 8.23 2001/09/24 13:50:29 marka Exp $"
+literal|"$Id: res_query.c,v 8.24 2003/01/31 15:25:58 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,17 +541,34 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|";; rcode = %d, ancount=%d\n"
+literal|";; rcode = (%s), counts = an:%d ns:%d ar:%d\n"
 argument_list|,
+name|p_rcode
+argument_list|(
 name|hp
 operator|->
 name|rcode
+argument_list|)
 argument_list|,
 name|ntohs
 argument_list|(
 name|hp
 operator|->
 name|ancount
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|hp
+operator|->
+name|nscount
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|hp
+operator|->
+name|arcount
 argument_list|)
 argument_list|)
 expr_stmt|;

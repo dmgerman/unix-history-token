@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_config.c,v 8.135 2002/05/24 03:04:59 marka Exp $"
+literal|"$Id: ns_config.c,v 8.136.8.1 2003/06/02 09:56:34 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2772,14 +2772,8 @@ expr_stmt|;
 name|purge_zone
 argument_list|(
 name|zp
-operator|->
-name|z_origin
 argument_list|,
 name|fcachetab
-argument_list|,
-name|zp
-operator|->
-name|z_class
 argument_list|)
 expr_stmt|;
 block|}
@@ -3300,16 +3294,6 @@ comment|/* 				 * Purge old data and mark the parent for 				 * reloading so tha
 name|do_reload
 argument_list|(
 name|zp
-operator|->
-name|z_origin
-argument_list|,
-name|zp
-operator|->
-name|z_type
-argument_list|,
-name|zp
-operator|->
-name|z_class
 argument_list|,
 literal|1
 argument_list|)
@@ -5742,6 +5726,12 @@ name|notify_yes
 expr_stmt|;
 endif|#
 directive|endif
+name|op
+operator|->
+name|edns_udp_size
+operator|=
+name|EDNS_MESSAGE_SZ
+expr_stmt|;
 return|return
 operator|(
 name|op

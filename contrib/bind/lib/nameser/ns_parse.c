@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 8.17 2001/06/20 02:50:49 marka Exp $"
+literal|"$Id: ns_parse.c,v 8.18 2003/04/03 06:10:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,9 +690,20 @@ block|{
 name|int
 name|b
 decl_stmt|;
+name|int
+name|tmp
+decl_stmt|;
 comment|/* Make section right. */
 if|if
 condition|(
+operator|(
+name|tmp
+operator|=
+name|section
+operator|)
+operator|<
+literal|0
+operator|||
 name|section
 operator|>=
 name|ns_s_max

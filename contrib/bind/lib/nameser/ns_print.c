@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_print.c,v 8.24 2001/06/18 06:40:45 marka Exp $"
+literal|"$Id: ns_print.c,v 8.26 2003/02/24 23:56:35 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<isc/assertions.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/dst.h>
 end_include
 
 begin_include
@@ -291,24 +297,6 @@ parameter_list|,
 name|size_t
 modifier|*
 name|buflen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Proto. */
-end_comment
-
-begin_function_decl
-name|u_int16_t
-name|dst_s_dns_key_id
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-specifier|const
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4017,7 +4005,7 @@ name|buflen
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* needs to dump key, print otherdata length& other data */
+comment|/* XXX need to dump key, print otherdata length& other data */
 break|break;
 block|}
 case|case

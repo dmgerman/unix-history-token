@@ -95,7 +95,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: named-xfer.c,v 8.121 2002/06/26 03:27:22 marka Exp $"
+literal|"$Id: named-xfer.c,v 8.122.8.2 2003/06/02 05:59:56 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,9 +736,37 @@ begin_comment
 comment|/*  * Debugging printf.  */
 end_comment
 
-begin_function
+begin_function_decl
+specifier|static
 name|void
-name|dprintf
+name|lprintf
+parameter_list|(
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+specifier|static
+name|void
+name|lprintf
 parameter_list|(
 name|int
 name|level
@@ -2591,7 +2619,7 @@ if|if
 condition|(
 name|dbfile
 condition|)
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -2608,7 +2636,7 @@ if|if
 condition|(
 name|ixfrfile
 condition|)
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -2625,7 +2653,7 @@ if|if
 condition|(
 name|tsigfile
 condition|)
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -2713,7 +2741,7 @@ name|z_addrcnt
 operator|=
 literal|0
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -2967,7 +2995,7 @@ argument_list|,
 name|INADDRSZ
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -3003,7 +3031,7 @@ name|z_addrcnt
 operator|=
 name|NSMAX
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -3013,7 +3041,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -4113,7 +4141,7 @@ name|cp
 operator|=
 name|buf
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -4295,7 +4323,7 @@ name|cp
 operator|-
 name|buf
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -5510,7 +5538,7 @@ index|[
 name|cnt
 index|]
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|3
 argument_list|,
@@ -5725,7 +5753,7 @@ name|sin_addr
 operator|=
 name|z_axfr_src
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|2
 argument_list|,
@@ -5808,7 +5836,7 @@ index|[
 name|cnt
 index|]
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|2
 argument_list|,
@@ -5865,7 +5893,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|2
 argument_list|,
@@ -6820,7 +6848,7 @@ literal|2
 operator|)
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -6854,7 +6882,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Skip to next record, if any.  */
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -6926,7 +6954,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -7643,7 +7671,7 @@ goto|goto
 name|axfr_response
 goto|;
 block|}
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -7775,7 +7803,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"send %s query %d to %s"
+literal|"send %s query %d to %s for %s"
 argument_list|,
 name|p_type
 argument_list|(
@@ -7790,9 +7818,24 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|)
+argument_list|,
+operator|(
+operator|*
+name|zp
+operator|->
+name|z_origin
+operator|!=
+literal|'\0'
+operator|)
+condition|?
+name|zp
+operator|->
+name|z_origin
+else|:
+literal|"."
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -7811,7 +7854,7 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -8139,7 +8182,7 @@ operator|!=
 name|NOERROR
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -8193,7 +8236,7 @@ name|ISIXFR
 operator|)
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -8865,7 +8908,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|dprintf
+name|lprintf
 argument_list|(
 literal|2
 argument_list|,
@@ -8891,7 +8934,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -8999,7 +9042,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -9083,7 +9126,7 @@ argument_list|,
 name|query_serial
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -9283,7 +9326,7 @@ goto|goto
 name|axfr_response
 goto|;
 block|}
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -10098,7 +10141,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|msglen
 argument_list|,
@@ -10752,7 +10795,7 @@ operator|!
 name|escaped
 expr_stmt|;
 block|}
-name|dprintf
+name|lprintf
 argument_list|(
 literal|3
 argument_list|,
@@ -12110,7 +12153,7 @@ operator|>
 name|MAXDATA
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -12143,7 +12186,7 @@ operator|+
 name|dlen
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -12534,7 +12577,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|2
 argument_list|,
@@ -12556,7 +12599,7 @@ operator|.
 name|z_serial
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -16014,7 +16057,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -16055,7 +16098,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,
@@ -16126,7 +16169,7 @@ argument_list|,
 literal|"ns_parserr() failed"
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|lprintf
 argument_list|(
 literal|1
 argument_list|,

@@ -16,7 +16,7 @@ comment|/*  * Copyright (c) 1998,1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: ctl.h,v 8.11 2001/08/10 02:40:49 marka Exp $  */
+comment|/*  * $Id: ctl.h,v 8.11.10.1 2003/06/02 06:04:03 marka Exp $  */
 end_comment
 
 begin_include
@@ -129,7 +129,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -160,19 +159,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|rest
 parameter_list|,
 name|u_int
-name|respflags
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|respctx
 parameter_list|,
 name|void
 modifier|*
-name|uctx
 parameter_list|)
 function_decl|;
 end_typedef

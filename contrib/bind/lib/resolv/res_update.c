@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_update.c,v 1.34 2002/04/12 06:28:52 marka Exp $"
+literal|"$Id: res_update.c,v 1.35.8.2 2003/06/02 09:24:40 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,8 +225,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* Macros. */
@@ -271,13 +280,10 @@ name|answer
 index|[
 name|PACKETSZ
 index|]
-decl_stmt|,
+decl_stmt|;
+name|u_char
+modifier|*
 name|packet
-index|[
-literal|2
-operator|*
-name|PACKETSZ
-index|]
 decl_stmt|;
 name|struct
 name|zonegrp
@@ -310,6 +316,33 @@ index|[
 name|MAXNS
 index|]
 decl_stmt|;
+name|packet
+operator|=
+name|malloc
+argument_list|(
+name|NS_MAXMSG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|packet
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"malloc failed"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Thread all of the updates onto a list of groups. */
 name|INIT_LIST
 argument_list|(
@@ -650,8 +683,7 @@ argument_list|)
 argument_list|,
 name|packet
 argument_list|,
-sizeof|sizeof
-name|packet
+name|NS_MAXMSG
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -864,6 +896,11 @@ argument_list|,
 name|nsaddrs
 argument_list|,
 name|nscount
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|packet
 argument_list|)
 expr_stmt|;
 return|return

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Perm
 end_comment
 
 begin_comment
-comment|/*  * $Id: misc.h,v 8.5 2001/06/18 06:40:43 marka Exp $  */
+comment|/*  * $Id: misc.h,v 8.5.10.1 2003/06/02 06:04:03 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -44,15 +44,12 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|l
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|r
 parameter_list|,
 name|int
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl

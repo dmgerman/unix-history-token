@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_nw.c,v 1.23 2002/06/26 07:42:06 marka Exp $"
+literal|"$Id: dns_nw.c,v 1.25 2002/07/18 02:07:43 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2003,6 +2003,30 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|HAVE_STRLCPY
+name|strlcpy
+argument_list|(
+name|bp
+argument_list|,
+name|name
+argument_list|,
+name|ep
+operator|-
+name|bp
+argument_list|)
+expr_stmt|;
+name|pvt
+operator|->
+name|net
+operator|.
+name|n_name
+operator|=
+name|bp
+expr_stmt|;
+else|#
+directive|else
 name|pvt
 operator|->
 name|net
@@ -2016,6 +2040,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|+=
 name|n
@@ -3036,6 +3062,16 @@ name|n
 decl_stmt|,
 name|m
 decl_stmt|;
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+name|ep
+operator|=
+name|name
+operator|+
+name|size
+expr_stmt|;
 comment|/* Zero fill any whole bytes left out of the prefix. */
 for|for
 control|(
@@ -3059,7 +3095,9 @@ control|)
 block|{
 if|if
 condition|(
-name|size
+name|ep
+operator|-
+name|name
 operator|<
 call|(
 name|int
@@ -3087,10 +3125,6 @@ name|name
 operator|+=
 name|m
 expr_stmt|;
-name|size
-operator|-=
-name|m
-expr_stmt|;
 block|}
 comment|/* Format the partial byte, if any, within the prefix. */
 if|if
@@ -3108,7 +3142,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|size
+name|ep
+operator|-
+name|name
 operator|<
 call|(
 name|int
@@ -3158,10 +3194,6 @@ name|name
 operator|+=
 name|m
 expr_stmt|;
-name|size
-operator|-=
-name|m
-expr_stmt|;
 block|}
 comment|/* Format the whole bytes within the prefix. */
 for|for
@@ -3182,7 +3214,9 @@ control|)
 block|{
 if|if
 condition|(
-name|size
+name|ep
+operator|-
+name|name
 operator|<
 call|(
 name|int
@@ -3217,15 +3251,13 @@ name|name
 operator|+=
 name|m
 expr_stmt|;
-name|size
-operator|-=
-name|m
-expr_stmt|;
 block|}
 comment|/* Add the static text. */
 if|if
 condition|(
-name|size
+name|ep
+operator|-
+name|name
 operator|<
 call|(
 name|int

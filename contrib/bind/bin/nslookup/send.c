@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 8.14 2002/05/10 04:35:09 marka Exp $"
+literal|"$Id: send.c,v 8.14.10.1 2003/06/02 05:59:56 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,7 +498,7 @@ continue|continue;
 block|}
 block|}
 comment|/* 			 * Send length& message 			 */
-name|__putshort
+name|ns_put16
 argument_list|(
 name|buflen
 argument_list|,

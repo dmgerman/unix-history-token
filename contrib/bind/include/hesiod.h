@@ -8,7 +8,7 @@ comment|/*  * This file is primarily maintained by<tytso@mit.edu> and<ghudson@mi
 end_comment
 
 begin_comment
-comment|/*  * $Id: hesiod.h,v 1.7 1999/01/08 19:22:45 vixie Exp $  */
+comment|/*  * $Id: hesiod.h,v 1.7.20.1 2003/06/02 05:48:04 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -32,7 +32,6 @@ operator|(
 name|void
 operator|*
 operator|*
-name|context
 operator|)
 argument_list|)
 decl_stmt|;
@@ -46,7 +45,6 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|context
 operator|)
 argument_list|)
 decl_stmt|;
@@ -61,17 +59,14 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|context
 operator|,
 specifier|const
 name|char
 operator|*
-name|name
 operator|,
 specifier|const
 name|char
 operator|*
-name|type
 operator|)
 argument_list|)
 decl_stmt|;
@@ -87,17 +82,14 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|context
 operator|,
 specifier|const
 name|char
 operator|*
-name|name
 operator|,
 specifier|const
 name|char
 operator|*
-name|type
 operator|)
 argument_list|)
 decl_stmt|;
@@ -111,12 +103,10 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|context
 operator|,
 name|char
 operator|*
 operator|*
-name|list
 operator|)
 argument_list|)
 decl_stmt|;
@@ -132,7 +122,6 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|context
 operator|)
 argument_list|)
 decl_stmt|;
@@ -146,7 +135,6 @@ argument_list|(
 operator|(
 name|void
 operator|*
-name|context
 operator|,
 expr|struct
 name|__res_state

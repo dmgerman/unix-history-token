@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_timers.c,v 1.32 2001/11/01 05:35:47 marka Exp $"
+literal|"$Id: ev_timers.c,v 1.33 2002/07/08 05:50:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,7 +668,7 @@ name|ctx
 argument_list|,
 literal|1
 argument_list|,
-literal|"evSetTimer(ctx %#x, func %#x, uap %#x, due %d.%09ld, inter %d.%09ld)\n"
+literal|"evSetTimer(ctx %p, func %p, uap %p, due %ld.%09ld, inter %ld.%09ld)\n"
 argument_list|,
 name|ctx
 argument_list|,
@@ -676,6 +676,9 @@ name|func
 argument_list|,
 name|uap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|due
 operator|.
 name|tv_sec
@@ -684,6 +687,9 @@ name|due
 operator|.
 name|tv_nsec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|inter
 operator|.
 name|tv_sec
@@ -1732,7 +1738,7 @@ name|ctx
 argument_list|,
 literal|7
 argument_list|,
-literal|"  func %p, uap %p, due %d.%09ld, inter %d.%09ld\n"
+literal|"  func %p, uap %p, due %ld.%09ld, inter %ld.%09ld\n"
 argument_list|,
 name|cur
 operator|->
@@ -1742,6 +1748,9 @@ name|cur
 operator|->
 name|uap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cur
 operator|->
 name|due
@@ -1754,6 +1763,9 @@ name|due
 operator|.
 name|tv_nsec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cur
 operator|->
 name|inter

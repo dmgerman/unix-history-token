@@ -18,7 +18,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/hmac_link.c,v 1.9 2001/05/29 05:48:10 marka Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/hmac_link.c,v 1.10 2002/12/03 05:26:49 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2098,6 +2098,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|dst_hmac_md5_init
+value|__dst_hmac_md5_init
+end_define
 
 begin_function
 name|int

@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.46 2001/11/01 05:35:48 marka Exp $"
+literal|"$Id: eventlib.c,v 1.48 2002/07/17 07:37:34 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1399,7 +1399,7 @@ name|ctx
 argument_list|,
 literal|4
 argument_list|,
-literal|"pselect(%d, 0x%lx, 0x%lx, 0x%lx, %d.%09ld)\n"
+literal|"pselect(%d, 0x%lx, 0x%lx, 0x%lx, %ld.%09ld)\n"
 argument_list|,
 name|ctx
 operator|->
@@ -1445,12 +1445,15 @@ index|]
 argument_list|,
 name|tp
 condition|?
+operator|(
+name|long
+operator|)
 name|tp
 operator|->
 name|tv_sec
 else|:
 operator|-
-literal|1
+literal|1L
 argument_list|,
 name|tp
 condition|?
@@ -2250,7 +2253,7 @@ name|ctx
 argument_list|,
 literal|5
 argument_list|,
-literal|"Dispatch.Accept: fd %d -> %d, func %#x, uap %#x\n"
+literal|"Dispatch.Accept: fd %d -> %d, func %p, uap %p\n"
 argument_list|,
 name|this
 operator|->
@@ -2368,7 +2371,7 @@ name|ctx
 argument_list|,
 literal|5
 argument_list|,
-literal|"Dispatch.File: fd %d, mask 0x%x, func %#x, uap %#x\n"
+literal|"Dispatch.File: fd %d, mask 0x%x, func %p, uap %p\n"
 argument_list|,
 name|this
 operator|->
@@ -2441,7 +2444,7 @@ name|ctx
 argument_list|,
 literal|5
 argument_list|,
-literal|"Dispatch.Stream: fd %d, func %#x, uap %#x\n"
+literal|"Dispatch.Stream: fd %d, func %p, uap %p\n"
 argument_list|,
 name|this
 operator|->
@@ -2518,7 +2521,7 @@ name|ctx
 argument_list|,
 literal|5
 argument_list|,
-literal|"Dispatch.Timer: func %#x, uap %#x\n"
+literal|"Dispatch.Timer: func %p, uap %p\n"
 argument_list|,
 name|this
 operator|->
@@ -2585,7 +2588,7 @@ name|ctx
 argument_list|,
 literal|5
 argument_list|,
-literal|"Dispatch.Wait: tag %#x, func %#x, uap %#x\n"
+literal|"Dispatch.Wait: tag %p, func %p, uap %p\n"
 argument_list|,
 name|this
 operator|->

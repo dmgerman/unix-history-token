@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_ixfr.c,v 8.31 2002/01/02 04:47:10 marka Exp $"
+literal|"$Id: db_ixfr.c,v 8.32 2002/07/08 06:26:04 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4295,6 +4295,10 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|strtoul
@@ -4309,6 +4313,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|n
 operator|>
 literal|0xffff

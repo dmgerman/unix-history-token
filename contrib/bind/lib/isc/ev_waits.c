@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_waits.c,v 8.11 2000/07/20 18:17:52 vixie Exp $"
+literal|"$Id: ev_waits.c,v 8.12 2002/07/08 05:50:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,7 +905,7 @@ name|ctx
 argument_list|,
 literal|9
 argument_list|,
-literal|"  tag %#x:"
+literal|"  tag %p:"
 argument_list|,
 name|wl
 operator|->
@@ -938,7 +938,7 @@ name|ctx
 argument_list|,
 literal|9
 argument_list|,
-literal|" %#x"
+literal|" %p"
 argument_list|,
 name|this
 argument_list|)
@@ -988,7 +988,7 @@ name|ctx
 argument_list|,
 literal|9
 argument_list|,
-literal|" %#x"
+literal|" %p"
 argument_list|,
 name|this
 argument_list|)
