@@ -1297,7 +1297,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|APIC_IO
+name|SMP
 name|acpi_SetIntrModel
 argument_list|(
 name|ACPI_INTR_APIC
