@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2181,6 +2181,14 @@ argument_list|(
 name|rt
 operator|->
 name|rt_gwroute
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Free
