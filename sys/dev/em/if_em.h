@@ -274,13 +274,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EM_ENABLE_RXCSUM_OFFLOAD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|EM_REPORT_TX_EARLY
 value|2
 end_define
@@ -726,6 +719,11 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
+name|res_ioport
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
 name|res_interrupt
 decl_stmt|;
 name|void
@@ -739,6 +737,9 @@ decl_stmt|;
 name|struct
 name|callout_handle
 name|timer_handle
+decl_stmt|;
+name|int
+name|io_rid
 decl_stmt|;
 name|u_int8_t
 name|unit
@@ -761,9 +762,6 @@ name|tx_int_delay
 decl_stmt|;
 name|u_int32_t
 name|rx_int_delay
-decl_stmt|;
-name|u_int8_t
-name|rx_checksum
 decl_stmt|;
 name|XSUM_CONTEXT_T
 name|active_checksum_context
