@@ -9935,6 +9935,8 @@ name|data
 expr_stmt|;
 if|if
 condition|(
+name|handle
+operator|&&
 name|ACPI_SUCCESS
 argument_list|(
 name|AcpiGetName
