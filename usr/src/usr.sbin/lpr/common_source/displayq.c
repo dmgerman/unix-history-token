@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	8.2 (Berkeley) %G%"
+literal|"@(#)displayq.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,7 +590,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sendtorem
+name|remote
 condition|)
 name|printf
 argument_list|(
@@ -694,7 +694,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sendtorem
+name|remote
 condition|)
 name|printf
 argument_list|(
@@ -833,7 +833,7 @@ expr_stmt|;
 comment|/* 				 * Print the status file. 				 */
 if|if
 condition|(
-name|sendtorem
+name|remote
 condition|)
 name|printf
 argument_list|(
@@ -980,7 +980,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|sendtorem
+name|remote
 condition|)
 block|{
 if|if
@@ -1116,6 +1116,8 @@ operator|=
 name|getport
 argument_list|(
 name|RM
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1230,7 +1232,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|sendtorem
+name|remote
 condition|)
 name|printf
 argument_list|(
@@ -1338,7 +1340,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|sendtorem
+name|remote
 operator|||
 name|garbage
 operator|||
