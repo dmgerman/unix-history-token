@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,6 +11,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -176,30 +188,6 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|long
-name|atol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ascii to long */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|double
-name|atof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ascii to floating point */
-end_comment
-
-begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|mktemp
@@ -284,15 +272,6 @@ begin_comment
 comment|/*  * defintions for doing memory allocation  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -334,33 +313,6 @@ end_define
 begin_comment
 comment|/*  * string definitions  */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|strlen
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|strdup
-parameter_list|(
-name|s
-parameter_list|)
-value|strcpy(malloc((unsigned) strlen(s) + 1), s)
-end_define
 
 begin_define
 define|#
