@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	1.8 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -886,10 +886,7 @@ operator|=
 name|key
 operator|.
 name|size
-operator|+
-literal|1
 expr_stmt|;
-comment|/* need extra byte for tag */
 name|key
 operator|.
 name|data
