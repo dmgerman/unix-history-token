@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.10 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4323,7 +4323,7 @@ endif|#
 directive|endif
 argument|if( p->sflags& SHIDES )unhide( p ); 			p->stype = TNULL; 			p->snext = clist; 			clist = p; 			} 		}
 comment|/* step 2: fix any mishashed entries */
-argument|p = clist; 	while( p ){ 		register struct symtab *r;  		q = p; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) { 				*r = *q; 				q->stype = NULL; 				} 			} 		p = p->snext; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
+argument|p = clist; 	while( p ){ 		register struct symtab *r;  		q = p; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) { 				*r = *q; 				q->stype = TNULL; 				} 			} 		p = p->snext; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
 literal|1
 argument|; ; ++q ){ 		if( q>=&stab[SYMTSZ] ) q = stab; 		if( q == p ) cerror(
 literal|"symbol table full"
