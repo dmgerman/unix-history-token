@@ -784,7 +784,7 @@ modifier|*
 specifier|const
 name|hci_features2str
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|features
 parameter_list|,

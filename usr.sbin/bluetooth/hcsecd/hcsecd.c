@@ -162,7 +162,7 @@ parameter_list|,
 name|bdaddr_p
 name|bdaddr
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|key
 parameter_list|)
@@ -1252,7 +1252,7 @@ modifier|*
 name|pin
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|buffer
 index|[
 name|HCSECD_BUFFER_SIZE
@@ -1596,12 +1596,12 @@ parameter_list|,
 name|bdaddr_p
 name|bdaddr
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|key
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|buffer
 index|[
 name|HCSECD_BUFFER_SIZE
@@ -2067,7 +2067,7 @@ operator|->
 name|key
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|malloc

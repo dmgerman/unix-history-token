@@ -352,7 +352,7 @@ modifier|*
 specifier|const
 name|hci_features2str
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|char

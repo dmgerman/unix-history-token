@@ -113,7 +113,7 @@ operator|.
 name|con_handle
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n
@@ -339,7 +339,7 @@ operator|.
 name|con_handle
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n
@@ -537,7 +537,7 @@ operator|.
 name|con_handle
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n
@@ -763,7 +763,7 @@ operator|.
 name|con_handle
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n

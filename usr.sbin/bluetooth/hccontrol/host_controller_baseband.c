@@ -185,7 +185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert ascii hex string to the u_int8_t[] */
+comment|/* Convert ascii hex string to the uint8_t[] */
 end_comment
 
 begin_function
@@ -198,7 +198,7 @@ specifier|const
 modifier|*
 name|s
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|a
 parameter_list|,
@@ -601,7 +601,7 @@ operator|.
 name|pin_type
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -761,7 +761,7 @@ decl_stmt|;
 name|ng_hci_return_link_keys_ep
 name|key
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|b
 index|[
 name|NG_HCI_EVENT_PKT_SIZE
@@ -1174,7 +1174,7 @@ block|{
 name|bdaddr_t
 name|bdaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|key
 index|[
 name|NG_HCI_KEY_SIZE
@@ -1364,7 +1364,7 @@ decl_stmt|;
 name|bdaddr_t
 name|bdaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|key
 index|[
 name|NG_HCI_KEY_SIZE
@@ -2352,7 +2352,7 @@ operator|.
 name|timeout
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -2684,7 +2684,7 @@ operator|.
 name|timeout
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -3006,7 +3006,7 @@ operator|.
 name|scan_enable
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -3355,7 +3355,7 @@ operator|.
 name|page_scan_interval
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -3395,7 +3395,7 @@ operator|.
 name|page_scan_window
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -3782,7 +3782,7 @@ operator|.
 name|inquiry_scan_interval
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -3822,7 +3822,7 @@ operator|.
 name|inquiry_scan_window
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -4171,7 +4171,7 @@ operator|.
 name|auth_enable
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -4484,7 +4484,7 @@ operator|.
 name|encryption_mode
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -5236,7 +5236,7 @@ operator|.
 name|settings
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|n
 expr_stmt|;
@@ -5551,7 +5551,7 @@ operator|.
 name|counter
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -5905,7 +5905,7 @@ operator|.
 name|hold_mode_activity
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -6217,7 +6217,7 @@ operator|.
 name|flow_control
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|n
 expr_stmt|;
@@ -6400,7 +6400,7 @@ operator|.
 name|con_handle
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n
@@ -6640,7 +6640,7 @@ operator|.
 name|con_handle
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n
@@ -6695,7 +6695,7 @@ operator|.
 name|timeout
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|n

@@ -356,7 +356,7 @@ name|firmware_filename
 init|=
 name|NULL
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|firmware
 init|=
@@ -476,7 +476,7 @@ comment|/* NOT REACHED */
 name|firmware
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|calloc
@@ -485,7 +485,7 @@ name|BT3CFW_MAX_FIRMWARE_SIZE
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -624,7 +624,7 @@ name|block
 init|=
 name|NULL
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|data
 init|=
@@ -807,7 +807,7 @@ comment|/* Data + second part of the cheksum: data */
 name|data
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(

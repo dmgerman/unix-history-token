@@ -156,7 +156,7 @@ operator|->
 name|opcode
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|opcode
 expr_stmt|;
@@ -194,7 +194,7 @@ operator|->
 name|length
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
 name|cp_size
 expr_stmt|;

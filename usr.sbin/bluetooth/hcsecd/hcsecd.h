@@ -57,7 +57,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* remote device name */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|key
 decl_stmt|;
