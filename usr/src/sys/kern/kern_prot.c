@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.1	82/07/15	*/
+comment|/*	kern_prot.c	5.2	82/07/22	*/
 end_comment
 
 begin_comment
@@ -103,6 +103,12 @@ directive|include
 file|"../h/mount.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/quota.h"
+end_include
+
 begin_macro
 name|getuid
 argument_list|()
@@ -189,6 +195,38 @@ name|suser
 argument_list|()
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|QUOTA
+if|if
+condition|(
+name|u
+operator|.
+name|u_quota
+operator|->
+name|q_uid
+operator|!=
+name|uid
+condition|)
+block|{
+name|qclean
+argument_list|()
+expr_stmt|;
+name|qstart
+argument_list|(
+name|getquota
+argument_list|(
+name|uid
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|u
 operator|.
 name|u_uid
