@@ -689,7 +689,7 @@ comment|/* page length (should be 0x1E)	      */
 define|#
 directive|define
 name|SMS_FLEXIBLE_GEOMETRY_PLEN
-value|0x0x1E
+value|0x1E
 name|u_int8_t
 name|xfr_rate_1
 decl_stmt|;
