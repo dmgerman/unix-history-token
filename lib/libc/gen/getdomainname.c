@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getdomainname.c,v 1.1 1994/08/08 00:40:23 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,8 +54,14 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function
-name|long
+name|int
 name|getdomainname
 parameter_list|(
 name|name

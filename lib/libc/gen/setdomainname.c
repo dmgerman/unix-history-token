@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: setdomainname.c,v 1.1 1994/08/08 00:40:24 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,14 +54,14 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_function
-name|long
+name|int
 name|setdomainname
 parameter_list|(
 specifier|const
@@ -72,23 +72,6 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|)
-else|#
-directive|else
-function|long setdomainname
-parameter_list|(
-name|name
-parameter_list|,
-name|namelen
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|namelen
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|mib
