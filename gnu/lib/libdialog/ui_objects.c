@@ -4165,6 +4165,9 @@ return|;
 case|case
 literal|'\n'
 case|:
+case|case
+literal|'\r'
+case|:
 operator|*
 operator|(
 name|bo

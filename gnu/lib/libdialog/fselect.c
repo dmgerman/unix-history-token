@@ -912,6 +912,13 @@ argument_list|(
 literal|"Could not change into directory"
 argument_list|)
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|o_dir
+argument_list|,
+name|old_dir
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -929,12 +936,12 @@ argument_list|,
 name|o_dir
 argument_list|)
 expr_stmt|;
+block|}
 name|RefreshStringObj
 argument_list|(
 name|dir_obj
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|get_dir
 argument_list|(
@@ -2004,6 +2011,13 @@ argument_list|(
 literal|"Could not change into directory"
 argument_list|)
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|o_dir
+argument_list|,
+name|old_dir
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2021,12 +2035,12 @@ argument_list|,
 name|o_dir
 argument_list|)
 expr_stmt|;
+block|}
 name|RefreshStringObj
 argument_list|(
 name|dir_obj
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
