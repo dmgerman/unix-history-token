@@ -540,6 +540,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|chn_lock
+parameter_list|(
+name|struct
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|chn_unlock
+parameter_list|(
+name|struct
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -573,6 +597,7 @@ name|CHN_LOCKASSERT
 parameter_list|(
 name|c
 parameter_list|)
+value|mtx_assert((struct mtx *)((c)->lock), MA_OWNED)
 end_define
 
 begin_else
@@ -785,6 +810,13 @@ define|#
 directive|define
 name|CHN_F_BADSETTING
 value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_F_SETBLOCKSIZE
+value|0x00080000
 end_define
 
 begin_define

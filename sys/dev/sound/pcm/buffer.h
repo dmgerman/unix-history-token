@@ -133,6 +133,11 @@ name|struct
 name|selinfo
 name|sel
 decl_stmt|;
+name|struct
+name|pcm_channel
+modifier|*
+name|channel
+decl_stmt|;
 name|char
 name|name
 index|[
@@ -159,6 +164,11 @@ parameter_list|,
 name|char
 modifier|*
 name|desc
+parameter_list|,
+name|struct
+name|pcm_channel
+modifier|*
+name|channel
 parameter_list|)
 function_decl|;
 end_function_decl
