@@ -114,6 +114,7 @@ comment|/*  * head - give the first few lines of a stream or of each of a set of
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|head
 parameter_list|(
@@ -126,18 +127,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|head_bytes
 parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|obsolete
 parameter_list|(
@@ -149,6 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -174,7 +178,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -488,6 +491,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|head
 parameter_list|(
@@ -499,7 +503,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
@@ -508,7 +511,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|error
 decl_stmt|,
 name|readlen
@@ -569,6 +572,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|head_bytes
 parameter_list|(
@@ -580,8 +584,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
-name|int
+name|size_t
 name|cnt
 decl_stmt|;
 block|{
@@ -591,8 +594,7 @@ index|[
 literal|4096
 index|]
 decl_stmt|;
-specifier|register
-name|int
+name|size_t
 name|readlen
 decl_stmt|;
 while|while
@@ -678,6 +680,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|obsolete
 parameter_list|(
@@ -796,6 +799,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
