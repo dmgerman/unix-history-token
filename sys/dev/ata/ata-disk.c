@@ -3081,13 +3081,32 @@ name|status
 operator|&
 name|ATA_S_CORR
 condition|)
-name|printf
+name|diskerr
 argument_list|(
-literal|"ad%d: soft error ECC corrected\n"
+name|request
+operator|->
+name|bp
 argument_list|,
+literal|"soft (ECC corrected)"
+argument_list|,
+name|request
+operator|->
+name|blockaddr
+operator|+
+operator|(
+name|request
+operator|->
+name|donecount
+operator|/
+name|DEV_BSIZE
+operator|)
+argument_list|,
+operator|&
 name|adp
 operator|->
-name|lun
+name|disk
+operator|.
+name|d_label
 argument_list|)
 expr_stmt|;
 comment|/* did any real errors happen ? */
@@ -3133,13 +3152,11 @@ operator|+
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-name|printf
+name|diskerr
 argument_list|(
-literal|"ad%d: %s %s ERROR blk# %d"
-argument_list|,
-name|adp
+name|request
 operator|->
-name|lun
+name|bp
 argument_list|,
 operator|(
 name|adp
@@ -3153,19 +3170,7 @@ operator|)
 condition|?
 literal|"UDMA ICRC"
 else|:
-literal|"HARD"
-argument_list|,
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ADR_F_READ
-operator|)
-condition|?
-literal|"READ"
-else|:
-literal|"WRITE"
+literal|"hard"
 argument_list|,
 name|request
 operator|->
@@ -3178,6 +3183,13 @@ name|donecount
 operator|/
 name|DEV_BSIZE
 operator|)
+argument_list|,
+operator|&
+name|adp
+operator|->
+name|disk
+operator|.
+name|d_label
 argument_list|)
 expr_stmt|;
 comment|/* if this is a UDMA CRC error, reinject request */
