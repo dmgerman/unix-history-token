@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  */
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  */
 end_comment
 
 begin_comment
@@ -10476,9 +10476,12 @@ name|nomem
 goto|;
 name|nextphys
 operator|=
+name|htole32
+argument_list|(
 name|next
 operator|->
 name|physaddr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -10598,10 +10601,7 @@ name|qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htole32
-argument_list|(
 name|nextphys
-argument_list|)
 expr_stmt|;
 name|cur
 operator|->
