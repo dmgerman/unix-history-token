@@ -166,7 +166,12 @@ comment|/* Old lucent compatible adhoc demo */
 name|IEEE80211_M_HOSTAP
 init|=
 literal|6
+block|,
 comment|/* Software Access Point */
+name|IEEE80211_M_MONITOR
+init|=
+literal|8
+comment|/* Monitor mode */
 block|}
 enum|;
 end_enum
@@ -1127,6 +1132,17 @@ end_define
 
 begin_comment
 comment|/* CAPABILITY: short preamble */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_MONITOR
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* CAPABILITY: monitor mode */
 end_comment
 
 begin_comment

@@ -527,6 +527,13 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|IEEE80211_M_MONITOR
+case|:
+comment|/* NB: this should collect everything */
+goto|goto
+name|out
+goto|;
 default|default:
 comment|/* XXX catch bad values */
 break|break;
@@ -843,6 +850,10 @@ operator|&
 name|ni
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_MONITOR
+case|:
 break|break;
 block|}
 if|if
@@ -3973,6 +3984,10 @@ operator|&
 name|IEEE80211_FC0_SUBTYPE_MASK
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_M_MONITOR
+case|:
 break|break;
 block|}
 break|break;
