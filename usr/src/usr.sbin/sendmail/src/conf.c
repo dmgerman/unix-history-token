@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.47 (Berkeley) %G%"
+literal|"@(#)conf.c	6.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,12 @@ name|H_RESENT
 block|,
 comment|/* trace fields */
 literal|"received"
+block|,
+name|H_TRACE
+operator||
+name|H_FORCE
+block|,
+literal|"x400-received"
 block|,
 name|H_TRACE
 operator||
