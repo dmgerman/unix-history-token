@@ -524,7 +524,7 @@ begin_define
 define|#
 directive|define
 name|TPL_FUNCE_LAN_MEDIA
-value|2
+value|3
 end_define
 
 begin_comment
@@ -551,6 +551,21 @@ end_define
 
 begin_comment
 comment|/* connector type (shape) */
+end_comment
+
+begin_comment
+comment|/* TPL_FUNC_SERIAL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPL_FUNCE_SER_UART
+value|0
+end_define
+
+begin_comment
+comment|/* UART type */
 end_comment
 
 end_unit

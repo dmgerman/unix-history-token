@@ -34,6 +34,70 @@ parameter_list|(
 name|RID
 parameter_list|)
 value|(1<<(((RID)-CARDBUS_BASE0_REG)/4))
+name|u_int16_t
+name|mfrid
+decl_stmt|;
+comment|/* manufacturer id */
+name|u_int16_t
+name|prodid
+decl_stmt|;
+comment|/* product id */
+name|u_int
+name|funcid
+decl_stmt|;
+comment|/* function id */
+union|union
+block|{
+struct|struct
+block|{
+name|u_int
+name|type
+decl_stmt|;
+comment|/* UART type */
+block|}
+name|sio
+struct|;
+struct|struct
+block|{
+name|u_int8_t
+name|nid
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* MAC address */
+name|u_int8_t
+name|tech
+decl_stmt|;
+comment|/* technology */
+name|u_int8_t
+name|contype
+decl_stmt|;
+comment|/* connector type */
+name|u_int32_t
+name|speed
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* available speeds */
+name|u_int8_t
+name|media
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* media types */
+block|}
+name|lan
+struct|;
+block|}
+name|funce
+union|;
+name|u_int32_t
+name|fepresent
+decl_stmt|;
+comment|/* bit mask of funce values present */
 block|}
 struct|;
 end_struct
