@@ -409,15 +409,6 @@ begin_decl_stmt
 name|__END_DECLS
 define|#
 directive|define
-name|__istype
-parameter_list|(
-name|c
-parameter_list|,
-name|f
-parameter_list|)
-value|(__runeflags((c))& (f))
-define|#
-directive|define
 name|isalnum
 parameter_list|(
 name|c
@@ -549,7 +540,7 @@ name|digittoint
 parameter_list|(
 name|c
 parameter_list|)
-value|__runeflags((c))
+value|__istype((c), 0xFF)
 comment|/* XXX the following macros are not backed up by functions. */
 define|#
 directive|define
@@ -679,13 +670,18 @@ operator|)
 specifier|static
 name|__inline
 name|int
-name|__runeflags
+name|__istype
 parameter_list|(
 name|_BSD_CT_RUNE_T_
 name|_c
+parameter_list|,
+name|unsigned
+name|long
+name|_f
 parameter_list|)
 block|{
 return|return
+operator|(
 operator|(
 name|_c
 operator|<
@@ -707,6 +703,9 @@ name|runetype
 index|[
 name|_c
 index|]
+operator|)
+operator|&
+name|_f
 return|;
 block|}
 end_function
@@ -836,11 +835,14 @@ end_comment
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
-name|__runeflags
+name|__istype
 name|__P
 argument_list|(
 operator|(
 name|_BSD_CT_RUNE_T_
+operator|,
+name|unsigned
+name|long
 operator|)
 argument_list|)
 decl_stmt|;
