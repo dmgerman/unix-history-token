@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,6 +28,8 @@ block|,
 name|VLNK
 block|,
 name|VSOCK
+block|,
+name|VFIFO
 block|,
 name|VBAD
 block|}
@@ -181,6 +183,12 @@ modifier|*
 name|vu_specinfo
 decl_stmt|;
 comment|/* device (VCHR, VBLK) */
+name|struct
+name|fifoinfo
+modifier|*
+name|vu_fifoinfo
+decl_stmt|;
+comment|/* fifo (VFIFO) */
 block|}
 name|v_un
 union|;
@@ -226,6 +234,13 @@ define|#
 directive|define
 name|v_specinfo
 value|v_un.vu_specinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_fifoinfo
+value|v_un.vu_fifoinfo
 end_define
 
 begin_comment
@@ -1070,20 +1085,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|v_hashchain
-value|v_specinfo->si_hashchain
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_specnext
-value|v_specinfo->si_specnext
-end_define
 
 begin_define
 define|#
