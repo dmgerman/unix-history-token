@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * Copyright (c) 1994 Sean Eric Fagan  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ibcs2.h,v 1.10 1994/10/13 12:13:00 sos Exp $  */
+comment|/*-  * Copyright (c) 1994 Søren Schmidt  * Copyright (c) 1994 Sean Eric Fagan  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ibcs2.h,v 1.11 1994/10/13 23:10:58 sos Exp $  */
 end_comment
 
 begin_comment
-comment|/* trace all ibcs2 system calls */
+comment|/* trace all iBCS2 system calls */
 end_comment
 
 begin_decl_stmt
@@ -15,7 +15,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* convert signals between bsd& ibcs2 */
+comment|/* convert signals between bsd& iBCS2 */
 end_comment
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ibcs2 type definitions */
+comment|/* iBCS2 type definitions */
 end_comment
 
 begin_typedef
@@ -278,7 +278,7 @@ value|*(((int *)arg) - 3) = IBCS2_MAGIC_OUT; \ 				*(((int *)arg) - 2) = retval[
 end_define
 
 begin_comment
-comment|/* ibcs signal numbers */
+comment|/* iBCS2 signal numbers */
 end_comment
 
 begin_define
@@ -562,7 +562,7 @@ value|(void (*)())2
 end_define
 
 begin_comment
-comment|/* ibcs open& fcntl file modes */
+comment|/* iBCS2 open& fcntl file modes */
 end_comment
 
 begin_define
@@ -650,7 +650,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* ibcs fcntl commands */
+comment|/* iBCS2 fcntl commands */
 end_comment
 
 begin_define
@@ -731,7 +731,95 @@ value|3
 end_define
 
 begin_comment
-comment|/* ibcs termio input modes */
+comment|/* iBCS2 poll commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLIN
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLPRI
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLOUT
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLERR
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLHUP
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLNVAL
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLRDNORM
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLWRNORM
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLRDBAND
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_POLLWRBAND
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_READPOLL
+value|(IBCS2_POLLIN|IBCS2_POLLRDNORM|IBCS2_POLLRDBAND)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_WRITEPOLL
+value|(IBCS2_POLLOUT|IBCS2_POLLWRNORM|IBCS2_POLLWRBAND)
+end_define
+
+begin_comment
+comment|/* iBCS2 termio input modes */
 end_comment
 
 begin_define
@@ -833,7 +921,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* ibcs termio output modes */
+comment|/* iBCS2 termio output modes */
 end_comment
 
 begin_define
@@ -949,7 +1037,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* ibcs termio control modes */
+comment|/* iBCS2 termio control modes */
 end_comment
 
 begin_define
@@ -1177,7 +1265,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* ibcs termio line discipline 0 modes */
+comment|/* iBCS2 termio line discipline 0 modes */
 end_comment
 
 begin_define
@@ -1237,7 +1325,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* ibcs control characters */
+comment|/* iBCS2 control characters */
 end_comment
 
 begin_define
@@ -1370,7 +1458,7 @@ comment|/* termios */
 end_comment
 
 begin_comment
-comment|/* ibcs ulimit commands */
+comment|/* iBCS2 ulimit commands */
 end_comment
 
 begin_define
@@ -1402,7 +1490,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* ibcs emulator trace control */
+comment|/* iBCS2 emulator trace control */
 end_comment
 
 begin_define
