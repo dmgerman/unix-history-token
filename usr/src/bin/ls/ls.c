@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.62 (Berkeley) %G%"
+literal|"@(#)ls.c	5.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2360,6 +2360,7 @@ block|{
 if|if
 condition|(
 name|comma
+operator|++
 condition|)
 operator|*
 name|p
@@ -2397,6 +2398,7 @@ block|{
 if|if
 condition|(
 name|comma
+operator|++
 condition|)
 operator|*
 name|p
@@ -2424,6 +2426,21 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|comma
+condition|)
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|buf
