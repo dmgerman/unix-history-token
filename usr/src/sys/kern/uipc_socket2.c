@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.17	81/12/22	*/
+comment|/*	uipc_socket2.c	4.18	82/01/19	*/
 end_comment
 
 begin_include
@@ -394,7 +394,7 @@ name|soselect
 argument_list|(
 name|so
 argument_list|,
-name|flag
+name|rw
 argument_list|)
 specifier|register
 expr|struct
@@ -406,19 +406,20 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|flag
+name|rw
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-if|if
+switch|switch
 condition|(
-name|flag
-operator|&
-name|FREAD
+name|rw
 condition|)
 block|{
+case|case
+name|FREAD
+case|:
 if|if
 condition|(
 name|soreadable
@@ -439,14 +440,10 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|flag
-operator|&
+break|break;
+case|case
 name|FWRITE
-condition|)
-block|{
+case|:
 if|if
 condition|(
 name|sowriteable
@@ -467,6 +464,7 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
