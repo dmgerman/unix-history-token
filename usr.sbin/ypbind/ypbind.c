@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ypbind.c,v 1.26 1997/10/27 07:45:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,7 +383,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 modifier|*
-name|ypbindproc_null_2
+name|ypbindproc_null_2_yp
 name|__P
 argument_list|(
 operator|(
@@ -403,7 +403,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 modifier|*
-name|ypbindproc_setdom_2
+name|ypbindproc_setdom_2_yp
 name|__P
 argument_list|(
 operator|(
@@ -790,7 +790,7 @@ end_decl_stmt
 begin_function
 name|void
 modifier|*
-name|ypbindproc_null_2
+name|ypbindproc_null_2_yp
 parameter_list|(
 name|transp
 parameter_list|,
@@ -845,7 +845,7 @@ begin_function
 name|struct
 name|ypbind_resp
 modifier|*
-name|ypbindproc_domain_2
+name|ypbindproc_domain_2_yp
 parameter_list|(
 name|transp
 parameter_list|,
@@ -1235,7 +1235,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|ypbindproc_setdom_2
+name|ypbindproc_setdom_2_yp
 parameter_list|(
 name|transp
 parameter_list|,
@@ -1556,7 +1556,7 @@ modifier|*
 call|)
 argument_list|()
 operator|)
-name|ypbindproc_null_2
+name|ypbindproc_null_2_yp
 expr_stmt|;
 break|break;
 case|case
@@ -1580,7 +1580,7 @@ modifier|*
 call|)
 argument_list|()
 operator|)
-name|ypbindproc_domain_2
+name|ypbindproc_domain_2_yp
 expr_stmt|;
 break|break;
 case|case
@@ -1656,7 +1656,7 @@ modifier|*
 call|)
 argument_list|()
 operator|)
-name|ypbindproc_setdom_2
+name|ypbindproc_setdom_2_yp
 expr_stmt|;
 break|break;
 default|default:

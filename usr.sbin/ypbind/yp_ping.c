@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_ping.c,v 1.3 1997/10/27 07:45:45 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1843,6 +1843,8 @@ name|sin
 decl_stmt|,
 modifier|*
 name|any
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|winner
