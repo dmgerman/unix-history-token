@@ -1016,6 +1016,14 @@ name|td
 operator|->
 name|td_frame
 operator|->
+name|tf_rbp
+operator|=
+literal|0
+expr_stmt|;
+name|td
+operator|->
+name|td_frame
+operator|->
 name|tf_rip
 operator|=
 operator|(
