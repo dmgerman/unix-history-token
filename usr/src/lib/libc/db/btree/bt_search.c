@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_search.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,7 +297,7 @@ name|next
 label|:
 if|if
 condition|(
-name|bt_push
+name|__bt_push
 argument_list|(
 name|t
 argument_list|,
