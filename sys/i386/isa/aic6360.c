@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.19 1996/01/07 19:22:35 gibbs Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.20 1996/03/10 07:04:43 gibbs Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -5412,7 +5412,7 @@ operator|>
 operator|(
 name|AIC_NSEG
 operator|<<
-name|PGSHIFT
+name|PAGE_SHIFT
 operator|)
 condition|)
 name|bp
@@ -5422,7 +5422,7 @@ operator|=
 operator|(
 name|AIC_NSEG
 operator|<<
-name|PGSHIFT
+name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 block|}

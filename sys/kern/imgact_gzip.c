@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.20 1996/03/19 15:02:47 bde Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.21 1996/05/01 02:42:50 bde Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -663,7 +663,7 @@ name|gz
 operator|->
 name|file_offset
 operator|=
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 else|else
@@ -684,7 +684,7 @@ name|gz
 operator|->
 name|virtual_offset
 operator|=
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 name|gz
 operator|->
@@ -724,7 +724,7 @@ name|gz
 operator|->
 name|virtual_offset
 operator|=
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 name|gz
 operator|->
@@ -760,7 +760,7 @@ name|a_out
 operator|.
 name|a_bss
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check various fields in header for validity/bounds. 	 */
@@ -799,16 +799,16 @@ operator|->
 name|a_out
 operator|.
 name|a_text
-operator|%
-name|NBPG
+operator|&
+name|PAGE_MASK
 operator|||
 name|gz
 operator|->
 name|a_out
 operator|.
 name|a_data
-operator|%
-name|NBPG
+operator|&
+name|PAGE_MASK
 condition|)
 block|{
 name|gz

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.59 1996/04/18 21:34:28 phk Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.60 1996/04/25 06:20:06 phk Exp $  */
 end_comment
 
 begin_include
@@ -296,7 +296,7 @@ name|maxbkva
 init|=
 name|MAXBKVA
 operator|*
-name|NBPG
+name|PAGE_SIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -770,7 +770,7 @@ name|size
 condition|;
 name|off
 operator|+=
-name|NBPG
+name|PAGE_SIZE
 control|)
 block|{
 name|pmap_kremove
@@ -952,7 +952,7 @@ name|malloc
 argument_list|(
 name|count
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|,
 name|M_TEMP
 argument_list|,
@@ -969,7 +969,7 @@ name|vm_bounce_kva
 argument_list|(
 name|count
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|,
 literal|1
 argument_list|)
@@ -1001,7 +1001,7 @@ name|kva
 operator|+
 name|i
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|,
 name|pa
 argument_list|)
@@ -1079,7 +1079,7 @@ name|kva
 operator|+
 name|i
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|vm_bounce_page_free
@@ -1096,7 +1096,7 @@ name|kva
 argument_list|,
 name|count
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -1247,7 +1247,7 @@ operator|-
 name|vapstart
 operator|)
 operator|/
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 comment|/*  * if any page is above 16MB, then go into bounce-buffer mode  */
 name|va
@@ -1297,7 +1297,7 @@ argument_list|)
 expr_stmt|;
 name|va
 operator|+=
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 if|if
@@ -1325,7 +1325,7 @@ name|vm_bounce_kva
 argument_list|(
 name|countvmpg
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|,
 literal|1
 argument_list|)
@@ -1382,7 +1382,7 @@ argument_list|(
 name|kva
 operator|+
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|*
 name|i
 operator|)
@@ -1423,12 +1423,12 @@ operator|)
 name|kva
 operator|+
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|*
 name|i
 operator|)
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1441,7 +1441,7 @@ argument_list|(
 name|kva
 operator|+
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|*
 name|i
 operator|)
@@ -1452,7 +1452,7 @@ expr_stmt|;
 block|}
 name|va
 operator|+=
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 comment|/*  * flag the buffer as being bounced  */
@@ -1495,11 +1495,7 @@ name|bp
 operator|->
 name|b_savekva
 operator|&
-operator|(
-name|NBPG
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1729,7 +1725,7 @@ operator|->
 name|b_bufsize
 argument_list|)
 expr_stmt|;
-comment|/* 	printf("freeva: %d\n", (bouncekvaend - bouncekva) / NBPG); */
+comment|/* 	printf("freeva: %d\n", (bouncekvaend - bouncekva) / PAGE_SIZE); */
 name|vm_bounce_kva_free
 argument_list|(
 name|bouncekva
@@ -1908,7 +1904,7 @@ name|bouncememory
 operator|+
 name|i
 operator|*
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 operator|)
 operator|>=
@@ -2842,7 +2838,7 @@ name|b_bufsize
 condition|;
 name|addr
 operator|+=
-name|NBPG
+name|PAGE_SIZE
 control|)
 name|pmap_kremove
 argument_list|(
@@ -2896,7 +2892,7 @@ name|b_bufsize
 condition|;
 name|addr
 operator|+=
-name|NBPG
+name|PAGE_SIZE
 control|)
 block|{
 comment|/* 	 * release the data page 	 */
@@ -2971,7 +2967,7 @@ name|caddr_t
 operator|)
 name|PTD
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* "good night, sweet prince ....<THUNK!>" */

@@ -1682,7 +1682,7 @@ operator|)
 name|loadpoint
 operator|)
 operator|&
-name|CLOFSET
+name|PAGE_MASK
 condition|)
 operator|*
 operator|(
@@ -1741,7 +1741,7 @@ operator|)
 name|loadpoint
 operator|)
 operator|&
-name|CLOFSET
+name|PAGE_MASK
 condition|)
 operator|*
 operator|(
