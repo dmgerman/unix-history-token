@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.4.2.2 1997/09/02 06:28:56 charnier Exp $"
+literal|"$Id: ac.c,v 1.4.2.3 1998/03/09 13:50:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2488,6 +2488,15 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|AC_W
+operator|)
+condition|)
 name|usr
 operator|.
 name|ut_time
