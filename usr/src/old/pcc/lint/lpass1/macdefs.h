@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)macdefs.h	1.3	(Berkeley)	%G%	*/
+comment|/*	@(#)macdefs.h	1.4	(Berkeley)	%G%	*/
 end_comment
 
 begin_if
@@ -285,6 +285,22 @@ define|#
 directive|define
 name|MINRVAR
 value|1
+end_define
+
+begin_comment
+comment|/* macros carried over from the PCC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ncopy
+parameter_list|(
+name|q
+parameter_list|,
+name|p
+parameter_list|)
+value|((q)->in = (p)->in)
 end_define
 
 begin_comment
