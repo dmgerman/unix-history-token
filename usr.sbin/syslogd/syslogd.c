@@ -1137,6 +1137,18 @@ comment|/* send message to all IPv4/IPv6 addresses */
 end_comment
 
 begin_decl_stmt
+name|int
+name|no_compress
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't compress messages (1=pipes, 2=all) */
+end_comment
+
+begin_decl_stmt
 name|char
 name|bootfile
 index|[
@@ -1735,7 +1747,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46Aa:b:df:kl:m:np:P:suv"
+literal|"46Aa:b:cdf:kl:m:np:P:suv"
 argument_list|)
 operator|)
 operator|!=
@@ -1799,6 +1811,13 @@ case|:
 name|bindhostname
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|no_compress
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -4611,6 +4630,18 @@ continue|continue;
 comment|/* 		 * suppress duplicate lines to this file 		 */
 if|if
 condition|(
+name|no_compress
+operator|-
+operator|(
+name|f
+operator|->
+name|f_type
+operator|!=
+name|F_PIPE
+operator|)
+operator|<
+literal|1
+operator|&&
 operator|(
 name|flags
 operator|&
