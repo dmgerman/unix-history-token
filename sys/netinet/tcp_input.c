@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.5 (Berkeley) 4/10/94  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,16 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* before tcp_seq.h, for tcp_random18() */
+end_comment
 
 begin_include
 include|#
@@ -810,7 +820,8 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 name|optp
 init|=
 name|NULL
@@ -1181,7 +1192,8 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|caddr_t
+name|u_char
+operator|*
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -1517,6 +1529,44 @@ operator|&
 name|SO_ACCEPTCONN
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|tiflags
+operator|&
+operator|(
+name|TH_RST
+operator||
+name|TH_ACK
+operator||
+name|TH_SYN
+operator|)
+operator|)
+operator|!=
+name|TH_SYN
+condition|)
+block|{
+comment|/* 				 * Note: dropwithreset makes sure we don't 				 * send a reset in response to a RST. 				 */
+if|if
+condition|(
+name|tiflags
+operator|&
+name|TH_ACK
+condition|)
+block|{
+name|tcpstat
+operator|.
+name|tcps_badsyn
+operator|++
+expr_stmt|;
+goto|goto
+name|dropwithreset
+goto|;
+block|}
+goto|goto
+name|drop
+goto|;
+block|}
 name|so
 operator|=
 name|sonewconn
@@ -2221,6 +2271,9 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|already_done
 if|if
 condition|(
 name|tiflags
@@ -2252,6 +2305,8 @@ condition|)
 goto|goto
 name|drop
 goto|;
+endif|#
+directive|endif
 comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * in_broadcast() should never return true on a received 		 * packet with M_BCAST not set. 		 */
 if|if
 condition|(
@@ -2267,11 +2322,14 @@ operator|)
 operator|||
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|ti
 operator|->
 name|ti_dst
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -2507,7 +2565,7 @@ name|tcp_iss
 operator|+=
 name|TCP_ISSINCR
 operator|/
-literal|2
+literal|4
 expr_stmt|;
 name|tp
 operator|->
@@ -3114,12 +3172,6 @@ operator|&=
 operator|~
 name|TH_FIN
 expr_stmt|;
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_ACKNOW
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3142,6 +3194,12 @@ goto|goto
 name|dropafterack
 goto|;
 block|}
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3324,7 +3382,7 @@ name|iss
 operator|=
 name|tp
 operator|->
-name|rcv_nxt
+name|snd_nxt
 operator|+
 name|TCP_ISSINCR
 expr_stmt|;
@@ -4136,7 +4194,7 @@ name|tp
 operator|->
 name|t_rxtcur
 expr_stmt|;
-comment|/* 		 * When new data is acked, open the congestion window. 		 * If the window gives us less than ssthresh packets 		 * in flight, open exponentially (maxseg per packet). 		 * Otherwise open linearly: maxseg per window 		 * (maxseg^2 / cwnd per packet), plus a constant 		 * fraction of a packet (maxseg/8) to help larger windows 		 * open quickly enough. 		 */
+comment|/* 		 * When new data is acked, open the congestion window. 		 * If the window gives us less than ssthresh packets 		 * in flight, open exponentially (maxseg per packet). 		 * Otherwise open linearly: maxseg per window 		 * (maxseg * (maxseg / cwnd) per packet). 		 */
 block|{
 specifier|register
 name|u_int
@@ -4169,10 +4227,6 @@ operator|*
 name|incr
 operator|/
 name|cw
-operator|+
-name|incr
-operator|/
-literal|8
 expr_stmt|;
 name|tp
 operator|->
@@ -5055,11 +5109,14 @@ operator|)
 operator|||
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|ti
 operator|->
 name|ti_dst
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
