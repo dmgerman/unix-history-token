@@ -264,6 +264,11 @@ init|=
 literal|0x0900000
 block|,
 comment|/* static mutex pool */
+name|SI_SUB_LOCKMGR
+init|=
+literal|0x0980000
+block|,
+comment|/* lockmgr locks */
 name|SI_SUB_VM
 init|=
 literal|0x1000000
@@ -293,7 +298,7 @@ name|SI_SUB_LOCK
 init|=
 literal|0x1B00000
 block|,
-comment|/* lockmgr locks */
+comment|/* various locks */
 name|SI_SUB_EVENTHANDLER
 init|=
 literal|0x1C00000

@@ -769,7 +769,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The lockbuilder pool must be initialized early because the lockmgr  * and sx locks depend on it.  The sx locks are used in the kernel  * memory allocator.  The lockmgr subsystem is initialized by  * SYSINIT(..., SI_SUB_LOCK, ...).  *  * We can't call MALLOC() to dynamically allocate the sleep pool  * until after kmeminit() has been called, which is done by  * SYSINIT(..., SI_SUB_KMEM, ...).  */
+comment|/*  * The lockbuilder pool must be initialized early because the lockmgr  * and sx locks depend on it.  The sx locks are used in the kernel  * memory allocator.  The lockmgr subsystem is initialized by  * SYSINIT(..., SI_SUB_LOCKMGR, ...).  *  * We can't call MALLOC() to dynamically allocate the sleep pool  * until after kmeminit() has been called, which is done by  * SYSINIT(..., SI_SUB_KMEM, ...).  */
 end_comment
 
 begin_expr_stmt
