@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|CLK_TCK
-value|_BSD_CLOCKS_PER_SEC_
+value|_BSD_CLK_TCK_
 end_define
 
 begin_endif
