@@ -951,7 +951,7 @@ argument|if (ppb_1284_negociate(ppbus, PPB_ECP, 0)) { 		printf("ppiwrite: ECP ne
 endif|#
 directive|endif
 comment|/* we have to be peripheral to be able to send data, so 	 * wait for the appropriate state 	 */
-argument|if (ppb->state< PPB_PERIPHERAL_NEGOCIATION) 		ppb_1284_terminate(ppbus);  	while (ppb->state != PPB_PERIPHERAL_IDLE) {
+argument|if (ppb_1284_get_state(ppbus)< PPB_PERIPHERAL_NEGOCIATION) 		ppb_1284_terminate(ppbus);   	while (ppb_1284_get_state(ppbus) != PPB_PERIPHERAL_IDLE) {
 comment|/* XXX should check a variable before sleeping */
 ifdef|#
 directive|ifdef

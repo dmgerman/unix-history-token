@@ -208,7 +208,6 @@ comment|/*  * ppb_1284_get_state()  *  * Get IEEE1284 state  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ppb_1284_get_state
 parameter_list|(
@@ -234,7 +233,6 @@ comment|/*  * ppb_1284_set_state()  *  * Change IEEE1284 state if no error occur
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ppb_1284_set_state
 parameter_list|(
