@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|PKG_INSTALL_VERSION
-value|20020908
+value|20030417
 end_define
 
 begin_define
@@ -392,6 +392,8 @@ block|,
 name|PLIST_DISPLAY
 block|,
 name|PLIST_PKGDEP
+block|,
+name|PLIST_CONFLICTS
 block|,
 name|PLIST_MTREE
 block|,
