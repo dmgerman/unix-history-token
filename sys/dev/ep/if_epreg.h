@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.7 1995/04/10 21:25:06 jkh Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.8 1995/05/30 08:02:09 rgrimes Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -109,6 +109,11 @@ define|#
 directive|define
 name|F_ACCESS_32_BITS
 value|0x100
+name|struct
+name|ep_board
+modifier|*
+name|epb
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|EP_LOCAL_STATS
@@ -132,6 +137,42 @@ name|rx_overrunl
 decl_stmt|;
 endif|#
 directive|endif
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ep_board
+block|{
+name|int
+name|epb_addr
+decl_stmt|;
+comment|/* address of this board */
+name|char
+name|epb_used
+decl_stmt|;
+comment|/* was this entry already used for configuring ? */
+comment|/* data from EEPROM for later use */
+name|char
+name|epb_isa
+decl_stmt|;
+comment|/* flag: this is an ISA card */
+name|u_short
+name|eth_addr
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Ethernet address */
+name|u_short
+name|prod_id
+decl_stmt|;
+comment|/* product ID */
+name|u_short
+name|res_cfg
+decl_stmt|;
+comment|/* resource configuration */
 block|}
 struct|;
 end_struct
