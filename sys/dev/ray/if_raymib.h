@@ -1,14 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayreg.h,v 1.2 2000/02/20 14:56:17 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raymib.h,v 1.1 2000/02/27 19:47:06 dmlb Exp $  *  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RAY_MAXSSIDLEN
-value|32
-end_define
 
 begin_struct
 struct|struct
@@ -27,7 +20,7 @@ comment|/*01*/
 name|u_int8_t
 name|mib_ssid
 index|[
-name|RAY_MAXSSIDLEN
+name|IEEE80211_NWID_LEN
 index|]
 decl_stmt|;
 comment|/*02*/
@@ -612,6 +605,129 @@ value|mib_tail.mib_test_max_chan
 end_define
 
 begin_comment
+comment|/*  * IOCTL support  */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_param_req
+block|{
+name|int
+name|r_failcause
+decl_stmt|;
+name|u_int8_t
+name|r_paramid
+decl_stmt|;
+name|u_int8_t
+name|r_len
+decl_stmt|;
+name|u_int8_t
+name|r_data
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ray_stats_req
+block|{
+name|u_int64_t
+name|rxoverflow
+decl_stmt|;
+comment|/* Number of rx overflows	*/
+name|u_int64_t
+name|rxcksum
+decl_stmt|;
+comment|/* Number of checksum errors	*/
+name|u_int64_t
+name|rxhcksum
+decl_stmt|;
+comment|/* Number of header checksum errors */
+name|u_int8_t
+name|rxnoise
+decl_stmt|;
+comment|/* Average receiver level	*/
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_EIDRANGE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_ELENGTH
+value|2
+end_define
+
+begin_comment
+comment|/* device can possibly return up to 255 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_EDEVSTOP
+value|256
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_WAITING
+value|257
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Get a param the data is a ray_param_req structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSRAYPARAM
+value|SIOCSIFGENERIC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGRAYPARAM
+value|SIOCGIFGENERIC
+end_define
+
+begin_comment
+comment|/* Get the error counters the data is a ray_stats_req structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGRAYSTATS
+value|_IOWR('i', 59, struct ifreq)
+end_define
+
+begin_comment
 comment|/*  * MIB IDs for the update/report param commands  */
 end_comment
 
@@ -942,6 +1058,120 @@ define|#
 directive|define
 name|RAY_MIB_MAX
 value|46
+end_define
+
+begin_comment
+comment|/*  * Strings for the MIB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_STRINGS
+value|{		\ 	"NET_TYPE",			\ 	"AP_STATUS",			\ 	"SSID",				\ 	"SCAN_MODE",			\ 	"APM_MODE",			\ 	"MAC_ADDR",			\ 	"FRAG_THRESH",			\ 	"DWELL_TIME",			\ 	"BEACON_PERIOD",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET"		\ }
+end_define
+
+begin_comment
+comment|/*  * Sizes for each MIB element  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SIZES
+value|{					\ 	1,
+comment|/* RAY_MIB_NET_TYPE */
+value|\ 	1,
+comment|/* RAY_MIB_AP_STATUS */
+value|\ 	IEEE80211_NWID_LEN,
+comment|/* RAY_MIB_SSID */
+value|\ 	1,
+comment|/* RAY_MIB_SCAN_MODE */
+value|\ 	1,
+comment|/* RAY_MIB_APM_MODE */
+value|\ 	ETHER_ADDR_LEN,
+comment|/* RAY_MIB_MAC_ADDR */
+value|\ 	2,
+comment|/* RAY_MIB_FRAG_THRESH */
+value|\ 	2,
+comment|/* RAY_MIB_DWELL_TIME */
+value|\ 	2,
+comment|/* RAY_MIB_BEACON_PERIOD */
+value|\ 	1,
+comment|/* RAY_MIB_DTIM_INTERVAL */
+value|\ 	1,
+comment|/* RAY_MIB_MAX_RETRY */
+value|\ 	1,
+comment|/* RAY_MIB_ACK_TIMO */
+value|\ 	1,
+comment|/* RAY_MIB_SIFS */
+value|\ 	1,
+comment|/* RAY_MIB_DIFS */
+value|\ 	1,
+comment|/* RAY_MIB_PIFS */
+value|\ 	2,
+comment|/* RAY_MIB_RTS_THRESH */
+value|\ 	2,
+comment|/* RAY_MIB_SCAN_DWELL */
+value|\ 	2,
+comment|/* RAY_MIB_SCAN_MAX_DWELL */
+value|\ 	1,
+comment|/* RAY_MIB_ASSOC_TIMO */
+value|\ 	1,
+comment|/* RAY_MIB_ADHOC_SCAN_CYCLE */
+value|\ 	1,
+comment|/* RAY_MIB_INFRA_SCAN_CYCLE */
+value|\ 	1,
+comment|/* RAY_MIB_INFRA_SUPER_SCAN_CYCLE */
+value|\ 	1,
+comment|/* RAY_MIB_PROMISC */
+value|\ 	2,
+comment|/* RAY_MIB_UNIQ_WORD */
+value|\ 	1,
+comment|/* RAY_MIB_SLOT_TIME */
+value|\ 	1,
+comment|/* RAY_MIB_ROAM_LOW_SNR_THRESH */
+value|\ 	1,
+comment|/* RAY_MIB_LOW_SNR_COUNT */
+value|\ 	1,
+comment|/* RAY_MIB_INFRA_MISSED_BEACON_COUNT */
+value|\ 	1,
+comment|/* RAY_MIB_ADHOC_MISSED_BEACON_COUNT */
+value|\ 	1,
+comment|/* RAY_MIB_COUNTRY_CODE */
+value|\ 	1,
+comment|/* RAY_MIB_HOP_SEQ */
+value|\ 	1,
+comment|/* RAY_MIB_HOP_SEQ_LEN */
+value|\ 	2,
+comment|/* RAY_MIB_CW_MAX */
+value|\ 	2,
+comment|/* RAY_MIB_CW_MIN */
+value|\ 	1,
+comment|/* RAY_MIB_NOISE_FILTER_GAIN */
+value|\ 	1,
+comment|/* RAY_MIB_NOISE_LIMIT_OFFSET */
+value|\ 	1,
+comment|/* RAY_MIB_RSSI_THRESH_OFFSET */
+value|\ 	1,
+comment|/* RAY_MIB_BUSY_THRESH_OFFSET */
+value|\ 	1,
+comment|/* RAY_MIB_SYNC_THRESH */
+value|\ 	1,
+comment|/* RAY_MIB_TEST_MODE */
+value|\ 	1,
+comment|/* RAY_MIB_TEST_MIN_CHAN */
+value|\ 	1,
+comment|/* RAY_MIB_TEST_MAX_CHAN */
+value|\ 	1,
+comment|/* RAY_MIB_ALLOW_PROBE_RESP */
+value|\ 	1,
+comment|/* RAY_MIB_PRIVACY_MUST_START */
+value|\ 	1,
+comment|/* RAY_MIB_PRIVACY_CAN_JOIN */
+value|\ 	8
+comment|/* RAY_MIB_BASIC_RATE_SET */
+value|\ }
 end_define
 
 begin_comment
