@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.17 1998/07/18 23:30:51 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.19 1998/09/18 20:53:08 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -2232,12 +2232,13 @@ operator|->
 name|rule
 operator|->
 name|fw_number
-operator|==
+operator|>=
 name|rule
 condition|)
 return|return
 name|chain
 return|;
+comment|/*      * note the above matches any rule>= the jump target. I      * don't think this is a particularly good idea, but it is      * how ipfw always worked.      */
 return|return
 name|me
 operator|->
