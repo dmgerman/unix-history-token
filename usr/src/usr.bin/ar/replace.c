@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.2 (Berkeley) %G%"
+literal|"@(#)replace.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,9 +725,7 @@ name|afd
 argument_list|,
 name|archive
 argument_list|,
-name|RPAD
-operator||
-name|WPAD
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
