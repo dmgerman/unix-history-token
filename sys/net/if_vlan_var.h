@@ -16,103 +16,6 @@ name|_NET_IF_VLAN_VAR_H_
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_struct
-struct|struct
-name|vlan_mc_entry
-block|{
-name|struct
-name|ether_addr
-name|mc_addr
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|vlan_mc_entry
-argument_list|)
-name|mc_entries
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ifvlan
-block|{
-name|struct
-name|arpcom
-name|ifv_ac
-decl_stmt|;
-comment|/* make this an interface */
-name|struct
-name|ifnet
-modifier|*
-name|ifv_p
-decl_stmt|;
-comment|/* parent inteface of this vlan */
-struct|struct
-name|ifv_linkmib
-block|{
-name|int
-name|ifvm_parent
-decl_stmt|;
-name|u_int16_t
-name|ifvm_proto
-decl_stmt|;
-comment|/* encapsulation ethertype */
-name|u_int16_t
-name|ifvm_tag
-decl_stmt|;
-comment|/* tag to apply on packets leaving if */
-block|}
-name|ifv_mib
-struct|;
-name|SLIST_HEAD
-argument_list|(
-argument|__vlan_mchead
-argument_list|,
-argument|vlan_mc_entry
-argument_list|)
-name|vlan_mc_listhead
-expr_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|ifvlan
-argument_list|)
-name|ifv_list
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|ifv_if
-value|ifv_ac.ac_if
-end_define
-
-begin_define
-define|#
-directive|define
-name|ifv_tag
-value|ifv_mib.ifvm_tag
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_struct
 struct|struct
 name|ether_vlan_header
@@ -161,17 +64,6 @@ name|tag
 parameter_list|)
 value|(((tag)>> 13)& 7)
 end_define
-
-begin_define
-define|#
-directive|define
-name|EVL_ENCAPLEN
-value|4
-end_define
-
-begin_comment
-comment|/* length in octets of encapsulation */
-end_comment
 
 begin_comment
 comment|/* sysctl(3) tags, for compatibility purposes */
@@ -225,6 +117,86 @@ directive|define
 name|SIOCGETVLAN
 value|SIOCGIFGENERIC
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Drivers that are capable of adding and removing the VLAN header  * in hardware indicate they support this by marking IFCAP_VLAN_HWTAGGING  * in if_capabilities.  Drivers for hardware that is also capable  * of handling larger MTU's that may include a software-appended  * VLAN header w/o lowering the normal MTU should mark IFCAP_VLA_MTU  * in if_capabilities; this notfies the VLAN code it can leave the  * MTU on the vlan interface at the normal setting.  */
+end_comment
+
+begin_comment
+comment|/*  * Drivers that support hardware VLAN tagging pass a packet's tag  * up through the stack by appending a packet tag with this value.  * Output is handled likewise, the driver must locate the packet  * tag to extract the VLAN tag.  The following macros are used to  * do this work.  On input, do:  *  *	VLAN_INPUT_TAG(ifp, m, tag,);  *  * to mark the packet m with the specified VLAN tag.  The last  * parameter provides code to execute in case of an error.  On  * output the driver should check ifnet to see if any VLANs are  * in use and only then check for a packet tag; this is done with:  *  *	struct m_tag *mtag;  *	mtag = VLAN_OUTPUT_TAG(ifp, m);  *	if (mtag != NULL) {  *		... = VLAN_TAG_VALUE(mtag);  *		... pass tag to hardware ...  *	}  *  * Note that a driver must indicate it supports hardware VLAN  * tagging by marking IFCAP_VLAN_HWTAGGING in if_capabilities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_VLAN
+value|1035328035
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_VLAN_TAG
+value|0
+end_define
+
+begin_comment
+comment|/* tag of VLAN interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VLAN_INPUT_TAG
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|,
+name|_t
+parameter_list|,
+name|_errcase
+parameter_list|)
+value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_DONTWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	*(u_int *)(mtag+1) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLAN_OUTPUT_TAG
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|)
+define|\
+value|((_ifp)->if_nvlans != 0 ?				\ 		m_tag_locate((_m), MTAG_VLAN, MTAG_VLAN_TAG, NULL) : NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLAN_TAG_VALUE
+parameter_list|(
+name|_mt
+parameter_list|)
+value|(*(u_int *)((_mt)+1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
