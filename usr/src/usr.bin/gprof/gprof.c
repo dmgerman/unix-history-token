@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.21 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,10 @@ name|debug
 operator|=
 literal|0
 expr_stmt|;
+name|bflag
+operator|=
+name|TRUE
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -127,7 +131,7 @@ literal|'b'
 case|:
 name|bflag
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
