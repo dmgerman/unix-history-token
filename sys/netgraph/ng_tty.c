@@ -1809,11 +1809,6 @@ condition|(
 name|m
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|m2
-decl_stmt|;
 name|int
 name|sent
 decl_stmt|;
@@ -1865,16 +1860,12 @@ literal|0
 condition|)
 break|break;
 comment|/* device can't take no more */
-name|MFREE
-argument_list|(
-name|m
-argument_list|,
-name|m2
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
-name|m2
+name|m_free
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Put remainder of mbuf chain (if any) back on queue */
