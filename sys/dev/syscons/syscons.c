@@ -7666,6 +7666,23 @@ return|;
 endif|#
 directive|endif
 comment|/* SC_NO_FONT_LOADING */
+ifdef|#
+directive|ifdef
+name|PC98
+case|case
+name|ADJUST_CLOCK
+case|:
+comment|/* /dev/rtc for 98note resume */
+name|inittodr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}
@@ -9170,12 +9187,17 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 specifier|static
 name|int
 name|kbd_interval
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|timeval
 name|tv
@@ -9265,6 +9287,9 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 operator|(
@@ -9379,6 +9404,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* PC98 */
 comment|/* find the vty to update */
 name|scp
 operator|=
@@ -12974,6 +13002,37 @@ name|sc
 operator|->
 name|new_scp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|sc
+operator|->
+name|old_scp
+operator|->
+name|mode
+operator|!=
+name|scp
+operator|->
+name|mode
+operator|||
+name|ISUNKNOWNSC
+argument_list|(
+name|sc
+operator|->
+name|old_scp
+argument_list|)
+operator|||
+name|ISUNKNOWNSC
+argument_list|(
+name|sc
+operator|->
+name|new_scp
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|sc
@@ -12993,6 +13052,8 @@ operator|->
 name|old_scp
 argument_list|)
 condition|)
+endif|#
+directive|endif
 name|set_mode
 argument_list|(
 name|scp
@@ -13966,6 +14027,23 @@ name|struct
 name|tty
 name|main_tty
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+specifier|static
+name|u_short
+name|sc_buffer
+index|[
+name|ROW
+operator|*
+name|COL
+operator|*
+literal|2
+index|]
+decl_stmt|;
+comment|/* XXX */
+else|#
+directive|else
 specifier|static
 name|u_short
 name|sc_buffer
@@ -13976,6 +14054,8 @@ name|COL
 index|]
 decl_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|SC_NO_FONT_LOADING
@@ -15350,6 +15430,24 @@ index|]
 operator|=
 name|i
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|sc
+operator|->
+name|scr_map
+index|[
+literal|0x5c
+index|]
+operator|=
+operator|(
+name|u_char
+operator|)
+literal|0xfc
+expr_stmt|;
+comment|/* for backslash */
+endif|#
+directive|endif
 name|sc
 operator|->
 name|flags
