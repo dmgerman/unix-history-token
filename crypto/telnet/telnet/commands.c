@@ -11722,12 +11722,6 @@ argument_list|)
 expr_stmt|;
 name|hints
 operator|.
-name|ai_flags
-operator|=
-name|AI_NUMERICHOST
-expr_stmt|;
-name|hints
-operator|.
 name|ai_family
 operator|=
 name|family
