@@ -10360,7 +10360,7 @@ argument_list|,
 else|#
 directive|else
 argument|printf(
-literal|", %x:%zd"
+literal|", %x:%d"
 argument|, segments[i].ds_addr,
 endif|#
 directive|endif
@@ -10368,23 +10368,29 @@ argument|segments[i].ds_len); 		printf(
 literal|"\n"
 argument|); END_DEBUG 		for (i =
 literal|0
-argument|; i< seg; i++) { 			s =&segments[i];
-if|#
-directive|if
-literal|1
+argument|; i< seg; i++) { 			s =&segments[i]; SBP_DEBUG(
+literal|0
+argument|)
 comment|/* XXX LSI Logic "< 16 byte" bug might be hit */
 argument|if (s->ds_len<
 literal|16
 argument|) 				printf(
 literal|"sbp_execute_ocb: warning, "
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 literal|"segment length(%zd) is less than 16."
+else|#
+directive|else
+literal|"segment length(%d) is less than 16."
+endif|#
+directive|endif
 literal|"(seg=%d/%d)\n"
 argument|, s->ds_len, i+
 literal|1
-argument|, seg);
-endif|#
-directive|endif
-argument|ocb->ind_ptr[i].hi = htonl(s->ds_len<<
+argument|, seg); END_DEBUG 			ocb->ind_ptr[i].hi = htonl(s->ds_len<<
 literal|16
 argument|); 			ocb->ind_ptr[i].lo = htonl(s->ds_addr); 		} 		ocb->orb[
 literal|4
