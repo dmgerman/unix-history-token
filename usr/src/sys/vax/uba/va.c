@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	3.5	%G%	*/
+comment|/*	va.c	3.6	%G%	*/
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ERNIE
-end_ifdef
 
 begin_include
 include|#
@@ -64,7 +58,7 @@ file|"../h/vcmd.h"
 end_include
 
 begin_comment
-comment|/*  * Benson-Varian matrix printer/plotter.  Device "va", for "varian".  * dma interface driver  */
+comment|/*  * Benson-Varian matrix printer/plotter  * dma interface driver  */
 end_comment
 
 begin_decl_stmt
@@ -75,20 +69,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Used with ubasetup. */
-end_comment
-
 begin_function_decl
 name|unsigned
 name|minvaph
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Maximum amount transferred by physio. */
-end_comment
 
 begin_define
 define|#
@@ -97,43 +83,42 @@ name|VAPRI
 value|(PZERO-1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ushort
+value|unsigned short
+end_define
+
 begin_struct
 struct|struct
 name|varegs
 block|{
-comment|/* Unibus registers provided by va. */
-name|unsigned
-name|short
-name|vabufaddr
+name|ushort
+name|vaba
 decl_stmt|;
-comment|/* DMA buffer address. */
 name|short
-name|vawcount
+name|vawc
 decl_stmt|;
-comment|/* Negative of number of 16-bit 					   words to transfer by DMA. */
 union|union
 block|{
 name|short
-name|vacsrword
+name|Vacsw
 decl_stmt|;
-comment|/* csr addressed as a word (for R). */
 struct|struct
 block|{
 name|char
-name|Vacsrlo
+name|Vacsl
 decl_stmt|;
 name|char
-name|Vacsrhi
+name|Vacsh
 decl_stmt|;
-comment|/* High byte (command bytes go here). */
-block|}
-name|vacsrbytes
-struct|;
-comment|/* csr addressed as bytes (for W). */
 block|}
 name|vacsr
+struct|;
+block|}
+name|vacs
 union|;
-comment|/* Control/Status Register (csr). */
 name|short
 name|vadata
 decl_stmt|;
@@ -144,15 +129,22 @@ end_struct
 begin_define
 define|#
 directive|define
-name|vacsrhi
-value|vacsr.vacsrbytes.Vacsrhi
+name|vacsw
+value|vacs.Vacsw
 end_define
 
 begin_define
 define|#
 directive|define
-name|vacsrlo
-value|vacsr.vacsrbytes.Vacsrlo
+name|vacsh
+value|vacs.vacsr.Vacsh
+end_define
+
+begin_define
+define|#
+directive|define
+name|vacsl
+value|vacs.vacsr.Vacsl
 end_define
 
 begin_define
@@ -163,7 +155,7 @@ value|((struct varegs *)(UBA0_DEV + 0164000))
 end_define
 
 begin_comment
-comment|/* vacsr.vacsrword bits: */
+comment|/* vacsw bits */
 end_comment
 
 begin_define
@@ -174,7 +166,7 @@ value|0100000
 end_define
 
 begin_comment
-comment|/* R	Some error has occurred */
+comment|/* Some error has occurred */
 end_comment
 
 begin_define
@@ -185,7 +177,7 @@ value|01000
 end_define
 
 begin_comment
-comment|/* R    DMA timeout error */
+comment|/* DMA timeout error */
 end_comment
 
 begin_define
@@ -196,7 +188,7 @@ value|0400
 end_define
 
 begin_comment
-comment|/* R	Something besides NPRTIMO */
+comment|/* Something besides NPRTIMO */
 end_comment
 
 begin_define
@@ -206,10 +198,6 @@ name|DONE
 value|0200
 end_define
 
-begin_comment
-comment|/* R	*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -218,7 +206,7 @@ value|0100
 end_define
 
 begin_comment
-comment|/* R/W	Interrupt enable */
+comment|/* Interrupt enable */
 end_comment
 
 begin_define
@@ -228,20 +216,12 @@ name|SUPPLIESLOW
 value|04
 end_define
 
-begin_comment
-comment|/* R	*/
-end_comment
-
 begin_define
 define|#
 directive|define
 name|BOTOFFORM
 value|02
 end_define
-
-begin_comment
-comment|/* R	*/
-end_comment
 
 begin_define
 define|#
@@ -251,11 +231,11 @@ value|01
 end_define
 
 begin_comment
-comment|/* R/W	Reverse byte order in words */
+comment|/* Reverse byte order in words */
 end_comment
 
 begin_comment
-comment|/* Command bytes sent to vacsrhi */
+comment|/* vacsh command bytes */
 end_comment
 
 begin_define
@@ -286,16 +266,16 @@ name|VAAUTOSTEP
 value|0244
 end_define
 
-begin_comment
-comment|/* The following commands are not used in this driver: */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|VANOAUTOSTEP
 value|0045
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -304,12 +284,20 @@ name|VAFORMFEED
 value|0263
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VASLEW
 value|0265
 end_define
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_define
 define|#
@@ -318,11 +306,15 @@ name|VASTEP
 value|0064
 end_define
 
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_struct
 struct|struct
 block|{
 name|char
-name|va_is_open
+name|va_open
 decl_stmt|;
 name|char
 name|va_busy
@@ -332,13 +324,18 @@ name|va_state
 decl_stmt|;
 comment|/* State: bits are commands in vcmd.h. */
 name|int
-name|va_wcount
+name|va_wc
 decl_stmt|;
 name|int
 name|va_bufp
 decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|va_bp
+decl_stmt|;
 block|}
-name|vainfo
+name|va11
 struct|;
 end_struct
 
@@ -368,12 +365,11 @@ begin_block
 block|{
 if|if
 condition|(
-name|vainfo
+name|va11
 operator|.
-name|va_is_open
+name|va_open
 condition|)
 block|{
-comment|/* Can't open if it's already open. */
 name|u
 operator|.
 name|u_error
@@ -382,28 +378,25 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
-name|vainfo
+name|va11
 operator|.
-name|va_is_open
+name|va_open
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NOW it's open! */
 name|VAADDR
 operator|->
-name|vawcount
+name|vawc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Clear residual errors */
-name|vainfo
+name|va11
 operator|.
-name|va_wcount
+name|va_wc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* No DMA to do now. */
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|=
@@ -411,11 +404,10 @@ literal|0
 expr_stmt|;
 name|VAADDR
 operator|->
-name|vacsrlo
+name|vacsl
 operator|=
 name|IENABLE
 expr_stmt|;
-comment|/* Enable interrupts. */
 name|vatimo
 argument_list|()
 expr_stmt|;
@@ -424,7 +416,6 @@ argument_list|(
 name|VPRINT
 argument_list|)
 expr_stmt|;
-comment|/* Start in print mode. */
 if|if
 condition|(
 name|u
@@ -464,34 +455,32 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
-name|vainfo
+name|va11
 operator|.
 name|va_busy
 condition|)
-comment|/* Wait till not busy. */
 name|sleep
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 operator|&
-name|vainfo
+name|va11
 argument_list|,
 name|VAPRI
 argument_list|)
 expr_stmt|;
-name|vainfo
+name|va11
 operator|.
 name|va_busy
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Grab it. */
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|va11
+operator|.
+name|va_bp
+operator|=
+name|bp
 expr_stmt|;
 name|va_ubinfo
 operator|=
@@ -502,20 +491,13 @@ argument_list|,
 name|vabdp
 argument_list|)
 expr_stmt|;
-comment|/* Set up uba mapper. */
-name|vainfo
+name|va11
 operator|.
 name|va_bufp
 operator|=
 name|va_ubinfo
 operator|&
 literal|0x3ffff
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl4
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -529,9 +511,9 @@ condition|)
 goto|goto
 name|brkout
 goto|;
-name|vainfo
+name|va11
 operator|.
-name|va_wcount
+name|va_wc
 operator|=
 operator|-
 operator|(
@@ -542,7 +524,6 @@ operator|/
 literal|2
 operator|)
 expr_stmt|;
-comment|/* va uses a word count,  		   so user had better supply an even number of bytes. */
 name|vastart
 argument_list|()
 expr_stmt|;
@@ -553,36 +534,35 @@ argument_list|(
 name|DONE
 argument_list|)
 expr_stmt|;
-comment|/* Wait for DMA to complete. */
-name|vainfo
+comment|/* Wait for DMA to complete */
+name|va11
 operator|.
-name|va_wcount
+name|va_wc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Reset state info. */
-name|vainfo
+name|va11
 operator|.
 name|va_bufp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* After printing a line of characters, VPRINTPLOT mode essentially 	   reverts to VPLOT mode, plotting things until a new mode is set. 	   This change is indicated by sending a VAAUTOSTEP command to 	   the va.  We also change va_state to reflect this effective 	   mode change. 	 */
+comment|/* 	 * After printing a line of characters, VPRINTPLOT mode essentially 	 * reverts to VPLOT mode, plotting things until a new mode is set. 	 * This change is indicated by sending a VAAUTOSTEP command to 	 * the va.  We also change va_state to reflect this effective 	 * mode change. 	 */
 if|if
 condition|(
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|&
 name|VPRINTPLOT
 condition|)
 block|{
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|=
 operator|(
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|&
@@ -594,7 +574,7 @@ name|VPLOT
 expr_stmt|;
 name|VAADDR
 operator|->
-name|vacsrhi
+name|vacsh
 operator|=
 name|VAAUTOSTEP
 expr_stmt|;
@@ -623,7 +603,13 @@ name|va_ubinfo
 operator|=
 literal|0
 expr_stmt|;
-name|vainfo
+name|va11
+operator|.
+name|va_bp
+operator|=
+literal|0
+expr_stmt|;
+name|va11
 operator|.
 name|va_busy
 operator|=
@@ -650,7 +636,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|vainfo
+name|va11
 argument_list|)
 expr_stmt|;
 block|}
@@ -747,9 +733,7 @@ name|e
 operator|=
 name|VAADDR
 operator|->
-name|vacsr
-operator|.
-name|vacsrword
+name|vacsw
 operator|&
 operator|(
 name|bit
@@ -766,7 +750,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|vainfo
+name|va11
 argument_list|,
 name|VAPRI
 argument_list|)
@@ -781,10 +765,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* vastart starts up the DMA by setting the buffer pointer and the word count. */
-end_comment
-
 begin_macro
 name|vastart
 argument_list|()
@@ -794,26 +774,26 @@ begin_block
 block|{
 if|if
 condition|(
-name|vainfo
+name|va11
 operator|.
-name|va_wcount
+name|va_wc
 condition|)
 block|{
 name|VAADDR
 operator|->
-name|vabufaddr
+name|vaba
 operator|=
-name|vainfo
+name|va11
 operator|.
 name|va_bufp
 expr_stmt|;
 name|VAADDR
 operator|->
-name|vawcount
+name|vawc
 operator|=
-name|vainfo
+name|va11
 operator|.
-name|va_wcount
+name|va_wc
 expr_stmt|;
 return|return;
 block|}
@@ -862,7 +842,7 @@ name|suword
 argument_list|(
 name|addr
 argument_list|,
-name|vainfo
+name|va11
 operator|.
 name|va_state
 argument_list|)
@@ -914,7 +894,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* vacmd sends a command code to the va, and waits for it to complete.    If an error occurs, u.u_error is set to EIO.    vacmd also updates vainfo.va_state.  */
+comment|/*  * Send a command code to the va, and wait for it to complete.  * If an error occurs, u.u_error is set to EIO.  * In any case, update va11.va_state.  */
 end_comment
 
 begin_macro
@@ -940,7 +920,7 @@ argument_list|(
 name|DONE
 argument_list|)
 expr_stmt|;
-comment|/* Wait for va to be ready. */
+comment|/* Wait for va to be ready */
 switch|switch
 condition|(
 name|vcmd
@@ -952,7 +932,7 @@ case|:
 comment|/* Must turn on plot AND autostep modes. */
 name|VAADDR
 operator|->
-name|vacsrhi
+name|vacsh
 operator|=
 name|VAPLOT
 expr_stmt|;
@@ -971,7 +951,7 @@ name|EIO
 expr_stmt|;
 name|VAADDR
 operator|->
-name|vacsrhi
+name|vacsh
 operator|=
 name|VAAUTOSTEP
 expr_stmt|;
@@ -981,7 +961,7 @@ name|VPRINT
 case|:
 name|VAADDR
 operator|->
-name|vacsrhi
+name|vacsh
 operator|=
 name|VAPRINT
 expr_stmt|;
@@ -991,18 +971,18 @@ name|VPRINTPLOT
 case|:
 name|VAADDR
 operator|->
-name|vacsrhi
+name|vacsh
 operator|=
 name|VAPRINTPLOT
 expr_stmt|;
 break|break;
 block|}
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|=
 operator|(
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|&
@@ -1050,9 +1030,9 @@ begin_block
 block|{
 if|if
 condition|(
-name|vainfo
+name|va11
 operator|.
-name|va_is_open
+name|va_open
 condition|)
 name|timeout
 argument_list|(
@@ -1095,7 +1075,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|vainfo
+name|va11
 argument_list|)
 expr_stmt|;
 block|}
@@ -1108,31 +1088,31 @@ end_macro
 
 begin_block
 block|{
-name|vainfo
+name|va11
 operator|.
-name|va_is_open
+name|va_open
 operator|=
 literal|0
 expr_stmt|;
-name|vainfo
+name|va11
 operator|.
 name|va_busy
 operator|=
 literal|0
 expr_stmt|;
-name|vainfo
+name|va11
 operator|.
 name|va_state
 operator|=
 literal|0
 expr_stmt|;
-name|vainfo
+name|va11
 operator|.
-name|va_wcount
+name|va_wc
 operator|=
 literal|0
 expr_stmt|;
-name|vainfo
+name|va11
 operator|.
 name|va_bufp
 operator|=
@@ -1140,17 +1120,182 @@ literal|0
 expr_stmt|;
 name|VAADDR
 operator|->
-name|vacsrlo
+name|vacsl
 operator|=
 literal|0
 expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|N
+parameter_list|)
+value|{ register int d; d = N; while (--d> 0); }
+end_define
+
+begin_macro
+name|vareset
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|va11
+operator|.
+name|va_open
+operator|==
+literal|0
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|" va"
+argument_list|)
+expr_stmt|;
+name|VAADDR
+operator|->
+name|vacsl
+operator|=
+name|IENABLE
+expr_stmt|;
+if|if
+condition|(
+name|va11
+operator|.
+name|va_state
+operator|&
+name|VPLOT
+condition|)
+block|{
+name|VAADDR
+operator|->
+name|vacsh
+operator|=
+name|VAPLOT
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+name|VAADDR
+operator|->
+name|vacsh
+operator|=
+name|VAAUTOSTEP
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|va11
+operator|.
+name|va_state
+operator|&
+name|VPRINTPLOT
+condition|)
+name|VAADDR
+operator|->
+name|vacsh
+operator|=
+name|VPRINTPLOT
+expr_stmt|;
+else|else
+name|VAADDR
+operator|->
+name|vacsh
+operator|=
+name|VAPRINTPLOT
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|va11
+operator|.
+name|va_busy
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|va_ubinfo
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"<%d>"
+argument_list|,
+operator|(
+name|va_ubinfo
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+argument_list|)
+expr_stmt|;
+name|ubafree
+argument_list|(
+name|va_ubinfo
+argument_list|)
+operator|,
+name|va_ubinfo
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* This code belongs in vastart() */
+name|va_ubinfo
+operator|=
+name|ubasetup
+argument_list|(
+name|va11
+operator|.
+name|va_bp
+argument_list|,
+name|vabdp
+argument_list|)
+expr_stmt|;
+name|va11
+operator|.
+name|va_bufp
+operator|=
+name|va_ubinfo
+operator|&
+literal|0x3ffff
+expr_stmt|;
+name|va11
+operator|.
+name|va_wc
+operator|=
+operator|(
+operator|-
+name|va11
+operator|.
+name|va_bp
+operator|->
+name|b_bcount
+operator|/
+literal|2
+operator|)
+expr_stmt|;
+comment|/* End badly placed code */
+name|vastart
+argument_list|()
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
