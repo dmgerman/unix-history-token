@@ -136,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|PATH_RTLD
-value|"/usr/libexec/ld-elf.so.1"
+value|"/libexec/ld-elf.so.1"
 end_define
 
 begin_comment
