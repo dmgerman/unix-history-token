@@ -64,26 +64,8 @@ comment|/* The game port can manage 4 buttons and 4 variable resistors (usually 
 end_comment
 
 begin_comment
-comment|/* #defines below taken from clock.c */
+comment|/* the formulae below only work if u is  ``not too large''. See also   * the discussion in microtime.s */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TIMER_FREQ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TIMER_FREQ
-value|1193182
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -92,7 +74,17 @@ name|usec2ticks
 parameter_list|(
 name|u
 parameter_list|)
-value|(u) * (TIMER_FREQ / 1000000) \                         + (u) * ((TIMER_FREQ % 1000000) / 1000) / 1000 \ 		        + (u) * (TIMER_FREQ % 1000) / 1000000
+value|((u) * 19549)>>14
+end_define
+
+begin_define
+define|#
+directive|define
+name|ticks2usec
+parameter_list|(
+name|u
+parameter_list|)
+value|((u) * 3433)>>12
 end_define
 
 begin_define
@@ -172,7 +164,7 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
-name|hz
+name|timer0_max_count
 decl_stmt|;
 end_decl_stmt
 
@@ -599,9 +591,7 @@ name|t0
 condition|)
 name|t1
 operator|-=
-name|TIMER_FREQ
-operator|/
-name|hz
+name|timer0_max_count
 expr_stmt|;
 if|if
 condition|(
@@ -666,11 +656,12 @@ name|dev
 argument_list|)
 index|]
 operator|+
-operator|(
+name|ticks2usec
+argument_list|(
 name|t0
 operator|-
 name|x
-operator|)
+argument_list|)
 else|:
 literal|0x80000000
 expr_stmt|;
@@ -694,11 +685,12 @@ name|dev
 argument_list|)
 index|]
 operator|+
-operator|(
+name|ticks2usec
+argument_list|(
 name|t0
 operator|-
 name|y
-operator|)
+argument_list|)
 else|:
 literal|0x80000000
 expr_stmt|;
