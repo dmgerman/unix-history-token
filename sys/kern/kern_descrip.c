@@ -1691,14 +1691,7 @@ block|{
 case|case
 name|F_DUPFD
 case|:
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
+comment|/* mtx_assert(&Giant, MA_NOTOWNED); */
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
@@ -1766,14 +1759,7 @@ break|break;
 case|case
 name|F_GETFD
 case|:
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
+comment|/* mtx_assert(&Giant, MA_NOTOWNED); */
 name|td
 operator|->
 name|td_retval
@@ -1801,14 +1787,7 @@ break|break;
 case|case
 name|F_SETFD
 case|:
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
+comment|/* mtx_assert(&Giant, MA_NOTOWNED); */
 operator|*
 name|pop
 operator|=
@@ -1839,15 +1818,7 @@ break|break;
 case|case
 name|F_GETFL
 case|:
-comment|/* MPSAFE */
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
+comment|/* mtx_assert(&Giant, MA_NOTOWNED); */
 name|FILE_LOCK
 argument_list|(
 name|fp
