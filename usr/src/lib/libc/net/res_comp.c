@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.3 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ file|<arpa/nameser.h>
 end_include
 
 begin_comment
-comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * Expanded names are converted to lower case.  * 'msg' is a pointer to the begining of the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
+comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * Expanded names are converted to lower case.  * 'msg' is a pointer to the begining of the message,  * 'eomorig' points to the first location after the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_macro
@@ -58,7 +58,7 @@ name|dn_expand
 argument_list|(
 argument|msg
 argument_list|,
-argument|msglen
+argument|eomorig
 argument_list|,
 argument|comp_dn
 argument_list|,
@@ -74,6 +74,9 @@ modifier|*
 name|msg
 decl_stmt|,
 modifier|*
+name|eomorig
+decl_stmt|,
+modifier|*
 name|comp_dn
 decl_stmt|,
 modifier|*
@@ -84,8 +87,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|length
-decl_stmt|,
-name|msglen
 decl_stmt|;
 end_decl_stmt
 
@@ -108,9 +109,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|eom
-decl_stmt|,
-modifier|*
-name|eomorig
 decl_stmt|;
 name|int
 name|len
@@ -131,14 +129,6 @@ operator|=
 name|exp_dn
 operator|+
 name|length
-operator|-
-literal|1
-expr_stmt|;
-name|eomorig
-operator|=
-name|msg
-operator|+
-name|msglen
 operator|-
 literal|1
 expr_stmt|;
@@ -273,7 +263,7 @@ block|}
 if|if
 condition|(
 name|cp
-operator|>
+operator|>=
 name|eomorig
 condition|)
 comment|/* out of range */
@@ -332,7 +322,7 @@ operator|<
 name|msg
 operator|||
 name|cp
-operator|>
+operator|>=
 name|eomorig
 condition|)
 comment|/* out of range */

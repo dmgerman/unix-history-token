@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.11 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +793,8 @@ name|dn_expand
 argument_list|(
 name|msg
 argument_list|,
+name|msg
+operator|+
 literal|512
 argument_list|,
 name|cp
