@@ -2451,6 +2451,32 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|asc
+operator|>=
+literal|0x80
+operator|&&
+name|asc
+operator|<=
+literal|0xff
+condition|)
+return|return
+literal|"Vendor Specific ASC"
+return|;
+if|if
+condition|(
+name|ascq
+operator|>=
+literal|0x80
+operator|&&
+name|ascq
+operator|<=
+literal|0xff
+condition|)
+return|return
+literal|"Vendor Specific ASCQ"
+return|;
 for|for
 control|(
 name|i
