@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.11	%G%	*/
+comment|/*	subr_prf.c	4.12	%G%	*/
 end_comment
 
 begin_include
@@ -700,54 +700,6 @@ argument_list|(
 name|RB_PANIC
 argument_list|,
 name|bootopt
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Prdev prints a warning message of the form "mesg on dev x/y".  * x and y are the major and minor parts of the device argument.  *  * PRDEV SHOULD COMPUTE AND USE DEVICE NAMES  */
-end_comment
-
-begin_macro
-name|prdev
-argument_list|(
-argument|str
-argument_list|,
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printf
-argument_list|(
-literal|"%s on dev %d/%d\n"
-argument_list|,
-name|str
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
