@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.5 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -26,6 +26,9 @@ comment|/* the process's memory image */
 name|Pregs
 block|,
 comment|/* the process's register set */
+name|Pfpregs
+block|,
+comment|/* the process's FP register set */
 name|Pctl
 block|,
 comment|/* process control */
@@ -426,6 +429,44 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|procfs_read_fpregs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|fpreg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|procfs_write_fpregs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|fpreg
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|procfs_donote
 name|__P
 argument_list|(
@@ -456,6 +497,35 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|procfs_doregs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|pfsnode
+operator|*
+name|pfsp
+operator|,
+expr|struct
+name|uio
+operator|*
+name|uio
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|procfs_dofpregs
 name|__P
 argument_list|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.5 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -152,6 +152,15 @@ literal|"regs"
 argument_list|)
 block|,
 name|Pregs
+block|}
+block|,
+block|{
+name|N
+argument_list|(
+literal|"fpregs"
+argument_list|)
+block|,
+name|Pfpregs
 block|}
 block|,
 block|{
@@ -1172,6 +1181,9 @@ expr_stmt|;
 break|break;
 case|case
 name|Pregs
+case|:
+case|case
+name|Pfpregs
 case|:
 case|case
 name|Pctl

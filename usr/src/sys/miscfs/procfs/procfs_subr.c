@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_subr.c	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs_subr.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_subr.c	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs_subr.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -422,6 +422,20 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
+name|Pfpregs
+case|:
+name|pfs
+operator|->
+name|pfs_mode
+operator|=
+operator|(
+name|VREAD
+operator||
+name|VWRITE
+operator|)
+expr_stmt|;
+break|break;
+case|case
 name|Pctl
 case|:
 name|pfs
@@ -751,6 +765,23 @@ case|:
 return|return
 operator|(
 name|procfs_doregs
+argument_list|(
+name|curp
+argument_list|,
+name|p
+argument_list|,
+name|pfs
+argument_list|,
+name|uio
+argument_list|)
+operator|)
+return|;
+case|case
+name|Pfpregs
+case|:
+return|return
+operator|(
+name|procfs_dofpregs
 argument_list|(
 name|curp
 argument_list|,
