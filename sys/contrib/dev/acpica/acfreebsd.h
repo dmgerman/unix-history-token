@@ -20,26 +20,8 @@ name|__ACFREEBSD_H__
 end_define
 
 begin_comment
-comment|/*  * Some systems' ASL may have problems because they look for names   * of Microsoft operating systems.  We default to "Microsoft Windows NT"  * (aka NT5 or Windows 2000) because it is most similar to our  * implementation and also most prevalent.  *  * To override this, set hw.acpi.os_name to the appropriate string.  */
+comment|/*  * Some systems' ASL may have problems because they look for names   * of Microsoft operating systems.  To override this, set hw.acpi.os_name  * to the appropriate string.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPICA_PEDANTIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_OS_NAME
-value|"Microsoft Windows NT"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -47,11 +29,6 @@ directive|define
 name|ACPI_OS_NAME
 value|"FreeBSD"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* FreeBSD uses GCC */
