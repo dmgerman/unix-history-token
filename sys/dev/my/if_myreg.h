@@ -2215,6 +2215,36 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Add by Surfer 2001/12/2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MY_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*mtx_lock(&(_sc)->my_mtx)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MY_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*mtx_unlock(&(_sc)->my_mtx)*/
+end_comment
+
+begin_comment
 comment|/*  * register space access macros  */
 end_comment
 
