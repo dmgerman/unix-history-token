@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.14 (Berkeley) %G%"
+literal|"@(#)find.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6222,9 +6222,6 @@ specifier|register
 name|int
 name|cp
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_PW_STAYOPEN
 specifier|extern
 name|int
 name|_pw_stayopen
@@ -6233,10 +6230,9 @@ name|_pw_stayopen
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
+operator|(
 operator|(
 operator|(
 name|NUID
@@ -6248,6 +6244,7 @@ name|NUID
 operator|)
 operator|-
 literal|1
+operator|)
 operator|)
 operator|!=
 literal|0
