@@ -573,6 +573,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EMUDEBUG
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|emu_vdump
+parameter_list|(
+name|struct
+name|sc_info
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|emu_voice
+modifier|*
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* talk to the card */
 end_comment

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_8010_H
+name|EMU10K1_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_8010_H
+name|EMU10K1_H
 end_define
 
 begin_comment
@@ -4677,13 +4677,41 @@ begin_comment
 comment|/* Instruction operand A			*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ENABLE
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISABLE
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENV_ON
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENV_OFF
+value|0x00
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _8010_H */
+comment|/* EMU10K1_H */
 end_comment
 
 end_unit
