@@ -864,23 +864,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|(
-name|SOLARIS
-operator|||
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MUTEX
+end_ifdef
 
 begin_decl_stmt
 specifier|extern

@@ -1268,6 +1268,17 @@ name|tcp_mtudisc
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MUTEX
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|kmutex_t
