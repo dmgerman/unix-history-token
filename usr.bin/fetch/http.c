@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.23 1999/01/15 16:56:22 wollman Exp $  */
+comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.26 1999/02/23 18:51:13 wollman Exp $  */
 end_comment
 
 begin_include
@@ -899,6 +899,8 @@ name|slash
 expr_stmt|;
 if|if
 condition|(
+name|q
+operator|==
 name|colon
 operator|&&
 name|colon
@@ -3540,7 +3542,6 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-comment|/* In the future, we might handle redirection and other responses. */
 switch|switch
 condition|(
 name|status
@@ -3578,10 +3579,11 @@ case|:
 comment|/* Resource has moved permanently */
 if|if
 condition|(
-operator|!
 name|fs
 operator|->
 name|fs_auto_retry
+operator|<
+literal|1
 condition|)
 name|errstr
 operator|=
@@ -3600,7 +3602,24 @@ case|case
 literal|302
 case|:
 comment|/* Resource has moved temporarily */
-comment|/* 		 * We don't test fs->fs_auto_retry here so that this 		 * sort of redirection is transparent to the user. 		 */
+comment|/* 		 * We formerly didn't test fs->fs_auto_retry here, 		 * so that this sort of redirection would be transparent 		 * to the user.  Unfortunately, there are a lot of idiots 		 * out there running Web sites, and some of them have 		 * decided to implement the following stupidity: rather 		 * than returning the correct `404 Not Found' error 		 * when something is not found, they instead return 		 * a 302 redirect, giving the erroneous impression that 		 * the requested resource actually exists.  This 		 * breaks any client which expects a non-existent resource 		 * to elicit a 40x response.  Grrr. 		 */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_auto_retry
+operator|<
+literal|0
+condition|)
+comment|/* -A flag */
+name|errstr
+operator|=
+name|safe_strdup
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+else|else
 name|redirection
 operator|=
 literal|302
