@@ -1267,6 +1267,7 @@ name|vp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * XXX This code should make use of vn_open(), rather than doing 	 * all this stuff itself. 	 */
 name|NDINIT
 argument_list|(
 operator|&
