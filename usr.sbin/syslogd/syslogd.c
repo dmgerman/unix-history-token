@@ -2631,7 +2631,7 @@ name|logmsg
 argument_list|(
 name|LOG_SYSLOG
 operator||
-name|LOG_AUTH
+name|LOG_NOTICE
 argument_list|,
 name|line
 argument_list|,
