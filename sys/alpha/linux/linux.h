@@ -741,6 +741,17 @@ parameter_list|)
 value|SIGADDSET(set, sig)
 end_define
 
+begin_comment
+comment|/* sigaltstack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_MINSIGSTKSZ
+value|2048
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
