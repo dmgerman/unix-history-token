@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisrc.c	7.6 (Berkeley) %G%"
+literal|"@(#)tisrc.c	7.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1534,13 +1534,13 @@ end_function
 begin_macro
 name|checkback
 argument_list|(
-argument|s
+argument|fd
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|s
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -1609,14 +1609,12 @@ name|n
 operator|=
 name|recvmsg
 argument_list|(
-name|s
+name|fd
 argument_list|,
 operator|&
 name|msg
 argument_list|,
-name|s
-operator|->
-name|s_flags
+literal|0
 argument_list|)
 expr_stmt|;
 name|cp
