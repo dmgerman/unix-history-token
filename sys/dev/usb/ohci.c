@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.118 2001/12/27 18:48:28 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.119 2001/12/31 12:20:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -7242,6 +7242,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_softwake
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_softwake
+operator|=
+literal|0
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_softwake
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_bus
@@ -11254,22 +11276,46 @@ name|device
 operator|->
 name|bus
 argument_list|,
-literal|1
+literal|20
 argument_list|)
 expr_stmt|;
 comment|/* Hardware finishes in 1ms */
-comment|/* XXX should have some communication with softintr() to know 	   when it's done */
-name|usb_delay_ms
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
+name|sc
+operator|->
+name|sc_softwake
+operator|=
+literal|1
+expr_stmt|;
+name|usb_schedsoftintr
 argument_list|(
-name|opipe
+operator|&
+name|sc
 operator|->
-name|pipe
-operator|.
-name|device
+name|sc_bus
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|sc
 operator|->
-name|bus
+name|sc_softwake
 argument_list|,
-literal|250
+name|PZERO
+argument_list|,
+literal|"ohciab"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Step 3: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * beyond the xfer we're trying to abort.  So as we're scanning 	 * the TDs of this xfer we check if the hardware points to 	 * any of them. 	 */

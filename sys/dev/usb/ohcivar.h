@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.29 2001/11/21 02:41:18 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.30 2001/12/31 12:20:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -301,6 +301,9 @@ name|u_int8_t
 name|sc_conf
 decl_stmt|;
 comment|/* device configuration */
+name|char
+name|sc_softwake
+decl_stmt|;
 name|ohci_soft_ed_t
 modifier|*
 name|sc_freeeds
