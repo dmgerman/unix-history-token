@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hy.c	4.2	83/02/21	*/
+comment|/*	if_hy.c	4.3	83/02/21	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Network Systems Copropration Hyperchanel interface  *  * MUST BE UPDATED FOR 4.1C  */
+comment|/*  * Network Systems Copropration Hyperchanel interface  *  * UNTESTED WITH 4.1C  */
 end_comment
 
 begin_include
@@ -66,25 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vmmac.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/user.h"
 end_include
 
 begin_include
@@ -96,7 +78,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/netisr.h"
 end_include
 
 begin_include
@@ -132,19 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_hy.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vaxif/if_hyreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vaxif/if_uba.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
@@ -163,6 +157,24 @@ begin_include
 include|#
 directive|include
 file|"../vaxuba/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxif/if_hy.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxif/if_hyreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxif/if_uba.h"
 end_include
 
 begin_define
@@ -274,11 +286,11 @@ comment|/* UNIBUS resources */
 name|short
 name|hy_flags
 decl_stmt|;
-comment|/* flags                        */
+comment|/* flags */
 name|short
 name|hy_state
 decl_stmt|;
-comment|/* driver state                 */
+comment|/* driver state */
 name|int
 name|hy_ilen
 decl_stmt|;
@@ -346,13 +358,8 @@ name|HYE_MAX
 value|0x18
 end_define
 
-begin_comment
-comment|/* max error code is 0x17, 0x18 bin gets out of range */
-end_comment
-
 begin_decl_stmt
-name|unsigned
-name|long
+name|u_long
 name|hy_elog
 index|[
 operator|(
@@ -429,7 +436,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * requests for service (in order by descending priority)  */
+comment|/*  * Requests for service (in order by descending priority).  */
 end_comment
 
 begin_define
@@ -498,10 +505,6 @@ begin_comment
 comment|/* mark this interface up */
 end_comment
 
-begin_comment
-comment|/*  *  more flags  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -514,7 +517,7 @@ comment|/* associated data to transmit */
 end_comment
 
 begin_comment
-comment|/*   * driver states  */
+comment|/*   * Driver states.  */
 end_comment
 
 begin_define
@@ -872,10 +875,6 @@ block|}
 end_block
 
 begin_comment
-comment|/* hyprobe */
-end_comment
-
-begin_comment
 comment|/*  * Interface exists: make available by filling in network interface  * record.  System will initialize the interface when it is ready  * to accept packets.  */
 end_comment
 
@@ -970,7 +969,7 @@ name|hyoutput
 expr_stmt|;
 name|ifp
 operator|->
-name|if_ubareset
+name|if_reset
 operator|=
 name|hyreset
 expr_stmt|;
@@ -996,7 +995,7 @@ name|UBA_CANTWAIT
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SUPBDP
+name|notdef
 name|is
 operator|->
 name|hy_ifuba
@@ -1014,10 +1013,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* hyattach */
-end_comment
 
 begin_comment
 comment|/*  * Reset of interface after UNIBUS reset.  * If interface is on specified uba, reset its state.  */
@@ -1096,10 +1091,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* hyreset */
-end_comment
 
 begin_comment
 comment|/*  * Initialization of interface; clear recorded pending  * operations, and reinitialize UNIBUS usage.  */
@@ -1210,7 +1201,7 @@ name|IFF_UP
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * issue wait for message and start the state machine 	 */
+comment|/* 	 * Issue wait for message and start the state machine 	 */
 name|s
 operator|=
 name|splimp
@@ -1252,11 +1243,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* hyinit */
-end_comment
-
-begin_comment
-comment|/*  * issue a command to the adapter  */
+comment|/*  * Issue a command to the adapter  */
 end_comment
 
 begin_macro
@@ -1283,17 +1270,9 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|ubaddr
 decl_stmt|;
 end_decl_stmt
@@ -1459,7 +1438,6 @@ operator|>>
 literal|1
 operator|)
 expr_stmt|;
-comment|/* was byte count */
 name|addr
 operator|->
 name|hyd_dbuf
@@ -1545,12 +1523,10 @@ name|HYLOG
 block|{
 struct|struct
 block|{
-name|unsigned
-name|char
+name|u_char
 name|hcmd
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|hstate
 decl_stmt|;
 name|short
@@ -1608,10 +1584,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* hystart */
-end_comment
-
 begin_decl_stmt
 name|int
 name|hyint_active
@@ -1625,7 +1597,7 @@ comment|/* set during hy interrupt */
 end_comment
 
 begin_comment
-comment|/*  * hyperchannel interface interrupt.  *  * An interrupt can occur for many reasons.  Examine the status of  * the hyperchannel status bits to determine what to do next.  *  * If input error just drop packet.  * Otherwise purge input buffered data path and examine   * packet to determine type.  Othewise decapsulate  * packet based on type and pass to type specific higher-level  * input routine.  */
+comment|/*  * Hyperchannel interface interrupt.  *  * An interrupt can occur for many reasons.  Examine the status of  * the hyperchannel status bits to determine what to do next.  *  * If input error just drop packet.  * Otherwise purge input buffered data path and examine   * packet to determine type.  Othewise decapsulate  * packet based on type and pass to type specific higher-level  * input routine.  */
 end_comment
 
 begin_macro
@@ -1685,13 +1657,11 @@ if|if
 condition|(
 name|hyint_active
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"RECURSIVE HYPERCHANNEL INTERRUPT"
 argument_list|)
 expr_stmt|;
-block|}
 name|hyint_active
 operator|++
 expr_stmt|;
@@ -1729,12 +1699,10 @@ label|:
 block|{
 struct|struct
 block|{
-name|unsigned
-name|char
+name|u_char
 name|hstate
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|hflags
 decl_stmt|;
 name|short
@@ -1800,7 +1768,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ERROR
+name|HYS_ERROR
 argument_list|(
 name|addr
 argument_list|)
@@ -1818,7 +1786,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * error bit set, some sort of error in the interface 		 * 		 * the adapter sets attn on command completion so that's not 		 * a real error even though the interface considers it one 		 */
+comment|/* 		 * Error bit set, some sort of error in the interface. 		 * 		 * The adapter sets attn on command completion so that's not 		 * a real error even though the interface considers it one. 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1855,15 +1823,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|addr
 operator|->
 name|hyd_csr
 operator|&
 name|S_NEX
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|printf
@@ -1906,15 +1870,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|addr
 operator|->
 name|hyd_csr
 operator|&
 name|S_POWEROFF
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|printf
@@ -1937,15 +1897,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|addr
 operator|->
 name|hyd_csr
 operator|&
 name|S_POWEROFF
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|if_down
@@ -1992,13 +1948,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|NORMAL
+name|HYS_NORMAL
 argument_list|(
 name|addr
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * normal interrupt, bump state machine unless in state 		 * waiting and no data present (assumed to be word count 		 * zero interrupt or other hardware botch) 		 */
+comment|/* 		 * Normal interrupt, bump state machine unless in state 		 * waiting and no data present (assumed to be word count 		 * zero interrupt or other hardware botch). 		 */
 if|if
 condition|(
 name|is
@@ -2007,7 +1963,7 @@ name|hy_state
 operator|!=
 name|WAITING
 operator|||
-name|RECV_DATA
+name|HYS_RECVDATA
 argument_list|(
 name|addr
 argument_list|)
@@ -2021,13 +1977,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ABNORMAL
+name|HYS_ABNORMAL
 argument_list|(
 name|addr
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * abnormal termination. 		 * bump error counts, retry the last function 		 * 'MAXRETRY' times before kicking the bucket. 		 * 		 * don't reissue the cmd if in certain states, abnormal 		 * on a reissued cmd or max retry exceeded 		 */
+comment|/* 		 * Abnormal termination. 		 * bump error counts, retry the last function 		 * 'MAXRETRY' times before kicking the bucket. 		 * 		 * Don't reissue the cmd if in certain states, abnormal 		 * on a reissued cmd or max retry exceeded. 		 */
 ifdef|#
 directive|ifdef
 name|HYLOG
@@ -2089,7 +2045,7 @@ argument_list|)
 expr_stmt|;
 name|printD
 argument_list|(
-literal|"\tflags 0x%x ilen %d olen %d lastwcr %d retry %d\n\tsaved: state %d count %d cmd 0x%x ptr 0x%x\n"
+literal|"\tflags 0x%x ilen %d olen %d lastwcr %d retry %d\n"
 argument_list|,
 name|is
 operator|->
@@ -2110,6 +2066,11 @@ argument_list|,
 name|is
 operator|->
 name|hy_retry
+argument_list|)
+expr_stmt|;
+name|printD
+argument_list|(
+literal|"\tsaved: state %d count %d cmd 0x%x ptr 0x%x\n"
 argument_list|,
 name|is
 operator|->
@@ -2157,7 +2118,6 @@ name|hy_state
 operator|==
 name|XMITDATASENT
 condition|)
-block|{
 name|is
 operator|->
 name|hy_if
@@ -2165,8 +2125,6 @@ operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|is
@@ -2181,7 +2139,6 @@ name|hy_state
 operator|==
 name|RECVDATASENT
 condition|)
-block|{
 name|is
 operator|->
 name|hy_if
@@ -2189,7 +2146,6 @@ operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|is
@@ -2226,13 +2182,11 @@ name|hy_retry
 operator|>
 name|MAXRETRY
 condition|)
-block|{
 name|hycancel
 argument_list|(
 name|ui
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 ifdef|#
@@ -2340,10 +2294,6 @@ literal|0
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* hyint */
-end_comment
 
 begin_comment
 comment|/*  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  */
@@ -2576,7 +2526,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * debugging loopback support: 		 * upper byte of 24 bit host number interpreted as follows 		 *	0x00 --> no loopback 		 *	0x01 --> hardware loop through remote adapter 		 *	other --> software loop through remote ip layer 		 */
+comment|/* 		 * Debugging loopback support: 		 * upper byte of 24 bit host number interpreted as follows 		 *	0x00 --> no loopback 		 *	0x01 --> hardware loop through remote adapter 		 *	other --> software loop through remote ip layer 		 */
 if|if
 condition|(
 name|hostaddr
@@ -2705,7 +2655,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-comment|/* 	 * add the software and hardware hyperchannel headers. 	 * If there's not enough space in the first mbuf, allocate another. 	 * If that should fail, drop this sucker. 	 * No extra space for headers is allocated. 	 */
+comment|/* 	 * Add the software and hardware hyperchannel headers. 	 * If there's not enough space in the first mbuf, allocate another. 	 * If that should fail, drop this sucker. 	 * No extra space for headers is allocated. 	 */
 if|if
 condition|(
 name|m
@@ -2732,6 +2682,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
@@ -2864,6 +2816,8 @@ condition|(
 name|r
 operator|->
 name|hyr_lasttime
+operator|.
+name|tv_sec
 operator|!=
 literal|0
 condition|)
@@ -3169,7 +3123,7 @@ directive|ifdef
 name|DEBUG
 name|printD
 argument_list|(
-literal|"hy%d: output mplen=%x ctl=%x access=%x to=%x (adapter %x) from=%x param=%x type=%x off=%x\n"
+literal|"hy%d: output mplen=%x ctl=%x access=%x to=%x"
 argument_list|,
 name|ifp
 operator|->
@@ -3196,6 +3150,11 @@ operator|->
 name|hym_hdr
 operator|.
 name|hyh_to
+argument_list|)
+expr_stmt|;
+name|printD
+argument_list|(
+literal|" (adapter %x) from=%x param=%x type=%x off=%x\n"
 argument_list|,
 name|hym
 operator|->
@@ -3316,7 +3275,7 @@ name|error
 operator|=
 name|ENETUNREACH
 expr_stmt|;
-comment|/* KLUDGE - should produce better error number */
+comment|/* XXX */
 name|drop
 label|:
 name|m_freem
@@ -3331,10 +3290,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* hyoutput */
-end_comment
 
 begin_expr_stmt
 name|hyact
@@ -3550,7 +3505,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|RECV_DATA
+name|HYS_RECVDATA
 argument_list|(
 name|addr
 argument_list|)
@@ -3614,7 +3569,7 @@ directive|ifdef
 name|DEBUG
 name|printD
 argument_list|(
-literal|"hy%d: reissue cmd=0x%x count=%d ubaddr=0x%x retry=%d\n"
+literal|"hy%d: reissue cmd=0x%x count=%d"
 argument_list|,
 name|ui
 operator|->
@@ -3627,6 +3582,11 @@ argument_list|,
 name|is
 operator|->
 name|hy_savedcount
+argument_list|)
+expr_stmt|;
+name|printD
+argument_list|(
+literal|" ubaddr=0x%x retry=%d\n"
 argument_list|,
 name|is
 operator|->
@@ -3681,7 +3641,7 @@ if|if
 condition|(
 name|m
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 specifier|register
@@ -3749,9 +3709,8 @@ name|hym
 operator|->
 name|hym_mplen
 expr_stmt|;
-name|cmd
-operator|=
-operator|(
+if|if
+condition|(
 name|hym
 operator|->
 name|hym_hdr
@@ -3763,10 +3722,14 @@ operator|->
 name|hym_hdr
 operator|.
 name|hyh_from_adapter
-operator|)
-condition|?
+condition|)
+name|cmd
+operator|=
 name|HYF_XMITLOCMSG
-else|:
+expr_stmt|;
+else|else
+name|cmd
+operator|=
 name|HYF_XMITMSG
 expr_stmt|;
 ifdef|#
@@ -3802,7 +3765,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 				 * strip off the software part of 				 * the hyperchannel header 				 */
+comment|/* 				 * Strip off the software part of 				 * the hyperchannel header 				 */
 name|m
 operator|->
 name|m_off
@@ -3837,9 +3800,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SUPBDP
 if|if
 condition|(
 name|is
@@ -3867,8 +3827,6 @@ operator|.
 name|ifrw_bdp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3979,7 +3937,7 @@ name|hy_retry
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 * port number is taken from status data 				 */
+comment|/* 				 * Port number is taken from status data 				 */
 name|hystart
 argument_list|(
 name|ui
@@ -4044,9 +4002,7 @@ operator|->
 name|hy_flags
 operator|&=
 operator|~
-operator|(
 name|RQ_MARKUP
-operator|)
 expr_stmt|;
 name|is
 operator|->
@@ -4054,7 +4010,7 @@ name|hy_retry
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 * Fill in the internet address from the status buffer 				 */
+comment|/* 				 * Fill in the Internet address 				 * from the status buffer 				 */
 name|printf
 argument_list|(
 literal|"hy%d: unit number 0x%x port %d type %x microcode level 0x%x\n"
@@ -4217,8 +4173,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 break|break;
+block|}
 case|case
 name|STATSENT
 case|:
@@ -4745,9 +4701,6 @@ specifier|register
 name|unsigned
 name|len
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SUPBDP
 if|if
 condition|(
 name|is
@@ -4758,7 +4711,6 @@ name|ifu_flags
 operator|&
 name|UBA_NEEDBDP
 condition|)
-comment|/* purge the BDP */
 name|UBAPURGE
 argument_list|(
 name|is
@@ -4776,8 +4728,6 @@ operator|.
 name|ifrw_bdp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|hyh
 operator|=
 operator|(
@@ -4984,9 +4934,6 @@ specifier|register
 name|unsigned
 name|len
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SUPBDP
 if|if
 condition|(
 name|is
@@ -4997,7 +4944,6 @@ name|ifu_flags
 operator|&
 name|UBA_NEEDBDP
 condition|)
-comment|/* purge the BDP */
 name|UBAPURGE
 argument_list|(
 name|is
@@ -5015,8 +4961,6 @@ operator|.
 name|ifrw_bdp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|hyh
 operator|=
 operator|(
@@ -5124,7 +5068,6 @@ specifier|register
 name|unsigned
 name|len
 decl_stmt|;
-comment|/* number of bytes sent in message proper */
 name|is
 operator|->
 name|hy_flags
@@ -5243,7 +5186,7 @@ case|:
 comment|/* wait for message complete or output requested */
 if|if
 condition|(
-name|RECV_DATA
+name|HYS_RECVDATA
 argument_list|(
 name|addr
 argument_list|)
@@ -5323,7 +5266,6 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-comment|/* end of switch */
 if|if
 condition|(
 name|is
@@ -5365,10 +5307,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* hyact */
-end_comment
 
 begin_comment
 comment|/*  * Called from device interrupt when recieving data.  * Examine packet to determine type.  Decapsulate packet  * based on type and pass to type specific higher-level  * input routine.  */
@@ -5561,7 +5499,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 switch|switch
@@ -5577,7 +5515,7 @@ name|INET
 case|case
 name|HYLINK_IP
 case|:
-comment|/* 		 * strip the variable portion of the hyperchannel header 		 * (fixed portion stripped in if_rubaget) 		 */
+comment|/* 		 * Strip the variable portion of the hyperchannel header 		 * (fixed portion stripped in if_rubaget). 		 */
 name|m
 operator|->
 name|m_len
@@ -5594,7 +5532,6 @@ name|hyh
 operator|->
 name|hyh_off
 expr_stmt|;
-comment|/* 		 * sent the packet up the chain to IP 		 */
 name|schednetisr
 argument_list|(
 name|NETISR_IP
@@ -5647,11 +5584,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* hyrecvdata */
-end_comment
-
-begin_comment
-comment|/*  * transmit done, release resources, bump counters  */
+comment|/*  * Transmit done, release resources, bump counters.  */
 end_comment
 
 begin_macro
@@ -5701,7 +5634,6 @@ operator|.
 name|ifu_xtofree
 condition|)
 block|{
-comment|/* free left over pages */
 name|m_freem
 argument_list|(
 name|is
@@ -5722,10 +5654,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/* hyxmitdata */
-end_comment
 
 begin_expr_stmt
 name|hycancel
@@ -5765,7 +5693,6 @@ operator|.
 name|ifu_xtofree
 condition|)
 block|{
-comment|/* free left over pages */
 name|m_freem
 argument_list|(
 name|is
@@ -5832,7 +5759,7 @@ argument_list|)
 expr_stmt|;
 name|printD
 argument_list|(
-literal|"\tflags 0x%x ilen %d olen %d lastwcr %d retry %d\n\tsaved: state %d count %d ptr 0x%x cmd 0x%x\n"
+literal|"\tflags 0x%x ilen %d olen %d lastwcr %d retry %d\n"
 argument_list|,
 name|is
 operator|->
@@ -5853,6 +5780,11 @@ argument_list|,
 name|is
 operator|->
 name|hy_retry
+argument_list|)
+expr_stmt|;
+name|printD
+argument_list|(
+literal|"\tsaved: state %d count %d ptr 0x%x cmd 0x%x\n"
 argument_list|,
 name|is
 operator|->
@@ -5896,10 +5828,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* hycancel */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -6490,7 +6418,7 @@ argument|dev
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
 argument_list|,
 argument|flag
 argument_list|)
@@ -6510,7 +6438,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|addr
+name|data
 decl_stmt|;
 end_decl_stmt
 
@@ -6522,24 +6450,15 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|hyroute
-modifier|*
-name|r
-init|=
-operator|&
-name|hy_route
-index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-index|]
-decl_stmt|;
-specifier|register
 name|int
 name|s
+init|=
+name|splimp
+argument_list|()
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -6551,19 +6470,14 @@ operator|>=
 name|NHY
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -6574,86 +6488,94 @@ name|HYSETROUTE
 case|:
 if|if
 condition|(
+operator|!
 name|suser
 argument_list|()
 condition|)
 block|{
-if|if
-condition|(
-name|copyin
-argument_list|(
-name|addr
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|r
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|r
-argument_list|)
-argument_list|)
-condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
-name|EFAULT
+name|EPERM
 expr_stmt|;
-name|r
-operator|->
+goto|goto
+name|bad
+goto|;
+block|}
+name|hy_route
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|=
+operator|*
+operator|(
+expr|struct
+name|hyroute
+operator|*
+operator|)
+name|data
+expr_stmt|;
+name|hy_route
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|.
 name|hyr_lasttime
 operator|=
 name|time
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|HYGETROUTE
 case|:
-if|if
-condition|(
-name|copyout
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|r
-argument_list|,
-name|addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
 operator|*
-name|r
-argument_list|)
-argument_list|)
-condition|)
-name|u
-operator|.
-name|u_error
+operator|(
+expr|struct
+name|hyroute
+operator|*
+operator|)
+name|data
 operator|=
-name|EFAULT
+name|hy_route
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
 expr_stmt|;
 break|break;
 default|default:
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ENXIO
 expr_stmt|;
 break|break;
 block|}
+name|bad
+label|:
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hy.h	4.1	83/02/20	*/
+comment|/*	if_hy.h	4.2	83/02/21	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,8 @@ begin_struct
 struct|struct
 name|hyroute
 block|{
-name|time_t
+name|struct
+name|timeval
 name|hyr_lasttime
 decl_stmt|;
 comment|/* last update time */
@@ -186,14 +187,14 @@ begin_define
 define|#
 directive|define
 name|HYSETROUTE
-value|('H'<<8) | 0x80
+value|_IOW(H, 0x80, sizeof (struct hyroute))
 end_define
 
 begin_define
 define|#
 directive|define
 name|HYGETROUTE
-value|('H'<<8) | 0x81
+value|_IOR(H, 0x81, sizeof (struct hyroute))
 end_define
 
 end_unit

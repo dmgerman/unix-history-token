@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.13	83/02/20	*/
+comment|/*	if_vv.c	4.14	83/02/21	*/
 end_comment
 
 begin_include
@@ -10,13 +10,13 @@ file|"vv.h"
 end_include
 
 begin_comment
-comment|/*  * Proteon 10 Meg Ring Driver.  * This device is called "vv" because its "real name",  * V2LNI won't work if shortened to the obvious "v2".  * Hence the subterfuge.  *  * MUST BE UPDATE FOR 4.1C  */
+comment|/*  * Proteon 10 Meg Ring Driver.  * This device is called "vv" because its "real name",  * V2LNI won't work if shortened to the obvious "v2".  * Hence the subterfuge.  *  * UNTESTED WITH 4.1C  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/pte.h"
+file|"../machine/pte.h"
 end_include
 
 begin_include
@@ -58,18 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vmmac.h"
 end_include
 
@@ -82,7 +70,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/netisr.h"
 end_include
 
 begin_include
@@ -118,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_vv.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_uba.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
@@ -137,6 +143,18 @@ begin_include
 include|#
 directive|include
 file|"../vaxuba/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxif/if_vv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxif/if_uba.h"
 end_include
 
 begin_comment
@@ -264,16 +282,16 @@ begin_comment
 comment|/* error flywheel is running */
 end_comment
 
+begin_comment
+comment|/*  * Interval in HZ - 50 msec.  * N.B. all times below are in units of flywheel ticks  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VV_FLYWHEEL
 value|3
 end_define
-
-begin_comment
-comment|/* interval in HZ - 50 msec. 					   N.B. all times below are  					   in units of flywheel ticks */
-end_comment
 
 begin_define
 define|#
@@ -494,7 +512,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * states of vs_iactive  */
+comment|/*  * States of vs_iactive.  */
 end_comment
 
 begin_define
@@ -531,7 +549,7 @@ comment|/* PAUSE and open host relay */
 end_comment
 
 begin_comment
-comment|/*  * recovery major states  */
+comment|/*  * Recovery major states.  */
 end_comment
 
 begin_define
@@ -564,7 +582,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* drastic measures - open host relay  				   for increasing intervals */
+comment|/* drastic measures - open host relay for increasing intervals */
 end_comment
 
 begin_macro
@@ -899,7 +917,7 @@ name|vs
 operator|->
 name|vs_if
 operator|.
-name|if_ubareset
+name|if_reset
 operator|=
 name|vvreset
 expr_stmt|;
@@ -1141,7 +1159,7 @@ argument_list|,
 name|VV_FLYWHEEL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * discover our host address and post it 	 */
+comment|/* 	 * Discover our host address and post it 	 */
 name|vs
 operator|->
 name|vs_if
@@ -1463,6 +1481,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1784,22 +1804,15 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|attempts
 operator|++
-operator|<
+operator|>=
 literal|10
 condition|)
-block|{
-goto|goto
-name|retry
-goto|;
-block|}
-else|else
 block|{
 name|printf
 argument_list|(
@@ -1834,7 +1847,9 @@ name|IFF_UP
 expr_stmt|;
 return|return;
 block|}
-block|}
+goto|goto
+name|retry
+goto|;
 block|}
 if|if
 condition|(
@@ -1928,13 +1943,15 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * check message type before we believe the source host address 	 */
+comment|/* 	 * Check message type before we believe the source host address 	 */
 name|v
 operator|=
 operator|(
@@ -1957,9 +1974,12 @@ condition|(
 name|v
 operator|->
 name|vh_type
-operator|==
+operator|!=
 name|RING_WHOAMI
 condition|)
+goto|goto
+name|retry
+goto|;
 return|return
 operator|(
 name|v
@@ -1967,10 +1987,6 @@ operator|->
 name|vh_shost
 operator|)
 return|;
-else|else
-goto|goto
-name|retry
-goto|;
 block|}
 end_block
 
@@ -2101,8 +2117,6 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-block|{
 comment|/* suspend reads for a while */
 name|vvtrprintf
 argument_list|(
@@ -2143,7 +2157,6 @@ operator|=
 literal|0
 expr_stmt|;
 continue|continue;
-block|}
 comment|/* 		 * MODE1: excessive error rate observed 		 * Scheme: try simply suspending reads for a 		 * short while a small number of times 		 */
 case|case
 name|MODE1
@@ -2304,8 +2317,6 @@ expr_stmt|;
 comment|/* yeah!! */
 continue|continue;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|vs
@@ -2343,8 +2354,6 @@ expr_stmt|;
 comment|/* recheck */
 continue|continue;
 block|}
-else|else
-block|{
 name|vs
 operator|->
 name|vs_major
@@ -2381,8 +2390,7 @@ name|vs_delayclock
 operator|=
 name|VV_MODE2DELAY
 expr_stmt|;
-block|}
-block|}
+comment|/* fall thru ... */
 block|}
 comment|/* 		 * MODE2: simply ignoring traffic didn't relieve condition 		 * Scheme: open host relay for intervals linearly 		 * increasing up to some maximum of a several minutes. 		 * This allows broken networks to return to operation 		 * without rebooting. 		 */
 case|case
@@ -2544,8 +2552,6 @@ expr_stmt|;
 comment|/* yeah!! */
 continue|continue;
 block|}
-else|else
-block|{
 name|vvtrprintf
 argument_list|(
 literal|"vv%d M2m1 ++ delay\n"
@@ -2600,7 +2606,6 @@ operator|->
 name|vs_delayrange
 expr_stmt|;
 continue|continue;
-block|}
 block|}
 default|default:
 name|printf
@@ -2716,7 +2721,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|vs
@@ -3497,12 +3502,10 @@ name|resid
 expr_stmt|;
 block|}
 else|else
-block|{
 name|off
 operator|=
 literal|0
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -3530,7 +3533,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|dropit
@@ -3631,7 +3634,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|IF_ENQUEUE
 argument_list|(
 name|inq
@@ -3639,7 +3641,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|setup
 label|:
 comment|/* 	 * Check the error rate and start recovery if needed 	 * this has to go here since the timer flywheel runs at 	 * a lower ipl and never gets a chance to change the mode 	 */
@@ -3824,7 +3825,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * drop packet on floor -- count them!! 	 */
+comment|/* 	 * Drop packet on floor -- count them!! 	 */
 name|dropit
 label|:
 name|vs
@@ -3943,7 +3944,6 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-comment|/* check address range */
 if|if
 condition|(
 operator|(
@@ -4194,13 +4194,15 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error

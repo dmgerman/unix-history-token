@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hyreg.h	4.1	83/02/20	*/
+comment|/*	if_hyreg.h	4.2	83/02/21	*/
 end_comment
 
 begin_comment
@@ -17,21 +17,6 @@ end_define
 begin_comment
 comment|/* PI13 vs. DR11B device depandant code */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEBUG
-end_ifndef
-
-begin_comment
-comment|/* #define	DEBUG		1	/* enable debugging code */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -138,21 +123,13 @@ begin_struct
 struct|struct
 name|hym_data
 block|{
-comment|/* data on the head of software versions of packets */
 name|short
 name|hymd_mplen
 decl_stmt|;
-comment|/* message proper length, if associated data, else 0 */
+comment|/* message proper length, if associated data */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|hym_mplen
-value|hym_d.hymd_mplen
-end_define
 
 begin_struct
 struct|struct
@@ -162,6 +139,10 @@ name|struct
 name|hym_data
 name|hym_d
 decl_stmt|;
+define|#
+directive|define
+name|hym_mplen
+value|hym_d.hymd_mplen
 name|struct
 name|hy_hdr
 name|hym_hdr
@@ -315,7 +296,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * get port number from status record  */
+comment|/*  * Get port number from status record  */
 end_comment
 
 begin_define
@@ -351,7 +332,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * device registers  */
+comment|/*  * Device registers  */
 end_comment
 
 begin_struct
@@ -362,18 +343,15 @@ name|short
 name|hyd_wcr
 decl_stmt|;
 comment|/* word count (negated) */
-name|unsigned
-name|short
+name|u_short
 name|hyd_bar
 decl_stmt|;
 comment|/* bus address bits 15-0 */
-name|unsigned
-name|short
+name|u_short
 name|hyd_csr
 decl_stmt|;
 comment|/* control and status */
-name|unsigned
-name|short
+name|u_short
 name|hyd_dbuf
 decl_stmt|;
 comment|/* data buffer */
@@ -382,7 +360,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * hyd_csr bit layout  */
+comment|/*  * CSR bit layout  */
 end_comment
 
 begin_define
@@ -633,10 +611,6 @@ name|XBASHIFT
 value|12
 end_define
 
-begin_comment
-comment|/* # bits to shift down to put unibus address bits 16/17 in right place in hyd_csr */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -651,7 +625,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RECV_DATA
+name|HYS_RECVDATA
 parameter_list|(
 name|x
 parameter_list|)
@@ -659,13 +633,13 @@ value|(((x)->hyd_csr& S_A) != 0)
 end_define
 
 begin_comment
-comment|/* recieve data in adapter */
+comment|/* get adapter data */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NORMAL
+name|HYS_NORMAL
 parameter_list|(
 name|x
 parameter_list|)
@@ -673,13 +647,13 @@ value|(((x)->hyd_csr& S_B) != 0)
 end_define
 
 begin_comment
-comment|/* normal termination      */
+comment|/* done normally */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ABNORMAL
+name|HYS_ABNORMAL
 parameter_list|(
 name|x
 parameter_list|)
@@ -687,13 +661,13 @@ value|(((x)->hyd_csr& S_C) != 0)
 end_define
 
 begin_comment
-comment|/* abnormal termination    */
+comment|/* done abnormally */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ERROR
+name|HYS_ERROR
 parameter_list|(
 name|x
 parameter_list|)
@@ -701,22 +675,18 @@ value|(((x)->hyd_csr& S_ERROR) != 0)
 end_define
 
 begin_comment
-comment|/* error condition   */
+comment|/* error condition */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DONE
+name|HYS_DONE
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)->hyd_csr& (S_ERROR|S_B|S_C)) != 0)
 end_define
-
-begin_comment
-comment|/* operation done */
-end_comment
 
 begin_comment
 comment|/*  * Function Codes for the Hyperchannel Adapter  * The codes are offset so they can be "or"ed into  * the reg data buffer  */
@@ -1045,30 +1015,25 @@ name|hy_log
 modifier|*
 name|hyl_self
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|hyl_enable
 decl_stmt|;
 comment|/* logging enabled? */
-name|unsigned
-name|char
+name|u_char
 name|hyl_onerr
 decl_stmt|;
 comment|/* state to enter on error */
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|hyl_eptr
 decl_stmt|;
 comment|/*&hy_log.hyl_buf[HYL_SIZE] */
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|hyl_ptr
 decl_stmt|;
 comment|/* pointer into hyl_buf */
-name|unsigned
-name|char
+name|u_char
 name|hyl_buf
 index|[
 name|HYL_SIZE
@@ -1078,24 +1043,6 @@ comment|/* log buffer space */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|hy_log
-name|hy_log
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1246,6 +1193,24 @@ end_define
 begin_comment
 comment|/* one buffer fill of status being captured */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|hy_log
+name|hy_log
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
