@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -114,6 +114,10 @@ name|u_int
 name|ni_pathlen
 decl_stmt|;
 comment|/* remaining chars in path */
+name|u_long
+name|ni_hash
+decl_stmt|;
+comment|/* hash value of current component */
 name|short
 name|ni_namelen
 decl_stmt|;
@@ -143,12 +147,12 @@ modifier|*
 name|ni_dvp
 decl_stmt|;
 comment|/* vnode of intermediate directory */
-comment|/* side effects: */
 name|struct
 name|direct
 name|ni_dent
 decl_stmt|;
-comment|/* current directory entry */
+comment|/* final component name */
+comment|/* side effects: */
 comment|/* BEGIN UFS SPECIFIC */
 name|off_t
 name|ni_endoff
@@ -168,10 +172,6 @@ name|uio
 name|nd_uio
 decl_stmt|;
 comment|/* directory I/O parameters */
-name|u_long
-name|nd_hash
-decl_stmt|;
-comment|/* hash value of nd_dent */
 block|}
 name|ni_nd
 struct|;
@@ -241,13 +241,6 @@ define|#
 directive|define
 name|ni_uio
 value|ni_nd.nd_uio
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_hash
-value|ni_nd.nd_hash
 end_define
 
 begin_ifdef
@@ -444,15 +437,23 @@ comment|/* LRU chain */
 name|struct
 name|vnode
 modifier|*
-name|nc_vp
+name|nc_dvp
 decl_stmt|;
-comment|/* vnode the name refers to */
+comment|/* vnode of parent of name */
+name|u_long
+name|nc_dvpid
+decl_stmt|;
+comment|/* capability number of nc_dvp */
 name|struct
 name|vnode
 modifier|*
-name|nc_dp
+name|nc_vp
 decl_stmt|;
-comment|/* vnode of parent of name */
+comment|/* vnode the name refers to */
+name|u_long
+name|nc_vpid
+decl_stmt|;
+comment|/* capability number of nc_vp */
 name|char
 name|nc_nlen
 decl_stmt|;
@@ -464,29 +465,9 @@ name|NCHNAMLEN
 index|]
 decl_stmt|;
 comment|/* segment name */
-name|struct
-name|ucred
-modifier|*
-name|nc_cred
-decl_stmt|;
-comment|/* ??? credentials */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|ANYCRED
-value|((struct ucred *) -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NOCRED
-value|((struct ucred *) 0)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -508,6 +489,12 @@ name|nchsize
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_long
+name|nextvnodeid
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -524,7 +511,11 @@ block|{
 name|long
 name|ncs_goodhits
 decl_stmt|;
-comment|/* hits that we can reall use */
+comment|/* hits that we can really use */
+name|long
+name|ncs_neghits
+decl_stmt|;
+comment|/* negative hits that we can use */
 name|long
 name|ncs_badhits
 decl_stmt|;
@@ -557,6 +548,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NAMEI_ */
+end_comment
 
 end_unit
 
