@@ -70,9 +70,43 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__GNUC__
+name|lint
 argument_list|)
 end_if
+
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|__int64_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|__uint64_t
+typedef|;
+end_typedef
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_elif
 
 begin_typedef
 typedef|typedef
