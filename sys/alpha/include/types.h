@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: types.h,v 1.3 1998/03/23 08:17:16 jb Exp $ */
+comment|/* $Id: types.h,v 1.4 1998/06/14 15:26:03 bde Exp $ */
 end_comment
 
 begin_comment
@@ -207,7 +207,7 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|uint64_t
+name|u_int64_t
 name|uoff_t
 typedef|;
 end_typedef
