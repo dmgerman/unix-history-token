@@ -3116,23 +3116,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BRIDGE
+comment|/* the following is not an error when doing bridging */
 if|if
 condition|(
 operator|!
-name|do_bridge
-condition|)
-block|{
-comment|/* the following is not an error when doing bridging */
-else|#
-directive|else
-block|{
-endif|#
-directive|endif
-if|if
-condition|(
+name|BRIDGE_TEST
+operator|&&
 name|rt
 operator|->
 name|rt_ifp
@@ -3143,10 +3132,6 @@ operator|->
 name|ac_if
 condition|)
 block|{
-if|if
-condition|(
-name|log_arp_wrong_iface
-condition|)
 name|log
 argument_list|(
 name|LOG_ERR
@@ -3192,7 +3177,6 @@ expr_stmt|;
 goto|goto
 name|reply
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -4212,9 +4196,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Free an arp entry.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|arptfree
@@ -4335,7 +4328,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Lookup or enter a new address in arptab.  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|llinfo_arp
@@ -4529,6 +4528,9 @@ name|rt_llinfo
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|arp_ifinit
 parameter_list|(

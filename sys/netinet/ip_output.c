@@ -1845,12 +1845,18 @@ operator|&
 name|dst
 argument_list|)
 expr_stmt|;
-comment|/*                  * On return we must do the following:                  * m == NULL         -> drop the pkt                  * (off& 0x40000)   -> drop the pkt (XXX new)                  * 1<=off<= 0xffff   -> DIVERT                  * (off& 0x10000)   -> send to a DUMMYNET pipe                  * (off& 0x20000)   -> TEE the packet                  * dst != old        -> IPFIREWALL_FORWARD                  * off==0, dst==old  -> accept                  * If some of the above modules is not compiled in, then                  * we should't have to check the corresponding condition                  * (because the ipfw control socket should not accept                  * unsupported rules), but better play safe and drop                  * packets in case of doubt.                  */
+comment|/*                  * On return we must do the following:                  * IP_FW_PORT_DENY_FLAG		-> drop the pkt (XXX new)                  * 1<=off<= 0xffff   -> DIVERT                  * (off& IP_FW_PORT_DYNT_FLAG)	-> send to a DUMMYNET pipe                  * (off& IP_FW_PORT_TEE_FLAG)	-> TEE the packet                  * dst != old        -> IPFIREWALL_FORWARD                  * off==0, dst==old  -> accept                  * If some of the above modules is not compiled in, then                  * we should't have to check the corresponding condition                  * (because the ipfw control socket should not accept                  * unsupported rules), but better play safe and drop                  * packets in case of doubt.                  */
 if|if
 condition|(
+operator|(
 name|off
 operator|&
-literal|0x40000
+name|IP_FW_PORT_DENY_FLAG
+operator|)
+operator|||
+name|m
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -1870,21 +1876,17 @@ goto|goto
 name|done
 goto|;
 block|}
-if|if
-condition|(
-operator|!
-name|m
-condition|)
-block|{
-comment|/* firewall said to reject */
-name|error
+name|ip
 operator|=
-name|EACCES
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 if|if
 condition|(
 name|off

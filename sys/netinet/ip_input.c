@@ -1975,12 +1975,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|&
-literal|0x40000
+name|IP_FW_PORT_DENY_FLAG
+operator|)
+operator|||
+name|m
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* XXX new interface-denied */
+comment|/* drop */
 if|if
 condition|(
 name|m
@@ -1992,14 +1998,18 @@ argument_list|)
 expr_stmt|;
 return|return ;
 block|}
-if|if
-condition|(
+name|ip
+operator|=
+name|mtod
+argument_list|(
 name|m
-operator|==
-name|NULL
-condition|)
-comment|/* Packet discarded by firewall */
-return|return;
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+comment|/* just in case m changed */
 if|if
 condition|(
 name|i

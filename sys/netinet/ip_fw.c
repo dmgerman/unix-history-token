@@ -4530,7 +4530,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
+comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	IP_FW_PORT_DENY_FLAG	the packet must be dropped.  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
 end_comment
 
 begin_function
@@ -6748,22 +6748,9 @@ block|}
 name|dropit
 label|:
 comment|/* 	 * Finally, drop the packet. 	 */
-if|if
-condition|(
-operator|*
-name|m
-condition|)
-block|{
 return|return
 operator|(
-literal|0x40000
-operator|)
-return|;
-block|}
-else|else
-return|return
-operator|(
-literal|0
+name|IP_FW_PORT_DENY_FLAG
 operator|)
 return|;
 undef|#
