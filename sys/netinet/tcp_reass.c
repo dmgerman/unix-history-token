@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1604,6 +1616,14 @@ name|next_hop
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|rstreason
 decl_stmt|;
@@ -2972,6 +2992,27 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_socket_receive
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|drop
+goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|so
@@ -4928,6 +4969,18 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_set_socket_peer_from_mbuf
+argument_list|(
+name|m
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Do window scaling on this connection? */
 if|if
 condition|(

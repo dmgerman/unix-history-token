@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -2121,6 +2133,35 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|tp
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Packet is associated with a socket, so allow the 		 * label of the response to reflect the socket label. 		 */
+name|mac_create_mbuf_from_socket
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_socket
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * XXXMAC: This will need to call a mac function that 		 * modifies the mbuf label in place for TCP datagrams 		 * not associated with a PCB. 		 */
+block|}
+endif|#
+directive|endif
 name|nth
 operator|->
 name|th_seq

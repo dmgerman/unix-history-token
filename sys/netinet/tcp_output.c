@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -2511,6 +2523,18 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_socket
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
