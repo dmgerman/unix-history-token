@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_util.c,v 1.9 1997/10/27 07:53:19 charnier Exp $"
+literal|"$Id: pw_util.c,v 1.5.2.3 1997/11/18 07:17:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -872,6 +872,8 @@ parameter_list|()
 block|{
 name|int
 name|c
+decl_stmt|,
+name|first
 decl_stmt|;
 operator|(
 name|void
@@ -889,6 +891,23 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|first
+operator|=
+name|c
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|c
+operator|!=
+literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOF
+condition|)
 name|c
 operator|=
 name|getchar
@@ -896,25 +915,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|c
-operator|!=
-name|EOF
-operator|&&
-name|c
-operator|!=
-literal|'\n'
-condition|)
-while|while
-condition|(
-name|getchar
-argument_list|()
-operator|!=
-literal|'\n'
-condition|)
-empty_stmt|;
-if|if
-condition|(
-name|c
+name|first
 operator|==
 literal|'n'
 condition|)

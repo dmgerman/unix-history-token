@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: stlstats.c,v 1.2.4.1 1997/11/07 07:24:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"0.0.5"
+literal|"1.0.0"
 decl_stmt|;
 end_decl_stmt
 
@@ -2433,8 +2433,6 @@ name|stat
 name|statinfo
 decl_stmt|;
 name|int
-name|optind
-decl_stmt|,
 name|c
 decl_stmt|,
 name|useport
@@ -2443,10 +2441,6 @@ name|char
 modifier|*
 name|portdev
 decl_stmt|;
-name|optind
-operator|=
-literal|0
-expr_stmt|;
 name|ctrldevice
 operator|=
 name|defdevice

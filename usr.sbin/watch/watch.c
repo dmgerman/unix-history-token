@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: watch.c,v 1.8.2.6 1997/11/18 07:24:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
