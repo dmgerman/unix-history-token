@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.8 %G%"
+literal|"@(#)tmps.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"align.h"
+end_include
 
 begin_include
 include|#
@@ -352,6 +358,9 @@ name|nl
 modifier|*
 name|nlp
 decl_stmt|;
+name|long
+name|alignment
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
@@ -462,6 +471,28 @@ endif|vax
 endif|#
 directive|endif
 endif|PC
+if|if
+condition|(
+name|type
+operator|==
+name|NIL
+condition|)
+block|{
+name|alignment
+operator|=
+name|A_STACK
+expr_stmt|;
+block|}
+else|else
+block|{
+name|alignment
+operator|=
+name|align
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
 name|op
 operator|->
 name|curtmps
@@ -483,13 +514,7 @@ operator|-
 name|size
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
-name|align
-argument_list|(
-name|type
-argument_list|)
+name|alignment
 argument_list|)
 expr_stmt|;
 name|offset
