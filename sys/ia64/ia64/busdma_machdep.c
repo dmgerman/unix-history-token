@@ -3158,6 +3158,7 @@ name|flags
 operator||=
 name|BUS_DMA_NOWAIT
 expr_stmt|;
+operator|*
 name|nsegs
 operator|=
 literal|0
