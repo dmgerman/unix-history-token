@@ -4,7 +4,7 @@ comment|/*  * This code is based on  *  (1) FreeBSD implementation on ISA/EISA E
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.12 1995/11/18 08:58:14 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.13 1995/12/05 02:01:18 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -28,166 +28,6 @@ include|#
 directive|include
 file|"zp.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NZP
-operator|>
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IF_CNTRS
-value|MACH
-end_define
-
-begin_include
-include|#
-directive|include
-file|<mach_ttd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<kern/time_out.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/device_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/io_req.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/if_hdr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/net_status.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<device/net_io.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<chips/busses.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386at/if_zpreg.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|SPLNET
-value|spl6
-end_define
-
-begin_if
-if|#
-directive|if
-name|MACH_TTD
-end_if
-
-begin_include
-include|#
-directive|include
-file|<ttd/ttd_stub.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MACH_TTD */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"i82365.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|MAXSLOT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHARED_MEMORY
-end_define
-
-begin_enum
-enum|enum
-name|memtype
-block|{
-name|COMMON
-block|,
-name|ATTRIBUTE
-block|}
-enum|;
-end_enum
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
 
 begin_include
 include|#
@@ -262,26 +102,6 @@ include|#
 directive|include
 file|<sys/syslog.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -413,50 +233,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<machine/clock.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|ZP_DEBUG
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/cons.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -517,15 +298,6 @@ begin_comment
 comment|/* NAPM> 0 */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -556,27 +328,10 @@ comment|/*  * zp_softc: per line info and status  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|zp_softc
 block|{
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|struct
-name|ifnet
-name|ds_if
-decl_stmt|;
-comment|/* generic interface header */
-name|u_char
-name|ds_addr
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* Ethernet hardware address */
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|struct
 name|arpcom
 name|arpcom
@@ -608,9 +363,6 @@ name|caddr_t
 name|bpf
 decl_stmt|;
 comment|/* BPF  "magic cookie"		 */
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|short
 name|ep_io_addr
 decl_stmt|;
@@ -627,23 +379,9 @@ name|char
 name|bus32bit
 decl_stmt|;
 comment|/* 32bit access possible	 */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|u_char
-name|attached
-decl_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|ORIGINAL
 name|u_short
 name|if_port
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* ORIGINAL */
 name|u_char
 name|last_alive
 decl_stmt|;
@@ -682,169 +420,8 @@ index|]
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|zpprobe
-argument_list|()
-decl_stmt|,
-name|zpopen
-argument_list|()
-decl_stmt|,
-name|zpoutput
-argument_list|()
-decl_stmt|,
-name|zpsetinput
-argument_list|()
-decl_stmt|,
-name|zpgetstat
-argument_list|()
-decl_stmt|,
-name|zpsetstat
-argument_list|()
-decl_stmt|,
-name|zpintr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|zpattach
-argument_list|()
-decl_stmt|,
-name|zpinit
-argument_list|()
-decl_stmt|,
-name|zpstart
-argument_list|()
-decl_stmt|,
-name|zpread
-argument_list|()
-decl_stmt|,
-name|zpreset
-argument_list|()
-decl_stmt|,
-name|zpwatchdog
-argument_list|()
-decl_stmt|,
-name|zpstop
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
-name|vm_offset_t
-name|zp_std
-index|[
-name|NZP
-index|]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|bus_device
-modifier|*
-name|zp_info
-index|[
-name|NZP
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|bus_driver
-name|zpdriver
-init|=
-block|{
-name|zpprobe
-block|,
-literal|0
-block|,
-name|zpattach
-block|,
-literal|0
-block|,
-name|zp_std
-block|,
-literal|"zp"
-block|,
-name|zp_info
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|struct
-name|zp_softc
-name|zp_softc_t
-typedef|;
-end_typedef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|zp_name
-init|=
-literal|"zp"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-name|card_info
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|splnet
-value|spl7
-end_define
-
-begin_define
-define|#
-directive|define
-name|splimp
-value|spl7
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
-
-begin_decl_stmt
 name|int
 name|zpprobe
 name|__P
@@ -859,6 +436,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|zpattach
 name|__P
@@ -938,6 +516,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpinit
 name|__P
@@ -950,6 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpmbuffill
 name|__P
@@ -978,6 +558,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpread
 name|__P
@@ -992,6 +573,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpreset
 name|__P
@@ -1004,6 +586,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpstart
 name|__P
@@ -1018,6 +601,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpstop
 name|__P
@@ -1030,6 +614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|zpwatchdog
 name|__P
@@ -1057,15 +642,6 @@ literal|"zp"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
 
 begin_define
 define|#
@@ -1143,12 +719,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("[%02x] %02x ", i, link); 	for (j = 4; j< 2 * link + 4&& j< 32; j += 2) 	    printf("%02x ", scratch[j + i]); 	printf("\n");
-endif|#
-directive|endif
 if|if
 condition|(
 name|scratch
@@ -1159,7 +729,7 @@ operator|==
 literal|0x15
 condition|)
 block|{
-comment|/* 	     * level 1 version/product info copy to card_info, translating 	     * '\0' to '~' 	     */
+comment|/* level 1 version/product info copy to card_info, 			 * translating '\0' to '~' */
 name|k
 operator|=
 literal|0
@@ -1211,39 +781,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"card info = %s\n"
-argument_list|,
-name|card_info
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"result = %d\n"
-argument_list|,
-name|bcmp
-argument_list|(
-name|card_info
-argument_list|,
-name|CARD_INFO
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|CARD_INFO
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|bcmp
@@ -1284,6 +821,7 @@ comment|/*  * Probe each slot looking for an IBM Credit Card Adapter for Etherne
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prev_slot
 init|=
@@ -1322,8 +860,8 @@ operator|++
 name|slot
 control|)
 block|{
-comment|/* 	 * see if there's a PCMCIA controller here Intel PCMCIA controllers 	 * use 0x82 and 0x83 IBM clone chips use 0x88 and 0x89, apparently 	 */
-comment|/* 	 * IBM ThinkPad230Cs use 0x84. 	 */
+comment|/* see if there's a PCMCIA controller here Intel PCMCIA 		 * controllers use 0x82 and 0x83 IBM clone chips use 0x88 and 		 * 0x89, apparently */
+comment|/* IBM ThinkPad230Cs use 0x84. */
 name|unsigned
 name|char
 name|idbyte
@@ -1359,12 +897,6 @@ operator|!=
 literal|0x89
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("ibmccae: pcic slot %d: wierd id/rev code 0x%02x\n", 		   slot, idbyte);
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -1422,30 +954,7 @@ argument_list|(
 name|slot
 argument_list|)
 expr_stmt|;
-comment|/* 	 * map the card's attribute memory and examine its card information 	 * structure tuples for something we recognize. 	 */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|pcic_map_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|scratch
-argument_list|,
-literal|0L
-argument_list|,
-literal|0xFFFL
-argument_list|,
-name|ATTRIBUTE
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
+comment|/* map the card's attribute memory and examine its card 		 * information structure tuples for something we recognize. */
 name|pcic_map_memory
 argument_list|(
 name|slot
@@ -1466,9 +975,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 operator|(
@@ -1610,37 +1116,8 @@ begin_comment
 comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer to an isa_device struct  *   on exit:  *	NULL if device not found  *	or # of i/o addresses used (if found)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|zpprobe
-argument_list|(
-name|port
-argument_list|,
-name|dev
-argument_list|)
-decl|struct
-name|bus_device
-modifier|*
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|zpprobe
 parameter_list|(
@@ -1649,28 +1126,7 @@ name|isa_device
 modifier|*
 name|isa_dev
 parameter_list|)
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|{
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|zp_softc_t
-modifier|*
-name|sc
-init|=
-operator|&
-name|zp_softc
-index|[
-name|dev
-operator|->
-name|unit
-index|]
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|struct
 name|zp_softc
 modifier|*
@@ -1684,9 +1140,6 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|int
 name|slot
 decl_stmt|;
@@ -1696,51 +1149,6 @@ decl_stmt|;
 name|int
 name|re_init_flag
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpprobe ####\n"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|x
-parameter_list|)
-value|delay(x * 10)
-name|sc
-operator|->
-name|attached
-operator|=
-literal|0
-expr_stmt|;
-name|BASE
-operator|=
-name|dev
-operator|->
-name|address
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 operator|(
@@ -1763,8 +1171,8 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/*      * okay, we found a card, so set it up      */
-comment|/*      * Inhibit 16 bit memory delay. POINTETH.SYS apparently does this, for      * what reason I don't know.      */
+comment|/* okay, we found a card, so set it up */
+comment|/* Inhibit 16 bit memory delay. POINTETH.SYS apparently does this, for 	 * what reason I don't know. */
 name|pcic_putb
 argument_list|(
 name|slot
@@ -1781,11 +1189,11 @@ operator||
 name|PCIC_16_DL_INH
 argument_list|)
 expr_stmt|;
-comment|/*      * things to map (1) card's EEPROM is already mapped by the find_adapter      * routine but we still need to get the card's ethernet address. after      * that we unmap that part of attribute memory. (2) card configuration      * registers need to be mapped in so we can set the configuration and      * socket # registers. (3) shared memory packet buffer (4) i/o ports (5)      * IRQ      */
+comment|/* things to map (1) card's EEPROM is already mapped by the 	 * find_adapter routine but we still need to get the card's ethernet 	 * address. after that we unmap that part of attribute memory. (2) 	 * card configuration registers need to be mapped in so we can set the 	 * configuration and socket # registers. (3) shared memory packet 	 * buffer (4) i/o ports (5) IRQ */
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/*      * Sigh.  Location of the ethernet address isn't documented in [1]. It      * was derived by doing a hex dump of all of attribute memory and looking      * for the IBM vendor prefix.      */
+comment|/* Sigh.  Location of the ethernet address isn't documented in [1]. It 	 * was derived by doing a hex dump of all of attribute memory and 	 * looking for the IBM vendor prefix. */
 name|enet_addr
 index|[
 literal|0
@@ -1872,61 +1280,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|pcic_unmap_memory(slot, 0);
-endif|#
-directive|endif
 name|re_init_flag
 operator|=
 literal|0
 expr_stmt|;
 name|re_init
 label|:
-comment|/*      * (2) map card configuration registers.  these are offset in card memory      * space by 0x20000.  normally we could get this offset from the card      * information structure, but I'm too lazy and am not quite sure if I      * understand the CIS anyway.      *      * XXX IF YOU'RE TRYING TO PORT THIS DRIVER FOR A DIFFERENT PCMCIA CARD, the      * most likely thing to change is the constant 0x20000 in the next      * statement.  Oh yes, also change the card id string that we probe for.      */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|pcic_map_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|dev
-operator|->
-name|phys_address
-argument_list|,
-literal|0x10000
-argument_list|,
-literal|8L
-argument_list|,
-name|ATTRIBUTE
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|POKE
-argument_list|(
-name|phystokv
-argument_list|(
-name|dev
-operator|->
-name|phys_address
-argument_list|)
-argument_list|,
-literal|0x80
-argument_list|)
-expr_stmt|;
-comment|/* reset the card (how long?) */
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|/* (2) map card configuration registers.  these are offset in card 	 * memory space by 0x20000.  normally we could get this offset from 	 * the card information structure, but I'm too lazy and am not quite 	 * sure if I understand the CIS anyway. 	 *  	 * XXX IF YOU'RE TRYING TO PORT THIS DRIVER FOR A DIFFERENT PCMCIA CARD, 	 * the most likely thing to change is the constant 0x20000 in the next 	 * statement.  Oh yes, also change the card id string that we probe 	 * for. */
 name|pcic_map_memory
 argument_list|(
 name|slot
@@ -1964,34 +1324,7 @@ argument_list|(
 literal|40000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*      * Set the configuration index.  According to [1], the adapter won't      * respond to any i/o signals until we do this; it uses the Memory Only      * interface (whatever that is; it's not documented). Also turn on      * "level" (not pulse) interrupts.      *      * XXX probably should init the socket and copy register also, so that we      * can deal with multiple instances of the same card.      */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|POKE
-argument_list|(
-name|phystokv
-argument_list|(
-name|dev
-operator|->
-name|phys_address
-argument_list|)
-argument_list|,
-literal|0x41
-argument_list|)
-expr_stmt|;
-name|pcic_unmap_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
+comment|/* Set the configuration index.  According to [1], the adapter won't 	 * respond to any i/o signals until we do this; it uses the Memory 	 * Only interface (whatever that is; it's not documented). Also turn 	 * on "level" (not pulse) interrupts. 	 *  	 * XXX probably should init the socket and copy register also, so that we 	 * can deal with multiple instances of the same card. */
 name|POKE
 argument_list|(
 name|isa_dev
@@ -2008,61 +1341,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/*      * (3) now map in the shared memory buffer.  This has to be mapped as      * words, not bytes, and on a 16k boundary.  The offset value was derived      * by installing IBM's POINTETH.SYS under DOS and looking at the PCIC      * registers; it's not documented in IBM's tech ref manual ([1]).      */
-name|pcic_map_memory
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|kvtop
-argument_list|(
-name|isa_dev
-operator|->
-name|id_maddr
-argument_list|)
-argument_list|,
-literal|0x4000L
-argument_list|,
-literal|0x4000L
-argument_list|,
-name|COMMON
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*      * (4) map i/o ports.      *      * XXX is it possible that the config file leaves this unspecified, in which      * case we have to pick one?      *      * At least one PCMCIA device driver I'v seen maps a block of 32 consecutive      * i/o ports as two windows of 16 ports each. Maybe some other pcic chips      * are restricted to 16-port windows; the 82365SL doesn't seem to have      * that problem.  But since we have an extra window anyway...      */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|pcic_map_io
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|dev
-operator|->
-name|address
-argument_list|,
-literal|16
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-if|#
-directive|if
-literal|1
+comment|/* (4) map i/o ports. 	 *  	 * XXX is it possible that the config file leaves this unspecified, in 	 * which case we have to pick one? 	 *  	 * At least one PCMCIA device driver I'v seen maps a block of 32 	 * consecutive i/o ports as two windows of 16 ports each. Maybe some 	 * other pcic chips are restricted to 16-port windows; the 82365SL 	 * doesn't seem to have that problem.  But since we have an extra 	 * window anyway... */
 name|pcic_map_io
 argument_list|(
 name|slot
@@ -2078,45 +1357,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|pcic_map_io
-argument_list|(
-name|slot
-argument_list|,
-literal|0
-argument_list|,
-name|isa_dev
-operator|->
-name|id_iobase
-argument_list|,
-literal|16
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|pcic_map_io
-argument_list|(
-name|slot
-argument_list|,
-literal|1
-argument_list|,
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-literal|16
-argument_list|,
-literal|16
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/*      * (5) configure the card for the desired interrupt      *      * XXX is it possible that the config file leaves this unspecified?      */
+comment|/* (5) configure the card for the desired interrupt 	 *  	 * XXX is it possible that the config file leaves this unspecified? */
 name|pcic_map_irq
 argument_list|(
 name|slot
@@ -2148,149 +1389,6 @@ operator||
 name|PCIC_CARDTYPE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* tell the PCIC to use level-mode interrupts */
-comment|/* XXX this register may not be present on all controllers */
-block|pcic_putb(slot, PCIC_GLO_CTRL, 	      pcic_getb(slot, PCIC_GLO_CTRL) | PCIC_LVL_MODE);
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|pcic_print_regs
-argument_list|(
-name|slot
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* I couldn't find the following part in linux. seiji */
-comment|/*      * Setup i/o addresses      */
-name|sc
-operator|->
-name|nic_addr
-operator|=
-name|isa_dev
-operator|->
-name|id_iobase
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sc->vector = isa_dev->id_irq;
-endif|#
-directive|endif
-name|sc
-operator|->
-name|smem_start
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|isa_dev
-operator|->
-name|id_maddr
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sc->vendor = ZE_VENDOR_IBM;     sc->type = xxx;
-endif|#
-directive|endif
-comment|/* reset card to force it into a known state */
-name|tmp
-operator|=
-name|inb
-argument_list|(
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-name|ZE_RESET
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|20000
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-name|ZE_RESET
-argument_list|,
-name|tmp
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|20000
-argument_list|)
-expr_stmt|;
-comment|/*      * query MAM bit in misc register for 10base2      */
-name|tmp
-operator|=
-name|inb
-argument_list|(
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-name|ZE_MISC
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tmp
-operator|&&
-operator|!
-name|re_init_flag
-condition|)
-block|{
-name|re_init_flag
-operator|++
-expr_stmt|;
-goto|goto
-name|re_init
-goto|;
-block|}
-name|sc
-operator|->
-name|mau
-operator|=
-name|tmp
-operator|&
-literal|0x09
-condition|?
-literal|"10base2"
-else|:
-literal|"10baseT"
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|sc
-operator|->
-name|ep_io_addr
-operator|=
-name|dev
-operator|->
-name|address
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|sc
 operator|->
 name|ep_io_addr
@@ -2299,9 +1397,6 @@ name|isa_dev
 operator|->
 name|id_iobase
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|GO_WINDOW
 argument_list|(
 literal|0
@@ -2317,9 +1412,6 @@ name|EEPROM_ADDR_CFG
 argument_list|)
 expr_stmt|;
 comment|/* get addr cfg */
-ifndef|#
-directive|ifndef
-name|ORIGINAL
 name|sc
 operator|->
 name|if_port
@@ -2328,21 +1420,6 @@ name|k
 operator|>>
 literal|14
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* ORIGINAL */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"EEPROM data = 0x%x\n"
-argument_list|,
-name|k
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|k
 operator|=
 operator|(
@@ -2356,23 +1433,6 @@ operator|+
 literal|0x200
 expr_stmt|;
 comment|/* decode base addr. */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-if|if
-condition|(
-name|k
-operator|!=
-operator|(
-name|u_short
-operator|)
-name|dev
-operator|->
-name|address
-condition|)
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 name|k
@@ -2384,9 +1444,6 @@ name|isa_dev
 operator|->
 name|id_iobase
 condition|)
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|{
 if|if
 condition|(
@@ -2420,64 +1477,6 @@ name|k
 operator|>>=
 literal|12
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"!!!IRQ Mach config: %d, board config: %d!!!\n"
-argument_list|,
-name|dev
-operator|->
-name|sysdep1
-argument_list|,
-operator|(
-name|k
-operator|==
-literal|2
-operator|)
-condition|?
-literal|9
-else|:
-name|k
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|if
-condition|(
-name|dev
-operator|->
-name|sysdep1
-operator|!=
-operator|(
-operator|(
-name|k
-operator|==
-literal|2
-operator|)
-condition|?
-literal|9
-else|:
-name|k
-operator|)
-condition|)
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 name|isa_dev
@@ -2500,41 +1499,11 @@ name|k
 operator|)
 operator|)
 condition|)
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-block|{
-name|printf
-argument_list|(
-literal|"Unmatched !!!!!!\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-else|#
-directive|else
-comment|/* ZP_DEBUG */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|#
-directive|if
-literal|0
-block|outb(id_port, ACTIVATE_ADAPTER_TO_CONFIG);
-else|#
-directive|else
 name|outb
 argument_list|(
 name|BASE
@@ -2542,25 +1511,6 @@ argument_list|,
 name|ACTIVATE_ADAPTER_TO_CONFIG
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|dev
-operator|->
-name|name
-operator|=
-name|zp_name
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 comment|/* information for reconfiguration */
 name|sc
 operator|->
@@ -2586,9 +1536,6 @@ literal|0x10
 operator|)
 return|;
 comment|/* 16 bytes of I/O space used. */
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 end_function
 
@@ -2695,35 +1642,8 @@ begin_comment
 comment|/*  * Install interface into kernel networking data structures  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|void
-name|zpattach
-argument_list|(
-name|dev
-argument_list|)
-decl|struct
-name|bus_device
-modifier|*
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|zpattach
 parameter_list|(
@@ -2734,40 +1654,7 @@ name|isa_device
 modifier|*
 name|isa_dev
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|{
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|zp_softc_t
-modifier|*
-name|sc
-init|=
-operator|&
-name|zp_softc
-index|[
-name|dev
-operator|->
-name|unit
-index|]
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|)
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|struct
 name|zp_softc
 modifier|*
@@ -2793,9 +1680,6 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|u_short
 name|i
 decl_stmt|;
@@ -2812,26 +1696,6 @@ decl_stmt|;
 name|int
 name|pl
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpattach ####\n"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 comment|/* PCMCIA card can be offlined. Reconfiguration is required */
 if|if
 condition|(
@@ -2948,42 +1812,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|printf
-argument_list|(
-literal|", port = %x, spl = %d, pic = %d. "
-argument_list|,
-name|dev
-operator|->
-name|address
-argument_list|,
-name|dev
-operator|->
-name|sysdep
-argument_list|,
-name|dev
-operator|->
-name|sysdep1
-argument_list|)
-expr_stmt|;
-name|take_dev_irq
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|ep_io_addr
-operator|=
-name|dev
-operator|->
-name|address
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|sc
 operator|->
 name|ep_io_addr
@@ -3001,32 +1829,12 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|sc
 operator|->
 name|ep_connectors
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|i
-operator|=
-name|inw
-argument_list|(
-name|sc
-operator|->
-name|ep_io_addr
-operator|+
-name|EP_W0_CONFIG_CTRL
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|i
 operator|=
 name|inw
@@ -3038,60 +1846,6 @@ operator|+
 name|EP_W0_CONFIG_CTRL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-block|{
-name|short
-name|if_port
-decl_stmt|;
-name|if_port
-operator|=
-name|read_eeprom_data
-argument_list|(
-name|BASE
-argument_list|,
-literal|8
-argument_list|)
-operator|>>
-literal|14
-expr_stmt|;
-name|sc
-operator|->
-name|if_port
-operator|=
-name|if_port
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Linux select:%x\n"
-argument_list|,
-name|if_port
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-block|}
-name|printf
-argument_list|(
-literal|"SELECT connectors:%x\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 if|if
 condition|(
 name|i
@@ -3183,39 +1937,6 @@ argument_list|(
 literal|"no connectors!"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-ifndef|#
-directive|ifndef
-name|ORIGINAL
-name|printf
-argument_list|(
-literal|":%s was selected.\n"
-argument_list|,
-name|if_names
-index|[
-name|sc
-operator|->
-name|if_port
-index|]
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-endif|#
-directive|endif
-comment|/* ORIGINAL */
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|GO_WINDOW
 argument_list|(
 literal|0
@@ -3261,23 +1982,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|bcopy
-argument_list|(
-name|tmp_addr
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|bcopy
 argument_list|(
 name|tmp_addr
@@ -3291,84 +1995,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|printf
-argument_list|(
-literal|"id [%x:%x:%x:%x:%x:%x]"
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|0
-index|]
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|1
-index|]
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|2
-index|]
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|3
-index|]
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|4
-index|]
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|5
-index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" address %s\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|sc
-operator|->
-name|ds_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|printf
 argument_list|(
 literal|" address %s\n"
@@ -3383,121 +2010,12 @@ name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|ifp
 operator|->
 name|if_mtu
 operator|=
 name|ETHERMTU
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|ifp
-operator|->
-name|if_flags
-operator|=
-name|IFF_BROADCAST
-expr_stmt|;
-name|ifp
-operator|->
-name|if_unit
-operator|=
-name|dev
-operator|->
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_header_size
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_header_format
-operator|=
-name|HDR_ETHERNET
-expr_stmt|;
-name|ifp
-operator|->
-name|if_address_size
-operator|=
-literal|6
-expr_stmt|;
-name|ifp
-operator|->
-name|if_address
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sc
-operator|->
-name|ds_addr
-index|[
-literal|0
-index|]
-expr_stmt|;
-define|#
-directive|define
-name|IFF_ALTPHYS
-value|0x8000
-ifdef|#
-directive|ifdef
-name|ORIGINAL
-comment|/*      * This is a temporary. Mach can not select link with ifconfig, so I      * select AUI statically.      */
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_ALTPHYS
-expr_stmt|;
-else|#
-directive|else
-comment|/* ORIGINAL */
-comment|/*      * Select connector according to board setting.      */
-if|if
-condition|(
-name|sc
-operator|->
-name|if_port
-operator|!=
-literal|3
-condition|)
-block|{
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_ALTPHYS
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* ORIGINAL */
-name|if_init_queues
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|attached
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|ifp
 operator|->
 name|if_flags
@@ -3544,47 +2062,19 @@ name|if_watchdog
 operator|=
 name|zpwatchdog
 expr_stmt|;
-comment|/*      * Select connector according to board setting.      */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-if|#
-directive|if
-literal|0
-block|if (sc->if_port != 3) { 	ifp->if_flags |= IFF_LINK0;     }
-else|#
-directive|else
+comment|/* Select connector according to board setting. */
 name|ifp
 operator|->
 name|if_flags
 operator||=
 name|IFF_LINK0
 expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* __NetBSD__ || __FreeBSD__ */
 name|if_attach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
-comment|/*      * Fill the hardware address into ifa_addr if we find an AF_LINK entry.      * We need to do this so bpf's can get the hardware addr of this card.      * netstat likes this too!      */
+comment|/* Fill the hardware address into ifa_addr if we find an AF_LINK 	 * entry. We need to do this so bpf's can get the hardware addr of 	 * this card. netstat likes this too! */
 name|ifa
 operator|=
 name|ifp
@@ -3814,9 +2304,6 @@ comment|/* NAPM> 0 */
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 end_function
 
@@ -3825,6 +2312,7 @@ comment|/*  * The order in here seems important. Otherwise we may not receive  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|zpinit
 parameter_list|(
@@ -3846,23 +2334,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-specifier|register
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|ds_if
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 specifier|register
 name|struct
 name|ifnet
@@ -3876,28 +2347,11 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|int
 name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpinit ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 if|if
 condition|(
 name|ifp
@@ -3912,9 +2366,6 @@ operator|)
 literal|0
 condition|)
 return|return;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|s
 operator|=
 name|splimp
@@ -3976,28 +2427,6 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|outb
-argument_list|(
-name|BASE
-operator|+
-name|EP_W2_ADDR_0
-operator|+
-name|i
-argument_list|,
-name|sc
-operator|->
-name|ds_addr
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|outb
 argument_list|(
 name|BASE
@@ -4016,9 +2445,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|outw
 argument_list|(
 name|BASE
@@ -4111,9 +2537,6 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ORIGINAL
-ifndef|#
-directive|ifndef
 name|IFF_MULTICAST
 define|#
 directive|define
@@ -4121,56 +2544,6 @@ name|IFF_MULTICAST
 value|0x10000
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|outw
-argument_list|(
-name|BASE
-operator|+
-name|EP_COMMAND
-argument_list|,
-name|SET_RX_FILTER
-operator||
-name|FIL_INDIVIDUAL
-operator||
-operator|(
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_MULTICAST
-operator|)
-condition|?
-name|FIL_GROUP
-else|:
-literal|0
-operator|)
-operator||
-name|FIL_BRDCST
-operator||
-operator|(
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_PROMISC
-operator|)
-condition|?
-name|FIL_ALL
-else|:
-literal|0
-operator|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|outw
 argument_list|(
 name|BASE
@@ -4220,42 +2593,7 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-else|#
-directive|else
-comment|/* ORIGINAL */
-name|outw
-argument_list|(
-name|BASE
-operator|+
-name|EP_COMMAND
-argument_list|,
-name|SET_RX_FILTER
-operator||
-name|FIL_INDIVIDUAL
-operator||
-name|FIL_GROUP
-operator||
-name|FIL_BRDCST
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ORIGINAL */
-comment|/*      * you can `ifconfig (link0|-link0) ep0' to get the following behaviour:      * -link0	disable AUI/UTP. enable BNC. link0	disable BNC. enable      * AUI. if the card has a UTP connector, that is enabled too. not sure,      * but it seems you have to be careful to not plug things into both AUI&      * UTP.      */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
+comment|/* you can `ifconfig (link0|-link0) ep0' to get the following 	 * behaviour: -link0	disable AUI/UTP. enable BNC. link0 disable 	 * BNC. enable AUI. if the card has a UTP connector, that is enabled 	 * too. not sure, but it seems you have to be careful to not plug 	 * things into both AUI& UTP. */
 if|if
 condition|(
 operator|!
@@ -4276,41 +2614,6 @@ name|BNC
 operator|)
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_ALTPHYS
-operator|)
-operator|&&
-operator|(
-name|sc
-operator|->
-name|ep_connectors
-operator|&
-name|BNC
-operator|)
-condition|)
-block|{
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"START TRANCEIVER"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|GO_WINDOW
 argument_list|(
 literal|0
@@ -4401,17 +2704,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"ENABLE UTP"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|GO_WINDOW
 argument_list|(
 literal|4
@@ -4456,9 +2748,6 @@ name|if_flags
 operator||=
 name|IFF_RUNNING
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 name|ifp
 operator|->
 name|if_flags
@@ -4467,9 +2756,6 @@ operator|~
 name|IFF_OACTIVE
 expr_stmt|;
 comment|/* just in case */
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|sc
 operator|->
 name|tx_start_thresh
@@ -4477,10 +2763,7 @@ operator|=
 literal|20
 expr_stmt|;
 comment|/* probably a good starting point. */
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
-comment|/*      * Store up a bunch of mbuf's for use later. (MAX_MBS). First we free up      * any that we had in case we're being called from intr or somewhere      * else.      */
+comment|/* Store up a bunch of mbuf's for use later. (MAX_MBS). First we free 	 * up any that we had in case we're being called from intr or 	 * somewhere else. */
 name|sc
 operator|->
 name|last_mb
@@ -4498,51 +2781,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-if|#
-directive|if
-literal|0
-comment|/* seiji */
-block|sc->tbusy = 0;
-endif|#
-directive|endif
-name|zpstart
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|zpstart
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpinit done ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 block|}
 specifier|static
 specifier|const
@@ -4560,20 +2808,7 @@ block|,
 literal|1
 block|}
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|void
-name|zpstart
-argument_list|(
-name|unit
-argument_list|)
-name|int
-name|unit
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
+specifier|static
 name|void
 name|zpstart
 parameter_list|(
@@ -4584,41 +2819,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|{
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-specifier|register
-name|struct
-name|zp_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|zp_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|ds_if
-decl_stmt|;
-name|io_req_t
-name|m
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 specifier|register
 name|struct
 name|zp_softc
@@ -4641,9 +2842,6 @@ decl_stmt|,
 modifier|*
 name|top
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|int
 name|s
 decl_stmt|,
@@ -4651,52 +2849,11 @@ name|len
 decl_stmt|,
 name|pad
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"head1 = 0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_snd
-operator|.
-name|ifq_head
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"BASE = 0x%x\n"
-argument_list|,
-name|BASE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 if|if
 condition|(
 name|sc
@@ -4715,121 +2872,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart oactive ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|startagain
 label|:
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-if|#
-directive|if
-literal|0
-comment|/* seiji */
-block|if (sc->tbusy) { 	return;     }
-endif|#
-directive|endif
-comment|/* Sneak a peek at the next packet */
-name|m
-operator|=
-call|(
-name|io_req_t
-call|)
-argument_list|(
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_head
-operator|.
-name|next
-operator|==
-operator|(
-name|queue_t
-operator|)
-operator|&
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_head
-operator|)
-operator|)
-operator|?
-literal|0
-operator|:
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_head
-operator|.
-name|next
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-literal|0
-condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart none data 1 ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-return|return;
-block|}
-if|#
-directive|if
-literal|0
-block|IF_DEQUEUE(&ifp->if_snd, m);     if (NULL == m) { 	return;     }
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* seiji */
-block|sc->tbusy++;     zp_cntrs[unit].xmt++;
-endif|#
-directive|endif
-name|len
-operator|=
-name|m
-operator|->
-name|io_count
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 comment|/* Sneak a peek at the next packet */
 name|m
 operator|=
@@ -4843,26 +2889,6 @@ name|if_snd
 operator|.
 name|ifq_head
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"head2 = 0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_snd
-operator|.
-name|ifq_head
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|m
@@ -4875,25 +2901,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart none data 2 ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* EP_DEBUG */
 return|return;
 block|}
-if|#
-directive|if
-literal|0
-block|len = m->m_pkthdr.len;
-else|#
-directive|else
 for|for
 control|(
 name|len
@@ -4918,11 +2927,6 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|pad
 operator|=
 name|padmap
@@ -4932,7 +2936,7 @@ operator|&
 literal|3
 index|]
 expr_stmt|;
-comment|/*      * The 3c509 automatically pads short packets to minimum ethernet length,      * but we drop packets that are too large. Perhaps we should truncate      * them instead?      */
+comment|/* The 3c509 automatically pads short packets to minimum ethernet 	 * length, but we drop packets that are too large. Perhaps we should 	 * truncate them instead? */
 if|if
 condition|(
 name|len
@@ -4943,36 +2947,6 @@ name|ETHER_MAX_LEN
 condition|)
 block|{
 comment|/* packet is obviously too large: toss it */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-operator|++
-operator|(
-name|ifp
-operator|->
-name|if_oerrors
-operator|)
-expr_stmt|;
-name|IF_DEQUEUE
-argument_list|(
-operator|&
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|)
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|iodone
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 operator|++
 name|sc
 operator|->
@@ -5001,16 +2975,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 goto|goto
 name|readcheck
 goto|;
 block|}
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|inw
@@ -5045,9 +3013,6 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 name|sc
 operator|->
 name|arpcom
@@ -5058,134 +3023,13 @@ name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart no room ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* EP_DEBUG */
 return|return;
 block|}
-else|#
-directive|else
-block|{
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|i
-operator|=
-name|inw
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_FREE_TX
-argument_list|)
-operator|)
-operator|<
-name|len
-operator|+
-name|pad
-operator|+
-literal|4
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"BASE + EP_W1_FREE_TX = 0x%x\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* no room in FIFO */
-name|outw
-argument_list|(
-name|BASE
-operator|+
-name|EP_COMMAND
-argument_list|,
-name|SET_TX_AVAIL_THRESH
-operator||
-operator|(
-name|len
-operator|+
-name|pad
-operator|+
-literal|4
-operator|)
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_flags
-operator||=
-name|IFF_OACTIVE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"### zpstart no room ####\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|printf
-argument_list|(
-literal|"BASE + EP_W1_FREE_TX = 0x%x\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|IF_DEQUEUE
-argument_list|(
-operator|&
-operator|(
-name|ifp
-operator|->
-name|if_snd
-operator|)
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -5200,9 +3044,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 name|m
@@ -5216,17 +3057,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart ??? ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 return|return;
 block|}
 name|outw
@@ -5267,105 +3097,6 @@ literal|0xffff
 argument_list|)
 expr_stmt|;
 comment|/* Second dword meaningless */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-if|if
-condition|(
-name|sc
-operator|->
-name|bus32bit
-condition|)
-block|{
-name|loutl
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_TX_PIO_WR_1
-argument_list|,
-name|m
-operator|->
-name|io_data
-argument_list|,
-name|len
-operator|/
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|&
-literal|3
-condition|)
-name|loutb
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_TX_PIO_WR_1
-argument_list|,
-name|m
-operator|->
-name|io_data
-operator|+
-operator|(
-name|len
-operator|&
-operator|~
-literal|3
-operator|)
-argument_list|,
-name|len
-operator|&
-literal|3
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|loutw
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_TX_PIO_WR_1
-argument_list|,
-name|m
-operator|->
-name|io_data
-argument_list|,
-name|len
-operator|/
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|&
-literal|1
-condition|)
-name|outb
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_TX_PIO_WR_1
-argument_list|,
-operator|*
-operator|(
-name|m
-operator|->
-name|io_data
-operator|+
-name|len
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 for|for
 control|(
 name|top
@@ -5447,21 +3178,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"Output len = %d\n"
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|outsw
 argument_list|(
 name|BASE
@@ -5515,9 +3231,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 while|while
 condition|(
 name|pad
@@ -5533,9 +3246,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Padding */
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 if|#
 directive|if
 name|NBPFILTER
@@ -5548,23 +3258,6 @@ operator|->
 name|bpf
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|u_short         etype; 	int             off, datasize, resid; 	struct ether_header *eh; 	struct trailer_header { 	    u_short         ether_type; 	    u_short         ether_residual; 	}               trailer_header; 	char            ether_packet[ETHER_MAX_LEN]; 	char           *ep;  	ep = ether_packet;
-comment|/* 	 * We handle trailers below: Copy ether header first, then residual 	 * data, then data. Put all this in a temporary buffer 'ether_packet' 	 * and send off to bpf. Since the system has generated this packet, 	 * we assume that all of the offsets in the packet are correct; if 	 * they're not, the system will almost certainly crash in m_copydata. 	 * We make no assumptions about how the data is arranged in the mbuf 	 * chain (i.e. how much data is in each mbuf, if mbuf clusters are 	 * used, etc.), which is why we use m_copydata to get the ether 	 * header rather than assume that this is located in the first mbuf. 	 */
-comment|/* copy ether header */
-block|m_copydata(top, 0, sizeof(struct ether_header), ep); 	eh = (struct ether_header *) ep; 	ep += sizeof(struct ether_header); 	eh->ether_type = etype = ntohs(eh->ether_type); 	if (etype>= ETHERTYPE_TRAIL&& 	    etype< ETHERTYPE_TRAIL + ETHERTYPE_NTRAILER) { 	    datasize = ((etype - ETHERTYPE_TRAIL)<< 9); 	    off = datasize + sizeof(struct ether_header);
-comment|/* copy trailer_header into a data structure */
-block|m_copydata(top, off, sizeof(struct trailer_header), 		       (caddr_t)& trailer_header.ether_type);
-comment|/* copy residual data */
-block|resid = trailer_header.ether_residual - 		sizeof(struct trailer_header); 	    resid = ntohs(resid); 	    m_copydata(top, off + sizeof(struct trailer_header), 		       resid, ep); 	    ep += resid;
-comment|/* copy data */
-block|m_copydata(top, sizeof(struct ether_header), 		       datasize, ep); 	    ep += datasize;
-comment|/* restore original ether packet type */
-block|eh->ether_type = trailer_header.ether_type;  	    bpf_tap(sc->bpf, ether_packet, ep - ether_packet); 	} else 	    bpf_mtap(sc->bpf, top);
-endif|#
-directive|endif
 name|bpf_mtap
 argument_list|(
 name|sc
@@ -5577,27 +3270,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-operator|++
-operator|(
-name|ifp
-operator|->
-name|if_opackets
-operator|)
-expr_stmt|;
-name|iodone
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|m_freem
 argument_list|(
 name|top
@@ -5612,10 +3284,7 @@ name|ac_if
 operator|.
 name|if_opackets
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-comment|/*      * Is another packet coming in? We don't want to overflow the tiny RX      * fifo.      */
+comment|/* Is another packet coming in? We don't want to overflow the tiny RX 	 * fifo. */
 name|readcheck
 label|:
 if|if
@@ -5635,330 +3304,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstart done ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG2
-name|printf
-argument_list|(
-literal|"### zpstart startagain ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 goto|goto
 name|startagain
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|int
-name|zpopen
-parameter_list|(
-name|dev
-parameter_list|,
-name|flag
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|flag
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpopen ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|if
-condition|(
-name|unit
-operator|<
-literal|0
-operator|||
-name|unit
-operator|>=
-name|NZP
-operator|||
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|attached
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|ds_if
-operator|.
-name|if_flags
-operator||=
-name|IFF_UP
-expr_stmt|;
-name|zpinit
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|int
-name|zpoutput
-parameter_list|(
-name|dev
-parameter_list|,
-name|ior
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|io_req_t
-name|ior
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|io_return_t
-name|result
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpoutput ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|if
-condition|(
-name|unit
-operator|<
-literal|0
-operator|||
-name|unit
-operator|>=
-name|NZP
-operator|||
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|attached
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-name|result
-operator|=
-name|net_write
-argument_list|(
-operator|&
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|ds_if
-argument_list|,
-name|zpstart
-argument_list|,
-name|ior
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpoutput done ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-return|return
-operator|(
-name|result
-operator|)
-return|;
-block|}
-name|int
-name|zpsetinput
-parameter_list|(
-name|dev
-parameter_list|,
-name|receive_port
-parameter_list|,
-name|priority
-parameter_list|,
-name|filter
-parameter_list|,
-name|filter_count
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|mach_port_t
-name|receive_port
-decl_stmt|;
-name|int
-name|priority
-decl_stmt|;
-name|filter_t
-name|filter
-index|[]
-decl_stmt|;
-name|unsigned
-name|int
-name|filter_count
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpsetinput ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|if
-condition|(
-name|unit
-operator|<
-literal|0
-operator|||
-name|unit
-operator|>=
-name|NZP
-operator|||
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|attached
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|net_set_filter
-argument_list|(
-operator|&
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|ds_if
-argument_list|,
-name|receive_port
-argument_list|,
-name|priority
-argument_list|,
-name|filter
-argument_list|,
-name|filter_count
-argument_list|)
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|int
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|void
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|zpintr
 parameter_list|(
 name|unit
@@ -5984,22 +3336,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|ds_if
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|struct
 name|ifnet
 modifier|*
@@ -6012,20 +3348,6 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpintr ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|status
 operator|=
 literal|0
@@ -6051,14 +3373,8 @@ operator||
 name|S_CARD_FAILURE
 operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ORIGINAL
 name|checkintr2
 label|:
-endif|#
-directive|endif
-comment|/* ORIGINAL */
 if|if
 condition|(
 name|status
@@ -6076,22 +3392,6 @@ argument_list|,
 name|C_INTR_LATCH
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpintr done ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-ifndef|#
-directive|ifndef
-name|ORIGINAL
-if|if
-condition|(
 name|status
 operator|=
 name|inw
@@ -6110,30 +3410,15 @@ name|S_RX_COMPLETE
 operator||
 name|S_CARD_FAILURE
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|status
 condition|)
-block|{
 goto|goto
 name|checkintr2
 goto|;
-block|}
-endif|#
-directive|endif
-comment|/* ORIGINAL */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 return|return;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 comment|/* important that we do this first. */
 name|outw
@@ -6166,17 +3451,6 @@ operator|+
 name|EP_W1_FREE_TX
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|zpstart
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|sc
 operator|->
 name|arpcom
@@ -6198,9 +3472,6 @@ operator|.
 name|ac_if
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 if|if
 condition|(
@@ -6250,32 +3521,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpintr error ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 return|return;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 if|if
 condition|(
@@ -6289,7 +3535,7 @@ operator|&=
 operator|~
 name|S_TX_COMPLETE
 expr_stmt|;
-comment|/* 	 * We need to read TX_STATUS until we get a 0 status in order to turn 	 * off the interrupt flag. 	 */
+comment|/* We need to read TX_STATUS until we get a 0 status in order 		 * to turn off the interrupt flag. */
 while|while
 condition|(
 operator|(
@@ -6315,18 +3561,6 @@ argument_list|,
 literal|0x0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ZE_DEBUG
-name|printf
-argument_list|(
-literal|"EP_W1_TX_STATUS = 0x%x\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
@@ -6346,19 +3580,6 @@ name|i
 operator|&
 name|TXS_MAX_COLLISION
 condition|)
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-operator|++
-operator|(
-name|ifp
-operator|->
-name|if_collisions
-operator|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 operator|++
 name|sc
 operator|->
@@ -6368,9 +3589,6 @@ name|ac_if
 operator|.
 name|if_collisions
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 name|i
@@ -6438,19 +3656,6 @@ argument_list|,
 name|TX_ENABLE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-operator|++
-operator|(
-name|ifp
-operator|->
-name|if_oerrors
-operator|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 operator|++
 name|sc
 operator|->
@@ -6460,35 +3665,19 @@ name|ac_if
 operator|.
 name|if_oerrors
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|zpstart
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|zpstart
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 block|}
 goto|goto
 name|checkintr
 goto|;
 block|}
+specifier|static
 name|void
 name|zpread
 parameter_list|(
@@ -6506,27 +3695,6 @@ name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|struct
-name|ether_header
-name|eth
-decl_stmt|;
-name|ipc_kmsg_t
-name|new_kmsg
-decl_stmt|;
-name|struct
-name|packet_header
-modifier|*
-name|pkt
-decl_stmt|;
-name|int
-name|totlen
-decl_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|struct
 name|mbuf
 modifier|*
@@ -6552,20 +3720,6 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpread ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|totlen
 operator|=
 name|inw
@@ -6575,9 +3729,6 @@ operator|+
 name|EP_W1_RX_STATUS
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 name|off
 operator|=
 literal|0
@@ -6586,9 +3737,6 @@ name|top
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 if|if
 condition|(
 name|totlen
@@ -6596,21 +3744,6 @@ operator|&
 name|ERR_RX
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-operator|++
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_ierrors
-operator|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 operator|++
 name|sc
 operator|->
@@ -6620,24 +3753,10 @@ name|ac_if
 operator|.
 name|if_ierrors
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 goto|goto
 name|out
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|totlen
-operator|&=
-name|RX_BYTES_MASK
-expr_stmt|;
-comment|/* Lower 11 bits = RX bytes. */
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|save_totlen
 operator|=
 name|totlen
@@ -6645,323 +3764,6 @@ operator|&=
 name|RX_BYTES_MASK
 expr_stmt|;
 comment|/* Lower 11 bits = RX bytes. */
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-comment|/* Get Etherheader */
-name|linw
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_RX_PIO_RD_1
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eth
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-operator|/
-literal|2
-argument_list|)
-expr_stmt|;
-name|totlen
-operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-expr_stmt|;
-name|new_kmsg
-operator|=
-name|net_kmsg_get
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|new_kmsg
-operator|==
-name|IKM_NULL
-condition|)
-block|{
-comment|/* Drop the packet */
-operator|++
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_rcvdrops
-operator|)
-expr_stmt|;
-comment|/* 	 * Is this true ? Do I have to remove the packet ? Maybe out discard 	 * incoming packet. 	 */
-goto|goto
-name|out
-goto|;
-block|}
-name|eh
-operator|=
-operator|(
-expr|struct
-name|ether_header
-operator|*
-operator|)
-operator|(
-operator|&
-name|net_kmsg
-argument_list|(
-name|new_kmsg
-argument_list|)
-operator|->
-name|header
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-name|pkt
-operator|=
-operator|(
-expr|struct
-name|packet_header
-operator|*
-operator|)
-operator|(
-operator|&
-name|net_kmsg
-argument_list|(
-name|new_kmsg
-argument_list|)
-operator|->
-name|packet
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-operator|*
-name|eh
-operator|=
-name|eth
-expr_stmt|;
-comment|/* Is this true ? */
-if|if
-condition|(
-name|sc
-operator|->
-name|bus32bit
-condition|)
-block|{
-name|linl
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_RX_PIO_RD_1
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|pkt
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|totlen
-operator|/
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|totlen
-operator|&
-literal|3
-condition|)
-name|linb
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_RX_PIO_RD_1
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|pkt
-operator|+
-literal|1
-operator|)
-operator|+
-operator|(
-name|totlen
-operator|&
-operator|~
-literal|3
-operator|)
-argument_list|,
-name|totlen
-operator|&
-literal|3
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|linw
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_RX_PIO_RD_1
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|pkt
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|totlen
-operator|/
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|totlen
-operator|&
-literal|1
-condition|)
-operator|*
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|pkt
-operator|+
-literal|1
-operator|)
-operator|+
-name|totlen
-operator|-
-literal|1
-operator|)
-operator|=
-name|inb
-argument_list|(
-name|BASE
-operator|+
-name|EP_W1_RX_PIO_RD_1
-argument_list|)
-expr_stmt|;
-block|}
-name|outw
-argument_list|(
-name|BASE
-operator|+
-name|EP_COMMAND
-argument_list|,
-name|RX_DISCARD_TOP_PACK
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|inw
-argument_list|(
-name|BASE
-operator|+
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
-operator|++
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_ipackets
-operator|)
-expr_stmt|;
-name|pkt
-operator|->
-name|type
-operator|=
-name|eh
-operator|->
-name|ether_type
-expr_stmt|;
-name|pkt
-operator|->
-name|length
-operator|=
-name|totlen
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|packet_header
-argument_list|)
-expr_stmt|;
-name|net_packet
-argument_list|(
-operator|&
-operator|(
-name|sc
-operator|->
-name|ds_if
-operator|)
-argument_list|,
-name|new_kmsg
-argument_list|,
-name|pkt
-operator|->
-name|length
-argument_list|,
-name|ethernet_priority
-argument_list|(
-name|new_kmsg
-argument_list|,
-name|pkt
-operator|->
-name|type
-argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpread done ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-return|return;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|m
 operator|=
 name|sc
@@ -7104,7 +3906,7 @@ expr|struct
 name|ether_header
 argument_list|)
 expr_stmt|;
-comment|/*      * mostly deal with trailer here.  (untested) We do this in a couple of      * parts.  First we check for a trailer, if we have one we convert the      * mbuf back to a regular mbuf and set the offset and subtract      * sizeof(struct ether_header) from the pktlen. After we've read the      * packet off the interface (all except for the trailer header, we then      * get a header mbuf, read the trailer into it, and fix up the mbuf      * pointer chain.      */
+comment|/* mostly deal with trailer here.  (untested) We do this in a couple 	 * of parts.  First we check for a trailer, if we have one we convert 	 * the mbuf back to a regular mbuf and set the offset and subtract 	 * sizeof(struct ether_header) from the pktlen. After we've read the 	 * packet off the interface (all except for the trailer header, we 	 * then get a header mbuf, read the trailer into it, and fix up the 	 * mbuf pointer chain. */
 name|eh
 operator|=
 name|mtod
@@ -7116,24 +3918,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* by nor@aecl.ntt.jp */
-block|eh->ether_type = etype = ntohs((u_short) eh->ether_type);     if (etype>= ETHERTYPE_TRAIL&& 	etype< ETHERTYPE_TRAIL + ETHERTYPE_NTRAILER) { 	m->m_data = m->m_dat;
-comment|/* Convert back to regular mbuf.  */
-block|m->m_flags = 0;
-comment|/* This sucks but non-trailers are the norm */
-block|off = (etype - ETHERTYPE_TRAIL) * 512; 	if (off>= ETHERMTU) { 	    m_freem(m); 	    return;
-comment|/* sanity */
-block|} 	totlen -= sizeof(struct ether_header);
-comment|/* We don't read the trailer */
-block|m->m_data += 2 * sizeof(u_short);
-comment|/* Get rid of type& len */
-block|}
-endif|#
-directive|endif
-comment|/* by nor@aecl.ntt.jp */
 while|while
 condition|(
 name|totlen
@@ -7645,7 +4429,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that the interface cannot be in promiscuous mode if there are 	 * no BPF listeners.  And if we are in promiscuous mode, we have to 	 * check if this packet is really ours. 	 */
+comment|/* Note that the interface cannot be in promiscuous mode if 		 * there are no BPF listeners.  And if we are in promiscuous 		 * mode, we have to check if this packet is really ours. */
 if|if
 condition|(
 operator|(
@@ -7750,9 +4534,6 @@ name|top
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|out
 label|:
 name|outw
@@ -7776,9 +4557,6 @@ operator|&
 name|S_COMMAND_IN_PROGRESS
 condition|)
 empty_stmt|;
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
 if|if
 condition|(
 name|top
@@ -7788,299 +4566,7 @@ argument_list|(
 name|top
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpread Error ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 block|}
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|int
-name|zpgetstat
-parameter_list|(
-name|dev
-parameter_list|,
-name|flavor
-parameter_list|,
-name|status
-parameter_list|,
-name|count
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|flavor
-decl_stmt|;
-name|dev_status_t
-name|status
-decl_stmt|;
-name|unsigned
-name|int
-modifier|*
-name|count
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpgetstat ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|if
-condition|(
-name|unit
-operator|<
-literal|0
-operator|||
-name|unit
-operator|>=
-name|NZP
-operator|||
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|attached
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|net_getstat
-argument_list|(
-operator|&
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|ds_if
-argument_list|,
-name|flavor
-argument_list|,
-name|status
-argument_list|,
-name|count
-argument_list|)
-operator|)
-return|;
-block|}
-name|int
-name|zpsetstat
-parameter_list|(
-name|dev
-parameter_list|,
-name|flavor
-parameter_list|,
-name|status
-parameter_list|,
-name|count
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|flavor
-decl_stmt|;
-name|dev_status_t
-name|status
-decl_stmt|;
-name|unsigned
-name|int
-name|count
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-specifier|register
-name|zp_softc_t
-modifier|*
-name|sc
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpsetstat ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-if|if
-condition|(
-name|unit
-operator|<
-literal|0
-operator|||
-name|unit
-operator|>=
-name|NZP
-operator|||
-name|zp_softc
-index|[
-name|unit
-index|]
-operator|.
-name|attached
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-name|sc
-operator|=
-operator|&
-name|zp_softc
-index|[
-name|unit
-index|]
-expr_stmt|;
-switch|switch
-condition|(
-name|flavor
-condition|)
-block|{
-case|case
-name|NET_STATUS
-case|:
-block|{
-specifier|register
-name|struct
-name|net_status
-modifier|*
-name|ns
-init|=
-operator|(
-expr|struct
-name|net_status
-operator|*
-operator|)
-name|status
-decl_stmt|;
-if|if
-condition|(
-name|count
-operator|<
-name|NET_STATUS_COUNT
-condition|)
-block|{
-return|return
-operator|(
-name|D_INVALID_SIZE
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_flags
-operator|!=
-name|ns
-operator|->
-name|flags
-condition|)
-block|{
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_flags
-operator|=
-name|ns
-operator|->
-name|flags
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_flags
-operator|&
-name|IFF_RUNNING
-condition|)
-block|{
-name|zpinit
-argument_list|(
-name|sc
-operator|->
-name|ds_if
-operator|.
-name|if_unit
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-break|break;
-default|default:
-return|return
-operator|(
-name|D_INVALID_OPERATION
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|D_SUCCESS
-operator|)
-return|;
-block|}
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 comment|/*  * Look familiar?  */
 specifier|static
 name|int
@@ -8136,17 +4622,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpioctl ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 switch|switch
 condition|(
 name|cmd
@@ -8522,40 +4997,6 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
-case|case
-name|SIOCGHWADDR
-case|:
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|sc
-operator|->
-name|sc_addr
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|ifr
-operator|->
-name|ifr_data
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=
@@ -8568,9 +5009,7 @@ name|error
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
+specifier|static
 name|void
 name|zpreset
 parameter_list|(
@@ -8586,17 +5025,6 @@ init|=
 name|splimp
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpreset ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|zpstop
 argument_list|(
 name|unit
@@ -8613,6 +5041,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+specifier|static
 name|void
 name|zpwatchdog
 parameter_list|(
@@ -8624,28 +5053,6 @@ modifier|*
 name|ifp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpwatchdog ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|ifp
-operator|->
-name|if_oerrors
-operator|++
-expr_stmt|;
-else|#
-directive|else
-comment|/* MACH_KERNEL */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -8662,9 +5069,6 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
 name|zpreset
 argument_list|(
 name|ifp
@@ -8673,6 +5077,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
+specifier|static
 name|void
 name|zpstop
 parameter_list|(
@@ -8693,17 +5098,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpstop ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|outw
 argument_list|(
 name|BASE
@@ -8822,26 +5216,6 @@ name|int
 name|offset
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### read_eeprom_data ####\n"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACH_KERNEL
-name|cngetc
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MACH_KERNEL */
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|outb
 argument_list|(
 name|id_port
@@ -8867,9 +5241,7 @@ literal|12
 argument_list|)
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|MACH_KERNEL
+specifier|static
 name|void
 name|zpmbuffill
 parameter_list|(
@@ -8897,17 +5269,6 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpmbuffill ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|s
 operator|=
 name|splimp
@@ -9007,17 +5368,6 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ZP_DEBUG
-name|printf
-argument_list|(
-literal|"### zpmbufempty ####\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ZP_DEBUG */
 name|s
 operator|=
 name|splimp
@@ -9092,24 +5442,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MACH_KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NZP> 0 */
-end_comment
 
 end_unit
 
