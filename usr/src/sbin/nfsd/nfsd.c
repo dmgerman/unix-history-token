@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.3 (Berkeley) %G%"
+literal|"@(#)nfsd.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -579,9 +579,17 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|MAXNFSDCNT
+value|20
+define|#
+directive|define
+name|DEFNFSDCNT
+value|4
 name|nfsdcnt
 operator|=
-literal|4
+name|DEFNFSDCNT
 expr_stmt|;
 name|cltpflag
 operator|=
@@ -608,14 +616,22 @@ directive|ifdef
 name|ISO
 define|#
 directive|define
-name|FLAGS
-value|"-crtu"
+name|GETOPT
+value|"cn:rtu"
+define|#
+directive|define
+name|USAGE
+value|"[-crtu] [-n num_servers]"
 else|#
 directive|else
 define|#
 directive|define
-name|FLAGS
-value|"-rtu"
+name|GETOPT
+value|"n:rtu"
+define|#
+directive|define
+name|USAGE
+value|"[-rtu] [-n num_servers]"
 endif|#
 directive|endif
 while|while
@@ -629,11 +645,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-operator|&
-name|FLAGS
-index|[
-literal|1
-index|]
+name|GETOPT
 argument_list|)
 operator|)
 operator|!=
@@ -644,6 +656,43 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'n'
+case|:
+name|nfsdcnt
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nfsdcnt
+operator|<
+literal|1
+operator|||
+name|nfsdcnt
+operator|>
+name|MAXNFSDCNT
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"nfsd count %d; reset to %d"
+argument_list|,
+name|DEFNFSDCNT
+argument_list|)
+expr_stmt|;
+name|nfsdcnt
+operator|=
+name|DEFNFSDCNT
+expr_stmt|;
+block|}
+break|break;
 case|case
 literal|'r'
 case|:
@@ -721,7 +770,7 @@ name|argc
 operator|-=
 name|optind
 expr_stmt|;
-comment|/* Trailing number is the count of daemons. */
+comment|/* 	 * XXX 	 * Backward compatibility, trailing number is the count of daemons. 	 */
 if|if
 condition|(
 name|argc
@@ -756,19 +805,19 @@ literal|1
 operator|||
 name|nfsdcnt
 operator|>
-literal|20
+name|MAXNFSDCNT
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"nfsd count %d; reset to 4"
+literal|"nfsd count %d; reset to %d"
 argument_list|,
-name|nfsdcnt
+name|DEFNFSDCNT
 argument_list|)
 expr_stmt|;
 name|nfsdcnt
 operator|=
-literal|4
+name|DEFNFSDCNT
 expr_stmt|;
 block|}
 block|}
@@ -2807,9 +2856,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nfsd [%s] [num_nfsds]\n"
+literal|"nfsd %s\n"
 argument_list|,
-name|FLAGS
+name|USAGE
 argument_list|)
 expr_stmt|;
 name|exit
