@@ -276,13 +276,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|kse
-name|kse0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|ksegrp
 name|ksegrp0
 decl_stmt|;
@@ -1174,11 +1167,6 @@ name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
-name|struct
-name|kse
-modifier|*
-name|ke
-decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|p
@@ -1191,39 +1179,10 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
-name|ke
-operator|=
-operator|&
-name|kse0
-expr_stmt|;
 name|kg
 operator|=
 operator|&
 name|ksegrp0
-expr_stmt|;
-name|ke
-operator|->
-name|ke_sched
-operator|=
-name|kse0_sched
-expr_stmt|;
-name|kg
-operator|->
-name|kg_sched
-operator|=
-name|ksegrp0_sched
-expr_stmt|;
-name|p
-operator|->
-name|p_sched
-operator|=
-name|proc0_sched
-expr_stmt|;
-name|td
-operator|->
-name|td_sched
-operator|=
-name|thread0_sched
 expr_stmt|;
 comment|/* 	 * Initialize magic number. 	 */
 name|p
@@ -1232,13 +1191,20 @@ name|p_magic
 operator|=
 name|P_MAGIC
 expr_stmt|;
-comment|/* 	 * Initialize thread, process and pgrp structures. 	 */
+comment|/* 	 * Initialize thread, process and ksegrp structures. 	 */
 name|procinit
 argument_list|()
 expr_stmt|;
+comment|/* set up proc zone */
 name|threadinit
 argument_list|()
 expr_stmt|;
+comment|/* set up thead, upcall and KSEGRP zones */
+comment|/* 	 * Initialise scheduler resources. 	 * Add scheduler specific parts to proc, ksegrp, thread as needed. 	 */
+name|schedinit
+argument_list|()
+expr_stmt|;
+comment|/* scheduler gets its house in order */
 comment|/* 	 * Initialize sleep queue hash table 	 */
 name|sleepinit
 argument_list|()
@@ -1366,7 +1332,6 @@ operator|=
 operator|&
 name|null_sysvec
 expr_stmt|;
-comment|/* 	 * proc_linkup was already done in init_i386() or alphainit() etc. 	 * because the earlier code needed to follow td->td_proc. Otherwise 	 * I would have done it here.. maybe this means this should be 	 * done earlier too. 	 */
 name|p
 operator|->
 name|p_flag
@@ -1436,28 +1401,9 @@ name|PUSER
 expr_stmt|;
 name|td
 operator|->
-name|td_kse
-operator|=
-name|ke
-expr_stmt|;
-comment|/* XXXKSE */
-name|td
-operator|->
 name|td_oncpu
 operator|=
 literal|0
-expr_stmt|;
-name|ke
-operator|->
-name|ke_state
-operator|=
-name|KES_THREAD
-expr_stmt|;
-name|ke
-operator|->
-name|ke_thread
-operator|=
-name|td
 expr_stmt|;
 name|p
 operator|->

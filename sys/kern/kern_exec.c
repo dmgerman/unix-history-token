@@ -1128,13 +1128,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_SA
-operator|||
-name|p
-operator|->
-name|p_numthreads
-operator|>
-literal|1
+name|P_HADTHREADS
 condition|)
 block|{
 if|if
@@ -1163,30 +1157,7 @@ operator|)
 return|;
 comment|/* Try again later. */
 block|}
-comment|/* 		 * If we get here all other threads are dead, 		 * so unset the associated flags and lose KSE mode. 		 */
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_SA
-expr_stmt|;
-name|td
-operator|->
-name|td_mailbox
-operator|=
-name|NULL
-expr_stmt|;
-name|td
-operator|->
-name|td_pflags
-operator|&=
-operator|~
-name|TDP_SA
-expr_stmt|;
-name|thread_single_end
-argument_list|()
-expr_stmt|;
+comment|/* 		 * If we get here all other threads are dead, 		 * and threading mode has been turned off 		 */
 block|}
 name|p
 operator|->

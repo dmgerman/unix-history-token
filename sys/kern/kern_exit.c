@@ -437,13 +437,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_SA
-operator|||
-name|p
-operator|->
-name|p_numthreads
-operator|>
-literal|1
+name|P_HADTHREADS
 condition|)
 block|{
 name|retry
@@ -465,25 +459,7 @@ condition|)
 goto|goto
 name|retry
 goto|;
-comment|/* 		 * All other activity in this process is now stopped. 		 * Remove excess KSEs and KSEGRPS. XXXKSE (when we have them) 		 * ... 		 * Turn off threading support. 		 */
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_SA
-expr_stmt|;
-name|td
-operator|->
-name|td_pflags
-operator|&=
-operator|~
-name|TDP_SA
-expr_stmt|;
-name|thread_single_end
-argument_list|()
-expr_stmt|;
-comment|/* Don't need this any more. */
+comment|/* 		 * All other activity in this process is now stopped. 		 * Threading support has been turned off. 		 */
 block|}
 name|p
 operator|->
@@ -1377,14 +1353,6 @@ expr_stmt|;
 name|lim_free
 argument_list|(
 name|plim
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Release this thread's reference to the ucred.  The actual proc 	 * reference will stay around until the proc is harvested by 	 * wait().  At this point the ucred is immutable (no other threads 	 * from this proc are around that can change it) so we leave the 	 * per-thread ucred pointer intact in case it is needed although 	 * in theory nothing should be using it at this point. 	 */
-name|crfree
-argument_list|(
-name|td
-operator|->
-name|td_ucred
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */

@@ -1274,7 +1274,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_kse
+name|td_sched
 argument_list|,
 operator|(
 name|long
@@ -1298,9 +1298,15 @@ name|p_flag
 operator|&
 name|P_SA
 condition|)
+name|newtd
+operator|=
 name|thread_switchout
 argument_list|(
 name|td
+argument_list|,
+name|flags
+argument_list|,
+name|newtd
 argument_list|)
 expr_stmt|;
 name|sched_switch
@@ -1324,7 +1330,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_kse
+name|td_sched
 argument_list|,
 operator|(
 name|long
