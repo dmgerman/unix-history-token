@@ -557,6 +557,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|591
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
@@ -581,6 +592,17 @@ operator|--
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|593
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
@@ -839,6 +861,17 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|588
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
@@ -874,6 +907,17 @@ name|hist_redraw
 goto|;
 block|}
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|596
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
