@@ -1666,7 +1666,7 @@ block|{
 name|int
 name|cc
 decl_stmt|;
-name|void
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -1915,10 +1915,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-operator|(
-name|char
-operator|*
-operator|)
 name|cp
 operator|+=
 name|cc
@@ -1934,10 +1930,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|cp
 operator|-
 operator|(

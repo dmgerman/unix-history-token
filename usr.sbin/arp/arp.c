@@ -2509,12 +2509,14 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-operator|(
-name|char
-operator|*
-operator|)
 name|sdl
 operator|=
+operator|(
+expr|struct
+name|sockaddr_dl
+operator|*
+operator|)
+operator|(
 operator|(
 name|char
 operator|*
@@ -2525,6 +2527,7 @@ name|SA_SIZE
 argument_list|(
 name|sin2
 argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
