@@ -142,6 +142,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from it's current tty.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -154,6 +158,31 @@ define|#
 directive|define
 name|SNPGTTY
 value|_IOR('T', 89, struct snptty)
+end_define
+
+begin_comment
+comment|/*  * Theese values would be returned by FIONREAD ioctl  * instead of number of characters in buffer in case  * of specific errors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNP_OFLOW
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP_TTYCLOSE
+value|-2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP_DETACH
+value|-3
 end_define
 
 begin_endif
