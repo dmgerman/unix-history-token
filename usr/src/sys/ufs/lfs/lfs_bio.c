@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -417,11 +417,16 @@ name|mp
 operator|=
 name|mountlist
 operator|.
-name|tqh_first
+name|cqh_first
 init|;
 name|mp
 operator|!=
-name|NULL
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|mountlist
 condition|;
 name|mp
 operator|=
@@ -429,7 +434,7 @@ name|mp
 operator|->
 name|mnt_list
 operator|.
-name|tqe_next
+name|cqe_next
 control|)
 block|{
 comment|/* The lock check below is to avoid races with unmount. */
