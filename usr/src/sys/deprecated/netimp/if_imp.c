@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.5	82/02/16	*/
+comment|/*	if_imp.c	4.6	82/02/16	*/
 end_comment
 
 begin_include
@@ -284,27 +284,14 @@ name|ui
 operator|->
 name|ui_flags
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* this should get cleaned after we talk to the imp */
+comment|/* this should be found by talking to the imp */
 name|ifp
 operator|->
 name|if_addr
 operator|=
-name|if_makeaddr
-argument_list|(
-name|ifp
-operator|->
-name|if_net
-argument_list|,
-name|ifp
-operator|->
-name|if_host
-argument_list|)
+literal|0x4e00000a
 expr_stmt|;
-endif|#
-directive|endif
+empty_stmt|;
 name|ifp
 operator|->
 name|if_init
@@ -2261,48 +2248,6 @@ name|dl_mtype
 operator|=
 name|IMPTYPE_NOOP
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|cp
-operator|->
-name|dl_network
-operator|=
-name|sc
-operator|->
-name|imp_if
-operator|.
-name|if_net
-expr_stmt|;
-comment|/* XXX */
-name|cp
-operator|->
-name|dl_host
-operator|=
-name|sc
-operator|->
-name|imp_if
-operator|.
-name|if_addr
-operator|.
-name|s_host
-expr_stmt|;
-comment|/* XXX */
-name|cp
-operator|->
-name|dl_imp
-operator|=
-name|sc
-operator|->
-name|imp_if
-operator|.
-name|if_addr
-operator|.
-name|s_imp
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 name|x
 operator|=
 name|splimp
