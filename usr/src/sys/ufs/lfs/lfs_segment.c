@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -761,11 +761,6 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"After writesuper returning\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -849,6 +844,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SEGWRITE
 name|printf
 argument_list|(
 literal|"callback: buffer: %x iocount %d\n"
@@ -860,6 +858,8 @@ operator|->
 name|lfs_iocount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fs
@@ -1635,15 +1635,6 @@ decl_stmt|,
 modifier|*
 name|lbnp
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_newseg: new segment %x\n"
-argument_list|,
-name|fs
-operator|->
-name|lfs_nextseg
-argument_list|)
-expr_stmt|;
 name|sp
 operator|=
 name|malloc
@@ -1969,11 +1960,6 @@ decl_stmt|;
 name|int
 name|nblocks
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_newsum\n"
-argument_list|)
-expr_stmt|;
 name|lfs_endsum
 argument_list|(
 name|fs
@@ -2126,6 +2112,9 @@ operator|)
 operator|/
 name|DEV_BSIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SEGWRITE
 name|printf
 argument_list|(
 literal|"alloc summary: bp %x, lblkno %x, bp index %d\n"
@@ -2147,6 +2136,8 @@ operator|-
 name|nblocks
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2440,13 +2431,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"lfs_updatemeta of %d blocks\n"
-argument_list|,
-name|nblocks
-argument_list|)
-expr_stmt|;
 comment|/* Sort the blocks and add disk addresses */
 name|shellsort
 argument_list|(
@@ -2532,13 +2516,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_updatemeta: block %d\n"
-argument_list|,
-name|lbn
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2600,8 +2577,7 @@ name|fs
 operator|->
 name|lfs_bsize
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
 literal|"lfs: negative bytes (segment %d)\n"
 argument_list|,
@@ -2612,12 +2588,6 @@ operator|->
 name|lfs_segtab
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"lfs: negative bytes in segment\n"
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|segup
@@ -2652,6 +2622,9 @@ operator|-
 name|NIADDR
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|META
 name|printf
 argument_list|(
 literal|"meta: update indirect block %d\n"
@@ -2659,6 +2632,8 @@ argument_list|,
 name|D_INDIR
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BREAD
 argument_list|(
 name|D_INDIR
@@ -2750,6 +2725,9 @@ name|fs
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|META
 name|printf
 argument_list|(
 literal|"meta: update indirect block %d\n"
@@ -2757,6 +2735,8 @@ argument_list|,
 name|S_INDIR
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BREAD
 argument_list|(
 name|S_INDIR
@@ -2822,6 +2802,9 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|META
 name|printf
 argument_list|(
 literal|"meta: update indirect block %d\n"
@@ -2829,6 +2812,8 @@ argument_list|,
 name|iblkno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BREAD
 argument_list|(
 name|iblkno
@@ -2919,11 +2904,6 @@ name|bytes_needed
 decl_stmt|,
 name|i
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_writeckp\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * This will write the dirty ifile blocks, but not the segusage 	 * table nor the ifile inode. 	 */
 name|sp
 operator|=
@@ -3317,13 +3297,6 @@ argument_list|)
 operator|->
 name|i_number
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_writefile: node %d\n"
-argument_list|,
-name|inum
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -3480,6 +3453,9 @@ name|sp
 operator|->
 name|fip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|META
 name|printf
 argument_list|(
 literal|"lfs_writefile: adding %d blocks\n"
@@ -3489,6 +3465,8 @@ operator|->
 name|fi_nblocks
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * If this is the ifile, always update the file count as we'll 		 * be adding the segment usage information even if we didn't 		 * write any blocks.  Also, don't update the FINFO pointer for 		 * the ifile as the segment usage information hasn't yet been 		 * added. 		 */
 if|if
 condition|(
@@ -3635,11 +3613,6 @@ decl_stmt|;
 name|int
 name|nblocks
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_writeinode\n"
-argument_list|)
-expr_stmt|;
 comment|/* Allocate a new inode block if necessary. */
 if|if
 condition|(
@@ -3737,27 +3710,6 @@ operator|-=
 name|fs
 operator|->
 name|lfs_bsize
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"alloc inode: bp %x, lblkno %x, bp index %d\n"
-argument_list|,
-name|sp
-operator|->
-name|sbp
-argument_list|,
-name|sp
-operator|->
-name|sbp
-operator|->
-name|b_lblkno
-argument_list|,
-name|fs
-operator|->
-name|lfs_ssize
-operator|-
-name|nblocks
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* Copy the new inode onto the inode page. */
@@ -3938,11 +3890,6 @@ name|void
 modifier|*
 name|pmeta
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_writeseg\n"
-argument_list|)
-expr_stmt|;
 comment|/* Update superblock segment address. */
 name|fs
 operator|->
@@ -4190,11 +4137,6 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_writesum\n"
-argument_list|)
-expr_stmt|;
 name|strategy
 operator|=
 name|VFSTOUFS
@@ -4246,6 +4188,18 @@ name|bp
 argument_list|)
 expr_stmt|;
 name|biowait
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* No associated vnode. */
+name|brelse
 argument_list|(
 name|bp
 argument_list|)
@@ -4311,10 +4265,22 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|strategy
+operator|=
+name|VFSTOUFS
 argument_list|(
-literal|"lfs_writesuper\n"
+name|fs
+operator|->
+name|lfs_ivnode
+operator|->
+name|v_mount
 argument_list|)
+operator|->
+name|um_devvp
+operator|->
+name|v_op
+operator|->
+name|vop_strategy
 expr_stmt|;
 comment|/* Checksum the superblock and copy it into a buffer. */
 name|fs
@@ -4370,24 +4336,7 @@ name|LFS
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Write the first superblock. */
-name|strategy
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|fs
-operator|->
-name|lfs_ivnode
-operator|->
-name|v_mount
-argument_list|)
-operator|->
-name|um_devvp
-operator|->
-name|v_op
-operator|->
-name|vop_strategy
-expr_stmt|;
+comment|/* Write the first superblock (wait). */
 call|(
 name|strategy
 call|)
@@ -4400,7 +4349,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* Write the second superblock. */
+comment|/* Write the second superblock (don't wait). */
 name|bp
 operator|->
 name|b_flags
@@ -4408,6 +4357,19 @@ operator|&=
 operator|~
 name|B_DONE
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ASYNC
+expr_stmt|;
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* No associated vnode. */
 name|bp
 operator|->
 name|b_blkno
@@ -4428,28 +4390,6 @@ name|strategy
 call|)
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_vp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* No associated vnode. */
-name|biowait
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_writesuper is returning\n"
 argument_list|)
 expr_stmt|;
 block|}
