@@ -755,12 +755,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
 name|struct
 name|pcic_softc
 modifier|*
@@ -833,9 +827,9 @@ block|{
 case|case
 literal|0
 case|:
-name|strcpy
+name|device_printf
 argument_list|(
-name|buf
+name|dev
 argument_list|,
 literal|"TI12XX PCI Config Reg: "
 argument_list|)
@@ -844,9 +838,9 @@ break|break;
 case|case
 literal|1
 case|:
-name|strcpy
+name|device_printf
 argument_list|(
-name|buf
+name|dev
 argument_list|,
 literal|"TI113X PCI Config Reg: "
 argument_list|)
@@ -931,18 +925,14 @@ name|syscntl
 operator|&
 name|TI113X_SYSCNTL_CLKRUN_SEL
 condition|)
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[clkrun irq 12]"
 argument_list|)
 expr_stmt|;
 else|else
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[clkrun irq 10]"
 argument_list|)
 expr_stmt|;
@@ -1012,10 +1002,8 @@ name|cardcntl
 operator|&
 name|TI113X_CARDCNTL_RING_ENA
 condition|)
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[ring enable]"
 argument_list|)
 expr_stmt|;
@@ -1025,10 +1013,8 @@ name|cardcntl
 operator|&
 name|TI113X_CARDCNTL_SPKR_ENA
 condition|)
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[speaker enable]"
 argument_list|)
 expr_stmt|;
@@ -1038,10 +1024,8 @@ name|syscntl
 operator|&
 name|TI113X_SYSCNTL_PWRSAVINGS
 condition|)
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[pwr save]"
 argument_list|)
 expr_stmt|;
@@ -1055,10 +1039,8 @@ block|{
 case|case
 name|TI113X_DEVCNTL_INTR_ISA
 case|:
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[CSC parallel isa irq]"
 argument_list|)
 expr_stmt|;
@@ -1066,10 +1048,8 @@ break|break;
 case|case
 name|TI113X_DEVCNTL_INTR_SERIAL
 case|:
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[CSC serial isa irq]"
 argument_list|)
 expr_stmt|;
@@ -1077,10 +1057,8 @@ break|break;
 case|case
 name|TI113X_DEVCNTL_INTR_NONE
 case|:
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[pci only]"
 argument_list|)
 expr_stmt|;
@@ -1088,22 +1066,16 @@ break|break;
 case|case
 name|TI12XX_DEVCNTL_INTR_ALLSERIAL
 case|:
-name|strcat
+name|printf
 argument_list|(
-name|buf
-argument_list|,
 literal|"[FUNC pci int + CSC serial isa irq]"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|device_printf
+name|printf
 argument_list|(
-name|dev
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|buf
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
