@@ -299,7 +299,7 @@ name|osrelease
 argument_list|,
 literal|0
 argument_list|,
-literal|"Operating system type"
+literal|"Operating system release"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1841,7 +1841,7 @@ name|init_path
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Path used to search the init process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

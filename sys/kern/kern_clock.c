@@ -1647,7 +1647,7 @@ name|sysctl_kern_clockrate
 argument_list|,
 literal|"S,clockinfo"
 argument_list|,
-literal|""
+literal|"Rate and period of various kernel clocks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

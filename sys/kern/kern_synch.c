@@ -444,7 +444,7 @@ name|sysctl_kern_quantum
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Roundrobin scheduling quantum in microseconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
