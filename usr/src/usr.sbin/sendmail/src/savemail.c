@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.29 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -766,8 +766,8 @@ case|case
 name|ESM_POSTMASTER
 case|:
 comment|/* 			**  Similar to previous case, but to system postmaster. 			*/
-if|if
-condition|(
+name|q
+operator|=
 name|parseaddr
 argument_list|(
 literal|"postmaster"
@@ -782,6 +782,10 @@ name|NULL
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|q
 operator|==
 name|NULL
 condition|)
@@ -1456,6 +1460,42 @@ argument_list|(
 literal|'a'
 argument_list|,
 literal|"\201b"
+argument_list|,
+name|ee
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'r'
+argument_list|,
+literal|"internal"
+argument_list|,
+name|ee
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+literal|"localhost"
+argument_list|,
+name|ee
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'_'
+argument_list|,
+literal|"localhost"
 argument_list|,
 name|ee
 argument_list|)
