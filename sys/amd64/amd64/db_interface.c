@@ -975,10 +975,8 @@ name|PG_RW
 expr_stmt|;
 block|}
 block|}
-name|pmap_invalidate_all
-argument_list|(
-name|kernel_pmap
-argument_list|)
+name|invltlb
+argument_list|()
 expr_stmt|;
 block|}
 name|dst
@@ -1027,10 +1025,8 @@ name|ptep1
 operator|=
 name|oldmap1
 expr_stmt|;
-name|pmap_invalidate_all
-argument_list|(
-name|kernel_pmap
-argument_list|)
+name|invltlb
+argument_list|()
 expr_stmt|;
 block|}
 block|}
