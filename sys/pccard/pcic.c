@@ -2175,15 +2175,27 @@ operator|*
 name|PCIC_SLOT_SIZE
 expr_stmt|;
 block|}
-comment|/* XXX - Screwed up slot 1 on the VLSI chips */
+comment|/*  		 * XXX - Screwed up slot 1 on the VLSI chips.  According to 		 * the Linux PCMCIA code from David Hinds, working chipsets 		 * return 0x84 from their (correct) ID ports, while the broken 		 * ones would need to be probed at the new offset we set after 		 * we assume it's broken. 		 */
 if|if
 condition|(
+operator|(
 name|slot
 operator|==
 literal|1
+operator|)
 operator|&&
 name|is_vlsi
-condition|)
+operator|&&
+operator|(
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_ID_REV
+operator|!=
+literal|0x84
+argument_list|)
+operator|)
 block|{
 name|sp
 operator|->
