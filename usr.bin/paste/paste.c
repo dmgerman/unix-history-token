@@ -132,7 +132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
+name|int
 name|parallel
 parameter_list|(
 name|char
@@ -143,7 +143,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sequential
 parameter_list|(
 name|char
@@ -197,6 +197,8 @@ parameter_list|)
 block|{
 name|int
 name|ch
+decl_stmt|,
+name|rval
 decl_stmt|,
 name|seq
 decl_stmt|;
@@ -293,12 +295,16 @@ if|if
 condition|(
 name|seq
 condition|)
+name|rval
+operator|=
 name|sequential
 argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
 else|else
+name|rval
+operator|=
 name|parallel
 argument_list|(
 name|argv
@@ -306,7 +312,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -339,7 +345,7 @@ typedef|;
 end_typedef
 
 begin_function
-name|void
+name|int
 name|parallel
 parameter_list|(
 name|char
@@ -771,11 +777,16 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|sequential
 parameter_list|(
 name|char
@@ -790,6 +801,8 @@ name|fp
 decl_stmt|;
 name|int
 name|cnt
+decl_stmt|,
+name|failed
 decl_stmt|;
 name|char
 name|ch
@@ -808,6 +821,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|failed
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -863,6 +880,10 @@ literal|"%s"
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|failed
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -1003,6 +1024,13 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|failed
+operator|!=
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
