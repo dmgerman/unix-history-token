@@ -1276,6 +1276,10 @@ operator|&=
 operator|~
 name|DIST_SRC
 expr_stmt|;
+name|SrcDists
+operator|=
+literal|0
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: /usr/src exists and sources were selected as upgrade\n"
