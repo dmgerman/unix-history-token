@@ -2429,7 +2429,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|critical_t
+name|register_t
 name|psr
 decl_stmt|;
 name|psr

@@ -76,7 +76,7 @@ name|MCOUNT_DECL
 parameter_list|(
 name|s
 parameter_list|)
-value|critical_t c;
+value|register_t c;
 end_define
 
 begin_ifdef

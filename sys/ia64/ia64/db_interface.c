@@ -2568,7 +2568,7 @@ operator|&
 name|RB_GDB
 operator|)
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 comment|/* 	 * Don't bother checking for usermode, since a benign entry 	 * by the kernel (call to Debugger() or a breakpoint) has 	 * already checked for usermode.  If neither of those 	 * conditions exist, something Bad has happened. 	 */

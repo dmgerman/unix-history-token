@@ -1121,13 +1121,13 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|critical_t
+name|register_t
 name|intr_disable
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|psr
 decl_stmt|;
 asm|__asm __volatile ("mov %0=psr;;" : "=r" (psr));

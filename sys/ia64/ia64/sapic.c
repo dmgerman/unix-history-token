@@ -297,7 +297,7 @@ operator|*
 operator|)
 name|rte
 decl_stmt|;
-name|critical_t
+name|register_t
 name|c
 decl_stmt|;
 name|c
@@ -381,7 +381,7 @@ operator|*
 operator|)
 name|rte
 decl_stmt|;
-name|critical_t
+name|register_t
 name|c
 decl_stmt|;
 name|c
