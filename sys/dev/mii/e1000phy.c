@@ -600,7 +600,7 @@ name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
 argument_list|,
-name|IFM_1000_TX
+name|IFM_1000_T
 argument_list|,
 literal|0
 argument_list|,
@@ -618,7 +618,7 @@ name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
 argument_list|,
-name|IFM_1000_TX
+name|IFM_1000_T
 argument_list|,
 name|IFM_FDX
 argument_list|,
@@ -1101,7 +1101,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IFM_1000_TX
+name|IFM_1000_T
 case|:
 if|if
 condition|(
@@ -1610,7 +1610,7 @@ name|mii
 operator|->
 name|mii_media_active
 operator||=
-name|IFM_1000_TX
+name|IFM_1000_T
 expr_stmt|;
 elseif|else
 if|if

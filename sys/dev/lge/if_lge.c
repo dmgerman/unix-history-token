@@ -1478,7 +1478,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|IFM_1000_TX
+name|IFM_1000_T
 case|:
 case|case
 name|IFM_1000_SX
@@ -5063,7 +5063,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|==
-name|IFM_1000_TX
+name|IFM_1000_T
 condition|)
 name|printf
 argument_list|(

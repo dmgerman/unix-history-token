@@ -3263,7 +3263,7 @@ operator|->
 name|ifm_media
 argument_list|)
 operator|==
-name|IFM_1000_TX
+name|IFM_1000_T
 operator|&&
 operator|(
 name|IFM_OPTIONS
@@ -3423,14 +3423,14 @@ operator|->
 name|mii_media_active
 operator|&
 operator|(
-name|IFM_1000_TX
+name|IFM_1000_T
 operator||
 name|IFM_HDX
 operator|)
 operator|)
 operator|==
 operator|(
-name|IFM_1000_TX
+name|IFM_1000_T
 operator||
 name|IFM_HDX
 operator|)

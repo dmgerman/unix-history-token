@@ -6283,7 +6283,7 @@ name|sc
 operator|->
 name|sk_pmd
 operator|=
-name|IFM_1000_TX
+name|IFM_1000_T
 expr_stmt|;
 break|break;
 default|default:

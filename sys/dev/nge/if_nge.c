@@ -2497,7 +2497,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|==
-name|IFM_1000_TX
+name|IFM_1000_T
 operator|||
 name|IFM_SUBTYPE
 argument_list|(
@@ -6205,7 +6205,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|==
-name|IFM_1000_TX
+name|IFM_1000_T
 condition|)
 name|printf
 argument_list|(

@@ -675,7 +675,7 @@ name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
 argument_list|,
-name|IFM_1000_TX
+name|IFM_1000_T
 argument_list|,
 literal|0
 argument_list|,
@@ -698,7 +698,7 @@ name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
 argument_list|,
-name|IFM_1000_TX
+name|IFM_1000_T
 argument_list|,
 name|IFM_FDX
 argument_list|,
@@ -1049,7 +1049,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IFM_1000_TX
+name|IFM_1000_T
 case|:
 name|speed
 operator|=
@@ -1132,7 +1132,7 @@ operator|->
 name|ifm_media
 argument_list|)
 operator|!=
-name|IFM_1000_TX
+name|IFM_1000_T
 condition|)
 break|break;
 comment|/* 			 * When settning the link manually, one side must 			 * be the master and the other the slave. However 			 * ifmedia doesn't give us a good way to specify 			 * this, so we fake it by using one of the LINK 			 * flags. If LINK0 is set, we program the PHY to 			 * be a master, otherwise it's a slave. 			 */
@@ -1486,7 +1486,7 @@ name|mii
 operator|->
 name|mii_media_active
 operator||=
-name|IFM_1000_TX
+name|IFM_1000_T
 operator||
 name|IFM_FDX
 expr_stmt|;
@@ -1498,7 +1498,7 @@ name|mii
 operator|->
 name|mii_media_active
 operator||=
-name|IFM_1000_TX
+name|IFM_1000_T
 operator||
 name|IFM_HDX
 expr_stmt|;

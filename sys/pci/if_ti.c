@@ -7675,7 +7675,7 @@ name|ifmedia
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_1000_TX
+name|IFM_1000_T
 argument_list|,
 literal|0
 argument_list|,
@@ -7691,7 +7691,7 @@ name|ifmedia
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_1000_TX
+name|IFM_1000_T
 operator||
 name|IFM_FDX
 argument_list|,
@@ -10310,7 +10310,7 @@ case|case
 name|IFM_1000_SX
 case|:
 case|case
-name|IFM_1000_TX
+name|IFM_1000_T
 case|:
 name|CSR_WRITE_4
 argument_list|(
@@ -10593,7 +10593,7 @@ name|ifmr
 operator|->
 name|ifm_active
 operator||=
-name|IFM_1000_TX
+name|IFM_1000_T
 expr_stmt|;
 else|else
 name|ifmr

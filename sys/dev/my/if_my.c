@@ -2327,7 +2327,7 @@ name|ability
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 * this version did not support 1000M, 				 * ifm->ifm_media = 				 * IFM_ETHER|IFM_1000_TX|IFM_FDX; 				 */
+comment|/* 				 * this version did not support 1000M, 				 * ifm->ifm_media = 				 * IFM_ETHER|IFM_1000_T|IFM_FDX; 				 */
 name|ifm
 operator|->
 name|ifm_media
@@ -2373,7 +2373,7 @@ name|ability
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 * this version did not support 1000M, 				 * ifm->ifm_media = IFM_ETHER|IFM_1000_TX; 				 */
+comment|/* 				 * this version did not support 1000M, 				 * ifm->ifm_media = IFM_ETHER|IFM_1000_T; 				 */
 name|ifm
 operator|->
 name|ifm_media
@@ -3068,7 +3068,7 @@ if|#
 directive|if
 literal|0
 comment|/* this version did not support 1000M, */
-block|if (sc->my_pinfo->my_vid == MarvellPHYID0) { 		if (bootverbose) 			printf("my%d: 1000Mbps half-duplex mode supported\n", 			       sc->my_unit);  		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_TX, 0, NULL); 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_TX | IFM_HDX, 		    0, NULL); 		if (bootverbose) 			printf("my%d: 1000Mbps full-duplex mode supported\n", 			   sc->my_unit); 		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_TX | IFM_FDX, 		    0, NULL); 		sc->ifmedia.ifm_media = IFM_ETHER | IFM_1000_TX | IFM_FDX; 	}
+block|if (sc->my_pinfo->my_vid == MarvellPHYID0) { 		if (bootverbose) 			printf("my%d: 1000Mbps half-duplex mode supported\n", 			       sc->my_unit);  		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T, 0, NULL); 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_HDX, 		    0, NULL); 		if (bootverbose) 			printf("my%d: 1000Mbps full-duplex mode supported\n", 			   sc->my_unit); 		ifp->if_baudrate = 1000000000; 		ifmedia_add(&sc->ifmedia, IFM_ETHER | IFM_1000_T | IFM_FDX, 		    0, NULL); 		sc->ifmedia.ifm_media = IFM_ETHER | IFM_1000_T | IFM_FDX; 	}
 endif|#
 directive|endif
 if|if
@@ -3259,7 +3259,7 @@ if|#
 directive|if
 literal|0
 comment|/* this version did not support 1000M, */
-block|if (IFM_SUBTYPE(media) == IFM_1000_TX) { 		printf("1000Mbps/T4, half-duplex\n"); 		bmcr&= ~PHY_BMCR_SPEEDSEL; 		bmcr&= ~PHY_BMCR_DUPLEX; 		bmcr |= PHY_BMCR_1000; 	}
+block|if (IFM_SUBTYPE(media) == IFM_1000_T) { 		printf("1000Mbps/T4, half-duplex\n"); 		bmcr&= ~PHY_BMCR_SPEEDSEL; 		bmcr&= ~PHY_BMCR_DUPLEX; 		bmcr |= PHY_BMCR_1000; 	}
 endif|#
 directive|endif
 if|if
@@ -7943,7 +7943,7 @@ if|#
 directive|if
 literal|0
 comment|/* this version did not support 1000M, */
-block|if (sc->my_pinfo->my_vid = MarvellPHYID0) { 		ability2 = my_phy_readreg(sc, PHY_1000SR); 		if (ability2& PHY_1000SR_1000BTXFULL) { 			advert = 0; 			ability = 0; 	  		ifmr->ifm_active = IFM_ETHER|IFM_1000_TX|IFM_FDX; 	  	} else if (ability& PHY_1000SR_1000BTXHALF) { 			advert = 0; 			ability = 0; 			ifmr->ifm_active = IFM_ETHER|IFM_1000_TX|IFM_HDX; 		} 	}
+block|if (sc->my_pinfo->my_vid = MarvellPHYID0) { 		ability2 = my_phy_readreg(sc, PHY_1000SR); 		if (ability2& PHY_1000SR_1000BTXFULL) { 			advert = 0; 			ability = 0; 	  		ifmr->ifm_active = IFM_ETHER|IFM_1000_T|IFM_FDX; 	  	} else if (ability& PHY_1000SR_1000BTXHALF) { 			advert = 0; 			ability = 0; 			ifmr->ifm_active = IFM_ETHER|IFM_1000_T|IFM_HDX; 		} 	}
 endif|#
 directive|endif
 if|if

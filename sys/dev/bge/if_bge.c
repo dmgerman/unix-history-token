@@ -2507,7 +2507,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|==
-name|IFM_1000_TX
+name|IFM_1000_T
 condition|)
 block|{
 name|BGE_SETBIT
@@ -9321,7 +9321,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|==
-name|IFM_1000_TX
+name|IFM_1000_T
 operator|||
 name|IFM_SUBTYPE
 argument_list|(

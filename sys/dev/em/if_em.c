@@ -4340,7 +4340,7 @@ name|ifmr
 operator|->
 name|ifm_active
 operator||=
-name|IFM_1000_TX
+name|IFM_1000_T
 expr_stmt|;
 break|break;
 block|}
@@ -4467,7 +4467,7 @@ case|case
 name|IFM_1000_SX
 case|:
 case|case
-name|IFM_1000_TX
+name|IFM_1000_T
 case|:
 name|adapter
 operator|->
@@ -5764,7 +5764,7 @@ name|media
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_1000_TX
+name|IFM_1000_T
 operator||
 name|IFM_FDX
 argument_list|,
@@ -5782,7 +5782,7 @@ name|media
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_1000_TX
+name|IFM_1000_T
 argument_list|,
 literal|0
 argument_list|,
