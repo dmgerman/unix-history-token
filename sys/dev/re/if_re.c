@@ -5314,11 +5314,6 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
