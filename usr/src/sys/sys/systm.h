@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.9	%G%	*/
+comment|/*	systm.h	4.10	%G%	*/
 end_comment
 
 begin_comment
@@ -453,6 +453,16 @@ end_decl_stmt
 begin_comment
 comment|/* no one is running just now */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|catcher
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
