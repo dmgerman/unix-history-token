@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1824,6 +1836,21 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_init_ifnet
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|mac_create_ifnet
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_index
@@ -2539,6 +2566,17 @@ argument_list|,
 name|IFAN_DEPARTURE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_ifnet
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MAC */
 name|KNOTE
 argument_list|(
 operator|&
