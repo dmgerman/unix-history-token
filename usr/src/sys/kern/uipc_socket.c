@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.53	82/10/16	*/
+comment|/*	uipc_socket.c	4.54	82/10/16	*/
 end_comment
 
 begin_include
@@ -2231,7 +2231,7 @@ argument_list|(
 operator|&
 name|so
 operator|->
-name|so_snd
+name|so_rcv
 argument_list|,
 literal|"soreceive restart"
 argument_list|)
