@@ -584,6 +584,16 @@ name|SADATA_OFFSET
 operator|)
 expr_stmt|;
 return|return
+operator|(
+name|sa
+operator|->
+name|sa_len
+operator|<
+name|SADATA_OFFSET
+operator|)
+condition|?
+literal|0
+else|:
 name|sa
 operator|->
 name|sa_len
