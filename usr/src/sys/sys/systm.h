@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.14	81/03/09	*/
+comment|/*	systm.h	4.15	81/04/18	*/
 end_comment
 
 begin_comment
@@ -476,6 +476,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|panicstr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wantin
 decl_stmt|;
 end_decl_stmt
 
