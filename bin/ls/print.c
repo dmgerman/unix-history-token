@@ -2579,16 +2579,8 @@ index|[
 name|j
 index|]
 operator|=
-name|defcolors
-index|[
-literal|2
-operator|*
-name|i
-operator|+
-name|j
-index|]
 operator|-
-literal|'0'
+literal|1
 expr_stmt|;
 block|}
 block|}
