@@ -217,8 +217,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
-name|ofwd_getunit
+name|void
+name|ofwd_enter_dev
 parameter_list|(
 specifier|const
 name|char
