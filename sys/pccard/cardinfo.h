@@ -607,6 +607,13 @@ begin_comment
 comment|/* String for snprintf */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCCARD_MEMSIZE
+value|(4*1024)
+end_define
+
 begin_endif
 endif|#
 directive|endif
