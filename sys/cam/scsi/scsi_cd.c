@@ -1232,28 +1232,6 @@ name|CHANGER_MAX_BUSY_SECONDS
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX KDM this CAM node should be moved if we ever get more CAM sysctl  * variables.  */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cam
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"CAM Subsystem"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(

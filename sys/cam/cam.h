@@ -477,6 +477,29 @@ name|ccb
 union_decl|;
 end_union_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_comment
+comment|/* from sysctl.h */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_cam
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__BEGIN_DECLS
 end_macro
