@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,6 +77,28 @@ end_struct
 
 begin_comment
 comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCOMLEN
+value|16
+end_define
+
+begin_comment
+comment|/*<= MAXNAMLEN,>= sizeof(ac_comm) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXLOGNAME
+value|12
+end_define
+
+begin_comment
+comment|/*>= UT_NAMESIZE */
 end_comment
 
 begin_struct
@@ -338,6 +360,24 @@ modifier|*
 name|p_tracep
 decl_stmt|;
 comment|/* trace to vnode */
+name|char
+name|p_comm
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|char
+name|p_logname
+index|[
+name|MAXLOGNAME
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|p_wmesg
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -354,6 +394,97 @@ decl_stmt|;
 comment|/* data cache key */
 endif|#
 directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*   * proc ops return arrays of augmented proc structures  */
+end_comment
+
+begin_struct
+struct|struct
+name|kinfo_proc
+block|{
+name|struct
+name|proc
+name|kp_proc
+decl_stmt|;
+comment|/* proc structure */
+struct|struct
+name|eproc
+block|{
+name|struct
+name|proc
+modifier|*
+name|e_paddr
+decl_stmt|;
+comment|/* address of proc */
+name|struct
+name|session
+modifier|*
+name|e_sess
+decl_stmt|;
+comment|/* session pointer */
+name|pid_t
+name|e_pgid
+decl_stmt|;
+comment|/* process group id */
+name|short
+name|e_jobc
+decl_stmt|;
+comment|/* job control counter */
+name|dev_t
+name|e_tdev
+decl_stmt|;
+comment|/* controlling tty */
+name|pid_t
+name|e_tpgid
+decl_stmt|;
+comment|/* tty process group id */
+name|struct
+name|session
+modifier|*
+name|e_tsess
+decl_stmt|;
+comment|/* tty session pointer */
+define|#
+directive|define
+name|WMESGLEN
+value|7
+name|char
+name|e_wmesg
+index|[
+name|WMESGLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* wchan message */
+name|size_t
+name|e_xsize
+decl_stmt|;
+comment|/* text size */
+name|short
+name|e_xrssize
+decl_stmt|;
+comment|/* text rss */
+name|short
+name|e_xccount
+decl_stmt|;
+comment|/* text references */
+name|short
+name|e_xswrss
+decl_stmt|;
+name|long
+name|e_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|kp_eproc
+struct|;
 block|}
 struct|;
 end_struct
@@ -861,12 +992,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SLOGIN
+name|SEXEC
 value|0x0800000
 end_define
 
 begin_comment
-comment|/* a login process (legit child of init) */
+comment|/* process called exec */
 end_comment
 
 begin_define
@@ -883,23 +1014,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SKTR
+name|SLOGIN
 value|0x2000000
 end_define
 
 begin_comment
-comment|/* pass kernel tracing flags to children */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEXEC
-value|0x8000000
-end_define
-
-begin_comment
-comment|/* process called exec */
+comment|/* a login process (legit child of init) */
 end_comment
 
 end_unit
