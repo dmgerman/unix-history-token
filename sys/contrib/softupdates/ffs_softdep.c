@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.46 (McKusick) 1/9/00  * $FreeBSD$  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.48 (McKusick) 1/10/00  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -7887,54 +7887,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add the freeblks structure to the list of operations that 	 * must await the zero'ed inode being written to disk. If we 	 * still have a bitmap dependency, then the inode has never been 	 * written to disk, so we can process the freeblks immediately. 	 */
-if|if
-condition|(
-operator|(
-name|inodedep
-operator|->
-name|id_state
-operator|&
-name|DEPCOMPLETE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|FREE_LOCK
 argument_list|(
 operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|handle_workitem_freeblocks
-argument_list|(
-name|freeblks
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|WORKLIST_INSERT
-argument_list|(
-operator|&
-name|inodedep
-operator|->
-name|id_bufwait
-argument_list|,
-operator|&
-name|freeblks
-operator|->
-name|fb_list
-argument_list|)
-expr_stmt|;
-name|FREE_LOCK
-argument_list|(
-operator|&
-name|lk
-argument_list|)
-expr_stmt|;
-block|}
 name|bdwrite
 argument_list|(
 name|bp
@@ -8038,10 +7996,9 @@ name|lk
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Try freeing the inodedep in case that was the last dependency. 	 */
+comment|/* 	 * Add the freeblks structure to the list of operations that 	 * must await the zero'ed inode being written to disk. If we 	 * still have a bitmap dependency, then the inode has never been 	 * written to disk, so we can process the freeblks immediately. 	 * If the inodedep does not exist, then the zero'ed inode has 	 * been written and we can also proceed. 	 */
 if|if
 condition|(
-operator|(
 name|inodedep_lookup
 argument_list|(
 name|fs
@@ -8055,16 +8012,50 @@ argument_list|,
 operator|&
 name|inodedep
 argument_list|)
-operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-operator|(
-name|void
-operator|)
+operator|||
 name|free_inodedep
 argument_list|(
 name|inodedep
+argument_list|)
+operator|||
+operator|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|DEPCOMPLETE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+name|handle_workitem_freeblocks
+argument_list|(
+name|freeblks
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|WORKLIST_INSERT
+argument_list|(
+operator|&
+name|inodedep
+operator|->
+name|id_bufwait
+argument_list|,
+operator|&
+name|freeblks
+operator|->
+name|fb_list
 argument_list|)
 expr_stmt|;
 name|FREE_LOCK
@@ -8073,6 +8064,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -8776,7 +8768,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk. Drop the dependency as it is no longer 	 * necessary since the inode is being deallocated. We set the 	 * ALLCOMPLETE flags since the bitmap now properly shows that the 	 * inode is not allocated. Even if the inode is actively being 	 * written, it has been rolled back to its zero'ed state, so we 	 * are ensured that a zero inode is what is on the disk. For short 	 * lived files, this change will usually result in removing all the 	 * depedencies from the inode so that it can be freed immediately. 	 */
+comment|/* 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk. Drop the dependency as it is no longer 	 * necessary since the inode is being deallocated. We set the 	 * ALLCOMPLETE flags since the bitmap now properly shows that the 	 * inode is not allocated. Even if the inode is actively being 	 * written, it has been rolled back to its zero'ed state, so we 	 * are ensured that a zero inode is what is on the disk. For short 	 * lived files, this change will usually result in removing all the 	 * dependencies from the inode so that it can be freed immediately. 	 */
 if|if
 condition|(
 operator|(
@@ -12042,6 +12034,9 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+name|ino_t
+name|oldinum
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -12114,7 +12109,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"handle_workitem_remove: lost inodedep 1"
+literal|"handle_workitem_remove: lost inodedep"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Normal file deletion. 	 */
@@ -12300,12 +12295,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk. Drop the dependency as it is no longer 	 * necessary since the inode is being deallocated. We set the 	 * ALLCOMPLETE flags since the bitmap now properly shows that the 	 * inode is not allocated. Even if the inode is actively being 	 * written, it has been rolled back to its zero'ed state, so we 	 * are ensured that a zero inode is what is on the disk. For short 	 * lived files, this change will usually result in removing all the 	 * depedencies from the inode so that it can be freed immediately. 	 */
+comment|/* 	 * If there is no inode dependency then we can free immediately. 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk. Drop the dependency as it is no longer 	 * necessary since the inode is being deallocated. We set the 	 * ALLCOMPLETE flags since the bitmap now properly shows that the 	 * inode is not allocated. Even if the inode is actively being 	 * written, it has been rolled back to its zero'ed state, so we 	 * are ensured that a zero inode is what is on the disk. For short 	 * lived files, this change will usually result in removing all the 	 * dependencies from the inode so that it can be freed immediately. 	 */
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
 name|lk
 argument_list|)
+expr_stmt|;
+name|dirrem
+operator|->
+name|dm_state
+operator|=
+literal|0
+expr_stmt|;
+name|oldinum
+operator|=
+name|dirrem
+operator|->
+name|dm_oldinum
+expr_stmt|;
+name|dirrem
+operator|->
+name|dm_oldinum
+operator|=
+name|dirrem
+operator|->
+name|dm_dirinum
 expr_stmt|;
 if|if
 condition|(
@@ -12316,9 +12331,7 @@ name|ip
 operator|->
 name|i_fs
 argument_list|,
-name|dirrem
-operator|->
-name|dm_oldinum
+name|oldinum
 argument_list|,
 literal|0
 argument_list|,
@@ -12329,11 +12342,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"handle_workitem_remove: lost inodedep 2"
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|(
@@ -12375,20 +12386,6 @@ name|id_list
 argument_list|)
 expr_stmt|;
 block|}
-name|dirrem
-operator|->
-name|dm_state
-operator|=
-literal|0
-expr_stmt|;
-name|dirrem
-operator|->
-name|dm_oldinum
-operator|=
-name|dirrem
-operator|->
-name|dm_dirinum
-expr_stmt|;
 if|if
 condition|(
 name|free_inodedep
@@ -12423,9 +12420,10 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
+name|out
+label|:
 name|FREE_LOCK
 argument_list|(
 operator|&
@@ -12442,7 +12440,6 @@ argument_list|(
 name|dirrem
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
