@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.21 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3981,7 +3981,7 @@ endif|#
 directive|endif
 argument|defid( p, class );
 comment|/* if an array is not initialized, no empty dimension */
-argument|if( class!=EXTERN&& ISARY(p->in.type)&& dimtab[p->fn.cdim]==
+argument|if( class!=EXTERN&& class!=TYPEDEF&& 	    ISARY(p->in.type)&& dimtab[p->fn.cdim]==
 literal|0
 argument|) 		uerror(
 literal|"null storage definition"
