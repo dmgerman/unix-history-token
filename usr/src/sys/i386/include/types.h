@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_X3J11_H_
+name|_MACHTYPES_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_X3J11_H_
+name|_MACHTYPES_H_
 end_define
 
 begin_comment
@@ -63,13 +63,57 @@ begin_comment
 comment|/* sizeof() */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_physadr
+block|{
+name|int
+name|r
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+typedef|*
+name|physadr
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|label_t
+block|{
+name|int
+name|val
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+name|label_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _X3J11_H_ */
+comment|/* _MACHTYPES_H_ */
 end_comment
 
 end_unit
