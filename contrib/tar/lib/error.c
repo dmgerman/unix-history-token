@@ -866,6 +866,10 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
 comment|/* Don't use __strerror_r's return value because on some systems 	 (at least DEC UNIX 4.0[A-D]) strerror_r returns `int'.  */
 operator|(
 name|void
@@ -880,12 +884,10 @@ sizeof|sizeof
 name|errbuf
 argument_list|)
 expr_stmt|;
-name|char
-modifier|*
 name|s
-init|=
+operator|=
 name|errbuf
-decl_stmt|;
+expr_stmt|;
 if|#
 directive|if
 name|_LIBC

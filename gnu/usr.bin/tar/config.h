@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_STRTOUMAX
-value|1
+value|0
 end_define
 
 begin_comment
@@ -923,12 +923,9 @@ begin_comment
 comment|/* Define if you have the<stdint.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_STDINT_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_STDINT_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<stdlib.h> header file. */
@@ -1082,20 +1079,20 @@ begin_comment
 comment|/* Define if you have the `strtoull' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRTOULL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOULL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the `strtoumax' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_STRTOUMAX
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_STRTOUMAX */
+end_comment
 
 begin_comment
 comment|/* Define if `st_blksize' is member of `struct stat'. */
@@ -1308,9 +1305,12 @@ begin_comment
 comment|/* Define if you have the<sys/tprintf.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_TPRINTF_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TPRINTF_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<sys/types.h> header file. */
@@ -1726,9 +1726,12 @@ begin_comment
 comment|/* Define to widest signed type if<inttypes.h> doesn't define. */
 end_comment
 
-begin_comment
-comment|/* #undef intmax_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|intmax_t
+value|long long
+end_define
 
 begin_comment
 comment|/* Type of major device numbers. */
@@ -1839,9 +1842,12 @@ begin_comment
 comment|/* Define to widest unsigned type if<inttypes.h> doesn't define. */
 end_comment
 
-begin_comment
-comment|/* #undef uintmax_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|uintmax_t
+value|unsigned long long
+end_define
 
 end_unit
 
