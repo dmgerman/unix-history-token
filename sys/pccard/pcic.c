@@ -3827,10 +3827,17 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 parameter_list|,
 name|u_int32_t
 modifier|*
 name|deltap
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|struct
@@ -3864,6 +3871,11 @@ name|card
 operator|=
 name|offset
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 if|if
 condition|(
 name|deltap
@@ -3874,6 +3886,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX BAD XXX */
+endif|#
+directive|endif
 return|return
 operator|(
 name|pcic_memory
