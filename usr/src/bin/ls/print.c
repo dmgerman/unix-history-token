@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.23 (Berkeley) %G%"
+literal|"@(#)print.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -968,7 +968,34 @@ value|((DAYSPERNYEAR / 2) * SECSPERDAY)
 if|if
 condition|(
 name|f_sectime
-operator|||
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|11
+init|;
+name|i
+operator|<
+literal|24
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+name|longstring
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|ftime
 operator|+
 name|SIXMONTHS
