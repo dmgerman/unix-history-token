@@ -148,7 +148,7 @@ name|char
 modifier|*
 name|temp_form
 init|=
-literal|"yacc.XXXXXXX"
+literal|"yacc.XXXXXXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
