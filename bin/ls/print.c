@@ -3580,13 +3580,9 @@ condition|)
 block|{
 name|entries
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-do|do
-name|entries
-operator|++
-expr_stmt|;
-do|while
+while|while
 condition|(
 name|acl_get_entry
 argument_list|(
@@ -3600,11 +3596,19 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-do|;
+if|if
+condition|(
+operator|++
+name|entries
+operator|>
+literal|3
+condition|)
+break|break;
+comment|/* 			 * POSIX.1e requires that ACLs of type ACL_TYPE_ACCESS 			 * must have at least three entries (owner, group, 			 * and other). So anything with more than 3 ACLs looks 			 * interesting to us. 			 */
 if|if
 condition|(
 name|entries
-operator|!=
+operator|>
 literal|3
 condition|)
 name|buf
