@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dir.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_comment
@@ -99,14 +99,11 @@ modifier|*
 name|i_lockf
 decl_stmt|;
 comment|/* Head of byte-level lock list. */
-name|pid_t
-name|i_lockholder
+name|struct
+name|lock
+name|i_lock
 decl_stmt|;
-comment|/* DEBUG: holder of inode lock. */
-name|pid_t
-name|i_lockwaiter
-decl_stmt|;
-comment|/* DEBUG: latest blocked for inode lock. */
+comment|/* Inode lock. */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|int32_t
 name|i_count
@@ -297,41 +294,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_EXLOCK
+name|IN_UPDATE
 value|0x0004
 end_define
 
 begin_comment
-comment|/* File has exclusive lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LOCKED
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Inode lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LWAIT
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Process waiting on file lock. */
+comment|/* Modification time update request. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IN_MODIFIED
-value|0x0020
+value|0x0008
 end_define
 
 begin_comment
@@ -342,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|IN_RENAME
-value|0x0040
+value|0x0010
 end_define
 
 begin_comment
@@ -353,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|IN_SHLOCK
-value|0x0080
+value|0x0020
 end_define
 
 begin_comment
@@ -363,23 +338,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_UPDATE
-value|0x0100
+name|IN_EXLOCK
+value|0x0040
 end_define
 
 begin_comment
-comment|/* Modification time update request. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_WANTED
-value|0x0200
-end_define
-
-begin_comment
-comment|/* Inode is wanted by a process. */
+comment|/* File has exclusive lock. */
 end_comment
 
 begin_ifdef
