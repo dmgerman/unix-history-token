@@ -4220,16 +4220,12 @@ name|conn
 operator|==
 name|NULL
 condition|)
-block|{
-name|_fetch_syserr
-argument_list|()
-expr_stmt|;
+comment|/* _fetch_connect() has already set an error code */
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 comment|/* expect welcome message */
 if|if
 condition|(

@@ -998,11 +998,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|_fetch_syserr
+argument_list|()
+expr_stmt|;
 name|close
 argument_list|(
 name|sd
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|conn
