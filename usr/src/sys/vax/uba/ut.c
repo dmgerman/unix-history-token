@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	6.2	84/08/29	*/
+comment|/*	ut.c	6.3	84/11/27	*/
 end_comment
 
 begin_include
@@ -1353,6 +1353,15 @@ name|av_forw
 operator|=
 name|NULL
 expr_stmt|;
+name|um
+operator|=
+name|tjdinfo
+index|[
+name|tjunit
+index|]
+operator|->
+name|ui_mi
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1380,15 +1389,6 @@ operator|->
 name|b_forw
 operator|=
 name|NULL
-expr_stmt|;
-name|um
-operator|=
-name|tjdinfo
-index|[
-name|tjunit
-index|]
-operator|->
-name|ui_mi
 expr_stmt|;
 if|if
 condition|(
