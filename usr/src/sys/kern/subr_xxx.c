@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.15	82/08/13	*/
+comment|/*	subr_xxx.c	4.16	82/08/14	*/
 end_comment
 
 begin_include
@@ -940,32 +940,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_macro
 name|copyuout
 argument_list|(
-name|uio
+argument|from
 argument_list|,
-name|to
+argument|len
 argument_list|,
-name|len
+argument|uio
 argument_list|)
-specifier|register
-expr|struct
-name|uio
-operator|*
-name|uio
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
 name|caddr_t
-name|to
+name|from
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|len
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -1018,11 +1021,11 @@ if|if
 condition|(
 name|copyout
 argument_list|(
+name|from
+argument_list|,
 name|iov
 operator|->
 name|iov_base
-argument_list|,
-name|to
 argument_list|,
 name|count
 argument_list|)
@@ -1040,7 +1043,7 @@ name|iov_base
 operator|+=
 name|len
 expr_stmt|;
-name|to
+name|from
 operator|+=
 name|count
 expr_stmt|;
