@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.34 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4107,8 +4107,13 @@ name|char
 modifier|*
 modifier|*
 name|glob
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+modifier|*
+name|copyblk
+argument_list|()
+decl_stmt|;
 name|pop
 operator|=
 name|glob
@@ -4122,8 +4127,48 @@ expr_stmt|;
 if|if
 condition|(
 name|pop
+operator|==
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
 condition|)
 block|{
+comment|/* globbing failed */
+name|char
+modifier|*
+name|vv
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|vv
+index|[
+literal|0
+index|]
+operator|=
+name|av
+index|[
+name|ac
+index|]
+expr_stmt|;
+name|vv
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|pop
+operator|=
+name|copyblk
+argument_list|(
+name|vv
+argument_list|)
+expr_stmt|;
+block|}
 name|av
 index|[
 name|ac
@@ -4155,7 +4200,6 @@ operator|*
 name|pop
 operator|++
 expr_stmt|;
-block|}
 block|}
 name|gav
 index|[
