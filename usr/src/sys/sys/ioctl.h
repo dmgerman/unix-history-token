@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -88,12 +88,6 @@ directive|define
 name|TIOCSSIZE
 value|TIOCSWINSZ
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IO
-end_ifndef
 
 begin_comment
 comment|/*  * Ioctl's have the command encoded in the lower word, and the size of  * any in or out parameters in the upper word.  The high 3 bits of the  * upper word are used to encode the in/out status of the parameter.  */
@@ -286,11 +280,6 @@ name|s
 parameter_list|)
 value|(IOC_IN|(((s)&IOCPARM_MASK)<<16)|(x<<8)|(y))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
