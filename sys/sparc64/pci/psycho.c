@@ -1613,7 +1613,7 @@ name|desc
 operator|->
 name|pd_mode
 expr_stmt|;
-comment|/* 	 * The psycho gets three register banks: 	 * (0) per-PBM configuration and status registers 	 * (1) per-PBM PCI configuration space, containing only the 	 *     PBM 256-byte PCI header 	 * (2) the shared psycho configuration registers (struct psychoreg) 	 * 	 * XXX use the prom address for the psycho registers?  we do so far. 	 */
+comment|/* 	 * The psycho gets three register banks: 	 * (0) per-PBM configuration and status registers 	 * (1) per-PBM PCI configuration space, containing only the 	 *     PBM 256-byte PCI header 	 * (2) the shared psycho configuration registers (struct psychoreg) 	 */
 name|reg
 operator|=
 name|nexus_get_reg
@@ -1942,7 +1942,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s, impl %d, version %d, ign %x "
+literal|"%s, impl %d, version %d, ign %#x\n"
 argument_list|,
 name|desc
 operator|->
@@ -2010,6 +2010,60 @@ name|PCR_CS
 argument_list|,
 name|csr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mode
+operator|==
+name|PSYCHO_MODE_SABRE
+condition|)
+block|{
+comment|/* 		 * Use the PROM preset for now. 		 */
+name|csr
+operator|=
+name|PCICTL_READ8
+argument_list|(
+name|sc
+argument_list|,
+name|PCR_TAS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|csr
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"psycho_attach: sabre TAS not initialized."
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dvmabase
+operator|=
+operator|(
+name|ffs
+argument_list|(
+name|csr
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|<<
+name|PCITAS_ADDR_SHIFT
+expr_stmt|;
+block|}
+else|else
+name|sc
+operator|->
+name|sc_dvmabase
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 comment|/* Grab the psycho ranges */
 name|psycho_get_ranges
@@ -3666,7 +3720,7 @@ expr_stmt|;
 comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(
-literal|"%s: uncorrectable DMA error AFAR %#lx AFSR %#lx\n"
+literal|"%s: uncorrectable DMA error AFAR %#lx AFSR %#lx"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -3821,7 +3875,7 @@ expr_stmt|;
 comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(
-literal|"%s: PCI bus A error AFAR %#lx AFSR %#lx\n"
+literal|"%s: PCI bus A error AFAR %#lx AFSR %#lx"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -3896,7 +3950,7 @@ expr_stmt|;
 comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(
-literal|"%s: PCI bus B error AFAR %#lx AFSR %#lx\n"
+literal|"%s: PCI bus B error AFAR %#lx AFSR %#lx"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -4068,21 +4122,6 @@ name|sc
 operator|->
 name|sc_is
 decl_stmt|;
-name|u_int32_t
-name|iobase
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|int
-modifier|*
-name|vdma
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|nitem
-decl_stmt|;
 comment|/* punch in our copies */
 name|is
 operator|->
@@ -4136,113 +4175,6 @@ name|is_dtcmp
 operator|=
 name|PSR_IOMMU_TLB_CMP_DIAG
 expr_stmt|;
-comment|/* 	 * Separate the men from the boys.  Get the `virtual-dma' 	 * property for sabre and use that to make sure the damn 	 * iommu works. 	 * 	 * We could query the `#virtual-dma-size-cells' and 	 * `#virtual-dma-addr-cells' and DTRT, but I'm lazy. 	 */
-name|nitem
-operator|=
-name|OF_getprop_alloc
-argument_list|(
-name|sc
-operator|->
-name|sc_node
-argument_list|,
-literal|"virtual-dma"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vdma
-argument_list|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|vdma
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nitem
-operator|>
-literal|0
-condition|)
-block|{
-name|iobase
-operator|=
-name|vdma
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|tsbsize
-operator|=
-name|ffs
-argument_list|(
-name|vdma
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tsbsize
-operator|<
-literal|25
-operator|||
-name|tsbsize
-operator|>
-literal|31
-operator|||
-operator|(
-name|vdma
-index|[
-literal|1
-index|]
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-operator|(
-name|tsbsize
-operator|-
-literal|1
-operator|)
-operator|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bogus tsb size %x, using 7\n"
-argument_list|,
-name|vdma
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|tsbsize
-operator|=
-literal|31
-expr_stmt|;
-block|}
-name|tsbsize
-operator|-=
-literal|24
-expr_stmt|;
-name|free
-argument_list|(
-name|vdma
-argument_list|,
-name|M_OFWPROP
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* give us a nice name.. */
 name|name
 operator|=
@@ -4294,7 +4226,9 @@ name|is
 argument_list|,
 name|tsbsize
 argument_list|,
-name|iobase
+name|sc
+operator|->
+name|sc_dvmabase
 argument_list|,
 literal|0
 argument_list|)
@@ -5650,7 +5584,6 @@ name|sc
 operator|->
 name|sc_iot
 expr_stmt|;
-comment|/* XXX: probably should use ranges property here. */
 name|bh
 operator|=
 name|sc

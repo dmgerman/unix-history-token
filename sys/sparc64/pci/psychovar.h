@@ -70,6 +70,9 @@ name|iommu_state
 modifier|*
 name|sc_is
 decl_stmt|;
+name|u_int32_t
+name|sc_dvmabase
+decl_stmt|;
 name|struct
 name|resource
 modifier|*

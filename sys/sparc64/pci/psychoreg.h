@@ -1365,6 +1365,17 @@ comment|/* pri. error during read */
 end_comment
 
 begin_comment
+comment|/* Definitions for the target address space register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCITAS_ADDR_SHIFT
+value|29
+end_define
+
+begin_comment
 comment|/* Definitions for the psycho configuration space */
 end_comment
 
