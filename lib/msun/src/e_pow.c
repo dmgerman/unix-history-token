@@ -252,6 +252,8 @@ name|r
 decl_stmt|,
 name|s
 decl_stmt|,
+name|sn
+decl_stmt|,
 name|t
 decl_stmt|,
 name|u
@@ -736,12 +738,9 @@ name|z
 return|;
 block|}
 block|}
-comment|/* (x<0)**(non-int) is NaN */
-comment|/* CYGNUS LOCAL: This used to be 	if((((hx>>31)+1)|yisint)==0) return (x-x)/(x-x);        but ANSI C says a right shift of a signed negative quantity is        implementation defined.  */
-if|if
-condition|(
-operator|(
-operator|(
+comment|/* CYGNUS LOCAL + fdlibm-5.3 fix: This used to be 	n = (hx>>31)+1;        but ANSI C says a right shift of a signed negative quantity is        implementation defined.  */
+name|n
+operator|=
 operator|(
 operator|(
 name|u_int32_t
@@ -752,7 +751,12 @@ literal|31
 operator|)
 operator|-
 literal|1
-operator|)
+expr_stmt|;
+comment|/* (x<0)**(non-int) is NaN */
+if|if
+condition|(
+operator|(
+name|n
 operator||
 name|yisint
 operator|)
@@ -772,6 +776,31 @@ operator|-
 name|x
 operator|)
 return|;
+name|sn
+operator|=
+name|one
+expr_stmt|;
+comment|/* s (sign of result -ve**odd) = -1 else = 1 */
+if|if
+condition|(
+operator|(
+name|n
+operator||
+operator|(
+name|yisint
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|sn
+operator|=
+operator|-
+name|one
+expr_stmt|;
+comment|/* (-ve)**(odd int) */
 comment|/* |y| is huge */
 if|if
 condition|(
@@ -846,10 +875,14 @@ operator|<
 literal|0
 operator|)
 condition|?
+name|sn
+operator|*
 name|huge
 operator|*
 name|huge
 else|:
+name|sn
+operator|*
 name|tiny
 operator|*
 name|tiny
@@ -867,10 +900,14 @@ operator|>
 literal|0
 operator|)
 condition|?
+name|sn
+operator|*
 name|huge
 operator|*
 name|huge
 else|:
+name|sn
+operator|*
 name|tiny
 operator|*
 name|tiny
@@ -1367,42 +1404,6 @@ name|z_h
 operator|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|one
-expr_stmt|;
-comment|/* s (sign of result -ve**odd) = -1 else = 1 */
-if|if
-condition|(
-operator|(
-operator|(
-operator|(
-operator|(
-name|u_int32_t
-operator|)
-name|hx
-operator|>>
-literal|31
-operator|)
-operator|-
-literal|1
-operator|)
-operator||
-operator|(
-name|yisint
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|s
-operator|=
-operator|-
-name|one
-expr_stmt|;
-comment|/* (-ve)**(odd int) */
 comment|/* split up y into y1+y2 and compute (y1+y2)*(t1+t2) */
 name|y1
 operator|=
@@ -1474,7 +1475,7 @@ literal|0
 condition|)
 comment|/* if z> 1024 */
 return|return
-name|s
+name|sn
 operator|*
 name|huge
 operator|*
@@ -1494,7 +1495,7 @@ operator|-
 name|p_h
 condition|)
 return|return
-name|s
+name|sn
 operator|*
 name|huge
 operator|*
@@ -1532,7 +1533,7 @@ literal|0
 condition|)
 comment|/* z< -1075 */
 return|return
-name|s
+name|sn
 operator|*
 name|tiny
 operator|*
@@ -1550,7 +1551,7 @@ operator|-
 name|p_h
 condition|)
 return|return
-name|s
+name|sn
 operator|*
 name|tiny
 operator|*
@@ -1836,7 +1837,7 @@ name|j
 argument_list|)
 expr_stmt|;
 return|return
-name|s
+name|sn
 operator|*
 name|z
 return|;
