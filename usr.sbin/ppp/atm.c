@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|PPPOA_LEN
-value|(sizeof(PPPOA)-1)
+value|(sizeof(PPPOA) - 1)
 end_define
 
 begin_struct
@@ -1044,7 +1044,8 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Malformed ATM device name \'%s\', PPPoA:if:vpi.vci expected\n"
+literal|"Malformed ATM device name \'%s\', "
+literal|"PPPoA:if:vpi.vci expected\n"
 argument_list|,
 name|p
 operator|->
