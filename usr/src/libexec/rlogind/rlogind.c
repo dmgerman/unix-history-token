@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.12 83/02/28"
+literal|"@(#)rlogind.c	4.13 83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ name|f
 decl_stmt|,
 name|options
 init|=
-name|SO_KEEPALIVE
+literal|0
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -476,9 +476,6 @@ argument_list|(
 literal|"rlogind: setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|setsockopt
@@ -498,11 +495,9 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"rlogind: setsocktopt (SO_KEEPALIVE)"
+literal|"rlogind: setsockopt (SO_KEEPALIVE)"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bind

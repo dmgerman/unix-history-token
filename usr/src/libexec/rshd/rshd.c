@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.14 83/02/23"
+literal|"@(#)rshd.c	4.15 83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,9 +476,6 @@ argument_list|(
 literal|"rshd: setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|setsockopt
@@ -501,8 +498,6 @@ argument_list|(
 literal|"rshd: setsockopt (SO_KEEPALIVE)"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bind

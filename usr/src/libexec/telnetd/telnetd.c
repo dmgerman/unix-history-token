@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.18 83/02/21"
+literal|"@(#)telnetd.c	4.19 83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/telnet.h>
 end_include
 
 begin_include
@@ -76,12 +82,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"telnet.h"
 end_include
 
 begin_define
@@ -628,9 +628,6 @@ argument_list|(
 literal|"telnetd: setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|setsockopt
@@ -653,8 +650,6 @@ argument_list|(
 literal|"telnetd: setsockopt (SO_KEEPALIVE)"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|bind
