@@ -229,11 +229,6 @@ decl_stmt|,
 name|enodev
 argument_list|()
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -287,18 +282,16 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Validation.  Make sure this device can be mapped 		 * and that range to map is acceptible to device. 		 */
-name|vp
+name|dev
 operator|=
+operator|(
 operator|(
 expr|struct
 name|vnode
 operator|*
 operator|)
 name|handle
-expr_stmt|;
-name|dev
-operator|=
-name|vp
+operator|)
 operator|->
 name|v_rdev
 expr_stmt|;
