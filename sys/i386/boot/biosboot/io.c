@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.18 1996/03/08 06:29:06 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.19 1996/04/30 23:43:25 bde Exp $  */
 end_comment
 
 begin_include
@@ -108,6 +108,17 @@ end_define
 begin_comment
 comment|/* enable A20, 					   enable output buffer full interrupt 					   enable data line 					   enable clock line */
 end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|getchar
+parameter_list|(
+name|int
+name|in_buf
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Gate A20 for high memory  */
@@ -481,25 +492,30 @@ name|c
 operator|==
 literal|'\n'
 condition|)
-block|{
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loadflags
 operator|&
-name|RB_SERIAL
+name|RB_DUAL
 condition|)
-name|serial_putc
-argument_list|(
-literal|'\r'
-argument_list|)
-expr_stmt|;
-else|else
+block|{
 name|putc
 argument_list|(
-literal|'\r'
+name|c
+argument_list|)
+expr_stmt|;
+name|serial_putc
+argument_list|(
+name|c
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|loadflags
@@ -521,6 +537,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|getchar
 parameter_list|(
@@ -535,23 +552,58 @@ name|loop
 label|:
 if|if
 condition|(
-operator|(
+name|loadflags
+operator|&
+name|RB_DUAL
+condition|)
+block|{
+if|if
+condition|(
+name|ischar
+argument_list|()
+condition|)
 name|c
 operator|=
-operator|(
-operator|(
+name|getc
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|serial_ischar
+argument_list|()
+condition|)
+name|c
+operator|=
+name|serial_getc
+argument_list|()
+expr_stmt|;
+else|else
+goto|goto
+name|loop
+goto|;
+block|}
+elseif|else
+if|if
+condition|(
 name|loadflags
 operator|&
 name|RB_SERIAL
-operator|)
-condition|?
+condition|)
+name|c
+operator|=
 name|serial_getc
 argument_list|()
-else|:
+expr_stmt|;
+else|else
+name|c
+operator|=
 name|getc
 argument_list|()
-operator|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|c
 operator|==
 literal|'\r'
 condition|)
@@ -604,12 +656,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PROBE_KEYBOARD
-end_ifdef
-
 begin_comment
 comment|/*  * This routine uses an inb to an unused port, the time to execute that  * inb is approximately 1.25uS.  This value is pretty constant across  * all CPU's and all buses, with the exception of some PCI implentations  * that do not forward this I/O adress to the ISA bus as they know it  * is not a valid ISA bus address, those machines execute this inb in  * 60 nS :-(.  *  * XXX this should be converted to use bios_tick.  */
 end_comment
@@ -644,15 +690,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PROBE_KEYBOARD */
-end_comment
-
 begin_function
 specifier|static
 name|__inline
@@ -671,6 +708,26 @@ operator|=
 name|ischar
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|loadflags
+operator|&
+name|RB_DUAL
+condition|)
+block|{
+if|if
+condition|(
+name|isc
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|isc
+operator|)
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
