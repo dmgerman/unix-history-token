@@ -1951,6 +1951,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KERN_PROC_RGID
+value|10
+end_define
+
+begin_comment
+comment|/* by real group id */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERN_PROC_INC_THREAD
 value|0x10
 end_define
