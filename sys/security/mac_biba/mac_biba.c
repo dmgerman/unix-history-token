@@ -549,6 +549,18 @@ parameter_list|)
 value|((struct mac_biba *)LABEL_TO_SLOT((l), mac_biba_slot).l_ptr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SLOT_SET
+parameter_list|(
+name|l
+parameter_list|,
+name|val
+parameter_list|)
+value|(LABEL_TO_SLOT((l), mac_biba_slot).l_ptr = (val))
+end_define
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t
@@ -2183,14 +2195,14 @@ modifier|*
 name|label
 parameter_list|)
 block|{
-name|SLOT
+name|SLOT_SET
 argument_list|(
 name|label
-argument_list|)
-operator|=
+argument_list|,
 name|biba_alloc
 argument_list|(
 name|M_WAITOK
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2210,14 +2222,14 @@ name|int
 name|flag
 parameter_list|)
 block|{
-name|SLOT
+name|SLOT_SET
 argument_list|(
 name|label
-argument_list|)
-operator|=
+argument_list|,
 name|biba_alloc
 argument_list|(
 name|flag
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2261,12 +2273,12 @@ name|label
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SLOT
+name|SLOT_SET
 argument_list|(
 name|label
-argument_list|)
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function
