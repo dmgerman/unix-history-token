@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.44 1999/05/14 09:36:04 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.45 1999/06/02 15:58:57 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -4792,6 +4792,47 @@ break|break;
 block|}
 comment|/* See above */
 comment|/* (*fp->parent->LayerFinish)(fp->parent->object, fp); */
+block|}
+break|break;
+case|case
+name|PROTO_IPCP
+case|:
+if|if
+condition|(
+name|fp
+operator|->
+name|proto
+operator|==
+name|PROTO_LCP
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"%s: IPCP protocol reject closes IPCP !\n"
+argument_list|,
+name|fp
+operator|->
+name|link
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|fsm_Close
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
+name|fsm
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
