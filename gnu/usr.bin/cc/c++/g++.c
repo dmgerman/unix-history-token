@@ -63,6 +63,12 @@ begin_comment
 comment|/* May get R_OK, etc. on some systems.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_comment
 comment|/* Defined to the name of the compiler; if using a cross compiler, the    Makefile should compile this file with the proper name    (e.g., "i386-aout-gcc").  */
 end_comment
@@ -263,11 +269,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|errno
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|errno
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|sys_nerr
 decl_stmt|;
 end_decl_stmt
@@ -283,6 +305,11 @@ operator|||
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 end_if
 
@@ -1651,6 +1678,10 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|args
 argument_list|,
 name|argc
@@ -1896,6 +1927,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|library
+operator|!=
+name|NULL
+operator|&&
 operator|(
 operator|(
 name|argv
@@ -1964,7 +1999,13 @@ if|if
 condition|(
 name|saw_speclang
 condition|)
+block|{
+name|saw_speclang
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* If the filename ends in .c or .i, put options around it. 	     But not if a specified -x option is currently active.  */
 name|len
 operator|=

@@ -477,6 +477,15 @@ condition|(
 name|pcc_struct_return
 condition|)
 block|{
+specifier|extern
+name|int
+name|flag_access_control
+decl_stmt|;
+name|int
+name|old_ac
+init|=
+name|flag_access_control
+decl_stmt|;
 name|tree
 name|init
 init|=
@@ -498,6 +507,10 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+name|flag_access_control
+operator|=
+literal|0
+expr_stmt|;
 name|expand_aggr_init
 argument_list|(
 name|slot
@@ -506,6 +519,10 @@ name|init
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|flag_access_control
+operator|=
+name|old_ac
 expr_stmt|;
 if|if
 condition|(

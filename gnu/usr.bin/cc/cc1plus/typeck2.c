@@ -1181,7 +1181,7 @@ comment|/* There are times when the compiler can get very confused, confused    
 end_comment
 
 begin_comment
-comment|/* First used: 0 (reserved), Last used: 360.  Free:  */
+comment|/* First used: 0 (reserved), Last used: 360.  Free: 261.  */
 end_comment
 
 begin_decl_stmt
@@ -1977,67 +1977,15 @@ condition|)
 return|return
 name|value
 return|;
-else|else
-block|{
-if|if
-condition|(
-name|pedantic
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|value
-argument_list|)
-operator|==
-name|CONSTRUCTOR
+if|#
+directive|if
+literal|0
+comment|/* No, that's C.  jason 9/19/94 */
+block|else     {       if (pedantic&& TREE_CODE (value) == CONSTRUCTOR
 comment|/* Don't complain about non-constant initializers of 	     signature tables and signature pointers/references.  */
-operator|&&
-operator|!
-operator|(
-name|TYPE_LANG_SPECIFIC
-argument_list|(
-name|type
-argument_list|)
-operator|&&
-operator|(
-name|IS_SIGNATURE
-argument_list|(
-name|type
-argument_list|)
-operator|||
-name|IS_SIGNATURE_POINTER
-argument_list|(
-name|type
-argument_list|)
-operator|||
-name|IS_SIGNATURE_REFERENCE
-argument_list|(
-name|type
-argument_list|)
-operator|)
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|TREE_CONSTANT
-argument_list|(
-name|value
-argument_list|)
-operator|||
-operator|!
-name|TREE_STATIC
-argument_list|(
-name|value
-argument_list|)
-condition|)
-name|pedwarn
-argument_list|(
-literal|"ANSI C++ forbids non-constant aggregate initializer expressions"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+block|&& ! (TYPE_LANG_SPECIFIC (type)&& (IS_SIGNATURE (type) 		    || IS_SIGNATURE_POINTER (type) 		    || IS_SIGNATURE_REFERENCE (type)))) 	{ 	  if (! TREE_CONSTANT (value) || ! TREE_STATIC (value)) 	    pedwarn ("ANSI C++ forbids non-constant aggregate initializer expressions"); 	}     }
+endif|#
+directive|endif
 name|DECL_INITIAL
 argument_list|(
 name|decl
@@ -2092,7 +2040,7 @@ decl_stmt|;
 name|tree
 name|element
 init|=
-literal|0
+name|NULL_TREE
 decl_stmt|;
 name|tree
 name|old_tail_contents
@@ -2205,6 +2153,8 @@ argument_list|)
 operator|==
 name|ADDR_EXPR
 operator|&&
+operator|(
+operator|(
 name|TREE_CODE
 argument_list|(
 name|TREE_TYPE
@@ -2227,6 +2177,20 @@ argument_list|)
 argument_list|)
 operator|==
 name|METHOD_TYPE
+operator|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|init
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|==
+name|TREE_LIST
+operator|)
 operator|)
 operator|||
 name|TREE_CODE
@@ -3296,7 +3260,7 @@ expr_stmt|;
 comment|/* Just ignore what we were supposed to use.  */
 name|tail1
 operator|=
-literal|0
+name|NULL_TREE
 expr_stmt|;
 block|}
 name|tail
@@ -4281,12 +4245,12 @@ block|}
 modifier|*
 name|chain
 init|=
-literal|0
+name|NULL
 struct|,
 modifier|*
 name|head
 init|=
-literal|0
+name|NULL
 struct|,
 name|scratch
 struct|;

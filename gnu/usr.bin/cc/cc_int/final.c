@@ -3395,8 +3395,25 @@ name|count
 init|=
 literal|1
 decl_stmt|;
-for|for
-control|(
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|body
+argument_list|)
+operator|==
+name|ASM_INPUT
+condition|)
+name|template
+operator|=
+name|XSTR
+argument_list|(
+name|body
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|template
 operator|=
 name|decode_asm_operands
@@ -3411,6 +3428,9 @@ name|NULL_PTR
 argument_list|,
 name|NULL_PTR
 argument_list|)
+expr_stmt|;
+for|for
+control|(
 init|;
 operator|*
 name|template
@@ -3779,9 +3799,6 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|NO_PROFILE_DATA
 name|int
 name|align
 init|=
@@ -3792,9 +3809,6 @@ argument_list|,
 name|POINTER_SIZE
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* not NO_PROFILE_DATA */
 name|int
 name|sval
 init|=
@@ -3805,9 +3819,6 @@ name|cxt
 init|=
 name|current_function_needs_context
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_PROFILE_DATA
 name|data_section
 argument_list|()
 expr_stmt|;
@@ -3843,9 +3854,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* not NO_PROFILE_DATA */
 name|text_section
 argument_list|()
 expr_stmt|;

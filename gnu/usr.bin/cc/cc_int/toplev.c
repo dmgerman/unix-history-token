@@ -77,6 +77,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WINNT
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -153,6 +159,11 @@ include|#
 directive|include
 file|<sys/resource.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1676,7 +1687,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means that functions declared `inline' will be treated    as `static'.  Prevents generation of zillions of copies of unused    static inline functions; instead, `inlines' are written out    only when actually used.  Used in conjunction with -g.  Also    does the right thing with #pragma interface.  */
+comment|/* Nonzero means that functions will not be inlined.  */
 end_comment
 
 begin_decl_stmt
@@ -2386,6 +2397,10 @@ literal|"-+e1"
 block|,
 literal|"-+e2"
 block|,
+literal|"-faccess-control"
+block|,
+literal|"-fno-access-control"
+block|,
 literal|"-fall-virtual"
 block|,
 literal|"-fno-all-virtual"
@@ -2517,6 +2532,14 @@ block|,
 literal|"-Wextern-inline"
 block|,
 literal|"-Wno-extern-inline"
+block|,
+literal|"-Wreorder"
+block|,
+literal|"-Wno-reorder"
+block|,
+literal|"-Wsynth"
+block|,
+literal|"-Wno-synth"
 block|,
 comment|/* these are for obj c */
 literal|"-lang-objc"
@@ -3051,6 +3074,14 @@ parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
+name|WINNT
+return|return
+literal|0
+return|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|USG
 name|struct
 name|tms
@@ -3188,6 +3219,8 @@ operator|)
 operator|*
 literal|10000
 return|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
@@ -3385,15 +3418,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called to give a better error message when we don't have an insn to match    what we are looking for or if the insn's constraints aren't satisfied,    rather than just calling abort().  */
+comment|/* Called to give a better error message for a bad insn rather than    just calling abort().  */
 end_comment
 
 begin_function
 name|void
-name|fatal_insn_not_found
+name|fatal_insn
 parameter_list|(
+name|message
+parameter_list|,
 name|insn
 parameter_list|)
+name|char
+modifier|*
+name|message
+decl_stmt|;
 name|rtx
 name|insn
 decl_stmt|;
@@ -3404,24 +3443,9 @@ operator|!
 name|output_bytecode
 condition|)
 block|{
-if|if
-condition|(
-name|INSN_CODE
-argument_list|(
-name|insn
-argument_list|)
-operator|<
-literal|0
-condition|)
 name|error
 argument_list|(
-literal|"internal error--unrecognizable insn:"
-argument_list|)
-expr_stmt|;
-else|else
-name|error
-argument_list|(
-literal|"internal error--insn does not satisfy its constraints:"
+name|message
 argument_list|)
 expr_stmt|;
 name|debug_rtx
@@ -3576,6 +3600,47 @@ argument_list|)
 expr_stmt|;
 name|abort
 argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Called to give a better error message when we don't have an insn to match    what we are looking for or if the insn's constraints aren't satisfied,    rather than just calling abort().  */
+end_comment
+
+begin_function
+name|void
+name|fatal_insn_not_found
+parameter_list|(
+name|insn
+parameter_list|)
+name|rtx
+name|insn
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|INSN_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal_insn
+argument_list|(
+literal|"internal error--unrecognizable insn:"
+argument_list|,
+name|insn
+argument_list|)
+expr_stmt|;
+else|else
+name|fatal_insn
+argument_list|(
+literal|"internal error--insn does not satisfy its constraints:"
+argument_list|,
+name|insn
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -10091,6 +10156,8 @@ argument|{ 		   lose = function_cannot_inline_p (decl);
 comment|/* If not optimzing, then make sure the DECL_INLINE 		      bit is off.  */
 argument|if (lose || ! optimize) 		     { 		       if (warn_inline&& specd) 			 warning_with_decl (decl, lose); 		       DECL_INLINE (decl) =
 literal|0
+argument|; 		       DECL_ABSTRACT_ORIGIN (decl) =
+literal|0
 argument|;
 comment|/* Don't really compile an extern inline function. 			  If we can't make it inline, pretend 			  it was only declared.  */
 argument|if (DECL_EXTERNAL (decl)) 			 { 			   DECL_INITIAL (decl) =
@@ -14088,12 +14155,25 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OS2
-ifndef|#
-directive|ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|VMS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WINNT
+argument_list|)
 if|if
 condition|(
 name|flag_print_mem
@@ -14165,10 +14245,7 @@ comment|/* not USG */
 block|}
 endif|#
 directive|endif
-comment|/* not VMS */
-endif|#
-directive|endif
-comment|/* not OS2 */
+comment|/* not OS2 and not VMS and not WINNT */
 if|if
 condition|(
 name|errorcount

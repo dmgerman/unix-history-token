@@ -1407,9 +1407,16 @@ name|gen_rtx
 argument_list|(
 name|EXPR_LIST
 argument_list|,
+name|VOIDmode
+argument_list|,
+name|gen_rtx
+argument_list|(
 name|CLOBBER
 argument_list|,
+name|VOIDmode
+argument_list|,
 name|stack_pointer_rtx
+argument_list|)
 argument_list|,
 name|CALL_INSN_FUNCTION_USAGE
 argument_list|(
@@ -2043,15 +2050,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|struct_value_size
-operator|<
-literal|0
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|target
 operator|&&
 name|GET_CODE
@@ -2074,6 +2072,15 @@ else|else
 block|{
 comment|/* Assign a temporary on the stack to hold the value.  */
 comment|/* For variable-sized objects, we must be called with a target 	       specified.  If we were to allocate space on the stack here, 	       we would have no way of knowing when to free it.  */
+if|if
+condition|(
+name|struct_value_size
+operator|<
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|structure_value_addr
 operator|=
 name|XEXP
@@ -2845,43 +2852,39 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACCUMULATE_OUTGOING_ARGS
-comment|/* If the stack will be adjusted, make sure the structure address 	 does not refer to virtual_outgoing_args_rtx.  */
+comment|/* If structure_value_addr is a REG other than 	 virtual_outgoing_args_rtx, we can use always use it.  If it 	 is not a REG, we must always copy it into a register. 	 If it is virtual_outgoing_args_rtx, we must copy it to another 	 register in some cases.  */
 name|rtx
 name|temp
 init|=
 operator|(
+name|GET_CODE
+argument_list|(
+name|structure_value_addr
+argument_list|)
+operator|!=
+name|REG
+ifdef|#
+directive|ifdef
+name|ACCUMULATE_OUTGOING_ARGS
+operator|||
+operator|(
 name|stack_arg_under_construction
+operator|&&
+name|structure_value_addr
+operator|==
+name|virtual_outgoing_args_rtx
+operator|)
+endif|#
+directive|endif
 condition|?
 name|copy_addr_to_reg
 argument_list|(
 name|structure_value_addr
 argument_list|)
 else|:
-name|force_reg
-argument_list|(
-name|Pmode
-argument_list|,
 name|structure_value_addr
-argument_list|)
 operator|)
 decl_stmt|;
-else|#
-directive|else
-name|rtx
-name|temp
-init|=
-name|force_reg
-argument_list|(
-name|Pmode
-argument_list|,
-name|structure_value_addr
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
 name|actparms
 operator|=
 name|tree_cons
@@ -3132,6 +3135,24 @@ operator|,
 name|type
 operator|=
 name|integer_type_node
+expr_stmt|;
+comment|/* If TYPE is a transparent union, pass things the way we would 	 pass the first field of the union.  We have already verified that 	 the modes are the same.  */
+if|if
+condition|(
+name|TYPE_TRANSPARENT_UNION
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|TYPE_FIELDS
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* Decide where to pass this arg.  	 args[i].reg is nonzero if all or part is passed in registers.  	 args[i].partial is nonzero if part but not all is passed in registers, 	 and the exact value says how many words are passed in registers.  	 args[i].pass_on_stack is nonzero if the argument must at least be 	 computed on the stack.  It may then be loaded back into registers 	 if args[i].reg is nonzero.  	 These decisions are driven by the FUNCTION_... macros and must agree 	 with those made by function.c.  */
 comment|/* See if this argument should be passed by invisible reference.  */
@@ -4626,11 +4647,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|must_preallocate
-condition|)
+else|else
 block|{
 comment|/* Note that we must go through the motions of allocating an argument 	 block even if the size is zero because we may be storing args 	 in the area reserved for register arguments, which may be part of 	 the stack frame.  */
 name|int
@@ -4640,10 +4657,7 @@ name|args_size
 operator|.
 name|constant
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ACCUMULATE_OUTGOING_ARGS
-comment|/* Store the maximum argument space used.  It will be pushed by the 	 prologue.  	 Since the stack pointer will never be pushed, it is possible for 	 the evaluation of a parm to clobber something we have already 	 written to the stack.  Since most function calls on RISC machines 	 do not use the stack, this is uncommon, but must work correctly. 	  	 Therefore, we save any area of the stack that was already written 	 and that we are using.  Here we set up to do this by making a new 	 stack usage map from the old one.  The actual save will be done 	 by store_one_arg.   	 Another approach might be to try to reorder the argument 	 evaluations to avoid this conflicting stack usage.  */
+comment|/* Store the maximum argument space used.  It will be pushed by the 	 prologue (if ACCUMULATE_OUTGOING_ARGS, or stack overflow checking). */
 if|if
 condition|(
 name|needed
@@ -4654,6 +4668,15 @@ name|current_function_outgoing_args_size
 operator|=
 name|needed
 expr_stmt|;
+if|if
+condition|(
+name|must_preallocate
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|ACCUMULATE_OUTGOING_ARGS
+comment|/* Since the stack pointer will never be pushed, it is possible for 	     the evaluation of a parm to clobber something we have already 	     written to the stack.  Since most function calls on RISC machines 	     do not use the stack, this is uncommon, but must work correctly.  	     Therefore, we save any area of the stack that was already written 	     and that we are using.  Here we set up to do this by making a new 	     stack usage map from the old one.  The actual save will be done 	     by store_one_arg.   	     Another approach might be to try to reorder the argument 	     evaluations to avoid this conflicting stack usage.  */
 if|#
 directive|if
 name|defined
@@ -4666,7 +4689,7 @@ name|defined
 argument_list|(
 name|OUTGOING_REG_PARM_STACK_SPACE
 argument_list|)
-comment|/* Since we will be writing into the entire argument area, the 	 map must be allocated for its entire size, not just the part that 	 is the responsibility of the caller.  */
+comment|/* Since we will be writing into the entire argument area, the 	     map must be allocated for its entire size, not just the part that 	     is the responsibility of the caller.  */
 name|needed
 operator|+=
 name|reg_parm_stack_space
@@ -4747,7 +4770,7 @@ name|needed
 operator|=
 literal|0
 expr_stmt|;
-comment|/* The address of the outgoing argument list must not be copied to a 	 register here, because argblock would be left pointing to the 	 wrong place after the call to allocate_dynamic_stack_space below. */
+comment|/* The address of the outgoing argument list must not be copied to a 	     register here, because argblock would be left pointing to the 	     wrong place after the call to allocate_dynamic_stack_space below. 	     */
 name|argblock
 operator|=
 name|virtual_outgoing_args_rtx
@@ -4762,7 +4785,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Try to reuse some or all of the pending_stack_adjust 	     to get this space.  Maybe we can avoid any pushing.  */
+comment|/* Try to reuse some or all of the pending_stack_adjust 		 to get this space.  Maybe we can avoid any pushing.  */
 if|if
 condition|(
 name|needed
@@ -4791,7 +4814,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* Special case this because overhead of `push_block' in this 	 case is non-trivial.  */
+comment|/* Special case this because overhead of `push_block' in this 	     case is non-trivial.  */
 if|if
 condition|(
 name|needed
@@ -4817,7 +4840,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* We only really need to call `copy_to_reg' in the case where push 	 insns are going to be used to pass ARGBLOCK to a function 	 call in ARGS.  In that case, the stack pointer changes value 	 from the allocation point to the call point, and hence 	 the value of VIRTUAL_OUTGOING_ARGS_RTX changes as well. 	 But might as well always do it.  */
+comment|/* We only really need to call `copy_to_reg' in the case where push 	     insns are going to be used to pass ARGBLOCK to a function 	     call in ARGS.  In that case, the stack pointer changes value 	     from the allocation point to the call point, and hence 	     the value of VIRTUAL_OUTGOING_ARGS_RTX changes as well. 	     But might as well always do it.  */
 name|argblock
 operator|=
 name|copy_to_reg
@@ -4828,6 +4851,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* not ACCUMULATE_OUTGOING_ARGS */
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -8288,11 +8312,16 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
+name|force_operand
+argument_list|(
 name|XEXP
 argument_list|(
 name|slot
 argument_list|,
 literal|0
+argument_list|)
+argument_list|,
+name|NULL_RTX
 argument_list|)
 expr_stmt|;
 name|mode
@@ -8649,9 +8678,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ACCUMULATE_OUTGOING_ARGS
 if|if
 condition|(
 name|args_size
@@ -8666,6 +8692,9 @@ name|args_size
 operator|.
 name|constant
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACCUMULATE_OUTGOING_ARGS
 name|args_size
 operator|.
 name|constant
@@ -10268,9 +10297,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ACCUMULATE_OUTGOING_ARGS
 if|if
 condition|(
 name|args_size
@@ -10285,6 +10311,9 @@ name|args_size
 operator|.
 name|constant
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACCUMULATE_OUTGOING_ARGS
 name|args_size
 operator|.
 name|constant

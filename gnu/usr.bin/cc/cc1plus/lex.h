@@ -59,21 +59,20 @@ name|RID_FRIEND
 block|,
 name|RID_VIRTUAL
 block|,
+name|RID_SIGNED
+block|,
+name|RID_AUTO
+block|,
+name|RID_MUTABLE
+block|,
+comment|/* This is where grokdeclarator ends its search when setting the specbits. */
 name|RID_PUBLIC
 block|,
 name|RID_PRIVATE
 block|,
 name|RID_PROTECTED
 block|,
-name|RID_SIGNED
-block|,
 name|RID_EXCEPTION
-block|,
-name|RID_RAISES
-block|,
-name|RID_AUTO
-block|,
-name|RID_MUTABLE
 block|,
 name|RID_TEMPLATE
 block|,
@@ -97,6 +96,13 @@ define|#
 directive|define
 name|RID_FIRST_MODIFIER
 value|RID_EXTERN
+end_define
+
+begin_define
+define|#
+directive|define
+name|RID_LAST_MODIFIER
+value|RID_MUTABLE
 end_define
 
 begin_comment

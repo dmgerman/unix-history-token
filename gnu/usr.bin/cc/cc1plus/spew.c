@@ -736,6 +736,10 @@ expr_stmt|;
 comment|/* This move does not rely on the system being able to handle 	     overlapping moves.  */
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|nth_token
 argument_list|(
 literal|0
@@ -756,6 +760,10 @@ name|bcopy
 argument_list|(
 name|tmp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|nth_token
 argument_list|(
 name|n

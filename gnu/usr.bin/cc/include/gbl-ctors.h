@@ -142,7 +142,7 @@ comment|/* Define a macro with the code which needs to be executed at program   
 end_comment
 
 begin_comment
-comment|/* The first word may or may not contain the number of pointers in the table.    In all cases, the table is null-terminated.    We ignore the first word and scan up to the null.  */
+comment|/* Some systems place the number of pointers    in the first word of the table.    On other systems, that word is -1.    In all cases, the table is null-terminated.    If the length is not recorded, count up to the null.  */
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ define|#
 directive|define
 name|DO_GLOBAL_CTORS_BODY
 define|\
-value|do {									\   func_ptr *p;								\   for (p = __CTOR_LIST__ + 1; *p; )					\     (*p++) ();								\ } while (0)
+value|do {									\   unsigned long nptrs = (unsigned long) __CTOR_LIST__[0];		\   unsigned i;								\   if (nptrs == -1)							\     for (nptrs = 0; __CTOR_LIST__[nptrs + 1] != 0; nptrs++);		\   for (i = nptrs; i>= 1; i--)						\     __CTOR_LIST__[i] ();						\ } while (0)
 end_define
 
 begin_endif

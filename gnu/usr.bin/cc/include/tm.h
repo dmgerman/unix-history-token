@@ -57,6 +57,12 @@ name|CPP_PREDEFINES
 value|"-Dunix -Di386 -D__FreeBSD__=2 -D__386BSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -64,12 +70,10 @@ name|INCLUDE_DEFAULTS
 value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
 end_define
 
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|" %| %{fpic:-k} %{fPIC:-k}"
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Like the default, except no -lg.  */
@@ -81,17 +85,6 @@ directive|define
 name|LIB_SPEC
 value|"%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
 end_define
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z}"
-end_define
-
-begin_escape
-end_escape
 
 begin_undef
 undef|#
@@ -129,14 +122,14 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"int"
+value|"short unsigned int"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WCHAR_UNSIGNED
-value|0
+value|1
 end_define
 
 begin_undef
@@ -149,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|BITS_PER_WORD
+value|16
 end_define
 
 begin_define
@@ -188,7 +181,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
+value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%eax\n",		\ 	     LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%eax\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
 end_define
 
 begin_if
@@ -422,7 +415,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\         size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
 end_define
 
 begin_comment
@@ -443,7 +436,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									 \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);			 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL))); \        }								 \    } while (0)
+value|do {                                                                    \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);                  \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)	        \&& ! AT_END&& TOP_LEVEL                                       \&& DECL_INITIAL (DECL) == error_mark_node                      \&& !size_directive_output)                                     \        {                                                                \          fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);                        \ 	 assemble_name (FILE, name);                                    \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));\ 	}								\    } while (0)
 end_define
 
 begin_comment
@@ -465,54 +458,19 @@ define|\
 value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
 end_define
 
-begin_comment
-comment|/* This section copied from i386/osfrose.h */
-end_comment
-
-begin_comment
-comment|/* A C statement or compound statement to output to FILE some    assembler code to initialize basic-block profiling for the current    object module.  This code should call the subroutine    `__bb_init_func' once per object module, passing it as its sole    argument the address of a block allocated in the object module.     The name of the block is a local symbol made with this statement:  	ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 0);     Of course, since you are writing the definition of    `ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you    can take a short cut in the definition of this macro and use the    name that you know will result.     The first word of this block is a flag which will be nonzero if the    object module has already been initialized.  So test this word    first, and do not call `__bb_init_func' if the flag is nonzero.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_BLOCK_PROFILER
-end_undef
-
 begin_define
 define|#
 directive|define
-name|FUNCTION_BLOCK_PROFILER
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|do									\   {									\     if (!flag_pic)							\       {									\ 	fprintf (STREAM, "\tcmpl $0,%sPBX0\n", LPREFIX);		\ 	fprintf (STREAM, "\tjne 0f\n");					\ 	fprintf (STREAM, "\tpushl $%sPBX0\n", LPREFIX);			\ 	fprintf (STREAM, "\tcall ___bb_init_func\n");			\ 	fprintf (STREAM, "0:\n");					\       }									\     else								\       {									\ 	fprintf (STREAM, "\tpushl %eax\n");				\ 	fprintf (STREAM, "\tmovl %sPBX0@GOT(%ebx),%eax\n");		\ 	fprintf (STREAM, "\tcmpl $0,(%eax)\n");				\ 	fprintf (STREAM, "\tjne 0f\n");					\ 	fprintf (STREAM, "\tpushl %eax\n");				\ 	fprintf (STREAM, "\tcall ___bb_init_func@PLT\n");		\ 	fprintf (STREAM, "0:\n");					\ 	fprintf (STREAM, "\tpopl %eax\n");				\       }									\   }									\ while (0)
+name|ASM_SPEC
+value|" %| %{fpic:-k} %{fPIC:-k}"
 end_define
 
-begin_comment
-comment|/* A C statement or compound statement to increment the count    associated with the basic block number BLOCKNO.  Basic blocks are    numbered separately from zero within each compilation.  The count    associated with block number BLOCKNO is at index BLOCKNO in a    vector of words; the name of this array is a local symbol made    with this statement:  	ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 2);     Of course, since you are writing the definition of    `ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you    can take a short cut in the definition of this macro and use the    name that you know will result.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|BLOCK_PROFILER
-end_undef
-
 begin_define
 define|#
 directive|define
-name|BLOCK_PROFILER
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|BLOCKNO
-parameter_list|)
+name|LINK_SPEC
 define|\
-value|do									\   {									\     if (!flag_pic)							\       fprintf (STREAM, "\tincl %sPBX2+%d\n", LPREFIX, (BLOCKNO)*4);	\     else								\       {									\ 	fprintf (STREAM, "\tpushl %eax\n");				\ 	fprintf (STREAM, "\tmovl %sPBX2@GOT(%ebx),%eax\n", LPREFIX);	\ 	fprintf (STREAM, "\tincl %d(%eax)\n", (BLOCKNO)*4);		\ 	fprintf (STREAM, "\tpopl %eax\n");				\       }									\   }									\ while (0)
+value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
 end_define
 
 begin_comment

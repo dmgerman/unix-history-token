@@ -13504,6 +13504,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+comment|/* Generate DIEs to represent all known formal parameters */
 specifier|register
 name|tree
 name|arg_decls
@@ -13513,62 +13514,12 @@ argument_list|(
 name|decl
 argument_list|)
 decl_stmt|;
-block|{
-specifier|register
-name|tree
-name|last_arg
-decl_stmt|;
-name|last_arg
-operator|=
-operator|(
-name|arg_decls
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|arg_decls
-argument_list|)
-operator|!=
-name|ERROR_MARK
-operator|)
-condition|?
-name|tree_last
-argument_list|(
-name|arg_decls
-argument_list|)
-else|:
-name|NULL
-expr_stmt|;
-comment|/* Generate DIEs to represent all known formal parameters, but 	       don't do it if this looks like a varargs function.  A given 	       function is considered to be a varargs function if (and only 	       if) its last named argument is named `__builtin_va_alist'.  */
-if|if
-condition|(
-operator|!
-name|last_arg
-operator|||
-operator|!
-name|DECL_NAME
-argument_list|(
-name|last_arg
-argument_list|)
-operator|||
-name|strcmp
-argument_list|(
-name|IDENTIFIER_POINTER
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|last_arg
-argument_list|)
-argument_list|)
-argument_list|,
-literal|"__builtin_va_alist"
-argument_list|)
-condition|)
-block|{
 specifier|register
 name|tree
 name|parm
 decl_stmt|;
-comment|/* WARNING!  Kludge zone ahead!  Here we have a special 		   hack for svr4 SDB compatibility.  Instead of passing the 		   current FUNCTION_DECL node as the second parameter (i.e. 		   the `containing_scope' parameter) to `output_decl' (as 		   we ought to) we instead pass a pointer to our own private 		   fake_containing_scope node.  That node is a RECORD_TYPE 		   node which NO OTHER TYPE may ever actually be a member of.  		   This pointer will ultimately get passed into `output_type' 		   as its `containing_scope' parameter.  `Output_type' will 		   then perform its part in the hack... i.e. it will pend 		   the type of the formal parameter onto the pending_types 		   list.  Later on, when we are done generating the whole 		   sequence of formal parameter DIEs for this function 		   definition, we will un-pend all previously pended types 		   of formal parameters for this function definition.  		   This whole kludge prevents any type DIEs from being 		   mixed in with the formal parameter DIEs.  That's good 		   because svr4 SDB believes that the list of formal 		   parameter DIEs for a function ends wherever the first 		   non-formal-parameter DIE appears.  Thus, we have to 		   keep the formal parameter DIEs segregated.  They must 		   all appear (consecutively) at the start of the list of 		   children for the DIE representing the function definition. 		   Then (and only then) may we output any additional DIEs 		   needed to represent the types of these formal parameters. 		*/
+comment|/* WARNING!  Kludge zone ahead!  Here we have a special 	     hack for svr4 SDB compatibility.  Instead of passing the 	     current FUNCTION_DECL node as the second parameter (i.e. 	     the `containing_scope' parameter) to `output_decl' (as 	     we ought to) we instead pass a pointer to our own private 	     fake_containing_scope node.  That node is a RECORD_TYPE 	     node which NO OTHER TYPE may ever actually be a member of.  	     This pointer will ultimately get passed into `output_type' 	     as its `containing_scope' parameter.  `Output_type' will 	     then perform its part in the hack... i.e. it will pend 	     the type of the formal parameter onto the pending_types 	     list.  Later on, when we are done generating the whole 	     sequence of formal parameter DIEs for this function 	     definition, we will un-pend all previously pended types 	     of formal parameters for this function definition.  	     This whole kludge prevents any type DIEs from being 	     mixed in with the formal parameter DIEs.  That's good 	     because svr4 SDB believes that the list of formal 	     parameter DIEs for a function ends wherever the first 	     non-formal-parameter DIE appears.  Thus, we have to 	     keep the formal parameter DIEs segregated.  They must 	     all appear (consecutively) at the start of the list of 	     children for the DIE representing the function definition. 	     Then (and only then) may we output any additional DIEs 	     needed to represent the types of these formal parameters. 	  */
+comment|/* 	     When generating DIEs, generate the unspecified_parameters 	     DIE instead if we come across the arg "__builtin_va_alist" 	  */
 for|for
 control|(
 name|parm
@@ -13593,6 +13544,36 @@ argument_list|)
 operator|==
 name|PARM_DECL
 condition|)
+block|{
+if|if
+condition|(
+name|DECL_NAME
+argument_list|(
+name|parm
+argument_list|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|IDENTIFIER_POINTER
+argument_list|(
+name|DECL_NAME
+argument_list|(
+name|parm
+argument_list|)
+argument_list|)
+argument_list|,
+literal|"__builtin_va_alist"
+argument_list|)
+condition|)
+name|output_die
+argument_list|(
+name|output_unspecified_parameters_die
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+else|else
 name|output_decl
 argument_list|(
 name|parm
@@ -13600,23 +13581,15 @@ argument_list|,
 name|fake_containing_scope
 argument_list|)
 expr_stmt|;
-comment|/* Now that we have finished generating all of the DIEs to 		   represent the formal parameters themselves, force out 		   any DIEs needed to represent their types.  We do this 		   simply by un-pending all previously pended types which 		   can legitimately go into the chain of children DIEs for 		   the current FUNCTION_DECL.  */
+block|}
+comment|/* 	     Now that we have finished generating all of the DIEs to 	     represent the formal parameters themselves, force out 	     any DIEs needed to represent their types.  We do this 	     simply by un-pending all previously pended types which 	     can legitimately go into the chain of children DIEs for 	     the current FUNCTION_DECL. 	  */
 name|output_pending_types_for_scope
 argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/* Now try to decide if we should put an ellipsis at the end. */
+comment|/* 	    Decide whether we need a unspecified_parameters DIE at the end. 	    There are 2 more cases to do this for: 	    1) the ansi ... declaration - this is detectable when the end 		of the arg list is not a void_type_node 	    2) an unprototyped function declaration (not a definition).  This 		just means that we have no info about the parameters at all. 	  */
 block|{
-specifier|register
-name|int
-name|has_ellipsis
-init|=
-name|TRUE
-decl_stmt|;
-comment|/* default assumption */
 specifier|register
 name|tree
 name|fn_arg_types
@@ -13634,8 +13607,7 @@ condition|(
 name|fn_arg_types
 condition|)
 block|{
-comment|/* This function declaration/definition was prototyped.	 */
-comment|/* If the list of formal argument types ends with a 		   void_type_node, then the formals list did *not* end 		   with an ellipsis.  */
+comment|/* this is the prototyped case, check for ... */
 if|if
 condition|(
 name|TREE_VALUE
@@ -13645,70 +13617,8 @@ argument_list|(
 name|fn_arg_types
 argument_list|)
 argument_list|)
-operator|==
+operator|!=
 name|void_type_node
-condition|)
-name|has_ellipsis
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* This function declaration/definition was not prototyped.  */
-comment|/* Note that all non-prototyped function *declarations* are 		   assumed to represent varargs functions (until proven 		   otherwise).	*/
-if|if
-condition|(
-name|DECL_INITIAL
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-comment|/* if this is a func definition */
-block|{
-if|if
-condition|(
-operator|!
-name|arg_decls
-condition|)
-name|has_ellipsis
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* no args == (void) */
-else|else
-block|{
-comment|/* For a non-prototyped function definition which 			   declares one or more formal parameters, if the name 			   of the first formal parameter is *not* 			   __builtin_va_alist then we must assume that this 			   is *not* a varargs function.	 */
-if|if
-condition|(
-name|DECL_NAME
-argument_list|(
-name|arg_decls
-argument_list|)
-operator|&&
-name|strcmp
-argument_list|(
-name|IDENTIFIER_POINTER
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|arg_decls
-argument_list|)
-argument_list|)
-argument_list|,
-literal|"__builtin_va_alist"
-argument_list|)
-condition|)
-name|has_ellipsis
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-block|}
-block|}
-if|if
-condition|(
-name|has_ellipsis
 condition|)
 name|output_die
 argument_list|(
@@ -13717,6 +13627,26 @@ argument_list|,
 name|decl
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* this is unprotoyped, check for undefined (just declaration) */
+if|if
+condition|(
+operator|!
+name|DECL_INITIAL
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+name|output_die
+argument_list|(
+name|output_unspecified_parameters_die
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Output Dwarf info for all of the stuff within the body of the 	 function (if it has one - it may be just a declaration).  */

@@ -7396,6 +7396,13 @@ name|loop_start
 argument_list|)
 expr_stmt|;
 comment|/* Because the USAGE information potentially 				     contains objects other than hard registers 				     we need to copy it.  */
+if|if
+condition|(
+name|CALL_INSN_FUNCTION_USAGE
+argument_list|(
+name|temp
+argument_list|)
+condition|)
 name|CALL_INSN_FUNCTION_USAGE
 argument_list|(
 name|i1
@@ -7588,6 +7595,13 @@ name|loop_start
 argument_list|)
 expr_stmt|;
 comment|/* Because the USAGE information potentially 			     contains objects other than hard registers 			     we need to copy it.  */
+if|if
+condition|(
+name|CALL_INSN_FUNCTION_USAGE
+argument_list|(
+name|p
+argument_list|)
+condition|)
 name|CALL_INSN_FUNCTION_USAGE
 argument_list|(
 name|i1

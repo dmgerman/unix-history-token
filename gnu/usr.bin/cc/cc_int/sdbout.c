@@ -84,6 +84,12 @@ name|defined
 argument_list|(
 name|hpux
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|WINNT
+argument_list|)
 end_if
 
 begin_include

@@ -286,6 +286,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Element Q is nonzero if this quantity has been used in a SUBREG    that changes its size.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|qty_changes_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Element Q is the register number of one pseudo register whose    reg_qty value is Q, or -1 is this quantity is for a SCRATCH.  This    register should be the head of the chain maintained in reg_next_in_qty.  */
 end_comment
 
@@ -987,6 +999,16 @@ index|[
 name|regno
 index|]
 expr_stmt|;
+name|qty_changes_size
+index|[
+name|qty
+index|]
+operator|=
+name|reg_changes_size
+index|[
+name|regno
+index|]
+expr_stmt|;
 block|}
 end_function
 
@@ -1411,6 +1433,13 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
+name|qty_changes_size
+index|[
+name|qty
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -1775,6 +1804,22 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|qty_changes_size
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|alloca
+argument_list|(
+name|max_qty
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8119,6 +8164,20 @@ index|]
 operator|=
 name|rclass
 expr_stmt|;
+if|if
+condition|(
+name|reg_changes_size
+index|[
+name|reg
+index|]
+condition|)
+name|qty_changes_size
+index|[
+name|qty
+index|]
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -8803,6 +8862,31 @@ argument_list|(
 name|used
 argument_list|,
 name|FRAME_POINTER_REGNUM
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CLASS_CANNOT_CHANGE_SIZE
+if|if
+condition|(
+name|qty_changes_size
+index|[
+name|qty
+index|]
+condition|)
+name|IOR_HARD_REG_SET
+argument_list|(
+name|used
+argument_list|,
+name|reg_class_contents
+index|[
+operator|(
+name|int
+operator|)
+name|CLASS_CANNOT_CHANGE_SIZE
+index|]
 argument_list|)
 expr_stmt|;
 endif|#

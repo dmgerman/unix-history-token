@@ -871,13 +871,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Emit code to perform an input reload of IN to RELOADREG.  IN is from    operand OPNUM with reload type TYPE.   */
+comment|/* Emit code to perform a reload from IN (which may be a reload register) to    OUT (which may also be a reload register).  IN or OUT is from operand    OPNUM with reload type TYPE.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|rtx
-name|gen_input_reload
+name|gen_reload
 name|PROTO
 argument_list|(
 operator|(

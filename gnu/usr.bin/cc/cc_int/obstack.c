@@ -38,11 +38,16 @@ name|__GNU_LIBRARY__
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_define
 define|#
@@ -1029,11 +1034,16 @@ begin_comment
 comment|/* Return nonzero if object OBJ has been allocated from obstack H.    This is here for debugging.    If you use it in a program, you are probably losing.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_comment
 comment|/* Suppress -Wmissing-prototypes warning.  We don't want to declare this in    obstack.h because it is just for debugging.  */
@@ -1463,11 +1473,16 @@ begin_comment
 comment|/* Now define the functional versions of the obstack macros.    Define them to simply use the corresponding macros to do the job.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_comment
 comment|/* These function definitions do not work with non-ANSI preprocessors;    they won't pass through the macro names in parentheses.  */

@@ -606,7 +606,7 @@ block|{
 name|tree
 name|sig_tbl_type
 init|=
-name|c_build_type_variant
+name|cp_build_type_variant
 argument_list|(
 name|to_type
 argument_list|,

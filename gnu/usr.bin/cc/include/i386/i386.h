@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel 80386.    Copyright (C) 1988, 1992, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions of target machine for GNU compiler for Intel X86 (386, 486, pentium)    Copyright (C) 1988, 1992, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -148,25 +148,154 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Compile 80387 insns for floating point (not library calls).  */
+comment|/* Masks for the -m switches */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_80387
+value|000000000001
+end_define
+
+begin_comment
+comment|/* Hardware floating point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_486
+value|000000000002
+end_define
+
+begin_comment
+comment|/* 80486 specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_NOTUSED
+value|000000000004
+end_define
+
+begin_comment
+comment|/* bit not currently used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_RTD
+value|000000000010
+end_define
+
+begin_comment
+comment|/* Use ret that pops args */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_REGPARM
+value|000000000020
+end_define
+
+begin_comment
+comment|/* Pass args in eax, edx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_SVR3_SHLIB
+value|000000000040
+end_define
+
+begin_comment
+comment|/* Uninit locals into bss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_IEEE_FP
+value|000000000100
+end_define
+
+begin_comment
+comment|/* IEEE fp comparisons */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_FLOAT_RETURNS
+value|000000000200
+end_define
+
+begin_comment
+comment|/* Return float in st(0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_NO_FANCY_MATH_387
+value|000000000400
+end_define
+
+begin_comment
+comment|/* Disable sin, cos, sqrt */
+end_comment
+
+begin_comment
+comment|/* Temporary codegen switches */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_DEBUG_ADDR
+value|000001000000
+end_define
+
+begin_comment
+comment|/* Debug GO_IF_LEGITIMATE_ADDRESS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_NO_WIDE_MULTIPLY
+value|000002000000
+end_define
+
+begin_comment
+comment|/* Disable 32x32->64 multiplies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_NO_MOVE
+value|000004000000
+end_define
+
+begin_comment
+comment|/* Don't generate mem->mem */
+end_comment
+
+begin_comment
+comment|/* Use the floating point instructions */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TARGET_80387
-value|(target_flags& 1)
-end_define
-
-begin_comment
-comment|/* Compile code for an i486. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_486
-value|(target_flags& 2)
+value|(target_flags& MASK_80387)
 end_define
 
 begin_comment
@@ -177,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_RTD
-value|(target_flags& 8)
+value|(target_flags& MASK_RTD)
 end_define
 
 begin_comment
@@ -188,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_REGPARM
-value|(target_flags& 020)
+value|(target_flags& MASK_RTD)
 end_define
 
 begin_comment
@@ -199,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_SVR3_SHLIB
-value|(target_flags& 040)
+value|(target_flags& MASK_SVR3_SHLIB)
 end_define
 
 begin_comment
@@ -210,7 +339,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_IEEE_FP
-value|(target_flags& 0100)
+value|(target_flags& MASK_IEEE_FP)
 end_define
 
 begin_comment
@@ -221,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_FLOAT_RETURNS_IN_80387
-value|(target_flags& 0200)
+value|(target_flags& MASK_FLOAT_RETURNS)
 end_define
 
 begin_comment
@@ -232,11 +361,81 @@ begin_define
 define|#
 directive|define
 name|TARGET_NO_FANCY_MATH_387
-value|(target_flags& 0400)
+value|(target_flags& MASK_NO_FANCY_MATH_387)
 end_define
 
 begin_comment
-comment|/* Macro to define tables used to set the flags.    This is a list in braces of pairs in braces,    each pair being { "NAME", VALUE }    where VALUE is the bits to set or minus the bits to clear.    An empty string NAME is used to identify the default VALUE.  */
+comment|/* Temporary switches for tuning code generation */
+end_comment
+
+begin_comment
+comment|/* Disable 32x32->64 bit multiplies that are used for long long multiplies    and division by constants, but sometimes cause reload problems.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_NO_WIDE_MULTIPLY
+value|(target_flags& MASK_NO_WIDE_MULTIPLY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_WIDE_MULTIPLY
+value|(!TARGET_NO_WIDE_MULTIPLY)
+end_define
+
+begin_comment
+comment|/* Debug GO_IF_LEGITIMATE_ADDRESS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEBUG_ADDR
+value|(target_flags& MASK_DEBUG_ADDR)
+end_define
+
+begin_comment
+comment|/* Hack macros for tuning code generation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_MOVE
+value|((target_flags& MASK_NO_MOVE) == 0)
+end_define
+
+begin_comment
+comment|/* Don't generate memory->memory */
+end_comment
+
+begin_comment
+comment|/* Specific hardware switches */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_486
+value|(target_flags& MASK_486)
+end_define
+
+begin_comment
+comment|/* 80486DX, 80486SX, 80486DX[24] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_386
+value|(!TARGET_486)
+end_define
+
+begin_comment
+comment|/* 80386 */
 end_comment
 
 begin_define
@@ -244,11 +443,34 @@ define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{ { "80387", 1},				\     { "no-80387", -1},				\     { "soft-float", -1},			\     { "no-soft-float", 1},			\     { "486", 2},				\     { "no-486", -2},				\     { "386", -2},				\     { "rtd", 8},				\     { "no-rtd", -8},				\     { "regparm", 020},				\     { "no-regparm", -020},			\     { "svr3-shlib", 040},			\     { "no-svr3-shlib", -040},			\     { "ieee-fp", 0100},				\     { "no-ieee-fp", -0100},			\     { "fp-ret-in-387", 0200},			\     { "no-fp-ret-in-387", -0200},		\     { "no-fancy-math-387", 0400},		\     { "fancy-math-387", -0400},			\     SUBTARGET_SWITCHES                          \     { "", TARGET_DEFAULT | TARGET_CPU_DEFAULT}}
+value|{ { "80387",			 MASK_80387 },				\   { "no-80387",			-MASK_80387 },				\   { "hard-float",		 MASK_80387 },				\   { "soft-float",		-MASK_80387 },				\   { "no-soft-float",		 MASK_80387 },				\   { "386",			-MASK_486 },				\   { "no-386",			 MASK_486 },				\   { "486",			 MASK_486 },				\   { "no-486",			-MASK_486 },				\   { "rtd",			 MASK_RTD },				\   { "no-rtd",			-MASK_RTD },				\   { "regparm",			 MASK_REGPARM },			\   { "no-regparm",		-MASK_REGPARM },			\   { "svr3-shlib",		 MASK_SVR3_SHLIB },			\   { "no-svr3-shlib",		-MASK_SVR3_SHLIB },			\   { "ieee-fp",			 MASK_IEEE_FP },			\   { "no-ieee-fp",		-MASK_IEEE_FP },			\   { "fp-ret-in-387",		 MASK_FLOAT_RETURNS },			\   { "no-fp-ret-in-387",		-MASK_FLOAT_RETURNS },			\   { "no-fancy-math-387",	 MASK_NO_FANCY_MATH_387 },		\   { "fancy-math-387",		-MASK_NO_FANCY_MATH_387 },		\   { "no-wide-multiply",		 MASK_NO_WIDE_MULTIPLY },		\   { "wide-multiply",		-MASK_NO_WIDE_MULTIPLY },		\   { "debug-addr",		 MASK_DEBUG_ADDR },			\   { "no-debug-addr",		-MASK_DEBUG_ADDR },			\   { "move",			-MASK_NO_MOVE },			\   { "no-move",			 MASK_NO_MOVE },			\   SUBTARGET_SWITCHES							\   { "", TARGET_DEFAULT | TARGET_CPU_DEFAULT}}
 end_define
 
 begin_comment
-comment|/* This is meant to be redefined in the host dependent files */
+comment|/* This macro is similar to `TARGET_SWITCHES' but defines names of    command options that have values.  Its definition is an    initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    fixed part of the option name, and the address of a variable.  The    variable, type `char *', is set to the variable part of the given    option if the fixed part matches.  The actual option name is made    by appending `-m' to the specified name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_OPTIONS
+define|\
+value|{ { "reg-alloc=",&i386_reg_alloc_order },				\   SUBTARGET_OPTIONS }
+end_define
+
+begin_comment
+comment|/* Sometimes certain combinations of command options do not make    sense on a particular target machine.  You can define a macro    `OVERRIDE_OPTIONS' to take account of this.  This macro, if    defined, is executed once just after all the command options have    been parsed.     Don't use this macro to turn on various extra optimizations for    `-O'.  That is what `OPTIMIZATION_OPTIONS' is for.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OVERRIDE_OPTIONS
+value|override_options ()
+end_define
+
+begin_comment
+comment|/* These are meant to be redefined in the host dependent files */
 end_comment
 
 begin_define
@@ -260,19 +482,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|OVERRIDE_OPTIONS
-define|\
-value|{				\   SUBTARGET_OVERRIDE_OPTIONS	\ }
-end_define
-
-begin_comment
-comment|/* This is meant to be redefined in the host dependent files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OVERRIDE_OPTIONS
+name|SUBTARGET_OPTIONS
 end_define
 
 begin_escape
@@ -558,7 +768,7 @@ value|{  1, 1, 1, 0, 0, 0, 0, 1, 1,  1,  1,  1,  1,  1,  1,  1,  1 }
 end_define
 
 begin_comment
-comment|/* Order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.  List frame pointer    late and fixed registers last.  Note that, in general, we prefer    registers listed in CALL_USED_REGISTERS, keeping the others    available for storage of persistent values.  */
+comment|/* Order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.  List frame pointer    late and fixed registers last.  Note that, in general, we prefer    registers listed in CALL_USED_REGISTERS, keeping the others    available for storage of persistent values.     Three different versions of REG_ALLOC_ORDER have been tried:     If the order is edx, ecx, eax, ... it produces a slightly faster compiler,    but slower code on simple functions returning values in eax.     If the order is eax, ecx, edx, ... it causes reload to abort when compiling    perl 4.036 due to not being able to create a DImode register (to hold a 2    word union).     If the order is eax, edx, ecx, ... it produces better code for simple    functions, and a slightly slower compiler.  Users complained about the code    generated by allocating edx first, so restore the 'natural' order of things. */
 end_comment
 
 begin_define
@@ -566,9 +776,20 @@ define|#
 directive|define
 name|REG_ALLOC_ORDER
 define|\
-comment|/*ax,cx,dx,bx,si,di,bp,sp,st,st1,st2,st3,st4,st5,st6,st7,arg*/
+comment|/*ax,dx,cx,bx,si,di,bp,sp,st,st1,st2,st3,st4,st5,st6,st7,arg*/
 define|\
-value|{  0, 2, 1, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13, 14, 15, 16 }
+value|{  0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13, 14, 15, 16 }
+end_define
+
+begin_comment
+comment|/* A C statement (sans semicolon) to choose the order in which to    allocate hard registers for pseudo-registers local to a basic    block.     Store the desired register order in the array `reg_alloc_order'.    Element 0 should be the register to allocate first; element 1, the    next register; and so on.     The macro body should not assume anything about the contents of    `reg_alloc_order' before execution of the macro.     On most machines, it is not necessary to define this macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ORDER_REGS_FOR_LOCAL_ALLOC
+value|order_regs_for_local_alloc ()
 end_define
 
 begin_comment
@@ -783,6 +1004,21 @@ name|STRUCT_VALUE
 value|0
 end_define
 
+begin_comment
+comment|/* A C expression which can inhibit the returning of certain function    values in registers, based on the type of value.  A nonzero value    says to return the function value in memory, just as large    structures are always returned.  Here TYPE will be a C expression    of type `tree', representing the data type of the value.     Note that values of mode `BLKmode' must be explicitly handled by    this macro.  Also, the option `-fpcc-struct-return' takes effect    regardless of this macro.  On most systems, it is possible to    leave the macro undefined; this causes a default definition to be    used, whose value is the constant 1 for `BLKmode' values, and 0    otherwise.     Do not use this macro to indicate that structures and unions    should always be returned in memory.  You should instead use    `DEFAULT_PCC_STRUCT_RETURN' to indicate this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RETURN_IN_MEMORY
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|((TYPE_MODE (TYPE) == BLKmode) || int_size_in_bytes (TYPE)> 12)
+end_define
+
 begin_escape
 end_escape
 
@@ -880,7 +1116,7 @@ value|\      0xf,
 comment|/* Q_REGS */
 value|\     0x10,   0x20,
 comment|/* SIREG, DIREG */
-value|\  0x1007f,
+value|\  0x07f,
 comment|/* INDEX_REGS */
 value|\  0x100ff,
 comment|/* GENERAL_REGS */
@@ -894,17 +1130,6 @@ end_define
 begin_comment
 comment|/* The same information, inverted:    Return the class number of the smallest class containing    reg number REGNO.  This could be a conditional expression    or could index an array.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|enum
-name|reg_class
-name|regclass_map
-index|[
-name|FIRST_PSEUDO_REGISTER
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1157,6 +1382,21 @@ name|MODE
 parameter_list|)
 define|\
 value|(FLOAT_CLASS_P (CLASS) ? 1 :		\   ((GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD))
+end_define
+
+begin_comment
+comment|/* A C expression whose value is nonzero if pseudos that have been    assigned to registers of class CLASS would likely be spilled    because registers of CLASS are needed for spill registers.     The default value of this macro returns 1 if CLASS has exactly one    register and zero otherwise.  On most machines, this default    should be used.  Only define this macro to some other expression    if pseudo allocated by `local-alloc.c' end up in memory because    their hard registers were needed for spill regisers.  If this    macro returns nonzero for those classes, those pseudos will only    be allocated by `global.c', which knows how to reallocate the    pseudo to another register.  If there would not be another    register available for reallocation, you should not change the    definition of this macro since the only effect of such a    definition would be to slow down register allocation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASS_LIKELY_SPILLED_P
+parameter_list|(
+name|CLASS
+parameter_list|)
+define|\
+value|(((CLASS) == AREG)							\    || ((CLASS) == DREG)							\    || ((CLASS) == CREG)							\    || ((CLASS) == BREG)							\    || ((CLASS) == AD_REGS)						\    || ((CLASS) == SIREG)						\    || ((CLASS) == DIREG))
 end_define
 
 begin_escape
@@ -1431,6 +1671,48 @@ value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, 
 end_define
 
 begin_comment
+comment|/* A C statement or compound statement to output to FILE some    assembler code to initialize basic-block profiling for the current    object module.  This code should call the subroutine    `__bb_init_func' once per object module, passing it as its sole    argument the address of a block allocated in the object module.     The name of the block is a local symbol made with this statement:  	ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 0);     Of course, since you are writing the definition of    `ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you    can take a short cut in the definition of this macro and use the    name that you know will result.     The first word of this block is a flag which will be nonzero if the    object module has already been initialized.  So test this word    first, and do not call `__bb_init_func' if the flag is nonzero.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FUNCTION_BLOCK_PROFILER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_BLOCK_PROFILER
+parameter_list|(
+name|STREAM
+parameter_list|,
+name|LABELNO
+parameter_list|)
+define|\
+value|do									\   {									\     static int num_func = 0;						\     rtx xops[8];							\     char block_table[80], false_label[80];				\ 									\     ASM_GENERATE_INTERNAL_LABEL (block_table, "LPBX", 0);		\     ASM_GENERATE_INTERNAL_LABEL (false_label, "LPBZ", num_func);	\ 									\     xops[0] = const0_rtx;						\     xops[1] = gen_rtx (SYMBOL_REF, VOIDmode, block_table);		\     xops[2] = gen_rtx (MEM, Pmode, gen_rtx (SYMBOL_REF, VOIDmode, false_label)); \     xops[3] = gen_rtx (MEM, Pmode, gen_rtx (SYMBOL_REF, VOIDmode, "__bb_init_func")); \     xops[4] = gen_rtx (MEM, Pmode, xops[1]);				\     xops[5] = stack_pointer_rtx;					\     xops[6] = GEN_INT (4);						\     xops[7] = gen_rtx (REG, Pmode, 0);
+comment|/* eax */
+value|\ 									\     CONSTANT_POOL_ADDRESS_P (xops[1]) = TRUE;				\     CONSTANT_POOL_ADDRESS_P (xops[2]) = TRUE;				\ 									\     output_asm_insn (AS2(cmp%L4,%0,%4), xops);				\     output_asm_insn (AS1(jne,%2), xops);				\ 									\     if (!flag_pic)							\       output_asm_insn (AS1(push%L1,%1), xops);				\     else								\       {									\ 	output_asm_insn (AS2 (lea%L7,%a1,%7), xops);			\ 	output_asm_insn (AS1 (push%L7,%7), xops);			\       }									\ 									\     output_asm_insn (AS1(call,%P3), xops);				\     output_asm_insn (AS2(add%L0,%6,%5), xops);				\     ASM_OUTPUT_INTERNAL_LABEL (STREAM, "LPBZ", num_func);		\     num_func++;								\   }									\ while (0)
+end_define
+
+begin_comment
+comment|/* A C statement or compound statement to increment the count    associated with the basic block number BLOCKNO.  Basic blocks are    numbered separately from zero within each compilation.  The count    associated with block number BLOCKNO is at index BLOCKNO in a    vector of words; the name of this array is a local symbol made    with this statement:  	ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 2);     Of course, since you are writing the definition of    `ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you    can take a short cut in the definition of this macro and use the    name that you know will result.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_PROFILER
+parameter_list|(
+name|STREAM
+parameter_list|,
+name|BLOCKNO
+parameter_list|)
+define|\
+value|do									\   {									\     rtx xops[1], cnt_rtx;						\     char counts[80];							\ 									\     ASM_GENERATE_INTERNAL_LABEL (counts, "LPBX", 2);			\     cnt_rtx = gen_rtx (SYMBOL_REF, VOIDmode, counts);			\     SYMBOL_REF_FLAG (cnt_rtx) = TRUE;					\ 									\     if (BLOCKNO)							\       cnt_rtx = plus_constant (cnt_rtx, (BLOCKNO)*4);			\ 									\     if (flag_pic)							\       cnt_rtx = gen_rtx (PLUS, Pmode, pic_offset_table_rtx, cnt_rtx);	\ 									\     xops[0] = gen_rtx (MEM, SImode, cnt_rtx);				\     output_asm_insn (AS1(inc%L0,%0), xops);				\   }									\ while (0)
+end_define
+
+begin_comment
 comment|/* EXIT_IGNORE_STACK should be nonzero if, when returning from a function,    the stack pointer does not matter.  The value is tested only in    functions that have frame pointers.    No definition is equivalent to always zero.  */
 end_comment
 
@@ -1643,50 +1925,36 @@ begin_comment
 comment|/* The macros REG_OK_FOR..._P assume that the arg is a REG rtx    and check its validity for a certain class.    We have two alternate definitions for each of them.    The usual definition accepts all pseudo regs; the other rejects    them unless they have been allocated suitable hard regs.    The symbol REG_OK_STRICT causes the latter definition to be used.     Most source files want to accept pseudo regs in the hope that    they will get allocated to the class that the insn wants them to be in.    Source files for reload pass need to be strict.    After reload, it makes no difference, since pseudo regs have    been eliminated by then.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|REG_OK_STRICT
-end_ifndef
-
 begin_comment
-comment|/* Nonzero if X is a hard reg that can be used as an index or if    it is a pseudo reg.  */
+comment|/* Non strict versions, pseudos are ok */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REG_OK_FOR_INDEX_P
+name|REG_OK_FOR_INDEX_NONSTRICT_P
 parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(REGNO (X)< STACK_POINTER_REGNUM \    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
-end_define
-
-begin_comment
-comment|/* Nonzero if X is a hard reg that can be used as a base reg    of if it is a pseudo reg.  */
-end_comment
-
-begin_comment
-comment|/* ?wfs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REG_OK_FOR_BASE_P
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|(REGNO (X)<= STACK_POINTER_REGNUM \    || REGNO (X) == ARG_POINTER_REGNUM \    || REGNO(X)>= FIRST_PSEUDO_REGISTER)
+value|(REGNO (X)< STACK_POINTER_REGNUM					\    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
 end_define
 
 begin_define
 define|#
 directive|define
-name|REG_OK_FOR_STRREG_P
+name|REG_OK_FOR_BASE_NONSTRICT_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(REGNO (X)<= STACK_POINTER_REGNUM					\    || REGNO (X) == ARG_POINTER_REGNUM					\    || REGNO (X)>= FIRST_PSEUDO_REGISTER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_STRREG_NONSTRICT_P
 parameter_list|(
 name|X
 parameter_list|)
@@ -1694,33 +1962,24 @@ define|\
 value|(REGNO (X) == 4 || REGNO (X) == 5 || REGNO (X)>= FIRST_PSEUDO_REGISTER)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* Nonzero if X is a hard reg that can be used as an index.  */
+comment|/* Strict versions, hard registers only */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REG_OK_FOR_INDEX_P
+name|REG_OK_FOR_INDEX_STRICT_P
 parameter_list|(
 name|X
 parameter_list|)
 value|REGNO_OK_FOR_INDEX_P (REGNO (X))
 end_define
 
-begin_comment
-comment|/* Nonzero if X is a hard reg that can be used as a base reg.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|REG_OK_FOR_BASE_P
+name|REG_OK_FOR_BASE_STRICT_P
 parameter_list|(
 name|X
 parameter_list|)
@@ -1730,12 +1989,83 @@ end_define
 begin_define
 define|#
 directive|define
-name|REG_OK_FOR_STRREG_P
+name|REG_OK_FOR_STRREG_STRICT_P
 parameter_list|(
 name|X
 parameter_list|)
 define|\
 value|(REGNO_OK_FOR_DIREG_P (REGNO (X)) || REGNO_OK_FOR_SIREG_P (REGNO (X)))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|REG_OK_STRICT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_INDEX_P
+parameter_list|(
+name|X
+parameter_list|)
+value|REG_OK_FOR_INDEX_NONSTRICT_P(X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_BASE_P
+parameter_list|(
+name|X
+parameter_list|)
+value|REG_OK_FOR_BASE_NONSTRICT_P(X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_STRREG_P
+parameter_list|(
+name|X
+parameter_list|)
+value|REG_OK_FOR_STRREG_NONSTRICT_P(X)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_INDEX_P
+parameter_list|(
+name|X
+parameter_list|)
+value|REG_OK_FOR_INDEX_STRICT_P(X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_BASE_P
+parameter_list|(
+name|X
+parameter_list|)
+value|REG_OK_FOR_BASE_STRICT_P(X)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_OK_FOR_STRREG_P
+parameter_list|(
+name|X
+parameter_list|)
+value|REG_OK_FOR_STRREG_STRICT_P(X)
 end_define
 
 begin_endif
@@ -1779,65 +2109,11 @@ parameter_list|)
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|GO_IF_INDEXABLE_BASE
-parameter_list|(
-name|X
-parameter_list|,
-name|ADDR
-parameter_list|)
-define|\
-value|if (GET_CODE (X) == REG&& REG_OK_FOR_BASE_P (X)) goto ADDR
-end_define
-
-begin_define
-define|#
-directive|define
-name|LEGITIMATE_INDEX_REG_P
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|(GET_CODE (X) == REG&& REG_OK_FOR_INDEX_P (X))
-end_define
-
-begin_comment
-comment|/* Return 1 if X is an index or an index times a scale.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEGITIMATE_INDEX_P
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|(LEGITIMATE_INDEX_REG_P (X)				\     || (GET_CODE (X) == MULT				\&& LEGITIMATE_INDEX_REG_P (XEXP (X, 0))		\&& GET_CODE (XEXP (X, 1)) == CONST_INT		\&& (INTVAL (XEXP (X, 1)) == 2			\ 	    || INTVAL (XEXP (X, 1)) == 4		\ 	    || INTVAL (XEXP (X, 1)) == 8)))
-end_define
-
-begin_comment
-comment|/* Go to ADDR if X is an index term, a base reg, or a sum of those.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GO_IF_INDEXING
-parameter_list|(
-name|X
-parameter_list|,
-name|ADDR
-parameter_list|)
-define|\
-value|{ if (LEGITIMATE_INDEX_P (X)) goto ADDR;				\   GO_IF_INDEXABLE_BASE (X, ADDR);					\   if (GET_CODE (X) == PLUS&& LEGITIMATE_INDEX_P (XEXP (X, 0)))		\     { GO_IF_INDEXABLE_BASE (XEXP (X, 1), ADDR); }			\   if (GET_CODE (X) == PLUS&& LEGITIMATE_INDEX_P (XEXP (X, 1)))		\     { GO_IF_INDEXABLE_BASE (XEXP (X, 0), ADDR); } }
-end_define
-
-begin_comment
-comment|/* We used to allow this, but it isn't ever used.    || ((GET_CODE (X) == POST_DEC || GET_CODE (X) == POST_INC)		\&& REG_P (XEXP (X, 0))						\&& REG_OK_FOR_STRREG_P (XEXP (X, 0)))				\ */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REG_OK_STRICT
+end_ifdef
 
 begin_define
 define|#
@@ -1851,8 +2127,33 @@ parameter_list|,
 name|ADDR
 parameter_list|)
 define|\
-value|{									\   if (CONSTANT_ADDRESS_P (X)						\&& (! flag_pic || LEGITIMATE_PIC_OPERAND_P (X)))			\     goto ADDR;								\   GO_IF_INDEXING (X, ADDR);						\   if (GET_CODE (X) == PLUS&& CONSTANT_ADDRESS_P (XEXP (X, 1)))		\     {									\       rtx x0 = XEXP (X, 0);						\       if (! flag_pic || ! SYMBOLIC_CONST (XEXP (X, 1)))			\ 	{ GO_IF_INDEXING (x0, ADDR); }					\       else if (x0 == pic_offset_table_rtx)				\ 	goto ADDR;							\       else if (GET_CODE (x0) == PLUS)					\ 	{								\ 	  if (XEXP (x0, 0) == pic_offset_table_rtx)			\ 	    { GO_IF_INDEXABLE_BASE (XEXP (x0, 1), ADDR); }		\ 	  if (XEXP (x0, 1) == pic_offset_table_rtx)			\ 	    { GO_IF_INDEXABLE_BASE (XEXP (x0, 0), ADDR); }		\ 	}								\     }									\ }
+value|{									\   if (legitimate_address_p (MODE, X, 1))				\     goto ADDR;								\ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GO_IF_LEGITIMATE_ADDRESS
+parameter_list|(
+name|MODE
+parameter_list|,
+name|X
+parameter_list|,
+name|ADDR
+parameter_list|)
+define|\
+value|{									\   if (legitimate_address_p (MODE, X, 0))				\     goto ADDR;								\ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Try machine-dependent ways of modifying an illegitimate address    to be legitimate.  If we find one, return the new, valid address.    This macro is used in only one place: `memory_address' in explow.c.     OLDX is the address as it was before break_out_memory_refs was called.    In some cases it is useful to look at this to decide what needs to be done.     MODE and WIN are passed so that this macro can use    GO_IF_LEGITIMATE_ADDRESS.     It is always safe for this macro to do nothing.  It exists to recognize    opportunities to optimize the output.     For the 80386, we handle X+REG by loading X into a register R and    using R+REG.  R will go in a general reg and indexing will be used.    However, if REG is a broken-out memory address or multiplication,    nothing needs to be done because REG can certainly go in a general reg.     When -fpic is used, special handling is needed for symbolic references.    See comments by legitimize_pic_address in i386.c for details.  */
@@ -1872,7 +2173,7 @@ parameter_list|,
 name|WIN
 parameter_list|)
 define|\
-value|{ extern rtx legitimize_pic_address ();					\   int ch = (X) != (OLDX);						\   if (flag_pic&& SYMBOLIC_CONST (X))					\     {									\       (X) = legitimize_pic_address (X, 0);				\       if (memory_address_p (MODE, X))					\ 	goto WIN;							\     }									\   if (GET_CODE (X) == PLUS)						\     { if (GET_CODE (XEXP (X, 0)) == MULT)				\ 	ch = 1, XEXP (X, 0) = force_operand (XEXP (X, 0), 0);		\       if (GET_CODE (XEXP (X, 1)) == MULT)				\ 	ch = 1, XEXP (X, 1) = force_operand (XEXP (X, 1), 0);		\       if (ch&& GET_CODE (XEXP (X, 1)) == REG				\&& GET_CODE (XEXP (X, 0)) == REG)				\ 	goto WIN;							\       if (flag_pic&& SYMBOLIC_CONST (XEXP (X, 1)))			\         ch = 1, (X) = legitimize_pic_address (X, 0);			\       if (ch) { GO_IF_LEGITIMATE_ADDRESS (MODE, X, WIN); }		\       if (GET_CODE (XEXP (X, 0)) == REG)                                \ 	{ register rtx temp = gen_reg_rtx (Pmode);			\ 	  register rtx val = force_operand (XEXP (X, 1), temp);		\ 	  if (val != temp) emit_move_insn (temp, val);			\ 	  XEXP (X, 1) = temp;						\ 	  goto WIN; }							\       else if (GET_CODE (XEXP (X, 1)) == REG)				\ 	{ register rtx temp = gen_reg_rtx (Pmode);			\ 	  register rtx val = force_operand (XEXP (X, 0), temp);		\ 	  if (val != temp) emit_move_insn (temp, val);			\ 	  XEXP (X, 0) = temp;						\ 	  goto WIN; }}}
+value|{									\   rtx orig_x = (X);							\   (X) = legitimize_address (X, OLDX, MODE);				\   if (memory_address_p (MODE, X))					\     goto WIN;								\ }
 end_define
 
 begin_comment
@@ -2236,18 +2537,6 @@ end_define
 begin_comment
 comment|/* Define the information needed to generate branch and scc insns.  This is    stored from the compare operation.  Note that we can't use "rtx" here    since it hasn't been defined!  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
-name|i386_compare_op0
-decl_stmt|,
-modifier|*
-name|i386_compare_op1
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2924,6 +3213,450 @@ name|mode
 parameter_list|)
 value|(gen_rtx (MEM, (mode), stack_pointer_rtx))
 end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Functions in i386.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|override_options
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|order_regs_for_local_alloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|output_op_from_reg
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|output_to_reg
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|singlemove_string
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_move_double
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_move_memory
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_move_pushmem
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|standard_80387_constant_p
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_move_const_single
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|symbolic_operand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|call_insn_operand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|expander_call_insn_operand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|symbolic_reference_mentioned_p
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|emit_pic_move
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|function_prologue
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|simple_386_epilogue
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|function_epilogue
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|legitimate_address_p
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|legitimize_pic_address
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|legitimize_address
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_operand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_operand_address
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|notice_update_cc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|split_di
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|binary_387_op
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|shift_op
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|VOIDmode_compare_op
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_387_binary_op
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_fix_trunc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_float_compare
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_fp_cc0_set
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|save_386_machine_status
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|restore_386_machine_status
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|clear_386_stack_locals
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|assign_386_stack_local
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Variables in i386.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|i386_reg_alloc_order
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* register allocation order */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|hi_reg_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* names for 16 bit regs */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|qi_reg_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* names for 8 bit regs (low) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|qi_high_reg_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* names for 8 bit regs (high) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|reg_class
+name|regclass_map
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* smalled class containing REGNO */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|i386_compare_op0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* operand 0 for comparisons */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|i386_compare_op1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* operand 1 for comparisons */
+end_comment
+
+begin_comment
+comment|/* External variables used */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optimize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* optimization level */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|obey_regdecls
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE if stupid register allocation */
+end_comment
+
+begin_comment
+comment|/* External functions used */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|force_operand
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape

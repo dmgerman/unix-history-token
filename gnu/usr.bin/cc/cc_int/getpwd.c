@@ -69,6 +69,11 @@ argument_list|(
 name|VMS
 argument_list|)
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_GETWD
+argument_list|)
 end_if
 
 begin_include
@@ -98,12 +103,35 @@ parameter_list|)
 value|getwd(buf)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAXPATHLEN
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|GUESSPATHLEN
 value|(MAXPATHLEN + 1)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GUESSPATHLEN
+value|100
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -142,6 +170,23 @@ end_endif
 begin_comment
 comment|/* (defined (USG) || defined (VMS)) */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WINNT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<direct.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|char

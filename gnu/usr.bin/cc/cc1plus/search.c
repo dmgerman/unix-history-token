@@ -1116,6 +1116,10 @@ argument_list|)
 decl_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 argument_list|,
 sizeof|sizeof
@@ -2921,6 +2925,10 @@ name|protected_ok
 decl_stmt|,
 name|via_protected
 decl_stmt|;
+specifier|extern
+name|int
+name|flag_access_control
+decl_stmt|;
 if|#
 directive|if
 literal|1
@@ -2963,6 +2971,14 @@ argument_list|)
 operator|)
 operator|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|flag_access_control
+condition|)
+return|return
+name|access_public
+return|;
 comment|/* The field lives in the current class.  */
 if|if
 condition|(
@@ -7193,6 +7209,22 @@ condition|)
 return|return
 name|NULL_TREE
 return|;
+name|baselink
+operator|=
+name|get_virtuals_named_this
+argument_list|(
+name|binfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|baselink
+operator|==
+name|NULL_TREE
+condition|)
+return|return
+name|NULL_TREE
+return|;
 name|drettype
 operator|=
 name|TREE_TYPE
@@ -7237,12 +7269,6 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|baselink
-operator|=
-name|get_virtuals_named_this
-argument_list|(
-name|binfo
-argument_list|)
 init|;
 name|baselink
 condition|;
@@ -7390,7 +7416,7 @@ argument_list|,
 name|fndecl
 argument_list|)
 expr_stmt|;
-name|cp_error
+name|cp_error_at
 argument_list|(
 literal|"overriding definition as `%#D'"
 argument_list|,
@@ -10627,7 +10653,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If we want debug info for a type TYPE, make sure all its base types    are also marked as being potentially interesting.  This avoids    the problem of not writing any debug info for intermediate basetypes    that have abstract virtual functions.  */
+comment|/* If we want debug info for a type TYPE, make sure all its base types    are also marked as being potentially interesting.  This avoids    the problem of not writing any debug info for intermediate basetypes    that have abstract virtual functions.  Also mark member types.  */
 end_comment
 
 begin_function
@@ -10640,6 +10666,9 @@ name|tree
 name|type
 decl_stmt|;
 block|{
+name|tree
+name|field
+decl_stmt|;
 name|dfs_walk
 argument_list|(
 name|TYPE_BINFO
@@ -10652,6 +10681,64 @@ argument_list|,
 name|dfs_debug_unmarkedp
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|field
+operator|=
+name|TYPE_FIELDS
+argument_list|(
+name|type
+argument_list|)
+init|;
+name|field
+condition|;
+name|field
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|field
+argument_list|)
+control|)
+block|{
+name|tree
+name|ttype
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|field
+argument_list|)
+operator|==
+name|FIELD_DECL
+operator|&&
+name|IS_AGGR_TYPE
+argument_list|(
+name|ttype
+operator|=
+name|target_type
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|field
+argument_list|)
+argument_list|)
+argument_list|)
+operator|&&
+name|dfs_debug_unmarkedp
+argument_list|(
+name|TYPE_BINFO
+argument_list|(
+name|ttype
+argument_list|)
+argument_list|)
+condition|)
+name|note_debug_info_needed
+argument_list|(
+name|ttype
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

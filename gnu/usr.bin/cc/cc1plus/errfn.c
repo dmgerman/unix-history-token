@@ -49,6 +49,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Whether or not we should try to be quiet for errors and warnings; this is    used to avoid being too talkative about problems with tentative choices    when we're computing the conversion costs for a method call.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cp_silent
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -531,6 +543,11 @@ specifier|extern
 name|errorfn
 name|error
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|error
@@ -563,6 +580,11 @@ specifier|extern
 name|errorfn
 name|warning
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|warning
@@ -595,6 +617,11 @@ specifier|extern
 name|errorfn
 name|pedwarn
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|pedwarn
@@ -627,6 +654,11 @@ specifier|extern
 name|errorfn
 name|compiler_error
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|compiler_error
@@ -691,6 +723,11 @@ specifier|extern
 name|errorfn
 name|error_with_file_and_line
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|error_with_file_and_line
@@ -723,6 +760,11 @@ specifier|extern
 name|errorfn
 name|warning_with_file_and_line
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|warning_with_file_and_line
@@ -755,6 +797,11 @@ specifier|extern
 name|errorfn
 name|pedwarn_with_file_and_line
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cp_silent
+condition|)
 name|cp_thing
 argument_list|(
 name|pedwarn_with_file_and_line

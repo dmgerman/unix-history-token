@@ -1844,9 +1844,22 @@ name|tree_node
 modifier|*
 name|signature_reference_to
 decl_stmt|;
+name|int
+name|linenum
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_SOURCE_LINE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_LANG_SPECIFIC(NODE)->linenum)
+end_define
 
 begin_comment
 comment|/* Indicates whether or not (and how) a template was expanded for this class.      0=no information yet/non-template class      1=implicit template instantiation      2=explicit template specialization      3=explicit template instantiation  */
@@ -5375,7 +5388,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
-name|c_build_type_variant
+name|cp_build_type_variant
 name|PROTO
 argument_list|(
 operator|(
@@ -10020,7 +10033,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|build_exception_table
 name|PROTO
 argument_list|(
@@ -11049,8 +11062,6 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|tree
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -11619,6 +11630,21 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|build_static_name
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13194,23 +13220,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|tree
-name|virtual_offset
-name|PROTO
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|,
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 name|debug_binfo
 name|PROTO
@@ -14757,7 +14766,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|GNU_xref_def
+name|GNU_xref_ref
 name|PROTO
 argument_list|(
 operator|(

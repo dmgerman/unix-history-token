@@ -617,7 +617,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", %d\n"
+literal|", %lu\n"
 argument_list|,
 name|s
 operator|->
@@ -654,7 +654,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", %d\n"
+literal|", %lu\n"
 argument_list|,
 name|s
 operator|->

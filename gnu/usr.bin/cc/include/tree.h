@@ -2100,6 +2100,20 @@ parameter_list|)
 value|((NODE)->type.needs_constructing_flag)
 end_define
 
+begin_comment
+comment|/* Indicates that objects of this type (a UNION_TYPE), should be passed    the same way that the first union alternative would be passed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_TRANSPARENT_UNION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->type.transparent_union_flag)
+end_define
+
 begin_struct
 struct|struct
 name|tree_type
@@ -2170,6 +2184,11 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|transparent_union_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|lang_flag_0
 range|:
 literal|1
@@ -2204,7 +2223,7 @@ name|lang_flag_6
 range|:
 literal|1
 decl_stmt|;
-comment|/* room for 6 more bits */
+comment|/* room for 5 more bits */
 name|unsigned
 name|int
 name|align
@@ -3150,6 +3169,20 @@ value|((NODE)->decl.defer_output)
 end_define
 
 begin_comment
+comment|/* Used in PARM_DECLs whose type are unions to indicate that the    argument should be passed in the same way that the first union    alternative would be passed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_TRANSPARENT_UNION
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->decl.transparent_union)
+end_define
+
+begin_comment
 comment|/* Additional flags for language-specific uses.  */
 end_comment
 
@@ -3336,7 +3369,12 @@ name|defer_output
 range|:
 literal|1
 decl_stmt|;
-comment|/* room for five more */
+name|unsigned
+name|transparent_union
+range|:
+literal|1
+decl_stmt|;
+comment|/* room for four more */
 name|unsigned
 name|lang_flag_0
 range|:
@@ -4879,6 +4917,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* If nonzero, an upper limit on alignment of structure fields, in bits. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maximum_field_alignment
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If non-zero, the alignment of a bitsting or (power-)set value, in bits. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|set_alignment
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Concatenate two lists (chains of TREE_LIST nodes) X and Y    by making the last node in X point to Y.    Returns X, except if X is 0 returns Y.  */
 end_comment
 
@@ -5741,6 +5801,42 @@ operator|(
 name|int
 operator|,
 name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_set_constructor_bits
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_set_constructor_words
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|HOST_WIDE_INT
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -6928,7 +6928,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-comment|/* p is used for address_operands.  When we are called by 		   gen_input_reload, no one will have checked that the 		   address is strictly valid, i.e., that all pseudos 		   requiring hard regs have gotten them.  */
+comment|/* p is used for address_operands.  When we are called by 		   gen_reload, no one will have checked that the address is 		   strictly valid, i.e., that all pseudos requiring hard regs 		   have gotten them.  */
 if|if
 condition|(
 name|strict

@@ -1243,7 +1243,7 @@ argument_list|)
 condition|)
 name|target_type
 operator|=
-name|c_build_type_variant
+name|cp_build_type_variant
 argument_list|(
 name|target_type
 argument_list|,
@@ -1710,33 +1710,21 @@ break|break;
 case|case
 name|PARM_DECL
 case|:
-if|if
-condition|(
-name|targ
-operator|==
-name|current_class_decl
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"address of `this' not available"
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
+block|if (targ == current_class_decl) 	{ 	  error ("address of `this' not available");
+comment|/* #if 0 */
 comment|/* This code makes the following core dump the compiler on a sun4, 	     if the code below is used.  	     class e_decl; 	     class a_decl; 	     typedef a_decl* a_ref;  	     class a_s { 	     public: 	       a_s(); 	       void* append(a_ref& item); 	     }; 	     class a_decl { 	     public: 	       a_decl (e_decl *parent); 	       a_s  generic_s; 	       a_s  decls; 	       e_decl* parent; 	     };  	     class e_decl { 	     public: 	       e_decl(); 	       a_s implementations; 	     };  	     void foobar(void *);  	     a_decl::a_decl(e_decl *parent) { 	       parent->implementations.append(this); 	     } 	   */
 block|TREE_ADDRESSABLE (targ) = 1;
 comment|/* so compiler doesn't die later */
 block|put_var_into_stack (targ); 	  break;
-else|#
-directive|else
-return|return
-name|error_mark_node
-return|;
+comment|/* #else */
+block|return error_mark_node;
+comment|/* #endif */
+block|}
 endif|#
 directive|endif
-block|}
 comment|/* Fall through.  */
 case|case
 name|VAR_DECL
@@ -1756,18 +1744,18 @@ name|TREE_ADDRESSABLE
 argument_list|(
 name|targ
 argument_list|)
-condition|)
-name|warning
-argument_list|(
-literal|"address needed to build reference for `%s', which is declared `register'"
-argument_list|,
-name|IDENTIFIER_POINTER
-argument_list|(
-name|DECL_NAME
+operator|&&
+operator|!
+name|DECL_ARTIFICIAL
 argument_list|(
 name|targ
 argument_list|)
-argument_list|)
+condition|)
+name|cp_warning
+argument_list|(
+literal|"address needed to build reference for `%D', which is declared `register'"
+argument_list|,
+name|targ
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1855,6 +1843,12 @@ return|return
 name|rval
 return|;
 block|}
+case|case
+name|PREINCREMENT_EXPR
+case|:
+case|case
+name|PREDECREMENT_EXPR
+case|:
 case|case
 name|MODIFY_EXPR
 case|:
@@ -2579,7 +2573,7 @@ argument_list|)
 decl_stmt|;
 name|ttr
 operator|=
-name|c_build_type_variant
+name|cp_build_type_variant
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -5105,6 +5099,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|e
+argument_list|)
+operator|==
+name|OFFSET_REF
+condition|)
+name|e
+operator|=
+name|resolve_offset_ref
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|TREE_READONLY_DECL_P
 argument_list|(
 name|e
@@ -5181,26 +5191,6 @@ return|;
 block|}
 if|if
 condition|(
-name|form
-operator|==
-name|OFFSET_TYPE
-condition|)
-name|cp_error_at
-argument_list|(
-literal|"pointer-to-member expression object not composed with type `%D' object"
-argument_list|,
-name|TYPE_NAME
-argument_list|(
-name|TYPE_OFFSET_BASETYPE
-argument_list|(
-name|intype
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|IS_AGGR_TYPE
 argument_list|(
 name|intype
@@ -5230,25 +5220,13 @@ condition|)
 return|return
 name|rval
 return|;
-if|if
-condition|(
-name|code
-operator|==
-name|BOOLEAN_TYPE
-condition|)
 name|cp_error
 argument_list|(
-literal|"`%#T' used where a `bool' was expected"
+literal|"`%#T' used where a `%T' was expected"
 argument_list|,
 name|intype
-argument_list|)
-expr_stmt|;
-else|else
-name|cp_error
-argument_list|(
-literal|"`%#T' used where an `int' was expected"
 argument_list|,
-name|intype
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -8517,10 +8495,10 @@ name|type
 operator|==
 name|wchar_type_node
 condition|)
-name|type
-operator|=
-name|type_for_size
-argument_list|(
+block|{
+name|int
+name|precision
+init|=
 name|MAX
 argument_list|(
 name|TYPE_PRECISION
@@ -8533,29 +8511,50 @@ argument_list|(
 name|integer_type_node
 argument_list|)
 argument_list|)
+decl_stmt|;
+name|tree
+name|totype
+init|=
+name|type_for_size
+argument_list|(
+name|precision
 argument_list|,
-operator|(
-name|flag_traditional
-operator|||
-operator|(
-name|TYPE_PRECISION
-argument_list|(
-name|type
+literal|0
 argument_list|)
-operator|>=
-name|TYPE_PRECISION
-argument_list|(
-name|integer_type_node
-argument_list|)
-operator|)
-operator|)
-operator|&&
+decl_stmt|;
+if|if
+condition|(
 name|TREE_UNSIGNED
 argument_list|(
 name|type
 argument_list|)
+operator|&&
+operator|!
+name|int_fits_type_p
+argument_list|(
+name|TYPE_MAX_VALUE
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|totype
+argument_list|)
+condition|)
+name|type
+operator|=
+name|type_for_size
+argument_list|(
+name|precision
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
+else|else
+name|type
+operator|=
+name|totype
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -8609,7 +8608,7 @@ operator|=
 name|double_type_node
 expr_stmt|;
 return|return
-name|c_build_type_variant
+name|cp_build_type_variant
 argument_list|(
 name|type
 argument_list|,

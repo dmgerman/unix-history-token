@@ -6686,6 +6686,13 @@ condition|)
 return|return
 literal|1
 return|;
+case|case
+name|EXPR_LIST
+case|:
+comment|/* An EXPR_LIST is used to represent a function call.  This 	 certainly may trap.  */
+return|return
+literal|1
+return|;
 default|default:
 comment|/* Any floating arithmetic may trap.  */
 if|if

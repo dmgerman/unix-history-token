@@ -5306,39 +5306,39 @@ literal|1869
 block|,
 literal|1871
 block|,
-literal|1876
+literal|1881
 block|,
-literal|1878
+literal|1883
 block|,
-literal|1882
+literal|1887
 block|,
-literal|1885
-block|,
-literal|1891
-block|,
-literal|1894
+literal|1890
 block|,
 literal|1896
 block|,
-literal|1898
+literal|1899
 block|,
-literal|1900
+literal|1901
 block|,
-literal|1907
+literal|1903
+block|,
+literal|1905
 block|,
 literal|1912
 block|,
 literal|1917
 block|,
-literal|1919
+literal|1922
 block|,
-literal|1928
+literal|1924
 block|,
-literal|1931
+literal|1933
 block|,
 literal|1936
 block|,
-literal|1939
+literal|1941
+block|,
+literal|1944
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -31994,11 +31994,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pedantic
-condition|)
-name|pedwarn
+comment|/* Gcc used to allow this as an extension.  However, it does 		     not work for all targets, and thus has been disabled. 		     Also, since func (...) and func () are indistinguishable, 		     it caused problems with the code in expand_builtin which 		     tries to verify that BUILT_IN_NEXT_ARG is being used 		     correctly.  */
+name|error
 argument_list|(
 literal|"ANSI C requires a named argument before `...'"
 argument_list|)
@@ -32011,7 +32008,7 @@ literal|350
 case|:
 line|#
 directive|line
-number|1877
+number|1882
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32031,7 +32028,7 @@ literal|351
 case|:
 line|#
 directive|line
-number|1879
+number|1884
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32051,7 +32048,7 @@ literal|352
 case|:
 line|#
 directive|line
-number|1884
+number|1889
 file|"c-parse.y"
 block|{
 name|push_parm_decl
@@ -32072,7 +32069,7 @@ literal|353
 case|:
 line|#
 directive|line
-number|1886
+number|1891
 file|"c-parse.y"
 block|{
 name|push_parm_decl
@@ -32093,7 +32090,7 @@ literal|354
 case|:
 line|#
 directive|line
-number|1893
+number|1898
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32126,7 +32123,7 @@ literal|355
 case|:
 line|#
 directive|line
-number|1895
+number|1900
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32159,7 +32156,7 @@ literal|356
 case|:
 line|#
 directive|line
-number|1897
+number|1902
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32192,7 +32189,7 @@ literal|357
 case|:
 line|#
 directive|line
-number|1899
+number|1904
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32225,7 +32222,7 @@ literal|358
 case|:
 line|#
 directive|line
-number|1901
+number|1906
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32258,7 +32255,7 @@ literal|359
 case|:
 line|#
 directive|line
-number|1908
+number|1913
 file|"c-parse.y"
 block|{
 name|pushlevel
@@ -32282,7 +32279,7 @@ literal|360
 case|:
 line|#
 directive|line
-number|1912
+number|1917
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32316,7 +32313,7 @@ literal|362
 case|:
 line|#
 directive|line
-number|1920
+number|1925
 file|"c-parse.y"
 block|{
 name|tree
@@ -32384,7 +32381,7 @@ literal|363
 case|:
 line|#
 directive|line
-number|1930
+number|1935
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32411,7 +32408,7 @@ literal|364
 case|:
 line|#
 directive|line
-number|1932
+number|1937
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32449,7 +32446,7 @@ literal|365
 case|:
 line|#
 directive|line
-number|1938
+number|1943
 file|"c-parse.y"
 block|{
 name|yyval
@@ -32476,7 +32473,7 @@ literal|366
 case|:
 line|#
 directive|line
-number|1940
+number|1945
 file|"c-parse.y"
 block|{
 name|yyval
@@ -33293,7 +33290,7 @@ end_function
 begin_line
 line|#
 directive|line
-number|1943
+number|1948
 file|"c-parse.y"
 end_line
 

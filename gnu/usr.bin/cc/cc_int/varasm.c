@@ -4638,11 +4638,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output text storage for constructor CONSTR.  Returns rtx of    storage. */
+comment|/* Output text storage for constructor CONSTR. */
 end_comment
 
 begin_function
-name|rtx
+name|void
 name|bc_output_constructor
 parameter_list|(
 name|constr

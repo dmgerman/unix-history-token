@@ -5974,13 +5974,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|INSN_DELETED_P
-argument_list|(
-name|insn
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -10564,10 +10557,12 @@ block|}
 comment|/* subst_stack_regs_pat may have deleted a no-op insn.  If so, any      REG_UNUSED will already have been dealt with, so just return. */
 if|if
 condition|(
-name|INSN_DELETED_P
+name|GET_CODE
 argument_list|(
 name|insn
 argument_list|)
+operator|==
+name|NOTE
 condition|)
 return|return;
 comment|/* If there is a REG_UNUSED note on a stack register on this insn,      the indicated reg must be popped.  The REG_UNUSED note is removed,      since the form of the newly emitted pop insn references the reg,      making it no longer `unset'. */

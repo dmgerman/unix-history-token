@@ -84,6 +84,8 @@ argument_list|(
 name|__STDC__
 argument_list|)
 operator|&&
+name|__STDC__
+operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -142,11 +144,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_define
 define|#
@@ -286,11 +293,16 @@ begin_comment
 comment|/* Declare the external functions we use; they are in obstack.c.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_function_decl
 specifier|extern
@@ -427,11 +439,16 @@ end_endif
 begin_escape
 end_escape
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_comment
 comment|/* Do the function-declarations after the structs    but before defining the macros.  */
@@ -1395,11 +1412,16 @@ define|\
 value|( (h)->alloc_failed ? 0 :						\   (((h)->next_free == (h)->object_base					\    ? (((h)->maybe_empty_object = 1), 0)					\    : 0),								\   (h)->temp = __PTR_TO_INT ((h)->object_base),				\   (h)->next_free							\     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\& ~ ((h)->alignment_mask)),				\   (((h)->next_free - (char *)(h)->chunk					\> (h)->chunk_limit - (char *)(h)->chunk)				\    ? ((h)->next_free = (h)->chunk_limit) : 0),				\   (h)->object_base = (h)->next_free,					\   __INT_TO_PTR ((h)->temp)))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|&&
+name|__STDC__
+end_if
 
 begin_define
 define|#

@@ -4794,6 +4794,39 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Abort routines */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fatal_insn_not_found
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fatal_insn
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Define a default value for STORE_FLAG_VALUE.  */
 end_comment
 

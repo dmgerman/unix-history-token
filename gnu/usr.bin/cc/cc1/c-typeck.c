@@ -2973,6 +2973,7 @@ argument_list|)
 operator|==
 name|UNION_TYPE
 operator|&&
+operator|(
 name|TYPE_NAME
 argument_list|(
 name|TREE_VALUE
@@ -2982,6 +2983,15 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|TYPE_TRANSPARENT_UNION
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|args1
+argument_list|)
+argument_list|)
+operator|)
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -3079,6 +3089,7 @@ argument_list|)
 operator|==
 name|UNION_TYPE
 operator|&&
+operator|(
 name|TYPE_NAME
 argument_list|(
 name|TREE_VALUE
@@ -3088,6 +3099,15 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|TYPE_TRANSPARENT_UNION
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|args2
+argument_list|)
+argument_list|)
+operator|)
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -4466,7 +4486,7 @@ argument_list|(
 name|exp
 argument_list|)
 expr_stmt|;
-comment|/* Replace a nonvolatile const static variable with its value.  */
+comment|/* Replace a nonvolatile const static variable with its value unless      it is an array, in which case we must be sure that taking the      address of the array produces consistent results.  */
 elseif|else
 if|if
 condition|(
@@ -4478,6 +4498,10 @@ name|exp
 argument_list|)
 operator|==
 name|VAR_DECL
+operator|&&
+name|code
+operator|!=
+name|ARRAY_TYPE
 condition|)
 block|{
 name|exp
@@ -7045,14 +7069,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-literal|0
-comment|/* This turns out not to win--there's no way to write a prototype 	 for a function whose arg type is a union with no tag.  */
-comment|/* Nameless union automatically casts the types it contains.  */
-block|if (TREE_CODE (type) == UNION_TYPE&& TYPE_NAME (type) == 0) 		{ 		  tree field;  		  for (field = TYPE_FIELDS (type); field; 		       field = TREE_CHAIN (field)) 		    if (comptypes (TYPE_MAIN_VARIANT (TREE_TYPE (field)), 				   TYPE_MAIN_VARIANT (TREE_TYPE (val)))) 		      break;  		  if (field) 		    val = build1 (CONVERT_EXPR, type, val); 		}
-endif|#
-directive|endif
 comment|/* Optionally warn about conversions that 		 differ from the default conversions.  */
 if|if
 condition|(
@@ -7069,12 +7085,10 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|TREE_CODE
+name|INTEGRAL_TYPE_P
 argument_list|(
 name|type
 argument_list|)
-operator|!=
-name|REAL_TYPE
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -7111,7 +7125,7 @@ argument_list|(
 name|type
 argument_list|)
 operator|==
-name|REAL_TYPE
+name|COMPLEX_TYPE
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -7120,8 +7134,43 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
-operator|!=
+operator|==
 name|REAL_TYPE
+condition|)
+name|warn_for_assignment
+argument_list|(
+literal|"%s as complex rather than floating due to prototype"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|name
+argument_list|,
+name|parmnum
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|REAL_TYPE
+operator|&&
+name|INTEGRAL_TYPE_P
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
 condition|)
 name|warn_for_assignment
 argument_list|(
@@ -7140,6 +7189,44 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|REAL_TYPE
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+operator|==
+name|COMPLEX_TYPE
+condition|)
+name|warn_for_assignment
+argument_list|(
+literal|"%s as floating rather than complex due to prototype"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|name
+argument_list|,
+name|parmnum
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* ??? At some point, messages should be written about 		     conversions between complex types, but that's too messy 		     to do now.  */
 elseif|else
 if|if
 condition|(
@@ -7193,43 +7280,18 @@ comment|/* Detect integer changing in width or signedness.  */
 elseif|else
 if|if
 condition|(
-operator|(
-name|TREE_CODE
+name|INTEGRAL_TYPE_P
 argument_list|(
 name|type
 argument_list|)
-operator|==
-name|INTEGER_TYPE
-operator|||
-name|TREE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|==
-name|ENUMERAL_TYPE
-operator|)
 operator|&&
-operator|(
-name|TREE_CODE
+name|INTEGRAL_TYPE_P
 argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|val
 argument_list|)
 argument_list|)
-operator|==
-name|INTEGER_TYPE
-operator|||
-name|TREE_CODE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|val
-argument_list|)
-argument_list|)
-operator|==
-name|ENUMERAL_TYPE
-operator|)
 condition|)
 block|{
 name|tree
@@ -11964,7 +12026,7 @@ argument_list|)
 expr_stmt|;
 name|inc
 operator|=
-name|c_sizeof_nowarn
+name|c_size_in_bytes
 argument_list|(
 name|TREE_TYPE
 argument_list|(
@@ -13502,6 +13564,28 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* If we are making this addressable due to its having 	       volatile components, give a different error message.  Also 	       handle the case of an unnamed parameter by not trying 	       to give the name.  */
+elseif|else
+if|if
+condition|(
+name|C_TYPE_FIELDS_VOLATILE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"cannot put object with volatile field into register"
 argument_list|)
 expr_stmt|;
 return|return
@@ -16220,7 +16304,7 @@ argument_list|(
 name|rhstype
 argument_list|)
 decl_stmt|;
-comment|/* Any non-function converts to a [const][volatile] void * 		 and vice versa; otherwise, targets must be the same. 		 Meanwhile, the lhs target must have all the qualifiers of the rhs.  */
+comment|/* Any non-function converts to a [const][volatile] void * 		 and vice versa; otherwise, targets must be the same. 		 Meanwhile, the lhs target must have all the qualifiers of 		 the rhs.  */
 if|if
 condition|(
 name|TYPE_MAIN_VARIANT
@@ -16245,7 +16329,7 @@ name|rhstype
 argument_list|)
 condition|)
 block|{
-comment|/* Const and volatile mean something different for function types, 		     so the usual warnings are not appropriate.  */
+comment|/* Const and volatile mean something different for function 		     types, so the usual warnings are not appropriate.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -16320,7 +16404,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Because const and volatile on functions are restrictions 			 that say the function will not do certain things, 			 it is okay to use a const or volatile function 			 where an ordinary one is wanted, but not vice-versa.  */
+comment|/* Because const and volatile on functions are 			 restrictions that say the function will not do 			 certain things, it is okay to use a const or volatile 			 function where an ordinary one is wanted, but not 			 vice-versa.  */
 if|if
 condition|(
 name|TYPE_READONLY
@@ -16409,6 +16493,56 @@ argument_list|)
 return|;
 block|}
 block|}
+comment|/* Can convert integer zero to any pointer type.  */
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|memb_types
+argument_list|)
+argument_list|)
+operator|==
+name|POINTER_TYPE
+operator|&&
+operator|(
+name|integer_zerop
+argument_list|(
+name|rhs
+argument_list|)
+operator|||
+operator|(
+name|TREE_CODE
+argument_list|(
+name|rhs
+argument_list|)
+operator|==
+name|NOP_EXPR
+operator|&&
+name|integer_zerop
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|rhs
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|)
+operator|)
+condition|)
+return|return
+name|build1
+argument_list|(
+name|NOP_EXPR
+argument_list|,
+name|type
+argument_list|,
+name|null_pointer_node
+argument_list|)
+return|;
 block|}
 block|}
 comment|/* Conversions among pointers */
@@ -21194,6 +21328,10 @@ if|if
 condition|(
 name|constructor_incremental
 operator|&&
+name|constructor_type
+operator|!=
+literal|0
+operator|&&
 name|TREE_CODE
 argument_list|(
 name|constructor_type
@@ -24479,6 +24617,10 @@ operator|&&
 operator|!
 name|constructor_no_implicit
 operator|&&
+name|value
+operator|!=
+name|error_mark_node
+operator|&&
 name|TYPE_MAIN_VARIANT
 argument_list|(
 name|TREE_TYPE
@@ -24723,6 +24865,10 @@ operator|&&
 operator|!
 name|constructor_no_implicit
 operator|&&
+name|value
+operator|!=
+name|error_mark_node
+operator|&&
 name|TYPE_MAIN_VARIANT
 argument_list|(
 name|TREE_TYPE
@@ -24893,6 +25039,10 @@ operator|&&
 operator|!
 name|constructor_no_implicit
 operator|&&
+name|value
+operator|!=
+name|error_mark_node
+operator|&&
 name|TYPE_MAIN_VARIANT
 argument_list|(
 name|TREE_TYPE
@@ -24950,6 +25100,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* In the case of [LO .. HI] = VALUE, only evaluate VALUE once. */
+if|if
+condition|(
+name|constructor_range_end
+condition|)
+name|value
+operator|=
+name|save_expr
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
 comment|/* Now output the actual element. 	     Ordinarily, output once. 	     If there is a range, repeat it till we advance past the range.  */
 do|do
 block|{
