@@ -24,7 +24,7 @@ file|"time.h"
 end_include
 
 begin_comment
-comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 1.3 of %G%  */
+comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 4.1 of %G%  */
 end_comment
 
 begin_define
@@ -532,7 +532,7 @@ decl_stmt|;
 name|char
 name|d_pgmr
 index|[
-literal|8
+name|SZLNAM
 index|]
 decl_stmt|;
 name|char
@@ -818,7 +818,7 @@ begin_define
 define|#
 directive|define
 name|SZLNAM
-value|(9)
+value|9
 end_define
 
 begin_comment
@@ -829,7 +829,7 @@ begin_define
 define|#
 directive|define
 name|LNLNAM
-value|(8)
+value|8
 end_define
 
 begin_comment
@@ -868,7 +868,7 @@ decl_stmt|;
 name|char
 name|pf_user
 index|[
-literal|8
+name|SZLNAM
 index|]
 decl_stmt|;
 name|long
