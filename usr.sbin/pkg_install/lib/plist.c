@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.20 1997/06/29 10:41:49 jkh Exp $"
+literal|"$Id: plist.c,v 1.21 1997/06/30 03:15:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1857,19 +1857,9 @@ block|}
 if|if
 condition|(
 name|preserve
-condition|)
-block|{
-if|if
-condition|(
-operator|!
+operator|&&
 name|name
 condition|)
-name|whinge
-argument_list|(
-literal|"preserve set but no package name supplied!"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|char
 name|tmp2
@@ -1877,19 +1867,20 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
-name|snprintf
+if|if
+condition|(
+name|make_preserve_name
 argument_list|(
 name|tmp2
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"%s.%s"
+name|name
 argument_list|,
 name|tmp
-argument_list|,
-name|name
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 if|if
 condition|(
 name|fexists
