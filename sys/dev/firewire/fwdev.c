@@ -87,6 +87,12 @@ directive|include
 file|<dev/firewire/fwmem.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/firewire/iec68113.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -957,7 +963,7 @@ index|]
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+name|PAGE_SIZE
 expr_stmt|;
 name|sc
 operator|->
@@ -1085,7 +1091,7 @@ index|]
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -3453,11 +3459,21 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
+if|#
+directive|if
+name|DV_PAL
+define|#
+directive|define
+name|FWDVPACKET
+value|300
+else|#
+directive|else
 define|#
 directive|define
 name|FWDVPACKET
 value|250
-comment|/* NTSC (300 for PAL) */
+endif|#
+directive|endif
 define|#
 directive|define
 name|FWDVPMAX
@@ -3500,8 +3516,11 @@ name|tx
 operator|.
 name|npacket
 operator|=
-literal|300
+name|FWDVPACKET
+operator|+
+literal|30
 expr_stmt|;
+comment|/*> 320 or 267 */
 name|ibufreq
 operator|->
 name|tx
@@ -3621,7 +3640,7 @@ name|NDVCHUNK
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -3702,7 +3721,7 @@ name|dvpacket
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
@@ -3911,7 +3930,7 @@ name|nchunk
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3954,7 +3973,7 @@ name|nchunk
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3989,6 +4008,7 @@ operator|->
 name|rx
 operator|.
 name|npacket
+comment|/* XXX psize must be 2^n and less or 						equal to PAGE_SIZE */
 operator|*
 operator|(
 operator|(
@@ -4007,7 +4027,7 @@ operator|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4078,6 +4098,7 @@ operator|->
 name|tx
 operator|.
 name|npacket
+comment|/* XXX psize must be 2^n and less or 						equal to PAGE_SIZE */
 operator|*
 operator|(
 operator|(
@@ -4096,7 +4117,7 @@ operator|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5208,7 +5229,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

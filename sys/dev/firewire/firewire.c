@@ -124,8 +124,33 @@ name|int
 name|firewire_debug
 init|=
 literal|0
+decl_stmt|,
+name|try_bmr
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|firewire_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|firewire_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"FireWire driver debug flag"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -148,20 +173,20 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_hw_firewire
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|firewire_debug
+name|try_bmr
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|firewire_debug
+name|try_bmr
 argument_list|,
 literal|0
 argument_list|,
-literal|"FireWire driver debug flag"
+literal|"Try to be a bus manager"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -982,23 +1007,7 @@ goto|;
 block|}
 if|#
 directive|if
-literal|1
-define|#
-directive|define
-name|DVSEC
-value|100
-define|#
-directive|define
-name|DVFRAC
-value|2997
-comment|/* NTSC: 29.97 Hz (2997 = 29.97 * 100) */
-define|#
-directive|define
-name|DVDIFF
-value|203
-comment|/* 203 = (8000/250 - 29.97) * 100 */
-else|#
-directive|else
+name|DV_PAL
 define|#
 directive|define
 name|DVSEC
@@ -1013,6 +1022,22 @@ directive|define
 name|DVDIFF
 value|5
 comment|/* 125 = (8000/300 - 25) * 3 */
+else|#
+directive|else
+define|#
+directive|define
+name|DVSEC
+value|100
+define|#
+directive|define
+name|DVFRAC
+value|2997
+comment|/* NTSC: 29.97 Hz (2997 = 29.97 * 100) */
+define|#
+directive|define
+name|DVDIFF
+value|203
+comment|/* 203 = (8000/250 - 29.97) * 100 */
 endif|#
 directive|endif
 define|#
@@ -3880,7 +3905,7 @@ name|arq
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+name|PAGE_SIZE
 expr_stmt|;
 name|fc
 operator|->
@@ -3888,7 +3913,7 @@ name|ars
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+name|PAGE_SIZE
 expr_stmt|;
 name|fc
 operator|->
@@ -3896,7 +3921,7 @@ name|atq
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+literal|0
 expr_stmt|;
 name|fc
 operator|->
@@ -3904,7 +3929,7 @@ name|ats
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+literal|0
 expr_stmt|;
 name|fc
 operator|->
@@ -4238,7 +4263,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4262,7 +4287,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4375,7 +4400,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4476,7 +4501,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5299,7 +5324,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5700,11 +5725,12 @@ name|status
 operator|=
 name|FWBUSPHYCONF
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100000
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DELAY(100000);
+endif|#
+directive|endif
 name|xfer
 operator|=
 name|fw_xfer_alloc
@@ -5761,7 +5787,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6686,6 +6712,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|try_bmr
+operator|&&
 operator|(
 name|fc
 operator|->
@@ -6795,22 +6823,12 @@ name|status
 operator|=
 name|FWBUSMGRDONE
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|fc
-operator|->
-name|bdev
-argument_list|,
-literal|"BMR = %x\n"
-argument_list|,
-name|CSRARC
-argument_list|(
-name|fc
-argument_list|,
-name|BUS_MGR_ID
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|device_printf(fc->bdev, "BMR = %x\n", 				CSRARC(fc, BUS_MGR_ID));
+endif|#
+directive|endif
 block|}
 name|free
 argument_list|(
@@ -6819,10 +6837,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX optimize gap_count, if I am BMGR */
+comment|/* Optimize gap_count, if I am BMGR */
 if|if
 condition|(
 name|fc
@@ -6861,11 +6876,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-literal|1
 name|callout_reset
 argument_list|(
 operator|&
@@ -6890,15 +6900,6 @@ operator|)
 name|fc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fw_bus_probe
-argument_list|(
-name|fc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7448,7 +7449,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7745,7 +7746,7 @@ literal|16
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -8040,7 +8041,7 @@ literal|16
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10029,7 +10030,7 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10525,7 +10526,7 @@ argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				f
 literal|"fw_rcv: cannot response(bus reset)!\n"
 argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16
-argument|, M_DEVBUF, M_DONTWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
+argument|, M_DEVBUF, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
 literal|12
 argument|; 				break; 			case FWTCODE_RREQQ: 				resfp->mode.hdr.tcode = FWTCODE_RRESQ; 				xfer->send.len =
 literal|16
@@ -10572,21 +10573,17 @@ argument|selwakeup(&xferq->rsel); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq-
 literal|"fw_rcv: unknow tcode\n"
 argument|); 		break; 	} err: 	free(buf, M_DEVBUF); }
 comment|/*  * Post process for Bus Manager election process.  */
-argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *sfp
-argument_list|,
-argument|*rfp; 	struct firewire_comm *fc;  	if(xfer == NULL) return; 	fc = xfer->fc; 	if(xfer->resp !=
+argument|static void fw_try_bmr_callback(struct fw_xfer *xfer) { 	struct fw_pkt *rfp; 	struct firewire_comm *fc; 	int bmr;  	if (xfer == NULL) 		return; 	fc = xfer->fc; 	if (xfer->resp !=
 literal|0
-argument|){ 		goto error; 	}  	if(xfer->send.buf == NULL){ 		goto error; 	} 	sfp = (struct fw_pkt *)xfer->send.buf;  	if(xfer->recv.buf == NULL){ 		goto error; 	} 	rfp = (struct fw_pkt *)xfer->recv.buf; 	CSRARC(fc, BUS_MGR_ID) 		= fc->set_bmr(fc, ntohl(rfp->mode.lres.payload[
+argument|) 		goto error; 	if (xfer->send.buf == NULL) 		goto error; 	if (xfer->recv.buf == NULL) 		goto error; 	rfp = (struct fw_pkt *)xfer->recv.buf; 	if (rfp->mode.lres.rtcode != FWRCODE_COMPLETE) 		goto error;  	bmr = ntohl(rfp->mode.lres.payload[
 literal|0
-argument|])&
+argument|]); 	if (bmr ==
+literal|0x3f
+argument|) 		bmr = fc->nodeid;  	CSRARC(fc, BUS_MGR_ID) = fc->set_bmr(fc, bmr&
 literal|0x3f
 argument|); 	device_printf(fc->bdev,
 literal|"new bus manager %d "
-argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if((htonl(rfp->mode.lres.payload[
-literal|0
-argument|])&
-literal|0x3f
-argument|) == fc->nodeid){ 		printf(
+argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if(bmr == fc->nodeid){ 		printf(
 literal|"(me)\n"
 argument|);
 comment|/* If I am bus manager, optimize gapcount */
@@ -10604,7 +10601,7 @@ argument|; 	xfer->spd =
 literal|0
 argument|; 	xfer->send.buf = malloc(
 literal|24
-argument|, M_DEVBUF, M_DONTWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
+argument|, M_DEVBUF, M_NOWAIT); 	if(xfer->send.buf == NULL){ 		fw_xfer_free( xfer); 		return; 	}  	fc->status = FWBUSMGRELECT;  	xfer->send.off =
 literal|0
 argument|;  	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.lreq.dest_hi = htons(
 literal|0xffff
@@ -10620,11 +10617,11 @@ argument|); 	fp->mode.lreq.extcode = htons(FW_LREQ_CMPSWAP); 	xfer->dst = FWLOCA
 literal|0xf0000000
 argument|| BUS_MGR_ID); 	fp->mode.lreq.payload[
 literal|0
-argument|] =
+argument|] = htonl(
 literal|0x3f
-argument|; 	fp->mode.lreq.payload[
+argument|); 	fp->mode.lreq.payload[
 literal|1
-argument|] = fc->nodeid; 	xfer->act_type = FWACT_XFER; 	xfer->act.hand = fw_try_bmr_callback;  	err = fw_asyreq(fc, -
+argument|] = htonl(fc->nodeid); 	xfer->act_type = FWACT_XFER; 	xfer->act.hand = fw_try_bmr_callback;  	err = fw_asyreq(fc, -
 literal|1
 argument|, xfer); 	if(err){ 		fw_xfer_free( xfer); 		return; 	} 	return; }
 ifdef|#
