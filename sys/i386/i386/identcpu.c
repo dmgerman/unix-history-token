@@ -2519,8 +2519,10 @@ name|cpuid_cpuinfo
 operator|&
 name|CPUID_HTT_CORES
 operator|)
+operator|>>
+literal|16
 operator|>
-literal|0x100
+literal|1
 condition|)
 name|printf
 argument_list|(
