@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.33 1999/02/08 02:11:52 dillon Exp $"
+literal|"$Id: vmstat.c,v 1.34 1999/02/08 02:39:45 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4609,6 +4609,31 @@ argument_list|)
 operator|>
 name|w
 condition|)
+name|snprintf
+argument_list|(
+name|b
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|b
+argument_list|)
+argument_list|,
+literal|"%*.0f"
+argument_list|,
+name|w
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|b
+argument_list|)
+operator|>
+name|w
+condition|)
 block|{
 while|while
 condition|(
@@ -4710,6 +4735,26 @@ argument_list|,
 name|w
 argument_list|,
 name|d
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|b
+argument_list|)
+operator|>
+name|w
+condition|)
+name|sprintf
+argument_list|(
+name|b
+argument_list|,
+literal|"%*.0Lf"
+argument_list|,
+name|w
 argument_list|,
 name|f
 argument_list|)
