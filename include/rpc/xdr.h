@@ -296,7 +296,10 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-comment|/* XDR *, void *, u_int */
+name|XDR
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 expr_stmt|;
