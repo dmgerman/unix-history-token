@@ -260,8 +260,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RLIM_NLIMITS
+name|RLIMIT_SBSIZE
 value|9
+end_define
+
+begin_comment
+comment|/* maximum size of all socket buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIM_NLIMITS
+value|10
 end_define
 
 begin_comment
@@ -310,6 +321,8 @@ block|,
 literal|"nproc"
 block|,
 literal|"nofile"
+block|,
+literal|"sbsize"
 block|, }
 decl_stmt|;
 end_decl_stmt

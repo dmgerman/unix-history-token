@@ -1631,6 +1631,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|rlim_t
+name|chgsbsize
+name|__P
+argument_list|(
+operator|(
+name|uid_t
+name|uid
+operator|,
+name|rlim_t
+name|diff
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|enterpgrp
 name|__P

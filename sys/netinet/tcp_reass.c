@@ -8568,6 +8568,10 @@ operator|->
 name|so_snd
 argument_list|,
 name|bufsize
+argument_list|,
+name|so
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8641,6 +8645,10 @@ operator|->
 name|so_rcv
 argument_list|,
 name|bufsize
+argument_list|,
+name|so
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
