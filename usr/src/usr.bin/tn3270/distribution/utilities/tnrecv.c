@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tnrecv.c	4.1 (Berkeley) %G%"
+literal|"@(#)tnrecv.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2168,15 +2168,6 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
-name|Host
-index|[
-name|ACK_SEQUENCE
-operator|-
-literal|1
-index|]
-operator||=
-name|ATTR_MDT
-expr_stmt|;
 if|if
 condition|(
 name|putascii
@@ -2187,7 +2178,7 @@ name|a_ack_sequence
 argument_list|,
 name|ACK_SEQUENCE_LENGTH
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|==
 operator|-
@@ -2601,35 +2592,6 @@ block|}
 block|}
 if|if
 condition|(
-name|i
-operator|==
-literal|0
-condition|)
-block|{
-name|Host
-index|[
-name|ScreenSize
-operator|-
-literal|1
-index|]
-operator||=
-name|ATTR_MDT
-expr_stmt|;
-block|}
-else|else
-block|{
-name|Host
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator||=
-name|ATTR_MDT
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|putascii
 argument_list|(
 name|i
@@ -2638,7 +2600,7 @@ name|data_array
 argument_list|,
 name|data_length
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|==
 operator|-
