@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -585,16 +591,11 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_comment
-comment|/* start and end of kernel symbol table */
-end_comment
-
 begin_decl_stmt
-name|void
-modifier|*
+specifier|extern
+name|vm_offset_t
 name|ksym_start
 decl_stmt|,
-modifier|*
 name|ksym_end
 decl_stmt|;
 end_decl_stmt
@@ -2591,20 +2592,12 @@ directive|ifdef
 name|DDB
 name|ksym_start
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|bootinfo
 operator|.
 name|bi_symtab
 expr_stmt|;
 name|ksym_end
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|bootinfo
 operator|.
 name|bi_esymtab
@@ -3293,28 +3286,23 @@ name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
-ifdef|#
-directive|ifdef
-name|DDB
 name|kdb_init
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
 if|if
 condition|(
 name|boothowto
 operator|&
 name|RB_KDB
 condition|)
-block|{
-name|printf
+name|kdb_enter
 argument_list|(
 literal|"Boot flags requested debugger\n"
 argument_list|)
 expr_stmt|;
-name|breakpoint
-argument_list|()
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|ia64_set_tpr
@@ -6306,41 +6294,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DDB
-end_ifndef
-
-begin_function
-name|void
-name|Debugger
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Debugger(\"%s\") called.\n"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no DDB */
-end_comment
 
 begin_function
 name|int

@@ -17,6 +17,18 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|pcb
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|uwx_env
 struct_decl|;
 end_struct_decl
@@ -25,6 +37,11 @@ begin_struct
 struct|struct
 name|unw_regstate
 block|{
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
 name|struct
 name|trapframe
 modifier|*
@@ -47,7 +64,24 @@ end_struct
 
 begin_function_decl
 name|int
-name|unw_create
+name|unw_create_from_pcb
+parameter_list|(
+name|struct
+name|unw_regstate
+modifier|*
+name|s
+parameter_list|,
+name|struct
+name|pcb
+modifier|*
+name|pcb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|unw_create_from_frame
 parameter_list|(
 name|struct
 name|unw_regstate
