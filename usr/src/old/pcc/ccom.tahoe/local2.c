@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.1 (Berkeley) %G%"
+literal|"@(#)local2.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1566,7 +1566,7 @@ case|:
 comment|/* masked constant for fields */
 name|printf
 argument_list|(
-literal|"$%d"
+name|ACONFMT
 argument_list|,
 operator|(
 name|p
@@ -2062,71 +2062,17 @@ argument_list|(
 literal|"structure size<0=0 or>65535"
 argument_list|)
 expr_stmt|;
-switch|switch
+comment|/* 			 * Can't optimize with movw's or movl's here as 			 * we don't know the alignment properties of 			 * either source or destination (governed, potentially 			 * by alignment of enclosing structure/union). 			 * (PERHAPS WE COULD SIMULATE dclstruct?) 			 */
+if|if
 condition|(
 name|size
+operator|!=
+literal|1
 condition|)
 block|{
-case|case
-literal|1
-case|:
 name|printf
 argument_list|(
-literal|"	movb	"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|printf
-argument_list|(
-literal|"	movw	"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|4
-case|:
-name|printf
-argument_list|(
-literal|"	movl	"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|8
-case|:
-name|printf
-argument_list|(
-literal|"	movl	"
-argument_list|)
-expr_stmt|;
-name|upput
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|","
-argument_list|)
-expr_stmt|;
-name|upput
-argument_list|(
-name|l
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n	movl	"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"	movab	"
+literal|"\tmovab\t"
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -2136,7 +2082,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|",r1\n	movab	"
+literal|",r1\n\tmovab\t"
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -2146,7 +2092,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|",r0\n	movl	$%d,r2\n	movblk\n"
+literal|",r0\n\tmovl\t$%d,r2\n\tmovblk\n"
 argument_list|,
 name|size
 argument_list|)
@@ -2156,10 +2102,14 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-goto|goto
-name|endstasg
-goto|;
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\tmovb\t"
+argument_list|)
+expr_stmt|;
 name|adrput
 argument_list|(
 name|r
@@ -2180,8 +2130,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|endstasg
-label|:
+block|}
 if|if
 condition|(
 name|r
@@ -3567,12 +3516,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"$"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|CONFMT
+name|ACONFMT
 argument_list|,
 name|val
 argument_list|)
