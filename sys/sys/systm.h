@@ -1392,6 +1392,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|quad_t
+name|getenv_quad
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|,
+name|quad_t
+operator|*
+name|data
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
