@@ -4171,6 +4171,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|size
 operator|=
 name|shminfo
@@ -4254,6 +4260,12 @@ index|]
 operator|.
 name|shm_nattch
 operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_block

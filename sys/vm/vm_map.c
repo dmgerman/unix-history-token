@@ -9640,8 +9640,6 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|old_map
@@ -11536,8 +11534,6 @@ name|vmspace
 modifier|*
 name|newvmspace
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|oldvmspace
