@@ -294,6 +294,20 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|pcic_intr_way_t
+name|pcic_pci_gen_func
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|pcic_intr_way_t
+name|pcic_pci_gen_csc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pcic_intr_mapirq_t
 name|pcic_pci_gen_mapirq
 decl_stmt|;
@@ -604,6 +618,24 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|pcic_chip
+name|pcic_pci_generic_chip
+init|=
+block|{
+name|pcic_pci_gen_func
+block|,
+name|pcic_pci_gen_csc
+block|,
+name|pcic_pci_gen_mapirq
+block|,
+name|pcic_pci_cardbus_init
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|pcic_pci_table
@@ -672,6 +704,19 @@ name|pcic_pci_pd68xx_chip
 block|}
 block|,
 block|{
+name|PCI_DEVICE_ID_PCIC_CLPD6834
+block|,
+literal|"Cirrus Logic PD6834 PCI-CardBus Bridge"
+block|,
+name|PCIC_PD672X
+block|,
+name|PCIC_PD_POWER
+block|,
+operator|&
+name|pcic_pci_pd68xx_chip
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_PCIC_OZ6729
 block|,
 literal|"O2micro OZ6729 PC-Card Bridge"
@@ -713,7 +758,7 @@ block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6860
 block|,
-literal|"O2micro 6860/6836 PCI-Cardbus Bridge"
+literal|"O2micro 6836/6860 PCI-Cardbus Bridge"
 block|,
 name|PCIC_I82365
 block|,
@@ -727,6 +772,45 @@ block|{
 name|PCI_DEVICE_ID_PCIC_OZ6872
 block|,
 literal|"O2micro 6812/6872 PCI-Cardbus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
+block|,
+operator|&
+name|pcic_pci_oz68xx_chip
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6912
+block|,
+literal|"O2micro 6912 PCI-Cardbus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
+block|,
+operator|&
+name|pcic_pci_oz68xx_chip
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6922
+block|,
+literal|"O2micro 6922 PCI-Cardbus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
+block|,
+operator|&
+name|pcic_pci_oz68xx_chip
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6933
+block|,
+literal|"O2micro 6933 PCI-Cardbus Bridge"
 block|,
 name|PCIC_I82365
 block|,
@@ -945,6 +1029,32 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
+name|PCI_DEVICE_ID_PCIC_TI1260
+block|,
+literal|"TI PCI-1260 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
+block|,
+operator|&
+name|pcic_pci_ti12xx_chip
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1260B
+block|,
+literal|"TI PCI-1260B PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
+block|,
+operator|&
+name|pcic_pci_ti12xx_chip
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_PCIC_TI1410
 block|,
 literal|"TI PCI-1410 PCI-CardBus Bridge"
@@ -961,6 +1071,19 @@ block|{
 name|PCI_DEVICE_ID_PCIC_TI1420
 block|,
 literal|"TI PCI-1420 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
+block|,
+operator|&
+name|pcic_pci_ti12xx_chip
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1421
+block|,
+literal|"TI PCI-1421 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
@@ -1316,6 +1439,29 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|pcic_pci_gen_csc
+parameter_list|(
+name|struct
+name|pcic_slot
+modifier|*
+name|sp
+parameter_list|,
+name|enum
+name|pcic_intr_way
+name|way
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The O2micro OZ67xx chips functions.  */
 end_comment
@@ -1577,7 +1723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up the CL-PD6832 and 6833.  */
+comment|/*  * Set up the CL-PD6832, 6833 and 6834.  */
 end_comment
 
 begin_function
@@ -1653,7 +1799,7 @@ decl_stmt|;
 name|u_long
 name|cm1
 decl_stmt|;
-comment|/* 	 * CLPD6832 management interrupt enable bit is bit 11 	 * (MGMT_IRQ_ENA) in bridge control register(offset 0x3d). 	 * When on, card status interrupts are ISA controlled by 	 * the ExCA register 0x05. 	 * 	 * The CLPD6833 does things differently.  It doesn't have bit 	 * 11 in the bridge control register.  Instead, this 	 * functionality appears to be in the "Configuration 	 * Miscellaneous 1" register bit 1. 	 */
+comment|/* 	 * CLPD6832 management interrupt enable bit is bit 11 	 * (MGMT_IRQ_ENA) in bridge control register(offset 0x3d). 	 * When on, card status interrupts are ISA controlled by 	 * the ExCA register 0x05. 	 * 	 * The CLPD6833 does things differently.  It doesn't have bit 	 * 11 in the bridge control register.  Instead, this 	 * functionality appears to be in the "Configuration 	 * Miscellaneous 1" register bit 1. 	 * 	 * I'm assuming that the CLPD6834 does things like the '33 	 */
 if|if
 condition|(
 name|device_id
@@ -1703,8 +1849,8 @@ block|}
 if|if
 condition|(
 name|device_id
-operator|==
-name|PCI_DEVICE_ID_PCIC_CLPD6833
+operator|!=
+name|PCI_DEVICE_ID_PCIC_CLPD6832
 condition|)
 block|{
 name|cm1
@@ -4413,6 +4559,10 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+name|itm
+condition|)
 name|sc
 operator|->
 name|chip
@@ -4420,6 +4570,14 @@ operator|=
 name|itm
 operator|->
 name|chip
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|chip
+operator|=
+operator|&
+name|pcic_pci_generic_chip
 expr_stmt|;
 if|if
 condition|(
