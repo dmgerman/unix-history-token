@@ -13658,6 +13658,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|WI_PORTTYPE_IBSS
+case|:
+case|case
 name|WI_PORTTYPE_ADHOC
 case|:
 name|wreq
