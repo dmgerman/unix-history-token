@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	8.1 (Berkeley) %G%"
+literal|"@(#)hash_page.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1511,7 +1511,6 @@ operator|!=
 name|OVFLPAGE
 condition|)
 block|{
-comment|/* 			 * Ov_addr gets set before reaching this point; there's 			 * always an overflow page before a big key/data page. 			 */
 if|if
 condition|(
 name|__big_split
@@ -1524,7 +1523,9 @@ name|new_bufp
 argument_list|,
 name|bufp
 argument_list|,
-name|ov_addr
+name|bufp
+operator|->
+name|addr
 argument_list|,
 name|obucket
 argument_list|,
@@ -2160,6 +2161,13 @@ operator|&&
 operator|(
 name|bp
 index|[
+literal|2
+index|]
+operator|<
+name|REAL_KEY
+operator|||
+name|bp
+index|[
 name|bp
 index|[
 literal|0
@@ -2170,6 +2178,25 @@ name|REAL_KEY
 operator|)
 condition|)
 comment|/* Exception case */
+if|if
+condition|(
+name|bp
+index|[
+literal|2
+index|]
+operator|==
+name|FULL_KEY_DATA
+operator|&&
+name|bp
+index|[
+literal|0
+index|]
+operator|==
+literal|2
+condition|)
+comment|/* This is the last page of a big key/data pair 			   and we need to add another page */
+break|break;
+elseif|else
 if|if
 condition|(
 name|bp
@@ -2190,14 +2217,25 @@ operator|!=
 name|OVFLPAGE
 condition|)
 block|{
-comment|/* This is a big-keydata pair */
 name|bufp
 operator|=
-name|__add_ovflpage
+name|__get_buf
 argument_list|(
 name|hashp
 argument_list|,
+name|bp
+index|[
+name|bp
+index|[
+literal|0
+index|]
+operator|-
+literal|1
+index|]
+argument_list|,
 name|bufp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
