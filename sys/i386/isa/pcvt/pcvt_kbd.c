@@ -7270,7 +7270,7 @@ directive|if
 name|PCVT_USL_VT_COMPAT
 comment|/*---------------------------------------------------------------------------*  *	convert ISO-8859 style keycode into IBM 437  *---------------------------------------------------------------------------*/
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 name|iso2ibm
 parameter_list|(

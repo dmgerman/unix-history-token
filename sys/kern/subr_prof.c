@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_prof.c	8.3 (Berkeley) 9/23/93  * $Id: subr_prof.c,v 1.23 1997/10/27 17:23:08 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_prof.c	8.3 (Berkeley) 9/23/93  * $Id: subr_prof.c,v 1.24 1997/11/06 19:29:18 phk Exp $  */
 end_comment
 
 begin_include
@@ -626,19 +626,48 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|i386
+name|__i386
 argument_list|)
 operator|&&
 name|__GNUC__
 operator|>=
 literal|2
-asm|asm("pushl %0; call __mcount; popl %%ecx" 		    : 		    : "i" (profil) 		    : "ax", "bx", "cx", "dx", "memory");
+asm|__asm("pushl %0; call __mcount; popl %%ecx"
+block|: 		      :
+literal|"i"
+operator|(
+name|profil
+operator|)
+operator|:
+literal|"ax"
+operator|,
+literal|"bx"
+operator|,
+literal|"cx"
+operator|,
+literal|"dx"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_error
 error|#
 directive|error
+end_error
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|mcount_overhead
 operator|=
 name|KCOUNT
@@ -653,11 +682,17 @@ name|profil
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|startguprof
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|i
@@ -675,20 +710,50 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|i386
+name|__i386
 argument_list|)
 operator|&&
 name|__GNUC__
 operator|>=
 literal|2
-asm|asm("call mexitcount; 1:" 			: : : "ax", "bx", "cx", "dx", "memory");
-asm|asm("movl $1b,%0" : "=rm" (tmp_addr));
+asm|__asm("call mexitcount; 1:"
+block|: : :
+literal|"ax"
+operator|,
+literal|"bx"
+operator|,
+literal|"cx"
+operator|,
+literal|"dx"
+operator|,
+literal|"memory"
+end_for
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_asm
+asm|__asm("movl $1b,%0" : "=rm" (tmp_addr));
+end_asm
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_error
 error|#
 directive|error
+end_error
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|mexitcount_overhead
 operator|=
 name|KCOUNT
@@ -703,24 +768,39 @@ name|tmp_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|state
 operator|=
 name|GMON_PROF_OFF
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|stopguprof
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|enable_intr
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|nullfunc_loop_profiled_time
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|tmp_addr
@@ -760,6 +840,9 @@ name|tmp_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_for
+
+begin_define
 define|#
 directive|define
 name|CALIB_DOSCALE
@@ -767,6 +850,9 @@ parameter_list|(
 name|count
 parameter_list|)
 value|(((count) + CALIB_SCALE / 3) / CALIB_SCALE)
+end_define
+
+begin_define
 define|#
 directive|define
 name|c2n
@@ -776,6 +862,9 @@ parameter_list|,
 name|freq
 parameter_list|)
 value|((int)((count) * 1000000000LL / freq))
+end_define
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"cputime %d, empty_loop %d, nullfunc_loop_profiled %d, mcount %d, mexitcount %d\n"
@@ -841,19 +930,34 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cputime_overhead
 operator|-=
 name|empty_loop_time
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mcount_overhead
 operator|-=
 name|empty_loop_time
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mexitcount_overhead
 operator|-=
 name|empty_loop_time
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*- 	 * Profiling overheads are determined by the times between the 	 * following events: 	 *	MC1: mcount() is called 	 *	MC2: cputime() (called from mcount()) latches the timer 	 *	MC3: mcount() completes 	 *	ME1: mexitcount() is called 	 *	ME2: cputime() (called from mexitcount()) latches the timer 	 *	ME3: mexitcount() completes. 	 * The times between the events vary slightly depending on instruction 	 * combination and cache misses, etc.  Attempt to determine the 	 * minimum times.  These can be subtracted from the profiling times 	 * without much risk of reducing the profiling times below what they 	 * would be when profiling is not configured.  Abbreviate: 	 *	ab = minimum time between MC1 and MC3 	 *	a  = minumum time between MC1 and MC2 	 *	b  = minimum time between MC2 and MC3 	 *	cd = minimum time between ME1 and ME3 	 *	c  = minimum time between ME1 and ME2 	 *	d  = minimum time between ME2 and ME3. 	 * These satisfy the relations: 	 *	ab<= mcount_overhead		(just measured) 	 *	a + b<= ab 	 *	        cd<= mexitcount_overhead		(just measured) 	 *	        c + d<= cd 	 *	a         + d<= nullfunc_loop_profiled_time	(just measured) 	 *	a>= 0, b>= 0, c>= 0, d>= 0. 	 * Assume that ab and cd are equal to the minimums. 	 */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|->
 name|cputime_overhead
@@ -863,6 +967,9 @@ argument_list|(
 name|cputime_overhead
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|mcount_overhead
@@ -874,6 +981,9 @@ operator|-
 name|cputime_overhead
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|mexitcount_overhead
@@ -885,12 +995,18 @@ operator|-
 name|cputime_overhead
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|nullfunc_loop_overhead
 operator|=
 name|nullfunc_loop_profiled_time
 operator|-
 name|empty_loop_time
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|mexitcount_post_overhead
@@ -906,6 +1022,9 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|mexitcount_pre_overhead
@@ -922,6 +1041,9 @@ name|p
 operator|->
 name|mexitcount_post_overhead
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|mcount_pre_overhead
@@ -935,6 +1057,9 @@ name|p
 operator|->
 name|mexitcount_post_overhead
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|mcount_post_overhead
@@ -951,6 +1076,9 @@ name|p
 operator|->
 name|mcount_pre_overhead
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Profiling overheads: mcount: %d+%d, %d+%d; mexitcount: %d+%d, %d+%d nsec\n"
@@ -1044,6 +1172,9 @@ name|profrate
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Profiling overheads: mcount: %d+%d, %d+%d; mexitcount: %d+%d, %d+%d cycles\n"
@@ -1081,18 +1212,24 @@ operator|->
 name|mexitcount_post_overhead
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
-comment|/* GUPROF */
-block|}
-end_function
+end_endif
 
 begin_comment
+comment|/* GUPROF */
+end_comment
+
+begin_comment
+unit|}
 comment|/*  * Return kernel profiling information.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
+unit|static
 name|int
 name|sysctl_kern_prof
 name|SYSCTL_HANDLER_ARGS

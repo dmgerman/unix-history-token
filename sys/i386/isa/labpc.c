@@ -366,7 +366,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|loutb
 parameter_list|(
@@ -1359,7 +1359,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|ad_clear
 parameter_list|(
@@ -1439,7 +1439,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|reset
 parameter_list|(
@@ -2132,7 +2132,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|trigger
 parameter_list|(

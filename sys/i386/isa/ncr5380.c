@@ -3829,7 +3829,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|nca_sendbyte
 parameter_list|(
@@ -3894,7 +3894,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 name|nca_recvbyte
 parameter_list|(

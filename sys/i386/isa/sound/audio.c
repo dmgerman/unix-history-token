@@ -201,7 +201,7 @@ operator|||
 operator|!
 name|defined
 argument_list|(
-name|i386
+name|__i386
 argument_list|)
 end_if
 
@@ -232,7 +232,7 @@ end_else
 
 begin_function_decl
 specifier|extern
-specifier|inline
+name|__inline
 name|void
 name|translate_bytes
 parameter_list|(
@@ -713,7 +713,7 @@ operator|||
 operator|!
 name|defined
 argument_list|(
-name|i386
+name|__i386
 argument_list|)
 end_if
 
@@ -781,7 +781,7 @@ end_else
 
 begin_function
 specifier|extern
-specifier|inline
+name|__inline
 name|void
 name|translate_bytes
 parameter_list|(

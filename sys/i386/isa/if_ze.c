@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.50 1998/02/13 06:49:15 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.51 1998/03/28 13:24:24 bde Exp $  */
 end_comment
 
 begin_comment
@@ -630,7 +630,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|ze_xmit
 name|__P
@@ -663,7 +663,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|ze_rint
 name|__P
@@ -723,7 +723,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|char
 modifier|*
 name|ze_ring_copy
@@ -3341,7 +3341,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|ze_xmit
 parameter_list|(
@@ -3770,9 +3770,9 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
-comment|/* only called from one place, so may as well integrate */
+comment|/* only called from one place, so may as well inline */
 name|ze_rint
 parameter_list|(
 name|unit
@@ -5338,7 +5338,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|char
 modifier|*
 name|ze_ring_copy

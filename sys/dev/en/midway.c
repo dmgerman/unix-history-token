@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|INLINE
-value|inline
+value|__inline
 end_define
 
 begin_endif

@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.16 1998/01/23 02:46:26 ShimonR Exp ShimonR $"
+empty|#ident "$Id: dpt.h,v 1.1 1998/01/26 06:11:15 julian Exp $"
 end_empty
 
 begin_ifndef
@@ -5307,7 +5307,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_int32_t
 name|dpt_time_delta
 parameter_list|(

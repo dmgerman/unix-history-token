@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.24 1998/02/26 06:45:43 msmith Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.25 1998/02/27 12:22:22 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -179,7 +179,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|u_int8_t
 name|find_lcode
 name|__P
@@ -4748,7 +4748,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_int8_t
 name|find_lcode
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.33 1998/01/08 23:40:48 eivind Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.34 1998/03/28 13:23:58 bde Exp $  */
 end_comment
 
 begin_comment
@@ -383,7 +383,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|elread
 parameter_list|(
@@ -420,7 +420,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|el_hardreset
 parameter_list|(
@@ -1027,7 +1027,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|el_hardreset
 parameter_list|(
@@ -2615,7 +2615,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|elread
 parameter_list|(

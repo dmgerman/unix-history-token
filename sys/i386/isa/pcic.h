@@ -231,7 +231,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|unsigned
 name|char
 name|pcic_getb
@@ -276,7 +276,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|pcic_putb
 parameter_list|(
@@ -325,7 +325,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|unsigned
 name|short
 name|pcic_getw
@@ -367,7 +367,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|pcic_putw
 parameter_list|(

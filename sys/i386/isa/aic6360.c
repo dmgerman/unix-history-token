@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.38 1998/02/27 05:38:23 msmith Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.39 1998/04/12 12:11:31 phk Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3679,6 +3679,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|u_short
 name|aicphase
 name|__P
@@ -6325,7 +6326,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_short
 name|aicphase
 parameter_list|(

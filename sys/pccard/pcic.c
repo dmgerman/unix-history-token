@@ -400,7 +400,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|unsigned
 name|char
 name|getb1
@@ -440,7 +440,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|unsigned
 name|char
 name|getb2
@@ -473,7 +473,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|putb1
 parameter_list|(
@@ -517,7 +517,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|putb2
 parameter_list|(
@@ -552,7 +552,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|clrb
 parameter_list|(
@@ -599,7 +599,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|setb
 parameter_list|(
@@ -645,7 +645,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|putw
 parameter_list|(

@@ -593,7 +593,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|load_block_bitmap
 parameter_list|(
@@ -2222,7 +2222,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|block_in_use
 parameter_list|(

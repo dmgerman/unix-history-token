@@ -3929,7 +3929,7 @@ begin_define
 define|#
 directive|define
 name|_INLINE_
-value|inline
+value|__inline
 end_define
 
 begin_define

@@ -175,7 +175,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|getscheduler
 parameter_list|(

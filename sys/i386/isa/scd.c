@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.34 1997/12/02 21:06:26 phk Exp $ */
+comment|/* $Id: scd.c,v 1.35 1998/01/24 02:54:24 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -558,7 +558,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|write_control
 parameter_list|(
@@ -6808,7 +6808,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|write_control
 parameter_list|(

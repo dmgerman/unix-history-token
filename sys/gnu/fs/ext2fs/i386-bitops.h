@@ -163,7 +163,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|find_first_zero_bit
 parameter_list|(
@@ -195,7 +195,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|find_next_zero_bit
 parameter_list|(
@@ -316,7 +316,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|unsigned
 name|long
 name|ffz
@@ -343,7 +343,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|char
 modifier|*
 name|memscan
