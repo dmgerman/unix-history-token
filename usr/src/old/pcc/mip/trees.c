@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.19 (Berkeley) %G%"
+literal|"@(#)trees.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2506,11 +2506,13 @@ value|0100000
 comment|/* void type */
 argument|opact( p )  NODE *p; {  	register mt12, mt1, mt2, o;  	mt1 = mt2 = mt12 =
 literal|0
-argument|;  	switch( optype(o=p->in.op) ){  	case BITYPE: 		mt2 = moditype( p->in.right->in.type ); 	case UTYPE: 		mt1 = moditype( p->in.left->in.type ); 		break;  		}  	if( ((mt1 | mt2)& MVOID)&& 	    o != COMOP&& 	    !(o == CAST&& (mt1& MVOID)) ){
+argument|;  	switch( optype(o=p->in.op) ){  	case BITYPE: 		mt2 = moditype( p->in.right->in.type ); 	case UTYPE: 		mt1 = moditype( p->in.left->in.type ); 		break;  		}  	if( ((mt1 | mt2)& MVOID)&& 	    o != COMOP&& 	    o != COLON&& 	    !(o == QUEST&& (mt1& MVOID) ==
+literal|0
+argument|)&& 	    !(o == CAST&& (mt1& MVOID)) ){
 comment|/* if lhs of RETURN is void, grammar will complain */
 argument|if( o != RETURN ) 			uerror(
 literal|"value of void expression used"
-argument|); 		return( NCVT ); 		} 	mt1&= ~MVOID; 	mt2&= ~MVOID; 	mt12 = mt1& mt2;  	switch( o ){  	case NAME : 	case STRING : 	case ICON : 	case FCON : 	case DCON : 	case CALL : 	case UNARY CALL: 	case UNARY MUL: 		{  return( OTHER ); } 	case UNARY MINUS: 		if( mt1& MENU ) return(
+argument|); 		return( NCVT ); 		} 	mt12 = mt1& mt2;  	switch( o ){  	case NAME : 	case STRING : 	case ICON : 	case FCON : 	case DCON : 	case CALL : 	case UNARY CALL: 	case UNARY MUL: 		{  return( OTHER ); } 	case UNARY MINUS: 		if( mt1& MENU ) return(
 literal|0
 argument|); 		if( mt1& MDBI ) return( TYPL ); 		break;  	case COMPL: 		if( mt1& MENU ) return(
 literal|0
@@ -2520,7 +2522,7 @@ argument|);  	case NOT: 	case CBRANCH: 		if( mt1& MSTR ) break; 		return(
 literal|0
 argument|);  	case ANDAND: 	case OROR: 		if( (mt1& MSTR) || (mt2& MSTR) ) break; 		return(
 literal|0
-argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( TYMATCH+OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( mt12& MENU ) return( TYMATCH+NCVT+PUN ); 		if( mt12& MDBI ) return( TYMATCH+NCVT+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+TYMATCH ); 		else if( mt12& MDBI ) return( NCVT+TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 		else if( mt12& MENU ) return( LVAL+NCVT+TYPL+TYMATCH+PUN ); 	case CAST: 		if(o==CAST&& mt1==
+argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( TYMATCH+OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( mt12& MENU ) return( TYMATCH+NCVT+PUN ); 		if( mt12& MDBI ) return( TYMATCH+NCVT+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+TYMATCH ); 		else if( mt12& MDBI ) return( NCVT+TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		else if( mt12 == MVOID ) return( NCVT+TYPL ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 		else if( mt12& MENU ) return( LVAL+NCVT+TYPL+TYMATCH+PUN ); 	case CAST: 		if(o==CAST&& mt1==
 literal|0
 argument|)return(TYPL+TYMATCH); 		else if( mt12& MDBI ) return( TYPL+LVAL+NCVT+TYMATCH ); 		else if( mt2 ==
 literal|0
