@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	displayq.c	4.6	83/06/15	*/
+comment|/*	displayq.c	4.7	83/06/17	*/
 end_comment
 
 begin_comment
@@ -790,6 +790,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* unlocks as well */
 name|garbage
 operator|=
 name|nitems
@@ -982,6 +983,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* unlocks as well */
 block|}
 else|else
 name|putchar

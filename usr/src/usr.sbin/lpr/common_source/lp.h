@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.h	4.2	83/05/13	*/
+comment|/*	lp.h	4.3	83/06/17	*/
 end_comment
 
 begin_comment
@@ -117,6 +117,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* maximum number of blocks to copy */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|MC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of copies allowed */
 end_comment
 
 begin_decl_stmt
@@ -338,6 +349,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|short
+name|SC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress multiple copies */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|short
 name|SF
 decl_stmt|;
 end_decl_stmt
@@ -436,7 +458,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|short
+name|int
 name|FC
 decl_stmt|;
 end_decl_stmt
@@ -447,7 +469,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|short
+name|int
 name|FS
 decl_stmt|;
 end_decl_stmt
@@ -458,7 +480,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|short
+name|int
 name|XC
 decl_stmt|;
 end_decl_stmt
@@ -469,7 +491,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|short
+name|int
 name|XS
 decl_stmt|;
 end_decl_stmt

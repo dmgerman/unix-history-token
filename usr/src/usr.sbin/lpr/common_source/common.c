@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	common.c	4.5	83/06/02	*/
+comment|/*	common.c	4.6	83/06/17	*/
 end_comment
 
 begin_comment
@@ -31,6 +31,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* maximum number of blocks to copy */
+end_comment
+
+begin_decl_stmt
+name|int
+name|MC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of copies allowed */
 end_comment
 
 begin_decl_stmt
@@ -244,6 +254,16 @@ end_comment
 
 begin_decl_stmt
 name|short
+name|SC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress multiple copies */
+end_comment
+
+begin_decl_stmt
+name|short
 name|SF
 decl_stmt|;
 end_decl_stmt
@@ -333,7 +353,7 @@ comment|/* baud rate if lp is a tty */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|FC
 decl_stmt|;
 end_decl_stmt
@@ -343,7 +363,7 @@ comment|/* flags to clear if lp is a tty */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|FS
 decl_stmt|;
 end_decl_stmt
@@ -353,7 +373,7 @@ comment|/* flags to set if lp is a tty */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|XC
 decl_stmt|;
 end_decl_stmt
@@ -363,7 +383,7 @@ comment|/* flags to clear for local mode */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|XS
 decl_stmt|;
 end_decl_stmt
@@ -1063,7 +1083,7 @@ name|dirp
 operator|=
 name|opendir
 argument_list|(
-literal|"."
+name|SD
 argument_list|)
 operator|)
 operator|==

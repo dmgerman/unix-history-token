@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	printjob.c	4.7	83/06/15	*/
+comment|/*	printjob.c	4.8	83/06/17	*/
 end_comment
 
 begin_comment
@@ -451,8 +451,10 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
-literal|0664
+literal|0644
 argument_list|)
 expr_stmt|;
 if|if
@@ -460,7 +462,23 @@ condition|(
 name|lfd
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"cannot create %s"
+argument_list|,
+name|LO
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|flock
 argument_list|(
 name|lfd
@@ -487,7 +505,7 @@ argument_list|)
 expr_stmt|;
 name|log
 argument_list|(
-literal|"cannot create %s"
+literal|"cannot lock %s"
 argument_list|,
 name|LO
 argument_list|)
@@ -590,6 +608,39 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+literal|01
+condition|)
+block|{
+comment|/* reset queue flag */
+if|if
+condition|(
+name|fchmod
+argument_list|(
+name|lfd
+argument_list|,
+name|stb
+operator|.
+name|st_mode
+operator|&
+literal|0776
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|log
+argument_list|(
+literal|"cannot chmod %s"
+argument_list|,
+name|LO
+argument_list|)
+expr_stmt|;
+block|}
 name|openpr
 argument_list|()
 expr_stmt|;
@@ -716,30 +767,94 @@ operator|->
 name|q_name
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check to see if we are supposed to stop printing. 		 */
+comment|/* 		 * Check to see if we are supposed to stop printing or 		 * if we are to rebuild the queue. 		 */
 if|if
 condition|(
-name|stat
+name|fstat
 argument_list|(
-name|LO
+name|lfd
 argument_list|,
 operator|&
 name|stb
 argument_list|)
 operator|==
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|stb
 operator|.
 name|st_mode
 operator|&
 literal|0100
-operator|)
 condition|)
 goto|goto
 name|done
 goto|;
+if|if
+condition|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+literal|01
+condition|)
+block|{
+for|for
+control|(
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|q
+argument_list|)
+init|;
+name|nitems
+operator|--
+condition|;
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|q
+argument_list|)
+control|)
+name|q
+operator|=
+operator|*
+name|qp
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|fchmod
+argument_list|(
+name|lfd
+argument_list|,
+name|stb
+operator|.
+name|st_mode
+operator|&
+literal|0776
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|log
+argument_list|(
+literal|"cannot chmod %s"
+argument_list|,
+name|LO
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 comment|/* 		 * Check to see if we should try reprinting the job. 		 */
 if|if
 condition|(
@@ -4561,18 +4676,11 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|log
+name|fatal
 argument_list|(
 literal|"can't open printer description file"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4580,18 +4688,11 @@ name|status
 operator|==
 literal|0
 condition|)
-block|{
-name|log
+name|fatal
 argument_list|(
 literal|"unknown printer"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5767,11 +5868,7 @@ expr_stmt|;
 block|}
 end_if
 
-begin_if
-if|if
-condition|(
-name|FC
-condition|)
+begin_expr_stmt
 name|ttybuf
 operator|.
 name|sg_flags
@@ -5779,20 +5876,16 @@ operator|&=
 operator|~
 name|FC
 expr_stmt|;
-end_if
+end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|FS
-condition|)
+begin_expr_stmt
 name|ttybuf
 operator|.
 name|sg_flags
 operator||=
 name|FS
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_if
 if|if

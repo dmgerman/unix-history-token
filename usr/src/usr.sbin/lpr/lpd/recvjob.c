@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	recvjob.c	4.4	83/06/15	*/
+comment|/*	recvjob.c	4.5	83/06/17	*/
 end_comment
 
 begin_comment
@@ -725,10 +725,6 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|err
-operator|==
-literal|0
-operator|&&
 name|write
 argument_list|(
 name|fd
@@ -740,9 +736,12 @@ argument_list|)
 operator|!=
 name|amt
 condition|)
+block|{
 name|err
 operator|++
 expr_stmt|;
+break|break;
+block|}
 block|}
 operator|(
 name|void
