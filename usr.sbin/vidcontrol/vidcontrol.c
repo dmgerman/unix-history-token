@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.2 1994/09/15 07:28:06 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.3 1994/09/26 20:20:44 ache Exp $  */
 end_comment
 
 begin_include
@@ -1284,131 +1284,64 @@ end_function
 
 begin_function
 name|void
-name|set_cursor_values
+name|set_cursor_type
 parameter_list|(
 name|char
 modifier|*
-name|size
+name|appearence
 parameter_list|)
 block|{
 name|int
-name|start
-decl_stmt|,
-name|end
+name|type
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
-name|char
-modifier|*
-name|v1
-decl_stmt|;
-name|start
-operator|=
-name|strtol
-argument_list|(
-name|size
-argument_list|,
-operator|&
-name|v1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|start
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
-operator|*
-name|v1
-operator|!=
-literal|'.'
-operator|)
-condition|)
-goto|goto
-name|badopt
-goto|;
-name|size
-operator|=
-operator|++
-name|v1
-expr_stmt|;
-name|end
-operator|=
-name|strtol
+operator|!
+name|strcmp
 argument_list|(
-name|size
+name|appearence
 argument_list|,
-operator|&
-name|v1
-argument_list|,
-literal|0
+literal|"blink"
 argument_list|)
+condition|)
+name|type
+operator|=
+literal|1
 expr_stmt|;
+elseif|else
 if|if
 condition|(
-operator|(
-name|end
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
-operator|*
-name|size
-operator|==
-literal|'\0'
-operator|)
-operator|||
-operator|(
-operator|*
-name|v1
-operator|!=
-literal|'\0'
-operator|)
+operator|!
+name|strcmp
+argument_list|(
+name|appearence
+argument_list|,
+literal|"noblink"
+argument_list|)
 condition|)
+name|type
+operator|=
+literal|0
+expr_stmt|;
+else|else
 block|{
-name|badopt
-label|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"argument to -c must be start.end\n"
+literal|"argument to -c must be blink or noblink\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|verbose
-condition|)
-name|fprintf
+name|ioctl
 argument_list|(
-name|stderr
+literal|0
 argument_list|,
-literal|"setting cursor to %d.%d\n"
+name|CONS_CURSORTYPE
 argument_list|,
-name|start
-argument_list|,
-name|end
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"
-literal|[=%d;%dC"
-argument_list|,
-name|start
-argument_list|,
-name|end
+operator|&
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -1491,12 +1424,50 @@ operator|*
 name|index
 index|]
 argument_list|,
+literal|"VGA_80x30"
+argument_list|)
+condition|)
+name|mode
+operator|=
+name|SW_VGA_C80x30
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+operator|*
+name|index
+index|]
+argument_list|,
 literal|"VGA_80x50"
 argument_list|)
 condition|)
 name|mode
 operator|=
 name|SW_VGA_C80x50
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+operator|*
+name|index
+index|]
+argument_list|,
+literal|"VGA_80x60"
+argument_list|)
+condition|)
+name|mode
+operator|=
+name|SW_VGA_C80x60
 expr_stmt|;
 elseif|else
 if|if
@@ -2017,18 +1988,18 @@ argument_list|,
 literal|"Usage: vidcontrol mode             (available modes: VGA_40x25, VGA_80x25,\n"
 literal|"                                                     VGA_80x50, VGA_320x200,\n"
 literal|"                                                     EGA_80x25, EGA_80x43)\n"
-literal|"                  show             (show available colors)\n"
-literal|"                  fgcol bgcol      (set fore-& background colors)\n"
-literal|"                  -r fgcol bgcol   (set reverse fore-& background colors)\n"
-literal|"                  -b color         (set border color)\n"
-literal|"                  -c n.m           (set cursor start line n& end line m)\n"
-literal|"                  -d               (dump screenmap to stdout)\n"
-literal|"                  -l filename      (load srceenmap file filename)\n"
-literal|"                  -L               (load default screenmap)\n"
-literal|"                  -f DxL filename  (load font, D dots wide& L lines high)\n"
-literal|"                  -s saver | help  (set screensaver type or help for a list)\n"
-literal|"                  -t N             (set screensaver timeout in seconds)\n"
-literal|"                  -x               (use hex numbers for output)\n"
+literal|"                  show               (show available colors)\n"
+literal|"                  fgcol bgcol        (set fore-& background colors)\n"
+literal|"                  -r fgcol bgcol     (set reverse fore-& background colors)\n"
+literal|"                  -b color           (set border color)\n"
+literal|"                  -c blink | noblink (set cursor type)\n"
+literal|"                  -d                 (dump screenmap to stdout)\n"
+literal|"                  -l filename        (load srceenmap file filename)\n"
+literal|"                  -L                 (load default screenmap)\n"
+literal|"                  -f DxL filename    (load font, D dots wide& L lines high)\n"
+literal|"                  -s saver | help    (set screensaver type or help for a list)\n"
+literal|"                  -t N               (set screensaver timeout in seconds)\n"
+literal|"                  -x                 (use hex numbers for output)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2085,7 +2056,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"Must be on a vty"
+literal|"Must be on a vrtual console"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2120,7 +2091,7 @@ block|{
 case|case
 literal|'c'
 case|:
-name|set_cursor_values
+name|set_cursor_type
 argument_list|(
 name|optarg
 argument_list|)

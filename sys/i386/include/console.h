@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.12 1994/10/01 02:56:07 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.13 1994/10/17 22:11:52 sos Exp $  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/ioccom.h>
 end_include
 
 begin_define
@@ -178,39 +178,42 @@ begin_define
 define|#
 directive|define
 name|GIO_ATTR
-value|_IOR('a', 0, long)
+value|_IOR('a', 0, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GIO_COLOR
-value|_IOR('c', 0, long)
+value|_IOR('c', 0, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONS_CURRENT
-value|_IOR('c', 1, long)
+value|_IOR('c', 1, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONS_GET
-value|_IOR('c', 2, long)
+value|_IOR('c', 2, int)
 end_define
 
-begin_comment
-comment|/* #define CONS_IO		_IO('c', 3, long) */
-end_comment
+begin_define
+define|#
+directive|define
+name|CONS_IO
+value|_IO('c', 3, int)
+end_define
 
 begin_define
 define|#
 directive|define
 name|CONS_BLANKTIME
-value|_IOW('c', 4, long)
+value|_IOW('c', 4, int)
 end_define
 
 begin_define
@@ -225,6 +228,20 @@ define|#
 directive|define
 name|CONS_GSAVER
 value|_IOWR('c', 6, ssaver_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_CURSORTYPE
+value|_IOW('c', 7, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_BELLTYPE
+value|_IOW('c', 8, int)
 end_define
 
 begin_define
@@ -280,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|CONS_GETVERS
-value|_IOR('c', 74, long)
+value|_IOR('c', 74, int)
 end_define
 
 begin_define
@@ -376,29 +393,12 @@ comment|/* switching controlled by prog */
 end_comment
 
 begin_comment
-comment|/* compatibility to old pccons& X386 */
+comment|/* compatibility to old pccons& X386 about to go away */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CONSOLE_X_MODE_ON
-value|_IO('t', 121)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONSOLE_X_MODE_OFF
-value|_IO('t', 122)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONSOLE_X_BELL
-value|_IOW('t',123,int[2])
-end_define
+begin_comment
+comment|/* #define CONSOLE_X_MODE_ON	_IO('t', 121) #define CONSOLE_X_MODE_OFF	_IO('t', 122) #define CONSOLE_X_BELL		_IOW('t',123,int[2]) */
+end_comment
 
 begin_struct
 struct|struct
@@ -1665,34 +1665,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_VGA_C80x50
-value|30
-end_define
-
-begin_comment
-comment|/* vga 8x8 font on color */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_VGA_M80x25
 value|25
 end_define
 
 begin_comment
 comment|/* vga 8x16 font on mono */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_VGA_M80x50
-value|31
-end_define
-
-begin_comment
-comment|/* vga 8x8 font on color */
 end_comment
 
 begin_define
@@ -1748,6 +1726,72 @@ directive|define
 name|M_VGA_CG320
 value|28
 end_define
+
+begin_define
+define|#
+directive|define
+name|M_VGA_C80x50
+value|30
+end_define
+
+begin_comment
+comment|/* vga 8x8 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_M80x50
+value|31
+end_define
+
+begin_comment
+comment|/* vga 8x8 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_C80x30
+value|32
+end_define
+
+begin_comment
+comment|/* vga 8x16 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_M80x30
+value|33
+end_define
+
+begin_comment
+comment|/* vga 8x16 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_C80x60
+value|34
+end_define
+
+begin_comment
+comment|/* vga 8x8 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_M80x60
+value|35
+end_define
+
+begin_comment
+comment|/* vga 8x8 font on color */
+end_comment
 
 begin_define
 define|#
@@ -1968,8 +2012,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SW_VGA_C80x30
+value|_IO('S', M_VGA_C80x30)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_VGA_C80x50
 value|_IO('S', M_VGA_C80x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_C80x60
+value|_IO('S', M_VGA_C80x60)
 end_define
 
 begin_define
@@ -1982,8 +2040,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SW_VGA_M80x30
+value|_IO('S', M_VGA_M80x30)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_VGA_M80x50
 value|_IO('S', M_VGA_M80x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_M80x60
+value|_IO('S', M_VGA_M80x60)
 end_define
 
 begin_define

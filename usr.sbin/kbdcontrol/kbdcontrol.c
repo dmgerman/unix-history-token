@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdcontrol.c,v 1.1 1994/08/17 08:59:34 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdcontrol.c,v 1.2 1994/10/25 20:50:41 swallace Exp $  */
 end_comment
 
 begin_include
@@ -2101,6 +2101,8 @@ name|opt
 parameter_list|)
 block|{
 name|int
+name|bell
+decl_stmt|,
 name|duration
 decl_stmt|,
 name|pitch
@@ -2112,16 +2114,43 @@ name|strcmp
 argument_list|(
 name|opt
 argument_list|,
-literal|"normal"
+literal|"visual"
 argument_list|)
 condition|)
+name|bell
+operator|=
+literal|1
+operator|,
 name|duration
 operator|=
 literal|1
 operator|,
 name|pitch
 operator|=
-literal|15
+literal|800
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"normal"
+argument_list|)
+condition|)
+name|bell
+operator|=
+literal|0
+operator|,
+name|duration
+operator|=
+literal|1
+operator|,
+name|pitch
+operator|=
+literal|800
 expr_stmt|;
 else|else
 block|{
@@ -2132,6 +2161,10 @@ name|char
 modifier|*
 name|v1
 decl_stmt|;
+name|bell
+operator|=
+literal|0
+expr_stmt|;
 name|duration
 operator|=
 name|strtol
@@ -2218,6 +2251,18 @@ if|if
 condition|(
 name|verbose
 condition|)
+if|if
+condition|(
+name|bell
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"setting visual bell\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -2229,6 +2274,21 @@ argument_list|,
 name|pitch
 argument_list|)
 expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_BELLTYPE
+argument_list|,
+operator|&
+name|bell
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bell
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2554,16 +2614,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: kbdcontrol -b duration.pitch (set bell duration& pitch)\n"
-literal|"                  -d                (dump keyboard map to stdout)\n"
-literal|"                  -l filename       (load keyboard map file)\n"
-literal|"                  -f<N> string     (set function key N to send<string>)\n"
-literal|"                  -F                (set function keys back to default)\n"
-literal|"                  -r delay.repeat   (set keyboard delay& repeat rate)\n"
-literal|"                  -r slow           (set keyboard delay& repeat to slow)\n"
-literal|"                  -r normal         (set keyboard delay& repeat to normal)\n"
-literal|"                  -r fast           (set keyboard delay& repeat to fast)\n"
-literal|"                  -v                (verbose)\n"
+literal|"Usage: kbdcontrol -b duration.pitch   (set bell duration& pitch)\n"
+literal|"                  -b normal | visual  (set bell to visual type)\n"
+literal|"                  -d                  (dump keyboard map to stdout)\n"
+literal|"                  -l filename         (load keyboard map file)\n"
+literal|"                  -f<N> string       (set function key N to send<string>)\n"
+literal|"                  -F                  (set function keys back to default)\n"
+literal|"                  -r delay.repeat     (set keyboard delay& repeat rate)\n"
+literal|"                  -r slow             (set keyboard delay& repeat to slow)\n"
+literal|"                  -r normal           (set keyboard delay& repeat to normal)\n"
+literal|"                  -r fast             (set keyboard delay& repeat to fast)\n"
+literal|"                  -v                  (verbose)\n"
 argument_list|)
 expr_stmt|;
 block|}
