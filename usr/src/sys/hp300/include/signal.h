@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,11 +14,21 @@ name|sig_atomic_t
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_POSIX_SOURCE
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -29,11 +39,6 @@ end_include
 begin_comment
 comment|/* codes for SIGILL, SIGFPE */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
@@ -74,6 +79,11 @@ comment|/* psl to restore */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

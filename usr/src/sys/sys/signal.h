@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,22 @@ define|#
 directive|define
 name|_SYS_SIGNAL_H_
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -26,11 +42,10 @@ begin_comment
 comment|/* counting 0; could be 33 (mask is 1-32) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -41,11 +56,6 @@ end_include
 begin_comment
 comment|/* sigcontext; codes for SIGILL, SIGFPE */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -504,6 +514,17 @@ name|SIG_ERR
 value|(void (*)(int))-1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_SIGARG
+value|int
+end_define
+
+begin_comment
+comment|/* one int parameter */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -529,6 +550,17 @@ directive|define
 name|SIG_ERR
 value|(void (*)())-1
 end_define
+
+begin_define
+define|#
+directive|define
+name|_SIGARG
+value|void
+end_define
+
+begin_comment
+comment|/* unspecified parameters */
+end_comment
 
 begin_endif
 endif|#
@@ -562,7 +594,9 @@ function_decl|(
 modifier|*
 name|sa_handler
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|_SIGARG
+parameter_list|)
 function_decl|;
 comment|/* signal handler */
 name|sigset_t
@@ -691,11 +725,21 @@ begin_comment
 comment|/* set specified signal set */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|_POSIX_SOURCE
-end_ifndef
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -793,7 +837,9 @@ function_decl|(
 modifier|*
 name|sv_handler
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|_SIGARG
+parameter_list|)
 function_decl|;
 comment|/* signal handler */
 name|int
