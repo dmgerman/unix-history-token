@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	5.16 (Berkeley) %G%"
+literal|"@(#)lprint.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1255,27 +1255,28 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|show_text
-argument_list|(
-argument|directory
-argument_list|,
-argument|file_name
-argument_list|,
-argument|header
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|directory
-operator|,
-operator|*
+parameter_list|,
 name|file_name
-operator|,
-operator|*
+parameter_list|,
 name|header
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+name|char
+modifier|*
+name|directory
+decl_stmt|,
+decl|*
+name|file_name
+decl_stmt|,
+modifier|*
+name|header
+decl_stmt|;
+end_function
 
 begin_block
 block|{
