@@ -5339,18 +5339,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|==
-name|NULL
-condition|)
-comment|/* shouldn't happen */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Setup initial state */
 name|sc
 operator|->
