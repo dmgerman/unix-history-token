@@ -1371,7 +1371,7 @@ name|t
 operator|.
 name|c_lflag
 operator|=
-name|TTYDEF_LFLAG
+name|TTYDEF_LFLAG_ECHO
 operator||
 operator|(
 name|ip
