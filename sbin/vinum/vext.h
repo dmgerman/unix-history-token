@@ -29,6 +29,17 @@ begin_comment
 comment|/* this is what the system does somewhere */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXDATETEXT
+value|128
+end_define
+
+begin_comment
+comment|/* date text in history (far too much) */
+end_comment
+
 begin_enum
 enum|enum
 block|{
@@ -98,6 +109,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_HISTORYFILE
+value|"/var/tmp/vinum_history"
+end_define
+
+begin_comment
+comment|/* default name for history stuff */
+end_comment
 
 begin_comment
 comment|/* Prototype declarations */
@@ -719,6 +741,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|printconfig
+parameter_list|(
+name|FILE
+modifier|*
+name|of
+parameter_list|,
+name|char
+modifier|*
+name|comment
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vinum_saveconfig
 parameter_list|(
 name|int
@@ -1080,6 +1117,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|timestamp
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1144,6 +1188,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* wait for children to exit */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|history
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* history file */
 end_comment
 
 begin_comment
