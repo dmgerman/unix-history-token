@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/i386/conf.c,v 1.3 1993/08/09 06:16:38 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/conf.c,v 1.4 1993/08/09 19:02:21 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,20 +206,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
-comment|/*sddump(),*/
-name|sdsize
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
 name|sddump
-value|enxio
-end_define
+argument_list|()
+decl_stmt|,
+name|sdsize
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
