@@ -10595,7 +10595,7 @@ argument_list|,
 name|M_PKTHDR
 argument_list|)
 else|:
-name|m_get
+name|m_gethdr
 argument_list|(
 name|M_DONTWAIT
 argument_list|,
