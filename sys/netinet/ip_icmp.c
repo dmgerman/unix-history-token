@@ -308,7 +308,7 @@ specifier|static
 name|int
 name|icmplim
 init|=
-literal|100
+literal|200
 decl_stmt|;
 end_decl_stmt
 
