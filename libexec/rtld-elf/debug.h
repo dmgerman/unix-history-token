@@ -43,6 +43,18 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function_decl
 specifier|extern
 name|void
@@ -114,6 +126,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|assert
+parameter_list|(
+name|cond
+parameter_list|)
+value|((cond) ? (void) 0 :		\     (msg("ld-elf.so.1: assert failed: " __FILE__ ":"	\       __XSTRING(__LINE__) "\n"), abort()))
+end_define
+
+begin_define
+define|#
+directive|define
+name|msg
+parameter_list|(
+name|s
+parameter_list|)
+value|write(1, s, strlen(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|trace
+parameter_list|()
+value|msg("ld-elf.so.1: " __XSTRING(__LINE__) "\n")
+end_define
 
 begin_endif
 endif|#

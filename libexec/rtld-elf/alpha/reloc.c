@@ -85,38 +85,6 @@ directive|include
 file|"rtld.h"
 end_include
 
-begin_comment
-comment|/*  * Debugging support.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|assert
-parameter_list|(
-name|cond
-parameter_list|)
-value|((cond) ? (void) 0 :\     (msg("oops: " __XSTRING(__LINE__) "\n"), abort()))
-end_define
-
-begin_define
-define|#
-directive|define
-name|msg
-parameter_list|(
-name|s
-parameter_list|)
-value|(write(1, s, strlen(s)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|trace
-parameter_list|()
-value|msg("trace: " __XSTRING(__LINE__) "\n");
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|Elf_Dyn
