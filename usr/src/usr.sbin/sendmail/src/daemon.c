@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.18 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.19 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.18 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.19 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2166,14 +2166,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* create local address */
-name|bzero
-argument_list|(
-operator|&
 name|la
-argument_list|,
-sizeof|sizeof
-name|la
-argument_list|)
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+literal|0
 expr_stmt|;
 comment|/* create foreign address */
 name|sp
@@ -2260,7 +2259,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* connect to foreign IDENT server */
+comment|/* connect to foreign IDENT server using same address as SMTP socket */
 name|s
 operator|=
 name|socket
@@ -2290,6 +2289,23 @@ goto|;
 block|}
 if|if
 condition|(
+name|bind
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|la
+operator|.
+name|sa
+argument_list|,
+sizeof|sizeof
+name|la
+operator|.
+name|sin
+argument_list|)
+operator|<
+literal|0
+operator|||
 name|connect
 argument_list|(
 name|s
