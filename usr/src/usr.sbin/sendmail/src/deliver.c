@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.84.1.4 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.138 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1386,6 +1386,8 @@ operator||
 name|EF_FATALERRS
 operator||
 name|EF_SENDRECEIPT
+operator||
+name|EF_RET_PARAM
 operator|)
 expr_stmt|;
 name|ee
@@ -1475,6 +1477,7 @@ name|q
 operator|->
 name|q_next
 control|)
+block|{
 if|if
 condition|(
 name|q
@@ -1498,6 +1501,7 @@ operator|~
 name|QQUEUEUP
 expr_stmt|;
 block|}
+block|}
 for|for
 control|(
 name|q
@@ -1516,6 +1520,7 @@ name|q
 operator|->
 name|q_next
 control|)
+block|{
 if|if
 condition|(
 name|q
@@ -1538,6 +1543,30 @@ operator|&=
 operator|~
 name|QQUEUEUP
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* clear DSN parameters */
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+operator|(
+name|QHASNOTIFY
+operator||
+name|QPINGONSUCCESS
+operator|)
+expr_stmt|;
+name|q
+operator|->
+name|q_flags
+operator||=
+name|QPINGONFAILURE
+operator||
+name|QPINGONDELAY
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
