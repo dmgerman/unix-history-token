@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c	1.1 (Berkeley) %G%"
+literal|"@(#)c20.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,6 +325,13 @@ index|]
 condition|)
 block|{
 case|case
+literal|'a'
+case|:
+name|aobflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|nflag
@@ -512,6 +519,9 @@ argument_list|()
 condition|)
 do|;
 name|addaob
+argument_list|()
+expr_stmt|;
+name|interleave
 argument_list|()
 expr_stmt|;
 name|output

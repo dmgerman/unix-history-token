@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	c2.h	1.1	86/03/02	*/
+comment|/*	c2.h	1.2	86/07/27	*/
 end_comment
 
 begin_comment
@@ -816,6 +816,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|intleavetab
+block|{
+name|char
+name|op
+decl_stmt|;
+name|unsigned
+name|char
+name|subop
+decl_stmt|;
+name|int
+name|intleavect
+decl_stmt|;
+block|}
+name|intltab
+index|[]
+struct|;
+end_struct
+
 begin_comment
 comment|/* struct { NUXI problems 	short	combop; }; */
 end_comment
@@ -976,6 +996,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|aobflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|lasta
@@ -1098,6 +1124,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAXAOBDISP
+value|5000
+end_define
+
+begin_define
+define|#
+directive|define
 name|NUSE
 value|6
 end_define
@@ -1109,6 +1142,8 @@ modifier|*
 name|uses
 index|[
 name|NUSE
+operator|+
+literal|7
 index|]
 decl_stmt|;
 end_decl_stmt
