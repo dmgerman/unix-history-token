@@ -1531,6 +1531,13 @@ begin_comment
 comment|/* stores file names as Unicode*/
 end_comment
 
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|fsctlop_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsidctl
@@ -1543,6 +1550,17 @@ name|fsid_t
 name|vc_fsid
 decl_stmt|;
 comment|/* fsid to operate on. */
+name|char
+name|vc_fstypename
+index|[
+name|MFSNAMELEN
+index|]
+decl_stmt|;
+comment|/* type of fs 'nfs' or '*' */
+name|fsctlop_t
+name|vc_op
+decl_stmt|;
+comment|/* operation VFS_CTL_* (below) */
 name|void
 modifier|*
 name|vc_ptr
@@ -1575,36 +1593,14 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * New style VFS sysctls, do not reuse/conflict with the namespace for  * private sysctls.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VFS_CTL_STATFS
-value|0x00010001
-end_define
-
-begin_comment
-comment|/* statfs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VFS_CTL_UMOUNT
-value|0x00010002
-end_define
-
-begin_comment
-comment|/* unmount */
+comment|/*  * New style VFS sysctls, do not reuse/conflict with the namespace for  * private sysctls.  * All "global" sysctl ops have the 33rd bit set:  * 0x...1....  * Priavte sysctl ops should have the 33rd bit unset.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VFS_CTL_QUERY
-value|0x00010003
+value|0x00010001
 end_define
 
 begin_comment
@@ -1614,19 +1610,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VFS_CTL_NEWADDR
-value|0x00010004
-end_define
-
-begin_comment
-comment|/* reconnect to new address */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VFS_CTL_TIMEO
-value|0x00010005
+value|0x00010002
 end_define
 
 begin_comment
@@ -1637,7 +1622,7 @@ begin_define
 define|#
 directive|define
 name|VFS_CTL_NOLOCKS
-value|0x00010006
+value|0x00010003
 end_define
 
 begin_comment
@@ -2316,6 +2301,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
+name|fsctlop_t
+name|op
+parameter_list|,
 name|struct
 name|sysctl_req
 modifier|*
@@ -2607,10 +2595,12 @@ name|VFS_SYSCTL
 parameter_list|(
 name|MP
 parameter_list|,
+name|OP
+parameter_list|,
 name|REQ
 parameter_list|)
 define|\
-value|((MP) == NULL ? ENOTSUP : \ 	 (*(MP)->mnt_op->vfs_sysctl)(MP, REQ))
+value|((MP) == NULL ? ENOTSUP : \ 	 (*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ))
 end_define
 
 begin_include
