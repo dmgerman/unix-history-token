@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startslip.c	5.7 (Berkeley) %G%"
+literal|"@(#)startslip.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +324,14 @@ decl_stmt|;
 specifier|extern
 name|int
 name|optind
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+modifier|*
+name|ap
 decl_stmt|;
 name|int
 name|ch
@@ -1406,6 +1414,46 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Security hack.  Do not want private information such as the 	 * password and possible phone number to be left around. 	 * So we clobber the arguments. 	 */
+for|for
+control|(
+name|ap
+operator|=
+name|argv
+operator|-
+name|optind
+operator|+
+literal|1
+init|;
+name|ap
+operator|<
+name|argv
+operator|+
+literal|3
+condition|;
+name|ap
+operator|++
+control|)
+for|for
+control|(
+name|cp
+operator|=
+operator|*
+name|ap
+init|;
+operator|*
+name|cp
+operator|!=
+literal|0
+condition|;
+name|cp
+operator|++
+control|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* 	 * Attach 	 */
 name|printd
 argument_list|(
