@@ -183,7 +183,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|select
+name|_select
 argument_list|(
 name|svc_maxfd
 operator|+

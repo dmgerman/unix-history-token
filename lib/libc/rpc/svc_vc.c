@@ -1885,7 +1885,7 @@ condition|)
 block|{
 name|flags
 operator|=
-name|fcntl
+name|_fcntl
 argument_list|(
 name|sock
 argument_list|,
@@ -1908,7 +1908,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|fcntl
+name|_fcntl
 argument_list|(
 name|sock
 argument_list|,
@@ -2485,7 +2485,7 @@ condition|)
 block|{
 name|len
 operator|=
-name|read
+name|_read
 argument_list|(
 name|sock
 argument_list|,
@@ -2693,7 +2693,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|read
+name|_read
 argument_list|(
 name|sock
 argument_list|,
