@@ -691,7 +691,6 @@ name|dst
 parameter_list|,
 name|rt0
 parameter_list|)
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -736,13 +735,11 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-specifier|register
 name|struct
 name|ether_header
 modifier|*
@@ -3013,7 +3010,6 @@ name|defined
 argument_list|(
 name|NETATALK
 argument_list|)
-specifier|register
 name|struct
 name|llc
 modifier|*
@@ -4050,13 +4046,11 @@ modifier|*
 name|llc
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
@@ -4462,7 +4456,6 @@ case|case
 name|AF_IPX
 case|:
 block|{
-specifier|register
 name|struct
 name|ipx_addr
 modifier|*
@@ -4561,7 +4554,6 @@ case|case
 name|AF_NS
 case|:
 block|{
-specifier|register
 name|struct
 name|ns_addr
 modifier|*

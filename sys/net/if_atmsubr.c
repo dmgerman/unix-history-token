@@ -221,7 +221,6 @@ name|dst
 parameter_list|,
 name|rt0
 parameter_list|)
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -741,7 +740,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-specifier|register
 name|struct
 name|atm_pseudohdr
 modifier|*
@@ -757,7 +755,6 @@ modifier|*
 name|rxhand
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifqueue
 modifier|*
@@ -1122,20 +1119,17 @@ name|atm_ifattach
 parameter_list|(
 name|ifp
 parameter_list|)
-specifier|register
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*

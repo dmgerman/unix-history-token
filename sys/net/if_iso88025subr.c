@@ -242,7 +242,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifaddr
 modifier|*
@@ -250,7 +249,6 @@ name|ifa
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
@@ -524,7 +522,6 @@ case|case
 name|AF_IPX
 case|:
 block|{
-specifier|register
 name|struct
 name|ipx_addr
 modifier|*
@@ -1729,13 +1726,11 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ifqueue
 modifier|*
 name|inq
 decl_stmt|;
-specifier|register
 name|struct
 name|llc
 modifier|*
