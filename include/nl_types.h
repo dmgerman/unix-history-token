@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: nl_types.h,v 1.4 1997/02/23 09:17:14 peter Exp $ */
 end_comment
 
 begin_comment
@@ -32,17 +32,25 @@ name|NL_SETD
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|NL_CAT_LOCALE
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
-name|long
-name|nl_catd
+name|int
+name|nl_item
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
-name|nl_item
+name|void
+modifier|*
+name|nl_catd
 typedef|;
 end_typedef
 
@@ -77,6 +85,7 @@ name|int
 operator|,
 name|int
 operator|,
+name|__const
 name|char
 operator|*
 operator|)
