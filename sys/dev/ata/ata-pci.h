@@ -763,8 +763,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_SII0680
-value|0x06801095
+name|ATA_SII3114
+value|0x31141095
 end_define
 
 begin_define
@@ -779,6 +779,13 @@ define|#
 directive|define
 name|ATA_SII3112_1
 value|0x02401095
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SII0680
+value|0x06801095
 end_define
 
 begin_define
@@ -1392,6 +1399,13 @@ define|#
 directive|define
 name|SIIBUG
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SII4CH
+value|0x08
 end_define
 
 begin_define
