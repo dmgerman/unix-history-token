@@ -3893,7 +3893,7 @@ name|relocs
 operator|=
 name|true
 expr_stmt|;
-comment|/* If this relocation section applies to a read only 		     section which is in memory at run time, then 		     we probably need a DT_TEXTREL entry.  The entries 		     in the .rel.plt section really apply to the 		     .got section, which we created ourselves and so 		     know is not readonly.  */
+comment|/* If this relocation section applies to a read only 		     section, then we probably need a DT_TEXTREL 		     entry.  The entries in the .rel.plt section 		     really apply to the .got section, which we 		     created ourselves and so know is not readonly.  */
 name|outname
 operator|=
 name|bfd_get_section_name
