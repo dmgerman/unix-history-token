@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.8 %G%"
+literal|"@(#)p2put.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,7 +836,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	rvalues are just lvalues with indirection, except      *	special case for named globals, whose names are their rvalues      */
+comment|/*      *	rvalues are just lvalues with indirection, except      *	special cases for registers and for named globals,      *	whose names are their rvalues.      */
 end_comment
 
 begin_macro
@@ -847,6 +847,8 @@ argument_list|,
 argument|level
 argument_list|,
 argument|offset
+argument_list|,
+argument|extra_flags
 argument_list|,
 argument|type
 argument_list|)
@@ -868,6 +870,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|offset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|extra_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -900,33 +908,21 @@ condition|)
 return|return;
 if|if
 condition|(
-name|whereis
-argument_list|(
-name|offset
-argument_list|)
-operator|==
-name|REGVAR
+name|extra_flags
+operator|&
+name|NREGVAR
 condition|)
 block|{
-name|regnumber
-operator|=
-operator|(
-operator|-
-name|offset
-operator|)
-operator|>>
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|regnumber
+name|offset
 operator|<
 literal|0
 operator|)
 operator|||
 operator|(
-name|regnumber
+name|offset
 operator|>
 name|P2FP
 operator|)
@@ -934,7 +930,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"putRV regnumber"
+literal|"putRV regvar"
 argument_list|)
 expr_stmt|;
 block|}
@@ -944,7 +940,7 @@ name|P2REG
 argument_list|,
 literal|0
 argument_list|,
-name|regnumber
+name|offset
 argument_list|,
 name|type
 argument_list|,
@@ -955,17 +951,23 @@ return|return;
 block|}
 if|if
 condition|(
-operator|(
+name|whereis
+argument_list|(
 name|level
-operator|<=
-literal|1
-operator|)
-operator|&&
-operator|(
+argument_list|,
+name|offset
+argument_list|,
+name|extra_flags
+argument_list|)
+operator|==
+name|GLOBALVAR
+condition|)
+block|{
+if|if
+condition|(
 name|name
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 if|if
@@ -1014,6 +1016,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+else|else
+block|{
+name|panic
+argument_list|(
+literal|"putRV no name"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|putLV
 argument_list|(
 name|name
@@ -1021,6 +1032,8 @@ argument_list|,
 name|level
 argument_list|,
 name|offset
+argument_list|,
+name|extra_flags
 argument_list|,
 name|type
 argument_list|)
@@ -1036,7 +1049,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	put out an lvalue       *	given a level and offset      *	special case for      *	    named globals, whose lvalues are just their names as constants.      *	    negative offsets, that are offsets from the frame pointer.      *	    odd negative numbers are register variables.      *	    positive offsets, that are offsets from argument pointer.      */
+comment|/*      *	put out an lvalue       *	given a level and offset      *	special case for      *	    named globals, whose lvalues are just their names as constants.      */
 end_comment
 
 begin_macro
@@ -1047,6 +1060,8 @@ argument_list|,
 argument|level
 argument_list|,
 argument|offset
+argument_list|,
+argument|extra_flags
 argument_list|,
 argument|type
 argument_list|)
@@ -1068,6 +1083,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|offset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|extra_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -1097,12 +1118,34 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
+name|extra_flags
+operator|&
+name|NREGVAR
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"putLV regvar"
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|whereis
+argument_list|(
 name|level
-operator|<=
-literal|1
-operator|)
-operator|&&
+argument_list|,
+name|offset
+argument_list|,
+name|extra_flags
+argument_list|)
+condition|)
+block|{
+case|case
+name|GLOBALVAR
+case|:
+if|if
+condition|(
 operator|(
 name|name
 operator|!=
@@ -1161,14 +1204,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-switch|switch
-condition|(
-name|whereis
-argument_list|(
-name|offset
-argument_list|)
-condition|)
+else|else
 block|{
+name|panic
+argument_list|(
+literal|"putLV no name"
+argument_list|)
+expr_stmt|;
+block|}
 case|case
 name|PARAMVAR
 case|:
@@ -1330,14 +1373,6 @@ name|P2CHAR
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|REGVAR
-case|:
-name|panic
-argument_list|(
-literal|"putLV regvar"
-argument_list|)
-expr_stmt|;
 block|}
 return|return;
 block|}

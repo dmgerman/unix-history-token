@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 1.4 %G%"
+literal|"@(#)stat.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -697,6 +697,8 @@ argument_list|(
 name|long
 argument_list|)
 argument_list|,
+name|NGLOBAL
+argument_list|,
 name|P2INT
 argument_list|)
 expr_stmt|;
@@ -848,6 +850,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+name|NGLOBAL
+argument_list|,
 name|P2INT
 argument_list|)
 expr_stmt|;
@@ -916,8 +920,10 @@ name|nl
 modifier|*
 name|r
 decl_stmt|;
-name|int
-name|i
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 name|int
 modifier|*
@@ -951,7 +957,7 @@ literal|2
 index|]
 control|)
 block|{
-name|i
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -981,7 +987,12 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
@@ -996,7 +1007,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2PTR
 operator||
@@ -1058,9 +1078,28 @@ name|WITHPTR
 argument_list|,
 name|r
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC
+name|r
+operator|->
+name|extra_flags
+operator||=
+name|tempnlp
+operator|->
+name|extra_flags
+expr_stmt|;
+endif|#
+directive|endif
+endif|PC
 name|r
 operator|->
 name|nl_next
@@ -1362,6 +1401,10 @@ name|value
 index|[
 name|NL_OFFS
 index|]
+argument_list|,
+name|p
+operator|->
+name|extra_flags
 argument_list|,
 name|p2type
 argument_list|(

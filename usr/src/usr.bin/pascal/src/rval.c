@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.11 %G%"
+literal|"@(#)rval.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,8 +299,10 @@ decl_stmt|;
 name|long
 name|ctype
 decl_stmt|;
-name|long
-name|tempoff
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 endif|#
 directive|endif
@@ -684,6 +686,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|p
+operator|->
+name|extra_flags
+argument_list|,
 name|p2type
 argument_list|(
 name|q
@@ -707,6 +713,10 @@ name|value
 index|[
 literal|0
 index|]
+argument_list|,
+name|p
+operator|->
+name|extra_flags
 argument_list|,
 name|p2type
 argument_list|(
@@ -1692,7 +1702,7 @@ literal|"_CTTOT"
 argument_list|)
 expr_stmt|;
 comment|/* 			 *	allocate a temporary and use it 			 */
-name|tempoff
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -1716,7 +1726,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2PTR
 operator||
@@ -2923,7 +2942,7 @@ name|NIL
 return|;
 block|}
 comment|/* 			     *	allocate a temporary and use it 			     */
-name|tempoff
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -2943,7 +2962,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2PTR
 operator||

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.5 %G%"
+literal|"@(#)pcproc.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,8 +230,10 @@ name|char
 modifier|*
 name|readname
 decl_stmt|;
-name|long
-name|tempoff
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 name|long
 name|readtype
@@ -639,6 +641,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -651,6 +655,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NGLOBAL
 argument_list|,
 name|P2PTR
 operator||
@@ -752,6 +758,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -846,6 +854,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -858,6 +868,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NGLOBAL
 argument_list|,
 name|P2PTR
 operator||
@@ -892,6 +904,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -904,6 +918,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NGLOBAL
 argument_list|,
 name|P2PTR
 operator||
@@ -1601,6 +1617,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -2107,6 +2125,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -2188,6 +2208,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -2413,6 +2435,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -2445,6 +2469,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -2515,6 +2541,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -2593,7 +2621,7 @@ index|]
 operator|.
 name|curtmps
 expr_stmt|;
-name|tempoff
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -2615,7 +2643,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)
@@ -2667,7 +2704,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)
@@ -2867,7 +2913,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)
@@ -3447,6 +3502,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -3519,7 +3576,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)
@@ -3550,7 +3616,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)
@@ -3679,6 +3754,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -3810,6 +3887,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -3878,6 +3957,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -4009,6 +4090,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -4089,6 +4172,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -4101,6 +4186,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NGLOBAL
 argument_list|,
 name|P2PTR
 operator||
@@ -4141,6 +4228,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -4153,6 +4242,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NGLOBAL
 argument_list|,
 name|P2PTR
 operator||
@@ -4382,6 +4473,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+name|NGLOBAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -4536,6 +4629,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -4710,6 +4805,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -4874,6 +4971,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -4938,6 +5037,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -5064,6 +5165,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||
@@ -6458,6 +6561,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -6582,6 +6687,8 @@ name|cbn
 argument_list|,
 name|CURFILEOFFSET
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -6650,6 +6757,8 @@ argument_list|,
 name|cbn
 argument_list|,
 name|CURFILEOFFSET
+argument_list|,
+name|NLOCAL
 argument_list|,
 name|P2PTR
 operator||

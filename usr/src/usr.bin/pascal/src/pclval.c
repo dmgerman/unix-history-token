@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pclval.c 1.3 %G%"
+literal|"@(#)pclval.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,9 @@ name|char
 modifier|*
 name|firstsymbol
 decl_stmt|;
+name|char
+name|firstextra_flags
+decl_stmt|;
 name|int
 name|firstbn
 decl_stmt|;
@@ -220,6 +223,12 @@ expr_stmt|;
 name|firstbn
 operator|=
 name|bn
+expr_stmt|;
+name|firstextra_flags
+operator|=
+name|p
+operator|->
+name|extra_flags
 expr_stmt|;
 name|c
 operator|=
@@ -372,6 +381,8 @@ name|value
 index|[
 literal|0
 index|]
+argument_list|,
+name|firstextra_flags
 argument_list|,
 name|p2type
 argument_list|(
@@ -553,6 +564,8 @@ name|firstbn
 argument_list|,
 name|o
 argument_list|,
+name|firstextra_flags
+argument_list|,
 name|p2type
 argument_list|(
 name|p
@@ -666,6 +679,8 @@ name|firstbn
 argument_list|,
 name|o
 argument_list|,
+name|firstextra_flags
+argument_list|,
 name|p2type
 argument_list|(
 name|p
@@ -777,6 +792,8 @@ name|firstbn
 argument_list|,
 name|o
 argument_list|,
+name|firstextra_flags
+argument_list|,
 name|p2type
 argument_list|(
 name|p
@@ -795,6 +812,8 @@ argument_list|,
 name|firstbn
 argument_list|,
 name|o
+argument_list|,
+name|firstextra_flags
 argument_list|,
 name|p2type
 argument_list|(

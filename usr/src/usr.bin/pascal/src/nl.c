@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.4 %G%"
+literal|"@(#)nl.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1049,6 +1049,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|PC
+name|input
+operator|->
+name|extra_flags
+operator||=
+name|NGLOBAL
+expr_stmt|;
+name|output
+operator|->
+name|extra_flags
+operator||=
+name|NGLOBAL
+expr_stmt|;
+endif|#
+directive|endif
+endif|PC
 comment|/* 	 *	built in constants 	 */
 name|cp
 operator|=
@@ -2392,6 +2410,92 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|PC
+if|if
+condition|(
+name|p
+operator|->
+name|extra_flags
+operator|!=
+literal|0
+condition|)
+block|{
+name|pchr
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|extra_flags
+operator|&
+name|NEXTERN
+condition|)
+name|printf
+argument_list|(
+literal|"NEXTERN "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|extra_flags
+operator|&
+name|NLOCAL
+condition|)
+name|printf
+argument_list|(
+literal|"NLOCAL "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|extra_flags
+operator|&
+name|NPARAM
+condition|)
+name|printf
+argument_list|(
+literal|"NPARAM "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|extra_flags
+operator|&
+name|NGLOBAL
+condition|)
+name|printf
+argument_list|(
+literal|"NGLOBAL "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|extra_flags
+operator|&
+name|NREGVAR
+condition|)
+name|printf
+argument_list|(
+literal|"NREGVAR "
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|PC
 ifdef|#
 directive|ifdef
 name|PTREE

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.5 %G%"
+literal|"@(#)pcfunc.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,8 +119,10 @@ name|char
 modifier|*
 name|funcname
 decl_stmt|;
-name|long
-name|tempoff
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 name|long
 name|temptype
@@ -1343,7 +1345,7 @@ name|nl
 operator|+
 name|TDOUBLE
 expr_stmt|;
-name|tempoff
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -1379,7 +1381,7 @@ name|nl
 operator|+
 name|T4INT
 expr_stmt|;
-name|tempoff
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -1420,7 +1422,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|temptype
 argument_list|,
@@ -1458,7 +1469,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|temptype
 argument_list|,
@@ -1471,7 +1491,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|temptype
 argument_list|,

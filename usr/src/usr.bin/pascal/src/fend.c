@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.7 %G%"
+literal|"@(#)fend.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1139,6 +1139,8 @@ index|]
 operator|.
 name|om_max
 argument_list|,
+name|NLOCAL
+argument_list|,
 name|P2CHAR
 argument_list|)
 expr_stmt|;
@@ -1608,6 +1610,10 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+name|iop
+operator|->
+name|extra_flags
+argument_list|,
 name|p2type
 argument_list|(
 name|iop
@@ -1906,6 +1912,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+name|NGLOBAL
+argument_list|,
 name|P2INT
 argument_list|)
 expr_stmt|;
@@ -2175,7 +2183,7 @@ operator|(
 operator|(
 name|p
 operator|->
-name|ext_flags
+name|extra_flags
 operator|&
 name|NEXTERN
 operator|)
@@ -2389,7 +2397,7 @@ operator|(
 operator|(
 name|p
 operator|->
-name|ext_flags
+name|extra_flags
 operator|&
 name|NEXTERN
 operator|)
@@ -2529,6 +2537,8 @@ expr|struct
 name|dispsave
 argument_list|)
 argument_list|,
+name|NGLOBAL
+argument_list|,
 name|P2PTR
 operator||
 name|P2CHAR
@@ -2639,6 +2649,10 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+name|fvar
+operator|->
+name|extra_flags
+argument_list|,
 name|fvartype
 argument_list|)
 expr_stmt|;
@@ -2723,6 +2737,10 @@ name|value
 index|[
 name|NL_OFFS
 index|]
+argument_list|,
+name|fvar
+operator|->
+name|extra_flags
 argument_list|,
 name|fvartype
 argument_list|)
@@ -2951,6 +2969,8 @@ name|formalrtn
 operator|*
 argument_list|)
 argument_list|,
+name|NPARAM
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -2968,6 +2988,8 @@ name|value
 index|[
 name|NL_OFFS
 index|]
+argument_list|,
+name|NPARAM
 argument_list|,
 name|P2PTR
 operator||

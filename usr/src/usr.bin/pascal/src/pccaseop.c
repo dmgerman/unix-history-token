@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.6 %G%"
+literal|"@(#)pccaseop.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,8 +116,10 @@ name|nl
 modifier|*
 name|exprtype
 decl_stmt|;
-name|int
-name|exproff
+name|struct
+name|nl
+modifier|*
+name|exprnlp
 decl_stmt|;
 name|struct
 name|nl
@@ -326,7 +328,7 @@ argument_list|(
 name|exprtype
 argument_list|)
 expr_stmt|;
-name|exproff
+name|exprnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -348,7 +350,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|exproff
+name|exprnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|exprnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)
@@ -815,7 +826,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|exproff
+name|exprnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|exprnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2INT
 argument_list|)

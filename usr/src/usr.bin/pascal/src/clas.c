@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.3 %G%"
+literal|"@(#)clas.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -718,15 +718,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*      *	is a variable a local, a formal parameter, or a register temporary?      *	all this from just the offset:      *	    positives are parameters      *	    negative evens are locals      *	    negatives odds are encoded registers  ( see tmpalloc() ).      */
+comment|/*      *	is a variable a local, a formal parameter, or a global?      *	all this from just the offset:      *	    globals are at levels 0 or 1      *	    positives are parameters      *	    negative evens are locals      */
 end_comment
 
 begin_macro
 name|whereis
 argument_list|(
+argument|level
+argument_list|,
 argument|offset
+argument_list|,
+argument|extra_flags
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|level
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -734,46 +744,75 @@ name|offset
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|extra_flags
+decl_stmt|;
+end_decl_stmt
+
 begin_block
-block|{
-if|if
-condition|(
-name|offset
-operator|>=
-literal|0
-condition|)
-block|{
-return|return
-name|PARAMVAR
-return|;
-block|}
-if|if
-condition|(
-name|offset
-operator|&
-literal|1
-condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|PC
+name|OBJ
 return|return
-name|REGVAR
+operator|(
+name|offset
+operator|>=
+literal|0
+condition|?
+name|PARAMVAR
+else|:
+name|LOCALVAR
+operator|)
 return|;
-else|#
-directive|else
+endif|#
+directive|endif
+endif|OBJ
+ifdef|#
+directive|ifdef
+name|PC
+switch|switch
+condition|(
+name|extra_flags
+operator|&
+operator|(
+name|NGLOBAL
+operator||
+name|NPARAM
+operator||
+name|NLOCAL
+operator|)
+condition|)
+block|{
+case|case
+name|NGLOBAL
+case|:
+return|return
+name|GLOBALVAR
+return|;
+case|case
+name|NPARAM
+case|:
+return|return
+name|PARAMVAR
+return|;
+case|case
+name|NLOCAL
+case|:
+return|return
+name|LOCALVAR
+return|;
+default|default:
 name|panic
 argument_list|(
 literal|"whereis"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|PC
-block|}
-return|return
-name|LOCALVAR
-return|;
 block|}
 end_block
 

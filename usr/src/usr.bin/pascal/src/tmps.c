@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.4 %G%"
+literal|"@(#)tmps.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|REGSIZ
+name|MINREGSIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXREGSIZE
 value|4
 end_define
 
@@ -101,7 +108,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|REGSIZ
+name|MINREGSIZE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXREGSIZE
 value|2
 end_define
 
@@ -127,7 +141,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|REGSIZ
+name|MINREGSIZE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXREGSIZE
 value|0
 end_define
 
@@ -161,7 +182,9 @@ comment|/*  * allocate runtime temporary variables  */
 end_comment
 
 begin_function
-name|long
+name|struct
+name|nl
+modifier|*
 name|tmpalloc
 parameter_list|(
 name|size
@@ -198,6 +221,12 @@ specifier|register
 name|int
 name|offset
 decl_stmt|;
+specifier|register
+name|struct
+name|nl
+modifier|*
+name|nlp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
@@ -208,8 +237,12 @@ operator|==
 name|REGOK
 operator|&&
 name|size
+operator|>=
+name|MINREGSIZE
+operator|&&
+name|size
 operator|<=
-name|REGSIZ
+name|MAXREGSIZE
 operator|&&
 name|op
 operator|->
@@ -245,22 +278,31 @@ operator|=
 name|offset
 expr_stmt|;
 block|}
-comment|/* 		     * the register number is encoded as an odd negative number 		     * which can never appear as an address. 		     */
-return|return
-operator|-
-operator|(
-operator|(
-operator|(
+name|nlp
+operator|=
+name|defnl
+argument_list|(
+literal|0
+argument_list|,
+name|VAR
+argument_list|,
+name|type
+argument_list|,
 name|offset
 operator|+
 name|FIRSTREG
-operator|)
-operator|<<
-literal|1
-operator|)
-operator|+
-literal|1
-operator|)
+argument_list|)
+expr_stmt|;
+name|nlp
+operator|->
+name|extra_flags
+operator|=
+name|NLOCAL
+operator||
+name|NREGVAR
+expr_stmt|;
+return|return
+name|nlp
 return|;
 block|}
 endif|#
@@ -295,9 +337,28 @@ operator|=
 name|offset
 expr_stmt|;
 block|}
+name|nlp
+operator|=
+name|defnl
+argument_list|(
+literal|0
+argument_list|,
+name|VAR
+argument_list|,
+name|type
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
+name|nlp
+operator|->
+name|extra_flags
+operator|=
+name|NLOCAL
+expr_stmt|;
 name|putlbracket
 argument_list|(
 name|ftnno
@@ -310,7 +371,7 @@ endif|#
 directive|endif
 endif|PC
 return|return
-name|offset
+name|nlp
 return|;
 block|}
 end_function
@@ -448,7 +509,7 @@ end_macro
 
 begin_block
 block|{
-name|short
+name|int
 name|mask
 decl_stmt|;
 name|int

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fhdr.c 1.2 %G%"
+literal|"@(#)fhdr.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -458,6 +458,12 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+name|p
+operator|->
+name|extra_flags
+operator||=
+name|NGLOBAL
+expr_stmt|;
 endif|#
 directive|endif
 endif|PC
@@ -604,6 +610,12 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+name|p
+operator|->
+name|extra_flags
+operator||=
+name|NGLOBAL
+expr_stmt|;
 endif|#
 directive|endif
 endif|PC
@@ -739,6 +751,12 @@ argument_list|)
 argument_list|)
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|extra_flags
+operator||=
+name|NLOCAL
 expr_stmt|;
 endif|#
 directive|endif
@@ -1856,6 +1874,18 @@ operator|!=
 name|NIL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC
+name|dp
+operator|->
+name|extra_flags
+operator||=
+name|NPARAM
+expr_stmt|;
+endif|#
+directive|endif
+endif|PC
 name|chainp
 operator|->
 name|chain

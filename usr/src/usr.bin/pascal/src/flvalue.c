@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.9 %G%"
+literal|"@(#)flvalue.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,8 +96,10 @@ name|nl
 modifier|*
 name|p
 decl_stmt|;
-name|long
-name|tempoff
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 name|char
 modifier|*
@@ -271,6 +273,10 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+name|p
+operator|->
+name|extra_flags
+argument_list|,
 name|p2type
 argument_list|(
 name|p
@@ -337,7 +343,7 @@ name|NIL
 return|;
 block|}
 comment|/* 			 *	allocate space for the thunk 			 */
-name|tempoff
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -372,7 +378,12 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 name|put
@@ -493,7 +504,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoff
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2STRTY
 argument_list|)

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.8 %G%"
+literal|"@(#)lab.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +573,8 @@ argument_list|(
 expr|struct
 name|dispsave
 argument_list|)
+argument_list|,
+name|NGLOBAL
 argument_list|,
 name|P2PTR
 operator||

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.19 %G%"
+literal|"@(#)fdec.c 1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,7 +206,7 @@ condition|)
 block|{
 name|fp
 operator|->
-name|ext_flags
+name|extra_flags
 operator||=
 name|NEXTERN
 expr_stmt|;
@@ -282,6 +282,11 @@ name|q
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|functemp
 decl_stmt|;
 name|cbn
 operator|++
@@ -426,6 +431,18 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC
+name|q
+operator|->
+name|extra_flags
+operator||=
+name|NPARAM
+expr_stmt|;
+endif|#
+directive|endif
+endif|PC
 block|}
 block|}
 if|if
@@ -467,14 +484,10 @@ operator|->
 name|type
 operator|!=
 name|NIL
-operator|&&
-name|q
-operator|->
-name|ptr
-index|[
-name|NL_OFFS
-index|]
-operator|!=
+condition|)
+block|{
+name|functemp
+operator|=
 name|tmpalloc
 argument_list|(
 name|leven
@@ -509,11 +522,36 @@ name|type
 argument_list|,
 name|NOREG
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|ptr
+index|[
+name|NL_OFFS
+index|]
+operator|!=
+name|functemp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 condition|)
 name|panic
 argument_list|(
 literal|"func var"
 argument_list|)
+expr_stmt|;
+block|}
+name|q
+operator|->
+name|extra_flags
+operator||=
+name|functemp
+operator|->
+name|extra_flags
 expr_stmt|;
 endif|#
 directive|endif
@@ -742,7 +780,7 @@ operator|(
 operator|(
 name|p
 operator|->
-name|ext_flags
+name|extra_flags
 operator|&
 name|NEXTERN
 operator|)
@@ -790,7 +828,7 @@ name|p
 operator|->
 name|chain
 operator|->
-name|ext_flags
+name|extra_flags
 operator|&
 name|NEXTERN
 operator|)

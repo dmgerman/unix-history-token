@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.13 %G%"
+literal|"@(#)call.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,8 +129,10 @@ name|chk
 init|=
 name|TRUE
 decl_stmt|;
-name|long
-name|savedisp
+name|struct
+name|nl
+modifier|*
+name|savedispnp
 decl_stmt|;
 comment|/* temporary to hold saved display */
 ifdef|#
@@ -162,8 +164,10 @@ name|calltype
 decl_stmt|;
 comment|/* type of the call */
 comment|/* 		 *	these get used if temporaries and structures are used 		 */
-name|long
-name|tempoffset
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 name|long
 name|temptype
@@ -200,7 +204,7 @@ name|FPROC
 condition|)
 block|{
 comment|/* 	     * allocate space to save the display for formal calls 	     */
-name|savedisp
+name|savedispnp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -246,7 +250,12 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|savedisp
+name|savedispnp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 name|put
@@ -398,7 +407,7 @@ operator|!=
 name|P2UNDEF
 condition|)
 block|{
-name|tempoffset
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -418,7 +427,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoffset
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|temptype
 argument_list|)
@@ -485,14 +503,16 @@ literal|0
 argument_list|,
 name|psbn
 argument_list|,
-operator|(
 name|p
 operator|->
 name|value
 index|[
 name|NL_OFFS
 index|]
-operator|)
+argument_list|,
+name|p
+operator|->
+name|extra_flags
 argument_list|,
 name|P2PTR
 operator||
@@ -1244,7 +1264,12 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|savedisp
+name|savedispnp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 name|put
@@ -1328,6 +1353,10 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+name|p
+operator|->
+name|extra_flags
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -1357,7 +1386,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|savedisp
+name|savedispnp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|savedispnp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2PTR
 operator||
@@ -1549,6 +1587,10 @@ index|[
 name|NL_OFFS
 index|]
 argument_list|,
+name|p
+operator|->
+name|extra_flags
+argument_list|,
 name|P2PTR
 operator||
 name|P2STRTY
@@ -1560,7 +1602,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|savedisp
+name|savedispnp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|savedispnp
+operator|->
+name|extra_flags
 argument_list|,
 name|P2PTR
 operator||
@@ -1614,7 +1665,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoffset
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|p_type_p2type
 argument_list|)
@@ -1628,7 +1688,16 @@ literal|0
 argument_list|,
 name|cbn
 argument_list|,
-name|tempoffset
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempnlp
+operator|->
+name|extra_flags
 argument_list|,
 name|p_type_p2type
 argument_list|)

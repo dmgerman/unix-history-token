@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.8 %G%"
+literal|"@(#)var.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +320,11 @@ name|ovidl
 init|=
 name|vidl
 decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|vp
+decl_stmt|;
 name|np
 operator|=
 name|gtype
@@ -474,6 +479,8 @@ block|}
 endif|#
 directive|endif
 endif|PC
+name|vp
+operator|=
 name|enter
 argument_list|(
 name|defnl
@@ -578,6 +585,21 @@ name|w
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|extra_flags
+operator||=
+name|NGLOBAL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vp
+operator|->
+name|extra_flags
+operator||=
+name|NLOCAL
 expr_stmt|;
 block|}
 endif|#
