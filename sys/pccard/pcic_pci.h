@@ -171,6 +171,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TI12XX_PCI_DIAGNOSTIC
+value|0x93
+end_define
+
+begin_comment
+comment|/* Diagnostic register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TI113X_PCI_SOCKET_DMA0
 value|0x94
 end_define
@@ -377,6 +388,21 @@ directive|define
 name|TI12XX_DEVCNTL_INTR_ALLSERIAL
 value|0x06u
 end_define
+
+begin_comment
+comment|/* Diagnostic register (misnamed) TI12XX_PCI_DIAGNOSTIC == 0x93 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI12XX_DIAG_CSC_INTR
+value|0x20
+end_define
+
+begin_comment
+comment|/* see datasheet */
+end_comment
 
 begin_comment
 comment|/* Texas Instruments PCI-1130/1131 CardBus Controller */
@@ -878,12 +904,20 @@ name|CB_SM_CD
 value|0x6
 end_define
 
+begin_comment
+comment|/* Socket MASK Card detect */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CB_SE_CD
 value|0x6
 end_define
+
+begin_comment
+comment|/* Socket Event Card detect */
+end_comment
 
 begin_define
 define|#
