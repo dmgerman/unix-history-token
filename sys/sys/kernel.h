@@ -308,12 +308,12 @@ block|,
 comment|/* create the init process */
 name|SI_SUB_MBUF
 init|=
-literal|0x2700000
+literal|0x2380000
 block|,
 comment|/* mbuf subsystem */
 name|SI_SUB_DRIVERS
 init|=
-literal|0x3100000
+literal|0x2400000
 block|,
 comment|/* Let Drivers initialize */
 name|SI_SUB_CONFIGURE
