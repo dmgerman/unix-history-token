@@ -352,7 +352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * paren_squish --  *	replaces "parentheisized" plans in our search plan with "expr" nodes.  */
+comment|/*  * paren_squish --  *	replaces "parenthesized" plans in our search plan with "expr" nodes.  */
 end_comment
 
 begin_function

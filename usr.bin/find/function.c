@@ -4614,7 +4614,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -print functions --  *  *	Always true, causes the current pathame to be written to  *	standard output.  */
+comment|/*  * -print functions --  *  *	Always true, causes the current pathname to be written to  *	standard output.  */
 end_comment
 
 begin_function
@@ -4686,7 +4686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -print0 functions --  *  *	Always true, causes the current pathame to be written to  *	standard output followed by a NUL character  */
+comment|/*  * -print0 functions --  *  *	Always true, causes the current pathname to be written to  *	standard output followed by a NUL character  */
 end_comment
 
 begin_function
@@ -5677,7 +5677,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * -xdev functions --  *  *	Always true, causes find not to decend past directories that have a  *	different device ID (st_dev, see stat() S5.6.2 [POSIX.1])  */
+comment|/*  * -xdev functions --  *  *	Always true, causes find not to descend past directories that have a  *	different device ID (st_dev, see stat() S5.6.2 [POSIX.1])  */
 end_comment
 
 begin_function
