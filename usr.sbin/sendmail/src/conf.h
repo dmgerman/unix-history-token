@@ -3135,26 +3135,18 @@ operator|==
 literal|2
 end_if
 
-begin_include
-include|#
-directive|include
-file|<osreldate.h>
-end_include
-
-begin_comment
-comment|/* and this works */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|199512
+operator|!
+name|defined
+argument_list|(
+name|DONT_HAVE_SETPROCTITLE
+argument_list|)
 end_if
 
 begin_comment
-comment|/* 2.2-current right now */
+comment|/* add to the Makefile for< 2.0.5 */
 end_comment
 
 begin_define
