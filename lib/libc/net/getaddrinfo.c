@@ -16,7 +16,7 @@ comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translato
 end_comment
 
 begin_comment
-comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - EAI_RESNULL support  * - AI_ADDRCONFIG support is supplied  * - EDNS0 support is not available due to resolver differences  * - some of FreeBSD style (#define tabify and others)  * - AI_ADDRCONFIG is turned on by default.  * - classful IPv4 numeric (127.1) is allowed.  */
+comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - EAI_RESNULL support  * - AI_ADDRCONFIG support is supplied  * - EDNS0 support is not available due to resolver differences  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
 end_comment
 
 begin_include
@@ -2384,18 +2384,6 @@ argument_list|(
 name|EAI_NODATA
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX: temporarily, behave as if AI_ADDRCONFIG is specified */
-name|pai
-operator|->
-name|ai_flags
-operator||=
-name|AI_ADDRCONFIG
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
