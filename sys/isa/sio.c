@@ -2925,6 +2925,13 @@ block|}
 block|,
 comment|/* USR3031 - U.S. Robotics 56K FAX INT */
 block|{
+literal|0x50307256
+block|,
+name|NULL
+block|}
+block|,
+comment|/* USR3050 - U.S. Robotics 56K FAX INT */
+block|{
 literal|0x70307256
 block|,
 name|NULL
