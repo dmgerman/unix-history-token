@@ -347,17 +347,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|_pw_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* password flags */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|__hashpw
 name|__P
 argument_list|(
@@ -881,7 +870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup the compat mode prototype template  */
+comment|/*  * Setup the compat mode prototype template that may be used in  * __pwparse.  Only pw_passwd, pw_uid, pw_gid, pw_gecos, pw_dir, and  * pw_shell are used.  The other fields are zero'd.  */
 end_comment
 
 begin_function
@@ -937,85 +926,22 @@ expr|struct
 name|passwd
 argument_list|)
 expr_stmt|;
-comment|/* name */
-if|if
-condition|(
-name|pw
-operator|->
-name|pw_name
-operator|&&
-operator|(
-name|pw
-operator|->
-name|pw_name
-operator|)
-index|[
+name|memset
+argument_list|(
+name|__pwproto
+argument_list|,
 literal|0
-index|]
-condition|)
-block|{
-name|ptr
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ALIGN
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|ptr
-argument_list|)
-expr_stmt|;
-name|memmove
-argument_list|(
-name|ptr
 argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|__pwproto
-operator|->
-name|pw_name
-operator|=
-name|ptr
-expr_stmt|;
-name|ptr
-operator|+=
-operator|(
-name|strlen
-argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|)
-operator|+
-literal|1
-operator|)
-expr_stmt|;
-block|}
-else|else
-name|__pwproto
-operator|->
-name|pw_name
-operator|=
-operator|(
-name|char
 operator|*
-operator|)
-name|NULL
+name|__pwproto
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|__pwproto_flags
+operator|=
+literal|0
 expr_stmt|;
 comment|/* password */
 if|if
@@ -1085,19 +1011,12 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+name|__pwproto_flags
+operator||=
+name|_PWF_PASSWD
+expr_stmt|;
 block|}
-else|else
-name|__pwproto
-operator|->
-name|pw_passwd
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-comment|/* uid */
+comment|/* uid, gid */
 name|__pwproto
 operator|->
 name|pw_uid
@@ -1106,7 +1025,6 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-comment|/* gid */
 name|__pwproto
 operator|->
 name|pw_gid
@@ -1115,21 +1033,11 @@ name|pw
 operator|->
 name|pw_gid
 expr_stmt|;
-comment|/* change (ignored anyway) */
-name|__pwproto
-operator|->
-name|pw_change
-operator|=
-name|pw
-operator|->
-name|pw_change
-expr_stmt|;
-comment|/* class (ignored anyway) */
-name|__pwproto
-operator|->
-name|pw_class
-operator|=
-literal|""
+name|__pwproto_flags
+operator||=
+name|_PWF_UID
+operator||
+name|_PWF_GID
 expr_stmt|;
 comment|/* gecos */
 if|if
@@ -1199,18 +1107,11 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-block|}
-else|else
-name|__pwproto
-operator|->
-name|pw_gecos
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|__pwproto_flags
+operator||=
+name|_PWF_GECOS
 expr_stmt|;
+block|}
 comment|/* dir */
 if|if
 condition|(
@@ -1279,18 +1180,11 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-block|}
-else|else
-name|__pwproto
-operator|->
-name|pw_dir
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|__pwproto_flags
+operator||=
+name|_PWF_DIR
 expr_stmt|;
+block|}
 comment|/* shell */
 if|if
 condition|(
@@ -1359,32 +1253,11 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-block|}
-else|else
-name|__pwproto
-operator|->
-name|pw_shell
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-comment|/* expire (ignored anyway) */
-name|__pwproto
-operator|->
-name|pw_expire
-operator|=
-name|pw
-operator|->
-name|pw_expire
-expr_stmt|;
-comment|/* flags */
 name|__pwproto_flags
-operator|=
-name|_pw_flags
+operator||=
+name|_PWF_SHELL
 expr_stmt|;
+block|}
 block|}
 end_function
 
