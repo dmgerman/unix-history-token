@@ -2503,6 +2503,21 @@ literal|"=ftp://releng4.freebsd.org/pub/FreeBSD/snapshots/"
 block|}
 block|,
 block|{
+literal|" jp.FreeBSD.org SNAP Server"
+block|,
+literal|"snapshots.jp.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://snapshots.jp.freebsd.org"
+block|}
+block|,
+block|{
 literal|" IPv6 Ready"
 block|,
 literal|"ftp2.jp.freebsd.org"
@@ -2758,7 +2773,22 @@ literal|"=ftp://ftp.cz.freebsd.org"
 block|}
 block|,
 block|{
-literal|"Denmark"
+literal|"Denmark (Primary)"
+block|,
+literal|"ftp.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.dk.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Denmark"
 block|,
 literal|"ftp.dk.freebsd.org"
 block|,
@@ -3910,21 +3940,6 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp3.ua.freebsd.org"
-block|}
-block|,
-block|{
-literal|" USA"
-block|,
-literal|"ftp.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftp.freebsd.org"
 block|}
 block|,
 block|{
