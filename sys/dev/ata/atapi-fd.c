@@ -2016,8 +2016,6 @@ operator|->
 name|flags
 operator||=
 operator|(
-name|ATA_R_SKIPSTART
-operator||
 name|ATA_R_ATAPI
 operator||
 name|ATA_R_READ
@@ -2032,8 +2030,6 @@ operator|->
 name|flags
 operator||=
 operator|(
-name|ATA_R_SKIPSTART
-operator||
 name|ATA_R_ATAPI
 operator||
 name|ATA_R_WRITE

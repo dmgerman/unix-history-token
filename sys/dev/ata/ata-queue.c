@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -365,18 +371,6 @@ argument_list|,
 literal|"queued"
 argument_list|)
 expr_stmt|;
-comment|/* should we skip start to avoid lock recursion ? */
-if|if
-condition|(
-operator|!
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_SKIPSTART
-operator|)
-condition|)
 name|ata_start
 argument_list|(
 name|request
@@ -530,6 +524,13 @@ operator|->
 name|timeout
 operator|=
 literal|5
+expr_stmt|;
+name|request
+operator|->
+name|retries
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|ata_queue_request
 argument_list|(
@@ -732,6 +733,14 @@ name|ATA_IMMEDIATE_MODE
 condition|)
 return|return;
 comment|/* lock the ATA HW for this request */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|queue_mtx
+argument_list|)
+expr_stmt|;
 name|ch
 operator|->
 name|locking
@@ -752,10 +761,7 @@ name|ATA_ACTIVE
 argument_list|)
 condition|)
 block|{
-return|return;
-block|}
-comment|/* if we dont have any work, ask the subdriver(s) */
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ch
@@ -763,6 +769,9 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+comment|/* if we dont have any work, ask the subdriver(s) */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -927,7 +936,7 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* kick HW into action */
+comment|/* kick HW into action and wait for interrupt if it flies*/
 if|if
 condition|(
 name|ch
@@ -942,21 +951,8 @@ operator|==
 name|ATA_OP_CONTINUES
 condition|)
 return|return;
-name|ata_finish
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 block|}
-else|else
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|queue_mtx
-argument_list|)
-expr_stmt|;
+comment|/* unlock ATA channel HW */
 name|ATA_UNLOCK_CH
 argument_list|(
 name|ch
@@ -969,6 +965,25 @@ argument_list|(
 name|ch
 argument_list|,
 name|ATA_LF_UNLOCK
+argument_list|)
+expr_stmt|;
+comment|/* if we have a request here it failed and should be completed */
+if|if
+condition|(
+name|request
+condition|)
+name|ata_finish
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+else|else
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|queue_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1015,6 +1030,29 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|request
+operator|->
+name|bio
+condition|)
+name|bio_taskqueue
+argument_list|(
+name|request
+operator|->
+name|bio
+argument_list|,
+operator|(
+name|bio_task_t
+operator|*
+operator|)
+name|ata_completed
+argument_list|,
+name|request
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -1041,6 +1079,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
@@ -1057,7 +1096,7 @@ modifier|*
 name|context
 parameter_list|,
 name|int
-name|pending
+name|dummy
 parameter_list|)
 block|{
 name|struct
@@ -1099,6 +1138,65 @@ operator|&
 name|ATA_R_TIMEOUT
 condition|)
 block|{
+comment|/* if negative retry count just give up and unlock channel HW */
+if|if
+condition|(
+name|request
+operator|->
+name|retries
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_QUIET
+operator|)
+condition|)
+name|ata_prtdev
+argument_list|(
+name|request
+operator|->
+name|device
+argument_list|,
+literal|"FAILURE - %s no interrupt\n"
+argument_list|,
+name|ata_cmd2str
+argument_list|(
+name|request
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|request
+operator|->
+name|result
+operator|=
+name|EIO
+expr_stmt|;
+name|ATA_UNLOCK_CH
+argument_list|(
+name|channel
+argument_list|)
+expr_stmt|;
+name|channel
+operator|->
+name|locking
+argument_list|(
+name|channel
+argument_list|,
+name|ATA_LF_UNLOCK
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* reset controller and devices */
 name|ata_reinit
 argument_list|(
 name|channel
@@ -1120,11 +1218,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-operator|(
 name|ATA_R_TIMEOUT
-operator||
-name|ATA_R_SKIPSTART
-operator|)
 expr_stmt|;
 name|request
 operator|->
@@ -1177,6 +1271,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -1345,13 +1440,6 @@ name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
-name|request
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ATA_R_SKIPSTART
 expr_stmt|;
 name|request
 operator|->
@@ -1924,6 +2012,12 @@ name|flags
 operator|&
 name|ATA_R_QUIET
 operator|)
+operator|&&
+name|request
+operator|->
+name|retries
+operator|>
+literal|0
 condition|)
 block|{
 name|ata_prtdev

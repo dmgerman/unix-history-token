@@ -1690,6 +1690,14 @@ operator|->
 name|transfersize
 argument_list|)
 expr_stmt|;
+comment|/* clear interrupt seen flag as we need to wait again */
+name|request
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ATA_R_INTR_SEEN
+expr_stmt|;
 comment|/* if data write command, output the data */
 if|if
 condition|(
@@ -2314,30 +2322,19 @@ expr_stmt|;
 comment|/* done with HW */
 break|break;
 block|}
-comment|/* if we timed out, we hold on to the channel, ata_reinit() will unlock */
+comment|/* if we timed out the unlocking of the ATA channel is done later */
 if|if
 condition|(
+operator|!
+operator|(
 name|request
 operator|->
 name|flags
 operator|&
 name|ATA_R_TIMEOUT
+operator|)
 condition|)
 block|{
-name|ata_finish
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* schedule completition for this request */
-name|ata_finish
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
-comment|/* unlock the ATA channel for new work */
 name|ch
 operator|->
 name|running
@@ -2356,6 +2353,13 @@ argument_list|(
 name|ch
 argument_list|,
 name|ATA_LF_UNLOCK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* schedule completition for this request */
+name|ata_finish
+argument_list|(
+name|request
 argument_list|)
 expr_stmt|;
 block|}
@@ -3086,21 +3090,6 @@ literal|100000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* enable interrupt */
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-name|ATA_IDX_OUTB
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|,
-name|ATA_A_4BIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|stat0
@@ -3478,6 +3467,18 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* enable interrupt */
+name|ATA_IDX_OUTB
+argument_list|(
+name|atadev
+operator|->
+name|channel
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|,
+name|ATA_A_4BIT
+argument_list|)
+expr_stmt|;
 comment|/* only use 48bit addressing if needed (avoid bugs and overhead) */
 if|if
 condition|(

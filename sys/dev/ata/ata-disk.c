@@ -1344,7 +1344,7 @@ name|atadev
 expr_stmt|;
 name|request
 operator|->
-name|driver
+name|bio
 operator|=
 name|bp
 expr_stmt|;
@@ -1683,12 +1683,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|request
-operator|->
-name|flags
-operator||=
-name|ATA_R_SKIPSTART
-expr_stmt|;
 name|ata_queue_request
 argument_list|(
 name|request
@@ -1715,7 +1709,7 @@ name|bp
 init|=
 name|request
 operator|->
-name|driver
+name|bio
 decl_stmt|;
 comment|/* finish up transfer */
 if|if
