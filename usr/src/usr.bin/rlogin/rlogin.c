@@ -1233,6 +1233,14 @@ operator|==
 name|KSUCCESS
 condition|)
 block|{
+name|setreuid
+argument_list|(
+literal|0
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|encrypt
@@ -1299,6 +1307,12 @@ name|krb_realm
 argument_list|)
 expr_stmt|;
 block|}
+name|setuid
+argument_list|(
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
