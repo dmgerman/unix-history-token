@@ -1,12 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *      Trivial program to load VT220 Function keys with strings,  *      note that the values only get sent when the key is shifted  *      (shoulda been an option to flip the shift set like the Z19!)  *  *      Typing no args gives help, basically pairs of keyname/value  *      strings.  *  *      Author, Author: Barry Shein, Boston University  *  * HISTORY   {1}   30-Oct-85  Kenneth J. Lester (ken) at ektools          Added the necessary code to read an initialization file.  This         should make it easier to used this program.  Also added code         that will set-up the terminal in vt200 (this saves the user the         trouble of checking if the set-up is in vt200).          Restructed  the  main  function  to  use   getopt,  for  argument         processing.          Alterated usage function  to include  new "i"  option (init file)    	-hm	minor modifications for pcvt 2.0 release  */
+comment|/*  *      Trivial program to load VT220 Function keys with strings,  *      note that the values only get sent when the key is shifted  *      (shoulda been an option to flip the shift set like the Z19!)  *  *      Typing no args gives help, basically pairs of keyname/value  *      strings.  *  *      Author, Author: Barry Shein, Boston University  *  * HISTORY   {1}   30-Oct-85  Kenneth J. Lester (ken) at ektools          Added the necessary code to read an initialization file.  This         should make it easier to used this program.  Also added code         that will set-up the terminal in vt200 (this saves the user the         trouble of checking if the set-up is in vt200).          Restructed  the  main  function  to  use   getopt,  for  argument         processing.          Alterated usage function  to include  new "i"  option (init file)    	-hm	minor modifications for pcvt 2.0 release  $FreeBSD$ */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -222,23 +234,20 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* clear all keys before loading strings */
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|prog
 argument_list|,
 operator|*
 name|argv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|prog
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* store program name               */
+comment|/* store program name       */
 if|if
 condition|(
 name|argc
@@ -789,32 +798,6 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* file pointer to init file            */
-comment|/* system calls and subroutines */
-name|FILE
-modifier|*
-name|fopen
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|strcat
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|fgets
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 comment|/* construct full path name for init file */
 name|home
 operator|=
@@ -823,32 +806,18 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+argument_list|,
+literal|"%s/%s"
 argument_list|,
 name|home
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|path
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|path
 argument_list|,
 name|INITFILE
 argument_list|)

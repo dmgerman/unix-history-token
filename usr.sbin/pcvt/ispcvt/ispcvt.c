@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_decl_stmt
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -196,33 +202,13 @@ if|if
 condition|(
 name|verbose
 condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|strcpy
+name|warn
 argument_list|(
-name|buffer
-argument_list|,
-literal|"ERROR opening "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buffer
+literal|"ERROR opening %s"
 argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|1
@@ -257,9 +243,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"ispcvt - ioctl VGAPCVTID failed, error"
+literal|"ioctl VGAPCVTID failed, error"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -303,11 +289,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ispcvt - minor revision: expected %d, got %d\n"
+literal|"minor revision: expected %d, got %d"
 argument_list|,
 name|PCVTIDMINOR
 argument_list|,
@@ -330,11 +314,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ispcvt - major revision: expected %d, got %d\n"
+literal|"major revision: expected %d, got %d"
 argument_list|,
 name|PCVTIDMAJOR
 argument_list|,
@@ -357,11 +339,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ispcvt - name check: expected %s, got %s\n"
+literal|"name check: expected %s, got %s"
 argument_list|,
 name|PCVTIDNAME
 argument_list|,
@@ -382,11 +362,9 @@ condition|(
 name|verbose
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\nispcvt: kernel and utils match, driver name [%s], release [%1.1d.%02.2d]\n\n"
+literal|"\nkernel and utils match, driver name [%s], release [%1.1d.%02.2d]\n"
 argument_list|,
 name|pcvtid
 operator|.
@@ -433,9 +411,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"ispcvt - ioctl VGAPCVTINFO failed, error"
+literal|"ioctl VGAPCVTINFO failed, error"
 argument_list|)
 expr_stmt|;
 name|exit

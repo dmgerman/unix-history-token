@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992,1993,1994 Hellmuth Michaelis and Joerg Wunsch  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis and Joerg Wunsch  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1992,1993,1994 Hellmuth Michaelis and Joerg Wunsch  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis and Joerg Wunsch  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_decl_stmt
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1379,19 +1385,13 @@ if|if
 condition|(
 name|Pflag
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"-p list is mutual exclusive "
-literal|"with other -p options\n"
+literal|"-p list is mutual exclusive with other -p options"
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-return|;
-block|}
 name|Pflag
 operator|=
 literal|3
@@ -1413,19 +1413,13 @@ if|if
 condition|(
 name|Pflag
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"multiple -p default not "
-literal|"allowed\n"
+literal|"multiple -p default not allowed"
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-return|;
-block|}
 name|Pflag
 operator|=
 literal|2
@@ -1448,19 +1442,13 @@ name|Pflag
 operator|>
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"-p default and -p i,r,g,b "
-literal|"ambiguous\n"
+literal|"-p default and -p i,r,g,b ambiguous"
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-return|;
-block|}
 name|Pflag
 operator|=
 literal|1
@@ -1488,21 +1476,15 @@ name|idx
 operator|>=
 name|NVGAPEL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"index %u in -p option "
-literal|"out of range\n"
+literal|"index %u in -p option out of range"
 argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-return|;
-block|}
 name|palette
 index|[
 name|idx
@@ -1699,38 +1681,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|strcpy
+name|err
 argument_list|(
-name|buffer
+literal|1
 argument_list|,
-literal|"ERROR opening "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buffer
+literal|"ERROR opening %s"
 argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|vflag
@@ -1858,7 +1817,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl(VGASCREENSAVER)"
 argument_list|)
@@ -1910,18 +1869,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
 literal|"ioctl(VGASETCOLMS)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 goto|goto
 name|success
 goto|;
@@ -2067,16 +2021,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
 literal|"ioctl(fd, VGAWRITEPEL)"
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-return|;
-block|}
 block|}
 goto|goto
 name|success
@@ -2151,18 +2102,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl VGASETSCREEN failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -2396,18 +2342,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl VGASETSCREEN failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|success
 label|:
 if|if
@@ -2619,18 +2560,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl VGAGETSCREEN failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|screeninfo
@@ -2718,18 +2654,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl VGAGETSCREEN failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|screeninfo
@@ -2934,18 +2865,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl VGAGETSCREEN failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\nVideo Adaptor Type           = "
@@ -3340,18 +3266,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
 literal|"ioctl(VGAREADPEL)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|palette
 index|[
 name|idx
@@ -3586,20 +3507,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"too few args in -p i,r,g,b\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"too few args in -p i,r,g,b"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|firstarg
@@ -3676,18 +3590,13 @@ name|idx
 expr_stmt|;
 return|return;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arg ``%s'' in -p option not recognized\n"
-argument_list|,
-name|firstarg
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"arg ``%s'' in -p option not recognized"
+argument_list|,
+name|firstarg
 argument_list|)
 expr_stmt|;
 block|}
