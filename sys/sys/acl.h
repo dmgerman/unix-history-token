@@ -62,13 +62,6 @@ begin_comment
 comment|/* maximum entries in an ACL */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_POSIX_ACL_PATH_MAX
-value|ACL_MAX_ENTRIES
-end_define
-
 begin_typedef
 typedef|typedef
 name|int
