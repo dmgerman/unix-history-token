@@ -613,214 +613,121 @@ argument_list|(
 literal|"IPv4 multicast forwarding:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+define|#
+directive|define
+name|p
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, mrtstat.f, plural(mrtstat.f))
+define|#
+directive|define
+name|p2
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, mrtstat.f, plurales(mrtstat.f))
+name|p
 argument_list|(
-literal|" %10lu multicast forwarding cache lookup%s\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_mfc_lookups
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_mfc_lookups
-argument_list|)
+literal|"\t%lu multicast forwarding cache lookup%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p2
 argument_list|(
-literal|" %10lu multicast forwarding cache miss%s\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_mfc_misses
 argument_list|,
-name|plurales
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_mfc_misses
-argument_list|)
+literal|"\t%lu multicast forwarding cache miss%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu upcall%s to mrouted\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_upcalls
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_upcalls
-argument_list|)
+literal|"\t%lu upcall%s to mrouted\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu upcall queue overflow%s\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_upq_ovflw
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_upq_ovflw
-argument_list|)
+literal|"\t%lu upcall queue overflow%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu upcall%s dropped due to full socket buffer\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_upq_sockfull
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_upq_sockfull
-argument_list|)
+literal|"\t%lu upcall%s dropped due to full socket buffer\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu cache cleanup%s\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_cache_cleanups
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_cache_cleanups
-argument_list|)
+literal|"\t%lu cache cleanup%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s with no route for origin\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_no_route
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_no_route
-argument_list|)
+literal|"\t%lu datagram%s with no route for origin\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s arrived with bad tunneling\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_bad_tunnel
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_bad_tunnel
-argument_list|)
+literal|"\t%lu datagram%s arrived with bad tunneling\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s could not be tunneled\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_cant_tunnel
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_cant_tunnel
-argument_list|)
+literal|"\t%lu datagram%s could not be tunneled\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s arrived on wrong interface\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_wrong_if
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_wrong_if
-argument_list|)
+literal|"\t%lu datagram%s arrived on wrong interface\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s selectively dropped\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_drop_sel
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_drop_sel
-argument_list|)
+literal|"\t%lu datagram%s selectively dropped\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s dropped due to queue overflow\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_q_overflow
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_q_overflow
-argument_list|)
+literal|"\t%lu datagram%s dropped due to queue overflow\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10lu datagram%s dropped for being too large\n"
-argument_list|,
-name|mrtstat
-operator|.
 name|mrts_pkt2large
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrts_pkt2large
-argument_list|)
+literal|"\t%lu datagram%s dropped for being too large\n"
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|p2
+undef|#
+directive|undef
+name|p
 block|}
 end_function
 
