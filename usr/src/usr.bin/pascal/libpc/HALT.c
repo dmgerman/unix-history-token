@@ -13,6 +13,12 @@ literal|"@(#)HALT.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|"h00vars.h"
+end_include
+
 begin_macro
 name|HALT
 argument_list|()
@@ -20,11 +26,14 @@ end_macro
 
 begin_block
 block|{
-name|ERROR
+name|PFLUSH
+argument_list|()
+expr_stmt|;
+name|fputs
 argument_list|(
 literal|"Call to procedure halt\n"
 argument_list|,
-literal|0
+name|stderr
 argument_list|)
 expr_stmt|;
 name|PCEXIT
