@@ -187,6 +187,25 @@ specifier|extern
 name|struct
 name|alias_link
 modifier|*
+name|PacketAliasRedirectPptp
+parameter_list|(
+name|struct
+name|in_addr
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|alias_link
+modifier|*
 name|PacketAliasRedirectAddr
 parameter_list|(
 name|struct
@@ -348,7 +367,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* If PKT_ALIAS_USE_SOCKETS is set, then when partially specified 	links (e.g. destination port and/or address is zero), the packet 	aliasing engine will attempt to allocate a socket for the aliasing 	port it chooses.  This will avoid interference with the host 	machine.  Fully specified links do not require this.  This bit         is set after a call to PacketAliasInit(), so it is a default         mode of operation.*/
+comment|/* If PKT_ALIAS_USE_SOCKETS is set, then when partially specified 	links (e.g. destination port and/or address is zero), the packet 	aliasing engine will attempt to allocate a socket for the aliasing 	port it chooses.  This will avoid interference with the host 	machine.  Fully specified links do not require this.  This bit         is set after a call to PacketAliasInit(), so it is a default         mode of operation. */
 end_comment
 
 begin_define
@@ -359,7 +378,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with 	unregistered source addresses will be aliased (along with those 	of the ppp host maching itself.  Private addresses are those         in the following ranges: 		10.0.0.0     ->   10.255.255.255 		172.16.0.0   ->   172.31.255.255 		192.168.0.0  ->   192.168.255.255  */
+comment|/* If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with 	unregistered source addresses will be aliased.  Private 	addresses are those in the following ranges: 		10.0.0.0     ->   10.255.255.255 		172.16.0.0   ->   172.31.255.255 		192.168.0.0  ->   192.168.255.255  */
 end_comment
 
 begin_define
@@ -370,7 +389,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* If PKT_ALIAS_RESET_ON_ADDR_CHANGE is set, then the table of dynamic 	aliasing links will be reset whenever PacketAliasSetAddress()         changes the default aliasing address.  If the default aliasing         address is left unchanged by this functions call, then the         table of dynamic aliasing links will be left intact.  This         bit is set after a call to PacketAliasInit(). */
+comment|/* If PKT_ALIAS_RESET_ON_ADDR_CHANGE is set, then the table of dynamic 	aliasing links will be reset whenever PacketAliasSetAddress()         changes the default aliasing address.  If the default aliasing         address is left unchanged by this function call, then the         table of dynamic aliasing links will be left intact.  This         bit is set after a call to PacketAliasInit(). */
 end_comment
 
 begin_define
@@ -422,6 +441,17 @@ define|#
 directive|define
 name|PKT_ALIAS_REVERSE
 value|0x80
+end_define
+
+begin_comment
+comment|/* If PKT_ALIAS_DENY_PPTP is set, then PPTP sessions will be 	prevented by the aliasing engine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_DENY_PPTP
+value|0x200
 end_define
 
 begin_comment

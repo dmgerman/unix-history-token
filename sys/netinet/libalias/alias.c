@@ -404,7 +404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Protocol Specific Packet Aliasing Routines       IcmpAliasIn(), IcmpAliasIn1(), IcmpAliasIn2(), IcmpAliasIn3()     IcmpAliasOut(), IcmpAliasOut1(), IcmpAliasOut2(), IcmpAliasOut3()     UdpAliasIn(), UdpAliasOut()     TcpAliasIn(), TcpAliasOut()  These routines handle protocol specific details of packet aliasing. One may observe a certain amount of repetitive arithmetic in these functions, the purpose of which is to compute a revised checksum without actually summing over the entire data packet, which could be unnecessarily time consuming.  The purpose of the packet aliasing routines is to replace the source address of the outgoing packet and then correctly put it back for any incoming packets.  For TCP and UDP, ports are also re-mapped.  For ICMP echo/timestamp requests and replies, the following scheme is used: the id number is replaced by an alias for the outgoing packet.  ICMP error messages are handled by looking at the IP fragment in the data section of the message.  For TCP and UDP protocols, a port number is chosen for an outgoing packet, and then incoming packets are identified by IP address and port numbers.  For TCP packets, there is additional logic in the event that sequence and ack numbers have been altered (as is the case for FTP data port commands).  The port numbers used by the packet aliasing module are not true ports in the Unix sense.  No sockets are actually bound to ports. They are more correctly thought of as placeholders.  All packets go through the aliasing mechanism, whether they come from the gateway machine or other machines on a local area network. */
+comment|/* Protocol Specific Packet Aliasing Routines       IcmpAliasIn(), IcmpAliasIn1(), IcmpAliasIn2(), IcmpAliasIn3()     IcmpAliasOut(), IcmpAliasOut1(), IcmpAliasOut2(), IcmpAliasOut3()     UdpAliasIn(), UdpAliasOut()     TcpAliasIn(), TcpAliasOut()  These routines handle protocol specific details of packet aliasing. One may observe a certain amount of repetitive arithmetic in these functions, the purpose of which is to compute a revised checksum without actually summing over the entire data packet, which could be unnecessarily time consuming.  The purpose of the packet aliasing routines is to replace the source address of the outgoing packet and then correctly put it back for any incoming packets.  For TCP and UDP, ports are also re-mapped.  For ICMP echo/timestamp requests and replies, the following scheme is used: the ID number is replaced by an alias for the outgoing packet.  ICMP error messages are handled by looking at the IP fragment in the data section of the message.  For TCP and UDP protocols, a port number is chosen for an outgoing packet, and then incoming packets are identified by IP address and port numbers.  For TCP packets, there is additional logic in the event that sequence and ACK numbers have been altered (as in the case for FTP data port commands).  The port numbers used by the packet aliasing module are not true ports in the Unix sense.  No sockets are actually bound to ports. They are more correctly thought of as placeholders.  All packets go through the aliasing mechanism, whether they come from the gateway machine or other machines on a local area network. */
 end_comment
 
 begin_comment
@@ -2384,34 +2384,61 @@ parameter_list|)
 block|{
 comment|/*   Handle incoming PPTP packets. The   only thing which is done in this case is to alias   the dest IP address of the packet to our inside   machine. */
 name|struct
-name|in_addr
-name|alias_addr
+name|alias_link
+modifier|*
+name|link
 decl_stmt|;
+comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
-operator|!
-name|GetPptpAlias
-argument_list|(
+name|packetAliasMode
 operator|&
-name|alias_addr
-argument_list|)
+name|PKT_ALIAS_PROXY_ONLY
+condition|)
+return|return
+name|PKT_ALIAS_OK
+return|;
+if|if
+condition|(
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_DENY_PPTP
 condition|)
 return|return
 name|PKT_ALIAS_IGNORED
 return|;
-if|if
-condition|(
+name|link
+operator|=
+name|FindPptpIn
+argument_list|(
 name|pip
 operator|->
 name|ip_src
-operator|.
-name|s_addr
+argument_list|,
+name|pip
+operator|->
+name|ip_dst
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|link
 operator|!=
-name|alias_addr
-operator|.
-name|s_addr
+name|NULL
 condition|)
 block|{
+name|struct
+name|in_addr
+name|original_address
+decl_stmt|;
+name|original_address
+operator|=
+name|GetOriginalAddress
+argument_list|(
+name|link
+argument_list|)
+expr_stmt|;
+comment|/* Restore original IP address */
 name|DifferentialChecksum
 argument_list|(
 operator|&
@@ -2424,7 +2451,7 @@ name|u_short
 operator|*
 operator|)
 operator|&
-name|alias_addr
+name|original_address
 argument_list|,
 operator|(
 name|u_short
@@ -2442,11 +2469,18 @@ name|pip
 operator|->
 name|ip_dst
 operator|=
-name|alias_addr
+name|original_address
 expr_stmt|;
+return|return
+operator|(
+name|PKT_ALIAS_OK
+operator|)
+return|;
 block|}
 return|return
-name|PKT_ALIAS_OK
+operator|(
+name|PKT_ALIAS_IGNORED
+operator|)
 return|;
 block|}
 end_function
@@ -2464,43 +2498,61 @@ parameter_list|)
 block|{
 comment|/*   Handle outgoing PPTP packets. The   only thing which is done in this case is to alias   the source IP address of the packet. */
 name|struct
-name|in_addr
-name|alias_addr
+name|alias_link
+modifier|*
+name|link
 decl_stmt|;
+comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
-operator|!
-name|GetPptpAlias
-argument_list|(
+name|packetAliasMode
 operator|&
-name|alias_addr
-argument_list|)
+name|PKT_ALIAS_PROXY_ONLY
+condition|)
+return|return
+name|PKT_ALIAS_OK
+return|;
+if|if
+condition|(
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_DENY_PPTP
 condition|)
 return|return
 name|PKT_ALIAS_IGNORED
 return|;
-if|if
-condition|(
-name|pip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-operator|==
-name|alias_addr
-operator|.
-name|s_addr
-condition|)
-block|{
-name|alias_addr
+name|link
 operator|=
-name|FindAliasAddress
+name|FindPptpOut
 argument_list|(
 name|pip
 operator|->
 name|ip_src
+argument_list|,
+name|pip
+operator|->
+name|ip_dst
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|link
+operator|!=
+name|NULL
+condition|)
+block|{
+name|struct
+name|in_addr
+name|alias_address
+decl_stmt|;
+name|alias_address
+operator|=
+name|GetAliasAddress
+argument_list|(
+name|link
+argument_list|)
+expr_stmt|;
+comment|/* Change source address */
 name|DifferentialChecksum
 argument_list|(
 operator|&
@@ -2513,7 +2565,7 @@ name|u_short
 operator|*
 operator|)
 operator|&
-name|alias_addr
+name|alias_address
 argument_list|,
 operator|(
 name|u_short
@@ -2531,11 +2583,18 @@ name|pip
 operator|->
 name|ip_src
 operator|=
-name|alias_addr
+name|alias_address
 expr_stmt|;
+return|return
+operator|(
+name|PKT_ALIAS_OK
+operator|)
+return|;
 block|}
 return|return
-name|PKT_ALIAS_OK
+operator|(
+name|PKT_ALIAS_IGNORED
+operator|)
 return|;
 block|}
 end_function
@@ -3438,7 +3497,7 @@ operator|-=
 operator|*
 name|sptr
 expr_stmt|;
-comment|/* If this is a proxy, then modify the tcp source port  and    checksum accumulation */
+comment|/* If this is a proxy, then modify the TCP source port and    checksum accumulation */
 if|if
 condition|(
 name|proxy_port
@@ -3507,7 +3566,7 @@ operator|*
 name|sptr
 expr_stmt|;
 block|}
-comment|/* See if ack number needs to be modified */
+comment|/* See if ACK number needs to be modified */
 if|if
 condition|(
 name|GetAckModified
@@ -3843,7 +3902,7 @@ condition|)
 return|return
 name|PKT_ALIAS_OK
 return|;
-comment|/* If this is a transparent proxy, save original destination,    then alter the destination and adust checksums */
+comment|/* If this is a transparent proxy, save original destination,    then alter the destination and adjust checksums */
 name|dest_port
 operator|=
 name|tc
@@ -4098,7 +4157,7 @@ argument_list|(
 name|link
 argument_list|)
 expr_stmt|;
-comment|/* Monitor tcp connection state */
+comment|/* Monitor TCP connection state */
 name|TcpMonitorOut
 argument_list|(
 name|pip
@@ -4403,7 +4462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fragment Handling      FragmentIn()     FragmentOut()  The packet aliasing module has a limited ability for handling IP fragments.  If the ICMP, TCP or UDP header is in the first fragment received, then the id number of the IP packet is saved, and other fragments are identified according to their ID number and IP address they were sent from.  Pointers to unresolved fragments can also be saved and recalled when a header fragment is seen. */
+comment|/* Fragment Handling      FragmentIn()     FragmentOut()  The packet aliasing module has a limited ability for handling IP fragments.  If the ICMP, TCP or UDP header is in the first fragment received, then the ID number of the IP packet is saved, and other fragments are identified according to their ID number and IP address they were sent from.  Pointers to unresolved fragments can also be saved and recalled when a header fragment is seen. */
 end_comment
 
 begin_comment
@@ -5272,8 +5331,7 @@ operator|&
 name|PKT_ALIAS_UNREGISTERED_ONLY
 condition|)
 block|{
-name|unsigned
-name|int
+name|u_long
 name|addr
 decl_stmt|;
 name|int
