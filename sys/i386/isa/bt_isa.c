@@ -289,6 +289,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"bt_isa_probe: Probe failed for card at 0x%x\n"
