@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)pccons.c	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)pccons.c	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1346,40 +1346,14 @@ name|t_outq
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tp
-operator|->
-name|t_wsel
-condition|)
-block|{
 name|selwakeup
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_wsel
-argument_list|,
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_WCOLL
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_wsel
-operator|=
-literal|0
-expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_WCOLL
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
