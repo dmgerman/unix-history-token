@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.6 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -823,13 +823,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cleaner Running  at %s (need space)\n"
+literal|"Cleaner Running  at %s (%d of %d segments available)\n"
 argument_list|,
 name|ctime
 argument_list|(
 operator|&
 name|now
 argument_list|)
+argument_list|,
+name|fsp
+operator|->
+name|fi_cip
+operator|->
+name|clean
+argument_list|,
+name|max_free_segs
 argument_list|)
 expr_stmt|;
 name|clean_fs
