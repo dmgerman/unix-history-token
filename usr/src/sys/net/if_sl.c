@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_sl.c	5.6 (Berkeley) %G% */
+comment|/*	@(#)if_sl.c	5.7 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2191,11 +2191,11 @@ block|}
 block|}
 if|if
 condition|(
+operator|++
 name|sc
 operator|->
 name|sc_ilen
-operator|++
-operator|>=
+operator|>
 name|SLMTU
 condition|)
 block|{
