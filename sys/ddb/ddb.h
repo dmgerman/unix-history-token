@@ -621,12 +621,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|db_cmdfcn_t
-name|db_stack_trace_cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|db_cmdfcn_t
 name|db_trace_until_call_cmd
 decl_stmt|;
 end_decl_stmt

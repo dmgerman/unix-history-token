@@ -183,6 +183,7 @@ value|(-3)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|db_stack_trace_cmd
 parameter_list|(
