@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -290,9 +290,30 @@ block|,
 literal|"DONT"
 block|,
 literal|"IAC"
+block|,
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|telcmds
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -327,11 +348,6 @@ name|x
 parameter_list|)
 value|telcmds[(x)-TELCMD_FIRST]
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* telnet options */
@@ -748,11 +764,11 @@ begin_define
 define|#
 directive|define
 name|TELOPT_AUTHENTICATION
-value|45
+value|37
 end_define
 
 begin_comment
-comment|/* XXX Auto Authenticate */
+comment|/* Authenticate */
 end_comment
 
 begin_define
@@ -769,8 +785,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_ENCRYPT
+value|51
+end_define
+
+begin_comment
+comment|/* Encryption option - EXPERIMENTAL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NTELOPTS
-value|(1+TELOPT_AUTHENTICATION)
+value|(1+TELOPT_ENCRYPT)
 end_define
 
 begin_ifdef
@@ -785,6 +812,8 @@ modifier|*
 name|telopts
 index|[
 name|NTELOPTS
+operator|+
+literal|1
 index|]
 init|=
 block|{
@@ -862,23 +891,37 @@ literal|"XDISPLOC"
 block|,
 literal|"ENVIRON"
 block|,
-literal|"UNKNOWN 37"
-block|,
-literal|"UNKNOWN 38"
-block|,
-literal|"UNKNOWN 39"
-block|,
-literal|"UNKNOWN 40"
-block|,
-literal|"UNKNOWN 41"
-block|,
-literal|"UNKNOWN 42"
-block|,
-literal|"UNKNOWN 43"
-block|,
-literal|"UNKNOWN 44"
-block|,
 literal|"AUTHENTICATION"
+block|,
+literal|"38"
+block|,
+literal|"39"
+block|,
+literal|"40"
+block|,
+literal|"41"
+block|,
+literal|"42"
+block|,
+literal|"43"
+block|,
+literal|"44"
+block|,
+literal|"45"
+block|,
+literal|"46"
+block|,
+literal|"47"
+block|,
+literal|"48"
+block|,
+literal|"49"
+block|,
+literal|"50"
+block|,
+literal|"X-ENCRYPT"
+block|,
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -894,7 +937,7 @@ begin_define
 define|#
 directive|define
 name|TELOPT_LAST
-value|TELOPT_AUTHENTICATION
+value|TELOPT_ENCRYPT
 end_define
 
 begin_define
@@ -957,6 +1000,17 @@ end_define
 
 begin_comment
 comment|/* ENVIRON: informational version of IS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_REPLY
+value|2
+end_define
+
+begin_comment
+comment|/* AUTHENTICATION: client version of IS */
 end_comment
 
 begin_comment
@@ -1198,11 +1252,79 @@ name|NSLC
 value|18
 end_define
 
+begin_comment
+comment|/*  * For backwards compatability, we define SLC_NAMES to be the  * list of names if SLC_NAMES is not defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLC_NAMELIST
+value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", \ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP", \ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2", 0,
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SLC_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|slc_names
+index|[]
+init|=
+block|{
+name|SLC_NAMELIST
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|slc_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|SLC_NAMES
-value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", \ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP", \ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2"
+value|SLC_NAMELIST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SLC_NAME_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 0&& (x)< NSLC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_NAME
+parameter_list|(
+name|x
+parameter_list|)
+value|slc_names[x]
 end_define
 
 begin_define
@@ -1307,50 +1429,403 @@ begin_comment
 comment|/*  * AUTHENTICATION suboptions  */
 end_comment
 
+begin_comment
+comment|/*  * Who is authenticating who ...  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TELQUAL_AUTHTYPE_NONE
+name|AUTH_WHO_CLIENT
+value|0
+end_define
+
+begin_comment
+comment|/* Client authenticating server */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_WHO_SERVER
+value|1
+end_define
+
+begin_comment
+comment|/* Server authenticating client */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_WHO_MASK
+value|1
+end_define
+
+begin_comment
+comment|/*  * amount of authentication done  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_HOW_ONE_WAY
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|TELQUAL_AUTHTYPE_PRIVATE
+name|AUTH_HOW_MUTUAL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTH_HOW_MASK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTHTYPE_NULL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTHTYPE_KERBEROS_V4
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TELQUAL_AUTHTYPE_KERBEROS
+name|AUTHTYPE_KERBEROS_V5
 value|2
 end_define
-
-begin_comment
-comment|/* Kerberos-specific */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|TELQUAL_AUTHTYPE_KERBEROS_V4
+name|AUTHTYPE_SPX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTHTYPE_MINK
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TELQUAL_AUTHTYPE_KERBEROS_V5
+name|AUTHTYPE_CNT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|TELQUAL_AUTHTYPE_KERBEROS_USERNAME
+name|AUTHTYPE_TEST
+value|99
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTH_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|authtype_names
+index|[]
+init|=
+block|{
+literal|"NULL"
+block|,
+literal|"KERBEROS_V4"
+block|,
+literal|"KERBEROS_V5"
+block|,
+literal|"SPX"
+block|,
+literal|"MINK"
+block|,
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|authtype_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|AUTHTYPE_NAME_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 0&& (x)< AUTHTYPE_CNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTHTYPE_NAME
+parameter_list|(
+name|x
+parameter_list|)
+value|authtype_names[x]
+end_define
+
+begin_comment
+comment|/*  * ENCRYPTion suboptions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_IS
+value|0
+end_define
+
+begin_comment
+comment|/* I pick encryption type ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_SUPPORT
 value|1
+end_define
+
+begin_comment
+comment|/* I support encryption types ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_REPLY
+value|2
+end_define
+
+begin_comment
+comment|/* Initial setup response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_START
+value|3
+end_define
+
+begin_comment
+comment|/* Am starting to send encrypted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_END
+value|4
+end_define
+
+begin_comment
+comment|/* Am ending encrypted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_REQSTART
+value|5
+end_define
+
+begin_comment
+comment|/* Request you start encrypting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_REQEND
+value|6
+end_define
+
+begin_comment
+comment|/* Request you send encrypting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_CNT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCTYPE_ANY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCTYPE_KRBDES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCTYPE_CNT
+value|2
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENCRYPT_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|encrypt_names
+index|[]
+init|=
+block|{
+literal|"IS"
+block|,
+literal|"SUPPORT"
+block|,
+literal|"REPLY"
+block|,
+literal|"START"
+block|,
+literal|"END"
+block|,
+literal|"REQUEST-START"
+block|,
+literal|"REQUEST-END"
+block|,
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|enctype_names
+index|[]
+init|=
+block|{
+literal|"ANY"
+block|,
+literal|"KRBDES"
+block|,
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|encrypt_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|enctype_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_NAME_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 0&& (x)< ENCRYPT_CNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCRYPT_NAME
+parameter_list|(
+name|x
+parameter_list|)
+value|encrypt_names[x]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCTYPE_NAME_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 0&& (x)< ENCTYPE_CNT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENCTYPE_NAME
+parameter_list|(
+name|x
+parameter_list|)
+value|enctype_names[x]
 end_define
 
 end_unit
