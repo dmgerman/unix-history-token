@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.4 (Berkeley) %G%"
+literal|"@(#)main.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1039,17 +1039,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s%s%s%s%s"
+literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"restore tfhsvy [file ...]\n"
+literal|"restore -i [-chmvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"\trestore xfhmsvy [file ...]\n"
+literal|"restore -r [-cvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"\trestore ifhmsvy\n"
+literal|"restore -R [-cvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"\trestore rfsvy\n"
+literal|"restore -x [-chmvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|,
-literal|"\trestore Rfsvy\n"
+literal|"restore -t [-chvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|)
 expr_stmt|;
 name|done
