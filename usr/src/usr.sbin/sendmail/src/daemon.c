@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.61 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.62 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.61 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.62 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,6 +588,9 @@ name|sav_errno
 decl_stmt|;
 name|int
 name|addrlen
+decl_stmt|;
+name|bool
+name|firstconnect
 decl_stmt|;
 if|#
 directive|if
@@ -1219,6 +1222,10 @@ name|EX_TEMPFAIL
 return|;
 endif|#
 directive|endif
+name|firstconnect
+operator|=
+name|TRUE
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1449,6 +1456,46 @@ operator|>=
 literal|0
 condition|)
 break|break;
+comment|/* if running demand-dialed connection, try again */
+if|if
+condition|(
+name|DialDelay
+operator|>
+literal|0
+operator|&&
+name|firstconnect
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|16
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"Connect failed (%s); trying again...\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|sav_errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|firstconnect
+operator|=
+name|FALSE
+expr_stmt|;
+name|sleep
+argument_list|(
+name|DialDelay
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* couldn't connect.... figure out why */
 name|sav_errno
 operator|=

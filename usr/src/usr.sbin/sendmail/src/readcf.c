@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.52 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4881,6 +4881,16 @@ name|O_SSFILE
 block|,
 name|FALSE
 block|,
+define|#
+directive|define
+name|O_DIALDELAY
+value|0x87
+literal|"DialDelay"
+block|,
+name|O_DIALDELAY
+block|,
+name|TRUE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -7059,6 +7069,20 @@ operator|=
 name|newstr
 argument_list|(
 name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_DIALDELAY
+case|:
+comment|/* delay for dial-on-demand operation */
+name|DialDelay
+operator|=
+name|convtime
+argument_list|(
+name|val
+argument_list|,
+literal|'s'
 argument_list|)
 expr_stmt|;
 break|break;
