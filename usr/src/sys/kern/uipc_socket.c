@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.9	81/11/21	*/
+comment|/*	uipc_socket.c	4.10	81/11/21	*/
 end_comment
 
 begin_include
@@ -1757,6 +1757,11 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|restart
 goto|;
@@ -1973,6 +1978,14 @@ name|m
 argument_list|,
 name|n
 argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|=
+name|n
 expr_stmt|;
 block|}
 else|else
