@@ -1150,7 +1150,9 @@ name|struct
 name|dc_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1160,7 +1162,9 @@ specifier|static
 name|u_int32_t
 name|dc_crc_be
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4581,11 +4585,13 @@ name|dc_softc
 modifier|*
 name|sc
 parameter_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|idx
 decl_stmt|,
 name|bit
@@ -4809,11 +4815,13 @@ specifier|static
 name|u_int32_t
 name|dc_crc_be
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|crc
 decl_stmt|,
 name|carry
@@ -4823,7 +4831,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|c
 decl_stmt|;
 comment|/* Compute CRC for the address value. */
@@ -5205,9 +5213,6 @@ name|dc_crc_le
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ifp
 operator|->
 name|if_broadcastaddr
@@ -6296,9 +6301,6 @@ name|dc_crc_le
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ifp
 operator|->
 name|if_broadcastaddr
