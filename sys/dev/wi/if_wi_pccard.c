@@ -807,6 +807,8 @@ condition|(
 name|pp
 operator|->
 name|pp_name
+operator|!=
+name|NULL
 condition|)
 name|device_set_desc
 argument_list|(

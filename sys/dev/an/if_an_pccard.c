@@ -431,6 +431,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|pp
+operator|->
+name|pp_name
+operator|!=
+name|NULL
+condition|)
 name|device_set_desc
 argument_list|(
 name|dev
