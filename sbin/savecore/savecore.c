@@ -2181,7 +2181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CcdfkN:vz"
+literal|"Ccfkvz"
 argument_list|)
 operator|)
 operator|!=
@@ -2241,13 +2241,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'d'
-case|:
-comment|/* Obsolete */
-case|case
-literal|'N'
-case|:
 case|case
 literal|'?'
 case|:
