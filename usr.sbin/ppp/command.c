@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.140 1998/06/12 17:45:08 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.141 1998/06/12 20:12:25 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -630,7 +630,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/06/12 17:45:08 $"
+literal|"$Date: 1998/06/12 20:12:25 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5576,33 +5576,6 @@ operator|==
 name|arg
 operator|->
 name|argn
-operator|||
-operator|(
-name|arg
-operator|->
-name|argc
-operator|==
-name|arg
-operator|->
-name|argn
-operator|+
-literal|1
-operator|&&
-operator|!
-name|strcasecmp
-argument_list|(
-name|arg
-operator|->
-name|argv
-index|[
-name|arg
-operator|->
-name|argn
-index|]
-argument_list|,
-literal|"lcp"
-argument_list|)
-operator|)
 condition|)
 name|bundle_Close
 argument_list|(
@@ -5622,7 +5595,7 @@ name|name
 else|:
 name|NULL
 argument_list|,
-literal|1
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5637,8 +5610,49 @@ operator|->
 name|argn
 operator|+
 literal|1
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|arg
+operator|->
+name|argv
+index|[
+name|arg
+operator|->
+name|argn
+index|]
+argument_list|,
+literal|"lcp"
+argument_list|)
+condition|)
+name|bundle_Close
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|arg
+operator|->
+name|cx
+condition|?
+name|arg
+operator|->
+name|cx
+operator|->
+name|name
+else|:
+name|NULL
+argument_list|,
+name|CLOSE_LCP
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 name|strcasecmp
 argument_list|(
@@ -5668,7 +5682,6 @@ index|]
 argument_list|,
 literal|"ccp!"
 argument_list|)
-operator|)
 condition|)
 block|{
 name|struct
@@ -5758,6 +5771,12 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
+else|else
+return|return
+operator|-
+literal|1
+return|;
 return|return
 literal|0
 return|;
@@ -5826,7 +5845,7 @@ name|arg
 operator|->
 name|cx
 argument_list|,
-literal|1
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 else|else

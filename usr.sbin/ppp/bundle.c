@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.14 1998/06/07 00:16:37 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.15 1998/06/12 17:45:03 brian Exp $  */
 end_comment
 
 begin_include
@@ -1128,7 +1128,7 @@ name|datalink_Close
 argument_list|(
 name|last
 argument_list|,
-literal|1
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 block|}
@@ -2309,7 +2309,7 @@ name|datalink_Close
 argument_list|(
 name|dl
 argument_list|,
-literal|0
+name|CLOSE_NORMAL
 argument_list|)
 expr_stmt|;
 name|fsm_Down
@@ -2464,7 +2464,7 @@ modifier|*
 name|name
 parameter_list|,
 name|int
-name|staydown
+name|how
 parameter_list|)
 block|{
 comment|/*    * Please close the given datalink.    * If name == NULL or name is the last datalink, fsm_Close all NCPs    * (except our MP)    * If it isn't the last datalink, just Close that datalink.    */
@@ -2548,15 +2548,30 @@ operator|==
 name|dl
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
-name|staydown
+name|how
 condition|)
+block|{
+case|case
+name|CLOSE_LCP
+case|:
+name|datalink_DontHangup
+argument_list|(
+name|dl
+argument_list|)
+expr_stmt|;
+comment|/* fall through */
+case|case
+name|CLOSE_STAYDOWN
+case|:
 name|datalink_StayDown
 argument_list|(
 name|dl
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 elseif|else
 if|if
@@ -2713,7 +2728,7 @@ name|datalink_Close
 argument_list|(
 name|dl
 argument_list|,
-name|staydown
+name|how
 argument_list|)
 expr_stmt|;
 block|}
@@ -2739,7 +2754,7 @@ name|datalink_Close
 argument_list|(
 name|this_dl
 argument_list|,
-name|staydown
+name|how
 argument_list|)
 expr_stmt|;
 block|}
@@ -2780,7 +2795,7 @@ name|datalink_Down
 argument_list|(
 name|dl
 argument_list|,
-literal|1
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 block|}
@@ -7405,7 +7420,7 @@ name|bundle
 argument_list|,
 name|NULL
 argument_list|,
-literal|1
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 block|}
