@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c	1.6 (Berkeley/CCI) %G%"
+literal|"@(#)c21.c	1.7 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4679,6 +4679,12 @@ operator|==
 name|DOUBLE
 operator|<<
 literal|4
+operator|||
+name|p
+operator|->
+name|op
+operator|==
+name|EMUL
 condition|)
 name|dblflg
 operator||=
@@ -5573,9 +5579,6 @@ case|:
 endif|#
 directive|endif
 endif|EMOD
-case|case
-name|EMUL
-case|:
 case|case
 name|AOBLEQ
 case|:
