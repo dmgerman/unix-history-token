@@ -1550,6 +1550,13 @@ expr_stmt|;
 name|xferq
 operator|->
 name|flag
+operator|&=
+operator|~
+literal|0xff
+expr_stmt|;
+name|xferq
+operator|->
+name|flag
 operator||=
 name|fwe
 operator|->
