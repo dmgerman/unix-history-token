@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	1.4 (Berkeley) %G%"
+literal|"@(#)gmon.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,10 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*      *	etext is added by the loader, and is the end of the text space.      *	eprol is a local symbol, and labels almost the beginning of text space.      *	    its name is changed so it doesn't look like a function.      */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -41,10 +45,6 @@ name|etext
 decl_stmt|;
 end_decl_stmt
 
-begin_asm
-asm|asm( "#define _eprol eprol" );
-end_asm
-
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -52,6 +52,10 @@ name|char
 name|eprol
 decl_stmt|;
 end_decl_stmt
+
+begin_asm
+asm|asm( "#define _eprol _$eprol" );
+end_asm
 
 begin_asm
 asm|asm( "#define _start start" );
@@ -172,7 +176,7 @@ name|environ
 operator|=
 name|targv
 expr_stmt|;
-asm|asm("eprol:");
+asm|asm("_eprol:");
 name|_mstartup
 argument_list|(
 operator|&
