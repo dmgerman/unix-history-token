@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char const sccsid[] = "@(#)date.c	8.2 (Berkeley) 4/28/95";
+unit|static char sccsid[] = "@(#)date.c	8.2 (Berkeley) 4/28/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: date.c,v 1.24 1998/05/06 06:51:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
