@@ -780,6 +780,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VR_ISR_ETI
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Tx early (3043/3071) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VR_ISR_UDFI
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Tx FIFO underflow (3065) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VR_ISR_RX_OFLOW
 value|0x0400
 end_define
@@ -2037,6 +2059,13 @@ define|#
 directive|define
 name|VR_TXSTAT_CARRLOST
 value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_TXSTAT_UDF
+value|0x00000800
 end_define
 
 begin_define
