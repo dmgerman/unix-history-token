@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -447,7 +453,7 @@ block|{
 name|char
 name|remotehost
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct
@@ -515,6 +521,16 @@ argument_list|(
 name|remotehost
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|remotehost
+index|[
+sizeof|sizeof
+name|remotehost
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|syslog
 argument_list|(
@@ -1202,7 +1218,7 @@ decl_stmt|;
 name|char
 name|remotehost
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|int
