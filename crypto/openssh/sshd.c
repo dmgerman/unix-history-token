@@ -741,6 +741,13 @@ argument_list|,
 name|saved_argv
 argument_list|)
 expr_stmt|;
+name|execv
+argument_list|(
+literal|"/proc/curproc/file"
+argument_list|,
+name|saved_argv
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
 literal|"RESTART FAILED: av0='%s', error: %s."
