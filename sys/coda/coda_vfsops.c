@@ -2064,7 +2064,11 @@ block|,
 name|vfs_stdvptofh
 block|,
 name|vfs_stdinit
-block|}
+block|,
+name|vfs_stduninit
+block|,
+name|vfs_stdextattrctl
+block|, }
 decl_stmt|;
 end_decl_stmt
 

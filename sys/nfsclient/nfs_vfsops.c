@@ -623,6 +623,8 @@ comment|/* shouldn't happen */
 name|nfs_init
 block|,
 name|nfs_uninit
+block|,
+name|vfs_stdextattrctl
 block|, }
 decl_stmt|;
 end_decl_stmt

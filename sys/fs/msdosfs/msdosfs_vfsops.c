@@ -5036,7 +5036,11 @@ block|,
 name|msdosfs_vptofh
 block|,
 name|msdosfs_init
-block|}
+block|,
+name|vfs_stduninit
+block|,
+name|vfs_stdextattrctl
+block|, }
 decl_stmt|;
 name|VFS_SET
 argument_list|(

@@ -355,6 +355,10 @@ block|,
 name|cd9660_vptofh
 block|,
 name|cd9660_init
+block|,
+name|vfs_stduninit
+block|,
+name|vfs_stdextattrctl
 block|, }
 decl_stmt|;
 end_decl_stmt

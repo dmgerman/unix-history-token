@@ -448,7 +448,9 @@ comment|/* shouldn't happen */
 name|nwfs_init
 block|,
 name|nwfs_uninit
-block|}
+block|,
+name|vfs_stdextattrctl
+block|, }
 decl_stmt|;
 end_decl_stmt
 

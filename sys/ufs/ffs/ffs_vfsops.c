@@ -276,6 +276,10 @@ block|,
 name|ffs_vptofh
 block|,
 name|ffs_init
+block|,
+name|vfs_stduninit
+block|,
+name|vfs_stdextattrctl
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -4804,8 +4804,10 @@ name|ntfs_vptofh
 block|,
 name|ntfs_init
 block|,
-name|NULL
-block|}
+name|vfs_stduninit
+block|,
+name|vfs_stdextattrctl
+block|, }
 decl_stmt|;
 end_decl_stmt
 
