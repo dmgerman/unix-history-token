@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)quit.c	2.8 (Berkeley) %G%"
+literal|"@(#)quit.c	2.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1230,6 +1230,12 @@ argument_list|(
 literal|"Thou hast new mail.\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fbuf
+operator|!=
+name|NULL
+condition|)
 name|fclose
 argument_list|(
 name|fbuf
