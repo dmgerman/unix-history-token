@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -384,7 +390,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 name|struct
 name|mbuf
@@ -542,7 +548,7 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-name|p
+name|tl
 operator|=
 name|mtod
 argument_list|(
@@ -553,7 +559,7 @@ operator|*
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 operator|*
@@ -566,31 +572,31 @@ name|nfs_xid
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|rpc_call
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|rpc_vers
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|prog
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|vers
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|procid
@@ -629,7 +635,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 argument_list|,
 name|asiz
 argument_list|)
@@ -652,7 +658,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 argument_list|,
 name|siz
 argument_list|)
@@ -1746,7 +1752,7 @@ name|xfer
 decl_stmt|;
 specifier|register
 name|caddr_t
-name|p
+name|tl
 decl_stmt|;
 name|mp
 operator|=
@@ -1899,7 +1905,7 @@ block|}
 operator|*
 name|cp2
 operator|=
-name|p
+name|tl
 operator|=
 name|mtod
 argument_list|(
@@ -1913,7 +1919,7 @@ argument_list|(
 operator|*
 name|dposp
 argument_list|,
-name|p
+name|tl
 argument_list|,
 name|left
 argument_list|)
@@ -1925,7 +1931,7 @@ name|siz
 operator|-
 name|left
 expr_stmt|;
-name|p
+name|tl
 operator|+=
 name|left
 expr_stmt|;
@@ -1986,7 +1992,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
-name|p
+name|tl
 argument_list|,
 name|xfer
 argument_list|)
@@ -2004,7 +2010,7 @@ name|m_len
 operator|-=
 name|xfer
 expr_stmt|;
-name|p
+name|tl
 operator|+=
 name|xfer
 expr_stmt|;
@@ -2251,7 +2257,7 @@ name|tlen
 decl_stmt|;
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 name|int
 name|putsize
@@ -2283,7 +2289,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|p
+name|tl
 operator|=
 operator|(
 operator|(
@@ -2297,7 +2303,7 @@ operator|)
 operator|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2333,7 +2339,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 argument_list|,
 name|left
 argument_list|)
@@ -2407,7 +2413,7 @@ name|m2
 operator|=
 name|m1
 expr_stmt|;
-name|p
+name|tl
 operator|=
 name|mtod
 argument_list|(
@@ -2427,7 +2433,7 @@ name|putsize
 condition|)
 block|{
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2478,7 +2484,7 @@ name|len
 condition|)
 operator|*
 operator|(
-name|p
+name|tl
 operator|+
 operator|(
 name|xfer
@@ -2508,7 +2514,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 argument_list|,
 name|xfer
 argument_list|)
@@ -2774,7 +2780,7 @@ block|{
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|int
@@ -2787,7 +2793,7 @@ comment|/* Maybe someday there should be a cache of AUTH_SHORT's */
 if|if
 condition|(
 operator|(
-name|p
+name|tl
 operator|=
 name|rpc_uidp
 operator|)
@@ -2823,7 +2829,7 @@ endif|#
 directive|endif
 name|MALLOC
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -2840,7 +2846,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 argument_list|,
 name|i
 argument_list|)
@@ -2850,10 +2856,10 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2861,12 +2867,12 @@ argument_list|(
 name|RPCAUTH_UNIX
 argument_list|)
 expr_stmt|;
-name|p
+name|tl
 operator|++
 expr_stmt|;
 comment|/* Fill in size later */
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|hostid
@@ -2875,7 +2881,7 @@ ifdef|#
 directive|ifdef
 name|FILLINHOST
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2897,12 +2903,12 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 argument_list|,
 name|hostnamelen
 argument_list|)
 expr_stmt|;
-name|p
+name|tl
 operator|+=
 operator|(
 name|i
@@ -2913,7 +2919,7 @@ expr_stmt|;
 else|#
 directive|else
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 literal|0
@@ -2922,11 +2928,11 @@ endif|#
 directive|endif
 name|rpc_uidp
 operator|=
-name|p
+name|tl
 expr_stmt|;
 block|}
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2937,7 +2943,7 @@ name|cr_uid
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2975,7 +2981,7 @@ literal|1
 operator|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -2997,7 +3003,7 @@ name|i
 operator|++
 control|)
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -3012,13 +3018,13 @@ argument_list|)
 expr_stmt|;
 comment|/* And add the AUTH_NULL */
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 literal|0
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 literal|0
 expr_stmt|;
@@ -3029,7 +3035,7 @@ operator|(
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 operator|)
 operator|-
 name|rpc_unixauth
@@ -3037,7 +3043,7 @@ operator|)
 operator|-
 literal|12
 expr_stmt|;
-name|p
+name|tl
 operator|=
 operator|(
 name|u_long
@@ -3050,7 +3056,7 @@ literal|4
 operator|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -4534,8 +4540,11 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
+comment|/* XXX XXX XXX */
 if|if
 condition|(
 name|error
