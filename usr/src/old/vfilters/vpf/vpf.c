@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vpf.c	4.2	83/03/17	*/
+comment|/*	vpf.c	4.3	83/03/30	*/
 end_comment
 
 begin_comment
@@ -474,14 +474,7 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|nskipped
-expr_stmt|;
 name|lineno
-operator|=
-literal|0
-expr_stmt|;
-name|nskipped
 operator|=
 literal|0
 expr_stmt|;
@@ -493,34 +486,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|literal
-operator|&&
-name|varian
-operator|&&
-name|lineno
-operator|==
-literal|0
-operator|&&
-name|linebuf
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|&&
-name|nskipped
-operator|<
-literal|3
-condition|)
-block|{
-name|nskipped
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
 name|varian
 operator|&&
 name|lineno
@@ -528,10 +493,6 @@ operator|>=
 name|length
 condition|)
 block|{
-name|nskipped
-operator|=
-literal|0
-expr_stmt|;
 name|putline
 argument_list|(
 literal|1
