@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dvar.c	1.2	83/07/09  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
+comment|/*	dvar.c	1.3	83/07/29  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
 end_comment
 
 begin_comment
@@ -147,17 +147,7 @@ name|hmot
 parameter_list|(
 name|n
 parameter_list|)
-value|hpos += n
-end_define
-
-begin_define
-define|#
-directive|define
-name|hgoto
-parameter_list|(
-name|n
-parameter_list|)
-value|hpos = n
+value|hgoto(hpos + n)
 end_define
 
 begin_define
@@ -175,7 +165,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dvar.c	1.2	83/07/09"
+literal|"dvar.c	1.3	83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,16 +410,6 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|maxH
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* farthest down we've been on the current page */
-end_comment
-
-begin_decl_stmt
-name|int
 name|size
 init|=
 operator|-
@@ -474,24 +454,20 @@ begin_comment
 comment|/* current vertical position (down positive) */
 end_comment
 
-begin_decl_stmt
-name|int
-name|horig
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern	linethickness;
+end_extern
 
 begin_comment
-comment|/* h origin of current block (just a marker) */
+comment|/* thickness, in pixels, of any drawn object */
 end_comment
 
-begin_decl_stmt
-name|int
-name|vorig
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern	linmod;
+end_extern
 
 begin_comment
-comment|/* v origin of current block (just a marker) */
+comment|/* line style (a bit mask - dotted, etc.) of objects */
 end_comment
 
 begin_decl_stmt
@@ -551,7 +527,7 @@ begin_define
 define|#
 directive|define
 name|TRAILER
-value|(10 * RES)
+value|(10*RES+RES/2)
 end_define
 
 begin_comment
@@ -580,11 +556,11 @@ begin_define
 define|#
 directive|define
 name|NLINES
-value|1600
+value|1700
 end_define
 
 begin_comment
-comment|/* device page width */
+comment|/* page width, 8.5 inches */
 end_comment
 
 begin_define
@@ -850,10 +826,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|int
-name|done
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 name|argc
@@ -1063,9 +1035,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-name|done
-argument_list|()
-expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -1693,7 +1662,7 @@ name|error
 argument_list|(
 name|FATAL
 argument_list|,
-literal|"unknown drawing function %s\n"
+literal|"unknown drawing function %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -1977,18 +1946,14 @@ break|break;
 default|default:
 name|error
 argument_list|(
-operator|!
 name|FATAL
 argument_list|,
-literal|"unknown input character %o %c\n"
+literal|"unknown input character %o %c"
 argument_list|,
 name|c
 argument_list|,
 name|c
 argument_list|)
-expr_stmt|;
-name|done
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2271,7 +2236,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%s/devver/DESC.out"
+literal|"%s/devvar/DESC.out"
 argument_list|,
 name|fontdir
 argument_list|)
@@ -2295,7 +2260,7 @@ name|error
 argument_list|(
 name|FATAL
 argument_list|,
-literal|"can't open tables for %s\n"
+literal|"can't open tables for %s"
 argument_list|,
 name|temp
 argument_list|)
@@ -2975,7 +2940,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%s/devver/%s.out"
+literal|"%s/devvar/%s.out"
 argument_list|,
 name|fontdir
 argument_list|,
@@ -3074,7 +3039,7 @@ name|error
 argument_list|(
 name|FATAL
 argument_list|,
-literal|"Font %s too big for position %d\n"
+literal|"Font %s too big for position %d"
 argument_list|,
 name|s
 argument_list|,
@@ -3201,26 +3166,6 @@ directive|endif
 block|}
 end_block
 
-begin_macro
-name|done
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|t_reset
-argument_list|(
-literal|'s'
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_comment
 comment|/*VARARGS1*/
 end_comment
@@ -3254,7 +3199,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"dver: "
+literal|"dvar: "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3289,15 +3234,13 @@ if|if
 condition|(
 name|f
 condition|)
-name|done
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*******************************************************************************  * Routine:	  * Results:	  * Side Efct:	  ******************************************************************************/
-end_comment
 
 begin_macro
 name|t_init
@@ -3353,10 +3296,10 @@ name|int
 name|svpos
 decl_stmt|;
 name|int
-name|shorig
+name|sstyle
 decl_stmt|;
 name|int
-name|svorig
+name|sthick
 decl_stmt|;
 block|}
 struct|;
@@ -3407,15 +3350,15 @@ name|font
 expr_stmt|;
 name|statep
 operator|->
-name|shorig
+name|sstyle
 operator|=
-name|horig
+name|linmod
 expr_stmt|;
 name|statep
 operator|->
-name|svorig
+name|sthick
 operator|=
-name|vorig
+name|linethickness
 expr_stmt|;
 name|statep
 operator|->
@@ -3426,14 +3369,6 @@ expr_stmt|;
 name|statep
 operator|->
 name|svpos
-operator|=
-name|vpos
-expr_stmt|;
-name|horig
-operator|=
-name|hpos
-expr_stmt|;
-name|vorig
 operator|=
 name|vpos
 expr_stmt|;
@@ -3517,17 +3452,17 @@ name|statep
 operator|->
 name|svpos
 expr_stmt|;
-name|horig
+name|linmod
 operator|=
 name|statep
 operator|->
-name|shorig
+name|sstyle
 expr_stmt|;
-name|vorig
+name|linethickness
 operator|=
 name|statep
 operator|->
-name|svorig
+name|sthick
 expr_stmt|;
 block|}
 end_block
@@ -3573,21 +3508,17 @@ expr_stmt|;
 block|}
 name|slop_lines
 argument_list|(
-name|maxH
+name|NLINES
 argument_list|)
 expr_stmt|;
 comment|/* noversatec 		ioctl(OUTFILE, VSETSTATE, prtmode); 		if (write(OUTFILE, "\f", 2) != 2) 			exit(RESTART); 		ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
-name|size
-operator|=
-name|BYTES_PER_LINE
-operator|*
-name|maxH
-expr_stmt|;
 name|vclear
 argument_list|(
 name|buf0p
 argument_list|,
-name|size
+name|BYTES_PER_LINE
+operator|*
+name|NLINES
 argument_list|)
 expr_stmt|;
 name|buf0p
@@ -3595,10 +3526,6 @@ operator|=
 name|buffer
 expr_stmt|;
 block|}
-name|maxH
-operator|=
-literal|0
-expr_stmt|;
 name|vpos
 operator|=
 literal|0
@@ -3786,11 +3713,12 @@ if|if
 condition|(
 name|dbg
 condition|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+operator|!
+name|FATAL
 argument_list|,
-literal|"can't set height on versatec yet\n"
+literal|"can't set height on varian yet"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3824,11 +3752,12 @@ if|if
 condition|(
 name|dbg
 condition|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+operator|!
+name|FATAL
 argument_list|,
-literal|"can't set slant on versatec yet\n"
+literal|"can't set slant on varian yet"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4054,12 +3983,8 @@ literal|'p'
 case|:
 name|slop_lines
 argument_list|(
-name|maxH
+name|NLINES
 argument_list|)
-expr_stmt|;
-name|maxH
-operator|=
-literal|0
 expr_stmt|;
 name|buf0p
 operator|=
@@ -4071,7 +3996,7 @@ literal|'s'
 case|:
 name|slop_lines
 argument_list|(
-name|maxH
+name|NLINES
 argument_list|)
 expr_stmt|;
 name|t_done
@@ -4121,6 +4046,57 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	hgoto (horizontal_spot)  |  | Results:	hpos is set to n.  If n overlaps in either direction, it wraps  |		around to the other end of the page.  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_macro
+name|hgoto
+argument_list|(
+argument|n
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|n
+operator|+=
+name|NLINES
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|n
+operator|>=
+name|NLINES
+condition|)
+name|n
+operator|-=
+name|NLINES
+expr_stmt|;
+name|hpos
+operator|=
+name|n
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	vgoto (vertical_spot)  |  | Results:	vpos is set to n.  If n overlaps in either direction, it wraps  |		around to the other end of the page.  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_macro
 name|vgoto
 argument_list|(
@@ -4128,43 +4104,35 @@ argument|n
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-comment|/* check to see if n would move use past buf0p */
 if|if
 condition|(
 name|n
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ERROR vgoto past the beginning"
-argument_list|)
+name|n
+operator|+=
+name|RASTER_LENGTH
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* check for end of page */
+elseif|else
 if|if
 condition|(
 name|n
 operator|>
-name|RES
-operator|*
-literal|11
+name|RASTER_LENGTH
 condition|)
 name|n
 operator|-=
-name|RES
-operator|*
-literal|11
+name|RASTER_LENGTH
 expr_stmt|;
-comment|/* wrap around on to the top */
 name|vpos
 operator|=
 name|n
@@ -4855,7 +4823,7 @@ name|error
 argument_list|(
 name|FATAL
 argument_list|,
-literal|"illegal font %d\n"
+literal|"illegal font %d"
 argument_list|,
 name|n
 argument_list|)
@@ -5153,9 +5121,10 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|0
+operator|!
+name|FATAL
 argument_list|,
-literal|"fnum = %d size = %d name = %s\n"
+literal|"fnum = %d size = %d name = %s"
 argument_list|,
 name|fnum
 argument_list|,
@@ -5906,25 +5875,6 @@ name|dis
 operator|->
 name|left
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|i
-operator|=
-name|hpos
-operator|+
-name|dis
-operator|->
-name|right
-operator|)
-operator|>
-name|maxH
-condition|)
-name|maxH
-operator|=
-name|i
-expr_stmt|;
-comment|/* remember page len */
 name|scanp
 operator|=
 name|buf0p
@@ -6285,7 +6235,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"dver: write failed"
+literal|"dvar: write failed"
 argument_list|)
 expr_stmt|;
 name|exit
