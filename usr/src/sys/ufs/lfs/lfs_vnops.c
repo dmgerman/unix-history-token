@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.18	82/02/27	*/
+comment|/*	lfs_vnops.c	4.19	82/03/12	*/
 end_comment
 
 begin_include
@@ -347,11 +347,6 @@ argument_list|,
 name|uap
 operator|->
 name|sb
-argument_list|,
-operator|(
-name|off_t
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|iput

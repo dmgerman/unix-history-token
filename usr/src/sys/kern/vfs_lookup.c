@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.11	82/03/06	*/
+comment|/*	vfs_lookup.c	4.12	82/03/12	*/
 end_comment
 
 begin_include
@@ -120,9 +120,6 @@ name|nlink
 decl_stmt|;
 name|dev_t
 name|d
-decl_stmt|;
-name|ino_t
-name|ino
 decl_stmt|;
 name|off_t
 name|eo
@@ -872,12 +869,6 @@ operator|=
 name|dp
 operator|->
 name|i_dev
-expr_stmt|;
-name|ino
-operator|=
-name|dp
-operator|->
-name|i_number
 expr_stmt|;
 name|irele
 argument_list|(
