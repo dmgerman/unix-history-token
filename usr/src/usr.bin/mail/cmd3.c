@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.2 %G%"
+literal|"@(#)cmd3.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2454,15 +2454,23 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Print out the current edit file, if we are editting.  * Otherwise, print the name of the person who's mail  * we are reading.  */
+comment|/*  * Print out the current edit file, if we are editing.  * Otherwise, print the name of the person who's mail  * we are reading.  */
 end_comment
 
 begin_macro
 name|file
 argument_list|(
-argument|e
+argument|argv
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2471,13 +2479,29 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|char
+name|fname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+operator|==
+name|NOSTR
+condition|)
+block|{
 if|if
 condition|(
 name|edit
 condition|)
 name|printf
 argument_list|(
-literal|"Reading \"%s\"\n"
+literal|"Reading \"%s\""
 argument_list|,
 name|editfile
 argument_list|)
@@ -2485,7 +2509,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Reading %s's mail\n"
+literal|"Reading %s's mail"
 argument_list|,
 name|rindex
 argument_list|(
@@ -2497,13 +2521,90 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"; %d message(s)\n"
+argument_list|,
+name|msgCount
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Acker's!  Must switch to the new file. 	 * We use a funny interpretation -- 	 *	# -- gets the previous file 	 *	% -- gets the invoker's post office box 	 *	%user -- gets someone else's post office box 	 *	string -- reads the given file 	 */
+name|cp
+operator|=
+name|getfilename
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NOSTR
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|setfile
+argument_list|(
+name|cp
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
 end_block
+
+begin_comment
+comment|/*  * Evaluate the string given as a new mailbox name.  * Ultimately, we want this to support a number of meta characters.  * Possibly:  *	% -- for my system mail box  *	%user -- for user's system mail box  *	# -- for previous file  *	file name -- for any other file  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|getfilename
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|cp
+operator|=
+name|expand
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|cp
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Expand file names like echo  */
