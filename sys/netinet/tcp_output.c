@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_output.c	8.3 (Berkeley) 12/30/93  * $Id: tcp_output.c,v 1.11.4.3 1996/01/31 11:09:44 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_output.c	8.3 (Berkeley) 12/30/93  * $Id: tcp_output.c,v 1.11.4.4 1996/03/04 04:56:26 davidg Exp $  */
 end_comment
 
 begin_include
@@ -569,7 +569,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be -1.  Otherwise, window shrank 		 * after we sent into it.  If window shrank to 0, 		 * cancel pending retransmit and pull snd_nxt 		 * back to (closed) window.  We will enter persist 		 * state below.  If the window didn't close completely, 		 * just wait for an ACK. 		 */
+comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be -1.  Otherwise, window shrank 		 * after we sent into it.  If window shrank to 0, 		 * cancel pending retransmit, pull snd_nxt back 		 * to (closed) window, and set the persist timer 		 * if it isn't already going.  If the window didn't 		 * close completely, just wait for an ACK. 		 */
 name|len
 operator|=
 literal|0
@@ -592,11 +592,33 @@ literal|0
 expr_stmt|;
 name|tp
 operator|->
+name|t_rxtshift
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
 name|snd_nxt
 operator|=
 name|tp
 operator|->
 name|snd_una
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_PERSIST
+index|]
+operator|==
+literal|0
+condition|)
+name|tcp_setpersist
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 block|}
 block|}
