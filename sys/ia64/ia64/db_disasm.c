@@ -864,6 +864,115 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|templatenames
+index|[]
+init|=
+block|{
+literal|"MII"
+block|,
+comment|/* 00 */
+literal|"MII"
+block|,
+comment|/* 01 */
+literal|"MII"
+block|,
+comment|/* 02 */
+literal|"MII"
+block|,
+comment|/* 03 */
+literal|"MLX"
+block|,
+comment|/* 04 */
+literal|"MLX"
+block|,
+comment|/* 05 */
+literal|"???"
+block|,
+comment|/* 06 */
+literal|"???"
+block|,
+comment|/* 07 */
+literal|"MMI"
+block|,
+comment|/* 08 */
+literal|"MMI"
+block|,
+comment|/* 09 */
+literal|"MMI"
+block|,
+comment|/* 0a */
+literal|"MMI"
+block|,
+comment|/* 0b */
+literal|"MFI"
+block|,
+comment|/* 0c */
+literal|"MFI"
+block|,
+comment|/* 0d */
+literal|"MMF"
+block|,
+comment|/* 0e */
+literal|"MMF"
+block|,
+comment|/* 0f */
+literal|"MIB"
+block|,
+comment|/* 10 */
+literal|"MIB"
+block|,
+comment|/* 11 */
+literal|"MBB"
+block|,
+comment|/* 12 */
+literal|"MBB"
+block|,
+comment|/* 13 */
+literal|"???"
+block|,
+comment|/* 14 */
+literal|"???"
+block|,
+comment|/* 15 */
+literal|"BBB"
+block|,
+comment|/* 16 */
+literal|"BBB"
+block|,
+comment|/* 17 */
+literal|"MMB"
+block|,
+comment|/* 18 */
+literal|"MMB"
+block|,
+comment|/* 19 */
+literal|"???"
+block|,
+comment|/* 1a */
+literal|"???"
+block|,
+comment|/* 1b */
+literal|"MFB"
+block|,
+comment|/* 1c */
+literal|"MFB"
+block|,
+comment|/* 1d */
+literal|"???"
+block|,
+comment|/* 1e */
+literal|"???"
+block|,
+comment|/* 1f */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
@@ -23194,6 +23303,30 @@ condition|)
 name|slot
 operator|=
 literal|2
+expr_stmt|;
+if|if
+condition|(
+name|slot
+operator|==
+literal|0
+condition|)
+name|db_printf
+argument_list|(
+literal|"[%s] "
+argument_list|,
+name|templatenames
+index|[
+name|b
+operator|.
+name|template
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|db_printf
+argument_list|(
+literal|"      "
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
