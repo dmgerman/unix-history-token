@@ -4,7 +4,7 @@ comment|/* ssl/s23_srvr.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  *  * $FreeBSD$  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssl_locl.h"
 end_include
 
 begin_include
@@ -39,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/evp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssl_locl.h"
 end_include
 
 begin_function_decl
@@ -82,7 +82,7 @@ parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 if|if
 condition|(
 name|ver
@@ -154,6 +154,16 @@ condition|(
 name|init
 condition|)
 block|{
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|init
+condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|(
@@ -193,6 +203,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_SSL_METHOD
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|&
@@ -229,7 +245,18 @@ function_decl|(
 modifier|*
 name|cb
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|SSL
+modifier|*
+name|ssl
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|val
+parameter_list|)
 init|=
 name|NULL
 function_decl|;
@@ -630,6 +657,9 @@ modifier|*
 name|d
 decl_stmt|,
 modifier|*
+name|d_len
+decl_stmt|,
+modifier|*
 name|dd
 decl_stmt|;
 name|unsigned
@@ -664,7 +694,7 @@ index|]
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 name|int
 name|use_sslv2_strong
 init|=
@@ -981,35 +1011,6 @@ name|type
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|options
-operator|&
-name|SSL_OP_NON_EXPORT_FIRST
-condition|)
-comment|/* Not only utterly confusing, but broken 					 * ('fractured programming'?) -- the details 					 * of this block nearly make it work 					 * as intended in this environment, but on one 					 * of the fine points (w.r.t. restarts) it fails. 					 * The obvious fix would be even more devastating 					 * to program structure; if you want the functionality, 					 * throw this away and implement it in a way 					 * that makes sense */
-block|{
-if|#
-directive|if
-literal|0
-block|STACK_OF(SSL_CIPHER) *sk; 					SSL_CIPHER *c; 					int ne2,ne3;  					j=((p[0]&0x7f)<<8)|p[1]; 					if (j> (1024*4)) 						{ 						SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,SSL_R_RECORD_TOO_LARGE); 						goto err; 						}  					n=ssl23_read_bytes(s,j+2); 					if (n<= 0) return(n); 					p=s->packet;  					if ((buf=OPENSSL_malloc(n)) == NULL) 						{ 						SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,ERR_R_MALLOC_FAILURE); 						goto err; 						} 					memcpy(buf,p,n);  					p+=5; 					n2s(p,csl); 					p+=4;  					sk=ssl_bytes_to_cipher_list( 						s,p,csl,NULL); 					if (sk != NULL) 						{ 						ne2=ne3=0; 						for (j=0; j<sk_SSL_CIPHER_num(sk); j++) 							{ 							c=sk_SSL_CIPHER_value(sk,j); 							if (!SSL_C_IS_EXPORT(c)) 								{ 								if ((c->id>>24L) == 2L) 									ne2=1; 								else 									ne3=1; 								} 							} 						if (ne2&& !ne3) 							{ 							type=1; 							use_sslv2_strong=1; 							goto next_bit; 							} 						}
-else|#
-directive|else
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL23_GET_CLIENT_HELLO
-argument_list|,
-name|SSL_R_UNSUPPORTED_OPTION
-argument_list|)
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-endif|#
-directive|endif
-block|}
 block|}
 block|}
 elseif|else
@@ -1466,15 +1467,11 @@ name|ssl3_finish_mac
 argument_list|(
 name|s
 argument_list|,
-operator|&
-operator|(
 name|s
 operator|->
 name|packet
-index|[
+operator|+
 literal|2
-index|]
-operator|)
 argument_list|,
 name|s
 operator|->
@@ -1483,6 +1480,42 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|msg_callback
+condition|)
+name|s
+operator|->
+name|msg_callback
+argument_list|(
+literal|0
+argument_list|,
+name|SSL2_VERSION
+argument_list|,
+literal|0
+argument_list|,
+name|s
+operator|->
+name|packet
+operator|+
+literal|2
+argument_list|,
+name|s
+operator|->
+name|packet_length
+operator|-
+literal|2
+argument_list|,
+name|s
+argument_list|,
+name|s
+operator|->
+name|msg_callback_arg
+argument_list|)
+expr_stmt|;
+comment|/* CLIENT-HELLO */
 name|p
 operator|=
 name|s
@@ -1555,6 +1588,25 @@ goto|goto
 name|err
 goto|;
 block|}
+comment|/* record header: msg_type ... */
+operator|*
+operator|(
+name|d
+operator|++
+operator|)
+operator|=
+name|SSL3_MT_CLIENT_HELLO
+expr_stmt|;
+comment|/* ... and length (actual value will be written later) */
+name|d_len
+operator|=
+name|d
+expr_stmt|;
+name|d
+operator|+=
+literal|3
+expr_stmt|;
+comment|/* client_version */
 operator|*
 operator|(
 name|d
@@ -1745,6 +1797,18 @@ name|init_buf
 operator|->
 name|data
 operator|)
+operator|-
+literal|4
+expr_stmt|;
+name|l2n3
+argument_list|(
+operator|(
+name|long
+operator|)
+name|i
+argument_list|,
+name|d_len
+argument_list|)
 expr_stmt|;
 comment|/* get the data reused from the init_buf */
 name|s
@@ -1789,7 +1853,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL23_GET_CLIENT_HELLO
@@ -1847,7 +1911,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|BUF_MEM_grow
+name|BUF_MEM_grow_clean
 argument_list|(
 name|s
 operator|->
