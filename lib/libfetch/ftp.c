@@ -767,6 +767,10 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+name|s
+operator|==
+name|file
 condition|)
 block|{
 name|e
