@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwupdate.c	3.14 %G%"
+literal|"@(#)wwupdate.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,6 +712,15 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|q
+operator|-
+name|buf
+operator|>
+literal|1
+condition|)
+block|{
 call|(
 modifier|*
 name|tt
@@ -740,6 +749,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|os
 index|[
 operator|-
