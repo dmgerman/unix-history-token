@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.15 %G%"
+literal|"@(#)df.c	4.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,6 +351,15 @@ operator|->
 name|fs_type
 argument_list|,
 name|FSTAB_RO
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fsp
+operator|->
+name|fs_type
+argument_list|,
+name|FSTAB_RQ
 argument_list|)
 condition|)
 continue|continue;
