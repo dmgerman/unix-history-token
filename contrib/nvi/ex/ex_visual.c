@@ -310,6 +310,9 @@ argument_list|)
 argument_list|,
 literal|"%luz%c%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|lno
@@ -335,6 +338,9 @@ argument_list|)
 argument_list|,
 literal|"%luz%c"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|lno

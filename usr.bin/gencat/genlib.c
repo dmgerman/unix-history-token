@@ -210,7 +210,7 @@ decl_stmt|;
 block|{
 name|warnx
 argument_list|(
-literal|"%s on line %d\n%s"
+literal|"%s on line %ld\n%s"
 argument_list|,
 name|msg
 argument_list|,
@@ -4869,7 +4869,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"$set %d"
+literal|"$set %ld"
 argument_list|,
 name|set
 operator|->
@@ -4938,7 +4938,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\t%s\n"
+literal|"%ld\t%s\n"
 argument_list|,
 name|msg
 operator|->

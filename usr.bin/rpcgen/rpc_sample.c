@@ -1195,10 +1195,6 @@ argument_list|(
 name|fout
 argument_list|,
 literal|" result;\n"
-argument_list|,
-name|proc
-operator|->
-name|res_type
 argument_list|)
 expr_stmt|;
 block|}

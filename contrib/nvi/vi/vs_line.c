@@ -500,6 +500,9 @@ argument_list|)
 argument_list|,
 name|O_NUMBER_FMT
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|smp
 operator|->
 name|lno
@@ -1884,6 +1887,9 @@ argument_list|)
 argument_list|,
 name|O_NUMBER_FMT
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|smp
 operator|->
 name|lno

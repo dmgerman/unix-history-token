@@ -503,8 +503,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%6ld  "
+literal|"%6lu  "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|from
 argument_list|)
 expr_stmt|;

@@ -1878,6 +1878,9 @@ name|MAXNUM
 argument_list|,
 literal|"%lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|rptlines

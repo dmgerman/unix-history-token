@@ -915,8 +915,6 @@ argument_list|,
 name|sp
 argument_list|,
 name|TRANSP
-argument_list|,
-name|transp
 argument_list|)
 expr_stmt|;
 name|f_print
