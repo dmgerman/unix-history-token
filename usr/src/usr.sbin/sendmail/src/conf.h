@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.147 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.148 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -344,11 +344,27 @@ begin_comment
 comment|/* enable extended debugging */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|NEWDB
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HESIOD
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USERDB
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -358,7 +374,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* look in user database (requires NEWDB) */
+comment|/* look in user database */
 end_comment
 
 begin_endif
