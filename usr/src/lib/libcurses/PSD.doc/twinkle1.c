@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)twinkle1.c	5.1 (Berkeley) %G%"
+literal|"@(#)twinkle1.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,23 +62,16 @@ name|MAXPATTERNS
 value|4
 end_define
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|locs
 block|{
-name|char
+name|int
 name|y
 decl_stmt|,
 name|x
 decl_stmt|;
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|locs
 name|LOCS
 typedef|;
 end_typedef
@@ -111,19 +104,25 @@ begin_comment
 comment|/* number of stars in pattern */
 end_comment
 
-begin_function
-name|main
-parameter_list|()
-block|{
+begin_function_decl
 name|char
 modifier|*
 name|getenv
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|die
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_function
+name|main
+parameter_list|()
+block|{
 name|srand
 argument_list|(
 name|getpid
@@ -307,11 +306,13 @@ operator|=
 name|y
 expr_stmt|;
 name|lp
-operator|++
 operator|->
 name|x
 operator|=
 name|x
+expr_stmt|;
+name|lp
+operator|++
 expr_stmt|;
 block|}
 name|Numstars
