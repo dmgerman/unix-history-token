@@ -2105,6 +2105,12 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+else|else
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -2928,6 +2934,12 @@ condition|)
 name|cp
 operator|+=
 name|n
+expr_stmt|;
+else|else
+operator|*
+name|cp
+operator|=
+literal|'\0'
 expr_stmt|;
 break|break;
 block|}
