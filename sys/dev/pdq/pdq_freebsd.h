@@ -637,7 +637,7 @@ name|sc
 parameter_list|,
 name|m
 parameter_list|)
-value|bpf_mtap(&(sc)->arpcom.ac_if, m)
+value|BPF_MTAP(&(sc)->arpcom.ac_if, m)
 end_define
 
 begin_endif
