@@ -1487,11 +1487,30 @@ argument_list|)
 expr_stmt|;
 name|sNum
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|suffNull
 operator|=
 name|emptySuff
+expr_stmt|;
+comment|/*      * Clear suffNull's children list (the other suffixes are built new, but      * suffNull is used as is).      * NOFREE is used because all suffixes are are on the suffClean list.      * suffNull should not have parents.      */
+name|Lst_Destroy
+argument_list|(
+name|suffNull
+operator|->
+name|children
+argument_list|,
+name|NOFREE
+argument_list|)
+expr_stmt|;
+name|suffNull
+operator|->
+name|children
+operator|=
+name|Lst_Init
+argument_list|(
+name|FALSE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2206,6 +2225,8 @@ decl_stmt|;
 name|Suff
 modifier|*
 name|s2
+init|=
+name|NULL
 decl_stmt|;
 comment|/*      * First see if it is a transformation from this suffix.      */
 name|cp
@@ -2232,6 +2253,22 @@ operator|)
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+comment|/* null rule */
+name|s2
+operator|=
+name|suffNull
+expr_stmt|;
+else|else
+block|{
 name|ln
 operator|=
 name|Lst_Find
@@ -2253,8 +2290,6 @@ name|ln
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* 	     * Found target. Link in and return, since it can't be anything 	     * else. 	     */
 name|s2
 operator|=
 operator|(
@@ -2266,6 +2301,15 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|s2
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 	     * Found target. Link in and return, since it can't be anything 	     * else. 	     */
 name|SuffInsert
 argument_list|(
 name|s2
@@ -7981,7 +8025,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"%s "
+literal|"`%s' "
 argument_list|,
 operator|(
 operator|(
