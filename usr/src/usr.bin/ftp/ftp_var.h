@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ftp_var.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ftp_var.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -240,6 +240,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* passive port for proxy data connection */
+end_comment
+
+begin_decl_stmt
+name|int
+name|passivemode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* passive mode enabled */
 end_comment
 
 begin_decl_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	8.5 (Berkeley) %G%"
+literal|"@(#)cmds.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9057,6 +9057,45 @@ operator|(
 name|new
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setpassive
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
+block|{
+name|passivemode
+operator|=
+operator|!
+name|passivemode
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Passive mode %s.\n"
+argument_list|,
+name|onoff
+argument_list|(
+name|passivemode
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|passivemode
+expr_stmt|;
 block|}
 end_function
 
