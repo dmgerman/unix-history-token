@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: gencode.c,v 1.55 94/06/20 19:07:53 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/lib/libpcap/gencode.c,v 1.1.1.1 1995/01/20 04:13:04 jkh Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2403,12 +2403,11 @@ name|DLT_NULL
 case|:
 name|off_linktype
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|off_nl
 operator|=
-literal|0
+literal|4
 expr_stmt|;
 return|return;
 case|case
@@ -2618,6 +2617,41 @@ operator|=
 literal|0x0021
 expr_stmt|;
 comment|/* XXX - need ppp.h defs */
+break|break;
+case|case
+name|DLT_NULL
+case|:
+if|if
+condition|(
+name|proto
+operator|==
+name|ETHERTYPE_IP
+condition|)
+block|{
+name|proto
+operator|=
+name|htonl
+argument_list|(
+name|AF_INET
+argument_list|)
+expr_stmt|;
+comment|/* loopback& tun put */
+comment|/* sa_family into     */
+comment|/* prepended word     */
+return|return
+name|gen_cmp
+argument_list|(
+name|off_linktype
+argument_list|,
+name|BPF_W
+argument_list|,
+operator|(
+name|long
+operator|)
+name|proto
+argument_list|)
+return|;
+block|}
 break|break;
 block|}
 return|return
