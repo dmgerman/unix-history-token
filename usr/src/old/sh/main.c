@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.2 %G%"
+literal|"@(#)main.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dup.h"
 end_include
 
 begin_include
@@ -68,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_decl_stmt
@@ -177,7 +177,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* set names from userenv */
-name|getenv
+name|setupenv
 argument_list|()
 expr_stmt|;
 comment|/* look for restricted */
@@ -751,11 +751,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|dup
+name|dup2
 argument_list|(
 name|fa
-operator||
-name|DUPFLG
 argument_list|,
 name|fb
 argument_list|)

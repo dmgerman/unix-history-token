@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	4.2 %G%"
+literal|"@(#)io.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dup.h"
 end_include
 
 begin_comment
@@ -416,11 +410,9 @@ name|f1
 operator|!=
 name|f2
 name|THEN
-name|dup
+name|dup2
 argument_list|(
 name|f1
-operator||
-name|DUPFLG
 argument_list|,
 name|f2
 argument_list|)
