@@ -9870,7 +9870,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|pg("part %x, nblocks %d, dumplo %d num %d\n", 	   part, nblocks, dumplo, num);
+block|printf("part %d, nblocks %lu, dumplo %ld num %ld\n", 	    part, nblocks, dumplo, num);
 endif|#
 directive|endif
 comment|/* Check transfer bounds against partition size. */
@@ -10022,7 +10022,20 @@ name|blkcnt
 operator|=
 name|MAXTRANSFER
 expr_stmt|;
-comment|/* Keep transfer within current cylinder. */
+if|if
+condition|(
+operator|(
+name|du
+operator|->
+name|dk_flags
+operator|&
+name|DKFL_LBA
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* XXX keep transfer within current cylinder. */
 if|if
 condition|(
 operator|(
@@ -10049,6 +10062,7 @@ operator|%
 name|secpercyl
 operator|)
 expr_stmt|;
+block|}
 name|blknext
 operator|=
 name|blknum
@@ -10188,6 +10202,52 @@ block|}
 name|out
 label|:
 comment|/* Compute disk address. */
+if|if
+condition|(
+name|du
+operator|->
+name|dk_flags
+operator|&
+name|DKFL_LBA
+condition|)
+block|{
+name|sector
+operator|=
+operator|(
+name|blknum
+operator|>>
+literal|0
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|cylin
+operator|=
+operator|(
+name|blknum
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xffff
+expr_stmt|;
+name|head
+operator|=
+operator|(
+operator|(
+name|blknum
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator||
+name|WDSD_LBA
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cylin
 operator|=
 name|blknum
@@ -10210,11 +10270,12 @@ name|blknum
 operator|%
 name|secpertrk
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
 comment|/* Let's just talk about this first... */
-block|pg("cylin l%d head %ld sector %ld addr 0x%x count %ld", 		   cylin, head, sector, addr, blkcnt);
+block|printf("cylin %ld head %ld sector %ld addr %p count %ld\n", 		    cylin, head, sector, addr, blkcnt); 		cngetc();
 endif|#
 directive|endif
 comment|/* Do the write. */
