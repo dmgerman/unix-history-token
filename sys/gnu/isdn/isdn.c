@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)$Id: isdn.c,v 1.12 1995/12/17 21:17:48 phk Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.12 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/* @(#)$Id: isdn.c,v 1.13 1996/06/12 05:02:21 gpalmer Exp $  *******************************************************************************  *  II - Version 0.1 $Revision: 1.13 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"gnu/isdn/isdn_ioctl.h"
+file|<gnu/isdn/isdn_ioctl.h>
 end_include
 
 begin_decl_stmt
