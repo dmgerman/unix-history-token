@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -275,19 +275,6 @@ value|T_LINEP
 end_define
 
 begin_decl_stmt
-name|int
-name|sloutput
-argument_list|()
-decl_stmt|,
-name|slioctl
-argument_list|()
-decl_stmt|,
-name|ttrstrt
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|struct
 name|timeval
@@ -295,16 +282,48 @@ name|time
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|slinit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sl_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|sl_btom
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sl_softc
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Called from boot code to establish sl interfaces.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|slattach
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -429,7 +448,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -554,31 +573,23 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|slopen
-argument_list|(
-argument|dev
-argument_list|,
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|tp
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -722,28 +733,23 @@ name|ENXIO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * Line specific close routine.  * Detach the tty from the sl unit.  * Mimics part of ttyclose().  */
+comment|/*  * Line specific close routine.  * Detach the tty from the sl unit.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|slclose
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -848,7 +854,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Line specific (tty) ioctl routine.  * Provide a way to get the sl unit number.  */
@@ -858,46 +864,32 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sltioctl
-argument_list|(
-argument|tp
-argument_list|,
-argument|cmd
-argument_list|,
-argument|data
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|cmd
+parameter_list|,
+name|data
+parameter_list|,
+name|flag
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sl_softc
@@ -952,49 +944,45 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Queue a packet.  Start transmission if not active.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sloutput
-argument_list|(
-argument|ifp
-argument_list|,
-argument|m
-argument_list|,
-argument|dst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|,
+name|dst
+parameter_list|,
+name|rtp
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|struct
+name|rtentry
+modifier|*
+name|rtp
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1331,26 +1319,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Start output on interface.  Get another datagram  * to send from the interface queue and map it to  * the interface before starting output.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|slstart
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1811,7 +1797,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy data buffer to mbuf chain; add ifnet pointer.  */
@@ -2012,29 +1998,24 @@ begin_comment
 comment|/*  * tty interface receiver interrupt.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|slinput
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2593,42 +2574,34 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process an ioctl request.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|slioctl
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|cmd
-argument_list|,
+parameter_list|,
 name|data
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2782,7 +2755,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
