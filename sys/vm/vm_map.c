@@ -1050,7 +1050,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|vm_map_entry_dispose
 parameter_list|(
@@ -1070,9 +1069,21 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|kentry_count
-operator|<
-name|KENTRY_LOW_WATER
+name|map
+operator|==
+name|kernel_map
+operator|||
+name|map
+operator|==
+name|kmem_map
+operator|||
+name|map
+operator|==
+name|mb_map
+operator|||
+name|map
+operator|==
+name|pager_map
 condition|)
 block|{
 name|s
