@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.27	82/01/17	*/
+comment|/*	uipc_socket.c	4.28	82/01/19	*/
 end_comment
 
 begin_include
@@ -424,13 +424,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Close a socket on last file table reference removal.  * Initiate disconnect if connected.  * Free socket when disconnect complete.  */
+comment|/*  * Close a socket on last file table reference removal.  * Initiate disconnect if connected.  * Free socket when disconnect complete.  *  * THIS IS REALLY A UNIX INTERFACE ROUTINE  */
 end_comment
 
 begin_expr_stmt
 name|soclose
 argument_list|(
 name|so
+argument_list|,
+name|exiting
 argument_list|)
 specifier|register
 expr|struct
@@ -439,6 +441,12 @@ operator|*
 name|so
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|exiting
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -510,6 +518,13 @@ operator|.
 name|u_error
 condition|)
 block|{
+if|if
+condition|(
+name|exiting
+condition|)
+goto|goto
+name|drop
+goto|;
 name|splx
 argument_list|(
 name|s
@@ -548,6 +563,10 @@ name|so_options
 operator|&
 name|SO_NONBLOCKING
 operator|)
+operator|&&
+name|exiting
+operator|==
+literal|0
 condition|)
 block|{
 name|u
@@ -563,7 +582,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* should use tsleep here */
+comment|/* should use tsleep here, for at most linger */
 while|while
 condition|(
 name|so
@@ -589,6 +608,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|drop
+label|:
 name|u
 operator|.
 name|u_error
