@@ -460,8 +460,12 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Uid [#]: %d\n"
+literal|"Uid [#]: %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -474,8 +478,12 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Gid [# or name]: %d\n"
+literal|"Gid [# or name]: %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_gid
@@ -1445,7 +1453,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s:%s:%d:%d:%s:%ld:%ld:%s:%s:%s"
+literal|"%s:%s:%lu:%lu:%s:%ld:%ld:%s:%s:%s"
 argument_list|,
 name|pw
 operator|->
@@ -1455,10 +1463,18 @@ name|pw
 operator|->
 name|pw_passwd
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_uid
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_gid
@@ -1467,10 +1483,16 @@ name|pw
 operator|->
 name|pw_class
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_change
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_expire
