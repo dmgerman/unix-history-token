@@ -127,6 +127,18 @@ name|udf_sparing_table
 modifier|*
 name|s_table
 decl_stmt|;
+name|void
+modifier|*
+name|im_d2l
+decl_stmt|;
+comment|/* disk->local iconv handle */
+if|#
+directive|if
+literal|0
+block|void			*im_l2d;
+comment|/* local->disk iconv handle */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
