@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.23 2001/11/19 06:27:33 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.24 2001/11/28 08:33:12 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.146 2001/11/18 04:25:43 mrg Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.150 2001/11/27 03:25:16 enami Exp $ */
 end_comment
 
 begin_comment
@@ -1192,6 +1192,27 @@ name|PCMCIA_STR_BUFFALO_WLI_PCM_S11
 value|"BUFFALO AirStation 11Mbps WLAN"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BUFFALO_WLI_CF_S11G
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BUFFALO_WLI_CF_S11G
+value|0x030b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BUFFALO_WLI_CF_S11G
+value|"BUFFALO AirStation 11Mbps CF WLAN"
+end_define
+
 begin_comment
 comment|/* Compaq Products */
 end_comment
@@ -1742,6 +1763,27 @@ define|#
 directive|define
 name|PCMCIA_STR_IBM_TROPIC
 value|"IBM Token Ring 4/16"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_IBM_SCSI
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_IBM_SCSI
+value|0x0026
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_IBM_SCSI
+value|"IBM SCSI PCMCIA"
 end_define
 
 begin_define
