@@ -1658,19 +1658,6 @@ name|__isthreaded
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Restore signal mask early, so any memory problems could 	 * dump core. 	 */
-name|sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|curthread
-operator|->
-name|sigmask
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|curthread
 operator|->
 name|kse
@@ -1690,6 +1677,19 @@ operator|.
 name|flags
 operator||=
 name|PTHREAD_SCOPE_SYSTEM
+expr_stmt|;
+comment|/* 	 * Restore signal mask early, so any memory problems could 	 * dump core. 	 */
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|curthread
+operator|->
+name|sigmask
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|_thr_active_threads
 operator|=
