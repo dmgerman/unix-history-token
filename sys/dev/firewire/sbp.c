@@ -8503,16 +8503,16 @@ name|__FreeBSD_version
 operator|>=
 literal|500000
 argument|printf(
-literal|", %tx:%zd"
-argument|, segments[i].ds_addr,
+literal|", %jx:%jd"
+argument|, (uintmax_t)segments[i].ds_addr, 					(uintmax_t)segments[i].ds_len);
 else|#
 directive|else
 argument|printf(
 literal|", %x:%d"
-argument|, segments[i].ds_addr,
+argument|, segments[i].ds_addr, segments[i].ds_len);
 endif|#
 directive|endif
-argument|segments[i].ds_len); 	printf(
+argument|printf(
 literal|"\n"
 argument|); END_DEBUG  	if (seg ==
 literal|1
@@ -8566,7 +8566,9 @@ argument|) 		bus_dmamap_sync(ocb->sdev->target->sbp->dmat, ocb->dmamap, 			(ntoh
 literal|4
 argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_PREREAD : BUS_DMASYNC_PREWRITE); 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	fwdma_sync(&ocb->sdev->dma, BUS_DMASYNC_PREWRITE); 	if (prev == NULL) 		sbp_orb_pointer(ocb->sdev, ocb);  }  static void sbp_poll(struct cam_sim *sim) {
 comment|/* should call fwohci_intr? */
-argument|return; } static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw(), order =
+argument|return; } static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
+argument_list|,
+argument|order =
 literal|0
 argument|; 	int flags;  	for (ocb = STAILQ_FIRST(&sdev->ocbs); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		flags = ocb->flags; SBP_DEBUG(
 literal|1
@@ -8579,16 +8581,16 @@ name|__FreeBSD_version
 operator|>=
 literal|500000
 argument|printf(
-literal|"orb: 0x%tx next: 0x%x, flags %x\n"
-argument|,
+literal|"orb: 0x%jx next: 0x%x, flags %x\n"
+argument|, 			(uintmax_t)ocb->bus_addr,
 else|#
 directive|else
 argument|printf(
 literal|"orb: 0x%x next: 0x%lx, flags %x\n"
-argument|,
+argument|, 			ocb->bus_addr,
 endif|#
 directive|endif
-argument|ocb->bus_addr, ntohl(ocb->orb[
+argument|ntohl(ocb->orb[
 literal|1
 argument|]), flags); END_DEBUG 		if (OCB_MATCH(ocb, sbp_status)) {
 comment|/* found */
@@ -8619,8 +8621,8 @@ name|__FreeBSD_version
 operator|>=
 literal|500000
 argument|printf(
-literal|"sbp_enqueue_ocb orb=0x%tx in physical memory\n"
-argument|, ocb->bus_addr);
+literal|"sbp_enqueue_ocb orb=0x%jx in physical memory\n"
+argument|,  		(uintmax_t)ocb->bus_addr);
 else|#
 directive|else
 argument|printf(
@@ -8639,16 +8641,16 @@ name|__FreeBSD_version
 operator|>=
 literal|500000
 argument|printf(
-literal|"linking chain 0x%tx -> 0x%tx\n"
-argument|, prev->bus_addr,
+literal|"linking chain 0x%jx -> 0x%jx\n"
+argument|, 		(uintmax_t)prev->bus_addr, (uintmax_t)ocb->bus_addr);
 else|#
 directive|else
 argument|printf(
 literal|"linking chain 0x%x -> 0x%x\n"
-argument|, prev->bus_addr,
+argument|, prev->bus_addr, ocb->bus_addr);
 endif|#
 directive|endif
-argument|ocb->bus_addr); END_DEBUG 		prev->orb[
+argument|END_DEBUG 		prev->orb[
 literal|1
 argument|] = htonl(ocb->bus_addr); 		prev->orb[
 literal|0
@@ -8669,16 +8671,16 @@ name|__FreeBSD_version
 operator|>=
 literal|500000
 argument|printf(
-literal|"sbp_abort_ocb 0x%tx\n"
-argument|,
+literal|"sbp_abort_ocb 0x%jx\n"
+argument|, (uintmax_t)ocb->bus_addr);
 else|#
 directive|else
 argument|printf(
 literal|"sbp_abort_ocb 0x%x\n"
-argument|,
+argument|, ocb->bus_addr);
 endif|#
 directive|endif
-argument|ocb->bus_addr); END_DEBUG SBP_DEBUG(
+argument|END_DEBUG SBP_DEBUG(
 literal|1
 argument|) 	if (ocb->ccb != NULL) 		sbp_print_scsi_cmd(ocb); END_DEBUG 	if (ntohl(ocb->orb[
 literal|4
