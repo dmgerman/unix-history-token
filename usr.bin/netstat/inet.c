@@ -992,7 +992,12 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
+operator|(
 name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
 condition|?
 literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
 else|:
@@ -1102,7 +1107,7 @@ continue|continue;
 else|else
 block|{
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|vchar
 decl_stmt|;
@@ -3365,6 +3370,23 @@ decl_stmt|;
 name|int
 name|width
 decl_stmt|;
+if|if
+condition|(
+name|Wflag
+condition|)
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s."
+argument_list|,
+name|inetname
+argument_list|(
+name|in
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|line
@@ -3428,7 +3450,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%.15s"
+literal|"%.15s "
 argument_list|,
 name|sp
 condition|?
@@ -3444,7 +3466,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%d"
+literal|"%d "
 argument_list|,
 name|ntohs
 argument_list|(
@@ -3457,12 +3479,31 @@ argument_list|)
 expr_stmt|;
 name|width
 operator|=
+operator|(
 name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
 condition|?
 literal|18
 else|:
 literal|22
 expr_stmt|;
+if|if
+condition|(
+name|Wflag
+condition|)
+name|printf
+argument_list|(
+literal|"%-*s "
+argument_list|,
+name|width
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%-*.*s "
