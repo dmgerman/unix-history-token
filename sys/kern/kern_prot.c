@@ -5244,6 +5244,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.security.bsd.suser_enabled"
+argument_list|,
+operator|&
+name|suser_enabled
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Test whether the specified credentials imply "super-user" privilege.  * Return 0 or EPERM.  */
 end_comment
