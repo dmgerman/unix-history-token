@@ -957,7 +957,7 @@ name|d_maxsize
 operator|=
 literal|8
 operator|*
-name|PAGE_SIZE
+name|MLX_PAGE_SIZE
 expr_stmt|;
 else|else
 block|{
@@ -987,7 +987,7 @@ operator|-
 literal|1
 operator|)
 operator|*
-name|PAGE_SIZE
+name|MLX_PAGE_SIZE
 expr_stmt|;
 name|sc
 operator|->

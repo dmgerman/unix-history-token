@@ -14,6 +14,17 @@ begin_comment
 comment|/* fixed feature */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MLX_PAGE_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* controller, not cpu, attribute */
+end_comment
+
 begin_comment
 comment|/*  * Selected command codes.  */
 end_comment
