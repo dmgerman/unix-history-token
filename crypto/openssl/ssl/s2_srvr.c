@@ -4485,7 +4485,7 @@ argument_list|)
 expr_stmt|;
 name|buf2
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -4549,7 +4549,7 @@ operator|)
 name|i
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf2
 argument_list|)

@@ -1446,6 +1446,18 @@ name|state
 operator|=
 name|SSL2_ST_GET_SERVER_HELLO_A
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|s
+operator|->
+name|client_version
+operator|==
+name|SSL2_VERSION
+operator|)
+condition|)
+comment|/* use special padding (SSL 3.0 draft/RFC 2246, App. E.2) */
 name|s
 operator|->
 name|s2

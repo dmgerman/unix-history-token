@@ -4425,6 +4425,10 @@ goto|goto
 name|err
 goto|;
 block|}
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
+comment|/* but we keep s->verify_result */
 comment|/* server's cert for this session */
 name|sc
 operator|=
