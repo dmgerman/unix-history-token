@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.54.2.1 1996/11/12 09:09:59 phk Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.54.2.2 1996/12/03 10:52:49 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -1192,6 +1192,9 @@ comment|/* Digital DE500-?? 10/100 */
 name|TULIP_21140_SMC_9332
 block|,
 comment|/* SMC 9332 */
+name|TULIP_21140A_SMC_9332BDT
+block|,
+comment|/* SMC 9332BDT with 21140A */
 name|TULIP_21140_COGENT_EM100
 block|,
 comment|/* Cogent EM100 100 only */
@@ -7082,6 +7085,26 @@ block|,
 name|tulip_21140_smc9332_media_select
 block|,
 name|tulip_21140_nomii_media_preset
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|tulip_boardsw_t
+name|tulip_21140A_smc9332bdt_boardsw
+init|=
+block|{
+name|TULIP_21140A_SMC_9332BDT
+block|,
+literal|"SMC 9332BDT "
+block|,
+name|tulip_21140_smc9332_media_probe
+block|,
+name|tulip_21140_mii_media_preset
+block|,
+name|tulip_21140_mii_probe
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -14650,6 +14673,24 @@ name|tulip_boardsw
 operator|=
 operator|&
 name|tulip_21140_smc9332_boardsw
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|tulip_chipid
+operator|==
+name|TULIP_21140A
+condition|)
+block|{
+name|sc
+operator|->
+name|tulip_boardsw
+operator|=
+operator|&
+name|tulip_21140A_smc9332bdt_boardsw
 expr_stmt|;
 return|return;
 block|}
