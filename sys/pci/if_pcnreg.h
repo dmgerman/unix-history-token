@@ -1048,131 +1048,6 @@ comment|/*  * Chip ID values.  */
 end_comment
 
 begin_comment
-comment|/* Chip types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LANCE
-value|1
-end_define
-
-begin_comment
-comment|/* Am7990   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C_LANCE
-value|2
-end_define
-
-begin_comment
-comment|/* Am79C90  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_ISA
-value|3
-end_define
-
-begin_comment
-comment|/* Am79C960 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_ISAplus
-value|4
-end_define
-
-begin_comment
-comment|/* Am79C961 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_ISA_II
-value|5
-end_define
-
-begin_comment
-comment|/* Am79C961A */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_32
-value|6
-end_define
-
-begin_comment
-comment|/* Am79C965 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_PCI
-value|7
-end_define
-
-begin_comment
-comment|/* Am79C970 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_PCI_II
-value|8
-end_define
-
-begin_comment
-comment|/* Am79C970A */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_FAST
-value|9
-end_define
-
-begin_comment
-comment|/* Am79C971 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_FASTplus
-value|10
-end_define
-
-begin_comment
-comment|/* Am79C972 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCnet_Home
-value|11
-end_define
-
-begin_comment
-comment|/* Am79C978 */
-end_comment
-
-begin_comment
 comment|/* CSR88-89: Chip ID masks */
 end_comment
 
@@ -1258,6 +1133,13 @@ define|#
 directive|define
 name|Am79C978
 value|0x2626
+end_define
+
+begin_define
+define|#
+directive|define
+name|Am79C976
+value|0x2628
 end_define
 
 begin_comment
