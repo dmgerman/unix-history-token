@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.2	81/05/10	*/
+comment|/*	tip.c	4.3	81/05/18	*/
 end_comment
 
 begin_comment
@@ -881,6 +881,27 @@ name|bol
 init|=
 literal|1
 decl_stmt|;
+comment|/* 	 * Kinda klugey here... 	 *   check for scripting being turned on from the .tiprc file, 	 *   but be careful about just using setscript(), as we may 	 *   send a SIGEMT before tipout has a chance to set up catching 	 *   it; so wait a second, then setscript() 	 */
+if|if
+condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|SCRIPT
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|setscript
+argument_list|()
+expr_stmt|;
+block|}
 while|while
 condition|(
 literal|1
