@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.3 %G%"
+literal|"@(#)msgs.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dir.h>
 end_include
 
 begin_include
@@ -3279,6 +3279,11 @@ operator|*
 name|in
 operator|==
 literal|'@'
+operator|||
+operator|*
+name|in
+operator|==
+literal|'!'
 condition|)
 name|local
 operator|=
