@@ -1832,9 +1832,9 @@ operator|&=
 operator|~
 name|RB_GDB
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|cont_exit
+goto|;
 case|case
 literal|'g'
 case|:
@@ -2156,6 +2156,8 @@ name|eip
 operator|=
 name|addr
 expr_stmt|;
+name|cont_exit
+label|:
 comment|/* set the trace bit if we're stepping */
 if|if
 condition|(
