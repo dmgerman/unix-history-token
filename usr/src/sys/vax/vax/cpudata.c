@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpudata.c	4.3	81/04/03	*/
+comment|/*	cpudata.c	4.4	81/04/09	*/
 end_comment
 
 begin_include
@@ -160,15 +160,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Information to patch around the stupidity of configuration  * registers not returning types on some of the processors.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|VAX750
 end_if
-
-begin_comment
-comment|/*  * Information to patch around the stupidity of configuration  * registers not returning types on some of the processors.  */
-end_comment
 
 begin_decl_stmt
 name|short
@@ -212,6 +212,12 @@ name|NEX_ANY
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|VAX7ZZ
+end_if
 
 begin_decl_stmt
 name|short
