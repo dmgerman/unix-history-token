@@ -362,9 +362,17 @@ name|snd_cwnd
 decl_stmt|;
 comment|/* congestion-controlled window */
 name|u_long
+name|snd_bwnd
+decl_stmt|;
+comment|/* bandwidth-controlled window */
+name|u_long
 name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshold for 					 * for slow start exponential to 					 * linear switch 					 */
+name|u_long
+name|snd_bandwidth
+decl_stmt|;
+comment|/* calculated bandwidth or 0 */
 name|tcp_seq
 name|snd_recover
 decl_stmt|;
@@ -390,6 +398,14 @@ name|t_rtseq
 decl_stmt|;
 comment|/* sequence number being timed */
 name|int
+name|t_bw_rtttime
+decl_stmt|;
+comment|/* used for bandwidth calculation */
+name|tcp_seq
+name|t_bw_rtseq
+decl_stmt|;
+comment|/* used for bandwidth calculation */
+name|int
 name|t_rxtcur
 decl_stmt|;
 comment|/* current retransmit value (ticks) */
@@ -413,6 +429,10 @@ name|u_int
 name|t_rttmin
 decl_stmt|;
 comment|/* minimum rtt allowed */
+name|u_int
+name|t_rttbest
+decl_stmt|;
+comment|/* best rtt we've seen */
 name|u_long
 name|t_rttupdated
 decl_stmt|;
@@ -1899,6 +1919,21 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|tcp_xmit_bandwidth_limit
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|,
+name|tcp_seq
+name|ack_seq
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
