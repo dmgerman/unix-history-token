@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cplus-dem.c	5.4 (Berkeley) %G%"
+literal|"@(#)cplus-dem.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,23 +125,6 @@ define|#
 directive|define
 name|strrchr
 value|rindex
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
 end_define
 
 begin_endif
