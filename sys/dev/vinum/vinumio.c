@@ -500,6 +500,21 @@ operator|)
 expr_stmt|;
 comment|/* high-order unit bits */
 block|}
+if|if
+condition|(
+operator|(
+name|unit
+operator|&
+literal|7
+operator|)
+operator|==
+literal|2
+condition|)
+comment|/* partition c */
+return|return
+name|ENOTTY
+return|;
+comment|/* not buying that */
 name|drive
 operator|->
 name|dev
@@ -4120,13 +4135,23 @@ expr_stmt|;
 comment|/* try to open it */
 if|if
 condition|(
+operator|(
 name|drive
 operator|->
 name|lasterror
 operator|!=
 literal|0
-condition|)
+operator|)
 comment|/* didn't work, */
+operator|||
+operator|(
+name|drive
+operator|->
+name|state
+operator|!=
+name|drive_up
+operator|)
+condition|)
 name|free_drive
 argument_list|(
 name|drive
