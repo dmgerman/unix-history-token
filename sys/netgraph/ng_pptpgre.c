@@ -2817,6 +2817,10 @@ name|iphlen
 operator|+
 name|grelen
 operator|+
+name|gre
+operator|->
+name|hasSeq
+operator|*
 operator|(
 name|u_int16_t
 operator|)
