@@ -2561,6 +2561,11 @@ condition|)
 goto|goto
 name|skip
 goto|;
+name|Mkdir
+argument_list|(
+literal|"/etc"
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|fopen
