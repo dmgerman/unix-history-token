@@ -2898,7 +2898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * aa_dorangeroute()  *  * Add a route for a range of networks from bot to top - 1.  * Algorithm:  *  * Split the range into two subranges such that the middle  * of the two ranges is the point where the highest bit of difference  * between the two addresses makes its transition.  * Each of the upper and lower ranges might not exist, or might be   * representable by 1 or more netmasks. In addition, if both  * ranges can be represented by the same netmask, then teh can be merged  * by using the next higher netmask..  */
+comment|/*  * aa_dorangeroute()  *  * Add a route for a range of networks from bot to top - 1.  * Algorithm:  *  * Split the range into two subranges such that the middle  * of the two ranges is the point where the highest bit of difference  * between the two addresses makes its transition.  * Each of the upper and lower ranges might not exist, or might be   * representable by 1 or more netmasks. In addition, if both  * ranges can be represented by the same netmask, then they can be merged  * by using the next higher netmask..  */
 end_comment
 
 begin_function
