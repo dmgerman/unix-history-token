@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.15	83/05/27	*/
+comment|/*	file.h	4.16	83/06/03	*/
 end_comment
 
 begin_ifdef
@@ -227,6 +227,11 @@ name|FCNTLCANT
 value|(FREAD|FWRITE|FMARK|FDEFER)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* open only modes */
 end_comment
@@ -263,11 +268,6 @@ end_define
 begin_comment
 comment|/* error if already created */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * User definitions.  */
