@@ -390,10 +390,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX needed to change this for FreeBSD.. hit poul */
-end_comment
-
 begin_function
 name|void
 name|softdep_freefile
