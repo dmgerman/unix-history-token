@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.51 1996/10/03 01:22:22 jkh Exp $  **/
+comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.52 1996/10/03 07:51:40 jkh Exp $  **/
 end_comment
 
 begin_comment
@@ -84,6 +84,127 @@ begin_comment
 comment|/* list read by dset to extract changes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USERCONFIG_BOOT
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|userconfig_from_boot
+index|[
+literal|512
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|next
+init|=
+name|userconfig_from_boot
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|getchar
+parameter_list|(
+name|x
+parameter_list|)
+block|{
+if|if
+condition|(
+name|next
+operator|==
+name|userconfig_from_boot
+condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|next
+argument_list|,
+literal|"USERCONFIG\n"
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+block|{
+name|next
+operator|++
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|next
+argument_list|,
+literal|"quit\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|next
+operator|+=
+literal|11
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|*
+name|next
+condition|)
+block|{
+return|return
+operator|(
+operator|*
+name|next
+operator|++
+operator|)
+return|;
+block|}
+else|else
+block|{
+return|return
+name|cngetc
+argument_list|()
+return|;
+block|}
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !USERCONFIG_BOOT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|getchar
+parameter_list|()
+value|cngetc()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USERCONFIG_BOOT */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -92,14 +213,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|cnputc(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|getchar
-parameter_list|()
-value|cngetc()
 end_define
 
 begin_ifdef
@@ -8046,7 +8159,7 @@ comment|/* VISUAL_USERCONFIG */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.51 1996/10/03 01:22:22 jkh Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.52 1996/10/03 07:51:40 jkh Exp $  */
 end_comment
 
 begin_include
@@ -8418,6 +8531,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|introfunc
+parameter_list|(
+name|CmdParm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -8577,6 +8701,15 @@ block|}
 block|,
 comment|/* help		*/
 block|{
+literal|"intro"
+block|,
+name|introfunc
+block|,
+name|NULL
+block|}
+block|,
+comment|/* intro screen	*/
+block|{
 literal|"iom"
 block|,
 name|set_device_mem
@@ -8708,7 +8841,7 @@ name|cmd
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\nFreeBSD Kernel Configuration Utility - Version 1.0\n"
+literal|"\nFreeBSD Kernel Configuration Utility - Version 1.1\n"
 literal|" Type \"help\" for help"
 ifdef|#
 directive|ifdef
@@ -9865,6 +9998,231 @@ name|printf
 argument_list|(
 literal|"Commands may be abbreviated to a unique prefix\n"
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|center
+parameter_list|(
+name|int
+name|y
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|putxy
+argument_list|(
+operator|(
+literal|80
+operator|-
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+operator|)
+operator|/
+literal|2
+argument_list|,
+name|y
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|introfunc
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+name|int
+name|y
+init|=
+literal|3
+decl_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
+name|center
+argument_list|(
+name|y
+argument_list|,
+literal|"!iKernel Configuration Editor!n"
+argument_list|)
+expr_stmt|;
+name|y
+operator|+=
+literal|2
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"In this next screen, you will be shown a full list of all the device"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"drivers which are available in this copy of the OS kernel.  This is"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"!inot!n a list of devices which you necessarily have, simply those"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"which this kernel is capable of supporting."
+argument_list|)
+expr_stmt|;
+operator|++
+name|y
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"You should go through each device category and delete all entries"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"(using the DELETE key) for devices that you do not have.  This is an"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"important step since it minimizes the chance of conflicts and also"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"makes the kernel boot faster since there's no time wasted in trying to"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"detect non-existant hardware.  If you see an entry for a device which you"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"you !ido!n have and it's not a PCI device (which will be auto-configured),"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"be sure that its configuration parameters match your actual hardware."
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"To edit a device's configuration, simply press ENTER while over it."
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"Once you are satisfied with your device configuration, press Q to"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+name|y
+operator|++
+argument_list|,
+literal|"proceed with the booting process."
+argument_list|)
+expr_stmt|;
+operator|++
+name|y
+expr_stmt|;
+name|center
+argument_list|(
+name|y
+argument_list|,
+literal|"!iPress a key to continue!n"
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
 expr_stmt|;
 return|return
 literal|0

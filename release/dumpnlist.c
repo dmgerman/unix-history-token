@@ -35,12 +35,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"uc_main.h"
-end_include
-
 begin_decl_stmt
 name|struct
 name|nlist
@@ -168,11 +162,20 @@ return|return
 literal|1
 return|;
 block|}
-name|fprintf
+name|printf
 argument_list|(
-name|stdout
+literal|"%d\n"
 argument_list|,
-literal|"struct nlist nl[] = {\n"
+sizeof|sizeof
+argument_list|(
+name|nl
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|nlist
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -192,11 +195,9 @@ name|i
 operator|++
 control|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stdout
-argument_list|,
-literal|"\t{ \"%s\", %d, %d, %d, %ld },\n"
+literal|"%s\n"
 argument_list|,
 name|nl
 index|[
@@ -204,6 +205,11 @@ name|i
 index|]
 operator|.
 name|n_name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d %d %d %ld\n"
 argument_list|,
 name|nl
 index|[
@@ -235,13 +241,6 @@ name|n_value
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"};\n"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
