@@ -758,17 +758,6 @@ begin_comment
 comment|/* Return indirect block buffer. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BA_NOWAIT
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Do not sleep to await lock. */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
