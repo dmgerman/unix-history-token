@@ -626,6 +626,13 @@ name|authorized_keys_file2
 operator|=
 name|NULL
 expr_stmt|;
+name|options
+operator|->
+name|check_mail
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 
