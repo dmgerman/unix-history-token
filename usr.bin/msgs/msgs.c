@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * msgs - a user bulletin board program  *  * usage:  *	msgs [fhlopq] [[-]number]	to read messages  *	msgs -s				to place messages  *	msgs -c [-days]			to clean up the bulletin board  *  * prompt commands are:  *	y	print message  *	n	flush message, go to next message  *	q	flush message, quit  *	p	print message, turn on 'pipe thru more' mode  *	P	print message, turn off 'pipe thru more' mode  *	-	reprint last message  *	s[-][<num>] [<filename>]	save message  *	m[-][<num>]	mail with message in temp mbox  *	x	exit without flushing this message  *<num>	print message number<num>  */
@@ -522,7 +525,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|uid_t
 name|uid
 decl_stmt|;
 end_decl_stmt
@@ -974,20 +977,13 @@ name|uid
 operator|!=
 name|DAEMON
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Sorry\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"only the super-user can use the c flag"
 argument_list|)
 expr_stmt|;
-block|}
 name|clean
 operator|=
 name|YES
@@ -2494,6 +2490,7 @@ block|{
 case|case
 literal|'x'
 case|:
+comment|/* FALLTHROUGH */
 case|case
 literal|'X'
 case|:
@@ -2502,9 +2499,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|'q'
 case|:
+comment|/* FALLTHROUGH */
 case|case
 literal|'Q'
 case|:
@@ -2522,10 +2521,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* intentional fall-thru */
+comment|/* NOTREACHED */
 case|case
 literal|'n'
 case|:
+comment|/* FALLTHROUGH */
 case|case
 literal|'N'
 case|:
@@ -2547,6 +2547,7 @@ break|break;
 case|case
 literal|'p'
 case|:
+comment|/* FALLTHROUGH */
 case|case
 literal|'P'
 case|:
@@ -2560,10 +2561,11 @@ operator|==
 literal|'p'
 operator|)
 expr_stmt|;
-comment|/* intentional fallthru */
+comment|/* FALLTHROUGH */
 case|case
 literal|'\n'
 case|:
+comment|/* FALLTHROUGH */
 case|case
 literal|'y'
 case|:
@@ -2788,6 +2790,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
