@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)wbuf.c	4.3 (Berkeley) %G% */
+comment|/* @(#)wbuf.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -633,6 +633,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * fclose(*iop) - Close an open stdio stream without side effects.  *  * As per Dennis Ricthie's mail, fclose is defined to leave in a "virgin" state,  * the structure pointed to by the parameter, *iop.  This means that  * all flags are cleared, counters set to 0 and Pointers set to NULL.  *  * Which implies:  *		foo = fopen...  *		setbuf (foo, some_buffer);  *		.....  *		fclose(foo);  *  *	Will leave the buffer stucture cleared.  If the user wishes to  * reuse the *iop (foo) when he opens another file he must AGAIN call setbuf(3)  * if he again wishes to supply his own buffer.  *  *	The old method allowed the above case but had a nasty side effect  * of leaving data around if the phase of the moon was right.  The correct  * solution is to sanitize everything with the fclose.  *	Clem Cole 12-15-82  */
+end_comment
+
 begin_expr_stmt
 name|fclose
 argument_list|(
@@ -649,12 +653,14 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|r
-expr_stmt|;
+decl_stmt|;
 name|r
 operator|=
 name|EOF
 expr_stmt|;
+comment|/* 	 * Is this an open file structure as opposed to being String. 	 */
 if|if
 condition|(
 name|iop
@@ -680,6 +686,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * flush out any pending I/O 		 */
 name|r
 operator|=
 name|fflush
@@ -687,6 +694,7 @@ argument_list|(
 name|iop
 argument_list|)
 expr_stmt|;
+comment|/* 		 * tell UNIX that it can free up the file descriptor 		 */
 if|if
 condition|(
 name|close
@@ -703,6 +711,7 @@ name|r
 operator|=
 name|EOF
 expr_stmt|;
+comment|/* 		 * if we had done a malloc(3) in flsbuf or filbuf we need 		 * to give the buffer back to the system 		 */
 if|if
 condition|(
 name|iop
@@ -718,25 +727,32 @@ operator|->
 name|_base
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+block|}
+comment|/* 	 * finially sanitize the buffer structure 	 */
 name|iop
 operator|->
-name|_flag
-operator|&
-operator|(
-name|_IOMYBUF
-operator||
-name|_IONBF
-operator||
-name|_IOLBF
-operator|)
-condition|)
-block|{
+name|_cnt
+operator|=
+literal|0
+expr_stmt|;
 name|iop
 operator|->
 name|_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|iop
+operator|->
+name|_ptr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 expr_stmt|;
 name|iop
@@ -745,36 +761,15 @@ name|_bufsiz
 operator|=
 literal|0
 expr_stmt|;
-block|}
-block|}
 name|iop
 operator|->
 name|_flag
-operator|&=
-operator|~
-operator|(
-name|_IOREAD
-operator||
-name|_IOWRT
-operator||
-name|_IOLBF
-operator||
-name|_IONBF
-operator||
-name|_IOMYBUF
-operator||
-name|_IOERR
-operator||
-name|_IOEOF
-operator||
-name|_IOSTRG
-operator||
-name|_IORW
-operator|)
+operator|=
+literal|0
 expr_stmt|;
 name|iop
 operator|->
-name|_cnt
+name|_file
 operator|=
 literal|0
 expr_stmt|;
