@@ -187,6 +187,10 @@ begin_comment
 comment|/* Directory */
 end_comment
 
+begin_comment
+comment|/*  * CSR keys  * 00 - 2F: defined by CSR architecture standards.  * 30 - 37: defined by BUS starndards  * 38 - 3F: defined by Vendor/Specifier  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -538,6 +542,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CSRVAL_VENDOR_PRIVATE
+value|0xacde48
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSRVAL_1394TA
 value|0x00a02d
 end_define
@@ -795,6 +806,70 @@ value|0x31333934
 name|u_int32_t
 name|bus_name
 decl_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int32_t
+name|irmc
+range|:
+literal|1
+decl_stmt|,
+comment|/* iso. resource manager capable */
+name|cmc
+range|:
+literal|1
+decl_stmt|,
+comment|/* cycle master capable */
+name|isc
+range|:
+literal|1
+decl_stmt|,
+comment|/* iso. operation support */
+name|bmc
+range|:
+literal|1
+decl_stmt|,
+comment|/* bus manager capable */
+name|pmc
+range|:
+literal|1
+decl_stmt|,
+comment|/* power manager capable */
+range|:
+literal|3
+decl_stmt|,
+name|cyc_clk_acc
+range|:
+literal|8
+decl_stmt|,
+comment|/* 0<= ppm<= 100 */
+name|max_rec
+range|:
+literal|4
+decl_stmt|,
+comment|/* (2<< max_rec) bytes */
+range|:
+literal|2
+decl_stmt|,
+name|max_rom
+range|:
+literal|2
+decl_stmt|,
+name|generation
+range|:
+literal|4
+decl_stmt|,
+range|:
+literal|1
+decl_stmt|,
+name|link_spd
+range|:
+literal|3
+decl_stmt|;
+else|#
+directive|else
 name|u_int32_t
 name|link_spd
 range|:
@@ -807,18 +882,6 @@ name|generation
 range|:
 literal|4
 decl_stmt|,
-define|#
-directive|define
-name|MAXROM_4
-value|0
-define|#
-directive|define
-name|MAXROM_64
-value|1
-define|#
-directive|define
-name|MAXROM_1024
-value|2
 name|max_rom
 range|:
 literal|2
@@ -864,6 +927,8 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* iso. resource manager capable */
+endif|#
+directive|endif
 name|struct
 name|fw_eui64
 name|eui64
@@ -871,6 +936,31 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* max_rom */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXROM_4
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXROM_64
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXROM_1024
+value|2
+end_define
 
 begin_define
 define|#
@@ -1108,15 +1198,13 @@ name|offset
 decl_stmt|;
 struct|struct
 block|{
-name|u_int32_t
-name|crc
-range|:
-literal|16
-decl_stmt|,
+name|BIT16x2
+argument_list|(
 name|crc_len
-range|:
-literal|16
-decl_stmt|;
+argument_list|,
+name|crc
+argument_list|)
+expr_stmt|;
 name|u_int32_t
 name|buf
 index|[
