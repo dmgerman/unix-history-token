@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1003,34 +1003,6 @@ end_ifdef
 
 begin_decl_stmt
 name|void
-name|lease_check
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|ucred
-operator|,
-name|int
-name|flag
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|lease_updatetime
 name|__P
 argument_list|(
@@ -1041,22 +1013,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LEASE_CHECK
-parameter_list|(
-name|vp
-parameter_list|,
-name|p
-parameter_list|,
-name|cred
-parameter_list|,
-name|flag
-parameter_list|)
-value|lease_check((vp), (p), (cred), (flag))
-end_define
 
 begin_define
 define|#
@@ -1072,21 +1028,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|LEASE_CHECK
-parameter_list|(
-name|vp
-parameter_list|,
-name|p
-parameter_list|,
-name|cred
-parameter_list|,
-name|flag
-parameter_list|)
-end_define
 
 begin_define
 define|#
