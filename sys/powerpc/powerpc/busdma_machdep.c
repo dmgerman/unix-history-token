@@ -190,6 +190,11 @@ name|void
 modifier|*
 name|callback_arg
 decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|callback_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
