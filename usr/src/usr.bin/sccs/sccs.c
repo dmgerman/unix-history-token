@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c 1.7 delta %G% 20:24:38 get %H% %T%"
+literal|"@(#)sccs.c 1.8 delta %G% 20:53:30 get %H% %T%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,17 @@ end_define
 
 begin_comment
 comment|/* call a program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMACRO
+value|1
+end_define
+
+begin_comment
+comment|/* command substitution macro */
 end_comment
 
 begin_comment
@@ -211,6 +222,14 @@ block|,
 name|NO_SDOT
 block|,
 literal|"/usr/sccs/what"
+block|,
+literal|"del"
+block|,
+name|CMACRO
+block|,
+literal|0
+block|,
+literal|"delta/get"
 block|,
 name|NULL
 block|,
@@ -377,6 +396,8 @@ expr_stmt|;
 name|command
 argument_list|(
 name|argv
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|exit
@@ -391,6 +412,8 @@ begin_macro
 name|command
 argument_list|(
 argument|argv
+argument_list|,
+argument|forkflag
 argument_list|)
 end_macro
 
@@ -399,6 +422,12 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|forkflag
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +443,17 @@ specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|q
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|40
+index|]
 decl_stmt|;
 comment|/* 	**  Look up command. 	**	At this point, argv points to the command name. 	*/
 name|p
@@ -500,14 +540,87 @@ name|sccsflags
 argument_list|,
 name|argv
 argument_list|,
-name|FALSE
+name|forkflag
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|CMACRO
+case|:
+comment|/* command macro */
+for|for
+control|(
+name|p
+operator|=
+name|cmd
+operator|->
+name|sccspath
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|q
+operator|=
+name|buf
+init|;
+operator|*
+name|p
+operator|!=
+literal|'/'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+operator|,
+name|q
+operator|++
+control|)
+operator|*
+name|q
+operator|=
+operator|*
+name|p
+expr_stmt|;
+operator|*
+name|q
+operator|=
+literal|'\0'
+expr_stmt|;
+name|argv
+index|[
+literal|0
+index|]
+operator|=
+name|buf
+expr_stmt|;
+name|command
+argument_list|(
+name|argv
+argument_list|,
+operator|*
+name|p
+operator|!=
+literal|'\0'
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Sccs internal error: callprog\n"
+literal|"Sccs internal error: CMACRO\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -605,6 +718,10 @@ function_decl|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+specifier|auto
+name|int
+name|st
 decl_stmt|;
 if|if
 condition|(
@@ -721,11 +838,19 @@ name|i
 operator|>
 literal|0
 condition|)
+block|{
+name|wait
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|i
+name|st
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	**  Set protection as appropriate. 	*/
 if|if
