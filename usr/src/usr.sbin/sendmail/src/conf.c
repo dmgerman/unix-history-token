@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.33 (Berkeley) %G%"
+literal|"@(#)conf.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ file|"pathnames.h"
 end_include
 
 begin_comment
-comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		VMUNIX -- running on a Berkeley UNIX system. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
+comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
 end_comment
 
 begin_escape
@@ -1842,23 +1842,11 @@ begin_comment
 comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/wait.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
 
 begin_function
 name|void

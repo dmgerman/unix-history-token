@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.28		%G%"
+literal|"@(#)sendmail.h	5.29		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,12 +132,6 @@ directive|ifdef
 name|DAEMON
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -149,12 +143,6 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
 
 begin_endif
 endif|#
@@ -1634,12 +1622,6 @@ directive|ifdef
 name|DAEMON
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1696,12 +1678,6 @@ end_define
 begin_comment
 comment|/* this entry is valid */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
 
 begin_endif
 endif|#

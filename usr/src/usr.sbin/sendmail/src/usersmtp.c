@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.18 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.19 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.18 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.19 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,11 @@ name|EVENT
 modifier|*
 name|gte
 decl_stmt|;
+specifier|register
+name|STAB
+modifier|*
+name|st
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -298,6 +303,12 @@ decl_stmt|;
 specifier|static
 name|int
 name|greettimeout
+parameter_list|()
+function_decl|;
+specifier|extern
+name|STAB
+modifier|*
+name|stab
 parameter_list|()
 function_decl|;
 comment|/* 	**  Open the connection to the mailer. 	*/
@@ -862,24 +873,8 @@ operator|(
 name|EX_PROTOCOL
 operator|)
 return|;
-comment|/* signal a temporary failure */
 name|tempfail1
 label|:
-ifdef|#
-directive|ifdef
-name|HOSTINFO
-block|{
-specifier|register
-name|STAB
-modifier|*
-name|st
-decl_stmt|;
-specifier|extern
-name|STAB
-modifier|*
-name|stab
-parameter_list|()
-function_decl|;
 comment|/* log this as an error to avoid sure-to-be-void connections */
 name|st
 operator|=
@@ -908,12 +903,9 @@ name|ho_errno
 operator|=
 name|errno
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* HOSTINFO */
 name|tempfail2
 label|:
+comment|/* signal a temporary failure */
 name|smtpquit
 argument_list|(
 name|m
@@ -924,9 +916,9 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-comment|/* signal service unavailable */
 name|unavailable
 label|:
+comment|/* signal service unavailable */
 name|smtpquit
 argument_list|(
 name|m

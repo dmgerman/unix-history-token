@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.12 (Berkeley) %G%"
+literal|"@(#)err.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,7 +1104,7 @@ directive|ifdef
 name|DAEMON
 ifdef|#
 directive|ifdef
-name|VMUNIX
+name|ETIMEDOUT
 comment|/* 	**  Handle special network error codes. 	** 	**	These are 4.2/4.3bsd specific; they should be in daemon.c. 	*/
 switch|switch
 condition|(
@@ -1270,10 +1270,8 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|VMUNIX
 endif|#
 directive|endif
-endif|DAEMON
 if|if
 condition|(
 name|errno
