@@ -6905,7 +6905,7 @@ name|defined
 argument_list|(
 name|PMAP_DIAGNOSTIC
 argument_list|)
-comment|/* 	 * XXX this makes pmap_page_protect(NONE) illegal for non-managed 	 * pages! 	 */
+comment|/* 	 * XXX This makes pmap_remove_all() illegal for non-managed pages! 	 */
 if|if
 condition|(
 operator|!
@@ -6922,7 +6922,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_page_protect: illegal for unmanaged page, va: 0x%x"
+literal|"pmap_remove_all: illegal for unmanaged page, va: 0x%x"
 argument_list|,
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -6933,6 +6933,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splvm
