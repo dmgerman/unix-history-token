@@ -5151,7 +5151,7 @@ name|void
 name|pmap_prefault
 parameter_list|(
 name|pmap_t
-name|pmap
+name|pm
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -5160,8 +5160,27 @@ name|vm_map_entry_t
 name|entry
 parameter_list|)
 block|{
-name|TODO
+name|KASSERT
+argument_list|(
+name|pm
+operator|==
+operator|&
+name|curproc
+operator|->
+name|p_vmspace
+operator|->
+name|vm_pmap
+operator|||
+name|pm
+operator|==
+name|kernel_pmap
+argument_list|,
+operator|(
+literal|"pmap_prefault: non current pmap"
+operator|)
+argument_list|)
 expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
