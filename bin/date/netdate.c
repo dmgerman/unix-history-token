@@ -696,8 +696,10 @@ name|err
 operator|!=
 name|ECONNREFUSED
 condition|)
-name|warn
+name|warnc
 argument_list|(
+name|err
+argument_list|,
 literal|"send (delayed error)"
 argument_list|)
 expr_stmt|;
