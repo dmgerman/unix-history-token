@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.22	83/07/18	*/
+comment|/*	tu.c	4.23	83/07/21	*/
 end_comment
 
 begin_if
@@ -388,7 +388,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-name|pcnt
+name|tu_pcnt
 index|[
 literal|2
 index|]
@@ -871,7 +871,7 @@ condition|)
 name|tu_pee
 argument_list|(
 operator|&
-name|pcnt
+name|tu_pcnt
 index|[
 name|minor
 argument_list|(
@@ -1907,7 +1907,7 @@ condition|)
 name|tu_vee
 argument_list|(
 operator|&
-name|pcnt
+name|tu_pcnt
 index|[
 name|minor
 argument_list|(
@@ -2047,7 +2047,7 @@ condition|)
 name|tu_vee
 argument_list|(
 operator|&
-name|pcnt
+name|tu_pcnt
 index|[
 name|minor
 argument_list|(
@@ -2974,7 +2974,7 @@ condition|)
 name|tu_vee
 argument_list|(
 operator|&
-name|pcnt
+name|tu_pcnt
 index|[
 name|minor
 argument_list|(
