@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	1.4 (Berkeley) %G%"
+literal|"@(#)kdump.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"t:f:dnlTm"
+literal|"t:f:dnlTm:"
 argument_list|)
 operator|)
 operator|!=
