@@ -61,6 +61,12 @@ directive|include
 file|<sys/pioctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -4257,6 +4263,36 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|int
+name|suser_permitted
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suser_permitted
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|suser_permitted
+argument_list|,
+literal|0
+argument_list|,
+literal|"processes with uid 0 have privilege"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Test whether the specified credentials imply "super-user"  * privilege; if so, and we have accounting info, set the flag  * indicating use of super-powers.  * Returns 0 or error.  */
