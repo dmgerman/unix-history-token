@@ -2113,6 +2113,7 @@ operator|+
 literal|1200
 operator|)
 operator|||
+comment|/* 1200 = 307.2KHz>> 8 */
 operator|(
 name|sec
 operator|<
