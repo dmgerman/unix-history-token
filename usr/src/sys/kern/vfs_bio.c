@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	3.10	%G%	*/
+comment|/*	vfs_bio.c	3.11	%G%	*/
 end_comment
 
 begin_include
@@ -2806,6 +2806,32 @@ name|b_dev
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|B_DIRTY
+condition|)
+block|{
+name|swpf
+index|[
+name|bp
+operator|-
+name|swbuf
+index|]
+operator|=
+name|pfcent
+expr_stmt|;
+name|swsize
+index|[
+name|bp
+operator|-
+name|swbuf
+index|]
+operator|=
+name|nbytes
+expr_stmt|;
+block|}
 operator|(
 operator|*
 name|bdevsw
@@ -2839,24 +2865,6 @@ name|panic
 argument_list|(
 literal|"big push"
 argument_list|)
-expr_stmt|;
-name|swsize
-index|[
-name|bp
-operator|-
-name|swbuf
-index|]
-operator|=
-name|nbytes
-expr_stmt|;
-name|swpf
-index|[
-name|bp
-operator|-
-name|swbuf
-index|]
-operator|=
-name|pfcent
 expr_stmt|;
 return|return;
 block|}
