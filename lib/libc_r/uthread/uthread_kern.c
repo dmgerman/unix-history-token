@@ -784,7 +784,7 @@ argument_list|(
 operator|&
 name|_workq
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{ 		}
