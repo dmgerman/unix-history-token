@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.12 (Berkeley) %G%"
+literal|"@(#)util.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -630,6 +630,10 @@ name|shellval
 decl_stmt|;
 name|char
 modifier|*
+name|bp
+decl_stmt|;
+name|char
+modifier|*
 name|getusershell
 argument_list|()
 decl_stmt|,
@@ -842,13 +846,18 @@ name|shellval
 operator|=
 literal|0
 expr_stmt|;
+name|bp
+operator|=
+name|pw
+operator|->
+name|pw_gecos
+expr_stmt|;
 name|p
 operator|=
 name|strsep
 argument_list|(
-name|pw
-operator|->
-name|pw_gecos
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
@@ -873,11 +882,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
@@ -902,11 +908,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
@@ -931,11 +934,8 @@ name|p
 operator|=
 name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+operator|&
+name|bp
 argument_list|,
 literal|","
 argument_list|)
