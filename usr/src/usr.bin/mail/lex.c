@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.4 %G%"
+literal|"@(#)lex.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,12 +366,7 @@ name|sigset
 argument_list|(
 name|SIGCONT
 argument_list|,
-name|contin
-argument_list|)
-expr_stmt|;
-name|sighold
-argument_list|(
-name|SIGCONT
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 if|if
@@ -520,9 +515,11 @@ operator|!
 name|sourcing
 condition|)
 block|{
-name|sigrelse
+name|sigset
 argument_list|(
 name|SIGCONT
+argument_list|,
+name|contin
 argument_list|)
 expr_stmt|;
 name|printf
@@ -660,9 +657,11 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-name|sighold
+name|sigset
 argument_list|(
 name|SIGCONT
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 if|if
