@@ -315,6 +315,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+name|xxx
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -603,13 +609,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * make symbolic links in compilation directory 	 * for "sys" (to make genassym.c work along with #include<sys/xxx>) 	 * and similarly for "machine". 	 */
-block|{
-name|char
-name|xxx
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -655,6 +654,17 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|unlink
+argument_list|(
+name|path
+argument_list|(
+literal|"machine"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|symlink
 argument_list|(
 name|xxx
@@ -665,7 +675,6 @@ literal|"machine"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|options
 argument_list|()
 expr_stmt|;
