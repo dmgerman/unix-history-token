@@ -2369,12 +2369,6 @@ name|ftype
 operator|=
 name|VM_PROT_READ
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|map
@@ -2398,24 +2392,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Grow the stack if necessary 		 */
-comment|/* vm_map_growstack fails only if va falls into 		 * a growable stack region and the stack growth 		 * fails.  It succeeds if va was not within 		 * a growable stack region, or if the stack  		 * growth succeeded. 		 */
-if|if
-condition|(
-name|vm_map_growstack
-argument_list|(
-name|p
-argument_list|,
-name|va
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-condition|)
-name|rv
-operator|=
-name|KERN_FAILURE
-expr_stmt|;
-else|else
 comment|/* Fault in the user page: */
 name|rv
 operator|=
@@ -2471,12 +2447,6 @@ name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rv
