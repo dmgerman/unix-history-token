@@ -313,11 +313,11 @@ index|]
 expr_stmt|;
 name|gethostname
 argument_list|(
-name|host
+name|local_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|host
+name|local_host
 argument_list|)
 argument_list|)
 expr_stmt|;

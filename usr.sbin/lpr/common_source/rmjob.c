@@ -385,9 +385,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|from
+name|from_host
 operator|==
-name|host
+name|local_host
 condition|)
 name|fatal
 argument_list|(
@@ -400,7 +400,7 @@ name|all
 operator|=
 literal|1
 expr_stmt|;
-comment|/* all those from 'from' */
+comment|/* all those from 'from_host' */
 name|person
 operator|=
 name|root
@@ -946,15 +946,15 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-name|from
+name|from_host
 operator|!=
-name|host
+name|local_host
 condition|)
 name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|seteuid
@@ -1055,14 +1055,14 @@ condition|(
 name|all
 operator|&&
 operator|(
-name|from
+name|from_host
 operator|==
-name|host
+name|local_host
 operator|||
 operator|!
 name|strcmp
 argument_list|(
-name|from
+name|from_host
 argument_list|,
 name|file
 operator|+
@@ -1330,14 +1330,14 @@ name|root
 argument_list|)
 operator|&&
 operator|(
-name|from
+name|from_host
 operator|==
-name|host
+name|local_host
 operator|||
 operator|!
 name|strcmp
 argument_list|(
-name|from
+name|from_host
 argument_list|,
 name|file
 operator|+
@@ -1363,7 +1363,7 @@ operator|&&
 operator|!
 name|strcmp
 argument_list|(
-name|from
+name|from_host
 argument_list|,
 name|file
 operator|+
@@ -1377,15 +1377,15 @@ operator|)
 return|;
 if|if
 condition|(
-name|from
+name|from_host
 operator|!=
-name|host
+name|local_host
 condition|)
 name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1758,15 +1758,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|from
+name|from_host
 operator|!=
-name|host
+name|local_host
 condition|)
 name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|printf

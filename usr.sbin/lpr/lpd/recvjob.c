@@ -805,7 +805,7 @@ name|cp
 operator|+
 literal|6
 argument_list|,
-name|from
+name|from_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1118,7 +1118,7 @@ name|size
 argument_list|,
 name|givenid
 argument_list|,
-name|from
+name|from_host
 argument_list|,
 name|givenhost
 argument_list|)
@@ -1838,7 +1838,7 @@ name|LOG_ERR
 argument_list|,
 literal|"Error receiving job from %s:"
 argument_list|,
-name|fromb
+name|from_host
 argument_list|)
 expr_stmt|;
 name|vsyslog

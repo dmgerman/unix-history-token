@@ -490,11 +490,11 @@ literal|0
 expr_stmt|;
 name|gethostname
 argument_list|(
-name|host
+name|local_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|host
+name|local_host
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1878,18 +1878,19 @@ begin_comment
 comment|/* name of person doing lprm */
 end_comment
 
+begin_comment
+comment|/* buffer to hold the client's machine-name */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|char
-name|fromb
+name|frombuf
 index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* buffer for client's machine name */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -2074,7 +2075,7 @@ name|LOG_INFO
 argument_list|,
 literal|"%s requests %s %s"
 argument_list|,
-name|from
+name|from_host
 argument_list|,
 name|cmdnames
 index|[
@@ -2100,7 +2101,7 @@ argument_list|,
 operator|*
 name|cp
 argument_list|,
-name|from
+name|from_host
 argument_list|)
 expr_stmt|;
 block|}
@@ -2830,7 +2831,7 @@ init|=
 literal|0
 decl_stmt|;
 name|char
-name|host
+name|hostbuf
 index|[
 name|NI_MAXHOST
 index|]
@@ -2907,11 +2908,11 @@ name|f
 operator|->
 name|sa_len
 argument_list|,
-name|host
+name|hostbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|host
+name|hostbuf
 argument_list|)
 argument_list|,
 name|NULL
@@ -2936,11 +2937,11 @@ name|f
 operator|->
 name|sa_len
 argument_list|,
-name|host
+name|hostbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|host
+name|hostbuf
 argument_list|)
 argument_list|,
 name|NULL
@@ -2970,42 +2971,25 @@ literal|0
 argument_list|,
 literal|"Host name for your address (%s) unknown"
 argument_list|,
-name|host
+name|hostbuf
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|strncpy
+name|strlcpy
 argument_list|(
-name|fromb
+name|frombuf
 argument_list|,
-name|host
+name|hostbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fromb
+name|frombuf
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|fromb
-index|[
-sizeof|sizeof
-argument_list|(
-name|fromb
-argument_list|)
-operator|-
-literal|1
-index|]
+name|from_host
 operator|=
-literal|'\0'
-expr_stmt|;
-name|from
-operator|=
-name|fromb
+name|frombuf
 expr_stmt|;
 comment|/* Need address in stringform for comparison (no DNS lookup here) */
 name|error
@@ -3018,11 +3002,11 @@ name|f
 operator|->
 name|sa_len
 argument_list|,
-name|host
+name|hostbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|host
+name|hostbuf
 argument_list|)
 argument_list|,
 name|NULL
@@ -3045,26 +3029,12 @@ argument_list|,
 literal|"Cannot print address"
 argument_list|)
 expr_stmt|;
-name|strncpy
-argument_list|(
 name|from_ip
-argument_list|,
-name|host
-argument_list|,
-name|NI_MAXHOST
-argument_list|)
-expr_stmt|;
-name|from_ip
-index|[
-sizeof|sizeof
-argument_list|(
-name|from_ip
-argument_list|)
-operator|-
-literal|1
-index|]
 operator|=
-literal|'\0'
+name|strdup
+argument_list|(
+name|hostbuf
+argument_list|)
 expr_stmt|;
 comment|/* Reject numeric addresses */
 name|memset
@@ -3105,7 +3075,7 @@ if|if
 condition|(
 name|getaddrinfo
 argument_list|(
-name|fromb
+name|from_host
 argument_list|,
 name|NULL
 argument_list|,
@@ -3130,7 +3100,7 @@ literal|0
 argument_list|,
 literal|"reverse lookup results in non-FQDN %s"
 argument_list|,
-name|fromb
+name|from_host
 argument_list|)
 expr_stmt|;
 block|}
@@ -3165,7 +3135,7 @@ name|error
 operator|=
 name|getaddrinfo
 argument_list|(
-name|fromb
+name|from_host
 argument_list|,
 name|NULL
 argument_list|,

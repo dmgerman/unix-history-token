@@ -445,7 +445,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-name|fromhost
+name|origin_host
 index|[
 name|MAXHOSTNAMELEN
 index|]
@@ -2273,9 +2273,9 @@ block|{
 case|case
 literal|'H'
 case|:
-name|strncpy
+name|strlcpy
 argument_list|(
-name|fromhost
+name|origin_host
 argument_list|,
 name|line
 operator|+
@@ -2283,23 +2283,9 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fromhost
+name|origin_host
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|fromhost
-index|[
-sizeof|sizeof
-argument_list|(
-name|fromhost
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -4248,7 +4234,7 @@ name|n
 operator|++
 index|]
 operator|=
-name|fromhost
+name|origin_host
 expr_stmt|;
 name|av
 index|[
@@ -4853,9 +4839,9 @@ operator|==
 literal|'H'
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
-name|fromhost
+name|origin_host
 argument_list|,
 name|line
 operator|+
@@ -4863,23 +4849,9 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fromhost
+name|origin_host
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|fromhost
-index|[
-sizeof|sizeof
-argument_list|(
-name|fromhost
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -5630,7 +5602,7 @@ operator|++
 name|n
 index|]
 operator|=
-name|fromhost
+name|origin_host
 expr_stmt|;
 name|av
 index|[
@@ -6602,7 +6574,7 @@ name|pp
 operator|->
 name|remote_host
 argument_list|,
-name|fromhost
+name|origin_host
 argument_list|)
 expr_stmt|;
 return|return
@@ -7589,7 +7561,7 @@ literal|"To: %s@%s\n"
 argument_list|,
 name|user
 argument_list|,
-name|fromhost
+name|origin_host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7612,7 +7584,7 @@ name|printf
 argument_list|(
 literal|"Reply-To: root@%s\n\n"
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7676,7 +7648,7 @@ name|printf
 argument_list|(
 literal|"\ncould not be printed without an account on %s\n"
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|cp

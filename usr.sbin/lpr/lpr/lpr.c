@@ -203,7 +203,7 @@ name|char
 modifier|*
 name|class
 init|=
-name|host
+name|local_host
 decl_stmt|;
 end_decl_stmt
 
@@ -880,11 +880,11 @@ index|]
 expr_stmt|;
 name|gethostname
 argument_list|(
-name|host
+name|local_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|host
+name|local_host
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1565,7 +1565,7 @@ name|card
 argument_list|(
 literal|'H'
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|card
@@ -4287,7 +4287,7 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|host
+name|local_host
 argument_list|)
 operator|+
 literal|8
@@ -4480,7 +4480,7 @@ name|id
 argument_list|,
 name|num
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 return|return
