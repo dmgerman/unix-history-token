@@ -1398,6 +1398,8 @@ operator|=
 name|DIST_XF86_FONTS_BITMAPS
 operator||
 name|DIST_XF86_FONTS_75
+operator||
+name|DIST_XF86_FONTS_100
 expr_stmt|;
 return|return
 name|distSetXF86
