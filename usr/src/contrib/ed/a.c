@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)a.c	5.2 (Berkeley) %G%"
+literal|"@(#)a.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<db.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -109,12 +120,6 @@ literal|0
 condition|)
 name|u_clr_stk
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
 expr_stmt|;
 name|add_flag
 operator|=
