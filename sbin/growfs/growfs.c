@@ -1665,8 +1665,6 @@ decl_stmt|;
 name|long
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|d
 decl_stmt|,
 name|dlower
@@ -10594,8 +10592,6 @@ name|i
 decl_stmt|,
 name|mode
 decl_stmt|,
-name|remaining_blocks
-decl_stmt|,
 name|inodeupdated
 decl_stmt|;
 name|DBG_ENTER
@@ -11005,9 +11001,6 @@ argument_list|)
 name|void
 modifier|*
 name|ibuf
-decl_stmt|;
-name|off_t
-name|offset
 decl_stmt|;
 name|int
 name|i
