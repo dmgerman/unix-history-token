@@ -400,6 +400,52 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * SNMP Error-status values  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNMP_ERR_NOERROR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNMP_ERR_TOOBIG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNMP_ERR_NOSUCHNAME
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNMP_ERR_BADVALUE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNMP_ERR_READONLY
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNMP_ERR_GENERR
+value|5
+end_define
+
+begin_comment
 comment|/*  * Max string length for Variable  */
 end_comment
 
@@ -4351,17 +4397,15 @@ operator|*
 name|bp
 operator|++
 operator|=
-literal|0x02
+name|SNMP_ERR_NOSUCHNAME
 expr_stmt|;
-comment|/* NoSuch */
 else|else
 operator|*
 name|bp
 operator|++
 operator|=
-literal|0x00
+name|SNMP_ERR_NOERROR
 expr_stmt|;
-comment|/* NoError */
 comment|/* Error Index */
 operator|*
 name|bp
@@ -8630,6 +8674,24 @@ comment|/* 				 * This should be in response to our GETNEXT. 				 * Check the OI
 comment|/* 				 * First look for empty table. If found, go to next state. 				 */
 if|if
 condition|(
+operator|(
+name|Hdr
+operator|->
+name|error
+operator|==
+name|SNMP_ERR_NOSUCHNAME
+operator|)
+operator|||
+operator|(
+operator|(
+name|Hdr
+operator|->
+name|error
+operator|==
+name|SNMP_ERR_NOERROR
+operator|)
+operator|&&
+operator|(
 name|oid_ncmp
 argument_list|(
 operator|&
@@ -8657,6 +8719,8 @@ index|]
 argument_list|)
 operator|==
 literal|1
+operator|)
+operator|)
 condition|)
 block|{
 name|ilmi_state
@@ -8668,7 +8732,15 @@ name|ILMI_RUNNING
 expr_stmt|;
 comment|/* ILMI_REG; */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|Hdr
+operator|->
+name|error
+operator|==
+name|SNMP_ERR_NOERROR
+condition|)
 block|{
 comment|/* 					 * Check to see if this matches our address 					 * and if so, that it's a VALID entry. 					 */
 name|Atm_addr
