@@ -430,7 +430,7 @@ argument_list|,
 operator|&
 name|adp
 argument_list|,
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -609,7 +609,7 @@ name|unit
 argument_list|,
 name|sc
 argument_list|,
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)

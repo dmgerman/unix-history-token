@@ -1726,7 +1726,7 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -3660,7 +3660,7 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -5735,7 +5735,7 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -6526,7 +6526,7 @@ name|ED_HPP_TX_PAGE_OFFSET
 expr_stmt|;
 if|if
 condition|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -7759,7 +7759,7 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)

@@ -360,7 +360,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|isa_set_flags
+name|device_set_flags
 argument_list|(
 name|child
 argument_list|,

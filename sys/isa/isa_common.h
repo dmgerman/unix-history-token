@@ -62,9 +62,6 @@ name|struct
 name|resource_list
 name|id_resources
 decl_stmt|;
-name|int
-name|id_flags
-decl_stmt|;
 name|u_int32_t
 name|id_vendorid
 decl_stmt|;

@@ -336,6 +336,10 @@ comment|/* count of calls to device_busy() */
 name|device_state_t
 name|state
 decl_stmt|;
+name|u_int32_t
+name|devflags
+decl_stmt|;
+comment|/* api level flags for device_get_flags() */
 name|u_short
 name|flags
 decl_stmt|;

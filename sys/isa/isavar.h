@@ -256,8 +256,6 @@ name|ISA_IVAR_MSIZE
 block|,
 name|ISA_IVAR_MSIZE_1
 block|,
-name|ISA_IVAR_FLAGS
-block|,
 name|ISA_IVAR_IRQ
 block|,
 name|ISA_IVAR_IRQ_0
@@ -365,17 +363,6 @@ argument_list|(
 argument|msize
 argument_list|,
 argument|MSIZE
-argument_list|,
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|ISA_ACCESSOR
-argument_list|(
-argument|flags
-argument_list|,
-argument|FLAGS
 argument_list|,
 argument|int
 argument_list|)

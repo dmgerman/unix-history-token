@@ -1096,6 +1096,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int32_t
+name|device_get_flags
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|device_t
 name|device_get_parent
 parameter_list|(
@@ -1334,6 +1344,19 @@ parameter_list|,
 name|driver_t
 modifier|*
 name|driver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|device_set_flags
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int32_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2637,7 +2637,7 @@ goto|;
 comment|/* got irq/dma regs? */
 name|flags
 operator|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -2660,7 +2660,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -2708,7 +2708,7 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isa_set_flags
+name|device_set_flags
 argument_list|(
 name|dev
 argument_list|,
@@ -3651,13 +3651,13 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|isa_set_flags
+name|device_set_flags
 argument_list|(
 name|dev
 argument_list|,
 operator|(
 operator|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -3959,7 +3959,7 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -4553,7 +4553,7 @@ decl_stmt|;
 name|int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -4664,7 +4664,7 @@ operator|->
 name|bd_id
 operator|=
 operator|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
