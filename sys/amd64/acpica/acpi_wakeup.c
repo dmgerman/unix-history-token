@@ -302,9 +302,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_asm
 asm|__asm__("				\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_restorecpu, @function\n\ acpi_restorecpu:			\n\ 	.align 4			\n\ 	movl	r_eax,%eax		\n\ 	movl	r_ebx,%ebx		\n\ 	movl	r_ecx,%ecx		\n\ 	movl	r_edx,%edx		\n\ 	movl	r_ebp,%ebp		\n\ 	movl	r_esi,%esi		\n\ 	movl	r_edi,%edi		\n\ 	movl	r_esp,%esp		\n\ 					\n\ 	pushl	r_efl			\n\ 	popfl				\n\ 					\n\ 	movl	ret_addr,%eax		\n\ 	movl	%eax,(%esp)		\n\ 	xorl	%eax,%eax		\n\ 	ret				\n\ 					\n\ 	.text				\n\ 	.p2align 2, 0x90		\n\ 	.type acpi_savecpu, @function	\n\ acpi_savecpu:				\n\ 	movw	%cs,r_cs		\n\ 	movw	%ds,r_ds		\n\ 	movw	%es,r_es		\n\ 	movw	%fs,r_fs		\n\ 	movw	%gs,r_gs		\n\ 	movw	%ss,r_ss		\n\ 					\n\ 	movl	%eax,r_eax		\n\ 	movl	%ebx,r_ebx		\n\ 	movl	%ecx,r_ecx		\n\ 	movl	%edx,r_edx		\n\ 	movl	%ebp,r_ebp		\n\ 	movl	%esi,r_esi		\n\ 	movl	%edi,r_edi		\n\ 					\n\ 	movl	%cr0,%eax		\n\ 	movl	%eax,r_cr0		\n\ 	movl	%cr2,%eax		\n\ 	movl	%eax,r_cr2		\n\ 	movl	%cr3,%eax		\n\ 	movl	%eax,r_cr3		\n\ 	movl	%cr4,%eax		\n\ 	movl	%eax,r_cr4		\n\ 					\n\ 	pushfl				\n\ 	popl	r_efl			\n\ 					\n\ 	movl	%esp,r_esp		\n\ 					\n\ 	sgdt	r_gdt			\n\ 	sidt	r_idt			\n\ 	sldt	r_ldt			\n\ 	str	r_tr			\n\ 					\n\ 	movl	(%esp),%eax		\n\ 	movl	%eax,ret_addr		\n\ 	movl	$1,%eax			\n\ 	ret				\n\ ");
 end_asm
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_function
 specifier|static
