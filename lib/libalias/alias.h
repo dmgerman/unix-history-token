@@ -540,6 +540,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|LibAliasOutTry
+parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+name|_ptr
+parameter_list|,
+name|int
+name|_maxpacketsize
+parameter_list|,
+name|int
+name|_create
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|LibAliasUnaliasOut
 parameter_list|(
 name|struct
