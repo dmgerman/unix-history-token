@@ -240,12 +240,6 @@ begin_comment
 comment|/* flags */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|VINUMDEBUG
-end_if
-
 begin_decl_stmt
 name|int
 name|debug
@@ -257,11 +251,6 @@ end_decl_stmt
 begin_comment
 comment|/* debug flag, usage varies */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -744,85 +733,6 @@ literal|0
 condition|)
 block|{
 comment|/* no go */
-if|if
-condition|(
-name|errno
-operator|==
-name|ENODEV
-condition|)
-block|{
-comment|/* not configured, */
-name|superdev
-operator|=
-name|open
-argument_list|(
-name|VINUM_WRONGSUPERDEV_NAME
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-comment|/* do we have a debug mismatch? */
-if|if
-condition|(
-name|superdev
-operator|>=
-literal|0
-condition|)
-block|{
-comment|/* yup! */
-if|#
-directive|if
-name|VINUMDEBUG
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"This program is compiled with debug support, but the kernel module does\n"
-literal|"not have debug support.  This program must be matched with the kernel\n"
-literal|"module.  Please alter /usr/src/sbin/"
-name|VINUMMOD
-literal|"/Makefile and remove\n"
-literal|"the option -DVINUMDEBUG from the CFLAGS definition, or alternatively\n"
-literal|"edit /usr/src/sys/modules/"
-name|VINUMMOD
-literal|"/Makefile and add the option\n"
-literal|"-DVINUMDEBUG to the CFLAGS definition.  Then rebuild the component\n"
-literal|"of your choice with 'make clean all install'.  If you rebuild the kernel\n"
-literal|"module, you must stop "
-name|VINUMMOD
-literal|" and restart it\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"This program is compiled without debug support, but the kernel module\n"
-literal|"includes debug support.  This program must be matched with the kernel\n"
-literal|"module.  Please alter /usr/src/sbin/"
-name|VINUMMOD
-literal|"/Makefile and add\n"
-literal|"the option -DVINUMDEBUG to the CFLAGS definition, or alternatively\n"
-literal|"edit /usr/src/sys/modules/"
-name|VINUMMOD
-literal|"/Makefile and remove the option\n"
-literal|"-DVINUMDEBUG from the CFLAGS definition.  Then rebuild the component\n"
-literal|"of your choice with 'make clean all install'.  If you rebuild the kernel\n"
-literal|"module, you must stop "
-name|VINUMMOD
-literal|" and restart it\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-literal|1
-return|;
-block|}
-block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -1351,16 +1261,11 @@ argument_list|(
 name|read
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
 name|FUNKEY
 argument_list|(
 name|debug
 argument_list|)
 block|,
-endif|#
-directive|endif
 name|FUNKEY
 argument_list|(
 name|modify
@@ -1773,9 +1678,6 @@ name|j
 index|]
 condition|)
 block|{
-if|#
-directive|if
-name|VINUMDEBUG
 case|case
 literal|'d'
 case|:
@@ -1785,8 +1687,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'f'
 case|:
@@ -2723,43 +2623,6 @@ argument_list|,
 literal|"Can't create %s: %s\n"
 argument_list|,
 name|VINUM_SUPERDEV_NAME
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mknod
-argument_list|(
-name|VINUM_WRONGSUPERDEV_NAME
-argument_list|,
-name|S_IRUSR
-operator||
-name|S_IWUSR
-operator||
-name|S_IFCHR
-argument_list|,
-comment|/* user only */
-name|makedev
-argument_list|(
-name|VINUM_CDEV_MAJOR
-argument_list|,
-name|VINUM_WRONGSUPERDEV
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't create %s: %s\n"
-argument_list|,
-name|VINUM_WRONGSUPERDEV_NAME
 argument_list|,
 name|strerror
 argument_list|(
