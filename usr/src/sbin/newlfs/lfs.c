@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.10 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3183,6 +3183,8 @@ name|d_reclen
 operator|=
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|protodir
 index|[
@@ -3263,6 +3265,8 @@ name|cp
 argument_list|,
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|protodir
 index|[
