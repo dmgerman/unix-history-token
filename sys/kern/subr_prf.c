@@ -2666,6 +2666,9 @@ break|break;
 case|case
 literal|'d'
 case|:
+case|case
+literal|'i'
+case|:
 name|base
 operator|=
 literal|10
