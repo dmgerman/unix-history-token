@@ -60,5 +60,22 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|acpi_machdep_quirks
+parameter_list|(
+name|int
+modifier|*
+name|quirks
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

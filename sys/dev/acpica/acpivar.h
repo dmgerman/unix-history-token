@@ -469,6 +469,28 @@ value|2
 end_define
 
 begin_comment
+comment|/* Quirk flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_Q_OK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_Q_BROKEN
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Disable ACPI completely. */
+end_comment
+
+begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
 end_comment
 
@@ -1661,6 +1683,28 @@ name|sc
 parameter_list|,
 name|int
 name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acpi_table_quirks
+parameter_list|(
+name|int
+modifier|*
+name|quirks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acpi_machdep_quirks
+parameter_list|(
+name|int
+modifier|*
+name|quirks
 parameter_list|)
 function_decl|;
 end_function_decl
