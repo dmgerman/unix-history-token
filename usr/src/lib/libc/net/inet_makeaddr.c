@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_makeaddr.c	4.3	82/11/14	*/
+comment|/*	inet_makeaddr.c	4.4	85/06/02	*/
 end_comment
 
 begin_include
@@ -51,7 +51,11 @@ operator|<<
 name|IN_CLASSA_NSHIFT
 operator|)
 operator||
+operator|(
 name|host
+operator|&
+name|IN_CLASSA_HOST
+operator|)
 expr_stmt|;
 elseif|else
 if|if
@@ -68,7 +72,11 @@ operator|<<
 name|IN_CLASSB_NSHIFT
 operator|)
 operator||
+operator|(
 name|host
+operator|&
+name|IN_CLASSB_HOST
+operator|)
 expr_stmt|;
 else|else
 name|addr
@@ -79,7 +87,11 @@ operator|<<
 name|IN_CLASSC_NSHIFT
 operator|)
 operator||
+operator|(
 name|host
+operator|&
+name|IN_CLASSC_HOST
+operator|)
 expr_stmt|;
 name|addr
 operator|=
