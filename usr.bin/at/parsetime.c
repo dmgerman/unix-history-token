@@ -2455,6 +2455,17 @@ block|{
 case|case
 name|NOW
 case|:
+if|if
+condition|(
+name|scc
+operator|<
+literal|1
+condition|)
+block|{
+return|return
+name|nowtimer
+return|;
+block|}
 comment|/* now is optional prefix for PLUS tree */
 name|expect
 argument_list|(
