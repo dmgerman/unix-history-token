@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	8.10 (Berkeley) %G%"
+literal|"@(#)mountd.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4275,6 +4275,9 @@ argument_list|,
 name|tgrp
 argument_list|)
 expr_stmt|;
+name|endnetgrent
+argument_list|()
+expr_stmt|;
 goto|goto
 name|nextline
 goto|;
@@ -6723,7 +6726,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Inet_addr failed"
+literal|"Inet_addr failed for %s"
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 return|return
@@ -6820,7 +6825,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Gethostbyname failed"
+literal|"Gethostbyname failed for %s"
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 return|return
