@@ -8745,6 +8745,16 @@ name|object
 operator|->
 name|size
 condition|)
+block|{
+if|if
+condition|(
+name|object
+operator|->
+name|size
+operator|<
+name|pindex
+condition|)
+return|return;
 name|psize
 operator|=
 name|object
@@ -8753,6 +8763,7 @@ name|size
 operator|-
 name|pindex
 expr_stmt|;
+block|}
 name|mpte
 operator|=
 name|NULL
