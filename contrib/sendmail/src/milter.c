@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.196 2002/04/14 03:55:07 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.197 2002/06/12 22:33:48 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -5500,6 +5500,20 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"milter_set_option: invalid Milter option, must specify suboption"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|mo

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.606 2002/05/09 21:09:01 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.607 2002/06/14 16:57:32 ca Exp $"
 argument_list|)
 end_macro
 
@@ -11983,16 +11983,9 @@ comment|/* shared memory key file */
 if|#
 directive|if
 name|SM_CONF_SHM
-name|CANONIFY
+name|SET_STRING_EXP
 argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
 name|ShmKeyFile
-operator|=
-name|newstr
-argument_list|(
-name|val
 argument_list|)
 expr_stmt|;
 else|#
@@ -12012,10 +12005,10 @@ argument_list|,
 name|OPTNAME
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
 comment|/* SM_CONF_SHM */
-break|break;
 endif|#
 directive|endif
 comment|/* _FFR_SELECT_SHM */
