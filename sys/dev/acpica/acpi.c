@@ -5091,13 +5091,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiEnableEvent
-argument_list|(
-name|ACPI_EVENT_POWER_BUTTON
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|AcpiClearEvent
 argument_list|(
 name|ACPI_EVENT_POWER_BUTTON
@@ -5139,13 +5132,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|AcpiEnableEvent
-argument_list|(
-name|ACPI_EVENT_SLEEP_BUTTON
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|AcpiClearEvent
 argument_list|(
 name|ACPI_EVENT_SLEEP_BUTTON
