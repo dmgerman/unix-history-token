@@ -2456,7 +2456,7 @@ decl_stmt|;
 name|u_int8_t
 name|challenge
 index|[
-literal|128
+literal|32
 index|]
 decl_stmt|;
 name|struct
@@ -3258,9 +3258,11 @@ name|ssid_len
 decl_stmt|,
 name|rates_len
 decl_stmt|;
-name|struct
-name|ieee80211_nwid
+name|char
 name|ssid
+index|[
+literal|33
+index|]
 decl_stmt|;
 name|u_int16_t
 name|status
@@ -3316,13 +3318,13 @@ argument_list|,
 name|IEEE80211_ELEMID_SSID
 argument_list|,
 name|ssid
-operator|.
-name|i_nwid
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ssid
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|<
@@ -3330,10 +3332,11 @@ literal|0
 condition|)
 return|return;
 name|ssid
-operator|.
-name|i_len
-operator|=
+index|[
 name|ssid_len
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3423,8 +3426,6 @@ operator|->
 name|wi_net_name
 argument_list|,
 name|ssid
-operator|.
-name|i_nwid
 argument_list|)
 operator|!=
 literal|0
@@ -3447,8 +3448,6 @@ argument_list|(
 literal|"wihap_assoc_req: bad ssid: '%s' != '%s'\n"
 argument_list|,
 name|ssid
-operator|.
-name|i_nwid
 argument_list|,
 name|sc
 operator|->
