@@ -2118,13 +2118,60 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0x670
+literal|0x660
 case|:
 name|strcpy
 argument_list|(
 name|cpu_model
 argument_list|,
+literal|"VIA C3 Samuel"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x670
+case|:
+if|if
+condition|(
+name|cpu_id
+operator|&
+literal|0x8
+condition|)
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA C3 Ezra"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
 literal|"VIA C3 Samuel 2"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x680
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA C3 Ezra-T"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x690
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA C3 Nehemiah"
 argument_list|)
 expr_stmt|;
 break|break;
