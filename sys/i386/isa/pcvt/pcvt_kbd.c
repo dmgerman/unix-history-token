@@ -1049,10 +1049,6 @@ name|untimeout
 argument_list|(
 name|check_for_lost_intr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1060,10 +1056,6 @@ name|timeout
 argument_list|(
 name|check_for_lost_intr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|hz

@@ -357,6 +357,7 @@ name|void
 name|scrnsv_blink
 parameter_list|(
 name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3461,14 +3462,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	update asynchronous: cursor, cursor pos displ, sys load, keyb scan  *  *	arg is:  *		UPDATE_START = 0 = do update; requeue  *		UPDATE_STOP  = 1 = suspend updates  *		UPDATE_KERN  = 2 = do update for kernel printfs  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	update asynchronous: cursor, cursor pos displ, sys load, keyb scan  *  *	arg is:  *		UPDATE_START = do update; requeue  *		UPDATE_STOP  = suspend updates  *		UPDATE_KERN  = do update for kernel printfs  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
 name|async_update
 parameter_list|(
-name|int
+name|void
+modifier|*
 name|arg
 parameter_list|)
 block|{
@@ -3497,9 +3499,6 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|async_update
 argument_list|,
 name|UPDATE_START
@@ -4568,9 +4567,6 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|async_update
 argument_list|,
 name|UPDATE_START
@@ -8162,6 +8158,8 @@ name|void
 name|scrnsv_blink
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 specifier|static
@@ -8320,9 +8318,6 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_blink
 argument_list|,
 name|NULL
@@ -8384,9 +8379,6 @@ name|scrnsv_timeout
 condition|)
 name|untimeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_timedout
 argument_list|,
 name|NULL
@@ -8604,11 +8596,7 @@ block|}
 comment|/* prepare for next time... */
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_timedout
-comment|/* me! */
 argument_list|,
 name|NULL
 argument_list|,
@@ -8647,9 +8635,6 @@ name|Crtat
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_blink
 argument_list|,
 name|NULL
@@ -8734,9 +8719,6 @@ literal|1
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_timedout
 argument_list|,
 name|NULL
@@ -8759,9 +8741,6 @@ literal|1
 condition|)
 name|untimeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_blink
 argument_list|,
 name|NULL
@@ -8853,9 +8832,6 @@ block|{
 comment|/* mark next timeout */
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|scrnsv_timedout
 argument_list|,
 name|NULL

@@ -3234,17 +3234,13 @@ expr_stmt|;
 comment|/* flag active */
 name|timeout
 argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
 name|pcvt_timeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* fire off */

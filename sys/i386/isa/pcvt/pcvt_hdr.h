@@ -4392,7 +4392,7 @@ begin_define
 define|#
 directive|define
 name|UPDATE_START
-value|0
+value|((void *)0)
 end_define
 
 begin_comment
@@ -4403,7 +4403,7 @@ begin_define
 define|#
 directive|define
 name|UPDATE_STOP
-value|1
+value|((void *)1)
 end_define
 
 begin_comment
@@ -4414,7 +4414,7 @@ begin_define
 define|#
 directive|define
 name|UPDATE_KERN
-value|2
+value|((void *)2)
 end_define
 
 begin_comment
@@ -7205,42 +7205,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* in FreeBSD> 102 arguments for timeout()/untimeout() are a special type */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|102
-end_if
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT_FUNC_T
-value|timeout_func_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT_FUNC_T
-value|void *
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -7672,7 +7636,8 @@ begin_function_decl
 name|void
 name|async_update
 parameter_list|(
-name|int
+name|void
+modifier|*
 name|arg
 parameter_list|)
 function_decl|;
