@@ -595,12 +595,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
 name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifmr
