@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.12	81/05/03	*/
+comment|/*	ts.c	4.13	81/05/05	*/
 end_comment
 
 begin_include
@@ -1751,7 +1751,7 @@ name|sc
 operator|->
 name|sc_lastiow
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3635,13 +3635,13 @@ operator|=
 block|{
 name|TS_WEOF
 block|,
-name|TS_SFORW
-block|,
-name|TS_SREV
-block|,
 name|TS_SFORWF
 block|,
 name|TS_SREVF
+block|,
+name|TS_SFORW
+block|,
+name|TS_SREV
 block|,
 name|TS_REW
 block|,
@@ -3716,17 +3716,6 @@ case|:
 case|case
 name|MTBSF
 case|:
-name|callcount
-operator|=
-name|mtop
-operator|.
-name|mt_count
-expr_stmt|;
-name|fcount
-operator|=
-name|INF
-expr_stmt|;
-break|break;
 case|case
 name|MTFSR
 case|:
