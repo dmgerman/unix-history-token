@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_usrreq.c,v 5.4 88/11/18 17:29:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_usrreq.c,v $  *	@(#)tp_usrreq.c	7.6 (Berkeley) %G%  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
+comment|/*   * ARGO TP  *  * $Header: tp_usrreq.c,v 5.4 88/11/18 17:29:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_usrreq.c,v $  *	@(#)tp_usrreq.c	7.7 (Berkeley) %G%  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
 end_comment
 
 begin_ifndef
@@ -160,6 +160,20 @@ argument_list|()
 decl_stmt|,
 name|tp_driver
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|TNew
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|TPNagle1
+decl_stmt|,
+name|TPNagle2
 decl_stmt|;
 end_decl_stmt
 
@@ -2716,12 +2730,6 @@ init|=
 name|m
 decl_stmt|;
 specifier|register
-name|int
-name|len
-init|=
-literal|0
-decl_stmt|;
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
@@ -2764,6 +2772,11 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+decl_stmt|;
+name|int
+name|mbufcnt
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2840,7 +2853,7 @@ function_decl|eotsdu
 operator|,
 function_decl|m
 operator|,
-function_decl|len
+function_decl|totlen
 operator|,
 function_decl|sb
 block|)
@@ -2872,14 +2885,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_macro
 name|ENDDEBUG
+end_macro
+
+begin_comment
 comment|/* 			 * Pre-packetize the data in the sockbuf 			 * according to negotiated mtu.  Do it here 			 * where we can safely wait for mbufs. 			 * 			 * This presumes knowledge of sockbuf conventions. 			 */
-name|len
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+end_comment
 
 begin_if
 if|if
@@ -2922,7 +2934,7 @@ operator|<
 name|maxsize
 condition|)
 block|{
-name|int
+name|u_int
 name|space
 init|=
 name|maxsize
@@ -2962,36 +2974,43 @@ name|m_next
 operator|)
 condition|)
 do|;
-name|nn
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|+=
-name|space
-expr_stmt|;
 if|if
 condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
+name|totlen
 operator|<=
 name|space
 condition|)
 block|{
+name|TPNagle1
+operator|++
+expr_stmt|;
 name|n
 operator|->
 name|m_next
 operator|=
 name|m
 expr_stmt|;
+name|nn
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|totlen
+expr_stmt|;
+while|while
+condition|(
+name|n
+operator|=
+name|n
+operator|->
+name|m_next
+condition|)
 name|sballoc
 argument_list|(
 name|sb
 argument_list|,
-name|m
+name|n
 argument_list|)
 expr_stmt|;
 if|if
@@ -3010,7 +3029,13 @@ goto|;
 block|}
 else|else
 block|{
-name|nn
+comment|/* 					 * Can't sleep here, because when you wake up 					 * packet you want to attach to may be gone! 					 */
+if|if
+condition|(
+name|TNew
+operator|&&
+operator|(
+name|n
 operator|->
 name|m_next
 operator|=
@@ -3022,16 +3047,35 @@ literal|0
 argument_list|,
 name|space
 argument_list|,
-name|M_WAIT
+name|M_NOWAIT
 argument_list|)
+operator|)
+condition|)
+block|{
+name|nn
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|space
 expr_stmt|;
+name|TPNagle2
+operator|++
+expr_stmt|;
+while|while
+condition|(
+name|n
+operator|=
+name|n
+operator|->
+name|m_next
+condition|)
 name|sballoc
 argument_list|(
 name|sb
 argument_list|,
-name|nn
-operator|->
-name|m_next
+name|n
 argument_list|)
 expr_stmt|;
 name|m_adj
@@ -3043,6 +3087,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_if
 
 begin_label
@@ -3051,7 +3096,7 @@ label|:
 end_label
 
 begin_expr_stmt
-name|len
+name|mbufcnt
 operator|++
 expr_stmt|;
 end_expr_stmt
@@ -3081,7 +3126,7 @@ name|n
 argument_list|,
 literal|0
 argument_list|,
-name|len
+name|maxsize
 argument_list|,
 name|M_WAIT
 argument_list|)
@@ -3100,7 +3145,7 @@ argument_list|,
 name|maxsize
 argument_list|)
 expr_stmt|;
-name|len
+name|mbufcnt
 operator|++
 expr_stmt|;
 block|}
@@ -3146,13 +3191,13 @@ name|tptraceTPCB
 argument_list|(
 name|TPPTmisc
 argument_list|,
-literal|"SEND BF: maxsize totlen frags eotsdu"
+literal|"SEND BF: maxsize totlen mbufcnt eotsdu"
 argument_list|,
 name|maxsize
 argument_list|,
 name|totlen
 argument_list|,
-name|len
+name|mbufcnt
 argument_list|,
 name|eotsdu
 argument_list|)
@@ -3167,13 +3212,13 @@ name|D_SYSCALL
 parameter_list|)
 function_decl|printf
 parameter_list|(
-function_decl|"PRU_SEND: eot %d after sbappend 0x%x len 0x%x\n"
+function_decl|"PRU_SEND: eot %d after sbappend 0x%x mbufcnt 0x%x\n"
 operator|,
 function_decl|eotsdu
 operator|,
 function_decl|n
 operator|,
-function_decl|len
+function_decl|mbufcnt
 end_function_decl
 
 begin_empty_stmt
