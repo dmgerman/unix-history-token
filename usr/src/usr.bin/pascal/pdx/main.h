@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)main.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)main.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -62,6 +62,16 @@ end_expr_stmt
 
 begin_comment
 comment|/* does non-local goto for error recovery */
+end_comment
+
+begin_expr_stmt
+name|quit
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* clean-up before exiting */
 end_comment
 
 end_unit
