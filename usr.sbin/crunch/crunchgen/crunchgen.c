@@ -3589,7 +3589,7 @@ name|line
 argument_list|,
 name|MAXLINELEN
 argument_list|,
-literal|"cd %s&& make -f %s crunchgen_objs 2>&1"
+literal|"cd %s&& make -f %s crunchgen_objs"
 argument_list|,
 name|p
 operator|->
