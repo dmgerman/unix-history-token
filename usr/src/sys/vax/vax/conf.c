@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2482,19 +2482,19 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|syopen
+name|cttyopen
 argument_list|()
 decl_stmt|,
-name|syread
+name|cttyread
 argument_list|()
 decl_stmt|,
-name|sywrite
+name|cttywrite
 argument_list|()
 decl_stmt|,
-name|syioctl
+name|cttyioctl
 argument_list|()
 decl_stmt|,
-name|syselect
+name|cttyselect
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -4232,16 +4232,16 @@ name|enodev
 block|,
 name|NULL
 block|,
-name|syopen
+name|cttyopen
 block|,
 name|nullop
 block|,
-name|syread
+name|cttyread
 block|,
-name|sywrite
+name|cttywrite
 block|,
 comment|/*2*/
-name|syioctl
+name|cttyioctl
 block|,
 name|nullop
 block|,
@@ -4249,7 +4249,7 @@ name|nullop
 block|,
 name|NULL
 block|,
-name|syselect
+name|cttyselect
 block|,
 name|enodev
 block|,
