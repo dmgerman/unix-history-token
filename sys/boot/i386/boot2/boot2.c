@@ -215,6 +215,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RBX_NOINTR
+value|0x1f
+end_define
+
+begin_comment
+comment|/* -n */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RBX_MASK
 value|0xffff
 end_define
@@ -251,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|11
+value|12
 end_define
 
 begin_define
@@ -367,7 +378,7 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"DhaCcdgPrsv"
+literal|"DhaCcdgnPrsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,6 +406,8 @@ block|,
 name|RBX_KDB
 block|,
 name|RBX_GDB
+block|,
+name|RBX_NOINTR
 block|,
 name|RBX_PROBEKBD
 block|,
@@ -4609,6 +4622,17 @@ name|t0
 decl_stmt|,
 name|t1
 decl_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+literal|1
+operator|<<
+name|RBX_NOINTR
+condition|)
+return|return
+literal|0
+return|;
 name|t0
 operator|=
 literal|0
@@ -4715,6 +4739,17 @@ name|int
 name|fn
 parameter_list|)
 block|{
+if|if
+condition|(
+name|opts
+operator|&
+literal|1
+operator|<<
+name|RBX_NOINTR
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 init|;
