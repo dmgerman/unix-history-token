@@ -135,6 +135,12 @@ directive|include
 file|<dev/fe/if_fevar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isa/isavar.h>
+end_include
+
 begin_comment
 comment|/*  *	Cbus specific code.  */
 end_comment

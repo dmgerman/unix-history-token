@@ -713,7 +713,7 @@ block|}
 name|re
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_res
 operator|=
 name|bsre
@@ -721,7 +721,7 @@ expr_stmt|;
 name|re
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_ressz
 operator|=
 name|ressz
@@ -819,7 +819,7 @@ expr_stmt|;
 name|re
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_iat
 operator|=
 name|addr
@@ -827,7 +827,7 @@ expr_stmt|;
 name|re
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_iatsz
 operator|=
 name|count
@@ -907,7 +907,7 @@ operator|<
 name|r
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_ressz
 condition|;
 name|i
@@ -930,7 +930,7 @@ argument_list|,
 name|r
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_res
 index|[
 name|i
@@ -942,7 +942,7 @@ condition|(
 name|r
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_res
 operator|!=
 name|NULL
@@ -952,7 +952,7 @@ argument_list|(
 name|r
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_res
 argument_list|,
 name|M_DEVBUF
@@ -963,7 +963,7 @@ condition|(
 name|r
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_iat
 operator|!=
 name|NULL
@@ -973,7 +973,7 @@ argument_list|(
 name|r
 operator|->
 name|r_bushandle
-operator|.
+operator|->
 name|bsh_iat
 argument_list|,
 name|M_DEVBUF

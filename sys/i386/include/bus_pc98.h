@@ -30,12 +30,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -237,61 +231,10 @@ name|size_t
 name|bsh_ressz
 decl_stmt|;
 block|}
+typedef|*
 name|bus_space_handle_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Allocate discontinuous resources for ISA bus.  */
-end_comment
-
-begin_function_decl
-name|struct
-name|resource
-modifier|*
-name|isa_alloc_resourcev
-parameter_list|(
-name|device_t
-name|child
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-modifier|*
-name|rid
-parameter_list|,
-name|bus_addr_t
-modifier|*
-name|res
-parameter_list|,
-name|bus_size_t
-name|count
-parameter_list|,
-name|u_int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|isa_load_resourcev
-parameter_list|(
-name|struct
-name|resource
-modifier|*
-name|re
-parameter_list|,
-name|bus_addr_t
-modifier|*
-name|res
-parameter_list|,
-name|bus_size_t
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Map a region of device bus space into CPU virtual address space.  */
@@ -564,7 +507,7 @@ operator|(
 name|inb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -603,7 +546,7 @@ operator|(
 name|inb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -643,7 +586,7 @@ operator|*
 operator|)
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -701,7 +644,7 @@ operator|(
 name|inw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -740,7 +683,7 @@ operator|(
 name|inw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -780,7 +723,7 @@ operator|*
 operator|)
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -838,7 +781,7 @@ operator|(
 name|inl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -877,7 +820,7 @@ operator|(
 name|inl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -917,7 +860,7 @@ operator|*
 operator|)
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1088,7 +1031,7 @@ directive|endif
 name|insb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1128,7 +1071,7 @@ directive|endif
 name|insb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -1181,7 +1124,7 @@ operator|:
 literal|"r"
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1261,7 +1204,7 @@ directive|endif
 name|insw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1301,7 +1244,7 @@ directive|endif
 name|insw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -1354,7 +1297,7 @@ operator|:
 literal|"r"
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1434,7 +1377,7 @@ directive|endif
 name|insl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1474,7 +1417,7 @@ directive|endif
 name|insl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -1527,7 +1470,7 @@ operator|:
 literal|"r"
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1711,7 +1654,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1820,7 +1763,7 @@ operator|=
 name|inb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -1874,7 +1817,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -1978,7 +1921,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2088,7 +2031,7 @@ operator|=
 name|inw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -2142,7 +2085,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2246,7 +2189,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2356,7 +2299,7 @@ operator|=
 name|inl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -2410,7 +2353,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2597,7 +2540,7 @@ directive|endif
 name|outb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2635,7 +2578,7 @@ directive|endif
 name|outb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -2679,7 +2622,7 @@ operator|*
 operator|)
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2739,7 +2682,7 @@ directive|endif
 name|outw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2777,7 +2720,7 @@ directive|endif
 name|outw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -2821,7 +2764,7 @@ operator|*
 operator|)
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2881,7 +2824,7 @@ directive|endif
 name|outl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -2919,7 +2862,7 @@ directive|endif
 name|outl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -2963,7 +2906,7 @@ operator|*
 operator|)
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3132,7 +3075,7 @@ directive|endif
 name|outsb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3172,7 +3115,7 @@ directive|endif
 name|outsb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -3225,7 +3168,7 @@ operator|:
 literal|"r"
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3308,7 +3251,7 @@ directive|endif
 name|outsw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3348,7 +3291,7 @@ directive|endif
 name|outsw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -3401,7 +3344,7 @@ operator|:
 literal|"r"
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3484,7 +3427,7 @@ directive|endif
 name|outsl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3524,7 +3467,7 @@ directive|endif
 name|outsl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -3577,7 +3520,7 @@ operator|:
 literal|"r"
 operator|(
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3779,7 +3722,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -3883,7 +3826,7 @@ control|)
 name|outb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -3942,7 +3885,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4047,7 +3990,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4152,7 +4095,7 @@ control|)
 name|outw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -4206,7 +4149,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4311,7 +4254,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4416,7 +4359,7 @@ control|)
 name|outl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -4475,7 +4418,7 @@ name|int
 name|_port_
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4677,7 +4620,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4727,7 +4670,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -4778,7 +4721,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4858,7 +4801,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -4908,7 +4851,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -4959,7 +4902,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5039,7 +4982,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5089,7 +5032,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -5140,7 +5083,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5318,7 +5261,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5388,7 +5331,7 @@ control|)
 name|outb
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -5430,7 +5373,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5518,7 +5461,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5590,7 +5533,7 @@ control|)
 name|outw
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -5632,7 +5575,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5721,7 +5664,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -5793,7 +5736,7 @@ control|)
 name|outl
 argument_list|(
 name|bsh
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|offset
@@ -5835,7 +5778,7 @@ name|bus_addr_t
 name|addr
 init|=
 name|bsh
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|offset
@@ -6034,7 +5977,7 @@ name|bus_addr_t
 name|addr1
 init|=
 name|bsh1
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off1
@@ -6043,7 +5986,7 @@ name|bus_addr_t
 name|addr2
 init|=
 name|bsh2
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off2
@@ -6160,14 +6103,14 @@ block|{
 if|if
 condition|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
 index|]
 operator|>=
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -6194,7 +6137,7 @@ control|)
 name|outb
 argument_list|(
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -6203,7 +6146,7 @@ argument_list|,
 name|inb
 argument_list|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
@@ -6249,7 +6192,7 @@ control|)
 name|outb
 argument_list|(
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -6258,7 +6201,7 @@ argument_list|,
 name|inb
 argument_list|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
@@ -6300,7 +6243,7 @@ name|bus_addr_t
 name|addr1
 init|=
 name|bsh1
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off1
@@ -6309,7 +6252,7 @@ name|bus_addr_t
 name|addr2
 init|=
 name|bsh2
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off2
@@ -6475,7 +6418,7 @@ name|bus_addr_t
 name|addr1
 init|=
 name|bsh1
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off1
@@ -6484,7 +6427,7 @@ name|bus_addr_t
 name|addr2
 init|=
 name|bsh2
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off2
@@ -6609,14 +6552,14 @@ block|{
 if|if
 condition|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
 index|]
 operator|>=
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -6645,7 +6588,7 @@ control|)
 name|outw
 argument_list|(
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -6654,7 +6597,7 @@ argument_list|,
 name|inw
 argument_list|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
@@ -6706,7 +6649,7 @@ control|)
 name|outw
 argument_list|(
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -6715,7 +6658,7 @@ argument_list|,
 name|inw
 argument_list|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
@@ -6757,7 +6700,7 @@ name|bus_addr_t
 name|addr1
 init|=
 name|bsh1
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off1
@@ -6766,7 +6709,7 @@ name|bus_addr_t
 name|addr2
 init|=
 name|bsh2
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off2
@@ -6940,7 +6883,7 @@ name|bus_addr_t
 name|addr1
 init|=
 name|bsh1
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off1
@@ -6949,7 +6892,7 @@ name|bus_addr_t
 name|addr2
 init|=
 name|bsh2
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off2
@@ -7074,14 +7017,14 @@ block|{
 if|if
 condition|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
 index|]
 operator|>=
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -7110,7 +7053,7 @@ control|)
 name|outl
 argument_list|(
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -7119,7 +7062,7 @@ argument_list|,
 name|inl
 argument_list|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
@@ -7171,7 +7114,7 @@ control|)
 name|outl
 argument_list|(
 name|bsh2
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off2
@@ -7180,7 +7123,7 @@ argument_list|,
 name|inl
 argument_list|(
 name|bsh1
-operator|.
+operator|->
 name|bsh_iat
 index|[
 name|off1
@@ -7222,7 +7165,7 @@ name|bus_addr_t
 name|addr1
 init|=
 name|bsh1
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off1
@@ -7231,7 +7174,7 @@ name|bus_addr_t
 name|addr2
 init|=
 name|bsh2
-operator|.
+operator|->
 name|bsh_base
 operator|+
 name|off2
