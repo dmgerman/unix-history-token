@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dvar.c	1.5	83/08/23  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dvar.c	1.6	83/10/06  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -31,14 +31,22 @@ directive|include
 file|"dev.h"
 end_include
 
+begin_comment
+comment|/* #define DEBUGABLE		/* No, not debugable... */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DEBUGABLE
+name|DRIVER
 end_define
 
 begin_comment
-comment|/* Yes, debugable... */
+comment|/* Yes, we're driving directly */
+end_comment
+
+begin_comment
+comment|/* #define FULLPAGE		/* No, don't output full pages */
 end_comment
 
 begin_define
@@ -176,7 +184,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dvar.c	1.5	83/08/23"
+literal|"dvar.c	1.6	83/10/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,16 +298,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|smnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* index of first special font */
-end_comment
-
-begin_decl_stmt
-name|int
 name|nchtab
 decl_stmt|;
 end_decl_stmt
@@ -392,28 +390,21 @@ begin_comment
 comment|/* place to find raster fonts and fontmap */
 end_comment
 
-begin_struct
-struct|struct
-block|{
-comment|/* table of what font */
+begin_decl_stmt
 name|char
 modifier|*
-name|name
-decl_stmt|;
-comment|/*   name is on what */
-name|int
-name|number
-decl_stmt|;
-comment|/*   position in font tables */
-block|}
 name|fontname
 index|[
 name|NFONTS
 operator|+
 literal|1
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* table of what font is on what position */
+end_comment
 
 begin_struct
 struct|struct
@@ -593,6 +584,34 @@ name|BYTES_PER_LINE
 value|(RASTER_LENGTH/8)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FULLPAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NLINES
+value|1600
+end_define
+
+begin_comment
+comment|/* page width, 8 inches */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FULLPAGE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -603,6 +622,11 @@ end_define
 begin_comment
 comment|/* page width, 8.5 inches */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -914,8 +938,7 @@ argument_list|,
 operator|&
 name|argv
 argument_list|)
-block|)
-empty_stmt|;
+expr_stmt|;
 break|break;
 case|case
 literal|'f'
@@ -930,8 +953,7 @@ argument_list|,
 operator|&
 name|argv
 argument_list|)
-block|)
-empty_stmt|;
+expr_stmt|;
 break|break;
 case|case
 literal|'o'
@@ -1011,28 +1033,32 @@ literal|9999
 expr_stmt|;
 break|break;
 block|}
-end_function
-
-begin_comment
-unit|}
-comment|/* noversatec 	ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
-end_comment
-
-begin_expr_stmt
-unit|if
-operator|(
+block|}
+ifdef|#
+directive|ifdef
+name|DRIVER
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|pltmode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
 name|argc
 operator|<
 literal|1
-operator|)
+condition|)
 name|conv
 argument_list|(
 name|stdin
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|else
 while|while
 condition|(
@@ -1097,46 +1123,37 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*----------------------------------------------------------------------------*  | Routine:	char  * operand (& argc,& argv)  |  | Results:	returns address of the operand given with a command-line  |		option.  It uses either "-Xoperand" or "-X operand", whichever  |		is present.  The program is terminated if no option is present.  |  | Side Efct:	argc and argv are updated as necessary.  *----------------------------------------------------------------------------*/
 end_comment
 
-begin_expr_stmt
-unit|char
-operator|*
+begin_function
+name|char
+modifier|*
 name|operand
-argument_list|(
-argument|argcp
-argument_list|,
-argument|argvp
-argument_list|)
-name|int
-operator|*
+parameter_list|(
 name|argcp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|argvp
+parameter_list|)
+name|int
+modifier|*
+name|argcp
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|argvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1191,7 +1208,7 @@ operator|)
 return|;
 comment|/* operand next word */
 block|}
-end_block
+end_function
 
 begin_macro
 name|outlist
@@ -2824,26 +2841,6 @@ operator|&
 name|BMASK
 expr_stmt|;
 comment|/* 1st thing is width count */
-if|if
-condition|(
-name|smnt
-operator|==
-literal|0
-operator|&&
-name|fontbase
-index|[
-name|i
-index|]
-operator|->
-name|specfont
-operator|==
-literal|1
-condition|)
-name|smnt
-operator|=
-name|i
-expr_stmt|;
-comment|/* first special font */
 name|p
 operator|+=
 sizeof|sizeof
@@ -2852,7 +2849,6 @@ expr|struct
 name|font
 argument_list|)
 expr_stmt|;
-comment|/* that is on the beginning */
 name|widtab
 index|[
 name|i
@@ -3667,7 +3663,7 @@ name|f
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|ABORT
 argument_list|)
 expr_stmt|;
 block|}
@@ -3930,7 +3926,47 @@ argument_list|(
 name|NLINES
 argument_list|)
 expr_stmt|;
-comment|/* noversatec 		ioctl(OUTFILE, VSETSTATE, prtmode); 		if (write(OUTFILE, "\f", 2) != 2) 			exit(RESTART); 		ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
+ifdef|#
+directive|ifdef
+name|DRIVER
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|prtmode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|OUTFILE
+argument_list|,
+literal|"\f"
+argument_list|,
+literal|2
+argument_list|)
+operator|!=
+literal|2
+condition|)
+name|exit
+argument_list|(
+name|RESTART
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|pltmode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|vpos
 operator|=
@@ -4401,7 +4437,38 @@ argument_list|(
 name|NLINES
 argument_list|)
 expr_stmt|;
-comment|/* noversatec 		ioctl(OUTFILE, VSETSTATE, prtmode); 		if (write(OUTFILE, "\f", 2) != 2) 			exit(RESTART); noversatec */
+ifdef|#
+directive|ifdef
+name|DRIVER
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|prtmode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|OUTFILE
+argument_list|,
+literal|"\f"
+argument_list|,
+literal|2
+argument_list|)
+operator|!=
+literal|2
+condition|)
+name|exit
+argument_list|(
+name|RESTART
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 comment|/* no Return */
 block|}
@@ -4747,20 +4814,13 @@ index|]
 expr_stmt|;
 comment|/* get the width */
 block|}
-elseif|else
-if|if
-condition|(
-name|smnt
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* on special (we hope) */
+else|else
+comment|/* on another font (we hope) */
 for|for
 control|(
 name|k
 operator|=
-name|smnt
+name|font
 operator|,
 name|j
 operator|=
@@ -4837,7 +4897,6 @@ name|k
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -5051,6 +5110,10 @@ name|n
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* internal name is ignored */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -5174,22 +5237,8 @@ name|fontname
 index|[
 name|n
 index|]
-operator|.
-name|name
 operator|=
 name|s
-expr_stmt|;
-name|fontname
-index|[
-name|n
-index|]
-operator|.
-name|number
-operator|=
-name|atoi
-argument_list|(
-name|si
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -5456,8 +5505,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 operator|==
 literal|0
 condition|)
@@ -5472,8 +5519,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 argument_list|,
 name|fnum
 argument_list|,
@@ -5532,7 +5577,7 @@ name|d
 decl_stmt|;
 specifier|register
 name|int
-name|savesize
+name|sizehunt
 init|=
 name|size
 decl_stmt|;
@@ -5572,8 +5617,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 argument_list|,
 name|fsize
 argument_list|)
@@ -5596,13 +5639,13 @@ literal|1
 condition|)
 block|{
 comment|/* File wasn't found. Try another ps */
-name|size
+name|sizehunt
 operator|+=
 name|d
 expr_stmt|;
 if|if
 condition|(
-name|size
+name|sizehunt
 operator|<
 literal|0
 condition|)
@@ -5612,16 +5655,16 @@ name|d
 operator|=
 literal|1
 expr_stmt|;
-name|size
+name|sizehunt
 operator|=
-name|savesize
+name|size
 operator|+
 literal|1
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|size
+name|sizehunt
 operator|>
 name|nsizes
 condition|)
@@ -5638,7 +5681,7 @@ name|fsize
 operator|=
 name|pstab
 index|[
-name|size
+name|sizehunt
 index|]
 expr_stmt|;
 block|}
@@ -5685,8 +5728,6 @@ name|fontname
 index|[
 name|fnum
 index|]
-operator|.
-name|name
 argument_list|)
 expr_stmt|;
 name|fontwanted
@@ -5783,18 +5824,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+name|FATAL
 argument_list|,
-literal|"%s: ran out of memory\n"
+literal|"%s: ran out of memory"
 argument_list|,
 name|cbuf
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ABORT
 argument_list|)
 expr_stmt|;
 block|}
@@ -6526,8 +6562,7 @@ index|]
 condition|)
 name|scanp
 operator|-=
-sizeof|sizeof
-name|buffer
+name|BUFFER_SIZE
 expr_stmt|;
 name|count
 operator|=
@@ -6538,7 +6573,7 @@ condition|(
 name|scanp
 operator|+
 name|count
-operator|<=
+operator|<
 operator|&
 name|buffer
 index|[
@@ -6696,7 +6731,20 @@ argument_list|,
 name|usize
 argument_list|)
 expr_stmt|;
-comment|/* noversatec 	ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
+ifdef|#
+directive|ifdef
+name|DRIVER
+name|ioctl
+argument_list|(
+name|OUTFILE
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|pltmode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
