@@ -155,7 +155,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 if|if
@@ -165,8 +165,9 @@ name|authctxt
 operator|->
 name|user
 operator|||
-operator|!
 name|pass
+operator|==
+name|NULL
 operator|||
 name|pass
 index|[
@@ -303,7 +304,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 if|if

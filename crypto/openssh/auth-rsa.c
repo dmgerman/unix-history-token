@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.56 2002/06/10 16:53:06 stevesk Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.57 2003/04/08 20:21:28 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -740,7 +740,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Authentication refused: %s"
 argument_list|,
@@ -980,7 +980,7 @@ operator|->
 name|n
 argument_list|)
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Warning: %s, line %lu: keysize mismatch: "
 literal|"actual %d vs. announced %d."

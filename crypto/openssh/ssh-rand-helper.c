@@ -85,7 +85,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-rand-helper.c,v 1.10 2003/03/17 05:13:53 djm Exp $"
+literal|"$Id: ssh-rand-helper.c,v 1.13 2003/08/21 23:34:41 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -825,7 +825,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -2404,10 +2404,14 @@ block|{
 name|debug
 argument_list|(
 literal|"WARNING: PRNG seedfile %.100s must be mode 0600, "
-literal|"owned by uid %d"
+literal|"owned by uid %li"
 argument_list|,
 name|filename
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|)
@@ -2467,8 +2471,12 @@ condition|)
 name|fatal
 argument_list|(
 literal|"Couldn't get password entry for current user "
-literal|"(%i): %s"
+literal|"(%li): %s"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
@@ -2597,7 +2605,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -2680,8 +2688,12 @@ condition|)
 name|fatal
 argument_list|(
 literal|"Couldn't get password entry for current user "
-literal|"(%i): %s"
+literal|"(%li): %s"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
@@ -3480,7 +3492,7 @@ name|ll
 decl_stmt|;
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|argv
 index|[
@@ -3861,7 +3873,7 @@ name|ret
 operator|=
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|STDOUT_FILENO
 argument_list|,

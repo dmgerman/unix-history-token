@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compat.c,v 1.66 2003/04/01 10:31:26 markus Exp $"
+literal|"$OpenBSD: compat.c,v 1.69 2003/08/29 10:03:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -229,6 +229,17 @@ literal|"OpenSSH_3.0*,"
 literal|"OpenSSH_3.1*"
 block|,
 name|SSH_BUG_EXTEOF
+operator||
+name|SSH_BUG_GSSAPI_BER
+block|}
+block|,
+block|{
+literal|"OpenSSH_3.2*,"
+literal|"OpenSSH_3.3*,"
+literal|"OpenSSH_3.4*,"
+literal|"OpenSSH_3.5*"
+block|,
+name|SSH_BUG_GSSAPI_BER
 block|}
 block|,
 block|{
@@ -444,8 +455,6 @@ literal|"1.2.21*,"
 literal|"1.2.22*"
 block|,
 name|SSH_BUG_IGNOREMSG
-operator||
-name|SSH_BUG_K5USER
 block|}
 block|,
 block|{
@@ -453,16 +462,6 @@ literal|"1.3.2*"
 block|,
 comment|/* F-Secure */
 name|SSH_BUG_IGNOREMSG
-operator||
-name|SSH_BUG_K5USER
-block|}
-block|,
-block|{
-literal|"1.2.1*,"
-literal|"1.2.2*,"
-literal|"1.2.3*"
-block|,
-name|SSH_BUG_K5USER
 block|}
 block|,
 block|{
@@ -707,7 +706,7 @@ name|SSH_PROTO_2
 expr_stmt|;
 break|break;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"ignoring bad proto spec: '%s'."
 argument_list|,

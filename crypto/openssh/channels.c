@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.187 2003/03/05 22:33:43 markus Exp $"
+literal|"$OpenBSD: channels.c,v 1.195 2003/09/16 21:02:40 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bufaux.h"
 end_include
 
 begin_comment
@@ -355,7 +361,7 @@ operator|>=
 name|channels_alloc
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_lookup: %d: bad id"
 argument_list|,
@@ -380,7 +386,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_lookup: %d: bad id: channel free"
 argument_list|,
@@ -507,7 +513,7 @@ name|rfd
 argument_list|)
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rfd %d isatty"
 argument_list|,
@@ -984,7 +990,10 @@ name|c
 operator|->
 name|remote_name
 operator|=
+name|xstrdup
+argument_list|(
 name|remote_name
+argument_list|)
 expr_stmt|;
 name|c
 operator|->
@@ -1205,7 +1214,7 @@ parameter_list|)
 block|{
 name|debug3
 argument_list|(
-literal|"channel_close_fds: channel %d: r %d w %d e %d"
+literal|"channel %d: close_fds r %d w %d e %d"
 argument_list|,
 name|c
 operator|->
@@ -1310,7 +1319,7 @@ operator|++
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"channel_free: channel %d: %s, nchannels %d"
+literal|"channel %d: free: %s, nchannels %d"
 argument_list|,
 name|c
 operator|->
@@ -1336,7 +1345,11 @@ argument_list|()
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"channel_free: status: %s"
+literal|"channel %d: status: %s"
+argument_list|,
+name|c
+operator|->
+name|self
 argument_list|,
 name|s
 argument_list|)
@@ -1680,7 +1693,7 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"channel %d: big output buffer %d> %d"
+literal|"channel %d: big output buffer %u> %u"
 argument_list|,
 name|c
 operator|->
@@ -2264,7 +2277,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_send_open: %d: bad id"
 argument_list|,
@@ -2350,7 +2363,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_request_start: %d: unknown channel id"
 argument_list|,
@@ -2359,7 +2372,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: request %s"
 argument_list|,
@@ -2421,7 +2434,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_register_comfirm: %d: bad id"
 argument_list|,
@@ -2467,7 +2480,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_register_cleanup: %d: bad id"
 argument_list|,
@@ -2509,7 +2522,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_cancel_cleanup: %d: bad id"
 argument_list|,
@@ -2555,7 +2568,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel_register_filter: %d: bad id"
 argument_list|,
@@ -3144,7 +3157,7 @@ name|type
 operator|=
 name|SSH_CHANNEL_CLOSED
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: closing after input drain."
 argument_list|,
@@ -3332,7 +3345,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"Initial X11 packet contains bad byte order byte: 0x%x"
 argument_list|,
@@ -3406,7 +3419,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"X11 connection uses different authentication protocol."
 argument_list|)
@@ -3448,7 +3461,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"X11 auth data does not match fake data."
 argument_list|)
@@ -3572,7 +3585,7 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * We have received an X11 connection that has bad 		 * authentication information. 		 */
-name|log
+name|logit
 argument_list|(
 literal|"X11 connection rejected because of wrong authentication."
 argument_list|)
@@ -3695,12 +3708,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"X11 connection rejected because of wrong authentication."
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"X11 rejected %d i%d/o%d"
 argument_list|,
@@ -3760,7 +3773,7 @@ name|type
 operator|=
 name|SSH_CHANNEL_OPEN
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"X11 closed %d i%d/o%d"
 argument_list|,
@@ -4159,7 +4172,7 @@ operator|.
 name|dest_port
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: dynamic request: socks4 host %s port %u command %u"
 argument_list|,
@@ -4262,6 +4275,749 @@ block|}
 end_function
 
 begin_comment
+comment|/* try to decode a socks5 header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_AUTHDONE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_NOAUTH
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_IPV4
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_DOMAIN
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_IPV6
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_CONNECT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SOCKS5_SUCCESS
+value|0x00
+end_define
+
+begin_function
+specifier|static
+name|int
+name|channel_decode_socks5
+parameter_list|(
+name|Channel
+modifier|*
+name|c
+parameter_list|,
+name|fd_set
+modifier|*
+name|readset
+parameter_list|,
+name|fd_set
+modifier|*
+name|writeset
+parameter_list|)
+block|{
+struct|struct
+block|{
+name|u_int8_t
+name|version
+decl_stmt|;
+name|u_int8_t
+name|command
+decl_stmt|;
+name|u_int8_t
+name|reserved
+decl_stmt|;
+name|u_int8_t
+name|atyp
+decl_stmt|;
+block|}
+name|s5_req
+struct|,
+name|s5_rsp
+struct|;
+name|u_int16_t
+name|dest_port
+decl_stmt|;
+name|u_char
+modifier|*
+name|p
+decl_stmt|,
+name|dest_addr
+index|[
+literal|255
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|have
+decl_stmt|,
+name|found
+decl_stmt|,
+name|nmethods
+decl_stmt|,
+name|addrlen
+decl_stmt|,
+name|af
+decl_stmt|;
+name|debug2
+argument_list|(
+literal|"channel %d: decode socks5"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|buffer_ptr
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|!=
+literal|0x05
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|have
+operator|=
+name|buffer_len
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|SSH_SOCKS5_AUTHDONE
+operator|)
+condition|)
+block|{
+comment|/* format: ver | nmethods | methods */
+if|if
+condition|(
+name|have
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
+name|nmethods
+operator|=
+name|p
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|have
+operator|<
+name|nmethods
+operator|+
+literal|2
+condition|)
+return|return
+literal|0
+return|;
+comment|/* look for method: "NO AUTHENTICATION REQUIRED" */
+for|for
+control|(
+name|found
+operator|=
+literal|0
+operator|,
+name|i
+operator|=
+literal|2
+init|;
+name|i
+operator|<
+name|nmethods
+operator|+
+literal|2
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|p
+index|[
+name|i
+index|]
+operator|==
+name|SSH_SOCKS5_NOAUTH
+condition|)
+block|{
+name|found
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"channel %d: method SSH_SOCKS5_NOAUTH not found"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|buffer_consume
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+name|nmethods
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|buffer_put_char
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+literal|0x05
+argument_list|)
+expr_stmt|;
+comment|/* version */
+name|buffer_put_char
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+name|SSH_SOCKS5_NOAUTH
+argument_list|)
+expr_stmt|;
+comment|/* method */
+name|FD_SET
+argument_list|(
+name|c
+operator|->
+name|sock
+argument_list|,
+name|writeset
+argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|flags
+operator||=
+name|SSH_SOCKS5_AUTHDONE
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"channel %d: socks5 auth done"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* need more */
+block|}
+name|debug2
+argument_list|(
+literal|"channel %d: socks5 post auth"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have
+operator|<
+sizeof|sizeof
+argument_list|(
+name|s5_req
+argument_list|)
+operator|+
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+comment|/* need more */
+name|memcpy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|s5_req
+argument_list|,
+name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s5_req
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s5_req
+operator|.
+name|version
+operator|!=
+literal|0x05
+operator|||
+name|s5_req
+operator|.
+name|command
+operator|!=
+name|SSH_SOCKS5_CONNECT
+operator|||
+name|s5_req
+operator|.
+name|reserved
+operator|!=
+literal|0x00
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"channel %d: only socks5 connect supported"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+switch|switch
+condition|(
+name|s5_req
+operator|.
+name|atyp
+condition|)
+block|{
+case|case
+name|SSH_SOCKS5_IPV4
+case|:
+name|addrlen
+operator|=
+literal|4
+expr_stmt|;
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+break|break;
+case|case
+name|SSH_SOCKS5_DOMAIN
+case|:
+name|addrlen
+operator|=
+name|p
+index|[
+sizeof|sizeof
+argument_list|(
+name|s5_req
+argument_list|)
+index|]
+expr_stmt|;
+name|af
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|SSH_SOCKS5_IPV6
+case|:
+name|addrlen
+operator|=
+literal|16
+expr_stmt|;
+name|af
+operator|=
+name|AF_INET6
+expr_stmt|;
+break|break;
+default|default:
+name|debug2
+argument_list|(
+literal|"channel %d: bad socks5 atyp %d"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|,
+name|s5_req
+operator|.
+name|atyp
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|have
+operator|<
+literal|4
+operator|+
+name|addrlen
+operator|+
+literal|2
+condition|)
+return|return
+literal|0
+return|;
+name|buffer_consume
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s5_req
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s5_req
+operator|.
+name|atyp
+operator|==
+name|SSH_SOCKS5_DOMAIN
+condition|)
+name|buffer_consume
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* host string length */
+name|buffer_get
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dest_addr
+argument_list|,
+name|addrlen
+argument_list|)
+expr_stmt|;
+name|buffer_get
+argument_list|(
+operator|&
+name|c
+operator|->
+name|input
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dest_port
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|dest_addr
+index|[
+name|addrlen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|s5_req
+operator|.
+name|atyp
+operator|==
+name|SSH_SOCKS5_DOMAIN
+condition|)
+name|strlcpy
+argument_list|(
+name|c
+operator|->
+name|path
+argument_list|,
+name|dest_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|c
+operator|->
+name|path
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|inet_ntop
+argument_list|(
+name|af
+argument_list|,
+name|dest_addr
+argument_list|,
+name|c
+operator|->
+name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|c
+operator|->
+name|path
+argument_list|)
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|c
+operator|->
+name|host_port
+operator|=
+name|ntohs
+argument_list|(
+name|dest_port
+argument_list|)
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"channel %d: dynamic request: socks5 host %s port %u command %u"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|,
+name|c
+operator|->
+name|path
+argument_list|,
+name|c
+operator|->
+name|host_port
+argument_list|,
+name|s5_req
+operator|.
+name|command
+argument_list|)
+expr_stmt|;
+name|s5_rsp
+operator|.
+name|version
+operator|=
+literal|0x05
+expr_stmt|;
+name|s5_rsp
+operator|.
+name|command
+operator|=
+name|SSH_SOCKS5_SUCCESS
+expr_stmt|;
+name|s5_rsp
+operator|.
+name|reserved
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ignored */
+name|s5_rsp
+operator|.
+name|atyp
+operator|=
+name|SSH_SOCKS5_IPV4
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|)
+operator|&
+name|dest_addr
+operator|)
+operator|->
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+name|dest_port
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ignored */
+name|buffer_append
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|s5_rsp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s5_rsp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dest_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+operator|&
+name|c
+operator|->
+name|output
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dest_port
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dest_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* dynamic port forwarding */
 end_comment
 
@@ -4325,7 +5081,7 @@ if|if
 condition|(
 name|have
 operator|<
-literal|4
+literal|3
 condition|)
 block|{
 comment|/* need more */
@@ -4365,6 +5121,21 @@ case|:
 name|ret
 operator|=
 name|channel_decode_socks4
+argument_list|(
+name|c
+argument_list|,
+name|readset
+argument_list|,
+name|writeset
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x05
+case|:
+name|ret
+operator|=
+name|channel_decode_socks5
 argument_list|(
 name|c
 argument_list|,
@@ -4537,7 +5308,7 @@ operator|->
 name|single_connection
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"single_connection: closing X11 listener."
 argument_list|)
@@ -4633,10 +5404,7 @@ name|local_maxpacket
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 name|buf
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -4690,7 +5458,7 @@ operator|&
 name|SSH_BUG_X11FWD
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"ssh2 x11 bug compat mode"
 argument_list|)
@@ -5186,10 +5954,7 @@ name|local_maxpacket
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 name|rtype
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -5283,10 +6048,6 @@ name|Channel
 modifier|*
 name|nc
 decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|int
 name|newsock
 decl_stmt|;
@@ -5350,13 +6111,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|name
-operator|=
-name|xstrdup
-argument_list|(
-literal|"accepted auth socket"
-argument_list|)
-expr_stmt|;
 name|nc
 operator|=
 name|channel_new
@@ -5382,7 +6136,7 @@ name|local_maxpacket
 argument_list|,
 literal|0
 argument_list|,
-name|name
+literal|"accepted auth socket"
 argument_list|,
 literal|1
 argument_list|)
@@ -5786,7 +6540,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: read<=0 rfd %d len %d"
 argument_list|,
@@ -5810,7 +6564,7 @@ operator|!=
 name|SSH_CHANNEL_OPEN
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: not open"
 argument_list|,
@@ -5849,7 +6603,7 @@ name|type
 operator|=
 name|SSH_CHANNEL_INPUT_DRAINING
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: input draining."
 argument_list|,
@@ -5898,7 +6652,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: filter stops"
 argument_list|,
@@ -6092,7 +6846,7 @@ operator|!=
 name|SSH_CHANNEL_OPEN
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: not open"
 argument_list|,
@@ -6125,7 +6879,7 @@ operator|->
 name|output
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: input draining."
 argument_list|,
@@ -7309,7 +8063,7 @@ literal|0
 argument_list|)
 condition|)
 return|return;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: gc: notify user"
 argument_list|,
@@ -7339,7 +8093,7 @@ operator|!=
 name|NULL
 condition|)
 return|return;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: gc: user detached"
 argument_list|,
@@ -7360,7 +8114,7 @@ literal|1
 argument_list|)
 condition|)
 return|return;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: garbage collecting"
 argument_list|,
@@ -8266,7 +9020,7 @@ operator|->
 name|local_maxpacket
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: rcvd big packet %d, maxpack %d"
 argument_list|,
@@ -8291,7 +9045,7 @@ operator|->
 name|local_window
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: rcvd too much data %d, win %d"
 argument_list|,
@@ -8409,7 +9163,7 @@ operator|!=
 name|SSH_CHANNEL_OPEN
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: ext data for non open"
 argument_list|,
@@ -8475,7 +9229,7 @@ operator|!=
 name|SSH2_EXTENDED_DATA_STDERR
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: bad ext data"
 argument_list|,
@@ -8506,7 +9260,7 @@ operator|->
 name|local_window
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: rcvd too much extended_data %d, win %d"
 argument_list|,
@@ -9020,7 +9774,7 @@ literal|"callback done"
 argument_list|)
 expr_stmt|;
 block|}
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: open confirm rwindow %u rmax %u"
 argument_list|,
@@ -9192,7 +9946,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: open failed: %s%s%s"
 argument_list|,
@@ -9308,7 +10062,7 @@ operator|!=
 name|SSH_CHANNEL_OPEN
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Received window adjust for "
 literal|"non-open channel %d."
@@ -9479,6 +10233,11 @@ operator|=
 name|remote_id
 expr_stmt|;
 block|}
+name|xfree
+argument_list|(
+name|originator_string
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -9486,11 +10245,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xfree
-argument_list|(
-name|originator_string
-argument_list|)
-expr_stmt|;
 name|packet_start
 argument_list|(
 name|SSH_MSG_CHANNEL_OPEN_FAILURE
@@ -9802,9 +10556,13 @@ name|ai
 operator|->
 name|ai_family
 argument_list|,
-name|SOCK_STREAM
+name|ai
+operator|->
+name|ai_socktype
 argument_list|,
-literal|0
+name|ai
+operator|->
+name|ai_protocol
 argument_list|)
 expr_stmt|;
 if|if
@@ -9976,10 +10734,7 @@ name|CHAN_TCP_PACKET_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"port listener"
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -10262,7 +11017,7 @@ break|break;
 case|case
 name|SSH_SMSG_FAILURE
 case|:
-name|log
+name|logit
 argument_list|(
 literal|"Warning: Server denied remote port forwarding."
 argument_list|)
@@ -10382,6 +11137,17 @@ argument_list|(
 literal|"Requested forwarding of port %d but user is not root."
 argument_list|,
 name|port
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|host_port
+operator|==
+literal|0
+condition|)
+name|packet_disconnect
+argument_list|(
+literal|"Dynamic forwarding denied."
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10737,9 +11503,13 @@ name|ai
 operator|->
 name|ai_family
 argument_list|,
-name|SOCK_STREAM
+name|ai
+operator|->
+name|ai_socktype
 argument_list|,
-literal|0
+name|ai
+operator|->
+name|ai_protocol
 argument_list|)
 expr_stmt|;
 if|if
@@ -11035,7 +11805,7 @@ operator|!
 name|permit
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Received request to connect to host %.100s port %d, "
 literal|"but the request was denied."
@@ -11273,9 +12043,13 @@ name|ai
 operator|->
 name|ai_family
 argument_list|,
-name|SOCK_STREAM
+name|ai
+operator|->
+name|ai_socktype
 argument_list|,
-literal|0
+name|ai
+operator|->
+name|ai_protocol
 argument_list|)
 expr_stmt|;
 if|if
@@ -11398,7 +12172,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"bind port %d: %.100s"
 argument_list|,
@@ -11619,10 +12393,7 @@ name|CHAN_X11_PACKET_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"X11 inet listener"
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -12107,9 +12878,13 @@ name|ai
 operator|->
 name|ai_family
 argument_list|,
-name|SOCK_STREAM
+name|ai
+operator|->
+name|ai_socktype
 argument_list|,
-literal|0
+name|ai
+operator|->
+name|ai_protocol
 argument_list|)
 expr_stmt|;
 if|if
@@ -12119,7 +12894,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"socket: %.100s"
 argument_list|,
@@ -12150,7 +12925,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"connect %.100s port %d: %.100s"
 argument_list|,
@@ -12348,6 +13123,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|xfree
+argument_list|(
+name|remote_host
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -12364,11 +13144,6 @@ expr_stmt|;
 name|packet_put_int
 argument_list|(
 name|remote_id
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|remote_host
 argument_list|)
 expr_stmt|;
 block|}
@@ -12864,10 +13639,6 @@ name|remote_id
 decl_stmt|,
 name|sock
 decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 comment|/* Read the remote channel number from the message. */
 name|remote_id
 operator|=
@@ -12891,13 +13662,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|name
-operator|=
-name|xstrdup
-argument_list|(
-literal|"authentication agent connection"
-argument_list|)
-expr_stmt|;
 name|c
 operator|=
 name|channel_new
@@ -12919,7 +13683,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|name
+literal|"authentication agent connection"
 argument_list|,
 literal|1
 argument_list|)

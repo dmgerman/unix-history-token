@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.52 2003/03/13 11:42:18 markus Exp $"
+literal|"$OpenBSD: authfile.c,v 1.54 2003/05/24 09:30:39 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2429,6 +2429,9 @@ name|error
 argument_list|(
 literal|"Permissions 0%3.3o for '%s' are too open."
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|st
 operator|.
 name|st_mode
@@ -2960,6 +2963,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+comment|/* try rsa1 private key */
 name|pub
 operator|=
 name|key_load_public_type
@@ -2980,6 +2984,36 @@ condition|)
 return|return
 name|pub
 return|;
+comment|/* try rsa1 public key */
+name|pub
+operator|=
+name|key_new
+argument_list|(
+name|KEY_RSA1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key_try_load_public
+argument_list|(
+name|pub
+argument_list|,
+name|filename
+argument_list|,
+name|commentp
+argument_list|)
+operator|==
+literal|1
+condition|)
+return|return
+name|pub
+return|;
+name|key_free
+argument_list|(
+name|pub
+argument_list|)
+expr_stmt|;
+comment|/* try ssh2 public key */
 name|pub
 operator|=
 name|key_new

@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ttymodes.c,v 1.18 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: ttymodes.c,v 1.19 2003/04/08 20:21:29 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -712,7 +712,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"tcgetattr: %.100s"
 argument_list|,
@@ -1000,7 +1000,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"tcgetattr: %.100s"
 argument_list|,
@@ -1244,7 +1244,7 @@ block|}
 else|else
 block|{
 comment|/* 					 * It is a truly undefined opcode (160 to 255). 					 * We have no idea about its arguments.  So we 					 * must stop parsing.  Note that some data may be 					 * left in the packet; hopefully there is nothing 					 * more coming after the mode data. 					 */
-name|log
+name|logit
 argument_list|(
 literal|"parse_tty_modes: unknown opcode %d"
 argument_list|,
@@ -1284,7 +1284,7 @@ break|break;
 block|}
 else|else
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"parse_tty_modes: unknown opcode %d"
 argument_list|,
@@ -1313,7 +1313,7 @@ name|n_bytes_ptr
 operator|=
 name|n_bytes
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"parse_tty_modes: n_bytes_ptr != n_bytes: %d %d"
 argument_list|,
@@ -1351,7 +1351,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Setting tty modes failed: %.100s"
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rh-rsa.c,v 1.34 2002/03/25 09:25:06 markus Exp $"
+literal|"$OpenBSD: auth-rh-rsa.c,v 1.36 2003/06/02 09:17:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -220,7 +220,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 name|debug
@@ -273,7 +273,7 @@ name|client_host_key
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Client on %.800s failed to respond correctly to host authentication."
 argument_list|,

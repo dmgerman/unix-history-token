@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: groupaccess.c,v 1.5 2002/03/04 17:27:39 stevesk Exp $"
+literal|"$OpenBSD: groupaccess.c,v 1.6 2003/04/08 20:21:28 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -138,7 +138,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"getgrouplist: groups list too small"
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.41 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.44 2003/06/28 16:23:06 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -123,25 +123,6 @@ begin_comment
 comment|/* Flag indicating whether IPv4 or IPv6.  This can be set on the command line.    Default value is AF_UNSPEC means both IPv4 and IPv6. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV4_DEFAULT
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|IPv4or6
-init|=
-name|AF_INET
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|IPv4or6
@@ -149,11 +130,6 @@ init|=
 name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -1933,9 +1909,13 @@ name|ai
 operator|->
 name|ai_family
 argument_list|,
-name|SOCK_STREAM
+name|ai
+operator|->
+name|ai_socktype
 argument_list|,
-literal|0
+name|ai
+operator|->
+name|ai_protocol
 argument_list|)
 expr_stmt|;
 if|if
@@ -2880,7 +2860,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|s
 argument_list|,
@@ -3650,7 +3630,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-v46] [-p port] [-T timeout] [-f file]\n"
+literal|"usage: %s [-v46] [-p port] [-T timeout] [-t type] [-f file]\n"
 literal|"\t\t   [host | addrlist namelist] [...]\n"
 argument_list|,
 name|__progname
@@ -3708,7 +3688,7 @@ name|optarg
 decl_stmt|;
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|argv
 index|[

@@ -127,12 +127,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_U_INT64_T
-end_ifdef
-
 begin_function_decl
 name|u_int64_t
 name|buffer_get_int64
@@ -154,11 +148,6 @@ name|u_int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int

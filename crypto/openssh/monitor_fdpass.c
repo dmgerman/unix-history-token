@@ -522,6 +522,9 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BROKEN_CMSG_TYPE
 if|if
 condition|(
 name|cmsg
@@ -543,6 +546,8 @@ operator|->
 name|cmsg_type
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fd
 operator|=
 operator|(

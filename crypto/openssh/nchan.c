@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: nchan.c,v 1.47 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: nchan.c,v 1.49 2003/08/29 10:04:36 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -219,7 +219,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: input %s -> %s"
 argument_list|,
@@ -285,7 +285,7 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: output %s -> %s"
 argument_list|,
@@ -329,7 +329,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rcvd oclose"
 argument_list|,
@@ -422,7 +422,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: read failed"
 argument_list|,
@@ -482,7 +482,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: ibuf empty"
 argument_list|,
@@ -597,7 +597,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rcvd ieof"
 argument_list|,
@@ -664,7 +664,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: write failed"
 argument_list|,
@@ -750,7 +750,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: obuf empty"
 argument_list|,
@@ -843,7 +843,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: send ieof"
 argument_list|,
@@ -910,7 +910,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: send oclose"
 argument_list|,
@@ -989,7 +989,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rcvd close"
 argument_list|,
@@ -1120,7 +1120,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rcvd eof"
 argument_list|,
@@ -1163,7 +1163,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: write failed"
 argument_list|,
@@ -1227,7 +1227,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: send eof"
 argument_list|,
@@ -1297,7 +1297,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: send close"
 argument_list|,
@@ -1539,7 +1539,7 @@ operator|==
 name|SSH_CHANNEL_ZOMBIE
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: zombie"
 argument_list|,
@@ -1575,7 +1575,7 @@ operator|!
 name|compat20
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: is dead"
 argument_list|,
@@ -1680,7 +1680,7 @@ operator|&
 name|CHAN_CLOSE_RCVD
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: almost dead"
 argument_list|,
@@ -1714,7 +1714,7 @@ name|CHAN_CLOSE_RCVD
 operator|)
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: is dead"
 argument_list|,
@@ -1767,7 +1767,7 @@ name|SSH_CHANNEL_LARVAL
 condition|)
 return|return;
 comment|/* shutdown failure is allowed if write failed already */
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: close_write"
 argument_list|,
@@ -1799,7 +1799,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: chan_shutdown_write: "
 literal|"shutdown() failed for fd%d: %.100s"
@@ -1833,7 +1833,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: chan_shutdown_write: "
 literal|"close() failed for fd%d: %.100s"
@@ -1877,7 +1877,7 @@ operator|==
 name|SSH_CHANNEL_LARVAL
 condition|)
 return|return;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: close_read"
 argument_list|,
@@ -1956,7 +1956,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"channel %d: chan_shutdown_read: "
 literal|"close() failed for fd%d: %.100s"

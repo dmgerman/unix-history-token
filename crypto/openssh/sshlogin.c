@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshlogin.c,v 1.5 2002/08/29 15:57:25 stevesk Exp $"
+literal|"$OpenBSD: sshlogin.c,v 1.7 2003/06/12 07:57:38 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -79,7 +79,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Records that the user has logged in.  I these parts of operating systems  * were more standardized.  */
+comment|/*  * Records that the user has logged in.  I wish these parts of operating  * systems were more standardized.  */
 end_comment
 
 begin_function

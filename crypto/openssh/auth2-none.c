@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-none.c,v 1.4 2002/06/27 10:35:47 deraadt Exp $"
+literal|"$OpenBSD: auth2-none.c,v 1.6 2003/08/26 09:58:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -362,12 +362,14 @@ operator|)
 return|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|options
+operator|.
+name|password_authentication
+condition|)
 return|return
 operator|(
-name|authctxt
-operator|->
-name|valid
-condition|?
 name|PRIVSEP
 argument_list|(
 name|auth_password
@@ -377,7 +379,10 @@ argument_list|,
 literal|""
 argument_list|)
 argument_list|)
-else|:
+operator|)
+return|;
+return|return
+operator|(
 literal|0
 operator|)
 return|;

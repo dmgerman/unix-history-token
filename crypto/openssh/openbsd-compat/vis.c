@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"includes.h"
 end_include
 
 begin_if
@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: vis.c,v 1.8 2002/02/19 19:39:36 millert Exp $"
+literal|"$OpenBSD: vis.c,v 1.12 2003/06/02 20:18:35 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -82,7 +88,7 @@ name|isvisible
 parameter_list|(
 name|c
 parameter_list|)
-value|(((u_int)(c)<= UCHAR_MAX&& isascii((u_char)(c))&& \ 				isgraph((u_char)(c))) ||		     \ 				((flag& VIS_SP) == 0&& (c) == ' ') ||	     \ 				((flag& VIS_TAB) == 0&& (c) == '\t') ||    \ 				((flag& VIS_NL) == 0&& (c) == '\n') ||     \ 				((flag& VIS_SAFE)&&			     \ 				((c) == '\b' || (c) == '\007' || (c) == '\r')))
+value|(((u_int)(c)<= UCHAR_MAX&& isascii((u_char)(c))&& \ 				isgraph((u_char)(c))) ||		     \ 				((flag& VIS_SP) == 0&& (c) == ' ') ||	     \ 				((flag& VIS_TAB) == 0&& (c) == '\t') ||    \ 				((flag& VIS_NL) == 0&& (c) == '\n') ||     \ 				((flag& VIS_SAFE)&& ((c) == '\b' ||	     \ 				(c) == '\007' || (c) == '\r' ||		     \ 				isgraph((u_char)(c)))))
 end_define
 
 begin_comment
@@ -630,12 +636,10 @@ name|siz
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|dst
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -648,7 +652,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -659,6 +662,19 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
+name|char
+name|tbuf
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|start
@@ -694,6 +710,10 @@ name|c
 argument_list|)
 condition|)
 block|{
+name|i
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|dst
 operator|++
@@ -733,6 +753,10 @@ block|{
 name|dst
 operator|--
 expr_stmt|;
+name|i
+operator|=
+literal|2
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -742,20 +766,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* vis(3) requires up to 4 chars */
-if|if
-condition|(
-name|dst
-operator|+
-literal|3
-operator|<
-name|end
-condition|)
-name|dst
+name|i
 operator|=
 name|vis
 argument_list|(
-name|dst
+name|tbuf
 argument_list|,
 name|c
 argument_list|,
@@ -765,11 +780,47 @@ operator|*
 operator|++
 name|src
 argument_list|)
+operator|-
+name|tbuf
 expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|+
+name|i
+operator|<=
+name|end
+condition|)
+block|{
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|tbuf
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|dst
+operator|+=
+name|i
+expr_stmt|;
+block|}
 else|else
+block|{
+name|src
+operator|--
+expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|siz
+operator|>
+literal|0
+condition|)
 operator|*
 name|dst
 operator|=
@@ -778,16 +829,12 @@ expr_stmt|;
 if|if
 condition|(
 name|dst
-operator|>=
+operator|+
+name|i
+operator|>
 name|end
 condition|)
 block|{
-name|char
-name|tbuf
-index|[
-literal|5
-index|]
-decl_stmt|;
 comment|/* adjust return value for truncation */
 while|while
 condition|(

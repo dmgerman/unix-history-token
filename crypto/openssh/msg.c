@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: msg.c,v 1.5 2002/12/19 00:07:02 djm Exp $"
+literal|"$OpenBSD: msg.c,v 1.6 2003/06/28 16:23:06 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -110,7 +110,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -136,7 +136,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,

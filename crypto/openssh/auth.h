@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth.h,v 1.41 2002/09/26 11:38:43 markus Exp $	*/
+comment|/*	$OpenBSD: auth.h,v 1.46 2003/08/28 12:54:34 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -122,9 +122,11 @@ decl_stmt|;
 name|int
 name|postponed
 decl_stmt|;
+comment|/* authentication needs another step */
 name|int
 name|valid
 decl_stmt|;
+comment|/* user exists and is allowed to login */
 name|int
 name|attempt
 decl_stmt|;
@@ -135,6 +137,7 @@ name|char
 modifier|*
 name|user
 decl_stmt|;
+comment|/* username sent by the client */
 name|char
 modifier|*
 name|service
@@ -144,6 +147,7 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
+comment|/* set if 'valid' */
 name|char
 modifier|*
 name|style
@@ -163,21 +167,9 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|KRB4
-name|char
-modifier|*
-name|krb4_ticket_file
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|KRB5
 name|krb5_context
 name|krb5_ctx
-decl_stmt|;
-name|krb5_auth_context
-name|krb5_auth_ctx
 decl_stmt|;
 name|krb5_ccache
 name|krb5_fwd_ccache
@@ -191,9 +183,17 @@ name|krb5_ticket_file
 decl_stmt|;
 endif|#
 directive|endif
+name|void
+modifier|*
+name|methoddata
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Every authentication method has to handle authentication requests for  * non-existing users, or for users that are not allowed to login. In this  * case 'valid' is set to 0, but 'user' points to the username requested by  * the client.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -512,118 +512,6 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KRB4
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<krb.h>
-end_include
-
-begin_function_decl
-name|int
-name|auth_krb4
-parameter_list|(
-name|Authctxt
-modifier|*
-parameter_list|,
-name|KTEXT
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|KTEXT
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|auth_krb4_password
-parameter_list|(
-name|Authctxt
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|krb4_cleanup_proc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<kafs.h>
-end_include
-
-begin_function_decl
-name|int
-name|auth_krb4_tgt
-parameter_list|(
-name|Authctxt
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|auth_afs_token
-parameter_list|(
-name|Authctxt
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AFS */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KRB4 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|KRB5
 end_ifdef
 
@@ -705,12 +593,6 @@ begin_include
 include|#
 directive|include
 file|"auth-pam.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"auth2-pam.h"
 end_include
 
 begin_function_decl
@@ -971,6 +853,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|abandon_challenge_response
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|passwd
 modifier|*
@@ -1157,6 +1049,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|auth_debug_reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|passwd
+modifier|*
+name|fakepw
 parameter_list|(
 name|void
 parameter_list|)

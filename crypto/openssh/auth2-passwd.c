@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-passwd.c,v 1.2 2002/05/31 11:35:15 markus Exp $"
+literal|"$OpenBSD: auth2-passwd.c,v 1.4 2003/08/26 09:58:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,7 +98,7 @@ if|if
 condition|(
 name|change
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"password change not supported"
 argument_list|)
@@ -116,24 +116,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|authctxt
-operator|->
-name|valid
-operator|&&
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
-name|check_nt_auth
-argument_list|(
-literal|1
-argument_list|,
-name|authctxt
-operator|->
-name|pw
-argument_list|)
-operator|&&
-endif|#
-directive|endif
 name|PRIVSEP
 argument_list|(
 name|auth_password
@@ -145,6 +127,20 @@ argument_list|)
 argument_list|)
 operator|==
 literal|1
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+operator|&&
+name|check_nt_auth
+argument_list|(
+literal|1
+argument_list|,
+name|authctxt
+operator|->
+name|pw
+argument_list|)
+endif|#
+directive|endif
 condition|)
 name|authenticated
 operator|=

@@ -169,35 +169,5 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|/* wrapper for signal interface */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|mysig_t
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_function_decl
-name|mysig_t
-name|mysignal
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|mysig_t
-name|act
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 

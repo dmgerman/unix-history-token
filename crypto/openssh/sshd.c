@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.263 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.276 2003/08/28 12:54:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -369,25 +369,6 @@ begin_comment
 comment|/*  * Flag indicating whether IPv4 or IPv6.  This can be set on the command line.  * Default value is AF_UNSPEC means both IPv4 and IPv6.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV4_DEFAULT
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|IPv4or6
-init|=
-name|AF_INET
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|IPv4or6
@@ -395,11 +376,6 @@ init|=
 name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Debug mode flag.  This can be set on the command line.  If debug  * mode is enabled, extra debugging output will be sent to the system  * log, the daemon will not go to background, and will exit after processing  * the first connection.  */
@@ -645,7 +621,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|session_id2_len
 init|=
 literal|0
@@ -702,6 +678,16 @@ name|struct
 name|monitor
 modifier|*
 name|pmonitor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* message to be displayed after login */
+end_comment
+
+begin_decl_stmt
+name|Buffer
+name|loginmsg
 decl_stmt|;
 end_decl_stmt
 
@@ -890,7 +876,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Received SIGHUP; restarting."
 argument_list|)
@@ -911,7 +897,7 @@ argument_list|,
 name|saved_argv
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"RESTART FAILED: av[0]='%.100s', error: %.100s."
 argument_list|,
@@ -1325,19 +1311,12 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|client_version_string
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* Send our protocol version identification. */
 if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|sock_out
 argument_list|,
@@ -1355,7 +1334,7 @@ name|server_version_string
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Could not write ident string to %s"
 argument_list|,
@@ -1419,7 +1398,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Did not receive identification string from %s"
 argument_list|,
@@ -1508,7 +1487,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Check that the versions match.  In future this might accept 	 * several versions and set appropriate flags to handle them. 	 */
 if|if
 condition|(
@@ -1539,7 +1517,7 @@ name|void
 operator|)
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|sock_out
 argument_list|,
@@ -1561,7 +1539,7 @@ argument_list|(
 name|sock_out
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Bad protocol version identification '%.100s' from %s"
 argument_list|,
@@ -1598,7 +1576,7 @@ operator|&
 name|SSH_BUG_PROBE
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"probed from %s with %s.  Don't panic."
 argument_list|,
@@ -1619,7 +1597,7 @@ operator|&
 name|SSH_BUG_SCANNER
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"scanned from %s with %s.  Don't panic."
 argument_list|,
@@ -1767,7 +1745,7 @@ name|void
 operator|)
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|sock_out
 argument_list|,
@@ -1789,7 +1767,7 @@ argument_list|(
 name|sock_out
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Protocol major versions differ for %s: %.200s vs. %.200s"
 argument_list|,
@@ -2219,26 +2197,6 @@ operator|=
 name|pw
 operator|->
 name|pw_gid
-expr_stmt|;
-if|if
-condition|(
-name|setgid
-argument_list|(
-name|pw
-operator|->
-name|pw_gid
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"setgid failed for %u"
-argument_list|,
-name|pw
-operator|->
-name|pw_gid
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3368,7 +3326,7 @@ endif|#
 directive|endif
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|av
 index|[
@@ -3386,10 +3344,6 @@ name|ac
 expr_stmt|;
 name|saved_argv
 operator|=
-name|av
-expr_stmt|;
-name|saved_argv
-operator|=
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -3398,7 +3352,11 @@ operator|*
 name|saved_argv
 argument_list|)
 operator|*
+operator|(
 name|ac
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3427,6 +3385,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|saved_argv
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|HAVE_SETPROCTITLE
@@ -3437,6 +3402,10 @@ name|ac
 argument_list|,
 name|av
 argument_list|)
+expr_stmt|;
+name|av
+operator|=
+name|saved_argv
 expr_stmt|;
 endif|#
 directive|endif
@@ -3459,7 +3428,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"f:p:b:k:h:g:V:u:o:dDeiqtQ46"
+literal|"f:p:b:k:h:g:u:o:dDeiqtQ46"
 argument_list|)
 operator|)
 operator|!=
@@ -3501,9 +3470,9 @@ literal|'d'
 case|:
 if|if
 condition|(
-literal|0
-operator|==
 name|debug_flag
+operator|==
+literal|0
 condition|)
 block|{
 name|debug_flag
@@ -3526,28 +3495,11 @@ name|log_level
 operator|<
 name|SYSLOG_LEVEL_DEBUG3
 condition|)
-block|{
 name|options
 operator|.
 name|log_level
 operator|++
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Too high debugging level.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'D'
@@ -3781,19 +3733,6 @@ operator|++
 index|]
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'V'
-case|:
-name|client_version_string
-operator|=
-name|optarg
-expr_stmt|;
-comment|/* only makes sense with inetd_flag, i.e. no listen() */
-name|inetd_flag
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -4181,7 +4120,7 @@ operator|.
 name|have_ssh1_key
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Disabling protocol version 1. Could not load host key"
 argument_list|)
@@ -4210,7 +4149,7 @@ operator|.
 name|have_ssh2_key
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Disabling protocol version 2. Could not load host key"
 argument_list|)
@@ -4239,7 +4178,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"sshd: no hostkeys available -- exiting."
 argument_list|)
@@ -4828,9 +4767,13 @@ name|ai
 operator|->
 name|ai_family
 argument_list|,
-name|SOCK_STREAM
+name|ai
+operator|->
+name|ai_socktype
 argument_list|,
-literal|0
+name|ai
+operator|->
+name|ai_protocol
 argument_list|)
 expr_stmt|;
 if|if
@@ -4984,7 +4927,7 @@ name|num_listen_socks
 operator|++
 expr_stmt|;
 comment|/* Start listening on the port. */
-name|log
+name|logit
 argument_list|(
 literal|"Server listening on %s port %s."
 argument_list|,
@@ -5095,7 +5038,26 @@ expr_stmt|;
 if|if
 condition|(
 name|f
+operator|==
+name|NULL
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"Couldn't create pid file \"%s\": %s"
+argument_list|,
+name|options
+operator|.
+name|pid_file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|fprintf
 argument_list|(
@@ -5355,7 +5317,7 @@ condition|(
 name|received_sigterm
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Received signal %d; terminating."
 argument_list|,
@@ -5868,9 +5830,9 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|STREAMS_PUSH_ACQUIRES_CTTY
+name|SSHD_ACQUIRES_CTTY
 argument_list|)
-comment|/* 	 * If setsid is called on Solaris, sshd will acquire the controlling 	 * terminal while pushing STREAMS modules. This will prevent the 	 * shell from acquiring it later. 	 */
+comment|/* 	 * If setsid is called, on some platforms sshd will later acquire a 	 * controlling terminal which will result in "could not set 	 * controlling tty" errors. 	 */
 if|if
 condition|(
 operator|!
@@ -6098,101 +6060,15 @@ argument_list|,
 name|sock_out
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check that the connection comes from a privileged port. 	 * Rhosts-Authentication only makes sense from privileged 	 * programs.  Of course, if the intruder has root access on his local 	 * machine, he can connect from any port.  So do not use these 	 * authentication methods from machines that you do not trust. 	 */
-if|if
-condition|(
-name|options
-operator|.
-name|rhosts_authentication
-operator|&&
-operator|(
-name|remote_port
-operator|>=
-name|IPPORT_RESERVED
-operator|||
-name|remote_port
-operator|<
-name|IPPORT_RESERVED
-operator|/
-literal|2
-operator|)
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"Rhosts Authentication disabled, "
-literal|"originating port %d not trusted."
-argument_list|,
-name|remote_port
-argument_list|)
-expr_stmt|;
-name|options
-operator|.
-name|rhosts_authentication
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
-if|if
-condition|(
-operator|!
-name|packet_connection_is_ipv4
-argument_list|()
-operator|&&
-name|options
-operator|.
-name|kerberos_authentication
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"Kerberos Authentication disabled, only available for IPv4."
-argument_list|)
-expr_stmt|;
-name|options
-operator|.
-name|kerberos_authentication
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* KRB4&& !KRB5 */
-ifdef|#
-directive|ifdef
-name|AFS
-comment|/* If machine has AFS, set process authentication group. */
-if|if
-condition|(
-name|k_hasafs
-argument_list|()
-condition|)
-block|{
-name|k_setpag
-argument_list|()
-expr_stmt|;
-name|k_unlog
-argument_list|()
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* AFS */
 name|packet_set_nonblocking
 argument_list|()
+expr_stmt|;
+comment|/* prepare buffers to collect authentication messages */
+name|buffer_init
+argument_list|(
+operator|&
+name|loginmsg
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6296,6 +6172,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_PAM
+if|if
+condition|(
+name|options
+operator|.
+name|use_pam
+condition|)
 name|finish_pam
 argument_list|()
 expr_stmt|;
@@ -6781,18 +6663,6 @@ if|if
 condition|(
 name|options
 operator|.
-name|rhosts_authentication
-condition|)
-name|auth_mask
-operator||=
-literal|1
-operator|<<
-name|SSH_AUTH_RHOSTS
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|.
 name|rhosts_rsa_authentication
 condition|)
 name|auth_mask
@@ -6813,73 +6683,6 @@ literal|1
 operator|<<
 name|SSH_AUTH_RSA
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
-if|if
-condition|(
-name|options
-operator|.
-name|kerberos_authentication
-condition|)
-name|auth_mask
-operator||=
-literal|1
-operator|<<
-name|SSH_AUTH_KERBEROS
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AFS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
-if|if
-condition|(
-name|options
-operator|.
-name|kerberos_tgt_passing
-condition|)
-name|auth_mask
-operator||=
-literal|1
-operator|<<
-name|SSH_PASS_KERBEROS_TGT
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|AFS
-if|if
-condition|(
-name|options
-operator|.
-name|afs_token_passing
-condition|)
-name|auth_mask
-operator||=
-literal|1
-operator|<<
-name|SSH_PASS_AFS_TOKEN
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|options
@@ -7228,7 +7031,7 @@ decl_stmt|;
 name|MD5_CTX
 name|md
 decl_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"do_connection: generating a fake encryption key"
 argument_list|)

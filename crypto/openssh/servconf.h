@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.59 2002/07/30 17:03:55 markus Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.65 2003/09/01 18:15:50 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -264,10 +264,6 @@ name|log_level
 decl_stmt|;
 comment|/* Level for system logging. */
 name|int
-name|rhosts_authentication
-decl_stmt|;
-comment|/* If true, permit rhosts 					 * authentication. */
-name|int
 name|rhosts_rsa_authentication
 decl_stmt|;
 comment|/* If true, permit rhosts RSA 						 * authentication. */
@@ -287,17 +283,6 @@ name|int
 name|pubkey_authentication
 decl_stmt|;
 comment|/* If true, permit ssh2 pubkey authentication. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
 name|int
 name|kerberos_authentication
 decl_stmt|;
@@ -310,34 +295,14 @@ name|int
 name|kerberos_ticket_cleanup
 decl_stmt|;
 comment|/* If true, destroy ticket 						 * file on logout. */
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AFS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
 name|int
-name|kerberos_tgt_passing
+name|gss_authentication
 decl_stmt|;
-comment|/* If true, permit Kerberos TGT 					 * passing. */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|AFS
+comment|/* If true, permit GSSAPI authentication */
 name|int
-name|afs_token_passing
+name|gss_cleanup_creds
 decl_stmt|;
-comment|/* If true, permit AFS token passing. */
-endif|#
-directive|endif
+comment|/* If true, destroy cred cache on logout */
 name|int
 name|password_authentication
 decl_stmt|;
@@ -440,9 +405,8 @@ name|banner
 decl_stmt|;
 comment|/* SSH-2 banner message */
 name|int
-name|verify_reverse_mapping
+name|use_dns
 decl_stmt|;
-comment|/* cross-check ip and dns */
 name|int
 name|client_alive_interval
 decl_stmt|;
@@ -461,8 +425,9 @@ modifier|*
 name|authorized_keys_file2
 decl_stmt|;
 name|int
-name|pam_authentication_via_kbd_int
+name|use_pam
 decl_stmt|;
+comment|/* Enable auth via PAM */
 block|}
 name|ServerOptions
 typedef|;

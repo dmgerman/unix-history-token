@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.66 2003/03/05 22:33:43 markus Exp $"
+literal|"$OpenBSD: ssh-add.c,v 1.68 2003/06/16 10:22:45 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -604,14 +604,16 @@ break|break;
 name|clear_pass
 argument_list|()
 expr_stmt|;
-name|strlcpy
+name|snprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"Bad passphrase, try again: "
-argument_list|,
 sizeof|sizeof
 name|msg
+argument_list|,
+literal|"Bad passphrase, try again for %.200s: "
+argument_list|,
+name|comment
 argument_list|)
 expr_stmt|;
 block|}
@@ -791,6 +793,10 @@ argument_list|,
 name|id
 argument_list|,
 name|pin
+argument_list|,
+name|lifetime
+argument_list|,
+name|confirm
 argument_list|)
 condition|)
 block|{
@@ -1441,7 +1447,7 @@ literal|0
 decl_stmt|;
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|argv
 index|[

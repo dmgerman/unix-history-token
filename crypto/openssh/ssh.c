@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.190 2003/02/06 09:27:29 markus Exp $"
+literal|"$OpenBSD: ssh.c,v 1.201 2003/09/01 18:15:50 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -207,42 +207,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Flag indicating whether IPv4 or IPv6.  This can be set on the command line.    Default value is AF_UNSPEC means both IPv4 and IPv6. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV4_DEFAULT
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|IPv4or6
-init|=
-name|AF_INET
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|IPv4or6
-init|=
-name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 
@@ -512,19 +476,6 @@ argument_list|,
 literal|"  -a          Disable authentication agent forwarding (default).\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AFS
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -k          Disable Kerberos ticket and AFS token forwarding.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* AFS */
 name|fprintf
 argument_list|(
 name|stderr
@@ -858,7 +809,7 @@ name|optarg
 decl_stmt|;
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|av
 index|[
@@ -947,7 +898,7 @@ operator|!
 name|pw
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"You don't exist, go away!"
 argument_list|)
@@ -1033,7 +984,9 @@ break|break;
 case|case
 literal|'4'
 case|:
-name|IPv4or6
+name|options
+operator|.
+name|address_family
 operator|=
 name|AF_INET
 expr_stmt|;
@@ -1041,7 +994,9 @@ break|break;
 case|case
 literal|'6'
 case|:
-name|IPv4or6
+name|options
+operator|.
+name|address_family
 operator|=
 name|AF_INET6
 expr_stmt|;
@@ -1127,27 +1082,11 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|AFS
 case|case
 literal|'k'
 case|:
-name|options
-operator|.
-name|kerberos_tgt_passing
-operator|=
-literal|0
-expr_stmt|;
-name|options
-operator|.
-name|afs_token_passing
-operator|=
-literal|0
-expr_stmt|;
+comment|/* ignored for backward compatibility */
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'i'
 case|:
@@ -1256,9 +1195,9 @@ literal|'v'
 case|:
 if|if
 condition|(
-literal|0
-operator|==
 name|debug_flag
+operator|==
+literal|0
 condition|)
 block|{
 name|debug_flag
@@ -1272,7 +1211,8 @@ operator|=
 name|SYSLOG_LEVEL_DEBUG1
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|options
@@ -1281,7 +1221,6 @@ name|log_level
 operator|<
 name|SYSLOG_LEVEL_DEBUG3
 condition|)
-block|{
 name|options
 operator|.
 name|log_level
@@ -1289,12 +1228,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-else|else
-name|fatal
-argument_list|(
-literal|"Too high debugging level."
-argument_list|)
-expr_stmt|;
 comment|/* fallthrough */
 case|case
 literal|'V'
@@ -1303,7 +1236,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, SSH protocols %d.%d/%d.%d, OpenSSL 0x%8.8lx\n"
+literal|"%s, SSH protocols %d.%d/%d.%d, %s\n"
 argument_list|,
 name|SSH_VERSION
 argument_list|,
@@ -1315,8 +1248,10 @@ name|PROTOCOL_MAJOR_2
 argument_list|,
 name|PROTOCOL_MINOR_2
 argument_list|,
-name|SSLeay
-argument_list|()
+name|SSLeay_version
+argument_list|(
+name|SSLEAY_VERSION
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1656,7 +1591,7 @@ name|sscanf
 argument_list|(
 name|optarg
 argument_list|,
-literal|"%5[0-9]:%255[^:]:%5[0-9]"
+literal|"%5[0123456789]:%255[^:]:%5[0123456789]"
 argument_list|,
 name|sfwd_port
 argument_list|,
@@ -1671,7 +1606,7 @@ name|sscanf
 argument_list|(
 name|optarg
 argument_list|,
-literal|"%5[0-9]/%255[^/]/%5[0-9]"
+literal|"%5[0123456789]/%255[^/]/%5[0123456789]"
 argument_list|,
 name|sfwd_port
 argument_list|,
@@ -1814,7 +1749,7 @@ name|options
 argument_list|,
 name|fwd_port
 argument_list|,
-literal|"socks4"
+literal|"socks"
 argument_list|,
 literal|0
 argument_list|)
@@ -2047,11 +1982,6 @@ expr_stmt|;
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
-name|channel_set_af
-argument_list|(
-name|IPv4or6
-argument_list|)
-expr_stmt|;
 comment|/* Initialize the command to execute on remote host. */
 name|buffer_init
 argument_list|(
@@ -2205,7 +2135,7 @@ if|if
 condition|(
 name|tty_flag
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Pseudo-terminal will not be allocated because stdin is not a terminal."
 argument_list|)
@@ -2329,6 +2259,13 @@ operator|&
 name|options
 argument_list|)
 expr_stmt|;
+name|channel_set_af
+argument_list|(
+name|options
+operator|.
+name|address_family
+argument_list|)
+expr_stmt|;
 comment|/* reinit */
 name|log_init
 argument_list|(
@@ -2382,6 +2319,48 @@ name|options
 operator|.
 name|hostname
 expr_stmt|;
+comment|/* force lowercase for hostkey matching */
+if|if
+condition|(
+name|options
+operator|.
+name|host_key_alias
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|p
+operator|=
+name|options
+operator|.
+name|host_key_alias
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|isupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|options
@@ -2407,48 +2386,6 @@ name|proxy_command
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Disable rhosts authentication if not running as root. */
-ifdef|#
-directive|ifdef
-name|HAVE_CYGWIN
-comment|/* Ignore uid if running under Windows */
-if|if
-condition|(
-operator|!
-name|options
-operator|.
-name|use_privileged_port
-condition|)
-block|{
-else|#
-directive|else
-if|if
-condition|(
-name|original_effective_uid
-operator|!=
-literal|0
-operator|||
-operator|!
-name|options
-operator|.
-name|use_privileged_port
-condition|)
-block|{
-endif|#
-directive|endif
-name|debug
-argument_list|(
-literal|"Rhosts Authentication disabled, "
-literal|"originating port will not be trusted."
-argument_list|)
-expr_stmt|;
-name|options
-operator|.
-name|rhosts_authentication
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* Open a connection to the remote host. */
 if|if
 condition|(
@@ -2463,7 +2400,9 @@ name|options
 operator|.
 name|port
 argument_list|,
-name|IPv4or6
+name|options
+operator|.
+name|address_family
 argument_list|,
 name|options
 operator|.
@@ -3021,6 +2960,9 @@ return|return
 name|exit_status
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|x11_get_proto
@@ -3270,7 +3212,7 @@ name|rand
 init|=
 literal|0
 decl_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Warning: No xauth data; using fake authentication data for X11 forwarding."
 argument_list|)
@@ -3341,6 +3283,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ssh_init_forwarding
@@ -3538,6 +3483,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|check_agent_present
@@ -3567,6 +3515,9 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ssh_session
@@ -3675,7 +3626,7 @@ name|type
 operator|==
 name|SSH_SMSG_FAILURE
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Warning: Remote host refused compression."
 argument_list|)
@@ -3832,7 +3783,7 @@ name|type
 operator|==
 name|SSH_SMSG_FAILURE
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Warning: Remote host failed or refused to allocate a pseudo tty."
 argument_list|)
@@ -3917,7 +3868,7 @@ operator|==
 name|SSH_SMSG_FAILURE
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Warning: Remote host denied X11 forwarding."
 argument_list|)
@@ -3972,7 +3923,7 @@ name|type
 operator|!=
 name|SSH_SMSG_SUCCESS
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Warning: Remote host denied authentication agent forwarding."
 argument_list|)
@@ -4120,6 +4071,9 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|client_subsystem_reply
@@ -4192,6 +4146,9 @@ name|id
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|client_global_request_reply
 parameter_list|(
@@ -4282,7 +4239,7 @@ name|type
 operator|==
 name|SSH2_MSG_REQUEST_FAILURE
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Warning: remote port forwarding failed for listen port %d"
 argument_list|,
@@ -4297,7 +4254,13 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* request pty/x11/agent/tcpfwd/shell for channel */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ssh_session2_setup
@@ -4679,7 +4642,13 @@ name|interactive
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* open new channel for a session */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|ssh_session2_open
@@ -4842,10 +4811,7 @@ name|packetmax
 argument_list|,
 name|CHAN_EXTENDED_WRITE
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"client-session"
-argument_list|)
 argument_list|,
 comment|/*nonblock*/
 literal|0
@@ -4887,6 +4853,9 @@ operator|->
 name|self
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ssh_session2
@@ -4963,6 +4932,9 @@ name|id
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|load_public_identity_files
@@ -5132,12 +5104,14 @@ index|[
 literal|0
 index|]
 operator|=
-name|xstrdup
+name|sc_get_key_label
 argument_list|(
-literal|"smartcard key"
+name|keys
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 block|}
 if|if
 condition|(

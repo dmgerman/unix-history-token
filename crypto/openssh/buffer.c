@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: buffer.c,v 1.17 2003/09/16 03:03:47 deraadt Exp $"
+literal|"$OpenBSD: buffer.c,v 1.19 2003/09/18 07:54:48 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -124,6 +124,12 @@ name|buffer
 operator|->
 name|alloc
 argument_list|)
+expr_stmt|;
+name|buffer
+operator|->
+name|alloc
+operator|=
+literal|0
 expr_stmt|;
 name|xfree
 argument_list|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: serverloop.c,v 1.106 2003/04/01 10:22:21 markus Exp $"
+literal|"$OpenBSD: serverloop.c,v 1.110 2003/06/24 08:23:46 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -740,7 +740,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|len
 decl_stmt|;
 comment|/* Send buffered stderr data to the client. */
@@ -846,7 +846,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|len
 decl_stmt|;
 comment|/* Send buffered stdout data to the client. */
@@ -3055,6 +3055,7 @@ condition|(
 operator|!
 name|rekeying
 condition|)
+block|{
 name|channel_after_select
 argument_list|(
 name|readset
@@ -3062,6 +3063,30 @@ argument_list|,
 name|writeset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|packet_need_rekeying
+argument_list|()
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"need rekeying"
+argument_list|)
+expr_stmt|;
+name|xxx_kex
+operator|->
+name|done
+operator|=
+literal|0
+expr_stmt|;
+name|kex_send_kexinit
+argument_list|(
+name|xxx_kex
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|process_input
 argument_list|(
 name|readset
@@ -3435,10 +3460,7 @@ name|CHAN_TCP_PACKET_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"direct-tcpip"
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -3497,10 +3519,7 @@ name|CHAN_SES_PACKET_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"server-session"
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -3898,7 +3917,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* XXX currently ignored */
 name|listen_port
 operator|=
 operator|(

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshtty.c,v 1.3 2002/03/04 17:27:39 stevesk Exp $"
+literal|"$OpenBSD: sshtty.c,v 1.4 2003/07/16 10:36:28 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -204,6 +204,18 @@ operator||
 name|IXOFF
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IUCLC
+name|tio
+operator|.
+name|c_iflag
+operator|&=
+operator|~
+name|IUCLC
+expr_stmt|;
+endif|#
+directive|endif
 name|tio
 operator|.
 name|c_lflag

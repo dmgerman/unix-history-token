@@ -21,11 +21,9 @@ name|auth_sia_password
 parameter_list|(
 name|Authctxt
 modifier|*
-name|authctxt
 parameter_list|,
 name|char
 modifier|*
-name|pass
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -37,11 +35,9 @@ parameter_list|(
 name|struct
 name|passwd
 modifier|*
-name|pw
 parameter_list|,
 name|char
 modifier|*
-name|tty
 parameter_list|)
 function_decl|;
 end_function_decl

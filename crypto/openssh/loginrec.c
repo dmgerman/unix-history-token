@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Andre Lucas.  All rights reserved.  * Portions copyright (c) 1998 Todd C. Miller  * Portions copyright (c) 1996 Jason Downs  * Portions copyright (c) 1996 Theo de Raadt  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Markus Friedl.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000 Andre Lucas.  All rights reserved.  * Portions copyright (c) 1998 Todd C. Miller  * Portions copyright (c) 1996 Jason Downs  * Portions copyright (c) 1996 Theo de Raadt  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: loginrec.c,v 1.47 2003/03/10 00:23:07 djm Exp $"
+literal|"$Id: loginrec.c,v 1.52 2003/07/06 05:20:46 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -930,7 +930,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Attempt to write login records by non-root user (aborting)"
 argument_list|)
@@ -2640,7 +2640,7 @@ operator|==
 name|ty
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmp_write_entry: tty not found"
 argument_list|)
@@ -2849,7 +2849,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -2868,7 +2868,7 @@ operator|*
 name|ut
 argument_list|)
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"utmp_write_direct: error writing %s: %s"
 argument_list|,
@@ -2948,7 +2948,7 @@ name|ut
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmp_perform_login: utmp_write_library() failed"
 argument_list|)
@@ -2971,7 +2971,7 @@ name|ut
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmp_perform_login: utmp_write_direct() failed"
 argument_list|)
@@ -3026,7 +3026,7 @@ name|ut
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmp_perform_logout: utmp_write_library() failed"
 argument_list|)
@@ -3049,7 +3049,7 @@ name|ut
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmp_perform_logout: utmp_write_direct() failed"
 argument_list|)
@@ -3102,7 +3102,7 @@ name|li
 argument_list|)
 return|;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"utmp_write_entry: invalid type field"
 argument_list|)
@@ -3250,7 +3250,7 @@ modifier|*
 name|utx
 parameter_list|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmpx_write_direct: not implemented!"
 argument_list|)
@@ -3308,7 +3308,7 @@ name|utx
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmpx_perform_login: utmp_write_library() failed"
 argument_list|)
@@ -3331,7 +3331,7 @@ name|ut
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"utmpx_perform_login: utmp_write_direct() failed"
 argument_list|)
@@ -3470,7 +3470,7 @@ name|li
 argument_list|)
 return|;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"utmpx_write_entry: invalid type field"
 argument_list|)
@@ -3556,7 +3556,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmp_write: problem writing %s: %s"
 argument_list|,
@@ -3588,7 +3588,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -3617,7 +3617,7 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"wtmp_write: problem writing %s: %s"
 argument_list|,
@@ -3754,7 +3754,7 @@ name|li
 argument_list|)
 return|;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"wtmp_write_entry: invalid type field"
 argument_list|)
@@ -3897,7 +3897,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmp_get_entry: problem opening %s: %s"
 argument_list|,
@@ -3926,7 +3926,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmp_get_entry: couldn't stat %s: %s"
 argument_list|,
@@ -4010,7 +4010,7 @@ name|ut
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmp_get_entry: read of %s failed: %s"
 argument_list|,
@@ -4253,7 +4253,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmpx_write: problem opening %s: %s"
 argument_list|,
@@ -4285,7 +4285,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -4314,7 +4314,7 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"wtmpx_write: problem writing %s: %s"
 argument_list|,
@@ -4451,7 +4451,7 @@ name|li
 argument_list|)
 return|;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"wtmpx_write_entry: invalid type field"
 argument_list|)
@@ -4594,7 +4594,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmpx_get_entry: problem opening %s: %s"
 argument_list|,
@@ -4623,7 +4623,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmpx_get_entry: couldn't stat %s: %s"
 argument_list|,
@@ -4707,7 +4707,7 @@ name|utx
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"wtmpx_get_entry: read of %s failed: %s"
 argument_list|,
@@ -4926,7 +4926,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"syslogin_perform_login: couldn't malloc()"
 argument_list|)
@@ -5004,7 +5004,7 @@ name|line
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"syslogin_perform_logout: logout() returned an error"
 argument_list|)
@@ -5072,7 +5072,7 @@ name|li
 argument_list|)
 return|;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"syslogin_write_entry: Invalid type field"
 argument_list|)
@@ -5239,7 +5239,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"lastlog_perform_login: Couldn't stat %s: %s"
 argument_list|,
@@ -5372,7 +5372,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"lastlog_openseek: %.100s is not a file or directory!"
 argument_list|,
@@ -5391,6 +5391,8 @@ argument_list|(
 name|lastlog_file
 argument_list|,
 name|filemode
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 if|if
@@ -5460,7 +5462,7 @@ operator|!=
 name|offset
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"lastlog_openseek: %s->lseek(): %s"
 argument_list|,
@@ -5535,7 +5537,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -5559,7 +5561,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"lastlog_write_filemode: Error writing to %s: %s"
 argument_list|,
@@ -5613,7 +5615,7 @@ name|li
 argument_list|)
 return|;
 default|default:
-name|log
+name|logit
 argument_list|(
 literal|"lastlog_write_entry: Invalid type field"
 argument_list|)

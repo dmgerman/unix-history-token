@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: scard.h,v 1.11 2002/06/30 21:59:45 deraadt Exp $	*/
+comment|/*	$OpenBSD: scard.h,v 1.12 2003/06/12 19:12:03 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -81,6 +81,17 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|sc_get_key_label
+parameter_list|(
+name|Key
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: packet.h,v 1.37 2003/04/01 10:22:21 markus Exp $	*/
+comment|/*	$OpenBSD: packet.h,v 1.40 2003/06/24 08:23:46 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -485,19 +485,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int32_t
-name|packet_get_seqnr
+name|void
+name|packet_get_state
 parameter_list|(
 name|int
+parameter_list|,
+name|u_int32_t
+modifier|*
+parameter_list|,
+name|u_int64_t
+modifier|*
+parameter_list|,
+name|u_int32_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|packet_set_seqnr
+name|packet_set_state
 parameter_list|(
 name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int64_t
 parameter_list|,
 name|u_int32_t
 parameter_list|)
@@ -633,16 +646,16 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|max_packet_size
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|u_int
 name|packet_set_maxsize
 parameter_list|(
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -665,8 +678,26 @@ directive|define
 name|packet_check_eom
 parameter_list|()
 define|\
-value|do { \ 	int _len = packet_remaining(); \ 	if (_len> 0) { \ 		log("Packet integrity error (%d bytes remaining) at %s:%d", \ 		    _len ,__FILE__, __LINE__); \ 		packet_disconnect("Packet integrity error."); \ 	} \ } while (0)
+value|do { \ 	int _len = packet_remaining(); \ 	if (_len> 0) { \ 		logit("Packet integrity error (%d bytes remaining) at %s:%d", \ 		    _len ,__FILE__, __LINE__); \ 		packet_disconnect("Packet integrity error."); \ 	} \ } while (0)
 end_define
+
+begin_function_decl
+name|int
+name|packet_need_rekeying
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_set_rekey_limit
+parameter_list|(
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-options.c,v 1.26 2002/07/30 17:03:55 markus Exp $"
+literal|"$OpenBSD: auth-options.c,v 1.28 2003/06/02 09:17:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -845,7 +845,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 decl_stmt|;
 name|char
@@ -990,7 +990,7 @@ argument_list|(
 name|patterns
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Authentication tried for %.100s with "
 literal|"correct key but not from a permitted "
@@ -1369,7 +1369,7 @@ literal|1
 return|;
 name|bad_option
 label|:
-name|log
+name|logit
 argument_list|(
 literal|"Bad options in %.100s file, line %lu: %.50s"
 argument_list|,

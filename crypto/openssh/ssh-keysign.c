@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keysign.c,v 1.10 2003/03/13 11:42:19 markus Exp $"
+literal|"$OpenBSD: ssh-keysign.c,v 1.13 2003/07/03 08:09:06 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -113,15 +113,15 @@ directive|include
 file|"readconf.h"
 end_include
 
+begin_comment
+comment|/* XXX readconf.c needs these */
+end_comment
+
 begin_decl_stmt
 name|uid_t
 name|original_real_uid
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX readconf.c needs this */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -187,6 +187,8 @@ decl_stmt|;
 name|Key
 modifier|*
 name|key
+init|=
+name|NULL
 decl_stmt|;
 name|u_char
 modifier|*

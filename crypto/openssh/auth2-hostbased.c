@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-hostbased.c,v 1.2 2002/05/31 11:35:15 markus Exp $"
+literal|"$OpenBSD: auth2-hostbased.c,v 1.5 2003/06/24 08:23:46 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -116,7 +116,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|session_id2_len
 decl_stmt|;
 end_decl_stmt
@@ -296,7 +296,7 @@ name|KEY_UNSPEC
 condition|)
 block|{
 comment|/* this is perfectly legal */
-name|log
+name|logit
 argument_list|(
 literal|"userauth_hostbased: unsupported "
 literal|"public key algorithm: %s"
@@ -630,7 +630,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 name|ipaddr
@@ -734,7 +734,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"userauth_hostbased mismatch: "
 literal|"client sends %s, but we resolve %s to %s"

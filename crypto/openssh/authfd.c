@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.58 2003/01/23 13:50:27 markus Exp $"
+literal|"$OpenBSD: authfd.c,v 1.61 2003/06/28 16:23:06 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -383,7 +383,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|auth
 operator|->
@@ -398,7 +398,7 @@ literal|4
 operator|||
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|auth
 operator|->
@@ -1227,7 +1227,7 @@ operator|->
 name|n
 argument_list|)
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Warning: identity keysize mismatch: actual %d, announced %u"
 argument_list|,
@@ -1374,7 +1374,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Compatibility with ssh protocol version 1.0 no longer supported."
 argument_list|)
@@ -1504,7 +1504,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Agent admitted failure to authenticate using the key."
 argument_list|)
@@ -1749,7 +1749,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Agent admitted failure to sign using the key."
 argument_list|)
@@ -2565,6 +2565,12 @@ specifier|const
 name|char
 modifier|*
 name|pin
+parameter_list|,
+name|u_int
+name|life
+parameter_list|,
+name|u_int
+name|confirm
 parameter_list|)
 block|{
 name|Buffer
@@ -2572,7 +2578,34 @@ name|msg
 decl_stmt|;
 name|int
 name|type
+decl_stmt|,
+name|constrained
+init|=
+operator|(
+name|life
+operator|||
+name|confirm
+operator|)
 decl_stmt|;
+if|if
+condition|(
+name|add
+condition|)
+block|{
+name|type
+operator|=
+name|constrained
+condition|?
+name|SSH_AGENTC_ADD_SMARTCARD_KEY_CONSTRAINED
+else|:
+name|SSH_AGENTC_ADD_SMARTCARD_KEY
+expr_stmt|;
+block|}
+else|else
+name|type
+operator|=
+name|SSH_AGENTC_REMOVE_SMARTCARD_KEY
+expr_stmt|;
 name|buffer_init
 argument_list|(
 operator|&
@@ -2584,11 +2617,7 @@ argument_list|(
 operator|&
 name|msg
 argument_list|,
-name|add
-condition|?
-name|SSH_AGENTC_ADD_SMARTCARD_KEY
-else|:
-name|SSH_AGENTC_REMOVE_SMARTCARD_KEY
+name|type
 argument_list|)
 expr_stmt|;
 name|buffer_put_cstring
@@ -2607,6 +2636,50 @@ argument_list|,
 name|pin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|constrained
+condition|)
+block|{
+if|if
+condition|(
+name|life
+operator|!=
+literal|0
+condition|)
+block|{
+name|buffer_put_char
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|SSH_AGENT_CONSTRAIN_LIFETIME
+argument_list|)
+expr_stmt|;
+name|buffer_put_int
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|life
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|confirm
+operator|!=
+literal|0
+condition|)
+name|buffer_put_char
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|SSH_AGENT_CONSTRAIN_CONFIRM
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ssh_request_reply
@@ -2776,7 +2849,7 @@ case|:
 case|case
 name|SSH2_AGENT_FAILURE
 case|:
-name|log
+name|logit
 argument_list|(
 literal|"SSH_AGENT_FAILURE"
 argument_list|)

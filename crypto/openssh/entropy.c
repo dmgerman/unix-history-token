@@ -64,7 +64,7 @@ end_comment
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: entropy.c,v 1.44 2002/06/09 19:41:48 mouring Exp $"
+literal|"$Id: entropy.c,v 1.46 2003/08/25 01:16:21 mouring Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -201,7 +201,7 @@ argument_list|)
 expr_stmt|;
 name|old_sigchld
 operator|=
-name|mysignal
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -306,8 +306,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(rand child) setuid(%d): %s\n"
+literal|"(rand child) setuid(%li): %s\n"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|original_uid
 argument_list|,
 name|strerror
@@ -459,7 +463,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mysignal
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,

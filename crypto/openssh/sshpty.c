@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshpty.c,v 1.8 2003/02/03 08:56:16 markus Exp $"
+literal|"$OpenBSD: sshpty.c,v 1.10 2003/06/12 07:57:38 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -409,7 +409,7 @@ return|;
 block|}
 name|old_signal
 operator|=
-name|mysignal
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -440,7 +440,7 @@ return|return
 literal|0
 return|;
 block|}
-name|mysignal
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -1137,7 +1137,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Getting tty modes for pty failed: %.100s"
 argument_list|,
@@ -1193,7 +1193,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Setting tty modes for pty failed: %.100s"
 argument_list|,
@@ -1304,7 +1304,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Makes the tty the processes controlling tty and sets it to sane modes. */
+comment|/* Makes the tty the process's controlling tty and sets it to sane modes. */
 end_comment
 
 begin_function
@@ -1373,7 +1373,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|mysignal
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -1393,7 +1393,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mysignal
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -1635,7 +1635,7 @@ directive|ifdef
 name|USE_VHANGUP
 name|old
 operator|=
-name|mysignal
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -1645,7 +1645,7 @@ expr_stmt|;
 name|vhangup
 argument_list|()
 expr_stmt|;
-name|mysignal
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
@@ -2081,6 +2081,9 @@ literal|"chmod(%.100s, 0%o) failed: %.100s"
 argument_list|,
 name|ttyname
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mode
 argument_list|,
 name|strerror
@@ -2096,6 +2099,9 @@ literal|"chmod(%.100s, 0%o) failed: %.100s"
 argument_list|,
 name|ttyname
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mode
 argument_list|,
 name|strerror

@@ -26,7 +26,7 @@ end_if
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scard.c,v 1.26 2002/06/23 03:30:17 deraadt Exp $"
+literal|"$OpenBSD: scard.c,v 1.28 2003/06/12 19:12:02 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2686,7 +2686,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|log
+name|logit
 argument_list|(
 literal|"cyberflex_load_rsa_priv done"
 argument_list|)
@@ -2754,7 +2754,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|log
+name|logit
 argument_list|(
 literal|"cyberflex_load_rsa_pub done"
 argument_list|)
@@ -2923,6 +2923,25 @@ return|return
 operator|(
 name|status
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|sc_get_key_label
+parameter_list|(
+name|Key
+modifier|*
+name|key
+parameter_list|)
+block|{
+return|return
+name|xstrdup
+argument_list|(
+literal|"smartcard key"
+argument_list|)
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh.h,v 1.71 2002/06/22 02:00:29 stevesk Exp $	*/
+comment|/*	$OpenBSD: ssh.h,v 1.74 2003/09/01 13:52:18 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -63,16 +63,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_comment
-comment|/* For struct sockaddr_storage */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"openbsd-compat/fake-socket.h"
 end_include
 
 begin_comment
@@ -240,17 +230,6 @@ define|#
 directive|define
 name|SSH_SESSION_KEY_LENGTH
 value|32
-end_define
-
-begin_comment
-comment|/* Name of Kerberos service for SSH to use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KRB4_SERVICE_NAME
-value|"rcmd"
 end_define
 
 begin_comment

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-arc4random.c,v 1.6 2003/03/17 05:13:53 djm Exp $"
+literal|"$Id: bsd-arc4random.c,v 1.7 2003/05/18 14:13:38 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -227,6 +227,21 @@ sizeof|sizeof
 argument_list|(
 name|rand_buf
 argument_list|)
+argument_list|,
+name|rand_buf
+argument_list|)
+expr_stmt|;
+name|RC4
+argument_list|(
+operator|&
+name|rc4
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rand_buf
+argument_list|)
+argument_list|,
+name|rand_buf
 argument_list|,
 name|rand_buf
 argument_list|)
