@@ -871,13 +871,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|uma_zone_t
-name|ipatm_nif_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|ipatm_stat
 name|ipatm_stat
@@ -919,6 +912,25 @@ name|Atm_attributes
 name|ipatm_aal4null
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_harp_ip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

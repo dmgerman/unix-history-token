@@ -163,9 +163,6 @@ name|ivp
 init|=
 name|tok
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|ipatm_print
@@ -179,8 +176,6 @@ literal|"ipatm_input"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Handle input packet 	 */
 if|if
 condition|(
@@ -248,9 +243,6 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|ipatm_print
@@ -264,8 +256,6 @@ literal|"ipatm_ipinput"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
