@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MDDRIVER.C - test driver for MD2, MD4 and MD5  * $Id$  */
+comment|/* MDDRIVER.C - test driver for MD2, MD4 and MD5  * $Id: mddriver.c,v 1.3 1997/02/22 15:07:24 peter Exp $  */
 end_comment
 
 begin_comment
@@ -21,13 +21,19 @@ begin_define
 define|#
 directive|define
 name|MD
-value|MD5
+value|5
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#

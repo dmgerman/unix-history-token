@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD2.H - header file for MD2C.C  * $Id$  */
+comment|/* MD2.H - header file for MD2C.C  * $Id: md2.h,v 1.5 1997/02/22 15:07:12 peter Exp $  */
 end_comment
 
 begin_comment
@@ -58,7 +58,14 @@ name|MD2_CTX
 typedef|;
 end_typedef
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_function_decl
+name|__BEGIN_DECLS
 name|void
 name|MD2Init
 parameter_list|(
@@ -121,6 +128,7 @@ name|char
 modifier|*
 name|MD2File
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -148,6 +156,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
