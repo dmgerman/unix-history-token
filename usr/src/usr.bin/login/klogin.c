@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.8 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|notickets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|krbtkfile_env
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +202,18 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file named TKT_ROOT plus uid 	 */
+comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file named TKT_ROOT plus uid 	 * except for user.root tickets. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|instance
+argument_list|,
+literal|"root"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -211,6 +230,29 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|tkt_location
+argument_list|,
+literal|"%s_root_%d"
+argument_list|,
+name|TKT_ROOT
+argument_list|,
+name|pw
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
+name|krbtkfile_env
+operator|=
+name|tkt_location
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -219,6 +261,28 @@ argument_list|(
 name|tkt_location
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set real as well as effective ID to 0 for the moment, 	 * to make the kerberos library do the right thing. 	 */
+if|if
+condition|(
+name|setuid
+argument_list|(
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"login: setuid"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|kerror
 operator|=
 name|krb_get_pw_in_tkt
