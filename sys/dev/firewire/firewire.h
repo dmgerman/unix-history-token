@@ -202,6 +202,16 @@ end_struct
 begin_define
 define|#
 directive|define
+name|MAXREC
+parameter_list|(
+name|x
+parameter_list|)
+value|(2<< (x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|FWPMAX_S400
 value|(2048 + 20)
 end_define

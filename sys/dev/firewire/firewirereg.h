@@ -67,12 +67,12 @@ name|struct
 name|fw_eui64
 name|eui
 decl_stmt|;
-name|u_int32_t
-name|spec
-decl_stmt|;
-name|u_int32_t
-name|ver
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|u_int32_t spec; 	u_int32_t ver;
+endif|#
+directive|endif
 name|u_int8_t
 name|speed
 decl_stmt|;
