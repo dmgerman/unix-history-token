@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.67.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.68 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/specdev.h>
 end_include
 
@@ -72,6 +78,79 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_decl_stmt
+name|enum
+name|vtype
+name|iftovt_tab
+index|[
+literal|16
+index|]
+init|=
+block|{
+name|VNON
+block|,
+name|VFIFO
+block|,
+name|VCHR
+block|,
+name|VNON
+block|,
+name|VDIR
+block|,
+name|VNON
+block|,
+name|VBLK
+block|,
+name|VNON
+block|,
+name|VREG
+block|,
+name|VNON
+block|,
+name|VLNK
+block|,
+name|VNON
+block|,
+name|VSOCK
+block|,
+name|VNON
+block|,
+name|VNON
+block|,
+name|VBAD
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vttoif_tab
+index|[
+literal|9
+index|]
+init|=
+block|{
+literal|0
+block|,
+name|S_IFREG
+block|,
+name|S_IFDIR
+block|,
+name|S_IFBLK
+block|,
+name|S_IFCHR
+block|,
+name|S_IFLNK
+block|,
+name|S_IFSOCK
+block|,
+name|S_IFIFO
+block|,
+name|S_IFMT
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Remove a mount point from the list of mounted filesystems.  * Unmount of the root is illegal.  */
