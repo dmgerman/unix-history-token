@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ffs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_quota.h"
 end_include
 
@@ -79,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/extattr.h>
 end_include
 
 begin_include
@@ -279,8 +291,18 @@ name|ffs_init
 block|,
 name|vfs_stduninit
 block|,
+ifdef|#
+directive|ifdef
+name|FFS_EXTATTR
+name|ufs_extattrctl
+block|,
+else|#
+directive|else
 name|vfs_stdextattrctl
-block|, }
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3259,6 +3281,19 @@ index|]
 operator|=
 name|NULLVP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FFS_EXTATTR
+name|ufs_extattr_uepm_init
+argument_list|(
+operator|&
+name|ump
+operator|->
+name|um_extattr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|devvp
 operator|->
 name|v_specmountpoint
@@ -3721,6 +3756,33 @@ operator||=
 name|FORCECLOSE
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|FFS_EXTATTR
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ufs_extattr_stop
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ffs_unmonut: ufs_extattr_stop returned %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|mp

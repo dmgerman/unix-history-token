@@ -140,6 +140,12 @@ name|netexport
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ufs_extattr_per_mount
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* This structure describes the UFS specific mount structure data. */
 end_comment
@@ -212,6 +218,11 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* quota file access cred */
+name|struct
+name|ufs_extattr_per_mount
+name|um_extattr
+decl_stmt|;
+comment|/* extended attrs */
 name|u_long
 name|um_nindir
 decl_stmt|;

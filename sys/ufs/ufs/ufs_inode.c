@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ffs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_quota.h"
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/extattr.h>
 end_include
 
 begin_include
@@ -195,6 +207,22 @@ argument_list|,
 name|NOCRED
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|FFS_EXTATTR
+name|ufs_extattr_vnode_inactive
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 expr_stmt|;
 endif|#
