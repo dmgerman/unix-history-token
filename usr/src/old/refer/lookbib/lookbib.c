@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookbib.c	4.3 (Berkeley) %G%"
+literal|"@(#)lookbib.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,37 @@ modifier|*
 name|sprintf
 argument_list|()
 decl_stmt|;
+name|int
+name|instructions
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-n"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|instructions
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -247,6 +278,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|instructions
+operator|&&
 name|isatty
 argument_list|(
 name|fileno
