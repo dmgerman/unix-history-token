@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SCCSHELP
-value|"/usr/local/bin/help"
+value|"/usr/bin/help"
 end_define
 
 begin_define
