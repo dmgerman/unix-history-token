@@ -22,17 +22,17 @@ file|"ntp_stdlib.h"
 end_include
 
 begin_function
-name|u_long
+name|u_int32_t
 name|netof
 parameter_list|(
 name|num
 parameter_list|)
-name|u_long
+name|u_int32_t
 name|num
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 name|netnum
 decl_stmt|;
 name|netnum
