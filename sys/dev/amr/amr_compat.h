@@ -192,7 +192,7 @@ name|BIO_IS_READ
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)-b_flags& B_READ)
+value|((x)->b_flags& B_READ)
 end_define
 
 begin_else
