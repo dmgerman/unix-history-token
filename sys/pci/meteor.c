@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserv
 end_comment
 
 begin_comment
-comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . 	8/29/95		Fixes suggested by Bruce Evans. 			meteor_mmap should return -1 on error rather than 0. 			unit #> NMETEOR should be unit #>= NMETEOR. */
+comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . 	8/29/95		Fixes suggested by Bruce Evans. 			meteor_mmap should return -1 on error rather than 0. 			unit #> NMETEOR should be unit #>= NMETEOR. 	10/24/95	Turn 50 Hz processing for SECAM and 60 Hz processing 			off for AUTOMODE. 	11/11/95	Change UV from always begin signed to ioctl selected 			to either signed or unsigned. */
 end_comment
 
 begin_include
@@ -2112,15 +2112,7 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flags
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
+name|flag
 parameter_list|)
 block|{
 name|meteor_reg_t
@@ -2264,15 +2256,7 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flags
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
+name|flag
 parameter_list|)
 block|{
 name|meteor_reg_t
@@ -2632,9 +2616,6 @@ name|struct
 name|uio
 modifier|*
 name|uio
-parameter_list|,
-name|int
-name|ioflag
 parameter_list|)
 block|{
 name|meteor_reg_t
@@ -2828,18 +2809,7 @@ end_function
 begin_function
 name|int
 name|meteor_write
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -3654,7 +3624,7 @@ operator|~
 literal|0xe0
 operator|)
 operator||
-literal|0xe0
+literal|0x20
 argument_list|)
 expr_stmt|;
 name|SAA7196_WRITE
@@ -3770,7 +3740,7 @@ operator|~
 literal|0xc0
 operator|)
 operator||
-literal|0xc0
+literal|0x80
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5408,6 +5378,40 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* set signed/unsigned */
+name|SAA7196_WRITE
+argument_list|(
+name|mtr
+argument_list|,
+literal|0x30
+argument_list|,
+operator|(
+name|SAA7196_REG
+argument_list|(
+name|mtr
+argument_list|,
+literal|0x30
+argument_list|)
+operator|&
+operator|~
+literal|0x10
+operator|)
+operator||
+operator|(
+operator|(
+name|geo
+operator|->
+name|oformat
+operator|&
+name|METEOR_GEO_UNSIGNED
+operator|)
+condition|?
+literal|0
+else|:
+literal|0x10
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -5590,6 +5594,7 @@ name|unit
 operator|>=
 name|NMETEOR
 condition|)
+comment|/* at this point could this happen? */
 return|return
 operator|(
 operator|-

@@ -574,8 +574,19 @@ begin_comment
 comment|/* 4-2-2 YUV 16 bits planer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_UNSIGNED
+value|0x400000
+end_define
+
 begin_comment
-comment|/* following structure is used to coordinate the syncronous */
+comment|/* unsigned uv outputs */
+end_comment
+
+begin_comment
+comment|/* following structure is used to coordinate the synchronous */
 end_comment
 
 begin_struct

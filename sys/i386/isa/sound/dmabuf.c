@@ -2326,7 +2326,7 @@ condition|(
 name|dmap
 operator|->
 name|qlen
-operator|==
+operator|>=
 name|dmap
 operator|->
 name|nbufs
@@ -2560,7 +2560,14 @@ block|}
 if|if
 condition|(
 name|dontblock
+operator|&&
+operator|!
+name|space_in_queue
+argument_list|(
+name|dev
+argument_list|)
 condition|)
+comment|/* XXX */
 if|#
 directive|if
 name|defined
@@ -4252,6 +4259,11 @@ condition|)
 return|return
 literal|0
 return|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4260,11 +4272,6 @@ operator|->
 name|qlen
 condition|)
 block|{
-name|DISABLE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4315,6 +4322,11 @@ return|return
 literal|0
 return|;
 block|}
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -4344,6 +4356,11 @@ condition|)
 return|return
 literal|1
 return|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4353,11 +4370,6 @@ name|dev
 argument_list|)
 condition|)
 block|{
-name|DISABLE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4408,6 +4420,11 @@ return|return
 literal|0
 return|;
 block|}
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;

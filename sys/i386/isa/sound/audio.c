@@ -876,6 +876,13 @@ argument_list|(
 name|EWOULDBLOCK
 argument_list|)
 condition|)
+return|return
+name|wr_buff_no
+index|[
+name|dev
+index|]
+return|;
+comment|/* 					 * XXX Return error, write() will 					 * supply # of accepted bytes. 					 * In fact, in FreeBSD the check 					 * above should not be needed 					 */
 else|#
 directive|else
 if|if
@@ -895,12 +902,12 @@ argument_list|(
 name|EAGAIN
 argument_list|)
 condition|)
-endif|#
-directive|endif
 return|return
 name|p
 return|;
 comment|/* No more space. Return # of accepted bytes */
+endif|#
+directive|endif
 return|return
 name|wr_buff_no
 index|[
@@ -1277,6 +1284,10 @@ argument_list|(
 name|EWOULDBLOCK
 argument_list|)
 condition|)
+return|return
+name|buff_no
+return|;
+comment|/* 	    			 * XXX Return error, read() will supply 	    			 * # of bytes actually read. In fact, 	    			 * in FreeBSD the check above should not 	    			 * be needed 	    			 */
 else|#
 directive|else
 if|if
@@ -1293,11 +1304,11 @@ argument_list|(
 name|EAGAIN
 argument_list|)
 condition|)
-endif|#
-directive|endif
 return|return
 name|p
 return|;
+endif|#
+directive|endif
 return|return
 name|buff_no
 return|;
@@ -1843,6 +1854,51 @@ return|return
 literal|0
 return|;
 break|break;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+case|case
+name|FIONBIO
+case|:
+comment|/* XXX Is this the same in Linux? */
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+condition|)
+name|dev_nblock
+index|[
+name|dev
+index|]
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|dev_nblock
+index|[
+name|dev
+index|]
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+break|break;
+case|case
+name|FIOASYNC
+case|:
+return|return
+literal|0
+return|;
+comment|/* XXX Useful for ampling input notification? */
+break|break;
+endif|#
+directive|endif
 default|default:
 return|return
 name|DMAbuf_ioctl
