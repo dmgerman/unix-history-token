@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.8 1993/10/08 10:47:13 rgrimes Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"npx.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"isa.h"
+end_include
 
 begin_include
 include|#
@@ -36,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"map.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"proc.h"
 end_include
 
@@ -44,6 +62,16 @@ include|#
 directive|include
 file|"user.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"exec.h"
+end_include
+
+begin_comment
+comment|/* for PS_STRINGS */
+end_comment
 
 begin_include
 include|#
@@ -99,6 +127,23 @@ directive|include
 file|"net/netisr.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"sys/shm.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -117,12 +162,77 @@ directive|include
 file|"vm/vm_page.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sys/exec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/vnode.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_NONCONTIG
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|avail_start
+decl_stmt|,
+name|avail_end
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vm_offset_t
+name|hole_start
+decl_stmt|,
+name|hole_end
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vm_offset_t
+name|avail_next
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|avail_remaining
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MACHINE_NONCONTIG */
+end_comment
 
 begin_include
 include|#
@@ -151,29 +261,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i386/isa/rtc.h"
+file|"machine/sysarch.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVSHM
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"sys/shm.h"
+file|"i386/isa/isa.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSVSHM */
-end_comment
+begin_include
+include|#
+directive|include
+file|"i386/isa/rtc.h"
+end_include
 
 begin_define
 define|#
@@ -274,19 +375,17 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
-name|msgbufmapped
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set when safe to use msgbuf */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|freebufspace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_udatasel
+decl_stmt|,
+name|_ucodesel
 decl_stmt|;
 end_decl_stmt
 
@@ -355,12 +454,28 @@ begin_extern
 extern|extern cyloffset;
 end_extern
 
-begin_macro
-name|cpu_startup
-argument_list|()
-end_macro
+begin_decl_stmt
+name|int
+name|cpu_class
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_decl_stmt
+name|void
+name|dumpsys
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|cpu_startup
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -429,6 +544,9 @@ condition|;
 name|i
 operator|++
 control|)
+ifndef|#
+directive|ifndef
+name|MACHINE_NONCONTIG
 name|pmap_enter
 argument_list|(
 name|pmap_kernel
@@ -447,21 +565,58 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|pmap_enter
+argument_list|(
+name|pmap_kernel
+argument_list|()
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|msgbufp
+operator|+
+name|i
+operator|*
+name|NBPG
+argument_list|,
+name|avail_end
+operator|+
+name|i
+operator|*
+name|NBPG
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|msgbufmapped
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
-name|kdb_init
+comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
+name|printf
+argument_list|(
+name|version
+argument_list|)
+expr_stmt|;
+name|identifycpu
 argument_list|()
 expr_stmt|;
-comment|/* startup kernel debugger */
-endif|#
-directive|endif
-comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
-comment|/*printf(version); 	printf("real mem  = %d\n", ctob(physmem));*/
+name|printf
+argument_list|(
+literal|"real mem  = %d\n"
+argument_list|,
+name|ctob
+argument_list|(
+name|physmem
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate space for system data structures. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * As pages of memory are allocated and cleared, 	 * "firstaddr" is incremented. 	 * An index into the kernel page table corresponding to the 	 * virtual memory address maintained in "v" is kept in "mapaddr". 	 */
 comment|/* 	 * Make two passes.  The first pass calculates how much memory is 	 * needed and allocates it.  The second pass assigns virtual 	 * addresses to the various data structures. 	 */
 name|firstaddr
@@ -503,6 +658,7 @@ name|lim
 parameter_list|)
 define|\
 value|(name) = (type *)v; v = (caddr_t)((lim) = ((name)+(num)))
+comment|/*	valloc(cfree, struct cblock, nclist);  no clists any more!!! - cgd */
 name|valloc
 argument_list|(
 name|callout
@@ -513,6 +669,25 @@ argument_list|,
 name|ncallout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NetBSD
+name|valloc
+argument_list|(
+name|swapmap
+argument_list|,
+expr|struct
+name|map
+argument_list|,
+name|nswapmap
+operator|=
+name|maxproc
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SYSVSHM
@@ -541,13 +716,14 @@ if|if
 condition|(
 name|physmem
 operator|<
-operator|(
+name|btoc
+argument_list|(
 literal|2
 operator|*
 literal|1024
 operator|*
 literal|1024
-operator|)
+argument_list|)
 condition|)
 name|bufpages
 operator|=
@@ -561,34 +737,21 @@ else|else
 name|bufpages
 operator|=
 operator|(
-operator|(
+name|btoc
+argument_list|(
 literal|2
 operator|*
 literal|1024
 operator|*
 literal|1024
+argument_list|)
 operator|+
 name|physmem
 operator|)
 operator|/
 literal|20
-operator|)
 operator|/
 name|CLSIZE
-expr_stmt|;
-comment|/* 	 * 15 Aug 92	William Jolitz		bufpages fix for too large 	 */
-name|bufpages
-operator|=
-name|min
-argument_list|(
-name|NKMEMCLUSTERS
-operator|*
-literal|2
-operator|/
-literal|5
-argument_list|,
-name|bufpages
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -759,6 +922,8 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allocate a submap for exec arguments.  This map effectively 	 * limits the number of processes exec'ing at any time. 	 */
+comment|/*	exec_map = kmem_suballoc(kernel_map,&minaddr,&maxaddr,  *				16*NCARGS, TRUE);  *	NOT CURRENTLY USED -- cgd  */
 comment|/* 	 * Allocate a submap for physio 	 */
 name|phys_map
 operator|=
@@ -861,7 +1026,27 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/*printf("avail mem = %d\n", ptoa(vm_page_free_count));*/
+name|printf
+argument_list|(
+literal|"avail mem = %d\n"
+argument_list|,
+name|ptoa
+argument_list|(
+name|vm_page_free_count
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"using %d buffers containing %d bytes of memory\n"
+argument_list|,
+name|nbuf
+argument_list|,
+name|bufpages
+operator|*
+name|CLBYTES
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set up CPU-specific registers, cache, etc. 	 */
 name|initcpu
 argument_list|()
@@ -874,6 +1059,254 @@ comment|/* 	 * Configure the system. 	 */
 name|configure
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+name|struct
+name|cpu_nameclass
+name|i386_cpus
+index|[]
+init|=
+block|{
+block|{
+literal|"Intel 80286"
+block|,
+name|CPUCLASS_286
+block|}
+block|,
+comment|/* CPU_286   */
+block|{
+literal|"i386SX"
+block|,
+name|CPUCLASS_386
+block|}
+block|,
+comment|/* CPU_386SX */
+block|{
+literal|"i386DX"
+block|,
+name|CPUCLASS_386
+block|}
+block|,
+comment|/* CPU_386   */
+block|{
+literal|"i486SX"
+block|,
+name|CPUCLASS_486
+block|}
+block|,
+comment|/* CPU_486SX */
+block|{
+literal|"i486DX"
+block|,
+name|CPUCLASS_486
+block|}
+block|,
+comment|/* CPU_486   */
+block|{
+literal|"i586"
+block|,
+name|CPUCLASS_586
+block|}
+block|,
+comment|/* CPU_586   */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|identifycpu
+argument_list|()
+end_macro
+
+begin_comment
+comment|/* translated from hp300 -- cgd */
+end_comment
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"CPU: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpu
+operator|>=
+literal|0
+operator|&&
+name|cpu
+operator|<
+operator|(
+sizeof|sizeof
+name|i386_cpus
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cpu_nameclass
+argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|i386_cpus
+index|[
+name|cpu
+index|]
+operator|.
+name|cpu_name
+argument_list|)
+expr_stmt|;
+name|cpu_class
+operator|=
+name|i386_cpus
+index|[
+name|cpu
+index|]
+operator|.
+name|cpu_class
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"unknown cpu type %d\n"
+argument_list|,
+name|cpu
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"startup: bad cpu id"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|" ("
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cpu_class
+condition|)
+block|{
+case|case
+name|CPUCLASS_286
+case|:
+name|printf
+argument_list|(
+literal|"286"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPUCLASS_386
+case|:
+name|printf
+argument_list|(
+literal|"386"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPUCLASS_486
+case|:
+name|printf
+argument_list|(
+literal|"486"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPUCLASS_586
+case|:
+name|printf
+argument_list|(
+literal|"586"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"unknown"
+argument_list|)
+expr_stmt|;
+comment|/* will panic below... */
+block|}
+name|printf
+argument_list|(
+literal|"-class CPU)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* cpu speed would be nice, but how? */
+comment|/* 	 * Now that we have told the user what they have, 	 * let them know if that machine type isn't configured. 	 */
+switch|switch
+condition|(
+name|cpu_class
+condition|)
+block|{
+case|case
+name|CPUCLASS_286
+case|:
+comment|/* a 286 should not make it this far, anyway */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
+case|case
+name|CPUCLASS_386
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+case|case
+name|CPUCLASS_486
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+case|case
+name|CPUCLASS_586
+case|:
+endif|#
+directive|endif
+name|panic
+argument_list|(
+literal|"CPU class not configured"
+argument_list|)
+expr_stmt|;
+default|default:
+break|break;
+block|}
 block|}
 end_block
 
@@ -940,41 +1373,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_struct
-struct|struct
-name|sigframe
-block|{
-name|int
-name|sf_signum
-decl_stmt|;
-name|int
-name|sf_code
-decl_stmt|;
-name|struct
-name|sigcontext
-modifier|*
-name|sf_scp
-decl_stmt|;
-name|sig_t
-name|sf_handler
-decl_stmt|;
-name|int
-name|sf_eax
-decl_stmt|;
-name|int
-name|sf_edx
-decl_stmt|;
-name|int
-name|sf_ecx
-decl_stmt|;
-name|struct
-name|sigcontext
-name|sf_sc
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|extern
@@ -1831,6 +2229,23 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * a simple function to make the system panic (and dump a vmcore)  * in a predictable fashion  */
+end_comment
+
+begin_function
+name|void
+name|diediedie
+parameter_list|()
+block|{
+name|panic
+argument_list|(
+literal|"because you said to!"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 name|int
 name|waittime
@@ -1847,20 +2262,15 @@ name|dumppcb
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|boot
-argument_list|(
-argument|arghowto
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arghowto
+parameter_list|)
 name|int
 name|arghowto
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|long
@@ -1877,11 +2287,6 @@ name|int
 name|devtype
 decl_stmt|;
 comment|/* r10 == major of root dev */
-specifier|extern
-name|char
-modifier|*
-name|panicstr
-decl_stmt|;
 specifier|extern
 name|int
 name|cold
@@ -1955,6 +2360,11 @@ operator|)
 name|splnet
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"syncing disks... "
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Release inodes held by texts before update. 		 */
 if|if
 condition|(
@@ -1977,6 +2387,13 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Unmount filesystems 		 */
+if|#
+directive|if
+literal|0
+block|if (panicstr == 0) 			vfs_unmountall();
+endif|#
+directive|endif
 for|for
 control|(
 name|iter
@@ -2052,7 +2469,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* printf("%d ", nbusy); */
+name|printf
+argument_list|(
+literal|"%d "
+argument_list|,
+name|nbusy
+argument_list|)
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|40000
@@ -2067,19 +2490,13 @@ name|nbusy
 condition|)
 name|printf
 argument_list|(
-literal|" failed!\n"
+literal|"giving up\n"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|nomsg
-operator|==
-literal|0
-condition|)
+else|else
 name|printf
 argument_list|(
-literal|"succeded.\n"
+literal|"done\n"
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2106,10 +2523,23 @@ operator|&
 name|RB_HALT
 condition|)
 block|{
-name|pg
+name|printf
 argument_list|(
-literal|"\nThe operating system has halted. Please press any key to reboot.\n\n"
+literal|"\n"
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"The operating system has halted.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Please press any key to reboot.\n\n"
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -2175,10 +2605,10 @@ control|)
 empty_stmt|;
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_decl_stmt
-name|u_int
+name|unsigned
 name|dumpmag
 init|=
 literal|0x8fca0101
@@ -2205,12 +2635,10 @@ begin_comment
 comment|/*  * Doadump comes here after turning off memory management and  * getting on the dump stack, either when called above, or by  * the auto-restart code.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dumpsys
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2233,18 +2661,23 @@ operator|!=
 literal|1
 condition|)
 return|return;
+name|dumpsize
+operator|=
+name|physmem
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nThe operating system is saving a copy of RAM memory to device %x, offset %d\n\ (hit any key to abort): [ amount left to save (MB) ] "
+literal|"\ndumping to dev %x, offset %d\n"
 argument_list|,
 name|dumpdev
 argument_list|,
 name|dumplo
 argument_list|)
 expr_stmt|;
-name|dumpsize
-operator|=
-name|physmem
+name|printf
+argument_list|(
+literal|"dump "
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -2270,7 +2703,7 @@ name|ENXIO
 case|:
 name|printf
 argument_list|(
-literal|"-- device bad\n"
+literal|"device bad\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2279,7 +2712,7 @@ name|EFAULT
 case|:
 name|printf
 argument_list|(
-literal|"-- device not ready\n"
+literal|"device not ready\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2288,7 +2721,7 @@ name|EINVAL
 case|:
 name|printf
 argument_list|(
-literal|"-- area improper\n"
+literal|"area improper\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2297,7 +2730,7 @@ name|EIO
 case|:
 name|printf
 argument_list|(
-literal|"-- i/o error\n"
+literal|"i/o error\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2306,30 +2739,30 @@ name|EINTR
 case|:
 name|printf
 argument_list|(
-literal|"-- aborted from console\n"
+literal|"aborted from console\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|" succeeded\n"
+literal|"succeeded\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 name|printf
 argument_list|(
-literal|"system rebooting.\n\n"
+literal|"\n\n"
 argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2544,30 +2977,22 @@ begin_comment
 comment|/*  * Clear registers on exec  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setregs
-argument_list|(
-argument|p
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|entry
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|p
 operator|->
@@ -2608,9 +3033,11 @@ name|CR0_TS
 argument_list|)
 expr_stmt|;
 comment|/* start emulating */
-ifdef|#
-directive|ifdef
-name|NPX
+if|#
+directive|if
+name|NNPX
+operator|>
+literal|0
 name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
@@ -2619,7 +3046,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize 386 and configure to run kernel  */
@@ -2836,7 +3263,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* software prototypes -- in more palitable form */
+comment|/* software prototypes -- in more palatable form */
 end_comment
 
 begin_decl_stmt
@@ -2853,7 +3280,7 @@ block|,
 comment|/* segment base address  */
 literal|0x0
 block|,
-comment|/* length - all address space */
+comment|/* length */
 literal|0
 block|,
 comment|/* segment type */
@@ -3517,10 +3944,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_udatasel
-decl_stmt|,
-name|_ucodesel
-decl_stmt|,
 name|_gsel_tss
 decl_stmt|;
 end_decl_stmt
@@ -4822,10 +5245,9 @@ ifdef|#
 directive|ifdef
 name|INFORM_WAIT
 comment|/* 		 * People with less than 2 Meg have to hit return; this way 		 * we see the messages and can tell them why they blow up later. 		 * If they get working well enough to recompile, they can unset 		 * the flag; otherwise, it's a toy and they have to lump it. 		 */
-name|getchar
+name|cngetc
 argument_list|()
 expr_stmt|;
-comment|/* kernel getchar in /sys/i386/isa/pccons.c*/
 endif|#
 directive|endif
 comment|/* !INFORM_WAIT*/
@@ -4833,12 +5255,14 @@ block|}
 end_if
 
 begin_comment
-comment|/* 	 * End of CMOS bux fix 	 */
-end_comment
-
-begin_comment
 comment|/* call pmap initialization to make new kernel address space */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINCE_NONCONTIG
+end_ifndef
 
 begin_expr_stmt
 name|pmap_bootstrap
@@ -4849,6 +5273,33 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|pmap_bootstrap
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|atdevbase
+operator|+
+name|IOM_SIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MACHINE_NONCONTIG */
+end_comment
 
 begin_comment
 comment|/* now running on new page tables, configured,and u/iom is accessible */
@@ -5205,6 +5656,9 @@ argument_list|,
 name|NBPG
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MACHINE_NONCONTIG
 operator|*
 operator|(
 name|int
@@ -5214,6 +5668,9 @@ name|CADDR2
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MACHINE_NONCONTIG */
 block|}
 end_block
 
@@ -5221,16 +5678,14 @@ begin_comment
 comment|/*  * copy a page of physical memory  * specified in relocation units (NBPG bytes)  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|copyseg
-argument_list|(
-argument|frm
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|frm
+parameter_list|,
+name|n
+parameter_list|)
 block|{
 operator|*
 operator|(
@@ -5272,22 +5727,20 @@ name|NBPG
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * copy a page of physical memory  * specified in relocation units (NBPG bytes)  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|physcopyseg
-argument_list|(
-argument|frm
-argument_list|,
-argument|to
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|frm
+parameter_list|,
+name|to
+parameter_list|)
 block|{
 operator|*
 operator|(
@@ -5337,18 +5790,16 @@ name|NBPG
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*aston() { 	schednetisr(NETISR_AST); }*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setsoftclock
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|schednetisr
 argument_list|(
@@ -5356,7 +5807,7 @@ name|NETISR_SCLK
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * insert an element into a queue   */
