@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -648,6 +648,39 @@ begin_comment
 comment|/* 4.4BSD log-structured file system */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FS_OTHER
+value|10
+end_define
+
+begin_comment
+comment|/* in use, but unknown/unsupported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_HPFS
+value|11
+end_define
+
+begin_comment
+comment|/* OS/2 high-performance file system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_ISO9660
+value|12
+end_define
+
+begin_comment
+comment|/* ISO 9660, normally CD-ROM */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -681,6 +714,12 @@ block|,
 literal|"MSDOS"
 block|,
 literal|"4.4LFS"
+block|,
+literal|"unknown"
+block|,
+literal|"HPFS"
+block|,
+literal|"ISO9660"
 block|,
 literal|0
 block|}
