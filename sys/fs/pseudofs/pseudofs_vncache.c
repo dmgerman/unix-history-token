@@ -394,6 +394,14 @@ operator|->
 name|pvd_pid
 operator|==
 name|pid
+operator|&&
+name|pvd
+operator|->
+name|pvd_vnode
+operator|->
+name|v_mount
+operator|==
+name|mp
 condition|)
 block|{
 if|if
