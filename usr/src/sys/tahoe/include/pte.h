@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	1.5	87/07/11	*/
+comment|/*	pte.h	1.6	88/05/02	*/
 end_comment
 
 begin_comment
@@ -179,10 +179,6 @@ name|PG_U
 value|0x00400000
 end_define
 
-begin_comment
-comment|/* not currently used */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -265,6 +261,30 @@ parameter_list|(
 name|pte
 parameter_list|)
 value|((pte)->pg_m)
+end_define
+
+begin_comment
+comment|/*  * Kernel virtual address to page table entry and to physical address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kvtopte
+parameter_list|(
+name|va
+parameter_list|)
+value|(&Sysmap[((int)(va)&~ KERNBASE)>> PGSHIFT])
+end_define
+
+begin_define
+define|#
+directive|define
+name|kvtophys
+parameter_list|(
+name|x
+parameter_list|)
+value|((kvtopte(x)->pg_pfnum<< PGSHIFT) | ((int)(x)& PGOFSET))
 end_define
 
 begin_ifndef
