@@ -18,37 +18,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdio.h>
 end_include
 
-begin_comment
-comment|/*  * Stub out what's in -lcrypt.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|crypt_set_format
-end_pragma
-
-begin_function
-name|int
-name|crypt_set_format
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|f
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_function
 specifier|const
@@ -84,9 +67,32 @@ name|lc
 argument_list|,
 literal|"passwd_format"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|def
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"CRYPT_DEBUG"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"login_setcryptfmt: "
+literal|"passwd_format = %s\n"
+argument_list|,
+name|cipher
 argument_list|)
 expr_stmt|;
 if|if
