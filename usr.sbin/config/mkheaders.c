@@ -502,8 +502,10 @@ if|if
 condition|(
 name|match
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"FYI: static unit limits for %s are set: %s=%d\n"
 argument_list|,
 name|dev
