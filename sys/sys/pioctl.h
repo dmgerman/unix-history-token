@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * procfs ioctl definitions.  *  * $Id$  */
+comment|/*  * procfs ioctl definitions.  *  * $Id: pioctl.h,v 1.1 1997/12/06 04:11:14 sef Exp $  */
 end_comment
 
 begin_ifndef
@@ -181,6 +181,21 @@ end_define
 
 begin_comment
 comment|/* stop on exit */
+end_comment
+
+begin_comment
+comment|/*  * If PF_LINGER is set in procp->p_pfsflags, then the last close  * of a /proc/<pid>/mem file will nto clear out the stops and continue  * the process.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_LINGER
+value|0x01
+end_define
+
+begin_comment
+comment|/* Keep stops around after last close */
 end_comment
 
 begin_endif
