@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id.c	8.2 (Berkeley) %G%"
+literal|"@(#)id.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,7 +1202,9 @@ name|gr
 operator|=
 name|getgrgid
 argument_list|(
-name|id
+name|pw
+operator|->
+name|pw_gid
 argument_list|)
 condition|)
 operator|(
