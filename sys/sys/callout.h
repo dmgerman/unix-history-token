@@ -284,7 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|callout_stop
 name|__P
 argument_list|(
