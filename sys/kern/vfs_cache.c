@@ -3730,12 +3730,17 @@ end_expr_stmt
 
 begin_function
 name|int
-name|textvp_fullpath
+name|vn_fullpath
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vn
 parameter_list|,
 name|char
 modifier|*
@@ -3745,7 +3750,7 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|retfreebuf
+name|freebuf
 parameter_list|)
 block|{
 name|char
@@ -3774,9 +3779,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|,
-modifier|*
-name|textvp
 decl_stmt|;
 name|numfullpathcalls
 operator|++
@@ -3790,15 +3792,9 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-name|textvp
-operator|=
-name|p
-operator|->
-name|p_textvp
-expr_stmt|;
 if|if
 condition|(
-name|textvp
+name|vn
 operator|==
 name|NULL
 condition|)
@@ -3833,7 +3829,9 @@ literal|'\0'
 expr_stmt|;
 name|fdp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
@@ -3845,7 +3843,7 @@ for|for
 control|(
 name|vp
 operator|=
-name|textvp
+name|vn
 init|;
 name|vp
 operator|!=
@@ -3905,7 +3903,7 @@ if|if
 condition|(
 name|vp
 operator|!=
-name|textvp
+name|vn
 operator|&&
 name|vp
 operator|->
@@ -3970,7 +3968,7 @@ if|if
 condition|(
 name|vp
 operator|!=
-name|textvp
+name|vn
 operator|&&
 name|ncp
 operator|->
@@ -4135,7 +4133,7 @@ operator|=
 name|bp
 expr_stmt|;
 operator|*
-name|retfreebuf
+name|freebuf
 operator|=
 name|buf
 expr_stmt|;
