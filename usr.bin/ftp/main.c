@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ftp_var.h"
 end_include
 
@@ -205,6 +211,54 @@ name|autologin
 operator|=
 literal|1
 expr_stmt|;
+name|passivemode
+operator|=
+literal|0
+expr_stmt|;
+name|cp
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|(
+name|cp
+operator|==
+name|NULL
+operator|)
+condition|?
+name|argv
+index|[
+literal|0
+index|]
+else|:
+name|cp
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"pftp"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|passivemode
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -216,7 +270,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dgintv"
+literal|"dginptv"
 argument_list|)
 operator|)
 operator|!=
@@ -264,6 +318,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'p'
+case|:
+name|passivemode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 name|trace
@@ -285,7 +347,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ftp [-dgintv] [host [port]]\n"
+literal|"usage: ftp [-dginptv] [host [port]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -330,11 +392,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* proxy not active */
-name|passivemode
-operator|=
-literal|0
-expr_stmt|;
-comment|/* passive mode not active */
 name|crflag
 operator|=
 literal|1
