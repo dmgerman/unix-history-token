@@ -929,7 +929,7 @@ name|PMAP_LOCK_INIT
 parameter_list|(
 name|pmap
 parameter_list|)
-value|mtx_init(&(pmap)->pm_mtx, "pmap", \ 				    NULL, MTX_DEF)
+value|mtx_init(&(pmap)->pm_mtx, "pmap", \ 				    NULL, MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
