@@ -482,6 +482,8 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+operator|*
+literal|177
 expr_stmt|;
 if|if
 condition|(
