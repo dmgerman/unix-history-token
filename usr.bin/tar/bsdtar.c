@@ -1503,19 +1503,36 @@ case|case
 literal|'Z'
 case|:
 comment|/* GNU tar */
-name|bsdtar_warnc
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_compression
+operator|!=
+literal|'\0'
+condition|)
+name|bsdtar_errc
 argument_list|(
 name|bsdtar
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|".Z compression not supported"
+literal|"Can't specify both -%c and -%c"
+argument_list|,
+name|opt
+argument_list|,
+name|bsdtar
+operator|->
+name|create_compression
 argument_list|)
 expr_stmt|;
-name|usage
-argument_list|(
 name|bsdtar
-argument_list|)
+operator|->
+name|create_compression
+operator|=
+name|opt
 expr_stmt|;
 break|break;
 case|case
@@ -1701,6 +1718,34 @@ literal|"cr"
 argument_list|)
 expr_stmt|;
 comment|/* Check other parameters only permitted in certain modes. */
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|create_compression
+operator|==
+literal|'Z'
+operator|&&
+name|mode
+operator|==
+literal|'c'
+condition|)
+block|{
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|".Z compression not supported"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bsdtar
