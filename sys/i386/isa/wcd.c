@@ -270,8 +270,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATAPI_STATIC
+end_ifndef
+
 begin_function_decl
 specifier|static
+endif|#
+directive|endif
 name|int
 name|wcdattach
 parameter_list|(
@@ -1396,8 +1404,16 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATAPI_STATIC
+end_ifndef
+
 begin_function
 specifier|static
+endif|#
+directive|endif
 name|int
 name|wcdattach
 parameter_list|(
