@@ -1847,9 +1847,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DATA_SET
+name|PERIPHDRIVER_DECLARE
 argument_list|(
-name|periphdriver_set
+name|xpt
 argument_list|,
 name|xpt_driver
 argument_list|)
@@ -1857,9 +1857,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DATA_SET
+name|PERIPHDRIVER_DECLARE
 argument_list|(
-name|periphdriver_set
+name|probe
 argument_list|,
 name|probe_driver
 argument_list|)
@@ -4672,15 +4672,7 @@ for|for
 control|(
 name|p_drv
 operator|=
-operator|(
-expr|struct
-name|periph_driver
-operator|*
-operator|*
-operator|)
-name|periphdriver_set
-operator|.
-name|ls_items
+name|periph_drivers
 init|;
 operator|*
 name|p_drv
@@ -9676,15 +9668,7 @@ for|for
 control|(
 name|pdrv
 operator|=
-operator|(
-expr|struct
-name|periph_driver
-operator|*
-operator|*
-operator|)
-name|periphdriver_set
-operator|.
-name|ls_items
+name|periph_drivers
 init|;
 operator|*
 name|pdrv
@@ -10520,15 +10504,7 @@ name|start_pdrv
 condition|?
 name|start_pdrv
 else|:
-operator|(
-expr|struct
-name|periph_driver
-operator|*
-operator|*
-operator|)
-name|periphdriver_set
-operator|.
-name|ls_items
+name|periph_drivers
 operator|)
 init|;
 operator|*
@@ -26417,15 +26393,7 @@ comment|/* Register all the peripheral drivers */
 comment|/* XXX This will have to change when we have loadable modules */
 name|p_drv
 operator|=
-operator|(
-expr|struct
-name|periph_driver
-operator|*
-operator|*
-operator|)
-name|periphdriver_set
-operator|.
-name|ls_items
+name|periph_drivers
 expr_stmt|;
 for|for
 control|(

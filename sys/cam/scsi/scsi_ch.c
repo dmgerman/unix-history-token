@@ -653,9 +653,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DATA_SET
+name|PERIPHDRIVER_DECLARE
 argument_list|(
-name|periphdriver_set
+name|ch
 argument_list|,
 name|chdriver
 argument_list|)
