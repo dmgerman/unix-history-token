@@ -1046,14 +1046,6 @@ name|ic
 operator|->
 name|ic_sta
 argument_list|,
-name|type
-operator|==
-name|IEEE80211_FC0_TYPE_CTL
-condition|?
-name|wh
-operator|->
-name|i_addr1
-else|:
 name|wh
 operator|->
 name|i_addr2
