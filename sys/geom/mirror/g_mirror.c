@@ -13600,6 +13600,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * HACK: Wait for GEOM, because g_mirror_rootwait() can be called, 	 * HACK: before we get providers for tasting. 	 */
+name|tsleep
+argument_list|(
+operator|&
+name|g_mirror_class
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"mroot"
+argument_list|,
+name|hz
+operator|*
+literal|3
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wait for mirrors in degraded state. 	 */
 for|for
 control|(
