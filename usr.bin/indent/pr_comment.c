@@ -19,6 +19,17 @@ literal|"@(#)pr_comment.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -176,6 +187,16 @@ operator|*
 name|buf_ptr
 operator|==
 literal|'*'
+operator|||
+operator|(
+operator|*
+name|buf_ptr
+operator|==
+literal|'\n'
+operator|&&
+operator|!
+name|format_block_comments
+operator|)
 condition|)
 block|{
 name|ps
@@ -184,7 +205,7 @@ name|box_com
 operator|=
 name|true
 expr_stmt|;
-comment|/* a comment with a '-' or '*' immediately 				 * after the /* is assumed to be a boxed 				 * comment */
+comment|/* A comment with a '-' or '*' immediately 				 * after the /* is assumed to be a boxed 				 * comment. A comment with a newline 				 * immediately after the /* is assumed to 				 * be a block comment and is treated as a 				 * box comment unless format_block_comments 				 * is nonzero (the default). */
 name|break_delim
 operator|=
 literal|0

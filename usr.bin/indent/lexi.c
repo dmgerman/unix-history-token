@@ -19,6 +19,17 @@ literal|"@(#)lexi.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -102,7 +113,7 @@ name|struct
 name|templ
 name|specials
 index|[
-literal|100
+literal|1000
 index|]
 init|=
 block|{
@@ -217,6 +228,14 @@ block|,
 literal|"sizeof"
 block|,
 literal|7
+block|,
+literal|"const"
+block|,
+literal|9
+block|,
+literal|"volatile"
+block|,
+literal|9
 block|,
 literal|0
 block|,
@@ -1169,19 +1188,12 @@ case|case
 literal|3
 case|:
 comment|/* a "struct" */
-if|if
-condition|(
-name|ps
-operator|.
-name|p_l_follow
-condition|)
-break|break;
-comment|/* inside parens: cast */
+comment|/* 		 * Next time around, we may want to know that we have had a 		 * 'struct' 		 */
 name|l_struct
 operator|=
 name|true
 expr_stmt|;
-comment|/* 		 * Next time around, we will want to know that we have had a 		 * 'struct' 		 */
+comment|/* 		 * Fall through to test for a cast, function prototype or 		 * sizeof(). 		 */
 case|case
 literal|4
 case|:
@@ -1203,8 +1215,19 @@ name|ps
 operator|.
 name|p_l_follow
 expr_stmt|;
+comment|/* 		     * Forget that we saw `struct' if we're in a sizeof(). 		     */
+if|if
+condition|(
+name|ps
+operator|.
+name|sizeof_mask
+condition|)
+name|l_struct
+operator|=
+name|false
+expr_stmt|;
 break|break;
-comment|/* inside parens: cast */
+comment|/* inside parens: cast, prototype or sizeof() */
 block|}
 name|last_code
 operator|=

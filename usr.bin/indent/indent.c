@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -633,6 +633,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* -cli0 */
+name|format_block_comments
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -fcb */
 name|format_col1_comments
 operator|=
 literal|1
@@ -2416,7 +2421,20 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|false
+expr_stmt|;
 block|}
+else|else
+name|ps
+operator|.
+name|want_blank
+operator|=
+name|true
+expr_stmt|;
 name|ps
 operator|.
 name|sizeof_mask
@@ -2482,12 +2500,6 @@ name|token
 index|[
 literal|0
 index|]
-expr_stmt|;
-name|ps
-operator|.
-name|want_blank
-operator|=
-name|true
 expr_stmt|;
 if|if
 condition|(

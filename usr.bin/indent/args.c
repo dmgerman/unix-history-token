@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,6 +546,17 @@ block|,
 operator|&
 name|format_col1_comments
 block|,
+literal|"fcb"
+block|,
+name|PRO_BOOL
+block|,
+name|true
+block|,
+name|ON
+block|,
+operator|&
+name|format_block_comments
+block|,
 literal|"fc"
 block|,
 name|PRO_FONT
@@ -798,6 +809,17 @@ name|OFF
 block|,
 operator|&
 name|format_col1_comments
+block|,
+literal|"nfcb"
+block|,
+name|PRO_BOOL
+block|,
+name|true
+block|,
+name|OFF
+block|,
+operator|&
+name|format_block_comments
 block|,
 literal|"nip"
 block|,
