@@ -6898,11 +6898,18 @@ name|ifma_protospec
 operator|!=
 literal|0
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|ifma
 operator|->
 name|ifma_protospec
 return|;
+block|}
 comment|/* XXX - if_addmulti uses M_WAITOK.  Can this really be called 	   at interrupt time?  If so, need to fix if_addmulti. XXX */
 name|in6m
 operator|=
