@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mp.c	1.4	88/04/14	*/
+comment|/*	mp.c	1.5	88/05/14	*/
 end_comment
 
 begin_include
@@ -588,8 +588,8 @@ return|return
 operator|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|mblok
+operator|*
+name|reg
 argument_list|)
 operator|)
 return|;
