@@ -42,23 +42,23 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|BYTE_ORDER
+name|_BYTE_ORDER
 argument_list|)
 operator|||
 expr|\
 operator|(
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|!=
-name|BIG_ENDIAN
+name|_BIG_ENDIAN
 operator|&&
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|!=
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 operator|&&
 expr|\
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|!=
-name|PDP_ENDIAN
+name|_PDP_ENDIAN
 operator|)
 end_if
 
@@ -66,11 +66,12 @@ begin_comment
 comment|/* you must determine what the correct bit order is for 	 * your compiler - the next line is an intentional error 	 * which will force your compiles to bomb until you fix 	 * the above macros. 	 */
 end_comment
 
-begin_expr_stmt
-name|error
-literal|"Undefined or invalid BYTE_ORDER"
-expr_stmt|;
-end_expr_stmt
+begin_error
+error|#
+directive|error
+literal|"Undefined or invalid _BYTE_ORDER"
+error|;
+end_error
 
 begin_endif
 endif|#
@@ -93,9 +94,9 @@ decl_stmt|;
 comment|/* query identification number */
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|_BIG_ENDIAN
 comment|/* fields in third byte */
 name|unsigned
 name|qr
@@ -162,13 +163,13 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 operator|||
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|PDP_ENDIAN
+name|_PDP_ENDIAN
 comment|/* fields in third byte */
 name|unsigned
 name|rd
