@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.15 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4910,6 +4910,48 @@ argument_list|,
 literal|"ioctl(sctty)"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CRAY
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SESS_CTTY
+argument_list|)
+comment|/* SESS_CTTY is in param.h */
+comment|/* 	 * Close the hard fd to /dev/ttypXXX, and re-open through 	 * the indirect /dev/tty interface. 	 */
+name|close
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|t
+operator|=
+name|open
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|fatalperror
+argument_list|(
+name|net
+argument_list|,
+literal|"open(/dev/tty)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 name|close
@@ -4924,6 +4966,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|t
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -4934,6 +4982,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
@@ -4944,6 +4998,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+literal|2
+condition|)
 operator|(
 name|void
 operator|)
@@ -4954,6 +5014,12 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|>
+literal|2
+condition|)
 name|close
 argument_list|(
 name|t
