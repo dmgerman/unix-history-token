@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.12	81/03/09	*/
+comment|/*	ht.c	4.13	81/03/10	*/
 end_comment
 
 begin_include
@@ -143,6 +143,8 @@ name|httypes
 index|[]
 init|=
 block|{
+name|MBDT_TM03
+block|,
 name|MBDT_TE16
 block|,
 name|MBDT_TU45
@@ -1162,7 +1164,7 @@ name|bp
 operator|->
 name|b_command
 operator|==
-name|H_SENSE
+name|HT_SENSE
 condition|)
 block|{
 name|htaddr
@@ -3289,7 +3291,7 @@ if|if
 condition|(
 name|htaddr
 operator|->
-name|htcs
+name|htds
 operator|&
 name|HTDS_ERR
 condition|)

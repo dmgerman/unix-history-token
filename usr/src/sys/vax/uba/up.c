@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.33	81/03/09	*/
+comment|/*	up.c	4.34	81/03/10	*/
 end_comment
 
 begin_include
@@ -2527,6 +2527,14 @@ literal|07
 operator|)
 operator|==
 literal|4
+operator|&&
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|==
+literal|0
 condition|)
 block|{
 name|upaddr

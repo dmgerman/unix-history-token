@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.18	81/03/09	*/
+comment|/*	mba.c	4.19	81/03/10	*/
 end_comment
 
 begin_include
@@ -301,6 +301,7 @@ name|mi_dk
 operator|>=
 literal|0
 condition|)
+block|{
 name|dk_seek
 index|[
 name|mi
@@ -309,6 +310,17 @@ name|mi_dk
 index|]
 operator|++
 expr_stmt|;
+name|dk_busy
+operator||=
+operator|(
+literal|1
+operator|<<
+name|mi
+operator|->
+name|mi_dk
+operator|)
+expr_stmt|;
+block|}
 name|mi
 operator|->
 name|mi_tab
