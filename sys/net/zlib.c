@@ -3091,7 +3091,7 @@ name|Z_DEFLATED
 operator|||
 name|windowBits
 operator|<
-literal|8
+literal|9
 operator|||
 name|windowBits
 operator|>
