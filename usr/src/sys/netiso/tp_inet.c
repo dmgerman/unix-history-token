@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  * $Header: tp_inet.c,v 5.3 88/11/18 17:27:29 nhall Exp $   * $Source: /usr/argo/sys/netiso/RCS/tp_inet.c,v $  *	@(#)tp_inet.c	7.6 (Berkeley) %G% *  *  * Here is where you find the inet-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 		in_getsufx: gets transport suffix out of an inpcb structure.  * 		in_putsufx: put transport suffix into an inpcb structure.  *		in_putnetaddr: put a whole net addr into an inpcb.  *		in_getnetaddr: get a whole net addr from an inpcb.  *		in_cmpnetaddr: compare a whole net addr from an isopcb.  *		in_recycle_suffix: clear suffix for reuse in inpcb  *		tpip_mtu: figure out what size tpdu to use  *		tpip_input: take a pkt from ip, strip off its ip header, give to tp  *		tpip_output_dg: package a pkt for ip given 2 addresses& some data  *		tpip_output: package a pkt for ip given an inpcb& some data  */
+comment|/*   * ARGO TP  * $Header: tp_inet.c,v 5.3 88/11/18 17:27:29 nhall Exp $   * $Source: /usr/argo/sys/netiso/RCS/tp_inet.c,v $  *	@(#)tp_inet.c	7.7 (Berkeley) %G% *  *  * Here is where you find the inet-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 		in_getsufx: gets transport suffix out of an inpcb structure.  * 		in_putsufx: put transport suffix into an inpcb structure.  *		in_putnetaddr: put a whole net addr into an inpcb.  *		in_getnetaddr: get a whole net addr from an inpcb.  *		in_cmpnetaddr: compare a whole net addr from an isopcb.  *		in_recycle_suffix: clear suffix for reuse in inpcb  *		tpip_mtu: figure out what size tpdu to use  *		tpip_input: take a pkt from ip, strip off its ip header, give to tp  *		tpip_output_dg: package a pkt for ip given 2 addresses& some data  *		tpip_output: package a pkt for ip given an inpcb& some data  */
 end_comment
 
 begin_ifndef
@@ -1769,6 +1769,11 @@ name|ProtoHook
 name|in_rtchange
 parameter_list|()
 function_decl|;
+specifier|extern
+name|struct
+name|in_addr
+name|zeroin_addr
+decl_stmt|;
 if|if
 condition|(
 name|sin
@@ -1829,6 +1834,12 @@ name|sin
 argument_list|,
 literal|0
 argument_list|,
+name|zeroin_addr
+argument_list|,
+literal|0
+argument_list|,
+name|cmd
+argument_list|,
 operator|(
 name|int
 argument_list|(
@@ -1862,13 +1873,13 @@ name|tp_inpcb
 argument_list|,
 name|sin
 argument_list|,
-operator|(
-name|int
-operator|)
-name|inetctlerrmap
-index|[
+literal|0
+argument_list|,
+name|zeroin_addr
+argument_list|,
+literal|0
+argument_list|,
 name|cmd
-index|]
 argument_list|,
 name|in_rtchange
 argument_list|)
@@ -1883,13 +1894,13 @@ name|tp_inpcb
 argument_list|,
 name|sin
 argument_list|,
-operator|(
-name|int
-operator|)
-name|inetctlerrmap
-index|[
+literal|0
+argument_list|,
+name|zeroin_addr
+argument_list|,
+literal|0
+argument_list|,
 name|cmd
-index|]
 argument_list|,
 name|tpin_abort
 argument_list|)
