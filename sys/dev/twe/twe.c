@@ -3613,7 +3613,16 @@ operator|&
 name|tr
 argument_list|)
 condition|)
+block|{
+name|twe_enqueue_bio
+argument_list|(
+name|sc
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 comment|/* connect the bio to the command */
 name|tr
 operator|->
