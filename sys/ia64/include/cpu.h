@@ -62,12 +62,42 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CLKF_USERMODE
+name|TRAPF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
 define|\
-value|(((framep)->cf_tf.tf_cr_ipsr& IA64_PSR_CPL) == IA64_PSR_CPL_USER)
+value|(((framep)->tf_cr_ipsr& IA64_PSR_CPL) == IA64_PSR_CPL_USER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRAPF_PC
+parameter_list|(
+name|framep
+parameter_list|)
+value|((framep)->tf_cr_iip)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKF_USERMODE
+parameter_list|(
+name|framep
+parameter_list|)
+value|TRAPF_USERMODE(&(framep)->cf_tf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKF_PC
+parameter_list|(
+name|framep
+parameter_list|)
+value|TRAPF_PC(&(framep)->ct_tf)
 end_define
 
 begin_define
@@ -79,16 +109,6 @@ name|framep
 parameter_list|)
 define|\
 value|(((framep)->cf_tf.tf_cr_ipsr& IA64_PSR_I) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLKF_PC
-parameter_list|(
-name|framep
-parameter_list|)
-value|((framep)->cf_tf.tf_cr_iip)
 end_define
 
 begin_define
