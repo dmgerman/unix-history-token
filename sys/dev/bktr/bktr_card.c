@@ -823,13 +823,10 @@ block|,
 comment|/* the tuner */
 literal|0
 block|,
-comment|/* the tuner i2c address */
 literal|0
 block|,
-comment|/* dbx is optional */
 literal|0
 block|,
-comment|/* msp34xx is optional */
 literal|0
 block|,
 comment|/* EEProm type */
@@ -850,6 +847,84 @@ block|}
 block|,
 comment|/* audio MUX values */
 literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
+block|{
+name|CARD_ASKEY_DYNALINK_MAGIC_TVIEW
+block|,
+comment|/* the card id */
+literal|"Askey/Dynalink Magic TView"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x00
+block|}
+block|,
+comment|/* GPIO mask */
+block|{
+name|CARD_LEADTEK
+block|,
+comment|/* the card id */
+literal|"Leadtek Winfast TV 2000"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x00
 block|}
 block|,
 comment|/* GPIO mask */
@@ -1500,6 +1575,20 @@ name|VENDOR_STB
 value|0x10B4
 end_define
 
+begin_define
+define|#
+directive|define
+name|VENDOR_ASKEY_COMP
+value|0x144F
+end_define
+
+begin_define
+define|#
+directive|define
+name|VENDOR_LEADTEK
+value|0x6606
+end_define
+
 begin_function
 name|void
 name|probeCard
@@ -2086,6 +2175,100 @@ operator|(
 name|card
 operator|=
 name|CARD_STB
+operator|)
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkTuner
+goto|;
+block|}
+if|if
+condition|(
+name|subsystem_vendor_id
+operator|==
+name|VENDOR_ASKEY_COMP
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_ASKEY_DYNALINK_MAGIC_TVIEW
+operator|)
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkTuner
+goto|;
+block|}
+if|if
+condition|(
+name|subsystem_vendor_id
+operator|==
+name|VENDOR_LEADTEK
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_LEADTEK
 operator|)
 index|]
 expr_stmt|;
@@ -4023,6 +4206,34 @@ name|xtal_pll_mode
 operator|=
 name|BT848_USE_XTALS
 expr_stmt|;
+comment|/* Enable PLL mode for OSPREY users */
+if|if
+condition|(
+name|card
+operator|==
+name|CARD_OSPREY
+condition|)
+name|bktr
+operator|->
+name|xtal_pll_mode
+operator|=
+name|BT848_USE_PLL
+expr_stmt|;
+comment|/* Enable PLL mode for Video Highway Xtreme users */
+if|if
+condition|(
+name|card
+operator|==
+name|CARD_VIDEO_HIGHWAY_XTREME
+condition|)
+name|bktr
+operator|->
+name|xtal_pll_mode
+operator|=
+name|BT848_USE_PLL
+expr_stmt|;
+comment|/* Most (perhaps all) Bt878 cards need to be switched to PLL mode */
+comment|/* as they only fit the NTSC crystal to their cards */
 comment|/* Enable PLL mode for PAL/SECAM users on Hauppauge 878 cards */
 if|if
 condition|(
@@ -4052,19 +4263,6 @@ name|xtal_pll_mode
 operator|=
 name|BT848_USE_PLL
 expr_stmt|;
-comment|/* Enable PLL mode for OSPREY users */
-if|if
-condition|(
-name|card
-operator|==
-name|CARD_OSPREY
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
 comment|/* Enable PLL mode for PAL/SECAM users on FlyVideo 878 cards */
 if|if
 condition|(
@@ -4072,6 +4270,64 @@ operator|(
 name|card
 operator|==
 name|CARD_FLYVIDEO
+operator|)
+operator|&&
+operator|(
+name|bktr
+operator|->
+name|id
+operator|==
+name|BROOKTREE_878
+operator|||
+name|bktr
+operator|->
+name|id
+operator|==
+name|BROOKTREE_879
+operator|)
+condition|)
+name|bktr
+operator|->
+name|xtal_pll_mode
+operator|=
+name|BT848_USE_PLL
+expr_stmt|;
+comment|/* Enable PLL mode for Askey Dynalink users */
+if|if
+condition|(
+operator|(
+name|card
+operator|==
+name|CARD_ASKEY_DYNALINK_MAGIC_TVIEW
+operator|)
+operator|&&
+operator|(
+name|bktr
+operator|->
+name|id
+operator|==
+name|BROOKTREE_878
+operator|||
+name|bktr
+operator|->
+name|id
+operator|==
+name|BROOKTREE_879
+operator|)
+condition|)
+name|bktr
+operator|->
+name|xtal_pll_mode
+operator|=
+name|BT848_USE_PLL
+expr_stmt|;
+comment|/* Enable PLL mode for Leadtek users */
+if|if
+condition|(
+operator|(
+name|card
+operator|==
+name|CARD_LEADTEK
 operator|)
 operator|&&
 operator|(

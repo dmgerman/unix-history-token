@@ -120,8 +120,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_ASKEY_DYNALINK_MAGIC_TVIEW
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_LEADTEK
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|16
 end_define
 
 begin_function_decl
