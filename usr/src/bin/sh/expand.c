@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	8.4 (Berkeley) %G%"
+literal|"@(#)expand.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3173,7 +3173,7 @@ name|i
 decl_stmt|;
 specifier|extern
 name|int
-name|exitstatus
+name|oexitstatus
 decl_stmt|;
 name|char
 name|sep
@@ -3216,7 +3216,7 @@ literal|'?'
 case|:
 name|num
 operator|=
-name|exitstatus
+name|oexitstatus
 expr_stmt|;
 goto|goto
 name|numvar

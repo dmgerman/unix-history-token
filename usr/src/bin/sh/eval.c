@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.6 (Berkeley) %G%"
+literal|"@(#)eval.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* exit status of last command */
+end_comment
+
+begin_decl_stmt
+name|int
+name|oexitstatus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* saved exit status */
 end_comment
 
 begin_decl_stmt
@@ -1365,6 +1375,10 @@ operator|.
 name|next
 control|)
 block|{
+name|oexitstatus
+operator|=
+name|exitstatus
+expr_stmt|;
 name|expandarg
 argument_list|(
 name|argp
@@ -1547,6 +1561,10 @@ operator|&
 name|arglist
 operator|.
 name|list
+expr_stmt|;
+name|oexitstatus
+operator|=
+name|exitstatus
 expr_stmt|;
 name|expandarg
 argument_list|(
@@ -1836,6 +1854,10 @@ operator|&
 name|fn
 operator|.
 name|list
+expr_stmt|;
+name|oexitstatus
+operator|=
+name|exitstatus
 expr_stmt|;
 switch|switch
 condition|(
@@ -2332,19 +2354,21 @@ name|jp
 operator|=
 name|NULL
 expr_stmt|;
-name|exitstatus
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|n
 operator|==
 name|NULL
 condition|)
+block|{
+name|exitstatus
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 if|if
 condition|(
 name|n
@@ -2354,6 +2378,10 @@ operator|==
 name|NCMD
 condition|)
 block|{
+name|exitstatus
+operator|=
+name|oexitstatus
+expr_stmt|;
 name|evalcommand
 argument_list|(
 name|n
@@ -2366,6 +2394,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|exitstatus
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pipe
@@ -2704,6 +2736,14 @@ expr_stmt|;
 name|varflag
 operator|=
 literal|1
+expr_stmt|;
+name|oexitstatus
+operator|=
+name|exitstatus
+expr_stmt|;
+name|exitstatus
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
