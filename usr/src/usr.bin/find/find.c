@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	5.4 (Berkeley) %G%"
+literal|"@(#)find.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,6 +351,14 @@ case|:
 operator|(
 name|void
 operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -414,6 +422,14 @@ name|BADCH
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
