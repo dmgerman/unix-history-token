@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.45 1997/10/16 20:32:24 phk Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.46 1997/10/16 21:59:59 phk Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5135,7 +5135,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vn_default_error
+name|vop_defaultop
 block|}
 block|,
 block|{
