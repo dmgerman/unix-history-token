@@ -563,11 +563,14 @@ endif|#
 directive|endif
 comment|/* defined(unix) */
 name|debug
+decl_stmt|,
+comment|/* Debug level */
+name|clienteof
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Debug level */
+comment|/* Client received EOF */
 end_comment
 
 begin_decl_stmt

@@ -4293,7 +4293,12 @@ comment|/* defined(TN3270) */
 comment|/* I don't like this, does it ever happen? */
 name|printf
 argument_list|(
-literal|"sleep(5) from telnet, after select\r\n"
+literal|"sleep(5) from telnet, after select: %s\r\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sleep
