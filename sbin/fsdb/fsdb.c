@@ -371,7 +371,9 @@ name|sbdirty
 argument_list|()
 expr_stmt|;
 name|ckfini
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
