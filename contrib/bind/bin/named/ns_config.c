@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_config.c,v 8.34 1998/03/27 00:19:47 halley Exp $"
+literal|"$Id: ns_config.c,v 8.35 1998/05/05 19:44:48 halley Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -11053,6 +11053,10 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+name|loading
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Clean up any previous configuration and initialize 	 * global data structures we'll be updating. 	 */
 name|free_nameserver_info
 argument_list|()
@@ -11117,6 +11121,10 @@ name|opensocket_f
 argument_list|()
 expr_stmt|;
 name|initial_configuration
+operator|=
+literal|0
+expr_stmt|;
+name|loading
 operator|=
 literal|0
 expr_stmt|;

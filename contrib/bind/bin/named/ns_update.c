@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_update.c,v 8.24 1998/03/20 00:49:16 halley Exp $"
+literal|"$Id: ns_update.c,v 8.26 1998/05/05 19:45:10 halley Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3312,6 +3312,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BIND_NOTIFY
+if|if
+condition|(
+operator|!
+name|loading
+condition|)
 name|sysnotify
 argument_list|(
 name|zp
@@ -3731,13 +3736,6 @@ index|[
 name|zonenum
 index|]
 expr_stmt|;
-name|old_serial
-operator|=
-name|get_serial
-argument_list|(
-name|zp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|zp
@@ -4056,6 +4054,13 @@ name|Refuse
 operator|)
 return|;
 block|}
+name|old_serial
+operator|=
+name|get_serial
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
 name|ns_debug
 argument_list|(
 name|ns_log_update
@@ -11202,6 +11207,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BIND_NOTIFY
+if|if
+condition|(
+operator|!
+name|loading
+condition|)
 name|sysnotify
 argument_list|(
 name|zp

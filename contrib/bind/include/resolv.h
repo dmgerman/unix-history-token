@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  *
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.11 1998/01/26 23:09:53 halley Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.12 1998/04/28 19:36:46 halley Exp $  */
 end_comment
 
 begin_ifndef
@@ -1945,16 +1945,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|res_freeupdrec
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|ns_updrec
-modifier|*
-name|rrecp
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|__END_DECLS
