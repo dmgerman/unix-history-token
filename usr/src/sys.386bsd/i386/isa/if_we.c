@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_we.c	7.3 (Berkeley) 5/21/91  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_we.c	7.3 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00100  * --------------------         -----   ----------------------  *  * 09 Sep 92	Mike Durkin		Fix Danpex EW-2016& other 8013 clones  *					enable with "options WECOMPAT"  * 19 Sep 92	Michael Galassi		Fixed multiboard routing  * 20 Sep 92	Barry Lustig		WD8013 16 bit mode -- enable  *						with "options WD8013".  */
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  */
+comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  */
 end_comment
 
 begin_include
@@ -384,6 +384,30 @@ decl_stmt|;
 name|u_char
 name|sum
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WD8013
+comment|/* 20 Sep 92*/
+name|union
+name|we_laar
+name|laar
+decl_stmt|;
+name|laar
+operator|.
+name|laar_byte
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* WD8013*/
+name|wem
+operator|.
+name|ms_byte
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 20 Sep 92*/
 comment|/* reset card to force it into a known state. */
 name|outb
 argument_list|(
@@ -414,6 +438,46 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WD8013
+comment|/* 20 Sep 92*/
+comment|/* allow the NIC to access the shared RAM 16 bits at a time */
+name|laar
+operator|.
+name|addr_l19
+operator|=
+literal|1
+expr_stmt|;
+name|laar
+operator|.
+name|lan_16_en
+operator|=
+literal|1
+expr_stmt|;
+name|laar
+operator|.
+name|mem_16_en
+operator|=
+literal|1
+expr_stmt|;
+name|outb
+argument_list|(
+name|is
+operator|->
+name|id_iobase
+operator|+
+literal|5
+argument_list|,
+name|laar
+operator|.
+name|laar_byte
+argument_list|)
+expr_stmt|;
+comment|/* Write a 0xc1 */
+endif|#
+directive|endif
+comment|/* WD8013*/
 comment|/* 	 * Here we check the card ROM, if the checksum passes, and the 	 * type code and ethernet address check out, then we know we have 	 * a wd8003 card. 	 * 	 * Autoconfiguration: No warning message is printed on error. 	 */
 for|for
 control|(
@@ -451,11 +515,33 @@ name|sum
 operator|!=
 name|WD_CHECKSUM
 condition|)
+block|{
+comment|/* 09 Sep 92*/
+ifdef|#
+directive|ifdef
+name|WECOMPAT
+name|printf
+argument_list|(
+literal|"we: probe: checksum failed... installing anyway\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"we: Danpex EW-2016 or other 8013 clone card?\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !WECOMPAT*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* !WECOMPAT*/
+block|}
 name|sc
 operator|->
 name|we_type
@@ -1192,8 +1278,15 @@ end_block
 begin_expr_stmt
 specifier|static
 name|Bdry
+index|[
+name|NWE
+index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 19 Sep 92*/
+end_comment
 
 begin_comment
 comment|/*  * Initialization of interface (really just DS8390).   */
@@ -1270,9 +1363,13 @@ name|splhigh
 argument_list|()
 expr_stmt|;
 name|Bdry
+index|[
+name|unit
+index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 19 Sep 92*/
 name|wecmd
 operator|.
 name|cs_byte
@@ -1317,6 +1414,25 @@ operator|.
 name|cs_byte
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WD8013
+comment|/* 20 Sep 92*/
+comment|/* enable 16 bit access if 8013 card */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|we_io_nic_addr
+operator|+
+name|WD_P0_DCR
+argument_list|,
+name|WD_D_CONFIG16
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !WD8013*/
 name|outb
 argument_list|(
 name|sc
@@ -1328,6 +1444,9 @@ argument_list|,
 name|WD_D_CONFIG
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !WD8013*/
 name|outb
 argument_list|(
 name|sc
@@ -1936,10 +2055,6 @@ name|union
 name|we_interrupt
 name|weisr
 decl_stmt|;
-name|unit
-operator|=
-literal|0
-expr_stmt|;
 comment|/* disable onboard interrupts, then get interrupt status */
 name|wecmd
 operator|.
@@ -2394,10 +2509,17 @@ expr_stmt|;
 if|if
 condition|(
 name|Bdry
+index|[
+name|unit
+index|]
 condition|)
+comment|/* 19 Sep 92*/
 name|bnry
 operator|=
 name|Bdry
+index|[
+name|unit
+index|]
 expr_stmt|;
 while|while
 condition|(
@@ -2654,9 +2776,13 @@ argument_list|)
 expr_stmt|;
 block|}
 name|Bdry
+index|[
+name|unit
+index|]
 operator|=
 name|bnry
 expr_stmt|;
+comment|/* 19 Sep 92*/
 block|}
 end_block
 

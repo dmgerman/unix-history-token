@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_wereg.h	7.1 (Berkeley) 5/9/91  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_wereg.h	7.1 (Berkeley) 5/9/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00100  * --------------------         -----   ----------------------  *  * 20 Sep 92	Barry Lustig		WD8013 16 bit mode -- enable  *						with "options WD8013".  */
 end_comment
 
 begin_comment
@@ -53,6 +53,66 @@ name|u_char
 name|ms_byte
 decl_stmt|;
 comment|/* entire byte			*/
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/* 20 Sep 92*/
+end_comment
+
+begin_comment
+comment|/*  * LA Address Register (LAAR)  */
+end_comment
+
+begin_union
+union|union
+name|we_laar
+block|{
+struct|struct
+name|lan_addr_reg
+block|{
+name|u_char
+name|addr_l19_b
+range|:
+literal|1
+decl_stmt|,
+comment|/* Address Line 19 for enabling    */
+comment|/* 16 bit NIC access to shared RAM */
+name|unused_b
+range|:
+literal|5
+decl_stmt|,
+comment|/* unused (or unknown) bits        */
+name|lan_16_en_b
+range|:
+literal|1
+decl_stmt|,
+comment|/* Enables 16bit shrd RAM for LAN  */
+name|mem_16_en_b
+range|:
+literal|1
+decl_stmt|;
+comment|/* Enables 16bit shrd RAM for host */
+block|}
+name|laar_decode
+struct|;
+define|#
+directive|define
+name|addr_l19
+value|laar_decode.addr_l19_b
+define|#
+directive|define
+name|lan_16_en
+value|laar_decode.lan_16_en_b
+define|#
+directive|define
+name|mem_16_en
+value|laar_decode.mem_16_en_b
+name|u_char
+name|laar_byte
+decl_stmt|;
+comment|/* entire byte                  */
 block|}
 union|;
 end_union
@@ -1088,6 +1148,17 @@ directive|define
 name|WD_D_CONFIG
 value|(WD_D_FT1|WD_D_BMS)
 end_define
+
+begin_define
+define|#
+directive|define
+name|WD_D_CONFIG16
+value|(WD_D_FT1|WD_D_BMS|WD_D_LAS|WD_D_WTS)
+end_define
+
+begin_comment
+comment|/* 20 Sep 92*/
+end_comment
 
 begin_comment
 comment|/*  * Configuration constants (interrupt mask register)  */
