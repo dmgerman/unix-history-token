@@ -19,14 +19,13 @@ name|int
 name|index
 decl_stmt|;
 comment|/* Index number of matching keyword. */
-name|char
-modifier|*
-name|beg
+name|size_t
+name|offset
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* Begin pointer for each submatch. */
+comment|/* Offset of each submatch. */
 name|size_t
 name|size
 index|[
@@ -57,6 +56,7 @@ name|PARAMS
 argument_list|(
 operator|(
 name|char
+specifier|const
 operator|*
 operator|)
 argument_list|)
@@ -78,6 +78,7 @@ operator|(
 name|kwset_t
 operator|,
 name|char
+specifier|const
 operator|*
 operator|,
 name|size_t
@@ -110,8 +111,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
+name|size_t
 name|kwsexec
 name|PARAMS
 argument_list|(
@@ -119,6 +119,7 @@ operator|(
 name|kwset_t
 operator|,
 name|char
+specifier|const
 operator|*
 operator|,
 name|size_t

@@ -15,17 +15,11 @@ begin_comment
 comment|/* FIXME:    2.  We should not export so much of the DFA internals.    In addition to clobbering modularity, we eat up valuable    name space. */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|PARAMS
-end_undef
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -51,16 +45,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|PARAMS
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
 
 begin_else
 else|#
@@ -91,6 +75,49 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PARAMS
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PARAMS
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|PROTOTYPES
+end_if
+
+begin_define
+define|#
+directive|define
+name|PARAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -255,6 +282,21 @@ comment|/* LPAREN never appears in the parse tree, 				   it is only a lexeme. *
 name|RPAREN
 block|,
 comment|/* RPAREN never appears in the parse tree. */
+name|CRANGE
+block|,
+comment|/* CRANGE never appears in the parse tree. 				   It stands for a character range that can 				   match a string of one or more characters. 				   For example, [a-z] can match "ch" in 				   a Spanish locale.  */
+ifdef|#
+directive|ifdef
+name|MBS_SUPPORT
+name|ANYCHAR
+block|,
+comment|/* ANYCHAR is a terminal symbol that matches                                   any multibyte(or singlebyte) characters. 			          It is used only if MB_CUR_MAX> 1.  */
+name|MBCSET
+block|,
+comment|/* MBCSET is similar to CSET, but for 				   multibyte characters.  */
+endif|#
+directive|endif
+comment|/* MBS_SUPPORT */
 name|CSET
 comment|/* CSET and (and any value greater) is a 				   terminal symbol that matches any of a 				   class of characters. */
 block|}
@@ -488,6 +530,15 @@ name|int
 name|first_end
 decl_stmt|;
 comment|/* Token value of the first END in elems. */
+ifdef|#
+directive|ifdef
+name|MBS_SUPPORT
+name|position_set
+name|mbps
+decl_stmt|;
+comment|/* Positions which can match multibyte                                   characters.  e.g. period. 				  These staff are used only if 				  MB_CUR_MAX> 1.  */
+endif|#
+directive|endif
 block|}
 name|dfa_state
 typedef|;
@@ -516,6 +567,79 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MBS_SUPPORT
+end_ifdef
+
+begin_comment
+comment|/* A bracket operator.    e.g. [a-c], [[:alpha:]], etc.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mb_char_classes
+block|{
+name|int
+name|invert
+decl_stmt|;
+name|wchar_t
+modifier|*
+name|chars
+decl_stmt|;
+comment|/* Normal characters.  */
+name|int
+name|nchars
+decl_stmt|;
+name|wctype_t
+modifier|*
+name|ch_classes
+decl_stmt|;
+comment|/* Character classes.  */
+name|int
+name|nch_classes
+decl_stmt|;
+name|wchar_t
+modifier|*
+name|range_sts
+decl_stmt|;
+comment|/* Range characters (start of the range).  */
+name|wchar_t
+modifier|*
+name|range_ends
+decl_stmt|;
+comment|/* Range characters (end of the range).  */
+name|int
+name|nranges
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|equivs
+decl_stmt|;
+comment|/* Equivalent classes.  */
+name|int
+name|nequivs
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|coll_elems
+decl_stmt|;
+name|int
+name|ncoll_elems
+decl_stmt|;
+comment|/* Collating elements.  */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* A compiled regular expression. */
@@ -565,6 +689,32 @@ name|int
 name|nregexps
 decl_stmt|;
 comment|/* Count of parallel regexps being built 				   with dfaparse(). */
+ifdef|#
+directive|ifdef
+name|MBS_SUPPORT
+comment|/* These stuff are used only if MB_CUR_MAX> 1 or multibyte environments.  */
+name|int
+name|nmultibyte_prop
+decl_stmt|;
+name|int
+modifier|*
+name|multibyte_prop
+decl_stmt|;
+comment|/* The value of multibyte_prop[i] is defined by following rule.        if tokens[i]< NOTCHAR          bit 1 : tokens[i] is a singlebyte character, or the last-byte of 	         a multibyte character. 	 bit 0 : tokens[i] is a singlebyte character, or the 1st-byte of 	         a multibyte character.        if tokens[i] = MBCSET          ("the index of mbcsets correspnd to this operator"<< 2) + 3       e.g.      tokens         = 'single_byte_a', 'multi_byte_A', single_byte_b'         = 'sb_a', 'mb_A(1st byte)', 'mb_A(2nd byte)', 'mb_A(3rd byte)', 'sb_b'      multibyte_prop         = 3     , 1               ,  0              ,  2              , 3   */
+comment|/* Array of the bracket expressoin in the DFA.  */
+name|struct
+name|mb_char_classes
+modifier|*
+name|mbcsets
+decl_stmt|;
+name|int
+name|nmbcsets
+decl_stmt|;
+name|int
+name|mbcsets_alloc
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Stuff owned by the state builder. */
 name|dfa_state
 modifier|*
@@ -621,11 +771,6 @@ modifier|*
 name|success
 decl_stmt|;
 comment|/* Table of acceptance conditions used in 				   dfaexec and computed in build_state. */
-name|int
-modifier|*
-name|newlines
-decl_stmt|;
-comment|/* Transitions on newlines.  The entry for a 				   newline in any transition table is always 				   -1 so we can count lines without wasting 				   too many cycles.  The transition for a 				   newline is stored separately and handled 				   as a special case.  Newline is also used 				   as a sentinel at the end of the buffer. */
 name|struct
 name|dfamust
 modifier|*
@@ -716,7 +861,8 @@ name|reg_syntax_t
 operator|,
 name|int
 operator|,
-name|int
+name|unsigned
+name|char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -734,6 +880,7 @@ name|PARAMS
 argument_list|(
 operator|(
 name|char
+specifier|const
 operator|*
 operator|,
 name|size_t
@@ -749,13 +896,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Execute the given struct dfa on the buffer of characters.  The    first char * points to the beginning, and the second points to the    first character after the end of the buffer, which must be a writable    place so a sentinel end-of-buffer marker can be stored there.  The    second-to-last argument is a flag telling whether to allow newlines to    be part of a string matching the regexp.  The next-to-last argument,    if non-NULL, points to a place to increment every time we see a    newline.  The final argument, if non-NULL, points to a flag that will    be set if further examination by a backtracking matcher is needed in    order to verify backreferencing; otherwise the flag will be cleared.    Returns NULL if no match is found, or a pointer to the first    character after the first& shortest matching string in the buffer. */
+comment|/* Execute the given struct dfa on the buffer of characters.  The    last byte of the buffer must equal the end-of-line byte.    The final argument points to a flag that will    be set if further examination by a backtracking matcher is needed in    order to verify backreferencing; otherwise the flag will be cleared.    Returns (size_t) -1 if no match is found, or the offset of the first    character after the first& shortest matching string in the buffer. */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
+name|size_t
 name|dfaexec
 name|PARAMS
 argument_list|(
@@ -765,15 +911,10 @@ name|dfa
 operator|*
 operator|,
 name|char
+specifier|const
 operator|*
 operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|*
+name|size_t
 operator|,
 name|int
 operator|*
@@ -836,6 +977,7 @@ name|PARAMS
 argument_list|(
 operator|(
 name|char
+specifier|const
 operator|*
 operator|,
 name|size_t
@@ -898,7 +1040,7 @@ comment|/* Error handling. */
 end_comment
 
 begin_comment
-comment|/* dfaerror() is called by the regexp routines whenever an error occurs.  It    takes a single argument, a NUL-terminated string describing the error.    The default dfaerror() prints the error message to stderr and exits.    The user can provide a different dfafree() if so desired. */
+comment|/* dfaerror() is called by the regexp routines whenever an error occurs.  It    takes a single argument, a NUL-terminated string describing the error.    The user must supply a dfaerror.  */
 end_comment
 
 begin_decl_stmt
