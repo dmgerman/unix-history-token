@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -89,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_struct
@@ -516,7 +528,7 @@ condition|)
 return|return
 name|EAI_MEMORY
 return|;
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|serv
 argument_list|,
@@ -561,7 +573,7 @@ condition|)
 return|return
 name|EAI_MEMORY
 return|;
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|serv
 argument_list|,
@@ -865,7 +877,7 @@ comment|/* don't forget terminator */
 return|return
 name|EAI_MEMORY
 return|;
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|host
 argument_list|,
@@ -932,7 +944,7 @@ return|return
 name|EAI_MEMORY
 return|;
 block|}
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|host
 argument_list|,
@@ -1132,7 +1144,7 @@ comment|/* don't forget terminator */
 return|return
 name|EAI_MEMORY
 return|;
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|host
 argument_list|,

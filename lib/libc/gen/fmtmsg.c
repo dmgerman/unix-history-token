@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fmtmsg.h>
 end_include
 
@@ -39,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -469,7 +481,7 @@ define|#
 directive|define
 name|INSERT_COLON
 define|\
-value|if (*output != '\0')						\ 		strlcat(output, ": ", size)
+value|if (*output != '\0')						\ 		_strlcat(output, ": ", size)
 end_define
 
 begin_define
@@ -477,7 +489,7 @@ define|#
 directive|define
 name|INSERT_NEWLINE
 define|\
-value|if (*output != '\0')						\ 		strlcat(output, "\n", size)
+value|if (*output != '\0')						\ 		_strlcat(output, "\n", size)
 end_define
 
 begin_define
@@ -485,7 +497,7 @@ define|#
 directive|define
 name|INSERT_SPACE
 define|\
-value|if (*output != '\0')						\ 		strlcat(output, " ", size)
+value|if (*output != '\0')						\ 		_strlcat(output, " ", size)
 end_define
 
 begin_comment
@@ -675,7 +687,7 @@ condition|)
 block|{
 name|INSERT_COLON
 expr_stmt|;
-name|strlcat
+name|_strlcat
 argument_list|(
 name|output
 argument_list|,
@@ -704,7 +716,7 @@ condition|)
 block|{
 name|INSERT_COLON
 expr_stmt|;
-name|strlcat
+name|_strlcat
 argument_list|(
 name|output
 argument_list|,
@@ -736,7 +748,7 @@ condition|)
 block|{
 name|INSERT_COLON
 expr_stmt|;
-name|strlcat
+name|_strlcat
 argument_list|(
 name|output
 argument_list|,
@@ -765,7 +777,7 @@ condition|)
 block|{
 name|INSERT_NEWLINE
 expr_stmt|;
-name|strlcat
+name|_strlcat
 argument_list|(
 name|output
 argument_list|,
@@ -774,7 +786,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|strlcat
+name|_strlcat
 argument_list|(
 name|output
 argument_list|,
@@ -803,7 +815,7 @@ condition|)
 block|{
 name|INSERT_SPACE
 expr_stmt|;
-name|strlcat
+name|_strlcat
 argument_list|(
 name|output
 argument_list|,
@@ -862,7 +874,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|lmsgverb
 argument_list|,

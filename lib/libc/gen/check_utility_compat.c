@@ -17,9 +17,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * I din't use "namespace.h" here because none of the relevant utilities  * are threaded, so I'm not concerned about cancellation points or other  * niceties.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"namespace.h"
+end_include
 
 begin_include
 include|#
@@ -43,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_ifndef
@@ -117,7 +125,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|buf
 argument_list|,

@@ -683,7 +683,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|pathP
 argument_list|,

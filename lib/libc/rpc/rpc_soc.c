@@ -2413,7 +2413,7 @@ name|AF_LOCAL
 expr_stmt|;
 if|if
 condition|(
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|sun
 operator|.

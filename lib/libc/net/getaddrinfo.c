@@ -3824,7 +3824,7 @@ condition|)
 return|return
 name|EAI_MEMORY
 return|;
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|ai
 operator|->
@@ -5947,7 +5947,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-name|strlcpy
+name|_strlcpy
 argument_list|(
 name|bp
 argument_list|,
