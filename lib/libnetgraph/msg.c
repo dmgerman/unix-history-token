@@ -228,7 +228,11 @@ operator|)
 return|;
 return|return
 operator|(
-name|gMsgId
+name|msg
+operator|.
+name|header
+operator|.
+name|token
 operator|)
 return|;
 block|}
@@ -640,7 +644,11 @@ operator|)
 return|;
 return|return
 operator|(
-name|gMsgId
+name|binary
+operator|->
+name|header
+operator|.
+name|token
 operator|)
 return|;
 block|}
