@@ -583,69 +583,199 @@ begin_define
 define|#
 directive|define
 name|SUBID_9005_TYPE
-value|0x000F
+parameter_list|(
+name|id
+parameter_list|)
+value|((id)& 0xF)
 end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_TYPE_MB
+value|0xF
+end_define
+
+begin_comment
+comment|/* On Motherboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_TYPE_CARD
+value|0x0
+end_define
+
+begin_comment
+comment|/* Standard Card */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_TYPE_LCCARD
+value|0x1
+end_define
+
+begin_comment
+comment|/* Low Cost Card */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_TYPE_RAID
+value|0x3
+end_define
+
+begin_comment
+comment|/* Combined with Raid */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SUBID_9005_MAXRATE
-value|0x0030
+parameter_list|(
+name|id
+parameter_list|)
+value|(((id)& 0x30)>> 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SUBID_9005_DISAUTOTERM
-value|0x0040
+name|SUBID_9005_MAXRATE_ULTRA2
+value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
-name|SUBID_9005_LEGACYCONN
-value|0x0080
+name|SUBID_9005_MAXRATE_ULTRA
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_MAXRATE_U160
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_MAXRATE_RESERVED
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
 name|SUBID_9005_SEEPTYPE
-value|0x0300
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((SUBID_9005_TYPE(id) == SUBID_9005_TYPE_MB)			\ 	 ? ((id)& 0xC0)>> 6						\ 	 : ((id)& 0x300)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_SEEPTYPE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_SEEPTYPE_1K
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_SEEPTYPE_2K_4K
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_SEEPTYPE_RESERVED
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_AUTOTERM
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((SUBID_9005_TYPE(id) == SUBID_9005_TYPE_MB)			\ 	 ? (((id)& 0x400)>> 10) == 0					\ 	 : (((id)& 0x40)>> 6) == 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SUBID_9005_NUMCHAN
-value|0x0C00
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((SUBID_9005_TYPE(id) == SUBID_9005_TYPE_MB)			\ 	 ? ((id)& 0x300)>> 8						\ 	 : ((id)& 0xC00)>> 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_LEGACYCONN
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((SUBID_9005_TYPE(id) == SUBID_9005_TYPE_MB)			\ 	 ? 0								\ 	 : ((id)& 0x80)>> 7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SUBID_9005_MFUNCENB
-value|0x1000
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((SUBID_9005_TYPE(id) == SUBID_9005_TYPE_MB)			\ 	 ? ((id)& 0x800)>> 11						\ 	 : ((id)& 0x1000)>> 12)
 end_define
+
+begin_comment
+comment|/*  * Informational only. Should use chip register to be  * ceratian, but may be use in identification strings.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SUBID_9005_SCSIWIDTH
+name|SUBID_9005_CARD_SCSIWIDTH_MASK
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SUBID_9005_PCIWIDTH
+name|SUBID_9005_CARD_PCIWIDTH_MASK
 value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SUBID_9005_SEDIFF
+name|SUBID_9005_CARD_SEDIFF_MASK
 value|0x8000
 end_define
 
@@ -2019,11 +2149,10 @@ name|subvendor
 operator|==
 literal|0x9005
 operator|&&
-operator|(
-name|subdevice
-operator|&
 name|SUBID_9005_MFUNCENB
-operator|)
+argument_list|(
+name|subdevice
+argument_list|)
 operator|==
 literal|0
 condition|)

@@ -2152,7 +2152,7 @@ end_expr_stmt
 
 begin_struct
 struct|struct
-name|ahc_suspend_state
+name|ahc_suspend_channel_state
 block|{
 name|uint8_t
 name|scsiseq
@@ -2162,10 +2162,6 @@ name|sxfrctl0
 decl_stmt|;
 name|uint8_t
 name|sxfrctl1
-decl_stmt|;
-comment|/* scsiid */
-name|uint8_t
-name|optionmode
 decl_stmt|;
 name|uint8_t
 name|simode0
@@ -2178,6 +2174,24 @@ name|seltimer
 decl_stmt|;
 name|uint8_t
 name|seqctl
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ahc_suspend_state
+block|{
+name|struct
+name|ahc_suspend_channel_state
+name|channel
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|optionmode
 decl_stmt|;
 name|uint8_t
 name|dscommand0
@@ -2449,6 +2463,13 @@ name|name
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+comment|/* Selection Timer settings */
+name|int
+name|seltime
+decl_stmt|;
+name|int
+name|seltime_b
 decl_stmt|;
 name|uint16_t
 name|user_discenable
