@@ -166,16 +166,11 @@ modifier|*
 name|dbregs
 parameter_list|)
 block|{
-name|PROCFS_ACTION
-argument_list|(
-name|fill_dbregs
-argument_list|(
-name|td
-argument_list|,
-name|dbregs
-argument_list|)
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 end_function
 
@@ -194,16 +189,11 @@ modifier|*
 name|dbregs
 parameter_list|)
 block|{
-name|PROCFS_ACTION
-argument_list|(
-name|set_dbregs
-argument_list|(
-name|td
-argument_list|,
-name|dbregs
-argument_list|)
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 end_function
 
