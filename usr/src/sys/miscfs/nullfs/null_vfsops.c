@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	8.6 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	8.7 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -291,6 +297,10 @@ comment|/* 	 * Unlock the node (either the lower or the alias) 	 */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the node alias worked 	 */
@@ -685,6 +695,14 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -733,9 +751,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|*
