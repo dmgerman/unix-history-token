@@ -655,10 +655,10 @@ endif|#
 directive|endif
 comment|/*060*/
 name|u_int16_t
-name|lba_size_lo
+name|lba_size_1
 decl_stmt|;
 name|u_int16_t
-name|lba_size_hi
+name|lba_size_2
 decl_stmt|;
 name|u_int16_t
 name|obsolete62
