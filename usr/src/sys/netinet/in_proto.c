@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	6.3	84/02/15	*/
+comment|/*	in_proto.c	6.4	84/07/31	*/
 end_comment
 
 begin_include
@@ -350,6 +350,36 @@ name|SOCK_RAW
 block|,
 name|PF_INET
 block|,
+name|IPPROTO_EGP
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|rip_input
+block|,
+name|rip_output
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|raw_usrreq
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+block|{
+name|SOCK_RAW
+block|,
+name|PF_INET
+block|,
 name|IPPROTO_ICMP
 block|,
 name|PR_ATOMIC
@@ -374,43 +404,7 @@ literal|0
 block|,
 literal|0
 block|, }
-block|,
-if|#
-directive|if
-name|NND
-operator|>
-literal|0
-block|{
-literal|0
-block|,
-name|PF_INET
-block|,
-name|IPPROTO_ND
-block|,
-literal|0
-block|,
-name|nd_input
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|nd_init
-block|,
-literal|0
-block|,
-name|nd_slowtimo
-block|,
-literal|0
 block|, }
-block|,
-endif|#
-directive|endif
-block|}
 decl_stmt|;
 end_decl_stmt
 

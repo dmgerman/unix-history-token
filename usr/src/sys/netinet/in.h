@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	6.2	84/04/12	*/
+comment|/*	in.h	6.3	84/07/31	*/
 end_comment
 
 begin_comment
@@ -42,6 +42,17 @@ end_define
 
 begin_comment
 comment|/* tcp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_EGP
+value|8
+end_define
+
+begin_comment
+comment|/* exterior gateway protocol */
 end_comment
 
 begin_define
