@@ -510,6 +510,9 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|INET6
 name|mtx_assert
 argument_list|(
 operator|&
@@ -522,6 +525,8 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Determine length of data that should be transmitted, 	 * and flags that will be used. 	 * If there is some data or critical controls (SYN, RST) 	 * to send, then transmit; otherwise, investigate further. 	 */
 name|idle
 operator|=
