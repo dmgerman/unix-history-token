@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.6 (Berkeley) %G%"
+literal|"@(#)tape.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1463,8 +1463,21 @@ name|c_type
 operator|=
 name|TS_TAPE
 expr_stmt|;
+name|spcl
+operator|.
+name|c_flags
+operator||=
+name|DR_NEWHEADER
+expr_stmt|;
 name|spclrec
 argument_list|()
+expr_stmt|;
+name|spcl
+operator|.
+name|c_flags
+operator|&=
+operator|~
+name|DR_NEWHEADER
 expr_stmt|;
 if|if
 condition|(
