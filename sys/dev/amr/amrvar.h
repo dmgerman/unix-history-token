@@ -482,7 +482,9 @@ argument_list|)
 name|amr_cam_ccbq
 expr_stmt|;
 comment|/* control device */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|amr_dev_t
 decl_stmt|;
 comment|/* controller type-specific support */

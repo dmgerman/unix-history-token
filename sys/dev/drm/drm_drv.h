@@ -4443,7 +4443,9 @@ function|(
 name|open
 function|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int
@@ -4572,7 +4574,9 @@ function|(
 name|close
 function|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int
@@ -5159,7 +5163,9 @@ function|(
 name|ioctl
 function|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|u_long

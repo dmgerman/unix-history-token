@@ -603,7 +603,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)
@@ -641,7 +643,9 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 decl_stmt|;

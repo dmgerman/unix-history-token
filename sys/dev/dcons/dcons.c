@@ -462,7 +462,9 @@ specifier|static
 struct|struct
 name|dcons_softc
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -670,7 +672,9 @@ specifier|static
 name|int
 name|dcons_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -882,7 +886,9 @@ specifier|static
 name|int
 name|dcons_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1442,7 +1448,9 @@ specifier|static
 name|int
 name|dcons_cngetc
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -1469,7 +1477,9 @@ specifier|static
 name|int
 name|dcons_cncheckc
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -1496,7 +1506,9 @@ specifier|static
 name|void
 name|dcons_cnputc
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

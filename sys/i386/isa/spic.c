@@ -1813,7 +1813,9 @@ specifier|static
 name|int
 name|spicopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1883,7 +1885,9 @@ specifier|static
 name|int
 name|spicclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1941,7 +1945,9 @@ specifier|static
 name|int
 name|spicread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2127,7 +2133,9 @@ specifier|static
 name|int
 name|spicioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2170,7 +2178,9 @@ specifier|static
 name|int
 name|spicpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -323,7 +323,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|status_dev
 init|=
 literal|0
@@ -447,7 +449,9 @@ name|struct
 name|mtx
 name|queue_mtx
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|enum
@@ -5510,7 +5514,9 @@ specifier|static
 name|int
 name|mdctlioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

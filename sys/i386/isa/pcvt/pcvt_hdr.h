@@ -5718,7 +5718,9 @@ begin_function_decl
 name|int
 name|kbdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6200,7 +6202,9 @@ begin_function_decl
 name|int
 name|usl_vt_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6288,7 +6292,9 @@ begin_function_decl
 name|int
 name|vgaioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -218,7 +218,9 @@ specifier|static
 name|int
 name|smopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -413,7 +415,9 @@ specifier|static
 name|int
 name|smclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -622,7 +626,9 @@ specifier|static
 name|int
 name|smioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1084,7 +1090,9 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|dev

@@ -341,7 +341,9 @@ specifier|static
 name|int
 name|si_Sioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|,
@@ -2941,7 +2943,9 @@ specifier|static
 name|int
 name|siopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3739,7 +3743,9 @@ specifier|static
 name|int
 name|siclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -4214,7 +4220,9 @@ specifier|static
 name|int
 name|siwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -4419,7 +4427,9 @@ specifier|static
 name|int
 name|siioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -5328,7 +5338,9 @@ specifier|static
 name|int
 name|si_Sioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

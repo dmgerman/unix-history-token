@@ -248,7 +248,9 @@ specifier|extern
 name|int
 name|vc_nb_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -397,7 +399,9 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -2051,7 +2055,9 @@ name|devtomp
 parameter_list|(
 name|dev
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|{

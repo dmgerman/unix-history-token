@@ -35,7 +35,9 @@ name|udf_mnt
 modifier|*
 name|udfmp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 decl_stmt|;
 name|ino_t
@@ -65,7 +67,9 @@ name|mount
 modifier|*
 name|im_mountp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|im_dev
 decl_stmt|;
 name|struct

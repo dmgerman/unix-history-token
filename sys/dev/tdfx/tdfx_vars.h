@@ -325,7 +325,9 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devt
 decl_stmt|;
 name|struct

@@ -1343,7 +1343,9 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 endif|#
@@ -2070,7 +2072,9 @@ begin_function
 name|int
 name|uscanneropen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2392,7 +2396,9 @@ begin_function
 name|int
 name|uscannerclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2861,7 +2867,9 @@ begin_function
 name|int
 name|uscannerread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3103,7 +3111,9 @@ begin_function
 name|int
 name|uscannerwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3510,7 +3520,9 @@ begin_function
 name|int
 name|uscannerpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

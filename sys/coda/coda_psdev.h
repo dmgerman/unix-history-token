@@ -7,7 +7,9 @@ begin_function_decl
 name|int
 name|vc_nb_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -28,7 +30,9 @@ begin_function_decl
 name|int
 name|vc_nb_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -49,7 +53,9 @@ begin_function_decl
 name|int
 name|vc_nb_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -67,7 +73,9 @@ begin_function_decl
 name|int
 name|vc_nb_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -85,7 +93,9 @@ begin_function_decl
 name|int
 name|vc_nb_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -109,7 +119,9 @@ begin_function_decl
 name|int
 name|vc_nb_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -587,7 +587,9 @@ specifier|static
 name|int
 name|xrpu_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -646,7 +648,9 @@ specifier|static
 name|int
 name|xrpu_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -674,7 +678,9 @@ specifier|static
 name|int
 name|xrpu_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -731,7 +737,9 @@ specifier|static
 name|int
 name|xrpu_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

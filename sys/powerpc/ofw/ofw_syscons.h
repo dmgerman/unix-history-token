@@ -22,7 +22,9 @@ block|{
 name|video_adapter_t
 name|sc_va
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_si
 decl_stmt|;
 name|phandle_t

@@ -2031,7 +2031,9 @@ name|ifaddr
 modifier|*
 name|ife_ifnet_addr
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ife_dev
 decl_stmt|;
 block|}

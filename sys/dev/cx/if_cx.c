@@ -1066,7 +1066,9 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|400000
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devt
 index|[
 literal|3
@@ -8778,7 +8780,9 @@ decl|static
 name|int
 name|cx_open
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|int
@@ -9595,7 +9599,9 @@ decl|static
 name|int
 name|cx_close
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|int
@@ -9812,7 +9818,9 @@ specifier|static
 name|int
 name|cx_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -9895,7 +9903,9 @@ specifier|static
 name|int
 name|cx_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -10157,7 +10167,9 @@ decl|static
 name|int
 name|cx_ioctl
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|u_long
@@ -17705,7 +17717,9 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 specifier|static

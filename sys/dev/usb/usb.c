@@ -2088,7 +2088,9 @@ begin_function
 name|int
 name|usbopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2176,7 +2178,9 @@ begin_function
 name|int
 name|usbread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2340,7 +2344,9 @@ begin_function
 name|int
 name|usbclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2389,7 +2395,9 @@ begin_function
 name|int
 name|usbioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devt
 parameter_list|,
 name|u_long
@@ -2963,7 +2971,9 @@ begin_function
 name|int
 name|usbpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

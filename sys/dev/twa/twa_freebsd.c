@@ -146,7 +146,9 @@ specifier|static
 name|int
 name|twa_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -203,7 +205,9 @@ specifier|static
 name|int
 name|twa_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -261,7 +265,9 @@ specifier|static
 name|int
 name|twa_ioctl_wrapper
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1338,7 +1344,9 @@ operator|->
 name|twa_ctrl_dev
 operator|!=
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|)
 name|NULL
 condition|)

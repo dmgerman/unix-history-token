@@ -805,7 +805,9 @@ decl_stmt|;
 name|int
 name|vtys
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 decl_stmt|;
@@ -2056,7 +2058,9 @@ modifier|*
 name|sc_user_ioctl
 function_decl|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

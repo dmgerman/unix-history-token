@@ -2553,7 +2553,9 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|void
@@ -6275,7 +6277,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int

@@ -158,7 +158,9 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ipf_devs
 index|[
 name|IPL_LOGMAX

@@ -259,7 +259,9 @@ argument|ngd_connection
 argument_list|)
 name|links
 expr_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ngddev
 decl_stmt|;
 name|struct
@@ -1587,7 +1589,9 @@ specifier|static
 name|int
 name|ngdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1632,7 +1636,9 @@ specifier|static
 name|int
 name|ngdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1676,7 +1682,9 @@ specifier|static
 name|int
 name|ngdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1891,7 +1899,9 @@ specifier|static
 name|int
 name|ngdread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2124,7 +2134,9 @@ specifier|static
 name|int
 name|ngdwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2341,7 +2353,9 @@ specifier|static
 name|int
 name|ngdpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

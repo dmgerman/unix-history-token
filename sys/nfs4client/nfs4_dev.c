@@ -232,7 +232,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|nfs4device
 init|=
 literal|0
@@ -1032,7 +1034,9 @@ specifier|static
 name|int
 name|nfs4dev_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1102,7 +1106,9 @@ specifier|static
 name|int
 name|nfs4dev_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1228,7 +1234,9 @@ specifier|static
 name|int
 name|nfs4dev_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1332,7 +1340,9 @@ specifier|static
 name|int
 name|nfs4dev_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -887,7 +887,9 @@ name|struct
 name|bootfile
 name|ntm_bootfile
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ntm_dev
 decl_stmt|;
 comment|/* device mounted */

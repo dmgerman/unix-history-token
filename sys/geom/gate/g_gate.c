@@ -233,7 +233,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|status_dev
 decl_stmt|;
 end_decl_stmt
@@ -2380,7 +2382,9 @@ specifier|static
 name|int
 name|g_gate_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -374,7 +374,9 @@ name|vm_ooffset_t
 name|foff
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|d_mmap_t
@@ -777,7 +779,9 @@ decl_stmt|;
 name|vm_page_t
 name|page
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int

@@ -229,7 +229,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_bh
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_si
 decl_stmt|;
 name|struct
@@ -3274,7 +3276,9 @@ specifier|static
 name|int
 name|sabttyopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3673,7 +3677,9 @@ specifier|static
 name|int
 name|sabttyclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3741,7 +3747,9 @@ specifier|static
 name|int
 name|sabttyioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

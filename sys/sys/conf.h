@@ -92,7 +92,7 @@ define|#
 directive|define
 name|SI_CHILD
 value|0x0010
-comment|/* child of another dev_t */
+comment|/* child of another struct cdev **/
 define|#
 directive|define
 name|SI_DEVOPEN
@@ -174,7 +174,9 @@ argument|cdev
 argument_list|)
 name|si_siblings
 expr_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|si_parent
 decl_stmt|;
 name|u_int
@@ -425,7 +427,9 @@ typedef|typedef
 name|int
 name|d_open_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -447,7 +451,9 @@ typedef|typedef
 name|int
 name|d_fdopen_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -469,7 +475,9 @@ typedef|typedef
 name|int
 name|d_close_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -504,7 +512,9 @@ typedef|typedef
 name|int
 name|d_ioctl_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -529,7 +539,9 @@ typedef|typedef
 name|int
 name|d_read_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -548,7 +560,9 @@ typedef|typedef
 name|int
 name|d_write_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -567,7 +581,9 @@ typedef|typedef
 name|int
 name|d_poll_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -586,7 +602,9 @@ typedef|typedef
 name|int
 name|d_kqfilter_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -602,7 +620,9 @@ typedef|typedef
 name|int
 name|d_mmap_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -1050,7 +1070,9 @@ name|int
 modifier|*
 name|unit
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|,
@@ -1064,7 +1086,9 @@ begin_function_decl
 name|int
 name|count_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_dev
 parameter_list|)
 function_decl|;
@@ -1074,7 +1098,9 @@ begin_function_decl
 name|void
 name|destroy_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_dev
 parameter_list|)
 function_decl|;
@@ -1086,7 +1112,9 @@ name|cdevsw
 modifier|*
 name|devsw
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_dev
 parameter_list|)
 function_decl|;
@@ -1120,7 +1148,9 @@ name|char
 modifier|*
 name|devtoname
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_dev
 parameter_list|)
 function_decl|;
@@ -1130,7 +1160,9 @@ begin_function_decl
 name|int
 name|dev_named
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_pdev
 parameter_list|,
 specifier|const
@@ -1145,10 +1177,14 @@ begin_function_decl
 name|void
 name|dev_depends
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_pdev
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_cdev
 parameter_list|)
 function_decl|;
@@ -1158,7 +1194,9 @@ begin_function_decl
 name|void
 name|dev_ref
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -1168,7 +1206,9 @@ begin_function_decl
 name|void
 name|dev_rel
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -1187,7 +1227,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|makebdev
 parameter_list|(
 name|int
@@ -1200,7 +1242,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|make_dev
 parameter_list|(
 name|struct
@@ -1240,10 +1284,14 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|make_dev_alias
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_pdev
 parameter_list|,
 specifier|const
@@ -1269,7 +1317,9 @@ begin_function_decl
 name|int
 name|dev2unit
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|_dev
 parameter_list|)
 function_decl|;
@@ -1295,7 +1345,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|getdiskbyname
 parameter_list|(
 name|char
@@ -1309,7 +1361,9 @@ begin_function_decl
 name|void
 name|devfs_create
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -1319,7 +1373,9 @@ begin_function_decl
 name|void
 name|devfs_destroy
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -1407,7 +1463,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|result
 parameter_list|)

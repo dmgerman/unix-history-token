@@ -356,7 +356,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)
@@ -422,7 +424,9 @@ specifier|static
 name|int
 name|nsmb_dev_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -597,7 +601,9 @@ specifier|static
 name|int
 name|nsmb_dev_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -751,7 +757,9 @@ specifier|static
 name|int
 name|nsmb_dev_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1879,7 +1887,9 @@ name|smb_share
 modifier|*
 name|ssp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int

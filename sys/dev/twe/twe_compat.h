@@ -209,7 +209,7 @@ value|\     u_int32_t			twe_cmdphys;
 comment|/* address of command in controller space */
 value|\     device_t			twe_dev;
 comment|/* bus device */
-value|\     dev_t			twe_dev_t;
+value|\     struct cdev *twe_dev_t;
 comment|/* control device */
 value|\     struct resource		*twe_io;
 comment|/* register interface window */

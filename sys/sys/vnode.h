@@ -2680,7 +2680,9 @@ begin_function_decl
 name|int
 name|bdevvp
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3063,7 +3065,9 @@ begin_function_decl
 name|int
 name|vfinddev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3661,7 +3665,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|vn_todev
 parameter_list|(
 name|struct

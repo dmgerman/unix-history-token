@@ -9932,7 +9932,9 @@ name|Static
 name|int
 name|ubt_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -10134,7 +10136,9 @@ name|Static
 name|int
 name|ubt_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -10311,7 +10315,9 @@ name|Static
 name|int
 name|ubt_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -10618,7 +10624,9 @@ name|Static
 name|int
 name|ubt_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -10869,7 +10877,9 @@ name|Static
 name|int
 name|ubt_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -11441,7 +11451,9 @@ name|Static
 name|int
 name|ubt_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

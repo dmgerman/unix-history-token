@@ -1863,7 +1863,9 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devctl_dev
 decl_stmt|;
 end_decl_stmt
@@ -1934,7 +1936,9 @@ specifier|static
 name|int
 name|devopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1991,7 +1995,9 @@ specifier|static
 name|int
 name|devclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2052,7 +2058,9 @@ specifier|static
 name|int
 name|devread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2225,7 +2233,9 @@ specifier|static
 name|int
 name|devioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2341,7 +2351,9 @@ specifier|static
 name|int
 name|devpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

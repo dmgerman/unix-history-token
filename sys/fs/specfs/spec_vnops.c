@@ -768,7 +768,9 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 init|=
 name|vp
@@ -1273,7 +1275,9 @@ name|uio
 modifier|*
 name|uio
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -1352,7 +1356,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"specread() on un-referenced dev_t (%s)"
+literal|"specread() on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(
@@ -1503,7 +1507,9 @@ name|uio
 modifier|*
 name|uio
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -1571,7 +1577,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"spec_write() on un-referenced dev_t (%s)"
+literal|"spec_write() on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(
@@ -1717,7 +1723,9 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -1752,7 +1760,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"spec_ioctl() on un-referenced dev_t (%s)"
+literal|"spec_ioctl() on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(
@@ -1877,7 +1885,9 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -1912,7 +1922,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"spec_poll() on un-referenced dev_t (%s)"
+literal|"spec_poll() on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(
@@ -2007,7 +2017,9 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -2042,7 +2054,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"spec_kqfilter() on un-referenced dev_t (%s)"
+literal|"spec_kqfilter() on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(
@@ -2778,7 +2790,9 @@ name|ap
 operator|->
 name|a_td
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 init|=
 name|vp
@@ -2973,7 +2987,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"spec_close() on un-referenced dev_t (%s)"
+literal|"spec_close() on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(

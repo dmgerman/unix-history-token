@@ -1650,7 +1650,9 @@ specifier|static
 name|int
 name|gdcopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1730,7 +1732,9 @@ specifier|static
 name|int
 name|gdcclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1786,7 +1790,9 @@ specifier|static
 name|int
 name|gdcread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1837,7 +1843,9 @@ specifier|static
 name|int
 name|gdcwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1888,7 +1896,9 @@ specifier|static
 name|int
 name|gdcioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1949,7 +1959,9 @@ specifier|static
 name|int
 name|gdcmmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t

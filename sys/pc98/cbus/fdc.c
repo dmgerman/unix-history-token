@@ -1763,7 +1763,9 @@ name|devstat
 modifier|*
 name|device_stats
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|masterdev
 decl_stmt|;
 name|device_t
@@ -2715,7 +2717,9 @@ specifier|static
 name|int
 name|fdautoselect
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2761,7 +2765,9 @@ specifier|static
 name|int
 name|fdmisccmd
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -9094,7 +9100,9 @@ specifier|static
 name|int
 name|fdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -9417,7 +9425,9 @@ specifier|static
 name|int
 name|fdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -10207,7 +10217,9 @@ specifier|static
 name|int
 name|fdautoselect
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -14132,7 +14144,9 @@ specifier|static
 name|int
 name|fdmisccmd
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_int
@@ -14412,7 +14426,9 @@ specifier|static
 name|int
 name|fdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -1468,7 +1468,9 @@ specifier|static
 name|int
 name|tdfx_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1546,7 +1548,9 @@ specifier|static
 name|int
 name|tdfx_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1624,7 +1628,9 @@ specifier|static
 name|int
 name|tdfx_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -3123,7 +3129,9 @@ specifier|static
 name|int
 name|tdfx_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

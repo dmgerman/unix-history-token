@@ -39,7 +39,9 @@ name|ntnode
 modifier|*
 name|ntfs_nthashlookup
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|)
@@ -52,7 +54,9 @@ name|ntnode
 modifier|*
 name|ntfs_nthashget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|)

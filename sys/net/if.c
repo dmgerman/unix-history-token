@@ -800,7 +800,9 @@ specifier|static
 name|int
 name|netopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -828,7 +830,9 @@ specifier|static
 name|int
 name|netclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -856,7 +860,9 @@ specifier|static
 name|int
 name|netioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -991,7 +997,9 @@ specifier|static
 name|int
 name|netkqfilter
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

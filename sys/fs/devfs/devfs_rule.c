@@ -257,7 +257,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devfs_rule_getdev
 parameter_list|(
 name|struct
@@ -1983,12 +1985,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a dev_t corresponding to de so we can try to match rules based  * on it.  If this routine returns NULL, there is no dev_t associated  * with the dirent (symlinks and directories don't have dev_ts), and  * the caller should assume that any critera dependent on a dev_t  * don't match.  */
+comment|/*  * Get a struct cdev *corresponding to de so we can try to match rules based  * on it.  If this routine returns NULL, there is no struct cdev *associated  * with the dirent (symlinks and directories don't have dev_ts), and  * the caller should assume that any critera dependent on a dev_t  * don't match.  */
 end_comment
 
 begin_function
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devfs_rule_getdev
 parameter_list|(
 name|struct
@@ -1997,10 +2001,13 @@ modifier|*
 name|de
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|devp
 decl_stmt|,
+modifier|*
 name|dev
 decl_stmt|;
 name|devp
@@ -2028,7 +2035,7 @@ name|dev
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* If we think this dirent should have a dev_t, alert the user. */
+comment|/* If we think this dirent should have a struct cdev *, alert the user. */
 if|if
 condition|(
 name|dev
@@ -2053,7 +2060,7 @@ name|DT_DIR
 condition|)
 name|printf
 argument_list|(
-literal|"Warning: no dev_t for %s\n"
+literal|"Warning: no struct cdev *for %s\n"
 argument_list|,
 name|de
 operator|->
@@ -2482,7 +2489,9 @@ name|dk
 operator|->
 name|dk_rule
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|dev
@@ -2492,7 +2501,7 @@ argument_list|(
 name|de
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At this point, if dev is NULL, we should assume that any 	 * criteria that depend on it don't match.  We should *not* 	 * just ignore them (i.e., act like they weren't specified), 	 * since that makes a rule that only has criteria dependent on 	 * the dev_t match all symlinks and directories. 	 * 	 * Note also that the following tests are somewhat reversed: 	 * They're actually testing to see whether the condition does 	 * *not* match, since the default is to assume the rule should 	 * be run (such as if there are no conditions). 	 */
+comment|/* 	 * At this point, if dev is NULL, we should assume that any 	 * criteria that depend on it don't match.  We should *not* 	 * just ignore them (i.e., act like they weren't specified), 	 * since that makes a rule that only has criteria dependent on 	 * the struct cdev *match all symlinks and directories. 	 * 	 * Note also that the following tests are somewhat reversed: 	 * They're actually testing to see whether the condition does 	 * *not* match, since the default is to assume the rule should 	 * be run (such as if there are no conditions). 	 */
 if|if
 condition|(
 name|dr
@@ -2620,7 +2629,9 @@ name|char
 modifier|*
 name|pname
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|dev

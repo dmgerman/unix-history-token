@@ -1042,7 +1042,9 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devs
 index|[
 literal|6
@@ -5403,7 +5405,9 @@ name|mode
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -6191,7 +6195,9 @@ name|mode
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -6643,7 +6649,9 @@ name|uio
 parameter_list|,
 name|flag
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -6734,7 +6742,9 @@ name|uio
 parameter_list|,
 name|flag
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -8996,7 +9006,9 @@ name|flag
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|u_long

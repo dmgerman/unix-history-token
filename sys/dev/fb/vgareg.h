@@ -367,7 +367,9 @@ begin_function_decl
 name|int
 name|vga_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vga_softc_t
@@ -392,7 +394,9 @@ begin_function_decl
 name|int
 name|vga_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vga_softc_t
@@ -417,7 +421,9 @@ begin_function_decl
 name|int
 name|vga_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vga_softc_t
@@ -439,7 +445,9 @@ begin_function_decl
 name|int
 name|vga_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vga_softc_t
@@ -461,7 +469,9 @@ begin_function_decl
 name|int
 name|vga_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vga_softc_t
@@ -489,7 +499,9 @@ begin_function_decl
 name|int
 name|vga_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vga_softc_t

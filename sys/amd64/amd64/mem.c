@@ -155,11 +155,15 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|memdev
 decl_stmt|,
+modifier|*
 name|kmemdev
 decl_stmt|,
+modifier|*
 name|iodev
 decl_stmt|;
 end_decl_stmt
@@ -292,7 +296,9 @@ specifier|static
 name|int
 name|mmclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -341,7 +347,9 @@ specifier|static
 name|int
 name|mmopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -474,7 +482,9 @@ specifier|static
 name|int
 name|mmrw
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -842,7 +852,9 @@ specifier|static
 name|int
 name|memmmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -912,7 +924,9 @@ specifier|static
 name|int
 name|mmioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

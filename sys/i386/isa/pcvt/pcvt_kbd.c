@@ -4874,7 +4874,9 @@ begin_function
 name|int
 name|kbdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -941,7 +941,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/* XXX no error trapping, no storing of dev_t */
+comment|/* XXX no error trapping, no storing of struct cdev **/
 operator|(
 name|void
 operator|)
@@ -1038,7 +1038,9 @@ begin_function
 name|int
 name|ufmopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1140,7 +1142,9 @@ begin_function
 name|int
 name|ufmclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1729,7 +1733,9 @@ begin_function
 name|int
 name|ufmioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -95,7 +95,9 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devfs_inot
 index|[
 name|NDEVFSINO
@@ -105,7 +107,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|devfs_overflow
 decl_stmt|;
@@ -413,7 +417,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dp
 decl_stmt|;
@@ -564,7 +570,9 @@ block|}
 end_function
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|devfs_itod
 parameter_list|(
@@ -634,7 +642,9 @@ name|int
 name|insist
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 modifier|*
 name|ot
@@ -672,7 +682,9 @@ name|nb
 operator|=
 sizeof|sizeof
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|*
 argument_list|)
 operator|*
@@ -682,7 +694,9 @@ name|MALLOC
 argument_list|(
 name|ot
 argument_list|,
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|*
 operator|*
 argument_list|,
@@ -1388,9 +1402,12 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|,
+modifier|*
 name|pdev
 decl_stmt|;
 name|struct
@@ -1998,7 +2015,9 @@ begin_function
 name|void
 name|devfs_create
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -2010,7 +2029,9 @@ decl_stmt|,
 modifier|*
 name|ip
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dp
 decl_stmt|;
@@ -2212,7 +2233,9 @@ begin_function
 name|void
 name|devfs_destroy
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{

@@ -255,7 +255,9 @@ name|flags
 parameter_list|,
 name|vpp
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|ino_t

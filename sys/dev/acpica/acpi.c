@@ -10531,7 +10531,9 @@ specifier|static
 name|int
 name|acpiopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -10558,7 +10560,9 @@ specifier|static
 name|int
 name|acpiclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -10585,7 +10589,9 @@ specifier|static
 name|int
 name|acpiioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -1118,7 +1118,9 @@ specifier|static
 name|int
 name|zsopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1380,7 +1382,9 @@ specifier|static
 name|int
 name|zsclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

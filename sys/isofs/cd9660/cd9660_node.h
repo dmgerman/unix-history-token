@@ -380,7 +380,9 @@ begin_function_decl
 name|int
 name|cd9660_ihashget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|,

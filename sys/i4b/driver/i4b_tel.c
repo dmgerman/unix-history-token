@@ -759,7 +759,9 @@ specifier|static
 name|int
 name|i4btelopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -866,7 +868,9 @@ specifier|static
 name|int
 name|i4btelclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1064,7 +1068,9 @@ specifier|static
 name|int
 name|i4btelioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1559,7 +1565,9 @@ specifier|static
 name|int
 name|i4btelread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2209,7 +2217,9 @@ specifier|static
 name|int
 name|i4btelwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3119,7 +3129,9 @@ specifier|static
 name|int
 name|i4btelpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

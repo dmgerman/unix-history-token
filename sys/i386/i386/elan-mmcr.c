@@ -236,7 +236,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|led_dev
 index|[
 literal|32
@@ -1746,7 +1748,9 @@ specifier|static
 name|int
 name|elan_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -1790,7 +1794,9 @@ specifier|static
 name|int
 name|elan_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

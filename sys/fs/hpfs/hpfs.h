@@ -1190,7 +1190,9 @@ name|vnode
 modifier|*
 name|hpm_devvp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|hpm_dev
 decl_stmt|;
 name|uid_t
@@ -1330,7 +1332,9 @@ name|vnode
 modifier|*
 name|h_devvp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|h_dev
 decl_stmt|;
 name|lsn_t
@@ -1593,7 +1597,9 @@ name|hpfsnode
 modifier|*
 name|hpfs_hphashlookup
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|lsn_t
 parameter_list|)
@@ -1606,7 +1612,9 @@ name|hpfsnode
 modifier|*
 name|hpfs_hphashget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|lsn_t
 parameter_list|)
@@ -1617,7 +1625,9 @@ begin_function_decl
 name|int
 name|hpfs_hphashvget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|lsn_t
 parameter_list|,

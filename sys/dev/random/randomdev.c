@@ -248,7 +248,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|random_dev
 decl_stmt|;
 end_decl_stmt
@@ -275,7 +277,9 @@ specifier|static
 name|int
 name|random_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -355,7 +359,9 @@ specifier|static
 name|int
 name|random_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -524,7 +530,9 @@ specifier|static
 name|int
 name|random_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -640,7 +648,9 @@ specifier|static
 name|int
 name|random_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -703,7 +713,9 @@ specifier|static
 name|int
 name|random_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,

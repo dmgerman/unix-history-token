@@ -212,7 +212,9 @@ name|dev
 parameter_list|,
 name|inum
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|ino_t
@@ -295,7 +297,9 @@ name|flags
 parameter_list|,
 name|vpp
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|ino_t

@@ -1736,7 +1736,7 @@ value|29
 end_define
 
 begin_comment
-comment|/* dev_t: device to dump on */
+comment|/* struct cdev *: device to dump on */
 end_comment
 
 begin_define

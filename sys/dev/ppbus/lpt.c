@@ -1686,7 +1686,9 @@ specifier|static
 name|int
 name|lptopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2245,7 +2247,9 @@ specifier|static
 name|int
 name|lptclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2690,7 +2694,9 @@ specifier|static
 name|int
 name|lptread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2882,7 +2888,9 @@ specifier|static
 name|int
 name|lptwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3626,7 +3634,9 @@ specifier|static
 name|int
 name|lptioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

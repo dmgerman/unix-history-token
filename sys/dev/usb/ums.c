@@ -460,7 +460,9 @@ name|selinfo
 name|rsel
 decl_stmt|;
 comment|/* process waiting in select */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* specfs */
@@ -3155,7 +3157,9 @@ name|Static
 name|int
 name|ums_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3199,7 +3203,9 @@ name|Static
 name|int
 name|ums_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3259,7 +3265,9 @@ name|Static
 name|int
 name|ums_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3625,7 +3633,9 @@ name|Static
 name|int
 name|ums_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3737,7 +3747,9 @@ begin_function
 name|int
 name|ums_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -1331,7 +1331,9 @@ modifier|*
 name|ha_next
 decl_stmt|;
 comment|/* HBA list */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ha_devt
 decl_stmt|;
 block|}
@@ -1382,7 +1384,9 @@ specifier|static
 name|int
 name|asr_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1407,7 +1411,9 @@ specifier|static
 name|int
 name|asr_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int32_t
@@ -1429,7 +1435,9 @@ specifier|static
 name|int
 name|asr_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -13662,7 +13670,9 @@ specifier|static
 name|int
 name|asr_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int32_t
@@ -13754,7 +13764,9 @@ specifier|static
 name|int
 name|asr_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -16063,7 +16075,9 @@ specifier|static
 name|int
 name|asr_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

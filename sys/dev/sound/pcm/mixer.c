@@ -290,7 +290,9 @@ end_endif
 
 begin_function
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|mixer_get_devt
 parameter_list|(
 name|device_t
@@ -756,7 +758,9 @@ decl_stmt|;
 name|u_int16_t
 name|v
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 name|int
@@ -990,7 +994,9 @@ name|snd_mixer
 modifier|*
 name|m
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 name|pdev
@@ -1112,7 +1118,9 @@ name|snd_mixer
 modifier|*
 name|m
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 name|int
@@ -1398,7 +1406,9 @@ name|snd_mixer
 modifier|*
 name|m
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 name|pdev
@@ -1515,7 +1525,9 @@ name|snd_mixer
 modifier|*
 name|m
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 name|pdev
@@ -1633,7 +1645,9 @@ name|left
 decl_stmt|,
 name|right
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 name|pdev
@@ -1779,7 +1793,9 @@ specifier|static
 name|int
 name|mixer_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|int
@@ -1848,7 +1864,9 @@ specifier|static
 name|int
 name|mixer_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|int
@@ -1940,7 +1958,9 @@ begin_function
 name|int
 name|mixer_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|u_long
@@ -2225,7 +2245,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)

@@ -224,7 +224,9 @@ specifier|static
 name|int
 name|twe_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -281,7 +283,9 @@ specifier|static
 name|int
 name|twe_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -339,7 +343,9 @@ specifier|static
 name|int
 name|twe_ioctl_wrapper
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1785,7 +1791,9 @@ operator|->
 name|twe_dev_t
 operator|!=
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|)
 name|NULL
 condition|)

@@ -224,7 +224,9 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|nvp_rdev
 parameter_list|)
 function_decl|;
@@ -7632,7 +7634,9 @@ name|dev
 parameter_list|,
 name|vpp
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -7813,7 +7817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add vnode to the alias list hung off the dev_t.  *  * The reason for this gunk is that multiple vnodes can reference  * the same physical device, so checking vp->v_usecount to see  * how many users there are is inadequate; the v_usecount for  * the vnodes need to be accumulated.  vcount() does that.  */
+comment|/*  * Add vnode to the alias list hung off the struct cdev *.  *  * The reason for this gunk is that multiple vnodes can reference  * the same physical device, so checking vp->v_usecount to see  * how many users there are is inadequate; the v_usecount for  * the vnodes need to be accumulated.  vcount() does that.  */
 end_comment
 
 begin_function
@@ -7845,7 +7849,9 @@ modifier|*
 modifier|*
 name|ops
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 if|if
@@ -8068,7 +8074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is a local helper function that do the same as addaliasu, but for a  * dev_t instead of an udev_t. */
+comment|/* This is a local helper function that do the same as addaliasu, but for a  * struct cdev *instead of an udev_t. */
 end_comment
 
 begin_function
@@ -8085,7 +8091,9 @@ name|vnode
 modifier|*
 name|nvp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|{
@@ -10239,7 +10247,9 @@ decl_stmt|,
 modifier|*
 name|vq
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|KASSERT
@@ -10927,7 +10937,9 @@ name|dev
 parameter_list|,
 name|vpp
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -11036,7 +11048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Same as above, but using the dev_t as argument  */
+comment|/*  * Same as above, but using the struct cdev *as argument  */
 end_comment
 
 begin_function
@@ -11045,7 +11057,9 @@ name|count_dev
 parameter_list|(
 name|dev
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|{
@@ -14322,11 +14336,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * extract the dev_t from a VCHR  */
+comment|/*  * extract the struct cdev *from a VCHR  */
 end_comment
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|vn_todev
 parameter_list|(
 name|vp

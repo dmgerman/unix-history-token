@@ -482,7 +482,9 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 endif|#
@@ -1875,7 +1877,9 @@ begin_function
 name|int
 name|uhidopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2124,7 +2128,9 @@ begin_function
 name|int
 name|uhidclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2626,7 +2632,9 @@ begin_function
 name|int
 name|uhidread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2865,7 +2873,9 @@ begin_function
 name|int
 name|uhidwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3470,7 +3480,9 @@ begin_function
 name|int
 name|uhidioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -3557,7 +3569,9 @@ begin_function
 name|int
 name|uhidpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -2153,7 +2153,9 @@ begin_function
 name|int
 name|fwohci_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

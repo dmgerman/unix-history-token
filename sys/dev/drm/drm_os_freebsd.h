@@ -696,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|DRM_IOCTL_ARGS
-value|dev_t kdev, u_long cmd, caddr_t data, int flags, DRM_STRUCTPROC *p, DRMFILE filp
+value|struct cdev *kdev, u_long cmd, caddr_t data, int flags, DRM_STRUCTPROC *p, DRMFILE filp
 end_define
 
 begin_define
@@ -2199,7 +2199,9 @@ function_decl|(
 name|open_helper
 function_decl|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int

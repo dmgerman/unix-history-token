@@ -124,7 +124,9 @@ decl_stmt|;
 comment|/* Interface to device drivers. */
 union|union
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|t_kdev
 decl_stmt|;
 comment|/* Device. */
@@ -1764,7 +1766,9 @@ begin_function_decl
 name|int
 name|ttyopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|device
 parameter_list|,
 name|struct

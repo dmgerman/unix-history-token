@@ -1778,7 +1778,9 @@ name|mount
 modifier|*
 name|im_mountp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|im_dev
 decl_stmt|;
 name|struct

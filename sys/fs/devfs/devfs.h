@@ -571,7 +571,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|devfs_itod
 parameter_list|(

@@ -2499,7 +2499,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|vfs_getrootfsid
 parameter_list|(
 name|struct

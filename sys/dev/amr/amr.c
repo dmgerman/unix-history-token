@@ -1371,7 +1371,9 @@ operator|->
 name|amr_dev_t
 operator|!=
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|)
 name|NULL
 condition|)
@@ -1438,7 +1440,9 @@ specifier|static
 name|int
 name|amr_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1503,7 +1507,9 @@ specifier|static
 name|int
 name|amr_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1569,7 +1575,9 @@ specifier|static
 name|int
 name|amr_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -122,8 +122,10 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|u_long
-name|dev_t
-typedef|;
+struct_decl|struct
+name|cdev
+modifier|*
+struct_decl|;
 end_typedef
 
 begin_typedef

@@ -1464,7 +1464,9 @@ begin_function
 name|int
 name|pcigfb_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1564,7 +1566,9 @@ begin_function
 name|int
 name|pcigfb_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1627,7 +1631,9 @@ begin_function
 name|int
 name|pcigfb_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1685,7 +1691,9 @@ begin_function
 name|int
 name|pcigfb_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1743,7 +1751,9 @@ begin_function
 name|int
 name|pcigfb_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1811,7 +1821,9 @@ begin_function
 name|int
 name|pcigfb_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t

@@ -6056,7 +6056,9 @@ specifier|static
 name|int
 name|apmopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6176,7 +6178,9 @@ specifier|static
 name|int
 name|apmclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6287,7 +6291,9 @@ specifier|static
 name|int
 name|apmioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -6999,7 +7005,9 @@ specifier|static
 name|int
 name|apmwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -7158,7 +7166,9 @@ specifier|static
 name|int
 name|apmpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

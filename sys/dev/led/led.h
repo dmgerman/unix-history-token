@@ -29,7 +29,9 @@ function_decl|;
 end_typedef
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|led_create
 parameter_list|(
 name|led_t
@@ -49,7 +51,9 @@ begin_function_decl
 name|void
 name|led_destroy
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

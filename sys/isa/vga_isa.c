@@ -628,7 +628,9 @@ specifier|static
 name|int
 name|isavga_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -671,7 +673,9 @@ specifier|static
 name|int
 name|isavga_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -714,7 +718,9 @@ specifier|static
 name|int
 name|isavga_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -752,7 +758,9 @@ specifier|static
 name|int
 name|isavga_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -790,7 +798,9 @@ specifier|static
 name|int
 name|isavga_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -838,7 +848,9 @@ specifier|static
 name|int
 name|isavga_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t

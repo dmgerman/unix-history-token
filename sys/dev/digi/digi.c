@@ -4293,7 +4293,9 @@ specifier|static
 name|int
 name|digiopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -5179,7 +5181,9 @@ specifier|static
 name|int
 name|digiclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -5610,7 +5614,9 @@ specifier|static
 name|int
 name|digiread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -5750,7 +5756,9 @@ specifier|static
 name|int
 name|digiwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -6424,7 +6432,9 @@ specifier|static
 name|int
 name|digiioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -263,7 +263,9 @@ specifier|static
 name|int
 name|ngt_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -630,7 +632,9 @@ specifier|static
 name|int
 name|ngt_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

@@ -170,7 +170,9 @@ begin_struct
 struct|struct
 name|smapi_softc
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|cdev
 decl_stmt|;
 name|device_t
@@ -376,7 +378,9 @@ name|fflag
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|u_long

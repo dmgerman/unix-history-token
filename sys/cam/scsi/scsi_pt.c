@@ -244,7 +244,9 @@ decl_stmt|;
 name|int
 name|io_timeout
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|}
@@ -539,7 +541,9 @@ specifier|static
 name|int
 name|ptopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -750,7 +754,9 @@ specifier|static
 name|int
 name|ptclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2581,7 +2587,9 @@ specifier|static
 name|int
 name|ptioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

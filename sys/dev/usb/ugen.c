@@ -385,7 +385,9 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 endif|#
@@ -492,7 +494,9 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 endif|#
@@ -1200,7 +1204,9 @@ block|{
 name|int
 name|endptno
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 for|for
@@ -1365,7 +1371,9 @@ block|{
 name|int
 name|endptno
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* destroy all devices for the other (existing) endpoints as well */
@@ -1868,7 +1876,9 @@ begin_function
 name|int
 name|ugenopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2733,7 +2743,9 @@ begin_function
 name|int
 name|ugenclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3858,7 +3870,9 @@ begin_function
 name|int
 name|ugenread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -4393,7 +4407,9 @@ begin_function
 name|int
 name|ugenwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -7540,7 +7556,9 @@ begin_function
 name|int
 name|ugenioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -7637,7 +7655,9 @@ begin_function
 name|int
 name|ugenpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

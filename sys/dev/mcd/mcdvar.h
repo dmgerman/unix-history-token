@@ -113,7 +113,9 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|mcd_dev_t
 decl_stmt|;
 name|int

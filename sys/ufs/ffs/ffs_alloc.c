@@ -9240,7 +9240,9 @@ name|u_int8_t
 modifier|*
 name|blksfree
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|cg
@@ -10471,7 +10473,9 @@ name|u_int8_t
 modifier|*
 name|inosused
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|cg

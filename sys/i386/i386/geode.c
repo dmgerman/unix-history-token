@@ -106,11 +106,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|led1
 decl_stmt|,
+modifier|*
 name|led2
 decl_stmt|,
+modifier|*
 name|led3
 decl_stmt|;
 end_decl_stmt

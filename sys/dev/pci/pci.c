@@ -8936,7 +8936,9 @@ name|arg
 parameter_list|)
 block|{
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pci_cdev
 decl_stmt|;
 switch|switch

@@ -2043,7 +2043,9 @@ specifier|static
 name|int
 name|zsttyopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2283,7 +2285,9 @@ specifier|static
 name|int
 name|zsttyclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2351,7 +2355,9 @@ specifier|static
 name|int
 name|zsttyioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

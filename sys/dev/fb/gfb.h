@@ -797,7 +797,9 @@ name|cdevsw
 modifier|*
 name|cdevsw
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devt
 decl_stmt|;
 block|}

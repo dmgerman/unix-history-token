@@ -367,7 +367,9 @@ begin_function_decl
 name|int
 name|coda_grab_vnode
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|ino_t

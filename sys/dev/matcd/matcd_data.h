@@ -22,7 +22,9 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|matcd_dev_t
 decl_stmt|;
 name|struct

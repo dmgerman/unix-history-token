@@ -1149,7 +1149,9 @@ operator|->
 name|mlx_dev_t
 operator|!=
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|)
 name|NULL
 condition|)
@@ -3307,7 +3309,9 @@ begin_function
 name|int
 name|mlx_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3364,7 +3368,9 @@ begin_function
 name|int
 name|mlx_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3422,7 +3428,9 @@ begin_function
 name|int
 name|mlx_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -79,7 +79,9 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|wd_dev
 decl_stmt|;
 end_decl_stmt
@@ -89,7 +91,9 @@ specifier|static
 name|int
 name|wd_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,

@@ -4198,7 +4198,9 @@ decl_stmt|;
 name|ti_flag_vals
 name|ti_flags
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|}

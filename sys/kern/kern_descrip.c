@@ -9837,7 +9837,9 @@ name|type
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -10860,7 +10862,9 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|dev

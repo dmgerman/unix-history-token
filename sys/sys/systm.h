@@ -206,7 +206,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|rootdev
 decl_stmt|;
 end_decl_stmt
@@ -217,7 +219,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|rootdevs
 index|[
 literal|2
@@ -2612,14 +2616,16 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Common `dev_t' stuff are declared here to avoid #include poisoning  */
+comment|/*  * Common `struct cdev *' stuff are declared here to avoid #include poisoning  */
 end_comment
 
 begin_function_decl
 name|int
 name|major
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 function_decl|;
@@ -2629,7 +2635,9 @@ begin_function_decl
 name|int
 name|minor
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 function_decl|;
@@ -2639,14 +2647,18 @@ begin_function_decl
 name|udev_t
 name|dev2udev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|udev2dev
 parameter_list|(
 name|udev_t

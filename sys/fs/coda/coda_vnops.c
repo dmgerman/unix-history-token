@@ -1095,7 +1095,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|ino_t
@@ -8025,7 +8027,9 @@ begin_function
 name|int
 name|coda_grab_vnode
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|ino_t

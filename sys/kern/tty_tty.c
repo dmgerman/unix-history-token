@@ -106,7 +106,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ctty
 decl_stmt|;
 end_decl_stmt
@@ -116,7 +118,9 @@ specifier|static
 name|int
 name|cttyopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -155,7 +159,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)

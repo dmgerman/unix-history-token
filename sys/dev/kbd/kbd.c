@@ -2269,7 +2269,9 @@ specifier|static
 name|int
 name|genkbdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2434,7 +2436,9 @@ specifier|static
 name|int
 name|genkbdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2543,7 +2547,9 @@ specifier|static
 name|int
 name|genkbdread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2827,7 +2833,9 @@ specifier|static
 name|int
 name|genkbdwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2885,7 +2893,9 @@ specifier|static
 name|int
 name|genkbdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2983,7 +2993,9 @@ specifier|static
 name|int
 name|genkbdpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

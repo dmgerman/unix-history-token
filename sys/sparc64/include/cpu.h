@@ -101,7 +101,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* dev_t: console terminal device */
+comment|/* struct cdev *: console terminal device */
 end_comment
 
 begin_define

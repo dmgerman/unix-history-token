@@ -11409,7 +11409,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"dev_strategy on un-referenced dev_t (%s)"
+literal|"dev_strategy on un-referenced struct cdev *(%s)"
 operator|,
 name|devtoname
 argument_list|(

@@ -525,7 +525,9 @@ specifier|static
 name|int
 name|pcfclock_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -633,7 +635,9 @@ specifier|static
 name|int
 name|pcfclock_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -715,7 +719,9 @@ specifier|static
 name|void
 name|pcfclock_write_cmd
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|unsigned
@@ -824,7 +830,9 @@ specifier|static
 name|void
 name|pcfclock_display_data
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|char
@@ -951,7 +959,9 @@ specifier|static
 name|int
 name|pcfclock_read_data
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|char
@@ -1108,7 +1118,9 @@ specifier|static
 name|int
 name|pcfclock_read_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|char
@@ -1224,7 +1236,9 @@ specifier|static
 name|int
 name|pcfclock_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

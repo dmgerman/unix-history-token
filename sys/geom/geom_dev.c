@@ -305,7 +305,9 @@ name|int
 name|namelen
 name|__unused
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)
@@ -436,7 +438,9 @@ name|g_provider
 modifier|*
 name|g_dev_getprovider
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -528,7 +532,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|g_trace
@@ -732,7 +738,9 @@ specifier|static
 name|int
 name|g_dev_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -922,7 +930,9 @@ specifier|static
 name|int
 name|g_dev_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1197,7 +1207,9 @@ specifier|static
 name|int
 name|g_dev_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -1696,7 +1708,9 @@ name|bio
 modifier|*
 name|bp2
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|KASSERT
@@ -1880,7 +1894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Destroy the dev_t to prevent any more request from coming in.  The  *   provider is already marked with an error, so anything which comes in  *   in the interrim will be returned immediately.  * - Wait for any outstanding I/O to finish.  * - Set our access counts to zero, whatever they were.  * - Detach and self-destruct.  */
+comment|/*  * g_dev_orphan()  *  * Called from below when the provider orphaned us.  * - Clear any dump settings.  * - Destroy the struct cdev *to prevent any more request from coming in.  The  *   provider is already marked with an error, so anything which comes in  *   in the interrim will be returned immediately.  * - Wait for any outstanding I/O to finish.  * - Set our access counts to zero, whatever they were.  * - Detach and self-destruct.  */
 end_comment
 
 begin_function
@@ -1899,7 +1913,9 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|g_topology_assert
@@ -1944,7 +1960,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Destroy the dev_t so we get no more requests */
+comment|/* Destroy the struct cdev *so we get no more requests */
 name|destroy_dev
 argument_list|(
 name|dev

@@ -668,7 +668,9 @@ name|device_t
 name|twa_bus_dev
 decl_stmt|;
 comment|/* bus device */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|twa_ctrl_dev
 decl_stmt|;
 comment|/* control device */

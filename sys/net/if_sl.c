@@ -507,7 +507,9 @@ specifier|static
 name|int
 name|slopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|struct
 name|tty
@@ -1253,7 +1255,9 @@ name|dev
 parameter_list|,
 name|tp
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 specifier|register

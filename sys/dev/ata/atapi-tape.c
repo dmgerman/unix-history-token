@@ -510,7 +510,9 @@ name|struct
 name|ast_readposition
 name|position
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|stp
@@ -1707,7 +1709,9 @@ specifier|static
 name|int
 name|ast_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1832,7 +1836,9 @@ specifier|static
 name|int
 name|ast_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1990,7 +1996,9 @@ specifier|static
 name|int
 name|ast_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

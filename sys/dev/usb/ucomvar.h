@@ -676,7 +676,9 @@ name|u_char
 name|sc_dying
 decl_stmt|;
 comment|/* disconnecting */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* special device node */

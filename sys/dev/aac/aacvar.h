@@ -1075,7 +1075,9 @@ name|intr_config_hook
 name|aac_ich
 decl_stmt|;
 comment|/* management interface */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|aac_dev_t
 decl_stmt|;
 name|aac_lock_t

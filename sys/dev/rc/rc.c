@@ -265,11 +265,15 @@ modifier|*
 name|rc_rcb
 decl_stmt|;
 comment|/* back ptr             */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|rc_dev
 decl_stmt|;
 comment|/* non-callout device	*/
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|rc_cdev
 decl_stmt|;
 comment|/* callout device	*/
@@ -1168,7 +1172,9 @@ name|i
 decl_stmt|,
 name|x
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|cdev
 decl_stmt|;
 name|sc
@@ -4848,7 +4854,9 @@ specifier|static
 name|int
 name|rcopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -5365,7 +5373,9 @@ specifier|static
 name|int
 name|rcclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6865,7 +6875,9 @@ specifier|static
 name|int
 name|rcioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -627,7 +627,9 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_dev_t
 decl_stmt|;
 endif|#
@@ -1199,7 +1201,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/* XXX no error trapping, no storing of dev_t */
+comment|/* XXX no error trapping, no storing of struct cdev **/
 name|sc
 operator|->
 name|sc_dev_t
@@ -1297,7 +1299,9 @@ begin_function
 name|int
 name|urioopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1501,7 +1505,9 @@ begin_function
 name|int
 name|urioclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1620,7 +1626,9 @@ begin_function
 name|int
 name|urioread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2008,7 +2016,9 @@ begin_function
 name|int
 name|uriowrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2341,7 +2351,9 @@ begin_function
 name|int
 name|urioioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

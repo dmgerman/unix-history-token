@@ -123,7 +123,9 @@ function|(
 name|open_helper
 function|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int
@@ -386,7 +388,9 @@ function|(
 name|read
 function|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|struct
@@ -411,7 +415,9 @@ function|(
 name|poll
 function|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int

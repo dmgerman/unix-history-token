@@ -83,7 +83,9 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|openfirm_dev
 decl_stmt|;
 end_decl_stmt
@@ -330,7 +332,9 @@ begin_function
 name|int
 name|openfirm_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -956,7 +956,9 @@ begin_function_decl
 name|int
 name|vinum_super_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|,
@@ -1015,7 +1017,9 @@ begin_function_decl
 name|int
 name|vinumpart
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1198,7 +1202,9 @@ begin_function_decl
 name|int
 name|Volno
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 function_decl|;
@@ -1208,7 +1214,9 @@ begin_function_decl
 name|int
 name|Plexno
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 function_decl|;
@@ -1218,7 +1226,9 @@ begin_function_decl
 name|int
 name|Sdno
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 function_decl|;

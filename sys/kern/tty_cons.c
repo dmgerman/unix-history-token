@@ -353,7 +353,7 @@ argument_list|,
 sizeof|sizeof
 name|cn_udev_t
 argument_list|,
-literal|"T,dev_t"
+literal|"T,struct cdev *"
 argument_list|,
 literal|""
 argument_list|)
@@ -1696,7 +1696,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -1904,7 +1906,9 @@ specifier|static
 name|int
 name|cnopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1975,7 +1979,9 @@ specifier|static
 name|int
 name|cnclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2059,7 +2065,9 @@ specifier|static
 name|int
 name|cnread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2136,7 +2144,9 @@ specifier|static
 name|int
 name|cnwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2249,7 +2259,9 @@ specifier|static
 name|int
 name|cnioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2390,7 +2402,9 @@ specifier|static
 name|int
 name|cnpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2478,7 +2492,9 @@ specifier|static
 name|int
 name|cnkqfilter
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

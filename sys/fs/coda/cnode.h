@@ -237,7 +237,9 @@ name|u_short
 name|c_symlen
 decl_stmt|;
 comment|/* length of symbolic link */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|c_device
 decl_stmt|;
 comment|/* associated vnode device */
@@ -484,7 +486,9 @@ name|struct
 name|vcomm
 name|mi_vcomm
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -728,7 +732,9 @@ name|mount
 modifier|*
 name|devtomp
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;

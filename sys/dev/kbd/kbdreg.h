@@ -263,7 +263,9 @@ operator|/
 literal|2
 index|]
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kb_dev
 decl_stmt|;
 block|}

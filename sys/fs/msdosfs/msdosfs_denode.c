@@ -222,7 +222,9 @@ name|denode
 modifier|*
 name|msdosfs_hashget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -383,7 +385,9 @@ name|dirclust
 parameter_list|,
 name|diroff
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|u_long
@@ -732,7 +736,9 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 init|=
 name|pmp

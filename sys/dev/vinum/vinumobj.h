@@ -470,7 +470,9 @@ decl_stmt|;
 name|off_t
 name|mediasize
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* device information */
@@ -627,7 +629,9 @@ modifier|*
 name|waitlist
 decl_stmt|;
 comment|/* list of requests waiting on revive op */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* associated device */
@@ -789,7 +793,9 @@ name|daddr_t
 name|last_addr
 decl_stmt|;
 comment|/* last address read from this plex */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* associated device */
@@ -909,7 +915,9 @@ comment|/* index of plexes */
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* associated device */

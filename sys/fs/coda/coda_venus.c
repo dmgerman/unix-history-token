@@ -390,7 +390,9 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|,

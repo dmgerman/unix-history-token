@@ -391,7 +391,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|main_devs
 index|[
 name|MAXCONS
@@ -779,7 +781,9 @@ specifier|static
 name|int
 name|scdevtounit
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -843,7 +847,9 @@ name|scr_stat
 modifier|*
 name|sc_get_stat
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devptr
 parameter_list|)
 function_decl|;
@@ -1908,7 +1914,9 @@ directive|endif
 name|int
 name|vc
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|flags
@@ -2602,7 +2610,9 @@ specifier|static
 name|int
 name|scdevtounit
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -2674,7 +2684,9 @@ specifier|static
 name|int
 name|scopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3059,7 +3071,9 @@ specifier|static
 name|int
 name|scclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3381,7 +3395,9 @@ specifier|static
 name|int
 name|scread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3764,7 +3780,9 @@ specifier|static
 name|int
 name|scioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -13756,7 +13774,9 @@ name|sc_softc_t
 modifier|*
 name|sc
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -14632,7 +14652,9 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 argument_list|)
 operator|*
 name|sc
@@ -18129,7 +18151,9 @@ specifier|static
 name|int
 name|scmmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -19396,7 +19420,9 @@ name|scr_stat
 modifier|*
 name|sc_get_stat
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devptr
 parameter_list|)
 block|{

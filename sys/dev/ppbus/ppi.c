@@ -835,7 +835,9 @@ specifier|static
 name|int
 name|ppiopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1007,7 +1009,9 @@ specifier|static
 name|int
 name|ppiclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1144,7 +1148,9 @@ specifier|static
 name|int
 name|ppiread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1420,7 +1426,9 @@ specifier|static
 name|int
 name|ppiwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1680,7 +1688,9 @@ specifier|static
 name|int
 name|ppiioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -142,7 +142,9 @@ modifier|*
 name|i_devvp
 decl_stmt|;
 comment|/* vnode of blk dev we live on */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 decl_stmt|;
 comment|/* Device associated with the inode. */

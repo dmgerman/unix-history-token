@@ -171,7 +171,9 @@ operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|500000
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 endif|#
@@ -572,7 +574,9 @@ modifier|*
 name|ioctl
 function_decl|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|,
@@ -1498,7 +1502,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

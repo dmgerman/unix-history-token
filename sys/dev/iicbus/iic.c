@@ -114,7 +114,9 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 comment|/* input buffer */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_devnode
 decl_stmt|;
 block|}
@@ -535,7 +537,9 @@ specifier|static
 name|int
 name|iicopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -604,7 +608,9 @@ specifier|static
 name|int
 name|iicclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -687,7 +693,9 @@ specifier|static
 name|int
 name|iicwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -852,7 +860,9 @@ specifier|static
 name|int
 name|iicread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1043,7 +1053,9 @@ specifier|static
 name|int
 name|iicioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -1379,7 +1379,9 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 init|=
 name|devvp

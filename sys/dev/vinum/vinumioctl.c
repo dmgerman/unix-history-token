@@ -134,7 +134,9 @@ begin_function
 name|int
 name|vinumioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -512,7 +514,9 @@ begin_function
 name|int
 name|vinum_super_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

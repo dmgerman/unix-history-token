@@ -179,7 +179,9 @@ specifier|static
 name|int
 name|ng_h4_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|struct
 name|tty
@@ -576,7 +578,9 @@ specifier|static
 name|int
 name|ng_h4_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

@@ -768,7 +768,9 @@ name|video_adapter_t
 name|sc_va
 decl_stmt|;
 comment|/* XXX must be first */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_si
 decl_stmt|;
 name|struct

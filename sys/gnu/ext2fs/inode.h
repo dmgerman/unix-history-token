@@ -98,7 +98,9 @@ name|u_int32_t
 name|i_flag
 decl_stmt|;
 comment|/* flags, see below */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 decl_stmt|;
 comment|/* Device associated with the inode. */
@@ -238,7 +240,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The di_db fields may be overlaid with other information for  * file types that do not have associated disk storage. Block  * and character devices overlay the first data block with their  * dev_t value. Short symbolic links place their path in the  * di_db area.  */
+comment|/*  * The di_db fields may be overlaid with other information for  * file types that do not have associated disk storage. Block  * and character devices overlay the first data block with their  * struct cdev *value. Short symbolic links place their path in the  * di_db area.  */
 end_comment
 
 begin_define

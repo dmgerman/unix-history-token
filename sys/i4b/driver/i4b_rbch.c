@@ -671,7 +671,9 @@ specifier|static
 name|int
 name|i4brbchopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -762,7 +764,9 @@ specifier|static
 name|int
 name|i4brbchclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -849,7 +853,9 @@ specifier|static
 name|int
 name|i4brbchread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1290,7 +1296,9 @@ specifier|static
 name|int
 name|i4brbchwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1848,7 +1856,9 @@ specifier|static
 name|int
 name|i4brbchioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2239,7 +2249,9 @@ specifier|static
 name|int
 name|i4brbchpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

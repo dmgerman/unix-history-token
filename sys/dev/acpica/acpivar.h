@@ -85,7 +85,9 @@ block|{
 name|device_t
 name|acpi_dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|acpi_dev_t
 decl_stmt|;
 name|struct

@@ -330,7 +330,9 @@ name|mode
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -590,7 +592,9 @@ name|mode
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int

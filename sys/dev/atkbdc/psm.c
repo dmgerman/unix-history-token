@@ -549,10 +549,14 @@ name|callout_handle
 name|softcallout
 decl_stmt|;
 comment|/* buffer timer call out */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|bdev
 decl_stmt|;
 name|int
@@ -5714,7 +5718,9 @@ specifier|static
 name|int
 name|psmopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6089,7 +6095,9 @@ specifier|static
 name|int
 name|psmclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6834,7 +6842,9 @@ specifier|static
 name|int
 name|psmread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -7593,7 +7603,9 @@ specifier|static
 name|int
 name|psmioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -12172,7 +12184,9 @@ specifier|static
 name|int
 name|psmpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

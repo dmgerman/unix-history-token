@@ -1171,7 +1171,9 @@ decl_stmt|;
 comment|/* Device instance from newbus     */
 endif|#
 directive|endif
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devnode
 decl_stmt|;
 comment|/* Device number for mknod	   */

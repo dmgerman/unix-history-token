@@ -1748,7 +1748,9 @@ specifier|static
 name|int
 name|sxopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2507,7 +2509,9 @@ specifier|static
 name|int
 name|sxclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3077,7 +3081,9 @@ specifier|static
 name|int
 name|sxwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3280,7 +3286,9 @@ specifier|static
 name|int
 name|sxioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

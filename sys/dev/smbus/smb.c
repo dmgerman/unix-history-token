@@ -90,7 +90,9 @@ name|int
 name|sc_count
 decl_stmt|;
 comment|/*>0 if device opened */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_devnode
 decl_stmt|;
 block|}
@@ -488,7 +490,9 @@ specifier|static
 name|int
 name|smbopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -558,7 +562,9 @@ specifier|static
 name|int
 name|smbclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -629,7 +635,9 @@ specifier|static
 name|int
 name|smbioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

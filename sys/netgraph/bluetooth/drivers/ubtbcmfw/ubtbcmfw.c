@@ -173,15 +173,21 @@ name|usbd_device_handle
 name|sc_udev
 decl_stmt|;
 comment|/* USB device handle */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_ctrl_dev
 decl_stmt|;
 comment|/* control device */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_intr_in_dev
 decl_stmt|;
 comment|/* interrupt device */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_bulk_out_dev
 decl_stmt|;
 comment|/* bulk device */
@@ -1074,7 +1080,9 @@ name|Static
 name|int
 name|ubtbcmfw_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1261,7 +1269,9 @@ name|Static
 name|int
 name|ubtbcmfw_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1391,7 +1401,9 @@ name|Static
 name|int
 name|ubtbcmfw_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1651,7 +1663,9 @@ name|Static
 name|int
 name|ubtbcmfw_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1908,7 +1922,9 @@ name|Static
 name|int
 name|ubtbcmfw_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2047,7 +2063,9 @@ name|Static
 name|int
 name|ubtbcmfw_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

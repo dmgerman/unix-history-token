@@ -404,7 +404,9 @@ name|ext2_super_block
 modifier|*
 name|es
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1959,7 +1961,9 @@ name|ext2_super_block
 modifier|*
 name|es
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -3276,7 +3280,9 @@ name|ext2_super_block
 modifier|*
 name|es
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 init|=
 name|devvp
@@ -5215,7 +5221,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int

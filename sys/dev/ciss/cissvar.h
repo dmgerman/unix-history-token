@@ -354,7 +354,9 @@ name|device_t
 name|ciss_dev
 decl_stmt|;
 comment|/* bus attachment */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ciss_dev_t
 decl_stmt|;
 comment|/* control device */

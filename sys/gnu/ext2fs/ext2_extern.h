@@ -268,7 +268,9 @@ begin_function_decl
 name|int
 name|ext2_ihashget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|,
@@ -308,7 +310,9 @@ name|vnode
 modifier|*
 name|ext2_ihashlookup
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|)

@@ -631,7 +631,9 @@ name|acd
 modifier|*
 name|ptr
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 decl_stmt|;
 if|if
@@ -2261,7 +2263,9 @@ specifier|static
 name|int
 name|acdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2416,7 +2420,9 @@ begin_function
 name|int
 name|acdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3350,7 +3356,9 @@ begin_function
 name|int
 name|acdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

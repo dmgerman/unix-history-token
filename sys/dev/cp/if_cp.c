@@ -723,7 +723,9 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|400000
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devt
 decl_stmt|;
 endif|#
@@ -5184,7 +5186,9 @@ decl|static
 name|int
 name|cp_open
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|int
@@ -5277,7 +5281,9 @@ decl|static
 name|int
 name|cp_close
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|int
@@ -5450,7 +5456,9 @@ decl|static
 name|int
 name|cp_ioctl
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|u_long
@@ -15237,7 +15245,9 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 specifier|static

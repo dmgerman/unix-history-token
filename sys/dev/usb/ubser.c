@@ -409,7 +409,9 @@ name|u_int
 name|sc_opkthdrlen
 decl_stmt|;
 comment|/* header length of 						   output packet */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 index|[
 literal|8
@@ -4036,7 +4038,9 @@ specifier|static
 name|int
 name|ubser_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -4370,7 +4374,9 @@ specifier|static
 name|int
 name|ubser_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -4495,7 +4501,9 @@ specifier|static
 name|int
 name|ubser_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -4736,7 +4744,9 @@ specifier|static
 name|int
 name|ubser_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -4846,7 +4856,9 @@ specifier|static
 name|int
 name|ubser_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

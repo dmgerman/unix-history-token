@@ -230,7 +230,9 @@ argument|tun_softc
 argument_list|)
 name|tun_list
 expr_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|tun_dev
 decl_stmt|;
 name|u_short
@@ -417,7 +419,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)
@@ -429,7 +433,9 @@ specifier|static
 name|void
 name|tuncreate
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -630,7 +636,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)
@@ -722,7 +730,7 @@ condition|(
 name|i
 condition|)
 block|{
-comment|/* No preexisting dev_t, create one */
+comment|/* No preexisting struct cdev *, create one */
 operator|*
 name|dev
 operator|=
@@ -778,7 +786,9 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 comment|/* Unlocked read. */
@@ -1153,7 +1163,9 @@ specifier|static
 name|void
 name|tuncreate
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -1345,7 +1357,9 @@ specifier|static
 name|int
 name|tunopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1492,7 +1506,9 @@ specifier|static
 name|int
 name|tunclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2546,7 +2562,9 @@ specifier|static
 name|int
 name|tunioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -3237,7 +3255,9 @@ specifier|static
 name|int
 name|tunread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3559,7 +3579,9 @@ specifier|static
 name|int
 name|tunwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -4115,7 +4137,9 @@ specifier|static
 name|int
 name|tunpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -557,7 +557,9 @@ begin_function
 name|int
 name|sa11x0_bs_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|t
 parameter_list|,
 name|vm_offset_t

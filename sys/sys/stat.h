@@ -37,12 +37,23 @@ directive|ifndef
 name|_DEV_T_DECLARED
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|__dev_t
 name|dev_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

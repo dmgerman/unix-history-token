@@ -534,7 +534,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

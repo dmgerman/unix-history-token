@@ -282,14 +282,18 @@ comment|/*  * Given a controller number,  * make a special device and return the
 end_comment
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|gdt_make_dev
 parameter_list|(
 name|int
 name|unit
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 ifdef|#
@@ -377,7 +381,9 @@ begin_function
 name|void
 name|gdt_destroy_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -479,7 +485,9 @@ specifier|static
 name|int
 name|iir_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -553,7 +561,9 @@ specifier|static
 name|int
 name|iir_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -627,7 +637,9 @@ specifier|static
 name|int
 name|iir_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -699,7 +711,9 @@ specifier|static
 name|int
 name|iir_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -775,7 +789,9 @@ specifier|static
 name|int
 name|iir_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

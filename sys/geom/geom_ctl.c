@@ -2281,7 +2281,9 @@ specifier|static
 name|int
 name|g_ctl_ioctl_ctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2452,7 +2454,9 @@ specifier|static
 name|int
 name|g_ctl_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

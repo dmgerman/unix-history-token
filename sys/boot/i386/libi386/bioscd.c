@@ -1380,7 +1380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a suitable dev_t value for (dev).  */
+comment|/*  * Return a suitable struct cdev *value for (dev).  */
 end_comment
 
 begin_function
@@ -1444,7 +1444,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/*      * XXX: Need to examine device spec here to figure out if SCSI or      * ATAPI.  No idea on how to figure out device number.  All we can      * really pass to the kernel is what bus and device on which bus we      * were booted from, which dev_t isn't well suited to since those      * number don't match to unit numbers very well.  We may just need      * to engage in a hack where we pass -C to the boot args if we are      * the boot device.      */
+comment|/*      * XXX: Need to examine device spec here to figure out if SCSI or      * ATAPI.  No idea on how to figure out device number.  All we can      * really pass to the kernel is what bus and device on which bus we      * were booted from, which struct cdev *isn't well suited to since those      * number don't match to unit numbers very well.  We may just need      * to engage in a hack where we pass -C to the boot args if we are      * the boot device.      */
 name|major
 operator|=
 name|ACDMAJOR

@@ -292,7 +292,9 @@ specifier|static
 name|int
 name|pci_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -351,7 +353,9 @@ specifier|static
 name|int
 name|pci_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -742,7 +746,9 @@ specifier|static
 name|int
 name|pci_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

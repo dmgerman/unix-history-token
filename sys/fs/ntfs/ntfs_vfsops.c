@@ -776,7 +776,9 @@ name|ntfsmount
 modifier|*
 name|ntmp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 init|=
 name|devvp

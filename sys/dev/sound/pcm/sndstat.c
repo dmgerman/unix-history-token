@@ -189,7 +189,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sndstat_dev
 init|=
 literal|0
@@ -440,7 +442,9 @@ specifier|static
 name|int
 name|sndstat_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|int
@@ -599,7 +603,9 @@ specifier|static
 name|int
 name|sndstat_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|int
@@ -681,7 +687,9 @@ specifier|static
 name|int
 name|sndstat_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|struct

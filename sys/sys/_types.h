@@ -287,29 +287,11 @@ begin_comment
 comment|/* wint_t (see above) */
 end_comment
 
-begin_comment
-comment|/*  * dev_t has differing meanings in userland and the kernel.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_KERNEL
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|cdev
-modifier|*
-name|__dev_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_typedef
 typedef|typedef

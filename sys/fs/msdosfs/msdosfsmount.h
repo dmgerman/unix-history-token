@@ -66,7 +66,9 @@ modifier|*
 name|pm_mountp
 decl_stmt|;
 comment|/* vfs mount struct for this fs */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pm_dev
 decl_stmt|;
 comment|/* block special device mounted */

@@ -3645,7 +3645,9 @@ define|#
 directive|define
 name|GDT_POLL_WAIT
 value|0x80
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_dev
 decl_stmt|;
 name|bus_space_tag_t
@@ -4280,7 +4282,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|gdt_make_dev
 parameter_list|(
 name|int
@@ -4293,7 +4297,9 @@ begin_function_decl
 name|void
 name|gdt_destroy_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;

@@ -392,15 +392,21 @@ name|sc_hook
 decl_stmt|;
 comment|/* upstream hook */
 comment|/* Device specific */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_ctrl_dev
 decl_stmt|;
 comment|/* control device */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_intr_dev
 decl_stmt|;
 comment|/* interrupt device */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_bulk_dev
 decl_stmt|;
 comment|/* bulk device */

@@ -247,7 +247,9 @@ name|int
 name|snp_unit
 decl_stmt|;
 comment|/* Device number. */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|snp_target
 decl_stmt|;
 comment|/* Target tty device. */
@@ -412,7 +414,9 @@ name|tty
 modifier|*
 name|snpdevtotty
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -434,7 +438,9 @@ parameter_list|,
 name|int
 name|namelen
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 parameter_list|)
@@ -810,7 +816,9 @@ name|snpdevtotty
 parameter_list|(
 name|dev
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|{
@@ -879,7 +887,9 @@ name|uio
 parameter_list|,
 name|flag
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -1091,7 +1101,9 @@ name|uio
 parameter_list|,
 name|flag
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -1954,7 +1966,9 @@ name|mode
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -2266,7 +2280,9 @@ name|fmt
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -2426,7 +2442,9 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|u_long
@@ -2457,7 +2475,9 @@ decl_stmt|,
 modifier|*
 name|tpo
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|tdev
 decl_stmt|;
 name|int
@@ -2790,7 +2810,9 @@ name|events
 parameter_list|,
 name|td
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -2900,7 +2922,9 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev
 decl_stmt|;

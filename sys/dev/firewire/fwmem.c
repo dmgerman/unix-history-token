@@ -1309,7 +1309,9 @@ begin_function
 name|int
 name|fwmem_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1467,7 +1469,9 @@ begin_function
 name|int
 name|fwmem_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1667,7 +1671,9 @@ name|fw_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -2054,7 +2060,9 @@ begin_function
 name|int
 name|fwmem_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2155,7 +2163,9 @@ begin_function
 name|int
 name|fwmem_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2186,7 +2196,9 @@ operator|<
 literal|500102
 name|fwmem_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t
@@ -2199,7 +2211,9 @@ else|#
 directive|else
 function|fwmem_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|vm_offset_t

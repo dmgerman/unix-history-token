@@ -207,7 +207,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return dev_t for (dev) */
+comment|/* return struct cdev *for (dev) */
 end_comment
 
 begin_function_decl
@@ -293,7 +293,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* return dev_t for (dev) */
+comment|/* return struct cdev *for (dev) */
 end_comment
 
 begin_function_decl

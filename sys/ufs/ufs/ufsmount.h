@@ -124,7 +124,9 @@ modifier|*
 name|um_mountp
 decl_stmt|;
 comment|/* filesystem vfs structure */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|um_dev
 decl_stmt|;
 comment|/* device mounted */

@@ -564,7 +564,9 @@ specifier|static
 name|int
 name|sscopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -796,7 +798,9 @@ specifier|static
 name|int
 name|sscclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

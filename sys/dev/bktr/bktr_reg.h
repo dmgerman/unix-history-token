@@ -2430,27 +2430,39 @@ modifier|*
 name|res_ih
 decl_stmt|;
 comment|/* 4.x newbus interrupt handler cookie */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|bktrdev
 decl_stmt|;
 comment|/* 4.x device entry for /dev/bktrN */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|tunerdev
 decl_stmt|;
 comment|/* 4.x device entry for /dev/tunerN */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|vbidev
 decl_stmt|;
 comment|/* 4.x device entry for /dev/vbiN */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|bktrdev_alias
 decl_stmt|;
 comment|/* alias /dev/bktr to /dev/bktr0 */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|tunerdev_alias
 decl_stmt|;
 comment|/* alias /dev/tuner to /dev/tuner0 */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|vbidev_alias
 decl_stmt|;
 comment|/* alias /dev/vbi to /dev/vbi0 */

@@ -551,7 +551,9 @@ block|{
 comment|/* TTY specific data. */
 struct|struct
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|si
 index|[
 literal|2

@@ -200,7 +200,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|openprom_dev
 decl_stmt|;
 end_decl_stmt
@@ -217,7 +219,9 @@ specifier|static
 name|int
 name|openprom_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -260,7 +264,9 @@ specifier|static
 name|int
 name|openprom_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -292,7 +298,9 @@ specifier|static
 name|int
 name|openprom_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

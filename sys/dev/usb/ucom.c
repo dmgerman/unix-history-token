@@ -998,7 +998,9 @@ name|Static
 name|int
 name|ucomopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1840,7 +1842,9 @@ specifier|static
 name|int
 name|ucomclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2037,7 +2041,9 @@ specifier|static
 name|int
 name|ucomread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2135,7 +2141,9 @@ specifier|static
 name|int
 name|ucomwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2233,7 +2241,9 @@ specifier|static
 name|int
 name|ucomioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

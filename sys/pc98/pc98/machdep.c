@@ -5954,7 +5954,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* not a dev_t - encoding is different */
+comment|/* not a struct cdev *- encoding is different */
 end_comment
 
 begin_expr_stmt
@@ -5973,7 +5973,7 @@ name|bootdev
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maybe the Boot device (not in dev_t format)"
+literal|"Maybe the Boot device (not in struct cdev *format)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -960,7 +960,9 @@ specifier|static
 name|int
 name|scdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1200,7 +1202,9 @@ specifier|static
 name|int
 name|scdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1640,7 +1644,9 @@ specifier|static
 name|int
 name|scdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

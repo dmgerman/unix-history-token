@@ -706,7 +706,9 @@ name|union
 name|ccb
 name|ses_saved_ccb
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ses_dev
 decl_stmt|;
 name|struct
@@ -1861,7 +1863,9 @@ specifier|static
 name|int
 name|sesopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2129,7 +2133,9 @@ specifier|static
 name|int
 name|sesclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2417,7 +2423,9 @@ specifier|static
 name|int
 name|sesioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

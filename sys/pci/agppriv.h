@@ -179,7 +179,9 @@ name|int
 name|as_isopen
 decl_stmt|;
 comment|/* user device is open */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|as_devnode
 decl_stmt|;
 comment|/* from make_dev */

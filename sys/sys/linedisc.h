@@ -32,7 +32,9 @@ typedef|typedef
 name|int
 name|l_open_t
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -299,7 +301,9 @@ name|tty
 modifier|*
 name|tp
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{

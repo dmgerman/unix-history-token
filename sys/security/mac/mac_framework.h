@@ -440,6 +440,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|cdev
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|componentname
 struct_decl|;
 end_struct_decl
@@ -1033,7 +1039,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

@@ -8044,7 +8044,9 @@ begin_struct
 struct|struct
 name|swh0h0
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct

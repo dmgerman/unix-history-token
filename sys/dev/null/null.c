@@ -83,14 +83,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|null_dev
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|zero_dev
 decl_stmt|;
 end_decl_stmt
@@ -238,7 +242,9 @@ specifier|static
 name|int
 name|null_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -273,7 +279,9 @@ specifier|static
 name|int
 name|null_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -344,7 +352,9 @@ specifier|static
 name|int
 name|zero_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,

@@ -65,7 +65,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_data
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sc_si
 decl_stmt|;
 name|struct

@@ -143,7 +143,9 @@ name|cdevsw
 modifier|*
 name|cdevsw
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|bzero
@@ -1850,7 +1852,9 @@ name|struct
 name|l_ustat
 name|lu
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -1904,7 +1908,7 @@ name|lu
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our dev_t is 32-bits whereas Linux only has a 16-bits 	 * dev_t. The dev_t that is used now may as well be a truncated 	 * dev_t returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 */
+comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our struct cdev *is 32-bits whereas Linux only has a 16-bits 	 * struct cdev *. The struct cdev *that is used now may as well be a truncated 	 * struct cdev *returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 */
 name|dev
 operator|=
 name|udev2dev
@@ -2084,7 +2088,9 @@ name|cdevsw
 modifier|*
 name|cdevsw
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|bzero

@@ -97,7 +97,9 @@ name|u_int32_t
 name|i_flag
 decl_stmt|;
 comment|/* flags, see below */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 decl_stmt|;
 comment|/* Device associated with the inode. */

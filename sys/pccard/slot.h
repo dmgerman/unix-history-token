@@ -377,7 +377,9 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* Config system device. */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|d
 decl_stmt|;
 comment|/* fs device */

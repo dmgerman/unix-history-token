@@ -210,7 +210,9 @@ modifier|*
 name|bs_mmap
 function_decl|)
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
@@ -1995,7 +1997,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|int	__bs_c(f,_bs_mmap) (dev_t, vm_offset_t, vm_paddr_t *, int);
+value|int	__bs_c(f,_bs_mmap) (struct cdev *, vm_offset_t, vm_paddr_t *, int);
 end_define
 
 begin_define

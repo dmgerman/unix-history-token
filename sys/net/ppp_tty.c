@@ -121,7 +121,9 @@ specifier|static
 name|int
 name|pppopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -547,7 +549,9 @@ name|dev
 parameter_list|,
 name|tp
 parameter_list|)
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 specifier|register

@@ -338,7 +338,9 @@ name|devstat
 modifier|*
 name|device_stats
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|int
@@ -1455,7 +1457,9 @@ specifier|static
 name|int
 name|chopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1668,7 +1672,9 @@ specifier|static
 name|int
 name|chclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2704,7 +2710,9 @@ specifier|static
 name|int
 name|chioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

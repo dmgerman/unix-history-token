@@ -3659,7 +3659,9 @@ specifier|static
 name|int
 name|cryptoopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3687,7 +3689,9 @@ specifier|static
 name|int
 name|cryptoread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3712,7 +3716,9 @@ specifier|static
 name|int
 name|cryptowrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -3737,7 +3743,9 @@ specifier|static
 name|int
 name|cryptoioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -3965,7 +3973,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|crypto_dev
 decl_stmt|;
 end_decl_stmt

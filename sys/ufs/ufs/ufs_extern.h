@@ -408,7 +408,9 @@ begin_function_decl
 name|int
 name|ufs_ihashget
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|,
@@ -455,7 +457,9 @@ name|vnode
 modifier|*
 name|ufs_ihashlookup
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|ino_t
 parameter_list|)

@@ -209,7 +209,9 @@ name|devstat
 modifier|*
 name|device_stats
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|}
@@ -1215,7 +1217,9 @@ specifier|static
 name|int
 name|passopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1493,7 +1497,9 @@ specifier|static
 name|int
 name|passclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1780,7 +1786,9 @@ specifier|static
 name|int
 name|passioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

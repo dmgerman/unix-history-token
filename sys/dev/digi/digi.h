@@ -208,7 +208,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 index|[
 literal|6
@@ -454,7 +456,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|ctldev
 decl_stmt|;
 block|}

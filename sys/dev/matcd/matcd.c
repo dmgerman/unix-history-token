@@ -651,7 +651,9 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|matcd_dev_t
 decl_stmt|;
 name|short
@@ -810,7 +812,9 @@ specifier|static
 name|int
 name|matcdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -832,7 +836,9 @@ specifier|static
 name|int
 name|matcdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -885,7 +891,9 @@ specifier|static
 name|int
 name|matcdsize
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -1703,7 +1711,9 @@ operator|->
 name|port_bsh
 decl_stmt|;
 comment|/*Take port ID selected in probe()*/
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|d
 decl_stmt|;
 name|int
@@ -2231,7 +2241,9 @@ specifier|static
 name|int
 name|matcdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -3169,7 +3181,9 @@ specifier|static
 name|int
 name|matcdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -6728,7 +6742,9 @@ specifier|static
 name|int
 name|matcdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|unsigned
@@ -7395,7 +7411,9 @@ specifier|static
 name|int
 name|matcdsize
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{

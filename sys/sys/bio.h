@@ -56,7 +56,9 @@ name|u_int
 name|bio_cmd
 decl_stmt|;
 comment|/* I/O operation. */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|bio_dev
 decl_stmt|;
 comment|/* Device to do I/O on. */
@@ -503,7 +505,9 @@ begin_function_decl
 name|int
 name|physio
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct

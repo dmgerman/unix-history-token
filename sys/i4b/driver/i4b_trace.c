@@ -792,7 +792,9 @@ specifier|static
 name|int
 name|i4btrcopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -900,7 +902,9 @@ specifier|static
 name|int
 name|i4btrcclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1117,7 +1121,9 @@ specifier|static
 name|int
 name|i4btrcread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1351,7 +1357,9 @@ specifier|static
 name|int
 name|i4btrcpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1380,7 +1388,9 @@ specifier|static
 name|int
 name|i4btrcioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

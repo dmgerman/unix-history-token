@@ -239,7 +239,9 @@ specifier|static
 name|int
 name|i4bctlopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -296,7 +298,9 @@ specifier|static
 name|int
 name|i4bctlclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -332,7 +336,9 @@ specifier|static
 name|int
 name|i4bctlioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -707,7 +713,9 @@ specifier|static
 name|int
 name|i4bctlpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

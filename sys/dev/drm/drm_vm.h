@@ -24,7 +24,9 @@ argument_list|(
 name|dma_mmap
 argument_list|)
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|kdev
 argument_list|,
 name|vm_offset_t
@@ -198,7 +200,9 @@ argument_list|(
 name|mmap
 argument_list|)
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|kdev
 argument_list|,
 name|vm_offset_t

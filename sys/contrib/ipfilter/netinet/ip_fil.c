@@ -4035,11 +4035,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|cdev
+modifier|*
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -6934,7 +6958,9 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 end_decl_stmt
@@ -7114,7 +7140,9 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 end_decl_stmt
@@ -7235,7 +7263,9 @@ name|uio
 parameter_list|)
 endif|#
 directive|endif
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 specifier|register

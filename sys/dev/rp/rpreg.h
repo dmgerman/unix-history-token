@@ -2513,7 +2513,9 @@ name|tty
 decl_stmt|;
 comment|/* tty */
 comment|/* Device nodes */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dev_nodes
 decl_stmt|;

@@ -399,7 +399,9 @@ begin_function_decl
 name|int
 name|pfopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -416,7 +418,9 @@ begin_function_decl
 name|int
 name|pfclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -517,7 +521,9 @@ begin_function_decl
 name|int
 name|pfioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|,
@@ -541,7 +547,9 @@ begin_function_decl
 name|int
 name|pfioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|,
@@ -686,7 +694,9 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pf_dev
 decl_stmt|;
 end_decl_stmt
@@ -2414,7 +2424,9 @@ begin_function
 name|int
 name|pfopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -2455,7 +2467,9 @@ begin_function
 name|int
 name|pfclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -4436,7 +4450,9 @@ begin_decl_stmt
 name|int
 name|pfioctl
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|u_long
@@ -4458,7 +4474,9 @@ directive|else
 name|int
 name|pfioctl
 argument_list|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 name|dev
 argument_list|,
 name|u_long

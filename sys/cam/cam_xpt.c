@@ -3992,7 +3992,9 @@ specifier|static
 name|int
 name|xptopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -4113,7 +4115,9 @@ specifier|static
 name|int
 name|xptclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -4182,7 +4186,9 @@ specifier|static
 name|int
 name|xptioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -3315,7 +3315,9 @@ specifier|static
 name|int
 name|agp_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int
@@ -3379,7 +3381,9 @@ specifier|static
 name|int
 name|agp_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|int
@@ -3493,7 +3497,9 @@ specifier|static
 name|int
 name|agp_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|u_long
@@ -3649,7 +3655,9 @@ specifier|static
 name|int
 name|agp_mmap
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|kdev
 parameter_list|,
 name|vm_offset_t

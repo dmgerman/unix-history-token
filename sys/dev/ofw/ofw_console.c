@@ -334,7 +334,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 if|if
@@ -452,7 +454,9 @@ specifier|static
 name|int
 name|ofw_dev_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -686,7 +690,9 @@ specifier|static
 name|int
 name|ofw_dev_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

@@ -1486,7 +1486,9 @@ specifier|static
 name|int
 name|crdopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1552,7 +1554,9 @@ specifier|static
 name|int
 name|crdclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1583,7 +1587,9 @@ specifier|static
 name|int
 name|crdread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1873,7 +1879,9 @@ specifier|static
 name|int
 name|crdwrite
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -2163,7 +2171,9 @@ specifier|static
 name|int
 name|crdioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -3341,7 +3351,9 @@ specifier|static
 name|int
 name|crdpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

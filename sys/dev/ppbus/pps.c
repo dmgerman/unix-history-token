@@ -134,7 +134,9 @@ index|[
 literal|9
 index|]
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|devs
 index|[
 literal|9
@@ -425,7 +427,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|d
 decl_stmt|;
 name|intptr_t
@@ -986,7 +990,9 @@ specifier|static
 name|int
 name|ppsopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1216,7 +1222,9 @@ specifier|static
 name|int
 name|ppsclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -1636,7 +1644,9 @@ specifier|static
 name|int
 name|ppsioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

@@ -95,7 +95,9 @@ name|led_t
 modifier|*
 name|func
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|struct
@@ -360,7 +362,9 @@ specifier|static
 name|int
 name|led_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -1058,7 +1062,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|led_create
 parameter_list|(
 name|led_t
@@ -1294,7 +1300,9 @@ begin_function
 name|void
 name|led_destroy
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{

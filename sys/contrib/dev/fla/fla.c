@@ -303,7 +303,9 @@ name|disk
 modifier|*
 name|disk
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 block|}

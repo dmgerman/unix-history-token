@@ -3618,7 +3618,9 @@ name|iplioctl
 name|__P
 argument_list|(
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|,
 name|u_long
 operator|,
@@ -3674,7 +3676,9 @@ name|iplopen
 name|__P
 argument_list|(
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|,
 name|int
 operator|,
@@ -3695,7 +3699,9 @@ name|iplclose
 name|__P
 argument_list|(
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|,
 name|int
 operator|,
@@ -3865,7 +3871,9 @@ name|iplread
 name|__P
 argument_list|(
 operator|(
-name|dev_t
+expr|struct
+name|cdev
+operator|*
 operator|,
 expr|struct
 name|uio

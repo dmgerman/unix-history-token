@@ -312,7 +312,9 @@ specifier|static
 name|int
 name|logopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -415,7 +417,9 @@ specifier|static
 name|int
 name|logclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -473,7 +477,9 @@ specifier|static
 name|int
 name|logread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -665,7 +671,9 @@ specifier|static
 name|int
 name|logpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -895,7 +903,9 @@ specifier|static
 name|int
 name|logioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long

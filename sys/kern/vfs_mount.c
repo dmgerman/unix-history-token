@@ -455,7 +455,9 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|rootdev
 init|=
 name|NODEV
@@ -6680,11 +6682,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a given name to the dev_t of the disk-like device  * it refers to.  */
+comment|/*  * Convert a given name to the struct cdev *of the disk-like device  * it refers to.  */
 end_comment
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|getdiskbyname
 parameter_list|(
 name|char
@@ -6696,7 +6700,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|cp
@@ -6760,7 +6766,9 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|diskdev
 decl_stmt|;
 name|diskdev
@@ -6796,7 +6804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Show the dev_t for a disk specified by name */
+comment|/* Show the struct cdev *for a disk specified by name */
 end_comment
 
 begin_ifdef
@@ -6816,7 +6824,9 @@ end_macro
 
 begin_block
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 if|if
@@ -6851,7 +6861,7 @@ name|NODEV
 condition|)
 name|db_printf
 argument_list|(
-literal|"dev_t = %p\n"
+literal|"struct cdev *= %p\n"
 argument_list|,
 name|dev
 argument_list|)

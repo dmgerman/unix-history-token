@@ -38,7 +38,9 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|d
 decl_stmt|;
 block|}

@@ -727,6 +727,12 @@ begin_comment
 comment|/* geom_dev.c */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|cdev
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|g_dev_print
@@ -742,7 +748,9 @@ name|g_provider
 modifier|*
 name|g_dev_getprovider
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;

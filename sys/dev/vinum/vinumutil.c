@@ -887,6 +887,36 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FOOTYPE
+value|struct cdev *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FOOTYPE
+value|dev_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Extract the volume number from a device number.  Check that it's  * the correct type, and that it isn't one of the superdevs.  */
 end_comment
@@ -895,7 +925,7 @@ begin_function
 name|int
 name|Volno
 parameter_list|(
-name|dev_t
+name|FOOTYPE
 name|dev
 parameter_list|)
 block|{
@@ -972,7 +1002,7 @@ begin_function
 name|int
 name|Plexno
 parameter_list|(
-name|dev_t
+name|FOOTYPE
 name|dev
 parameter_list|)
 block|{
@@ -1026,7 +1056,7 @@ begin_function
 name|int
 name|Sdno
 parameter_list|(
-name|dev_t
+name|FOOTYPE
 name|dev
 parameter_list|)
 block|{

@@ -119,9 +119,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_DEVT
 argument_list|,
-literal|"dev_t"
+literal|"struct cdev *"
 argument_list|,
-literal|"dev_t storage"
+literal|"struct cdev *storage"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -153,7 +153,7 @@ value|83
 end_define
 
 begin_comment
-comment|/* The number of dev_t's we can create before malloc(9) kick in.  */
+comment|/* The number of struct cdev *'s we can create before malloc(9) kick in.  */
 end_comment
 
 begin_define
@@ -240,7 +240,9 @@ specifier|static
 name|void
 name|freedev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 function_decl|;
@@ -268,7 +270,7 @@ argument_list|(
 operator|&
 name|devmtx
 argument_list|,
-literal|"dev_t"
+literal|"struct cdev *"
 argument_list|,
 name|NULL
 argument_list|,
@@ -305,7 +307,9 @@ begin_function
 name|void
 name|dev_ref
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -327,7 +331,9 @@ begin_function
 name|void
 name|dev_rel
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -458,7 +464,9 @@ end_function
 
 begin_function_decl
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|makedev
 parameter_list|(
 name|int
@@ -754,7 +762,9 @@ specifier|static
 name|int
 name|no_kqfilter
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -801,7 +811,9 @@ specifier|static
 name|int
 name|no_poll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 name|__unused
 parameter_list|,
@@ -859,7 +871,9 @@ name|cdevsw
 modifier|*
 name|devsw
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -888,14 +902,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dev_t and u_dev_t primitives  */
+comment|/*  * struct cdev *and u_dev_t primitives  */
 end_comment
 
 begin_function
 name|int
 name|major
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 block|{
@@ -928,7 +944,9 @@ begin_function
 name|int
 name|minor
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 block|{
@@ -957,7 +975,9 @@ begin_function
 name|int
 name|dev2unit
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 block|{
@@ -1044,7 +1064,9 @@ end_function
 
 begin_function
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|allocdev
 parameter_list|(
 name|void
@@ -1184,7 +1206,9 @@ end_function
 
 begin_function
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|makedev
 parameter_list|(
 name|int
@@ -1302,7 +1326,9 @@ specifier|static
 name|void
 name|freedev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -1360,7 +1386,9 @@ begin_function
 name|udev_t
 name|dev2udev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|x
 parameter_list|)
 block|{
@@ -1386,7 +1414,9 @@ block|}
 end_function
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|udev2dev
 parameter_list|(
 name|udev_t
@@ -2091,7 +2121,9 @@ block|}
 end_function
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|make_dev
 parameter_list|(
 name|struct
@@ -2119,7 +2151,9 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|va_list
@@ -2357,7 +2391,9 @@ begin_function
 name|int
 name|dev_named
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 parameter_list|,
 specifier|const
@@ -2366,7 +2402,9 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|cdev
 decl_stmt|;
 if|if
@@ -2427,10 +2465,14 @@ begin_function
 name|void
 name|dev_depends
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|cdev
 parameter_list|)
 block|{
@@ -2468,10 +2510,14 @@ block|}
 end_function
 
 begin_function
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|make_dev_alias
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|pdev
 parameter_list|,
 specifier|const
@@ -2482,7 +2528,9 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|va_list
@@ -2595,7 +2643,9 @@ specifier|static
 name|void
 name|idestroy_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -2738,7 +2788,7 @@ argument_list|,
 name|si_list
 argument_list|)
 expr_stmt|;
-comment|/* If cdevsw has no dev_t's, clean it */
+comment|/* If cdevsw has no struct cdev *'s, clean it */
 if|if
 condition|(
 name|LIST_EMPTY
@@ -2843,7 +2893,9 @@ begin_function
 name|void
 name|destroy_dev
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -2867,7 +2919,9 @@ name|char
 modifier|*
 name|devtoname
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|)
 block|{
@@ -3169,7 +3223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper functions for cloning device drivers.  *  * The objective here is to make it unnecessary for the device drivers to  * use rman or similar to manage their unit number space.  Due to the way  * we do "on-demand" devices, using rman or other "private" methods   * will be very tricky to lock down properly once we lock down this file.  *  * Instead we give the drivers these routines which puts the dev_t's that  * are to be managed on their own list, and gives the driver the ability  * to ask for the first free unit number or a given specified unit number.  *  * In addition these routines support paired devices (pty, nmdm and similar)  * by respecting a number of "flag" bits in the minor number.  *  */
+comment|/*  * Helper functions for cloning device drivers.  *  * The objective here is to make it unnecessary for the device drivers to  * use rman or similar to manage their unit number space.  Due to the way  * we do "on-demand" devices, using rman or other "private" methods   * will be very tricky to lock down properly once we lock down this file.  *  * Instead we give the drivers these routines which puts the struct cdev *'s that  * are to be managed on their own list, and gives the driver the ability  * to ask for the first free unit number or a given specified unit number.  *  * In addition these routines support paired devices (pty, nmdm and similar)  * by respecting a number of "flag" bits in the minor number.  *  */
 end_comment
 
 begin_struct
@@ -3248,7 +3302,9 @@ name|int
 modifier|*
 name|up
 parameter_list|,
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 modifier|*
 name|dp
 parameter_list|,
@@ -3261,11 +3317,15 @@ name|clonedevs
 modifier|*
 name|cd
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|,
+modifier|*
 name|dl
 decl_stmt|,
+modifier|*
 name|de
 decl_stmt|;
 name|int
@@ -3548,7 +3608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Kill everything still on the list.  The driver should already have  * disposed of any softc hung of the dev_t's at this time.  */
+comment|/*  * Kill everything still on the list.  The driver should already have  * disposed of any softc hung of the struct cdev *'s at this time.  */
 end_comment
 
 begin_function
@@ -3562,9 +3622,12 @@ modifier|*
 name|cdp
 parameter_list|)
 block|{
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|,
+modifier|*
 name|tdev
 decl_stmt|;
 name|struct
@@ -3634,7 +3697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper sysctl for devname(3).  We're given a {u}dev_t and return  * the name, if any, registered by the device driver.  */
+comment|/*  * Helper sysctl for devname(3).  We're given a {u}struct cdev *and return  * the name, if any, registered by the device driver.  */
 end_comment
 
 begin_function
@@ -3651,7 +3714,9 @@ decl_stmt|;
 name|udev_t
 name|ud
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|error

@@ -381,7 +381,9 @@ specifier|static
 name|int
 name|i4bopen
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -454,7 +456,9 @@ specifier|static
 name|int
 name|i4bclose
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -510,7 +514,9 @@ specifier|static
 name|int
 name|i4bread
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -692,7 +698,9 @@ specifier|static
 name|int
 name|i4bioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -2994,7 +3002,9 @@ specifier|static
 name|int
 name|i4bpoll
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int

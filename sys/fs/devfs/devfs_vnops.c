@@ -576,7 +576,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 if|if
@@ -1033,7 +1035,9 @@ name|devfs_dirent
 modifier|*
 name|de
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 decl_stmt|;
 name|de
@@ -1482,7 +1486,9 @@ name|devfs_mount
 modifier|*
 name|dmp
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|cdev
 decl_stmt|;
 name|int

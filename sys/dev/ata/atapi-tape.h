@@ -535,9 +535,12 @@ modifier|*
 name|stats
 decl_stmt|;
 comment|/* devstat entry */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev1
 decl_stmt|,
+modifier|*
 name|dev2
 decl_stmt|;
 comment|/* device place holders */

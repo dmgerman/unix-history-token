@@ -44,7 +44,9 @@ begin_function_decl
 name|int
 name|mixer_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|i_dev
 parameter_list|,
 name|u_long

@@ -257,7 +257,9 @@ comment|/* bus connections */
 name|device_t
 name|mlx_dev
 decl_stmt|;
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|mlx_dev_t
 decl_stmt|;
 name|struct
