@@ -13647,6 +13647,14 @@ endif|#
 directive|endif
 return|return
 operator|(
+operator|(
+name|acc_mode
+operator|&
+name|VADMIN
+operator|)
+condition|?
+name|EPERM
+else|:
 name|EACCES
 operator|)
 return|;
