@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)showmount.c	6.2 (Berkeley) %G%"
+literal|"@(#)showmount.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,18 +45,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
 
 begin_include
 include|#
@@ -110,6 +98,18 @@ begin_include
 include|#
 directive|include
 file|<nfs/rpcv2.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment

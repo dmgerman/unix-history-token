@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)write.c	4.20 (Berkeley) %G%"
+literal|"@(#)write.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_decl_stmt
