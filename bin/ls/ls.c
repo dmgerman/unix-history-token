@@ -2563,6 +2563,11 @@ argument_list|(
 name|maxsize
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|jinitmax
+argument_list|)
+expr_stmt|;
 block|}
 name|bcfile
 operator|=
