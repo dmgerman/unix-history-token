@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/diskmbr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
