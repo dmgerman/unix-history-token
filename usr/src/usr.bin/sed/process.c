@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	8.3 (Berkeley) %G%"
+literal|"@(#)process.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -617,7 +617,7 @@ name|p
 operator|-
 name|ps
 operator|)
-operator|-
+operator|+
 literal|1
 expr_stmt|;
 name|memmove
