@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $Id: vinumhdr.h,v 1.7 1998/08/07 04:41:18 grog Exp grog $ */
+comment|/* $Id: vinumhdr.h,v 1.1.1.1 1998/09/16 05:56:21 grog Exp $ */
 end_comment
 
 begin_ifdef
@@ -284,12 +284,6 @@ end_include
 begin_comment
 comment|/* #include<machine/pmap.h> */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/cputypes.h>
-end_include
 
 begin_endif
 endif|#
