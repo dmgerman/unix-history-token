@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.21 1999/10/12 04:39:08 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -344,11 +344,16 @@ init|=
 literal|64
 block|,
 comment|/* number of locks to allocate to a plex */
-name|DEFAULT_REVIVE_BLOCKSIZE
+name|MAX_REVIVE_BLOCKSIZE
 init|=
 literal|65536
 block|,
-comment|/* size of block to transfer in one op */
+comment|/* maximum revive block size */
+name|DEFAULT_REVIVE_BLOCKSIZE
+init|=
+literal|16384
+block|,
+comment|/* default revive block size */
 name|VINUMHOSTNAMELEN
 init|=
 literal|32
@@ -691,6 +696,19 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|VINUM_MAXACTIVE
+value|256
+comment|/* maximum number of active requests */
+name|int
+name|active
+decl_stmt|;
+comment|/* current number of requests outstanding */
+name|int
+name|maxactive
+decl_stmt|;
+comment|/* maximum number of requests ever outstanding */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -1016,6 +1034,19 @@ block|}
 modifier|*
 name|freelist
 struct|;
+define|#
+directive|define
+name|DRIVE_MAXACTIVE
+value|10
+comment|/* maximum number of active requests */
+name|int
+name|active
+decl_stmt|;
+comment|/* current number of requests outstanding */
+name|int
+name|maxactive
+decl_stmt|;
+comment|/* maximum number of requests ever outstanding */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -1122,6 +1153,19 @@ modifier|*
 name|waitlist
 decl_stmt|;
 comment|/* list of requests waiting on revive op */
+comment|/* init parameters */
+name|u_int64_t
+name|initialized
+decl_stmt|;
+comment|/* block number of current init request */
+name|int
+name|init_blocksize
+decl_stmt|;
+comment|/* init block size (bytes) */
+name|int
+name|init_interval
+decl_stmt|;
+comment|/* and time to wait between transfers */
 name|char
 name|name
 index|[
@@ -1464,6 +1508,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MCFILENAMELEN
+value|16
+end_define
+
 begin_struct
 struct|struct
 name|mc
@@ -1487,7 +1538,7 @@ decl_stmt|;
 name|char
 name|file
 index|[
-literal|16
+name|MCFILENAMELEN
 index|]
 decl_stmt|;
 block|}
