@@ -141,12 +141,95 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|__word_swap_int
+name|__word_swap_int_var
 parameter_list|(
 name|x
 parameter_list|)
 define|\
 value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("rorl $16, %0" : "+r" (__X)); \    __X; })
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OPTIMIZE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__word_swap_int_const
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((((x)& 0xffff0000)>> 16) | \ 	 (((x)& 0x0000ffff)<< 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__word_swap_int
+parameter_list|(
+name|x
+parameter_list|)
+value|(__builtin_constant_p(x) ? \ 	__word_swap_int_const(x) : __word_swap_int_var(x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__word_swap_int
+parameter_list|(
+name|x
+parameter_list|)
+value|__word_swap_int_var(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_int_var
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("bswap %0" : "+r" (__X)); \    __X; })
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OPTIMIZE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_int_const
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((((x)& 0xff000000)>> 24) | \ 	 (((x)& 0x00ff0000)>>  8) | \ 	 (((x)& 0x0000ff00)<<  8) | \ 	 (((x)& 0x000000ff)<< 24))
 end_define
 
 begin_define
@@ -156,8 +239,63 @@ name|__byte_swap_int
 parameter_list|(
 name|x
 parameter_list|)
+value|(__builtin_constant_p(x) ? \ 	__byte_swap_int_const(x) : __byte_swap_int_var(x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_int
+parameter_list|(
+name|x
+parameter_list|)
+value|__byte_swap_int_var(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_long_var
+parameter_list|(
+name|x
+parameter_list|)
 define|\
-value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("bswap %0" : "+r" (__X)); \    __X; })
+value|__extension__ ({ register __uint64_t __X = (x); \    __asm ("bswap %0" : "+r" (__X)); \    __X; })
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OPTIMIZE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_long_const
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x>> 56) | \ 	 ((x>> 40)& 0xff00) | \ 	 ((x>> 24)& 0xff0000) | \ 	 ((x>> 8)& 0xff000000) | \ 	 ((x<< 8)& (0xfful<< 32)) | \ 	 ((x<< 24)& (0xfful<< 40)) | \ 	 ((x<< 40)& (0xfful<< 48)) | \ 	 ((x<< 56))))
 end_define
 
 begin_define
@@ -167,8 +305,63 @@ name|__byte_swap_long
 parameter_list|(
 name|x
 parameter_list|)
+value|(__builtin_constant_p(x) ? \ 	__byte_swap_long_const(x) : __byte_swap_long_var(x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_long
+parameter_list|(
+name|x
+parameter_list|)
+value|__byte_swap_long_var(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_word_var
+parameter_list|(
+name|x
+parameter_list|)
 define|\
-value|__extension__ ({ register __uint64_t __X = (x); \    __asm ("bswap %0" : "+r" (__X)); \    __X; })
+value|__extension__ ({ register __uint16_t __X = (x); \    __asm ("xchgb %h0, %b0" : "+Q" (__X)); \    __X; })
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OPTIMIZE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_word_const
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((((x)& 0xff00)>> 8) | \ 	 (((x)& 0x00ff)<< 8))
 end_define
 
 begin_define
@@ -178,9 +371,36 @@ name|__byte_swap_word
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|__extension__ ({ register __uint16_t __X = (x); \    __asm ("xchgb %h0, %b0" : "+Q" (__X)); \    __X; })
+value|(__builtin_constant_p(x) ? \ 	__byte_swap_word_const(x) : __byte_swap_word_var(x))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__byte_swap_word
+parameter_list|(
+name|x
+parameter_list|)
+value|__byte_swap_word_var(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __OPTIMIZE__ */
+end_comment
 
 begin_function
 specifier|static
