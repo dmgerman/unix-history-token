@@ -32,6 +32,9 @@ decl_stmt|;
 name|u_int
 name|sc_nirq
 decl_stmt|;
+name|int
+name|sc_psim
+decl_stmt|;
 name|struct
 name|rman
 name|sc_rman
