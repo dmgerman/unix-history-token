@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.42 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -604,7 +604,7 @@ literal|0
 expr_stmt|;
 name|what
 operator|=
-name|KINFO_PROC_ALL
+name|KERN_PROC_ALL
 expr_stmt|;
 name|nlistf
 operator|=
@@ -703,7 +703,7 @@ expr_stmt|;
 block|}
 name|what
 operator|=
-name|KINFO_PROC_PID
+name|KERN_PROC_PID
 expr_stmt|;
 name|arg
 operator|=
@@ -754,7 +754,7 @@ expr_stmt|;
 block|}
 name|what
 operator|=
-name|KINFO_PROC_UID
+name|KERN_PROC_UID
 expr_stmt|;
 name|arg
 operator|=

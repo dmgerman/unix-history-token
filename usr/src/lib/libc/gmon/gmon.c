@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.12 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_ifdef
@@ -192,6 +192,11 @@ name|clockinfo
 name|clockinfo
 decl_stmt|;
 name|int
+name|mib
+index|[
+literal|2
+index|]
+decl_stmt|,
 name|tsize
 decl_stmt|,
 name|fsize
@@ -540,17 +545,35 @@ argument_list|(
 name|clockinfo
 argument_list|)
 expr_stmt|;
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_KERN
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|KERN_CLOCKRATE
+expr_stmt|;
 if|if
 condition|(
-name|getkerninfo
+name|sysctl
 argument_list|(
-name|KINFO_CLOCKRATE
+name|mib
+argument_list|,
+literal|2
 argument_list|,
 operator|&
 name|clockinfo
 argument_list|,
 operator|&
 name|size
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.33 (Berkeley) %G%"
+literal|"@(#)w.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -1591,7 +1591,7 @@ name|kvm_getprocs
 argument_list|(
 name|kd
 argument_list|,
-name|KINFO_PROC_ALL
+name|KERN_PROC_ALL
 argument_list|,
 literal|0
 argument_list|,
