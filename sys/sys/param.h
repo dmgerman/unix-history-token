@@ -1294,65 +1294,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * XXX deprecated uppercase variants for byteorder(3) functions.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NTOHL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) = ntohl(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTOHS
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) = ntohs(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HTONL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) = htonl(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HTONS
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) = htons(x))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/*  * Constants for setting the parameters of the kernel memory allocator.  *  * 2 ** MINBUCKET is the smallest unit of memory that will be  * allocated. It must be at least large enough to hold a pointer.  *  * Units of memory less or equal to MAXALLOCSAVE will permanently  * allocate physical memory; requests for these size pieces of  * memory are quite fast. Allocations greater than MAXALLOCSAVE must  * always allocate and free physical memory; requests for these  * size allocations should be done infrequently as they will be slow.  *  * Constraints: PAGE_SIZE<= MAXALLOCSAVE<= 2 ** (MINBUCKET + 14), and  * MAXALLOCSIZE must be a power of two.  */
 end_comment
 
