@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: builtins.c,v 1.5 1999/07/23 15:00:07 sheldonh Exp $  *  */
+comment|/*-  * Copyright (c) 1983, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: builtins.c,v 1.6 1999/07/23 15:26:42 sheldonh Exp $  *  */
 end_comment
 
 begin_include
@@ -1418,7 +1418,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Out of memory."
+literal|"asprintf: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1474,20 +1479,6 @@ modifier|*
 name|sep
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|fakeid
-init|=
-name|NULL
-decl_stmt|;
-name|struct
-name|stat
-name|sb
-decl_stmt|;
-name|struct
-name|utsname
-name|un
-decl_stmt|;
 name|struct
 name|sockaddr_in
 name|sin
@@ -1518,12 +1509,6 @@ name|fd_set
 name|fdset
 decl_stmt|;
 name|char
-name|fakeid_path
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|char
 name|buf
 index|[
 name|BUFSIZE
@@ -1545,11 +1530,6 @@ modifier|*
 name|osname
 init|=
 name|NULL
-decl_stmt|;
-name|int
-name|sec
-decl_stmt|,
-name|usec
 decl_stmt|;
 name|int
 name|len
@@ -1664,6 +1644,12 @@ break|break;
 case|case
 literal|'t'
 case|:
+block|{
+name|int
+name|sec
+decl_stmt|,
+name|usec
+decl_stmt|;
 switch|switch
 condition|(
 name|sscanf
@@ -1711,6 +1697,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
 default|default:
 break|break;
 block|}
@@ -1722,6 +1709,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|struct
+name|utsname
+name|un
+decl_stmt|;
 if|if
 condition|(
 name|uname
@@ -1729,6 +1720,9 @@ argument_list|(
 operator|&
 name|un
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|iderror
 argument_list|(
@@ -2106,6 +2100,22 @@ condition|(
 name|fflag
 condition|)
 block|{
+name|FILE
+modifier|*
+name|fakeid
+init|=
+name|NULL
+decl_stmt|;
+name|char
+name|fakeid_path
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|seteuid
 argument_list|(
 name|pw
