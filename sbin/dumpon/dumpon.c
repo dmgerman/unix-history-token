@@ -279,21 +279,13 @@ name|stab
 operator|.
 name|st_mode
 argument_list|)
-operator|&&
-operator|!
-name|S_ISBLK
-argument_list|(
-name|stab
-operator|.
-name|st_mode
-argument_list|)
 condition|)
 block|{
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"%s: must specify a device"
+literal|"%s: must specify a character disk device"
 argument_list|,
 name|argv
 index|[
