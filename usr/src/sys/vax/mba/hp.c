@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.78	83/06/17	*/
+comment|/*	hp.c	4.79	83/06/19	*/
 end_comment
 
 begin_ifdef
@@ -653,7 +653,11 @@ literal|87
 block|,
 comment|/* H=cyl 87 thru 390 */
 block|}
-struct|, 9300_sizes[8]
+struct|,
+name|ampex_sizes
+index|[
+literal|8
+index|]
 init|=
 block|{
 literal|15884
@@ -1168,7 +1172,7 @@ literal|19
 block|,
 literal|815
 block|,
-literal|9300_sizes
+name|ampex_sizes
 block|,
 literal|3
 block|,
