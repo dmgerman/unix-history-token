@@ -15,6 +15,12 @@ directive|include
 file|"savecwd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"getline.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -58,14 +64,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|char
+modifier|*
 name|make_tempfile
 name|PROTO
 argument_list|(
 operator|(
-name|char
-operator|*
-name|temp
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -148,12 +153,12 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-comment|/* This is a one line description of what the file is for.  It is not       currently used, although one wonders whether it should be, somehow.       If NULL, then don't process this file in mkmodules (FIXME: a bit of       a kludge; probably should replace this with a flags field).  */
+comment|/* This is a one line description of what the file is for.  It is not       currently used, although one wonders whether it should be, somehow.       If NULL, then don't process this file in mkmodules (FIXME?: a bit of       a kludge; probably should replace this with a flags field).  */
 name|char
 modifier|*
 name|errormsg
 decl_stmt|;
-comment|/* Contents which the file should have in a new repository.  To avoid       problems with brain-dead compilers which choke on long string constants,       this is a pointer to an array of char * terminated by NULL--each of       the strings is concatenated.  */
+comment|/* Contents which the file should have in a new repository.  To avoid       problems with brain-dead compilers which choke on long string constants,       this is a pointer to an array of char * terminated by NULL--each of       the strings is concatenated.        If this field is NULL, the file is not created in a new       repository, but it can be added with "cvs add" (just as if one       had created the repository with a version of CVS which didn't       know about the file) and the checked-out copy will be updated       without having to add it to checkoutlist.  */
 specifier|const
 name|char
 modifier|*
@@ -175,45 +180,57 @@ name|loginfo_contents
 index|[]
 init|=
 block|{
-literal|"# The \"loginfo\" file is used to control where \"cvs commit\" log information\n"
+literal|"# The \"loginfo\" file controls where \"cvs commit\" log information\n"
 block|,
-literal|"# is sent.  The first entry on a line is a regular expression which is tested\n"
+literal|"# is sent.  The first entry on a line is a regular expression which must match\n"
 block|,
-literal|"# against the directory that the change is being made to, relative to the\n"
+literal|"# the directory that the change is being made to, relative to the\n"
 block|,
-literal|"# $CVSROOT.  For the first match that is found, then the remainder of the\n"
+literal|"# $CVSROOT.  If a match is found, then the remainder of the line is a filter\n"
 block|,
-literal|"# line is a filter program that should expect log information on its standard\n"
-block|,
-literal|"# input.\n"
+literal|"# program that should expect log information on its standard input.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# If the repository name does not match any of the regular expressions in the\n"
+literal|"# If the repository name does not match any of the regular expressions in this\n"
 block|,
-literal|"# first field of this file, the \"DEFAULT\" line is used, if it is specified.\n"
-block|,
-literal|"#\n"
-block|,
-literal|"# If the name \"ALL\" appears as a regular expression it is always used\n"
-block|,
-literal|"# in addition to the first matching regex or \"DEFAULT\".\n"
+literal|"# file, the \"DEFAULT\" line is used, if it is specified.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# The filter program may use one and only one \"%s\" modifier (ala printf).  If\n"
+literal|"# If the name ALL appears as a regular expression it is always used\n"
 block|,
-literal|"# such a \"%s\" is specified in the filter program, a brief title is included\n"
+literal|"# in addition to the first matching regex or DEFAULT.\n"
 block|,
-literal|"# (as one argument, enclosed in single quotes) showing the relative directory\n"
+literal|"#\n"
 block|,
-literal|"# name and listing the modified file names.\n"
+literal|"# You may specify a format string as part of the\n"
+block|,
+literal|"# filter.  The string is composed of a `%' followed\n"
+block|,
+literal|"# by a single format character, or followed by a set of format\n"
+block|,
+literal|"# characters surrounded by `{' and `}' as separators.  The format\n"
+block|,
+literal|"# characters are:\n"
+block|,
+literal|"#\n"
+block|,
+literal|"#   s = file name\n"
+block|,
+literal|"#   V = old version number (pre-checkin)\n"
+block|,
+literal|"#   v = new version number (post-checkin)\n"
 block|,
 literal|"#\n"
 block|,
 literal|"# For example:\n"
 block|,
-literal|"#DEFAULT		(echo \"\"; who am i; date; cat)>> $CVSROOT/CVSROOT/commitlog\n"
+literal|"#DEFAULT (echo \"\"; id; echo %s; date; cat)>> $CVSROOT/CVSROOT/commitlog\n"
+block|,
+literal|"# or\n"
+block|,
+literal|"#DEFAULT (echo \"\"; id; echo %{sVv}; date; cat)>> $CVSROOT/CVSROOT/commitlog\n"
 block|,
 name|NULL
 block|}
@@ -307,9 +324,66 @@ literal|"# better handled by an entry in the loginfo file.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# One thing that should be noted  is the the ALL keyword is not\n"
+literal|"# One thing that should be noted is the the ALL keyword is not\n"
 block|,
-literal|"# supported. There can be only one entry that matches a given\n"
+literal|"# supported.  There can be only one entry that matches a given\n"
+block|,
+literal|"# repository.\n"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|verifymsg_contents
+index|[]
+init|=
+block|{
+literal|"# The \"verifymsg\" file is used to allow verification of logging\n"
+block|,
+literal|"# information.  It works best when a template (as specified in the\n"
+block|,
+literal|"# rcsinfo file) is provided for the logging procedure.  Given a\n"
+block|,
+literal|"# template with locations for, a bug-id number, a list of people who\n"
+block|,
+literal|"# reviewed the code before it can be checked in, and an external\n"
+block|,
+literal|"# process to catalog the differences that were code reviewed, the\n"
+block|,
+literal|"# following test can be applied to the code:\n"
+block|,
+literal|"#\n"
+block|,
+literal|"#   Making sure that the entered bug-id number is correct.\n"
+block|,
+literal|"#   Validating that the code that was reviewed is indeed the code being\n"
+block|,
+literal|"#       checked in (using the bug-id number or a seperate review\n"
+block|,
+literal|"#       number to identify this particular code set.).\n"
+block|,
+literal|"#\n"
+block|,
+literal|"# If any of the above test failed, then the commit would be aborted.\n"
+block|,
+literal|"#\n"
+block|,
+literal|"# Actions such as mailing a copy of the report to each reviewer are\n"
+block|,
+literal|"# better handled by an entry in the loginfo file.\n"
+block|,
+literal|"#\n"
+block|,
+literal|"# One thing that should be noted is the the ALL keyword is not\n"
+block|,
+literal|"# supported.  There can be only one entry that matches a given\n"
 block|,
 literal|"# repository.\n"
 block|,
@@ -595,6 +669,12 @@ literal|"#	-l		Top-level directory only -- do not recurse.\n"
 block|,
 literal|"#\n"
 block|,
+literal|"# NOTE:  If you change any of the \"Run\" options above, you'll have to\n"
+block|,
+literal|"# release and re-checkout any working directories of these modules.\n"
+block|,
+literal|"#\n"
+block|,
 literal|"# And \"directory\" is a path to a directory relative to $CVSROOT.\n"
 block|,
 literal|"#\n"
@@ -656,6 +736,14 @@ name|editinfo_contents
 block|}
 block|,
 block|{
+name|CVSROOTADM_VERIFYMSG
+block|,
+literal|"a %s file can be used to validate log messages"
+block|,
+name|verifymsg_contents
+block|}
+block|,
+block|{
 name|CVSROOTADM_COMMITINFO
 block|,
 literal|"a %s file can be used to configure 'cvs commit' checking"
@@ -713,6 +801,23 @@ name|modules_contents
 block|}
 block|,
 block|{
+name|CVSROOTADM_READERS
+block|,
+literal|"a %s file specifies read-only users"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|CVSROOTADM_WRITERS
+block|,
+literal|"a %s file specifies read/write users"
+block|,
+name|NULL
+block|}
+block|,
+comment|/* Some have suggested listing CVSROOTADM_PASSWD here too.  The        security implications of transmitting hashed passwords over the        net are no worse than transmitting cleartext passwords which pserver        does, so this isn't a problem.  But I'm worried about the implications        of storing old passwords--if someone used a password in the past        they might be using it elsewhere, using a similar password, etc,        and so it doesn't seem to me like we should be saving old passwords,        even hashed.  */
+block|{
 name|NULL
 block|,
 name|NULL
@@ -740,12 +845,9 @@ name|struct
 name|saved_cwd
 name|cwd
 decl_stmt|;
-comment|/* FIXME: arbitrary limit */
 name|char
+modifier|*
 name|temp
-index|[
-name|PATH_MAX
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -770,12 +872,16 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* FIXME: arbitrary limit */
 name|char
+modifier|*
 name|line
-index|[
-literal|512
-index|]
+init|=
+name|NULL
+decl_stmt|;
+name|size_t
+name|line_allocated
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|struct
@@ -791,14 +897,12 @@ operator|&
 name|cwd
 argument_list|)
 condition|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|error_exit
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|chdir
+name|CVS_CHDIR
 argument_list|(
 name|dir
 argument_list|)
@@ -817,10 +921,10 @@ name|dir
 argument_list|)
 expr_stmt|;
 comment|/*      * First, do the work necessary to update the "modules" database.      */
-name|make_tempfile
-argument_list|(
 name|temp
-argument_list|)
+operator|=
+name|make_tempfile
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -897,9 +1001,15 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
-name|exit
+name|error
 argument_list|(
-name|EXIT_FAILURE
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot check out %s"
+argument_list|,
+name|CVSROOTADM_MODULES
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -922,6 +1032,11 @@ operator|(
 name|void
 operator|)
 name|unlink_file
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
+name|free
 argument_list|(
 name|temp
 argument_list|)
@@ -952,10 +1067,10 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|make_tempfile
-argument_list|(
 name|temp
-argument_list|)
+operator|=
+name|make_tempfile
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -994,11 +1109,15 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* Use 'fopen' instead of 'open_file' because we want to ignore error */
 name|fp
 operator|=
-name|fopen
+name|CVS_FOPEN
 argument_list|(
 name|CVSROOTADM_CHECKOUTLIST
 argument_list|,
@@ -1013,19 +1132,18 @@ block|{
 comment|/* 	 * File format: 	 *  [<whitespace>]<filename><whitespace><error message><end-of-line> 	 * 	 * comment lines begin with '#' 	 */
 while|while
 condition|(
-name|fgets
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+operator|&
+name|line_allocated
 argument_list|,
 name|fp
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 comment|/* skip lines starting with # */
@@ -1106,10 +1224,10 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|make_tempfile
-argument_list|(
 name|temp
-argument_list|)
+operator|=
+name|make_tempfile
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1176,13 +1294,80 @@ name|fname
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|line
+condition|)
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read %s"
+argument_list|,
+name|CVSROOTADM_CHECKOUTLIST
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|CVSROOTADM_CHECKOUTLIST
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Error from CVS_FOPEN.  */
+if|if
+condition|(
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|CVSROOTADM_CHECKOUTLIST
 argument_list|)
 expr_stmt|;
 block|}
@@ -1196,10 +1381,8 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
+name|error_exit
+argument_list|()
 expr_stmt|;
 name|free_cwd
 argument_list|(
@@ -1221,15 +1404,10 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|make_tempfile
-parameter_list|(
-name|temp
-parameter_list|)
 name|char
 modifier|*
-name|temp
-decl_stmt|;
+name|make_tempfile
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -1239,6 +1417,10 @@ literal|0
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|temp
 decl_stmt|;
 if|if
 condition|(
@@ -1250,6 +1432,18 @@ name|seed
 operator|=
 name|getpid
 argument_list|()
+expr_stmt|;
+name|temp
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|BAKPREFIX
+argument_list|)
+operator|+
+literal|40
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1276,7 +1470,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|open
+name|CVS_OPEN
 argument_list|(
 name|temp
 argument_list|,
@@ -1332,6 +1526,9 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
+return|return
+name|temp
+return|;
 block|}
 end_function
 
@@ -1354,26 +1551,47 @@ name|temp
 decl_stmt|;
 block|{
 name|char
+modifier|*
 name|rcs
-index|[
-name|PATH_MAX
-index|]
+decl_stmt|;
+name|RCSNode
+modifier|*
+name|rcsnode
 decl_stmt|;
 name|int
 name|retcode
 init|=
 literal|0
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+if|if
+condition|(
+name|noexec
+condition|)
+return|return
+literal|0
+return|;
+name|rcs
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|file
+argument_list|)
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+name|strcpy
 argument_list|(
 name|rcs
 argument_list|,
-literal|"%s%s"
-argument_list|,
 name|file
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|rcs
 argument_list|,
 name|RCSEXT
 argument_list|)
@@ -1386,41 +1604,56 @@ argument_list|(
 name|rcs
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|rcs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-name|run_setup
-argument_list|(
-literal|"%s%s -x,v/ -q -p"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS_CO
-argument_list|)
-expr_stmt|;
-name|run_arg
+block|}
+name|rcsnode
+operator|=
+name|RCS_parsercsfile
 argument_list|(
 name|rcs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|retcode
 operator|=
-name|run_exec
+name|RCS_checkout
 argument_list|(
-name|RUN_TTY
+name|rcsnode
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|temp
 argument_list|,
-name|RUN_TTY
-argument_list|,
-name|RUN_NORMAL
-argument_list|)
+operator|(
+name|RCSCHECKOUTPROC
 operator|)
+name|NULL
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retcode
 operator|!=
 literal|0
 condition|)
@@ -1444,6 +1677,17 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
+name|freercsnode
+argument_list|(
+operator|&
+name|rcsnode
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rcs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|retcode
@@ -2188,7 +2432,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|dotdir
 argument_list|,
@@ -2199,7 +2443,7 @@ comment|/* mv modules.dir .#modules.dir */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|dotpag
 argument_list|,
@@ -2210,7 +2454,7 @@ comment|/* mv modules.pag .#modules.pag */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|dotdb
 argument_list|,
@@ -2221,7 +2465,7 @@ comment|/* mv modules.db .#modules.db */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|newdir
 argument_list|,
@@ -2232,7 +2476,7 @@ comment|/* mv "temp".dir modules.dir */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|newpag
 argument_list|,
@@ -2243,7 +2487,7 @@ comment|/* mv "temp".pag modules.pag */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|newdb
 argument_list|,
@@ -2286,22 +2530,35 @@ name|real
 decl_stmt|;
 block|{
 name|char
+modifier|*
 name|bak
-index|[
-literal|50
-index|]
 decl_stmt|;
 name|struct
 name|stat
 name|statbuf
 decl_stmt|;
 name|char
+modifier|*
 name|rcs
-index|[
-name|PATH_MAX
-index|]
 decl_stmt|;
 comment|/* Set "x" bits if set in original. */
+name|rcs
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|real
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|RCSEXT
+argument_list|)
+operator|+
+literal|10
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2326,12 +2583,17 @@ comment|/* in case rcs file doesn't exist, but it should... */
 operator|(
 name|void
 operator|)
-name|stat
+name|CVS_STAT
 argument_list|(
 name|rcs
 argument_list|,
 operator|&
 name|statbuf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rcs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2364,6 +2626,23 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
+name|bak
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|real
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|BAKPREFIX
+argument_list|)
+operator|+
+literal|10
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2390,7 +2669,7 @@ comment|/* rm .#loginfo */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|real
 argument_list|,
@@ -2401,7 +2680,7 @@ comment|/* mv loginfo .#loginfo */
 operator|(
 name|void
 operator|)
-name|rename
+name|CVS_RENAME
 argument_list|(
 name|temp
 argument_list|,
@@ -2409,6 +2688,11 @@ name|real
 argument_list|)
 expr_stmt|;
 comment|/* mv "temp" loginfo */
+name|free
+argument_list|(
+name|bak
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2430,65 +2714,6 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Create directory NAME if it does not already exist; fatal error for    other errors.  FIXME: This should be in filesubr.c or thereabouts,    probably.  Perhaps it should be further abstracted, though (for example    to handle CVSUMASK where appropriate?).  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mkdir_if_needed
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|CVS_MKDIR
-argument_list|(
-name|name
-argument_list|,
-literal|0777
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|!=
-name|EEXIST
-ifdef|#
-directive|ifdef
-name|EACCESS
-comment|/* OS/2; see longer comment in client.c.  */
-operator|&&
-name|errno
-operator|!=
-name|EACCESS
-endif|#
-directive|endif
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot mkdir %s"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_function
 name|int
@@ -2549,6 +2774,9 @@ argument_list|(
 name|init_usage
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
 if|if
 condition|(
 name|client_active
@@ -2568,10 +2796,13 @@ name|get_responses_and_close
 argument_list|()
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 comment|/* Note: we do *not* create parent directories as needed like the        old cvsinit.sh script did.  Few utilities do that, and a        non-existent parent directory is as likely to be a typo as something        which needs to be created.  */
 name|mkdir_if_needed
 argument_list|(
-name|CVSroot
+name|CVSroot_directory
 argument_list|)
 expr_stmt|;
 name|adm
@@ -2580,7 +2811,7 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot
+name|CVSroot_directory
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -2595,7 +2826,7 @@ name|strcpy
 argument_list|(
 name|adm
 argument_list|,
-name|CVSroot
+name|CVSroot_directory
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -2620,7 +2851,7 @@ expr_stmt|;
 comment|/* This is needed by the call to "ci" below.  */
 if|if
 condition|(
-name|chdir
+name|CVS_CHDIR
 argument_list|(
 name|adm
 argument_list|)
