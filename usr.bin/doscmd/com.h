@@ -7,13 +7,6 @@ begin_comment
 comment|/* com.h for doscmd int14.c */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BUFSIZE
-value|1024
-end_define
-
 begin_comment
 comment|/* NS16550A register definitions */
 end_comment
@@ -30,7 +23,7 @@ value|0xF0
 end_define
 
 begin_comment
-comment|/* not used */
+comment|/* Not used */
 end_comment
 
 begin_define
@@ -96,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|II_NOP
-value|0x38
+value|0x30
 end_define
 
 begin_comment
@@ -107,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|II_INT_ID
-value|0x06
+value|0x0E
 end_define
 
 begin_comment
@@ -128,6 +121,13 @@ end_comment
 begin_comment
 comment|/* bit masks for II_INT_ID */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|II_TO
+value|0x0C
+end_define
 
 begin_define
 define|#
@@ -160,6 +160,55 @@ end_define
 begin_comment
 comment|/* FIFO control reg */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_SZ_MASK
+value|0xC0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_1B
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_4B
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_8B
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_14B
+value|0xC0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_CTR
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_FIFO_CRV
+value|0x02
+end_define
 
 begin_define
 define|#
@@ -267,12 +316,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LS_X_SHFT_E
+name|LS_X_DATA_E
 value|0x40
 end_define
 
 begin_comment
-comment|/* 0=data transfer, 1=transmitter idle */
+comment|/* 1=empty */
 end_comment
 
 begin_define
@@ -283,7 +332,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* 0=ready, 1=transferring character */
+comment|/* 1=empty */
 end_comment
 
 begin_define
@@ -434,107 +483,6 @@ comment|/* Clear To Send changed state */
 end_comment
 
 begin_comment
-comment|/* data structure definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_OF_COM_REGS
-value|8
-end_define
-
-begin_struct
-struct|struct
-name|com_data_struct
-block|{
-name|int
-name|fd
-decl_stmt|;
-comment|/* BSD/386 file descriptor */
-name|char
-modifier|*
-name|path
-decl_stmt|;
-comment|/* BSD/386 pathname */
-name|int
-name|addr
-decl_stmt|;
-comment|/* ISA I/O address */
-name|unsigned
-name|char
-name|irq
-decl_stmt|;
-comment|/* ISA IRQ */
-name|unsigned
-name|char
-name|flags
-decl_stmt|;
-comment|/* some general software flags */
-name|struct
-name|queue
-modifier|*
-name|com_queue
-decl_stmt|;
-comment|/* XXX DEBUG obsolete MCL? */
-name|unsigned
-name|char
-name|div_latch
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* mirror of 16550 R0':R1' read/write */
-name|unsigned
-name|char
-name|last_char_read
-decl_stmt|;
-comment|/* mirror of 16550 R0 read only */
-name|unsigned
-name|char
-name|int_enable
-decl_stmt|;
-comment|/* mirror of 16550 R1 read/write */
-name|unsigned
-name|char
-name|int_id
-decl_stmt|;
-comment|/* mirror of 16550 R2 read only */
-name|unsigned
-name|char
-name|fifo_ctrl
-decl_stmt|;
-comment|/* mirror of 16550 R2 write only */
-name|unsigned
-name|char
-name|line_ctrl
-decl_stmt|;
-comment|/* mirror of 16550 R3 read/write */
-name|unsigned
-name|char
-name|modem_ctrl
-decl_stmt|;
-comment|/* mirror of 16550 R4 read/write */
-name|unsigned
-name|char
-name|line_stat
-decl_stmt|;
-comment|/* mirror of 16550 R5 read/write */
-name|unsigned
-name|char
-name|modem_stat
-decl_stmt|;
-comment|/* mirror of 16550 R6 read/write */
-name|unsigned
-name|char
-name|uart_spare
-decl_stmt|;
-comment|/* mirror of 16550 R7 read/write */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* DOS definitions -- parameters */
 end_comment
 
@@ -643,6 +591,13 @@ name|TXLEN_8BITS
 value|0x03
 end_define
 
+begin_define
+define|#
+directive|define
+name|N_OF_COM_REGS
+value|8
+end_define
+
 begin_comment
 comment|/* DOS definitions -- return codes */
 end_comment
@@ -657,45 +612,6 @@ end_define
 begin_comment
 comment|/* return value used by DOS */
 end_comment
-
-begin_comment
-comment|/* miscellaneous definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIV_LATCH_LOW
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIV_LATCH_HIGH
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIV_LATCH_LOW_WRITTEN
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIV_LATCH_HIGH_WRITTEN
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIV_LATCH_BOTH_WRITTEN
-value|0x03
-end_define
 
 begin_comment
 comment|/* routine declarations */
@@ -714,23 +630,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|com_set_line
-parameter_list|(
-name|struct
-name|com_data_struct
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-parameter_list|,
-name|unsigned
-name|char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|init_com
 parameter_list|(
 name|int
@@ -738,27 +637,6 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
-parameter_list|,
-name|unsigned
-name|char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_char
-name|com_port_in
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|com_port_out
-parameter_list|(
 name|int
 parameter_list|,
 name|unsigned

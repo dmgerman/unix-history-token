@@ -1299,13 +1299,13 @@ operator|||
 operator|(
 name|irq
 operator|<
-literal|1
+literal|2
 operator|)
 operator|||
 operator|(
 name|irq
 operator|>
-literal|15
+literal|7
 operator|)
 condition|)
 block|{
@@ -1313,7 +1313,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign com[1-4] path addr irq\n"
+literal|"Usage: assign com[1-4] path addr irq[2-7]\n"
 argument_list|)
 expr_stmt|;
 name|quit

@@ -738,6 +738,16 @@ name|set_atc_index
 operator|=
 literal|1
 expr_stmt|;
+name|VGA_InputStatus1
+operator|=
+operator|(
+name|VGA_InputStatus1
+operator|+
+literal|1
+operator|)
+operator|&
+literal|15
+expr_stmt|;
 return|return
 name|VGA_InputStatus1
 return|;
@@ -1108,6 +1118,13 @@ expr_stmt|;
 name|define_input_port_handler
 argument_list|(
 name|GDC_DataPort
+argument_list|,
+name|video_inb
+argument_list|)
+expr_stmt|;
+name|define_input_port_handler
+argument_list|(
+name|VGA_InputStatus1Port
 argument_list|,
 name|video_inb
 argument_list|)
@@ -1576,6 +1593,10 @@ operator|=
 name|vram
 operator|+
 literal|0x30000
+expr_stmt|;
+name|VGA_InputStatus1
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -2067,9 +2088,6 @@ name|BIOS_CharHeight
 operator|=
 name|CharHeight
 expr_stmt|;
-name|_BlockIO
-argument_list|()
-expr_stmt|;
 comment|/* Load 'pixels[]' from default DAC values. */
 name|update_pixels
 argument_list|()
@@ -2086,9 +2104,6 @@ argument_list|()
 expr_stmt|;
 comment|/* Resize window if necessary. */
 name|resize_window
-argument_list|()
-expr_stmt|;
-name|_UnblockIO
 argument_list|()
 expr_stmt|;
 comment|/* Mmap video memory for the graphics modes. Write access to 0xa0000 -        0xaffff will generate a T_PAGEFAULT trap in VM86 mode (aside: why not a        SIGSEGV?), which is handled in 'trap.c:sigbus()'. */

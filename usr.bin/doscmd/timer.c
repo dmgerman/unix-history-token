@@ -82,6 +82,10 @@ operator|++
 expr_stmt|;
 comment|/* # times past mn */
 block|}
+comment|/* What is the real BIOS' sequence? */
+name|send_eoi
+argument_list|()
+expr_stmt|;
 name|softint
 argument_list|(
 literal|0x1c

@@ -1263,24 +1263,6 @@ name|PSL_VIF
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|n_pending
-operator|<
-literal|1
-condition|)
-block|{
-name|fatal
-argument_list|(
-literal|"Pending interrupts out of sync\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|resume_interrupt
 argument_list|()
 expr_stmt|;
@@ -2335,7 +2317,6 @@ argument_list|(
 name|REGS
 argument_list|)
 expr_stmt|;
-comment|/*     debug(D_ALWAYS,"tick %d", update_counter); */
 name|update_counter
 operator|=
 literal|0
@@ -2355,10 +2336,9 @@ argument_list|)
 expr_stmt|;
 name|hardint
 argument_list|(
-literal|0x08
+literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/*    debug(D_ALWAYS,"\n"); */
 if|if
 condition|(
 name|tmode
