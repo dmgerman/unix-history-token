@@ -20,7 +20,7 @@ name|char
 name|if_c_rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: if.c,v 1.2 1993/11/17 20:19:19 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,15 +503,18 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
-operator|*
 name|cp
-operator|++
-operator|=
+operator|+=
+name|sprintf
+argument_list|(
+name|cp
+argument_list|,
+literal|"%d"
+argument_list|,
 name|ifnet
 operator|.
 name|if_unit
-operator|+
-literal|'0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
