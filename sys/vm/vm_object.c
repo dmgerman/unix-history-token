@@ -5518,6 +5518,12 @@ operator|&
 name|vm_object_list_mtx
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|obj_zone
@@ -5571,17 +5577,6 @@ name|backing_object
 operator|->
 name|generation
 operator|++
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|backing_object
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
 expr_stmt|;
 name|new_backing_object
 operator|=
@@ -5648,8 +5643,13 @@ operator|->
 name|backing_object_offset
 expr_stmt|;
 block|}
-comment|/* 			 * Drop the reference count on backing_object. Since 			 * its ref_count was at least 2, it will not vanish; 			 * so we don't need to call vm_object_deallocate, but 			 * we do anyway. 			 */
-name|vm_object_deallocate
+comment|/* 			 * Drop the reference count on backing_object. Since 			 * its ref_count was at least 2, it will not vanish. 			 */
+name|backing_object
+operator|->
+name|ref_count
+operator|--
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -5659,12 +5659,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 		 * Try again with this object's new backing object. 		 */
-comment|/* XXX */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -5962,12 +5956,6 @@ operator|(
 name|TRUE
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|prev_object
@@ -5991,12 +5979,6 @@ block|{
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|prev_object
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -6024,12 +6006,6 @@ block|{
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|prev_object
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -6074,12 +6050,6 @@ block|{
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|prev_object
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -6151,12 +6121,6 @@ expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|prev_object
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
