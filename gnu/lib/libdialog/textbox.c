@@ -3487,10 +3487,6 @@ argument_list|,
 name|dialog_attr
 argument_list|)
 expr_stmt|;
-name|box_width
-operator|-=
-literal|2
-expr_stmt|;
 name|search_term
 index|[
 literal|0
@@ -3527,6 +3523,8 @@ operator|-
 literal|1
 argument_list|,
 name|box_width
+operator|-
+literal|2
 argument_list|,
 name|searchbox_attr
 argument_list|,
