@@ -79,6 +79,12 @@ directive|include
 file|<dev/aac/aacvar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AAC_DEBUG
+end_ifdef
+
 begin_function_decl
 name|void
 name|aac_printstate0
@@ -2645,6 +2651,11 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
