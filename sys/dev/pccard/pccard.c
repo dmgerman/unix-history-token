@@ -269,6 +269,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX Shouldn't be touching hardware, that's a layering violation */
+end_comment
+
+begin_comment
+comment|/* XXX imp */
+end_comment
+
 begin_function
 name|int
 name|pccard_ccr_read
@@ -3661,16 +3669,6 @@ name|int
 name|busno
 parameter_list|)
 block|{
-name|device_add_child
-argument_list|(
-name|dev
-argument_list|,
-name|NULL
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
