@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* signals.c -- install and maintain Info signal handlers.    $Id: signals.c,v 1.4 2003/01/29 19:23:22 karl Exp $    $FreeBSD$     Copyright (C) 1993, 1994, 1995, 1998, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* signals.c -- install and maintain Info signal handlers.    $Id: signals.c,v 1.4 2003/01/29 19:23:22 karl Exp $     Copyright (C) 1993, 1994, 1995, 1998, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -458,8 +458,6 @@ decl_stmt|,
 name|old_INT
 decl_stmt|,
 name|old_USR1
-decl_stmt|,
-name|old_CONT
 decl_stmt|;
 end_decl_stmt
 
@@ -544,22 +542,6 @@ operator|&
 name|old_WINCH
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SIGCONT
-argument_list|)
-name|set_termsig
-argument_list|(
-name|SIGCONT
-argument_list|,
-operator|&
-name|old_CONT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 if|#
@@ -932,16 +914,6 @@ argument_list|)
 ifdef|#
 directive|ifdef
 name|SIGWINCH
-ifdef|#
-directive|ifdef
-name|SIGCONT
-case|case
-name|SIGCONT
-case|:
-comment|/* pretend a SIGWINCH in case the terminal window size has changed 	 while we've been asleep */
-comment|/* FALLTHROUGH */
-endif|#
-directive|endif
 case|case
 name|SIGWINCH
 case|:
@@ -971,23 +943,6 @@ operator|=
 operator|&
 name|old_WINCH
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGCONT
-elseif|else
-if|if
-condition|(
-name|sig
-operator|==
-name|SIGCONT
-condition|)
-name|old_signal_handler
-operator|=
-operator|&
-name|old_CONT
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
