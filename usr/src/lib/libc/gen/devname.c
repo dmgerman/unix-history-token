@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.16 (Berkeley) %G%"
+literal|"@(#)devname.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,7 +178,18 @@ operator|(
 literal|"??"
 operator|)
 return|;
-comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field. 	 */
+comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field.  Be 	 * sure to clear any padding that may be found in bkey. 	 */
+name|bzero
+argument_list|(
+operator|&
+name|bkey
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bkey
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bkey
 operator|.
 name|dev

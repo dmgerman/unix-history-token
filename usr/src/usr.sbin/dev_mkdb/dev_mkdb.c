@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.12 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,7 +397,18 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field. 	 */
+comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field.  Note 	 * that the structure may contain padding, so we have to clear it 	 * out here. 	 */
+name|bzero
+argument_list|(
+operator|&
+name|bkey
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bkey
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|key
 operator|.
 name|data
