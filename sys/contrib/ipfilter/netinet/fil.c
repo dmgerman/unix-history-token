@@ -807,6 +807,12 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500043
+operator|)
 end_if
 
 begin_decl_stmt
@@ -833,7 +839,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SOLARIS || __sgi */
+comment|/* SOLARIS || __sgi || __FreeBSD_version */
 end_comment
 
 begin_endif

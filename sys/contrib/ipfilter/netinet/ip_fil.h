@@ -2553,12 +2553,6 @@ name|NetBSD
 operator|>=
 literal|199905
 operator|)
-operator|||
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|600001
-operator|)
 end_if
 
 begin_define
