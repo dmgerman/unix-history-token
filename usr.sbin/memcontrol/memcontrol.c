@@ -652,9 +652,6 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|int
-name|error
-decl_stmt|;
-name|int
 name|ch
 decl_stmt|;
 name|int

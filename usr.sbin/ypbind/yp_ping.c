@@ -776,14 +776,6 @@ name|cu_data
 modifier|*
 name|cu
 decl_stmt|;
-name|enum
-name|clnt_stat
-argument_list|(
-operator|*
-name|oldfunc
-argument_list|)
-argument_list|()
-decl_stmt|;
 name|int
 name|validsrvs
 init|=

@@ -352,11 +352,6 @@ name|flushtime
 init|=
 literal|30
 decl_stmt|;
-name|int
-name|lastc
-init|=
-literal|1000
-decl_stmt|;
 name|aflg
 operator|=
 name|kflg

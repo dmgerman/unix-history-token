@@ -367,9 +367,6 @@ name|unsigned
 name|long
 name|ipaddr
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|address
 index|[
 literal|0

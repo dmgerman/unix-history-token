@@ -221,8 +221,6 @@ name|l1
 decl_stmt|,
 name|l2
 decl_stmt|,
-name|l3
-decl_stmt|,
 name|l4
 decl_stmt|;
 name|struct

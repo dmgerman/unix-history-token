@@ -285,9 +285,6 @@ modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|t
-decl_stmt|,
-modifier|*
 name|tcapbuf
 decl_stmt|,
 modifier|*

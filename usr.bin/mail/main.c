@@ -147,9 +147,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|ef
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 name|char
 name|nosrc

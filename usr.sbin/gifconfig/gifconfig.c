@@ -2750,12 +2750,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|char
-name|hostname
-index|[
-name|NI_MAXHOST
-index|]
-decl_stmt|;
 name|int
 name|flags
 init|=

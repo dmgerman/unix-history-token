@@ -3151,11 +3151,6 @@ block|{
 name|int
 name|flags
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|type
-decl_stmt|;
 define|#
 directive|define
 name|ST
