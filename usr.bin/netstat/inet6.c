@@ -782,6 +782,8 @@ operator|==
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
 name|kread
 argument_list|(
 name|off
@@ -798,7 +800,8 @@ argument_list|(
 name|ip6stat
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"%s:\n"
