@@ -1245,7 +1245,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-bqs] [-a key#] [-k file] [-p samples] [-t timeo] server ...\n"
+literal|"usage: %s [-bdqsv] [-o version] [-a key#] [-e authdelay] [-k keyfile] [-p samples] [-t timeout] server ...\n"
 argument_list|,
 name|progname
 argument_list|)
