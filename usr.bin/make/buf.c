@@ -51,29 +51,6 @@ directive|include
 file|"util.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)> (b) ? (a) : (b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/**  * Returns the number of bytes in the buffer.  Doesn't include the  * null-terminating byte.  */
 end_comment
