@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.13 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,13 +111,13 @@ name|info
 operator|.
 name|bsize
 operator|=
-literal|1024
+literal|4096
 expr_stmt|;
 name|info
 operator|.
 name|ffactor
 operator|=
-literal|5
+literal|40
 expr_stmt|;
 name|info
 operator|.
