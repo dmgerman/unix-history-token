@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.18 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -43,13 +43,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sendmail.h"
 end_include
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.17 (Berkeley) %G%"
+literal|"@(#)conf.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,20 +31,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
 
 begin_include
 include|#
@@ -52,11 +40,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-endif|sun
-end_endif
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
 
 begin_include
 include|#
