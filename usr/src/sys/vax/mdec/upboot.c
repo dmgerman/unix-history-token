@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California. 
 end_comment
 
 begin_comment
-comment|/* "@(#)upboot.c	7.2 (Berkeley) %G%" */
+comment|/* "@(#)upboot.c	7.3 (Berkeley) %G%" */
 end_comment
 
 begin_include
@@ -278,6 +278,11 @@ name|r5
 decl_stmt|,
 name|r11
 comment|/* boot flags */
+name|movl
+name|r2
+decl_stmt|,
+name|r8
+comment|/* boot device CSR */
 name|brw
 name|start0
 comment|/*  * Leave space for pack label.  */
@@ -308,11 +313,6 @@ decl_stmt|,
 name|r9
 comment|/* UNIBUS adaptor address */
 name|movl
-name|r2
-decl_stmt|,
-name|r8
-comment|/* boot device CSR */
-name|movl
 name|r3
 decl_stmt|,
 name|r7
@@ -335,22 +335,8 @@ decl_stmt|,
 argument_list|(
 name|sp
 argument_list|)
-name|movl
-name|r9
-decl_stmt|,
-name|r1
-comment|/* UNIBUS I/O page address */
-name|movl
-name|r8
-decl_stmt|,
-name|r2
-comment|/* boot device CSR */
-name|movl
-name|r7
-decl_stmt|,
-name|r3
-comment|/* unit number */
 comment|/* init up, set vv in drive; if any errors, give up */
+comment|/* probably unneeded: rom should have already done this */
 name|bisw3
 name|r7
 decl_stmt|,
@@ -402,11 +388,6 @@ decl_stmt|,1b
 comment|/* relocate to high core */
 name|start
 range|:
-name|movl
-name|r5
-decl_stmt|,
-name|r11
-comment|/* boot flags */
 name|movl
 name|$RELOC
 decl_stmt|,

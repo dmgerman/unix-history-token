@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California. 
 end_comment
 
 begin_comment
-comment|/* "@(#)rlboot.c	7.2 (Berkeley) %G%" */
+comment|/* "@(#)rlboot.c	7.3 (Berkeley) %G%" */
 end_comment
 
 begin_include
@@ -195,7 +195,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|movl
+name|cvtbl
 name|$MAJOR
 decl_stmt|,
 name|r10
@@ -260,6 +260,11 @@ name|r5
 decl_stmt|,
 name|r11
 comment|/* boot flags */
+name|movl
+name|r2
+decl_stmt|,
+name|r8
+comment|/* boot device CSR */
 name|brw
 name|start0
 comment|/*  * Leave space for pack label.  */
@@ -289,23 +294,13 @@ index|]
 decl_stmt|,
 name|r9
 comment|/* UNIBUS adaptor address */
-name|movl
-name|r2
-decl_stmt|,
-name|r8
-comment|/* boot device CSR */
-name|movl
-name|r3
-decl_stmt|,
-name|r7
-comment|/* unit number */
 name|ashl
 name|$8
 decl_stmt|,
-name|r7
+name|r3
 decl_stmt|,
 name|r7
-comment|/* shifted for HL_cs */
+comment|/* unit number, shifted for HL_cs */
 comment|/* init rl11, and drive, don't check for any errors now */
 name|movw
 name|$HL_RESET
@@ -326,11 +321,6 @@ argument_list|)
 comment|/* relocate to high core */
 name|start
 range|:
-name|movl
-name|r5
-decl_stmt|,
-name|r11
-comment|/* save boot flags */
 name|movl
 name|$RELOC
 decl_stmt|,
