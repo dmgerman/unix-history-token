@@ -1668,7 +1668,9 @@ name|ad1816
 argument_list|)
 expr_stmt|;
 return|return
-name|format
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
