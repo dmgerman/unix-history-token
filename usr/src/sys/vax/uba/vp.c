@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	6.1	83/07/29	*/
+comment|/*	vp.c	6.2	83/09/20	*/
 end_comment
 
 begin_include
@@ -432,12 +432,7 @@ name|prcsr
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|ERNIE
-operator|||
-name|CAD
-comment|/* UNTIL REWIRED, GET INTERRUPT AT 200 BUT WANT 174 */
+comment|/* GET INTERRUPT AT 200 BUT WANT 174 IF HAVE TWO VECTORS */
 if|if
 condition|(
 name|cvec
@@ -455,8 +450,6 @@ operator|=
 literal|0174
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 sizeof|sizeof
