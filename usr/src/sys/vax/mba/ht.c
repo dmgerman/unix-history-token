@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.18	81/05/10	*/
+comment|/*	ht.c	4.19	81/08/31	*/
 end_comment
 
 begin_include
@@ -1910,7 +1910,6 @@ name|MBSR_MBEXC
 operator|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|bp
