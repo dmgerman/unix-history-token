@@ -419,10 +419,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_comment
+comment|/*  * ANSI/POSIX  */
+end_comment
+
 begin_decl_stmt
 name|__BEGIN_DECLS
-comment|/*  * ANSI/POSIX  */
-specifier|extern
 name|double
 name|acos
 name|__P
@@ -435,7 +437,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|asin
 name|__P
@@ -448,7 +449,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|atan
 name|__P
@@ -461,7 +461,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|atan2
 name|__P
@@ -476,7 +475,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|cos
 name|__P
@@ -489,7 +487,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|sin
 name|__P
@@ -502,7 +499,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|tan
 name|__P
@@ -515,7 +511,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|cosh
 name|__P
@@ -528,7 +523,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|sinh
 name|__P
@@ -541,7 +535,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|tanh
 name|__P
@@ -554,7 +547,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|exp
 name|__P
@@ -567,7 +559,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|frexp
 name|__P
@@ -583,7 +574,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|ldexp
 name|__P
@@ -598,7 +588,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|log
 name|__P
@@ -611,7 +600,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|log10
 name|__P
@@ -624,7 +612,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|modf
 name|__P
@@ -640,7 +627,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|pow
 name|__P
@@ -655,7 +641,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|sqrt
 name|__P
@@ -668,7 +653,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|ceil
 name|__P
@@ -681,7 +665,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|fabs
 name|__P
@@ -694,7 +677,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|floor
 name|__P
@@ -707,7 +689,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|fmod
 name|__P
@@ -738,7 +719,6 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|erf
 name|__P
@@ -751,7 +731,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|erfc
 name|__P
@@ -764,7 +743,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|gamma
 name|__P
@@ -777,7 +755,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|hypot
 name|__P
@@ -792,7 +769,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|isinf
 name|__P
@@ -805,7 +781,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|isnan
 name|__P
@@ -818,7 +793,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|finite
 name|__P
@@ -831,7 +805,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|j0
 name|__P
@@ -844,7 +817,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|j1
 name|__P
@@ -857,7 +829,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|jn
 name|__P
@@ -872,7 +843,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|lgamma
 name|__P
@@ -885,7 +855,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|y0
 name|__P
@@ -898,7 +867,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|y1
 name|__P
@@ -911,7 +879,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|yn
 name|__P
@@ -936,7 +903,6 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|acosh
 name|__P
@@ -949,7 +915,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|asinh
 name|__P
@@ -962,7 +927,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|atanh
 name|__P
@@ -975,7 +939,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|cbrt
 name|__P
@@ -988,7 +951,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|logb
 name|__P
@@ -1001,7 +963,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|nextafter
 name|__P
@@ -1016,7 +977,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|remainder
 name|__P
@@ -1031,7 +991,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|scalb
 name|__P
@@ -1052,7 +1011,6 @@ name|__cplusplus
 end_ifndef
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|matherr
 name|__P
@@ -1076,7 +1034,6 @@ comment|/*  * IEEE Test Vector  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|significand
 name|__P
@@ -1093,7 +1050,6 @@ comment|/*  * Functions callable from C, intended to support IEEE arithmetic.  *
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|copysign
 name|__P
@@ -1108,7 +1064,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|ilogb
 name|__P
@@ -1121,7 +1076,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|rint
 name|__P
@@ -1134,7 +1088,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|scalbn
 name|__P
@@ -1153,7 +1106,6 @@ comment|/*  * BSD math library entry points  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|drem
 name|__P
@@ -1168,7 +1120,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|expm1
 name|__P
@@ -1181,7 +1132,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|log1p
 name|__P
@@ -1204,7 +1154,6 @@ name|_REENTRANT
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|gamma_r
 name|__P
@@ -1220,7 +1169,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|lgamma_r
 name|__P
@@ -1249,7 +1197,6 @@ comment|/* float versions of ANSI/POSIX functions */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|acosf
 name|__P
@@ -1262,7 +1209,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|asinf
 name|__P
@@ -1275,7 +1221,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|atanf
 name|__P
@@ -1288,7 +1233,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|atan2f
 name|__P
@@ -1303,7 +1247,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|cosf
 name|__P
@@ -1316,7 +1259,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|sinf
 name|__P
@@ -1329,7 +1271,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|tanf
 name|__P
@@ -1342,7 +1283,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|coshf
 name|__P
@@ -1355,7 +1295,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|sinhf
 name|__P
@@ -1368,7 +1307,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|tanhf
 name|__P
@@ -1381,7 +1319,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|expf
 name|__P
@@ -1394,7 +1331,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|frexpf
 name|__P
@@ -1410,7 +1346,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|ldexpf
 name|__P
@@ -1425,7 +1360,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|logf
 name|__P
@@ -1438,7 +1372,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|log10f
 name|__P
@@ -1451,7 +1384,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|modff
 name|__P
@@ -1467,7 +1399,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|powf
 name|__P
@@ -1482,7 +1413,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|sqrtf
 name|__P
@@ -1495,7 +1425,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|ceilf
 name|__P
@@ -1508,7 +1437,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|fabsf
 name|__P
@@ -1521,7 +1449,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|floorf
 name|__P
@@ -1534,7 +1461,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|fmodf
 name|__P
@@ -1549,7 +1475,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|erff
 name|__P
@@ -1562,7 +1487,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|erfcf
 name|__P
@@ -1575,7 +1499,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|gammaf
 name|__P
@@ -1588,7 +1511,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|hypotf
 name|__P
@@ -1603,7 +1525,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|isnanf
 name|__P
@@ -1616,7 +1537,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|finitef
 name|__P
@@ -1629,7 +1549,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|j0f
 name|__P
@@ -1642,7 +1561,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|j1f
 name|__P
@@ -1655,7 +1573,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|jnf
 name|__P
@@ -1670,7 +1587,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|lgammaf
 name|__P
@@ -1683,7 +1599,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|y0f
 name|__P
@@ -1696,7 +1611,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|y1f
 name|__P
@@ -1709,7 +1623,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|ynf
 name|__P
@@ -1724,7 +1637,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|acoshf
 name|__P
@@ -1737,7 +1649,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|asinhf
 name|__P
@@ -1750,7 +1661,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|atanhf
 name|__P
@@ -1763,7 +1673,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|cbrtf
 name|__P
@@ -1776,7 +1685,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|logbf
 name|__P
@@ -1789,7 +1697,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|nextafterf
 name|__P
@@ -1804,7 +1711,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|remainderf
 name|__P
@@ -1819,7 +1725,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|scalbf
 name|__P
@@ -1838,7 +1743,6 @@ comment|/*  * float version of IEEE Test Vector  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|significandf
 name|__P
@@ -1855,7 +1759,6 @@ comment|/*  * Float versions of functions callable from C, intended to support  
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|copysignf
 name|__P
@@ -1870,7 +1773,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|ilogbf
 name|__P
@@ -1883,7 +1785,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|rintf
 name|__P
@@ -1896,7 +1797,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|scalbnf
 name|__P
@@ -1915,7 +1815,6 @@ comment|/*  * float versions of BSD math library entry points  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|dremf
 name|__P
@@ -1930,7 +1829,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|expm1f
 name|__P
@@ -1943,7 +1841,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|log1pf
 name|__P
@@ -1966,7 +1863,6 @@ name|_REENTRANT
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|gammaf_r
 name|__P
@@ -1982,7 +1878,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|lgammaf_r
 name|__P
@@ -2034,7 +1929,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MATH_H_ */
+comment|/* !_MATH_H_ */
 end_comment
 
 end_unit

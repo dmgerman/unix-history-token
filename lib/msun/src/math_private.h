@@ -32,11 +32,11 @@ file|<machine/endian.h>
 end_include
 
 begin_comment
-comment|/* The original fdlibm code used statements like: 	n0 = ((*(int*)&one)>>29)^1;		* index of high word * 	ix0 = *(n0+(int*)&x);			* high word of x * 	ix1 = *((1-n0)+(int*)&x);		* low word of x *    to dig two 32 bit words out of the 64 bit IEEE floating point    value.  That is non-ANSI, and, moreover, the gcc instruction    scheduler gets it wrong.  We instead use the following macros.    Unlike the original code, we determine the endianness at compile    time, not at run time; I don't see much benefit to selecting    endianness at run time.  */
+comment|/*  * The original fdlibm code used statements like:  *	n0 = ((*(int*)&one)>>29)^1;		* index of high word *  *	ix0 = *(n0+(int*)&x);			* high word of x *  *	ix1 = *((1-n0)+(int*)&x);		* low word of x *  * to dig two 32 bit words out of the 64 bit IEEE floating point  * value.  That is non-ANSI, and, moreover, the gcc instruction  * scheduler gets it wrong.  We instead use the following macros.  * Unlike the original code, we determine the endianness at compile  * time, not at run time; I don't see much benefit to selecting  * endianness at run time.  */
 end_comment
 
 begin_comment
-comment|/* A union which permits us to convert between a double and two 32 bit    ints.  */
+comment|/*  * A union which permits us to convert between a double and two 32 bit  * ints.  */
 end_comment
 
 begin_if
@@ -218,7 +218,7 @@ value|do {								\   ieee_double_shape_type sl_u;					\   sl_u.value = (d);				
 end_define
 
 begin_comment
-comment|/* A union which permits us to convert between a float and a 32 bit    int.  */
+comment|/*  * A union which permits us to convert between a float and a 32 bit  * int.  */
 end_comment
 
 begin_typedef
@@ -277,7 +277,6 @@ comment|/* ieee style elementary functions */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_sqrt
 name|__P
@@ -290,7 +289,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_acos
 name|__P
@@ -303,7 +301,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_acosh
 name|__P
@@ -316,7 +313,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_log
 name|__P
@@ -329,7 +325,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_atanh
 name|__P
@@ -342,7 +337,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_asin
 name|__P
@@ -355,7 +349,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_atan2
 name|__P
@@ -370,7 +363,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_exp
 name|__P
@@ -383,7 +375,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_cosh
 name|__P
@@ -396,7 +387,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_fmod
 name|__P
@@ -411,7 +401,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_pow
 name|__P
@@ -426,7 +415,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_lgamma_r
 name|__P
@@ -442,7 +430,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_gamma_r
 name|__P
@@ -458,7 +445,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_lgamma
 name|__P
@@ -471,7 +457,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_gamma
 name|__P
@@ -484,7 +469,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_log10
 name|__P
@@ -497,7 +481,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_sinh
 name|__P
@@ -510,7 +493,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_hypot
 name|__P
@@ -525,7 +507,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_j0
 name|__P
@@ -538,7 +519,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_j1
 name|__P
@@ -551,7 +531,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_y0
 name|__P
@@ -564,7 +543,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_y1
 name|__P
@@ -577,7 +555,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_jn
 name|__P
@@ -592,7 +569,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_yn
 name|__P
@@ -607,7 +583,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_remainder
 name|__P
@@ -622,7 +597,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|__ieee754_rem_pio2
 name|__P
@@ -638,7 +612,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__ieee754_scalb
 name|__P
@@ -657,7 +630,6 @@ comment|/* fdlibm kernel function */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__kernel_standard
 name|__P
@@ -674,7 +646,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__kernel_sin
 name|__P
@@ -691,7 +662,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__kernel_cos
 name|__P
@@ -706,7 +676,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|double
 name|__kernel_tan
 name|__P
@@ -723,7 +692,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|__kernel_rem_pio2
 name|__P
@@ -754,7 +722,6 @@ comment|/* ieee style elementary float functions */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_sqrtf
 name|__P
@@ -767,7 +734,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_acosf
 name|__P
@@ -780,7 +746,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_acoshf
 name|__P
@@ -793,7 +758,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_logf
 name|__P
@@ -806,7 +770,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_atanhf
 name|__P
@@ -819,7 +782,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_asinf
 name|__P
@@ -832,7 +794,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_atan2f
 name|__P
@@ -847,7 +808,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_expf
 name|__P
@@ -860,7 +820,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_coshf
 name|__P
@@ -873,7 +832,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_fmodf
 name|__P
@@ -888,7 +846,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_powf
 name|__P
@@ -903,7 +860,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_lgammaf_r
 name|__P
@@ -919,7 +875,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_gammaf_r
 name|__P
@@ -935,7 +890,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_lgammaf
 name|__P
@@ -948,7 +902,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_gammaf
 name|__P
@@ -961,7 +914,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_log10f
 name|__P
@@ -974,7 +926,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_sinhf
 name|__P
@@ -987,7 +938,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_hypotf
 name|__P
@@ -1002,7 +952,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_j0f
 name|__P
@@ -1015,7 +964,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_j1f
 name|__P
@@ -1028,7 +976,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_y0f
 name|__P
@@ -1041,7 +988,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_y1f
 name|__P
@@ -1054,7 +1000,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_jnf
 name|__P
@@ -1069,7 +1014,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_ynf
 name|__P
@@ -1084,7 +1028,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_remainderf
 name|__P
@@ -1099,7 +1042,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|__ieee754_rem_pio2f
 name|__P
@@ -1115,7 +1057,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__ieee754_scalbf
 name|__P
@@ -1134,7 +1075,6 @@ comment|/* float versions of fdlibm kernel functions */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__kernel_sinf
 name|__P
@@ -1151,7 +1091,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__kernel_cosf
 name|__P
@@ -1166,7 +1105,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|float
 name|__kernel_tanf
 name|__P
@@ -1183,7 +1121,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|__kernel_rem_pio2f
 name|__P
@@ -1402,7 +1339,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MATH_PRIVATE_H_ */
+comment|/* !_MATH_PRIVATE_H_ */
 end_comment
 
 end_unit
