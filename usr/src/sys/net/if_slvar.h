@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_slvar.h	7.2 (Berkeley) %G% */
+comment|/*	@(#)if_slvar.h	7.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -68,11 +68,17 @@ name|long
 name|sc_abortcount
 decl_stmt|;
 comment|/* number of abort esacpe chars */
+ifdef|#
+directive|ifdef
+name|INET
+comment|/* XXX */
 name|struct
 name|slcompress
 name|sc_comp
 decl_stmt|;
 comment|/* tcp compression data */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -138,6 +144,17 @@ end_define
 
 begin_comment
 comment|/* set configuration flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLIOGUNIT
+value|_IOW('t', 88, int)
+end_define
+
+begin_comment
+comment|/* get slip unit number */
 end_comment
 
 end_unit

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			THIS CODE IS NOT FOR DISTRIBUTION!  *	KEEP YOUR GRUBBY HANDS OFF UNLESS AUTHORIZED BY VAN JACOBSON TO COPY!  *			ASK SAM, MIKE, OR BILL ABOUT IT.  */
-end_comment
-
-begin_comment
-comment|/*  * Definitions for tcp compression routines.  *  * Copyright (c) 1988, 1989 by Van Jacobson, Lawrence Berkeley Laboratory  * All rights reserved.  *  * $Header: slcompress.h,v 1.3 89/03/19 18:10:38 van Locked $  */
+comment|/*  * Definitions for tcp compression routines.  *  * Copyright (c) 1988, 1989 by Van Jacobson, Lawrence Berkeley Laboratory  * All rights reserved.  *  * $Header: slcompress.h,v 1.6 89/06/05 08:29:13 van Exp $  */
 end_comment
 
 begin_define
@@ -30,7 +26,7 @@ comment|/* XXX 4bsd-ism: should really be 128 */
 end_comment
 
 begin_comment
-comment|/*  * Compressed packet format:  *  * The first octet contains the packet type (top 3 bits), TCP  * 'push' bit, and flags that indicate which of the 4 TCP sequence  * numbers have changed (bottom 5 bits).  The next octet is a  * conversation number that associates a saved IP/TCP header with  * the compressed packet.  The next two octets are the TCP checksum  * from the original datagram.  The next 0 to 15 octets are  * sequence number changes, one change per bit set in the header  * (there may be no changes and there are two special cases where  * the receiver implicitly knows what changed -- see below).  *  * { Note that the ip version number field this overlays is 4 bits  *   wide, and that we use type 4 to pass thru unaltered packets,  *   type 5 to pass thru uncompressed packets that will be state  *   information indexed by conversation. If msb (e.g type 8) is  *   set, the other type bits are stolen to encode the difference  *   information of a compressed TCP packet. -wfj }  *   * There are 5 numbers which can change (they are always inserted  * in the following order): TCP urgent pointer, window,  * acknowlegement, sequence number and IP ID.  (The urgent pointer  * is different from the others in that its value is sent, not the  * change in value.)  Since typical use of SLIP links is biased  * toward small packets (see comments on MTU/MSS below), changes  * use a variable length coding with one octet for numbers in the  * range 1 - 255 and 3 octets (0, MSB, LSB) for numbers in the  * range 256 - 65535 or 0.  (If the change in sequence number or  * ack is more than 65535, an uncompressed packet is sent.)  */
+comment|/*  * Compressed packet format:  *  * The first octet contains the packet type (top 3 bits), TCP  * 'push' bit, and flags that indicate which of the 4 TCP sequence  * numbers have changed (bottom 5 bits).  The next octet is a  * conversation number that associates a saved IP/TCP header with  * the compressed packet.  The next two octets are the TCP checksum  * from the original datagram.  The next 0 to 15 octets are  * sequence number changes, one change per bit set in the header  * (there may be no changes and there are two special cases where  * the receiver implicitly knows what changed -- see below).  *   * There are 5 numbers which can change (they are always inserted  * in the following order): TCP urgent pointer, window,  * acknowlegement, sequence number and IP ID.  (The urgent pointer  * is different from the others in that its value is sent, not the  * change in value.)  Since typical use of SLIP links is biased  * toward small packets (see comments on MTU/MSS below), changes  * use a variable length coding with one octet for numbers in the  * range 1 - 255 and 3 octets (0, MSB, LSB) for numbers in the  * range 256 - 65535 or 0.  (If the change in sequence number or  * ack is more than 65535, an uncompressed packet is sent.)  */
 end_comment
 
 begin_comment
@@ -52,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|TYPE_UNCOMPRESSED_TCP
-value|0x50
+value|0x70
 end_define
 
 begin_define
@@ -236,6 +232,43 @@ comment|/* last sent conn. id */
 name|u_short
 name|flags
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SL_STATS
+name|int
+name|sls_packets
+decl_stmt|;
+comment|/* outbound packets */
+name|int
+name|sls_compressed
+decl_stmt|;
+comment|/* outbound compressed packets */
+name|int
+name|sls_searches
+decl_stmt|;
+comment|/* searches for connection state */
+name|int
+name|sls_misses
+decl_stmt|;
+comment|/* times couldn't find conn. state */
+name|int
+name|sls_uncompressedin
+decl_stmt|;
+comment|/* inbound uncompressed packets */
+name|int
+name|sls_compressedin
+decl_stmt|;
+comment|/* inbound compressed packets */
+name|int
+name|sls_errorin
+decl_stmt|;
+comment|/* inbound unknown type packets */
+name|int
+name|sls_tossed
+decl_stmt|;
+comment|/* inbound packets tossed because of error */
+endif|#
+directive|endif
 name|struct
 name|cstate
 name|tstate
@@ -293,12 +326,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|mbuf
-modifier|*
+name|int
 name|sl_uncompress_tcp
 parameter_list|(
-comment|/* struct mbuf *, u_char, struct slcompress * */
+comment|/* u_char **, int,  u_char, struct slcompress * */
 parameter_list|)
 function_decl|;
 end_function_decl
