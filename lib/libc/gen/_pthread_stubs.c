@@ -405,7 +405,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|static ret FUNC_EXP(name)(void) __unused;		\ 	static ret FUNC_INT(name)(void) __unused;		\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(void);			\ 	static ret FUNC_EXP(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func());				\ 	}							\ 	static ret FUNC_INT(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func());				\ 	}
+value|static ret FUNC_EXP(name)(void) __used;		\ 	static ret FUNC_INT(name)(void) __used;		\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(void);			\ 	static ret FUNC_EXP(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func());				\ 	}							\ 	static ret FUNC_INT(name)(void)				\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func());				\ 	}
 end_define
 
 begin_define
@@ -422,7 +422,7 @@ parameter_list|,
 name|p0_type
 parameter_list|)
 define|\
-value|static ret FUNC_EXP(name)(p0_type) __unused;		\ 	static ret FUNC_INT(name)(p0_type) __unused;		\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(p0_type);		\ 	static ret FUNC_EXP(name)(p0_type p0)			\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func(p0));				\ 	}							\ 	static ret FUNC_INT(name)(p0_type p0)			\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func(p0));				\ 	}
+value|static ret FUNC_EXP(name)(p0_type) __used;		\ 	static ret FUNC_INT(name)(p0_type) __used;		\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(p0_type);		\ 	static ret FUNC_EXP(name)(p0_type p0)			\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func(p0));				\ 	}							\ 	static ret FUNC_INT(name)(p0_type p0)			\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func(p0));				\ 	}
 end_define
 
 begin_define
@@ -441,7 +441,7 @@ parameter_list|,
 name|p1_type
 parameter_list|)
 define|\
-value|static ret FUNC_EXP(name)(p0_type, p1_type) __unused;	\ 	static ret FUNC_INT(name)(p0_type, p1_type) __unused;	\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(p0_type, p1_type);	\ 	static ret FUNC_EXP(name)(p0_type p0, p1_type p1)	\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func(p0, p1));				\ 	}							\ 	static ret FUNC_INT(name)(p0_type p0, p1_type p1)	\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func(p0, p1));				\ 	}
+value|static ret FUNC_EXP(name)(p0_type, p1_type) __used;	\ 	static ret FUNC_INT(name)(p0_type, p1_type) __used;	\ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(p0_type, p1_type);	\ 	static ret FUNC_EXP(name)(p0_type p0, p1_type p1)	\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func(p0, p1));				\ 	}							\ 	static ret FUNC_INT(name)(p0_type p0, p1_type p1)	\ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func(p0, p1));				\ 	}
 end_define
 
 begin_define
@@ -462,7 +462,7 @@ parameter_list|,
 name|p2_type
 parameter_list|)
 define|\
-value|static ret FUNC_EXP(name)(p0_type, p1_type, p2_type) __unused; \ 	static ret FUNC_INT(name)(p0_type, p1_type, p2_type) __unused; \ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(p0_type, p1_type, p2_type); \ 	static ret FUNC_EXP(name)(p0_type p0, p1_type p1, p2_type p2) \ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func(p0, p1, p2));			\ 	}							\ 	static ret FUNC_INT(name)(p0_type p0, p1_type p1, p2_type p2) \ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func(p0, p1, p2));			\ 	}
+value|static ret FUNC_EXP(name)(p0_type, p1_type, p2_type) __used; \ 	static ret FUNC_INT(name)(p0_type, p1_type, p2_type) __used; \ 	WEAK_REF(FUNC_EXP(name), name);				\ 	WEAK_REF(FUNC_INT(name), __CONCAT(_, name));		\ 	typedef ret (*FUNC_TYPE(name))(p0_type, p1_type, p2_type); \ 	static ret FUNC_EXP(name)(p0_type p0, p1_type p1, p2_type p2) \ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][0];	\ 		return (func(p0, p1, p2));			\ 	}							\ 	static ret FUNC_INT(name)(p0_type p0, p1_type p1, p2_type p2) \ 	{							\ 		FUNC_TYPE(name) func;				\ 		func = (FUNC_TYPE(name))__thr_jtable[idx][1];	\ 		return (func(p0, p1, p2));			\ 	}
 end_define
 
 begin_macro
