@@ -268,7 +268,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"stray level interrupt %d\n"
+literal|"stray level interrupt %ld\n"
 argument_list|,
 name|tf
 operator|->
