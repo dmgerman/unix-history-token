@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.6 1995/10/26 08:55:40 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.7 1995/10/27 01:22:53 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -31,36 +31,6 @@ argument_list|(
 name|VAR_BROWSER_PACKAGE
 argument_list|)
 decl_stmt|;
-comment|/* Make sure we were started at a reasonable time */
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|variable_get
-argument_list|(
-name|SYSTEM_STATE
-argument_list|)
-argument_list|,
-literal|"init"
-argument_list|)
-condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Sorry, it's not possible to invoke the browser until the system\n"
-literal|"is installed completely enough to support a copy of %s."
-argument_list|,
-name|browser
-argument_list|)
-expr_stmt|;
-return|return
-name|RET_FAIL
-return|;
-block|}
 if|if
 condition|(
 operator|!
