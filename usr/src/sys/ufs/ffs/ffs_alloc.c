@@ -6,10 +6,10 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-name|version
+name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.1 %G%"
+literal|"@(#)ffs_alloc.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
