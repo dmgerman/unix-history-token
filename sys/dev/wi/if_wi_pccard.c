@@ -957,11 +957,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|wi_free
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Make sure interrupts are disabled. */
 name|CSR_WRITE_2
 argument_list|(
@@ -979,6 +974,11 @@ argument_list|,
 name|WI_EVENT_ACK
 argument_list|,
 literal|0xFFFF
+argument_list|)
+expr_stmt|;
+name|wi_free
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
