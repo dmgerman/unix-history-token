@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)byteorder.c	2.7 (Berkeley) %G%"
+literal|"@(#)byteorder.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,38 +28,42 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_empty
+empty|#ident "$Revision: 1.3 $"
+end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"globals.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<protocols/timed.h>
-end_include
-
 begin_comment
 comment|/*  * Two routines to do the necessary byte swapping for timed protocol  * messages. Protocol is defined in /usr/include/protocols/timed.h  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|bytenetorder
-argument_list|(
-argument|ptr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ptr
+parameter_list|)
 name|struct
 name|tsp
 modifier|*
 name|ptr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ptr
 operator|->
@@ -136,24 +140,19 @@ break|break;
 comment|/* nothing more needed */
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|bytehostorder
-argument_list|(
-argument|ptr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ptr
+parameter_list|)
 name|struct
 name|tsp
 modifier|*
 name|ptr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ptr
 operator|->
@@ -230,7 +229,7 @@ break|break;
 comment|/* nothing more needed */
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,7 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)globals.h	2.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)globals.h	5.1 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_empty
+empty|#ident "$Revision: 1.15 $"
+end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -12,25 +27,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_include
@@ -48,14 +45,131 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/timed.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<bstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/clock.h>
+end_include
+
+begin_comment
+comment|/* use the constant HZ instead of the function CLK_TCK */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLK_TCK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CLK_TCK
+value|HZ
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SECHR
+value|(60*60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECDAY
+value|(24*SECHR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sgi */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -71,6 +185,17 @@ name|sock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Best expected round trip for a measurement.  * This is essentially the number of milliseconds per CPU tick (CLK_TCK?).  * All delays shorter than this are usually reported as 0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_ROUND
+value|((1000-1)/CLK_TCK)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -79,7 +204,7 @@ value|240
 end_define
 
 begin_comment
-comment|/* synch() freq for master, sec */
+comment|/* synch() freq for master in sec */
 end_comment
 
 begin_define
@@ -90,44 +215,29 @@ value|20
 end_define
 
 begin_comment
-comment|/* max correction (sec) for adjtime */
-end_comment
-
-begin_comment
-comment|/*  * Parameters for network time measurement  * of each host using ICMP timestamp requests.  */
+comment|/* max adjtime() correction in sec */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RANGE
-value|20
+name|MAX_TRIM
+value|3000000
 end_define
 
 begin_comment
-comment|/* best expected round-trip time, ms */
+comment|/* max drift in nsec/sec, 0.3% */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MSGS
-value|5
+name|BIG_ADJ
+value|(MAX_TRIM/1000*SAMPLEINTVL*2)
 end_define
 
 begin_comment
-comment|/* # of timestamp replies to average */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TRIALS
-value|10
-end_define
-
-begin_comment
-comment|/* max # of timestamp echos sent */
+comment|/* max good adj */
 end_comment
 
 begin_define
@@ -137,11 +247,22 @@ name|MINTOUT
 value|360
 end_define
 
+begin_comment
+comment|/* election delays, 6-15 minutes */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXTOUT
 value|900
+end_define
+
+begin_define
+define|#
+directive|define
+name|BAD_STATUS
+value|(-1)
 end_define
 
 begin_define
@@ -186,6 +307,53 @@ name|ON
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_HOPCNT
+value|10
+end_define
+
+begin_comment
+comment|/* max value for tsp_hpcnt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOSTHOST
+value|3
+end_define
+
+begin_comment
+comment|/* forget after this many failures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VALID_RANGE
+value|(MAXADJ*1000)
+end_define
+
+begin_comment
+comment|/* good times in milliseconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GOOD_RANGE
+value|(MIN_ROUND*2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VGOOD_RANGE
+value|(MIN_ROUND-1)
+end_define
+
 begin_comment
 comment|/*  * Global and per-network states.  */
 end_comment
@@ -198,7 +366,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* no master on any network */
+comment|/* no good master */
 end_comment
 
 begin_define
@@ -240,34 +408,112 @@ begin_define
 define|#
 directive|define
 name|NHOSTS
-value|100
+value|1013
 end_define
 
 begin_comment
-comment|/* max number of hosts controlled by timed */
+comment|/* max of hosts controlled by timed 					 * This must be a prime number. 					 */
 end_comment
 
 begin_struct
 struct|struct
-name|host
+name|hosttbl
 block|{
-name|char
+name|struct
+name|hosttbl
 modifier|*
-name|name
+name|h_bak
+decl_stmt|;
+comment|/* hash chain */
+name|struct
+name|hosttbl
+modifier|*
+name|h_fwd
+decl_stmt|;
+name|struct
+name|hosttbl
+modifier|*
+name|l_bak
+decl_stmt|;
+comment|/* "sequential" list */
+name|struct
+name|hosttbl
+modifier|*
+name|l_fwd
+decl_stmt|;
+name|struct
+name|netinfo
+modifier|*
+name|ntp
 decl_stmt|;
 name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
-name|long
-name|delta
+name|char
+name|name
+index|[
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
+index|]
 decl_stmt|;
+name|u_char
+name|head
+decl_stmt|;
+comment|/* 1=head of hash chain */
+name|u_char
+name|good
+decl_stmt|;
+comment|/* 0=trusted host, for averaging */
+name|u_char
+name|noanswer
+decl_stmt|;
+comment|/* count of failures to answer */
+name|u_char
+name|need_set
+decl_stmt|;
+comment|/* need a SETTIME */
 name|u_short
 name|seq
+decl_stmt|;
+name|long
+name|delta
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* closed hash table with internal chaining */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|hosttbl
+name|hosttbl
+index|[
+name|NHOSTS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|self
+value|hosttbl[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|hostname
+value|(self.name)
+end_define
 
 begin_struct
 struct|struct
@@ -278,7 +524,8 @@ name|netinfo
 modifier|*
 name|next
 decl_stmt|;
-name|u_long
+name|struct
+name|in_addr
 name|net
 decl_stmt|;
 name|u_long
@@ -296,9 +543,34 @@ comment|/* broadcast addr or point-point */
 name|long
 name|status
 decl_stmt|;
+name|struct
+name|timeval
+name|slvwait
+decl_stmt|;
+comment|/* delay before sending our time */
+name|int
+name|quit_count
+decl_stmt|;
+comment|/* recent QUITs */
 block|}
 struct|;
 end_struct
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|tvtomsround
+parameter_list|(
+name|tv
+parameter_list|)
+value|((tv).tv_sec*1000 + ((tv).tv_usec + 500)/1000)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -341,6 +613,29 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|timeval
+name|from_when
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when the last msg arrived */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_short
+name|sequence
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TSP message sequence number */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|netinfo
 modifier|*
 name|fromnet
@@ -360,49 +655,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|hostname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|tracefile
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|host
-name|hp
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|backoff
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|long
 name|delay1
 decl_stmt|,
 name|delay2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|slvcount
 decl_stmt|;
 end_decl_stmt
 
@@ -414,7 +670,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of nets were I could be a slave */
+comment|/* nets were I could be a slave */
 end_comment
 
 begin_decl_stmt
@@ -425,7 +681,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of nets were I could be a master */
+comment|/* nets were I could be a master */
 end_comment
 
 begin_decl_stmt
@@ -436,7 +692,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of ignored nets */
+comment|/* ignored nets */
 end_comment
 
 begin_decl_stmt
@@ -447,20 +703,62 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of nets I am connected to */
+comment|/* nets I am connected to */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|trace_msg
+parameter_list|(
+name|msg
+parameter_list|)
+value|{if (trace) fprintf(fd, msg);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|trace_sendto_err
+parameter_list|(
+name|addr
+parameter_list|)
+value|{					\ 	int st_errno = errno;						\ 	syslog(LOG_ERR, "%s %d: sendto %s: %m",				\ 		__FILE__, __LINE__, inet_ntoa(addr));			\ 	if (trace)							\ 		fprintf(fd, "%s %d: sendto %s: %d", __FILE__, __LINE__,	\ 			inet_ntoa(addr), st_errno);			\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(a<b ? b : a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(a>b ? b : a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|abs
+parameter_list|(
+name|x
+parameter_list|)
+value|(x>=0 ? x : -(x))
+end_define
 
 end_unit
 
