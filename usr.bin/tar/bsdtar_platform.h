@@ -66,6 +66,18 @@ parameter_list|)
 value|(st)->st_mtimespec.tv_nsec
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|450002
+end_if
+
+begin_comment
+comment|/* nl_langinfo introduced */
+end_comment
+
 begin_comment
 comment|/* nl_langinfo supports D_MD_ORDER (FreeBSD extension) */
 end_comment
@@ -76,6 +88,11 @@ directive|define
 name|HAVE_NL_LANGINFO_D_MD_ORDER
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -156,6 +173,26 @@ directive|define
 name|BSDTAR_FILESIZE_PRINTF
 value|"%llu"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|<
+literal|5
+end_if
+
+begin_typedef
+typedef|typedef
+name|int64_t
+name|id_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
