@@ -4356,7 +4356,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|LOGIN_CAP
+name|HAVE_LOGIN_CAP
 name|child_set_env
 argument_list|(
 operator|&
@@ -4401,7 +4401,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !LOGIN_CAP */
+comment|/* !HAVE_LOGIN_CAP */
 comment|/* Normal systems set SHELL by default. */
 name|child_set_env
 argument_list|(
@@ -4417,6 +4417,9 @@ name|shell
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|HAVE_LOGIN_CAP
 if|if
 condition|(
 name|getenv
@@ -4440,6 +4443,9 @@ literal|"TZ"
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !HAVE_LOGIN_CAP */
 comment|/* Set custom environment options from RSA authentication. */
 if|if
 condition|(
@@ -4602,6 +4608,9 @@ operator|->
 name|tty
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_LOGIN_CAP
 if|if
 condition|(
 name|s
@@ -4623,6 +4632,9 @@ operator|->
 name|term
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !HAVE_LOGIN_CAP */
 if|if
 condition|(
 name|s
@@ -5325,6 +5337,10 @@ name|struct
 name|passwd
 modifier|*
 name|pw
+parameter_list|,
+name|Session
+modifier|*
+name|s
 parameter_list|)
 block|{
 name|char
@@ -5455,6 +5471,27 @@ name|getenv
 argument_list|(
 literal|"TZ"
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|term
+condition|)
+name|child_set_env
+argument_list|(
+operator|&
+name|env
+argument_list|,
+operator|&
+name|envsize
+argument_list|,
+literal|"TERM"
+argument_list|,
+name|s
+operator|->
+name|term
 argument_list|)
 expr_stmt|;
 comment|/* Save parent environment */
@@ -5742,6 +5779,8 @@ operator|=
 name|do_setusercontext
 argument_list|(
 name|pw
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 block|}
