@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)FP.h	5.1 (Berkeley) %G%  *  * General definitions of the floating point stuff on Power 6/32.  * The floating point format definition is:  *  *		S    (exp-128)  *	    (-1)  * 2	       * F  *  *	Where exp is the exponent field and F is the binary  *	mantissa following it, including the hidden bit.  *	The hidden bit actually is 1/2, so F is known to  *	satisfy the range:  *		1/2<= F< 1  */
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)FP.h	7.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * General definitions of the floating point stuff on Power 6/32.  * The floating point format definition is:  *  *		S    (exp-128)  *	    (-1)  * 2	       * F  *  *	Where exp is the exponent field and F is the binary  *	mantissa following it, including the hidden bit.  *	The hidden bit actually is 1/2, so F is known to  *	satisfy the range:  *		1/2<= F< 1  */
 end_comment
 
 begin_typedef
