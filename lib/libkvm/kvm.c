@@ -187,6 +187,26 @@ directive|include
 file|"kvm_private.h"
 end_include
 
+begin_comment
+comment|/* from src/lib/libc/gen/nlist.c */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__fdnlist
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|nlist
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|char
 modifier|*

@@ -3275,8 +3275,9 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|l
+decl_stmt|;
+name|size_t
+name|bufsz
 decl_stmt|;
 specifier|static
 name|int
@@ -3332,7 +3333,7 @@ operator|!
 name|buflen
 condition|)
 block|{
-name|l
+name|bufsz
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -3349,7 +3350,7 @@ operator|&
 name|buflen
 argument_list|,
 operator|&
-name|l
+name|bufsz
 argument_list|,
 name|NULL
 argument_list|,
@@ -3365,7 +3366,7 @@ literal|1
 condition|)
 block|{
 name|buflen
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 block|}
@@ -3446,7 +3447,7 @@ name|kp_proc
 operator|.
 name|p_pid
 expr_stmt|;
-name|l
+name|bufsz
 operator|=
 name|buflen
 expr_stmt|;
@@ -3461,7 +3462,7 @@ argument_list|,
 name|buf
 argument_list|,
 operator|&
-name|l
+name|bufsz
 argument_list|,
 literal|0
 argument_list|,
@@ -3474,7 +3475,7 @@ name|i
 operator|==
 literal|0
 operator|&&
-name|l
+name|bufsz
 operator|>
 literal|0
 condition|)
@@ -3540,7 +3541,7 @@ name|p
 operator|<
 name|buf
 operator|+
-name|l
+name|bufsz
 condition|)
 do|;
 name|bufp
