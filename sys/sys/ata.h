@@ -649,11 +649,42 @@ end_define
 
 begin_struct
 struct|struct
-name|ata_modes
+name|ata_cmd
 block|{
 name|int
 name|channel
 decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+define|#
+directive|define
+name|ATAGPARM
+value|1
+define|#
+directive|define
+name|ATAGMODE
+value|2
+define|#
+directive|define
+name|ATASMODE
+value|3
+define|#
+directive|define
+name|ATAREINIT
+value|4
+define|#
+directive|define
+name|ATAATTACH
+value|5
+define|#
+directive|define
+name|ATADETACH
+value|6
+union|union
+block|{
+struct|struct
+block|{
 name|int
 name|mode
 index|[
@@ -661,16 +692,10 @@ literal|2
 index|]
 decl_stmt|;
 block|}
+name|mode
 struct|;
-end_struct
-
-begin_struct
 struct|struct
-name|ata_param
 block|{
-name|int
-name|channel
-decl_stmt|;
 name|int
 name|type
 index|[
@@ -694,49 +719,20 @@ literal|2
 index|]
 decl_stmt|;
 block|}
+name|param
+struct|;
+block|}
+name|u
+union|;
+block|}
 struct|;
 end_struct
 
 begin_define
 define|#
 directive|define
-name|ATAGPARM
-value|_IOWR('a',  1, struct ata_param)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAGMODE
-value|_IOWR('a',  2, struct ata_modes)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATASMODE
-value|_IOWR('a',  3, struct ata_modes)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAREINIT
-value|_IOW('a',  4, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAATTACH
-value|_IOW('a',  5, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATADETACH
-value|_IOW('a',  6, int)
+name|IOCATA
+value|_IOWR('a',  1, struct ata_cmd)
 end_define
 
 begin_endif
