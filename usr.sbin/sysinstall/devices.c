@@ -424,6 +424,22 @@ literal|4
 block|}
 block|,
 block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"ipsd%d"
+block|,
+literal|"IBM ServeRAID RAID array"
+block|,
+literal|176
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|4
+block|}
+block|,
+block|{
 name|DEVICE_TYPE_FLOPPY
 block|,
 literal|"fd%d"
