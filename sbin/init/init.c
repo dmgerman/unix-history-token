@@ -3450,6 +3450,10 @@ name|single_user
 return|;
 block|}
 comment|/* 	 * Copied from single_user().  This is a bit paranoid. 	 */
+name|requested_transition
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -3485,6 +3489,18 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|requested_transition
+operator|==
+name|death
+condition|)
+return|return
+operator|(
+name|state_func_t
+operator|)
+name|death
+return|;
 if|if
 condition|(
 name|errno
