@@ -20,13 +20,13 @@ typedef|typedef
 struct|struct
 name|__mcontext
 block|{
-name|u_long
+name|long
 name|mc_global
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_long
+name|long
 name|mc_out
 index|[
 literal|8

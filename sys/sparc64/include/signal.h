@@ -37,7 +37,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|int
 name|osigset_t
 typedef|;
 end_typedef
