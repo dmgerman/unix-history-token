@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.14 (Berkeley) %G%"
+literal|"@(#)glob.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1422,7 +1422,7 @@ name|EOS
 expr_stmt|;
 if|if
 condition|(
-name|g_stat
+name|g_lstat
 argument_list|(
 name|pathbuf
 argument_list|,
