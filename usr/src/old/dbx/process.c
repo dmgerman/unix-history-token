@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	1.15 (Berkeley) %G%"
+literal|"@(#)process.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ptrace.h>
 end_include
 
 begin_include
@@ -2681,7 +2687,7 @@ define|#
 directive|define
 name|traceme
 parameter_list|()
-value|ptrace(0, 0, 0, 0)
+value|ptrace(PT_TRACE_ME, 0, 0, 0)
 end_define
 
 begin_define
@@ -2703,109 +2709,6 @@ name|p
 parameter_list|)
 value|(p->sigset&setrep(p->signo))
 end_define
-
-begin_comment
-comment|/*  * Ptrace options (specified in first argument).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UREAD
-value|3
-end_define
-
-begin_comment
-comment|/* read from process's user structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UWRITE
-value|6
-end_define
-
-begin_comment
-comment|/* write to process's user structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IREAD
-value|1
-end_define
-
-begin_comment
-comment|/* read from process's instruction space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWRITE
-value|4
-end_define
-
-begin_comment
-comment|/* write to process's instruction space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DREAD
-value|2
-end_define
-
-begin_comment
-comment|/* read from process's data space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWRITE
-value|5
-end_define
-
-begin_comment
-comment|/* write to process's data space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONT
-value|7
-end_define
-
-begin_comment
-comment|/* continue stopped process */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTEP
-value|9
-end_define
-
-begin_comment
-comment|/* continue for approximately one instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PKILL
-value|8
-end_define
-
-begin_comment
-comment|/* terminate the process */
-end_comment
 
 begin_comment
 comment|/*  * Start up a new process by forking and exec-ing the  * given argument list, returning when the process is loaded  * and ready to execute.  The PROCESS information (pointed to  * by the first argument) is appropriately filled.  *  * If the given PROCESS structure is associated with an already running  * process, we terminate it.  */
@@ -3056,7 +2959,7 @@ condition|)
 block|{
 name|ptrace
 argument_list|(
-name|PKILL
+name|PT_KILL
 argument_list|,
 name|p
 operator|->
@@ -3176,7 +3079,7 @@ if|if
 condition|(
 name|ptrace
 argument_list|(
-name|CONT
+name|PT_CONTINUE
 argument_list|,
 name|p
 operator|->
@@ -3375,7 +3278,7 @@ if|if
 condition|(
 name|ptrace
 argument_list|(
-name|SSTEP
+name|PT_STEP
 argument_list|,
 name|p
 operator|->
@@ -3811,7 +3714,7 @@ name|sigcode
 operator|=
 name|ptrace
 argument_list|(
-name|UREAD
+name|PT_READ_U
 argument_list|,
 name|p
 operator|->
@@ -3844,7 +3747,7 @@ name|mask
 operator|=
 name|ptrace
 argument_list|(
-name|UREAD
+name|PT_READ_U
 argument_list|,
 name|p
 operator|->
@@ -3881,7 +3784,7 @@ index|]
 operator|=
 name|ptrace
 argument_list|(
-name|UREAD
+name|PT_READ_U
 argument_list|,
 name|p
 operator|->
@@ -3958,7 +3861,7 @@ name|Address
 operator|)
 name|ptrace
 argument_list|(
-name|UREAD
+name|PT_READ_U
 argument_list|,
 name|p
 operator|->
@@ -4077,7 +3980,7 @@ condition|)
 block|{
 name|ptrace
 argument_list|(
-name|UWRITE
+name|PT_WRITE_U
 argument_list|,
 name|p
 operator|->
@@ -4678,7 +4581,7 @@ name|w
 operator|=
 name|ptrace
 argument_list|(
-name|IREAD
+name|PT_READ_I
 argument_list|,
 name|p
 operator|->
@@ -4719,7 +4622,7 @@ name|w
 operator|=
 name|ptrace
 argument_list|(
-name|DREAD
+name|PT_READ_D
 argument_list|,
 name|p
 operator|->
@@ -4819,7 +4722,7 @@ name|data
 expr_stmt|;
 name|ptrace
 argument_list|(
-name|IWRITE
+name|PT_WRITE_I
 argument_list|,
 name|p
 operator|->
@@ -4836,7 +4739,7 @@ name|DATASEG
 case|:
 name|ptrace
 argument_list|(
-name|DWRITE
+name|PT_WRITE_D
 argument_list|,
 name|p
 operator|->
