@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.113 1997/04/01 08:38:53 bde Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.114 1997/04/13 03:33:25 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -8857,6 +8857,137 @@ name|PAGE_SHIFT
 expr_stmt|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|buffer
+argument_list|,
+argument|db_show_buffer
+argument_list|)
+end_macro
+
+begin_block
+block|{
+comment|/* get args */
+name|struct
+name|buf
+modifier|*
+name|bp
+init|=
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+name|addr
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|have_addr
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"usage: show buffer<addr>\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|db_printf
+argument_list|(
+literal|"b_proc = %p,\nb_flags = 0x%b\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|bp
+operator|->
+name|b_proc
+argument_list|,
+name|bp
+operator|->
+name|b_flags
+argument_list|,
+literal|"\20\40bounce\37cluster\36vmio\35ram\34ordered"
+literal|"\33paging\32xxx\31writeinprog\30wanted\27relbuf\26tape"
+literal|"\25read\24raw\23phys\22clusterok\21malloc\20nocache"
+literal|"\17locked\16inval\15gathered\14error\13eintr\12done\11dirty"
+literal|"\10delwri\7call\6cache\5busy\4bad\3async\2needcommit\1age"
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, "
+literal|"b_resid = %ld\nb_dev = 0x%x, b_un.b_addr = %p, "
+literal|"b_blkno = %d, b_pblkno = %d\n"
+argument_list|,
+name|bp
+operator|->
+name|b_error
+argument_list|,
+name|bp
+operator|->
+name|b_bufsize
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|,
+name|bp
+operator|->
+name|b_resid
+argument_list|,
+name|bp
+operator|->
+name|b_dev
+argument_list|,
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_pblkno
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 end_unit
 
