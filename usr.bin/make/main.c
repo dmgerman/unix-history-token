@@ -1862,7 +1862,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * If the MAKEOBJDIR (or by default, the _PATH_OBJDIR) directory 	 * exists, change into it and build there.  (If a .${MACHINE} suffix 	 * exists, use that directory instead). 	 * Otherwise check MAKEOBJDIRPREFIX`cwd` (or by default, 	 * _PATH_OBJDIRPREFIX`cwd`) and build there if it exists. 	 * If all fails, use the current directory to build. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
+comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. _PATH_OBJDIR.${MACHINE} 	 *	4. _PATH_OBJDIR 	 *	5. _PATH_OBJDIRPREFIX${MACHINE} 	 * 	 * If all fails, use the current directory to build. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
 if|if
 condition|(
 operator|!
