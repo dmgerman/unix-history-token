@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)xdr.h 1.19 87/04/22 SMI  *	from: @(#)xdr.h	2.2 88/07/29 4.0 RPCSRC  *	$Id: xdr.h,v 1.10 1997/05/28 04:45:15 wpaul Exp $  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)xdr.h 1.19 87/04/22 SMI  *	from: @(#)xdr.h	2.2 88/07/29 4.0 RPCSRC  *	$Id: xdr.h,v 1.11 1998/09/08 17:33:12 obrien Exp $  */
 end_comment
 
 begin_comment
@@ -248,7 +248,43 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  *  * XXX can't actually prototype it, because some take three args!!!  */
+comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|bool_t
+argument_list|(
+argument|*xdrproc_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * XXX can't actually prototype it, because some take two args!!!  */
 end_comment
 
 begin_typedef
@@ -265,6 +301,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Operations defined on a XDR handle  *  * XDR		*xdrs;  * long		*longp;  * caddr_t	 addr;  * u_int	 len;  * u_int	 pos;  */
