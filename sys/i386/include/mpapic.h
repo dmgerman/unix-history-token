@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.h,v 1.4 1997/05/22 22:04:45 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.h,v 1.5 1997/05/25 02:43:42 fsmp Exp $  */
 end_comment
 
 begin_ifndef
@@ -243,23 +243,47 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|__inline
 name|u_int32_t
+if|#
+directive|if
+literal|1
+comment|/** XXX APIC_STRUCT */
 name|io_apic_read
-argument_list|(
+parameter_list|(
 name|int
 name|apic
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-argument_list|,
+parameter_list|,
 name|int
 name|reg
+parameter_list|)
+block|{
+name|ioapic
+index|[
+name|apic
+index|]
+operator|.
+name|ioregsel
+operator|=
+name|reg
+expr_stmt|;
+return|return
+name|ioapic
+index|[
+name|apic
+index|]
+operator|.
+name|iowin
+return|;
+else|#
+directive|else
+name|io_apic_read
+argument_list|(
+argument|int apic __attribute__ ((unused))
+argument_list|,
+argument|int reg
 argument_list|)
 block|{
 operator|(
@@ -286,62 +310,71 @@ operator|)
 operator|)
 operator|)
 return|;
-block|}
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
+comment|/** XXX APIC_STRUCT */
+block|}
+endif|#
+directive|endif
 comment|/* MULTIPLE_IOAPICS */
-end_comment
-
-begin_comment
 comment|/*  * write 'value' to 'reg' of 'apic'  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|MULTIPLE_IOAPICS
 argument_list|)
-end_if
-
-begin_error
 error|#
 directive|error
 error|MULTIPLE_IOAPICSXXX
-end_error
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
 specifier|static
 name|__inline
 name|void
+if|#
+directive|if
+literal|1
+comment|/** XXX APIC_STRUCT */
 name|io_apic_write
-argument_list|(
+parameter_list|(
 name|int
 name|apic
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-argument_list|,
+parameter_list|,
 name|int
 name|reg
-argument_list|,
+parameter_list|,
 name|u_int32_t
 name|value
+parameter_list|)
+block|{
+name|ioapic
+index|[
+name|apic
+index|]
+operator|.
+name|ioregsel
+operator|=
+name|reg
+expr_stmt|;
+name|ioapic
+index|[
+name|apic
+index|]
+operator|.
+name|iowin
+operator|=
+name|value
+expr_stmt|;
+else|#
+directive|else
+name|io_apic_write
+argument_list|(
+argument|int apic __attribute__ ((unused))
+argument_list|,
+argument|int reg
+argument_list|,
+argument|u_int32_t value
 argument_list|)
 block|{
 operator|(
@@ -369,52 +402,31 @@ operator|)
 operator|=
 name|value
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
+comment|/** XXX APIC_STRUCT */
+block|}
+endif|#
+directive|endif
 comment|/* MULTIPLE_IOAPICS */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|READY
 argument_list|)
-end_if
-
-begin_comment
 comment|/*  * set the IO APIC mask for INT# 'i'  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|MULTIPLE_IOAPICS
 argument_list|)
-end_if
-
-begin_error
 error|#
 directive|error
 error|MULTIPLE_IOAPICSXXX
-end_error
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -477,60 +489,30 @@ argument_list|)
 expr_stmt|;
 comment|/* new value */
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* MULTIPLE_IOAPICS */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* READY */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|READY
 argument_list|)
-end_if
-
-begin_comment
 comment|/*  * clear the IO APIC mask for INT# 'i'  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|MULTIPLE_IOAPICS
 argument_list|)
-end_if
-
-begin_error
 error|#
 directive|error
 error|MULTIPLE_IOAPICSXXX
-end_error
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -595,51 +577,24 @@ argument_list|)
 expr_stmt|;
 comment|/* new value */
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* MULTIPLE_IOAPICS */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* READY */
-end_comment
-
-begin_comment
 comment|/*  * read current IRQ0 -IRQ23 masks  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|MULTIPLE_IOAPICS
 argument_list|)
-end_if
-
-begin_error
 error|#
 directive|error
 error|MULTIPLE_IOAPICSXXX
-end_error
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
 specifier|static
 name|__inline
 name|u_int32_t
@@ -664,22 +619,10 @@ operator|)
 return|;
 comment|/* return our global copy */
 block|}
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* MULTIPLE_IOAPICS */
-end_comment
-
-begin_comment
 comment|/*  * send an EndOfInterrupt to the local APIC  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -688,21 +631,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|apic_base
-index|[
-name|APIC_EOI
-index|]
+name|lapic__eoi
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to CPUs in 'targetMap'  * 'targetMap' is a bitfiled of length 14,  *   APIC #0 == bit 0, ..., APIC #14 == bit 14  *   NOTE: these are LOGICAL APIC IDs  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|int
@@ -726,13 +660,7 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to all CPUs, including myself  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|int
@@ -753,13 +681,7 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to all CPUs EXCEPT myself  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|int
@@ -780,13 +702,7 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to myself  */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|int

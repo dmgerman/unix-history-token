@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.8 1997/05/07 19:53:20 peter Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.9 1997/05/28 18:44:11 fsmp Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -95,6 +95,12 @@ argument_list|(
 name|APIC_IO
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/apic.h>
+end_include
 
 begin_comment
 comment|/* global data in mpboot.s */
@@ -544,6 +550,34 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|lapic_t
+modifier|*
+name|lapic
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|MULTIPLE_IOAPICS
@@ -569,6 +603,34 @@ modifier|*
 name|io_apic_base
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|ioapic_t
+modifier|*
+name|ioapic
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
 
 begin_endif
 endif|#
@@ -824,6 +886,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|return (unsigned)(apic_id_to_logical[(apic_base[8]& 0x0f000000)>> 24]);
+else|#
+directive|else
 return|return
 call|(
 name|unsigned
@@ -832,10 +900,7 @@ argument_list|(
 name|apic_id_to_logical
 index|[
 operator|(
-name|apic_base
-index|[
-literal|8
-index|]
+name|lapic__id
 operator|&
 literal|0x0f000000
 operator|)
@@ -844,6 +909,8 @@ literal|24
 index|]
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
