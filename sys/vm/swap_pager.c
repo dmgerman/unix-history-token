@@ -560,6 +560,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|swap_pager_full
+init|=
+literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -571,11 +573,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|swap_pager_almost_full
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* swap space exhaustion (w/ hysteresis)*/
+comment|/* swap space exhaustion (w/hysteresis)*/
 end_comment
 
 begin_decl_stmt
@@ -7283,6 +7287,22 @@ expr_stmt|;
 name|nswapdev
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|nswapdev
+operator|==
+literal|0
+condition|)
+block|{
+name|swap_pager_full
+operator|=
+literal|2
+expr_stmt|;
+name|swap_pager_almost_full
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|swdevhd
