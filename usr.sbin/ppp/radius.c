@@ -2656,7 +2656,7 @@ name|cx
 operator|.
 name|rad
 operator|=
-name|rad_auth_open
+name|rad_acct_open
 argument_list|()
 operator|)
 operator|==
