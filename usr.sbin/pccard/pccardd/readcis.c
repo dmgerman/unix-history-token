@@ -107,6 +107,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|isdumpcisfile
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -4038,6 +4046,22 @@ name|i
 decl_stmt|,
 name|l
 decl_stmt|;
+if|if
+condition|(
+name|isdumpcisfile
+condition|)
+return|return
+operator|(
+name|read
+argument_list|(
+name|fd
+argument_list|,
+name|bp
+argument_list|,
+name|len
+argument_list|)
+operator|)
+return|;
 if|if
 condition|(
 name|len
