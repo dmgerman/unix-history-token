@@ -1614,8 +1614,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|p
-operator|&&
 operator|!
 name|chgsbsize
 argument_list|(
@@ -1633,6 +1631,8 @@ argument_list|,
 name|cc
 argument_list|,
 name|p
+condition|?
+name|p
 operator|->
 name|p_rlimit
 index|[
@@ -1640,6 +1640,8 @@ name|RLIMIT_SBSIZE
 index|]
 operator|.
 name|rlim_cur
+else|:
+name|RLIM_INFINITY
 argument_list|)
 condition|)
 block|{
