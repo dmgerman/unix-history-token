@@ -375,6 +375,7 @@ name|char
 modifier|*
 name|path
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -396,6 +397,7 @@ begin_function_decl
 name|void
 name|remember
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

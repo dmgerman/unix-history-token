@@ -203,9 +203,11 @@ specifier|static
 name|int
 name|opteq
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1355,7 +1357,7 @@ modifier|*
 name|clean
 decl_stmt|,
 modifier|*
-name|warn
+name|warning
 decl_stmt|;
 name|char
 name|fname
@@ -1802,7 +1804,7 @@ name|clean
 operator|=
 literal|0
 expr_stmt|;
-name|warn
+name|warning
 operator|=
 literal|0
 expr_stmt|;
@@ -2206,7 +2208,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|warn
+name|warning
 operator|=
 name|ns
 argument_list|(
@@ -2592,7 +2594,7 @@ name|tp
 operator|->
 name|f_warn
 operator|=
-name|warn
+name|warning
 expr_stmt|;
 goto|goto
 name|next
@@ -2786,7 +2788,7 @@ name|tp
 operator|->
 name|f_warn
 operator|=
-name|warn
+name|warning
 expr_stmt|;
 if|if
 condition|(
@@ -2816,10 +2818,12 @@ specifier|static
 name|int
 name|opteq
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|cp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|dp
@@ -3753,6 +3757,7 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|ftype
