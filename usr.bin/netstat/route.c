@@ -20,7 +20,7 @@ name|char
 name|route_c_rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: route.c,v 1.6 1993/11/17 20:19:24 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2087,7 +2087,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\n    %-7s "
+literal|"\n    %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2129,7 +2129,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-6s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2171,7 +2171,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-7s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2213,7 +2213,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-7s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2255,7 +2255,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-7s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2297,7 +2297,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-7s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2345,7 +2345,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-7s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
@@ -2393,7 +2393,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %-7s "
+literal|" %7s "
 argument_list|,
 literal|"-"
 argument_list|)
