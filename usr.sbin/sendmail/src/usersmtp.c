@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.79 (Berkeley) 12/1/96 (with SMTP)"
+literal|"@(#)usersmtp.c	8.80 (Berkeley) 1/18/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.79 (Berkeley) 12/1/96 (without SMTP)"
+literal|"@(#)usersmtp.c	8.80 (Berkeley) 1/18/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2057,6 +2057,47 @@ block|}
 elseif|else
 if|if
 condition|(
+name|r
+operator|==
+literal|452
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_SIZE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+operator|&&
+name|e
+operator|->
+name|e_msgsize
+operator|>
+literal|0
+condition|)
+block|{
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_NOTSTICKY
+argument_list|,
+name|smtptodsn
+argument_list|(
+name|r
+argument_list|)
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -2830,6 +2871,9 @@ decl_stmt|;
 name|int
 name|rstat
 decl_stmt|;
+name|int
+name|xstat
+decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
@@ -3315,6 +3359,32 @@ name|mci_state
 operator|=
 name|MCIS_OPEN
 expr_stmt|;
+name|xstat
+operator|=
+name|EX_NOTSTICKY
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|452
+condition|)
+name|rstat
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+literal|552
+condition|)
+name|rstat
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|REPLYTYPE
@@ -3325,6 +3395,8 @@ operator|==
 literal|4
 condition|)
 name|rstat
+operator|=
+name|xstat
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
@@ -3340,6 +3412,8 @@ literal|5
 condition|)
 name|rstat
 operator|=
+name|xstat
+operator|=
 name|EX_PROTOCOL
 expr_stmt|;
 elseif|else
@@ -3353,6 +3427,8 @@ operator|==
 literal|2
 condition|)
 name|rstat
+operator|=
+name|xstat
 operator|=
 name|EX_OK
 expr_stmt|;
@@ -3368,6 +3444,8 @@ literal|5
 condition|)
 name|rstat
 operator|=
+name|xstat
+operator|=
 name|EX_UNAVAILABLE
 expr_stmt|;
 else|else
@@ -3379,7 +3457,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|rstat
+name|xstat
 argument_list|,
 name|smtptodsn
 argument_list|(

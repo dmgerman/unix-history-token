@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.101 (Berkeley) 11/24/96"
+literal|"@(#)savemail.c	8.103 (Berkeley) 1/18/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -2498,7 +2498,7 @@ name|sendall
 argument_list|(
 name|ee
 argument_list|,
-name|SM_DEFAULT
+name|SM_DELIVER
 argument_list|)
 expr_stmt|;
 comment|/* restore state */
@@ -5795,7 +5795,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  XTEXTOK -- check if a string is legal xtext ** **	Xtext is used in Delivery Status Notifications.  The spec was **	taken from draft-ietf-notary-mime-delivery-04.txt. ** **	Parameters: **		s -- the string to check. ** **	Returns: **		TRUE -- if 's' is legal xtext. **		FALSE -- if it has any illegal characters in it. */
+comment|/* **  XTEXTOK -- check if a string is legal xtext ** **	Xtext is used in Delivery Status Notifications.  The spec was **	taken from RFC 1891, ``SMTP Service Extension for Delivery **	Status Notifications''. ** **	Parameters: **		s -- the string to check. ** **	Returns: **		TRUE -- if 's' is legal xtext. **		FALSE -- if it has any illegal characters in it. */
 end_comment
 
 begin_function

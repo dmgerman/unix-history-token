@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.101 (Berkeley) 11/23/96"
+literal|"@(#)headers.c	8.103 (Berkeley) 12/11/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -2274,6 +2274,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+literal|'\0'
 argument_list|,
 name|TRUE
 argument_list|)
@@ -4567,6 +4569,12 @@ operator|->
 name|h_flags
 argument_list|)
 operator|&&
+if|#
+directive|if
+name|_FFR_DSN_RRT
+operator|(
+name|RrtImpliesDsn
+operator|||
 name|bitset
 argument_list|(
 name|EF_NORECEIPT
@@ -4575,7 +4583,21 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
+operator|)
 condition|)
+else|#
+directive|else
+name|bitset
+argument_list|(
+name|EF_NORECEIPT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+block|)
+endif|#
+directive|endif
 block|{
 if|if
 condition|(
@@ -4804,10 +4826,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/* 	**  If we are converting this to a MIME message, add the 	**  MIME headers. 	*/
+end_comment
+
+begin_if
 if|#
 directive|if
 name|MIME8TO7
+end_if
+
+begin_if
 if|if
 condition|(
 name|bitset
@@ -4939,40 +4970,55 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_endif
 endif|#
 directive|endif
-block|}
-end_function
+end_endif
 
 begin_escape
+unit|}
 end_escape
 
 begin_comment
 comment|/* **  PUT_VANILLA_HEADER -- output a fairly ordinary header ** **	Parameters: **		h -- the structure describing this header **		v -- the value of this header **		mci -- the connection info for output ** **	Returns: **		none. */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|put_vanilla_header
-parameter_list|(
-name|h
-parameter_list|,
-name|v
-parameter_list|,
-name|mci
-parameter_list|)
+argument_list|(
+argument|h
+argument_list|,
+argument|v
+argument_list|,
+argument|mci
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|HDR
 modifier|*
 name|h
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|v
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|MCI
 modifier|*
 name|mci
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -5187,7 +5233,7 @@ name|putflags
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape
