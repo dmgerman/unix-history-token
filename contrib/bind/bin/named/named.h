@@ -4,12 +4,18 @@ comment|/*  * Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: named.h,v 8.31 2002/02/01 00:05:38 marka Exp $  */
+comment|/*  * $Id: named.h,v 8.32 2002/03/15 00:58:16 vixie Exp $  */
 end_comment
 
 begin_comment
 comment|/* Options. Change them at your peril. */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NXDOMAIN_ON_DENIAL
+end_undef
 
 begin_define
 define|#

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.172 2002/01/31 00:06:41 marka Exp $"
+literal|"$Id: ns_resp.c,v 8.176 2002/04/17 07:10:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,9 @@ parameter_list|,
 name|struct
 name|sockaddr_in
 name|from
+parameter_list|,
+name|int
+name|cache
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1980,6 +1983,8 @@ argument_list|(
 name|qp
 argument_list|,
 name|from
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2002,6 +2007,8 @@ argument_list|(
 name|qp
 argument_list|,
 name|from
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2024,6 +2031,8 @@ argument_list|(
 name|qp
 argument_list|,
 name|from
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4981,6 +4990,9 @@ condition|)
 block|{
 case|case
 name|T_A
+case|:
+case|case
+name|ns_t_a6
 case|:
 case|case
 name|T_AAAA
@@ -8658,6 +8670,9 @@ case|:
 case|case
 name|ns_t_cert
 case|:
+case|case
+name|ns_t_opt
+case|:
 name|cp1
 operator|=
 name|cp
@@ -9142,6 +9157,30 @@ expr_stmt|;
 name|cp1
 operator|=
 name|data
+expr_stmt|;
+if|if
+condition|(
+name|tnamep
+operator|!=
+name|NULL
+operator|&&
+name|type
+operator|==
+name|T_SOA
+condition|)
+operator|*
+name|tnamep
+operator|=
+name|savestr
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|cp1
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -19807,6 +19846,9 @@ parameter_list|,
 name|struct
 name|sockaddr_in
 name|from
+parameter_list|,
+name|int
+name|cache
 parameter_list|)
 block|{
 name|int
@@ -19877,6 +19919,8 @@ name|i
 index|]
 operator|.
 name|nsdata
+operator|&&
+name|cache
 condition|)
 name|qp
 operator|->

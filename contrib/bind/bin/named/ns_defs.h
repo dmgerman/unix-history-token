@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.115 2002/01/29 03:59:35 marka Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.118 2002/04/25 05:27:06 marka Exp $  */
 end_comment
 
 begin_comment
@@ -452,15 +452,18 @@ block|,
 comment|/* exec() needed. */
 name|main_need_reap
 block|,
-comment|/* need to reap dead children */
+comment|/* need to reap dead children. */
 name|main_need_noexpired
 block|,
-comment|/* ns_reconfig() needed w/ noexpired set */
+comment|/* ns_reconfig() needed w/ noexpired set. */
 name|main_need_num
 block|,
 comment|/* number of needs, used for array bound. */
 name|main_need_tick
-comment|/* tick every second to poll for cleanup (NT)*/
+block|,
+comment|/* tick every second to poll for cleanup (NT) */
+name|main_need_tryxfer
+comment|/* attemt to start a zone transfer. */
 block|}
 name|main_need
 typedef|;
@@ -520,12 +523,9 @@ directive|ifdef
 name|BIND_NOTIFY
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|OPTION_NONOTIFY
-value|0x00000010
-end_define
+begin_comment
+comment|/* #define	OPTION_NONOTIFY		0x00000010 */
+end_comment
 
 begin_comment
 comment|/* Turn off notify */
@@ -935,15 +935,17 @@ end_ifdef
 
 begin_enum
 enum|enum
-name|znotify
+name|notify
 block|{
-name|znotify_use_default
+name|notify_use_default
 init|=
 literal|0
 block|,
-name|znotify_yes
+name|notify_yes
 block|,
-name|znotify_no
+name|notify_no
+block|,
+name|notify_explicit
 block|}
 enum|;
 end_enum
@@ -1310,7 +1312,7 @@ ifdef|#
 directive|ifdef
 name|BIND_NOTIFY
 name|enum
-name|znotify
+name|notify
 name|z_notify
 decl_stmt|;
 comment|/* Notify mode */
@@ -2148,7 +2150,7 @@ name|BIND_NOTIFY
 name|int
 name|q_notifyzone
 decl_stmt|;
-comment|/* zone which needs another znotify() 					 * when the reply to this comes in. 					 */
+comment|/* zone which needs another notify() 					 * when the reply to this comes in. 					 */
 endif|#
 directive|endif
 name|struct
@@ -2623,6 +2625,10 @@ name|int
 name|tsig_skip
 decl_stmt|;
 comment|/* skip calling ns_sign_tcp 						 * during the next flush */
+name|int
+name|tsig_size
+decl_stmt|;
+comment|/* need to reserve this space 						 * for the tsig. */
 struct|struct
 name|qs_x_lev
 block|{
@@ -3316,6 +3322,10 @@ name|minroots
 decl_stmt|;
 name|u_int16_t
 name|preferred_glue
+decl_stmt|;
+name|enum
+name|notify
+name|notify
 decl_stmt|;
 block|}
 typedef|*

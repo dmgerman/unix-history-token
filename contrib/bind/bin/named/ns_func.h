@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.115 2002/01/29 03:59:38 marka Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.117 2002/04/25 05:27:07 marka Exp $  */
 end_comment
 
 begin_comment
@@ -2203,6 +2203,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tryxfer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|addxfer
 parameter_list|(
 name|struct
@@ -3232,7 +3241,8 @@ name|set_zone_notify
 parameter_list|(
 name|zone_config
 parameter_list|,
-name|int
+name|enum
+name|notify
 name|value
 parameter_list|)
 function_decl|;
