@@ -3300,19 +3300,6 @@ name|s
 decl_stmt|,
 name|rx_cfg
 decl_stmt|;
-comment|/* address not known */
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_addrhead
-argument_list|)
-condition|)
-comment|/* unlikely? XXX */
-return|return;
 comment|/* 	 * reset whatchdog timer 	 */
 name|ifp
 operator|->

@@ -7383,19 +7383,6 @@ operator|->
 name|gone
 condition|)
 return|return;
-comment|/* address not known */
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_addrhead
-argument_list|)
-condition|)
-comment|/* unlikely? XXX */
-return|return;
 comment|/* 	 * Initialize the NIC in the exact order outlined in the NS manual. 	 * This init procedure is "mandatory"...don't change what or when 	 * things happen. 	 */
 name|s
 operator|=

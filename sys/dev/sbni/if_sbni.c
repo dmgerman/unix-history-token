@@ -1116,18 +1116,6 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* address not known */
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_addrhead
-argument_list|)
-condition|)
-return|return;
 comment|/* 	 * kludge to avoid multiple initialization when more than once 	 * protocols configured 	 */
 if|if
 condition|(

@@ -4157,37 +4157,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* We need an address. */
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_addrhead
-argument_list|)
-condition|)
-block|{
-comment|/* XXX unlikely */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"%s: init() without any address\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_xname
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return;
-block|}
 comment|/* Start initializing 86960.  */
 name|s
 operator|=

@@ -3851,30 +3851,6 @@ name|char
 modifier|*
 name|lnc_mem
 decl_stmt|;
-comment|/* Check that interface has valid address */
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_addrhead
-argument_list|)
-condition|)
-block|{
-comment|/* XXX unlikely */
-name|printf
-argument_list|(
-literal|"XXX no address?\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* Shut down interface */
 name|s
 operator|=

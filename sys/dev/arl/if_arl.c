@@ -3203,17 +3203,6 @@ literal|"init\n"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_addrhead
-argument_list|)
-condition|)
-return|return;
 name|s
 operator|=
 name|splimp

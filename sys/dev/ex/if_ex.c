@@ -1479,21 +1479,6 @@ literal|"%s: ex_init: start\n"
 argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
-if|if
-condition|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_addrhead
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-return|return;
-block|}
 name|s
 operator|=
 name|splimp
