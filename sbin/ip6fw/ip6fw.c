@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: ip6fw.c,v 1.13 2001/06/22 05:51:16 itojun Exp $	*/
+comment|/*	$KAME: ip6fw.c,v 1.14 2003/10/02 19:36:25 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -256,6 +256,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Don't ask for confirmation */
+end_comment
+
+begin_decl_stmt
+name|int
+name|do_test
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't load into Kernel */
 end_comment
 
 begin_struct
@@ -2453,6 +2465,9 @@ name|r
 decl_stmt|,
 modifier|*
 name|rules
+decl_stmt|,
+modifier|*
+name|n
 decl_stmt|;
 name|int
 name|l
@@ -2500,28 +2515,20 @@ operator|>=
 name|nalloc
 condition|)
 block|{
-name|nalloc
-operator|=
-name|nalloc
-operator|*
-literal|2
-operator|+
-literal|200
-expr_stmt|;
-name|bytes
-operator|=
-name|nalloc
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|rules
+name|n
 operator|=
 name|realloc
 argument_list|(
 name|rules
 argument_list|,
-name|bytes
+name|nalloc
+operator|*
+literal|2
+operator|+
+literal|200
 argument_list|)
 operator|)
 operator|==
@@ -2533,6 +2540,20 @@ name|EX_OSERR
 argument_list|,
 literal|"realloc"
 argument_list|)
+expr_stmt|;
+name|bytes
+operator|=
+name|nalloc
+operator|=
+name|nalloc
+operator|*
+literal|2
+operator|+
+literal|200
+expr_stmt|;
+name|rules
+operator|=
+name|n
 expr_stmt|;
 name|i
 operator|=
@@ -2884,6 +2905,9 @@ name|u_char
 modifier|*
 name|addr
 decl_stmt|;
+name|int
+name|family
+decl_stmt|;
 block|{
 name|struct
 name|hostent
@@ -3088,6 +3112,10 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|ipno
 argument_list|,
 name|AF_INET6
@@ -4482,6 +4510,12 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_test
+condition|)
+block|{
 name|i
 operator|=
 name|setsockopt
@@ -4519,6 +4553,7 @@ argument_list|,
 literal|"IPV6_FW_DEL"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -6635,6 +6670,12 @@ operator|&
 name|rule
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_test
+condition|)
+block|{
 name|i
 operator|=
 name|setsockopt
@@ -6665,6 +6706,7 @@ argument_list|,
 literal|"IPV6_FW_ADD"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6701,6 +6743,12 @@ block|{
 comment|/* clear all entries */
 if|if
 condition|(
+operator|!
+name|do_test
+condition|)
+block|{
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|s
@@ -6733,6 +6781,18 @@ condition|)
 name|printf
 argument_list|(
 literal|"Accounting cleared.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
+name|printf
+argument_list|(
+literal|"Accounting not cleared.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6792,6 +6852,12 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|do_test
+condition|)
+block|{
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|s
@@ -6824,7 +6890,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|!
@@ -6833,6 +6898,22 @@ condition|)
 name|printf
 argument_list|(
 literal|"Entry %d cleared\n"
+argument_list|,
+name|rule
+operator|.
+name|fw_number
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
+name|printf
+argument_list|(
+literal|"Entry %d not cleared\n"
 argument_list|,
 name|rule
 operator|.
@@ -6885,10 +6966,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 comment|/* init optind to 1 */
 name|optind
 operator|=
@@ -6927,7 +7004,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"afqtN"
+literal|"afnqtN"
 argument_list|)
 operator|)
 operator|!=
@@ -6951,6 +7028,14 @@ case|case
 literal|'f'
 case|:
 name|do_force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|do_test
 operator|=
 literal|1
 expr_stmt|;
@@ -7183,6 +7268,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|do_test
+condition|)
+block|{
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|s
@@ -7215,6 +7306,18 @@ condition|)
 name|printf
 argument_list|(
 literal|"Flushed all rules.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|do_quiet
+condition|)
+name|printf
+argument_list|(
+literal|"Rules not flushed.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7412,6 +7515,8 @@ name|c
 decl_stmt|,
 name|lineno
 decl_stmt|,
+name|nflag
+decl_stmt|,
 name|qflag
 decl_stmt|,
 name|pflag
@@ -7494,6 +7599,8 @@ operator|==
 literal|0
 condition|)
 block|{
+name|nflag
+operator|=
 name|qflag
 operator|=
 name|pflag
@@ -7517,7 +7624,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"D:U:p:q"
+literal|"D:U:np:q"
 argument_list|)
 operator|)
 operator|!=
@@ -7621,6 +7728,14 @@ operator|++
 index|]
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -7980,6 +8095,18 @@ operator|++
 index|]
 operator|=
 literal|"-q"
+expr_stmt|;
+if|if
+condition|(
+name|nflag
+condition|)
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-n"
 expr_stmt|;
 for|for
 control|(
