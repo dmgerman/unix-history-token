@@ -1871,6 +1871,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Check if windowing is enabled */
+if|if
+condition|(
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableWindowing
+condition|)
+block|{
 comment|/* Is our transmit window full? */
 if|if
 condition|(
@@ -1915,6 +1925,7 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+block|}
 block|}
 comment|/* Sanity check frame length */
 if|if
@@ -2034,6 +2045,15 @@ name|hasSeq
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableWindowing
+condition|)
+block|{
 name|a
 operator|->
 name|timeSent
@@ -2052,6 +2072,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+block|}
 name|priv
 operator|->
 name|xmitSeq
@@ -3014,6 +3035,15 @@ operator|=
 name|ack
 expr_stmt|;
 comment|/* Update adaptive timeout stuff */
+if|if
+condition|(
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableWindowing
+condition|)
+block|{
 name|sample
 operator|=
 name|ng_pptpgre_time
@@ -3146,7 +3176,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If we sent an entire window, increase window size by one */
+comment|/* If we sent an entire window, increase window size */
 if|if
 condition|(
 name|PPTP_SEQ_DIFF
@@ -3204,6 +3234,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|badAck
 label|:
@@ -3473,6 +3504,16 @@ name|remain
 decl_stmt|,
 name|ticks
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableWindowing
+condition|)
+return|return;
 comment|/* Compute how long until oldest unack'd packet times out, 	   and reset the timer to that time. */
 name|KASSERT
 argument_list|(
@@ -3669,6 +3710,16 @@ name|priv
 operator|->
 name|ackp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableWindowing
+condition|)
+return|return;
 if|if
 condition|(
 name|callout_stop
