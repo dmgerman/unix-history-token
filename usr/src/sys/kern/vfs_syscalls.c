@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.107 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.108 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_ifdef
@@ -1305,6 +1311,20 @@ name|int
 name|syncprt
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug0
+init|=
+block|{
+literal|"syncprt"
+block|,
+operator|&
+name|syncprt
+block|}
 decl_stmt|;
 end_decl_stmt
 
