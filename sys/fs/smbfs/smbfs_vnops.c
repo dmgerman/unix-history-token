@@ -4460,7 +4460,7 @@ name|ap
 decl_stmt|;
 block|{
 return|return
-name|EINVAL
+name|ENOTTY
 return|;
 block|}
 end_function
