@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.20	81/05/09	*/
+comment|/*	mba.c	4.21	81/10/27	*/
 end_comment
 
 begin_include
@@ -439,7 +439,21 @@ goto|goto
 name|loop
 goto|;
 block|}
-comment|/* 	 * If this device isn't present and on-line, then 	 * we screwed up, and can't really do the operation. 	 */
+comment|/* 	 * If this device isn't present and on-line, then 	 * we screwed up, and can't really do the operation. 	 * Only check for non-tapes because tape drivers check 	 * ONLINE themselves and because TU78 registers are 	 * different. 	 */
+if|if
+condition|(
+operator|(
+name|mi
+operator|->
+name|mi_drv
+operator|->
+name|mbd_dt
+operator|&
+name|MBDT_TAP
+operator|)
+operator|==
+literal|0
+condition|)
 if|if
 condition|(
 operator|(

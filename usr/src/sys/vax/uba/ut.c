@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.2	81/11/06	*/
+comment|/*	ut.c	4.3	81/11/07	*/
 end_comment
 
 begin_include
@@ -16,13 +16,6 @@ name|NUT
 operator|>
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|UTDEBUG
-value|1
-end_define
 
 begin_comment
 comment|/*  * System Industries Model 9700 Tape Drive  *   emulates a TU45 on the UNIBUS  *  * TODO:  *	check out attention processing  *	try reset code and dump code  */
@@ -445,41 +438,6 @@ end_define
 begin_comment
 comment|/* erased inter-record gap */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|UTDEBUG
-end_if
-
-begin_decl_stmt
-name|int
-name|utdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|printd
-value|if (utdebug) printf
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|printd
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * A NOP should get an interrupt back, if the  *  device is there.  */
@@ -1640,27 +1598,6 @@ name|sc_lastiow
 operator|=
 literal|0
 expr_stmt|;
-name|printd
-argument_list|(
-literal|"utstart: cmd=%o openf=%d ds=%b\n"
-argument_list|,
-name|bp
-operator|->
-name|b_command
-operator|>>
-literal|1
-argument_list|,
-name|sc
-operator|->
-name|sc_openf
-argument_list|,
-name|addr
-operator|->
-name|utds
-argument_list|,
-name|UTDS_BITS
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1940,11 +1877,6 @@ operator|.
 name|b_errcnt
 condition|)
 block|{
-name|printd
-argument_list|(
-literal|"utstart: erase\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|um
@@ -1962,7 +1894,7 @@ name|um_tab
 operator|.
 name|b_state
 operator|=
-name|SERASED
+name|SERASE
 expr_stmt|;
 name|addr
 operator|->
@@ -1976,11 +1908,6 @@ name|UT_GO
 expr_stmt|;
 return|return;
 block|}
-name|printd
-argument_list|(
-literal|"utstart: erased\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|um
 operator|->
@@ -2015,20 +1942,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Tape positioned incorrectly; seek forwards or 	 * backwards to the correct spot.  This happens for 	 * raw tapes only on error retries. 	 */
-name|printd
-argument_list|(
-literal|"utstart: seek, blkno=%d dbtofsb=%d\n"
-argument_list|,
-name|blkno
-argument_list|,
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|um
 operator|->
 name|um_tab
@@ -2094,11 +2007,6 @@ block|}
 name|dobpcmd
 label|:
 comment|/* 	 * Perform the command setup in bp. 	 */
-name|printd
-argument_list|(
-literal|"utstart: dobpcmd\n"
-argument_list|)
-expr_stmt|;
 name|addr
 operator|->
 name|utcs1
@@ -2115,11 +2023,6 @@ return|return;
 name|next
 label|:
 comment|/* 	 * Advance to the next command in the slave queue, 	 * posting notice and releasing resources as needed. 	 */
-name|printd
-argument_list|(
-literal|"utstart: next\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|um
@@ -2226,25 +2129,6 @@ operator||
 name|UT_IE
 operator||
 name|UT_GO
-expr_stmt|;
-name|printd
-argument_list|(
-literal|"utdgo: cs1=%b fc=%x wc=%x\n"
-argument_list|,
-name|addr
-operator|->
-name|utcs1
-argument_list|,
-name|UT_BITS
-argument_list|,
-name|addr
-operator|->
-name|utfc
-argument_list|,
-name|addr
-operator|->
-name|utwc
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -2415,69 +2299,6 @@ name|utwc
 operator|<<
 literal|1
 expr_stmt|;
-name|printd
-argument_list|(
-literal|"utintr: state=%d cs1=%b cs2=%b ds=%b er=%b\n"
-argument_list|,
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_state
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|addr
-operator|)
-operator|->
-name|utcs1
-argument_list|,
-name|UT_BITS
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|addr
-operator|)
-operator|->
-name|utcs2
-argument_list|,
-name|UTCS2_BITS
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|addr
-operator|)
-operator|->
-name|utds
-argument_list|,
-name|UTDS_BITS
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|addr
-operator|)
-operator|->
-name|uter
-argument_list|,
-name|UTER_BITS
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2532,12 +2353,59 @@ name|UT_TRE
 operator|)
 condition|)
 block|{
+comment|/* 		 * To clear the ERR bit, we must issue a drive clear 		 * command, and to clear the TRE bit we must set the 		 * controller clear bit. 		 */
+name|cs2
+operator|=
+name|addr
+operator|->
+name|utcs2
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cs1
+operator|=
+name|addr
+operator|->
+name|utcs1
+operator|)
+operator|&
+name|UT_TRE
+condition|)
+name|addr
+operator|->
+name|utcs2
+operator||=
+name|UTCS2_CLR
+expr_stmt|;
+comment|/* is this dangerous ?? */
+while|while
+condition|(
+operator|(
+name|addr
+operator|->
+name|utcs1
+operator|&
+name|UT_RDY
+operator|)
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+name|addr
+operator|->
+name|utcs1
+operator|=
+name|UT_CLEAR
+operator||
+name|UT_GO
+expr_stmt|;
 comment|/* 		 * If we hit a tape mark or EOT update our position. 		 */
 if|if
 condition|(
-name|addr
+name|sc
 operator|->
-name|utds
+name|sc_dsreg
 operator|&
 operator|(
 name|UTDS_TM
@@ -2546,7 +2414,7 @@ name|UTDS_EOT
 operator|)
 condition|)
 block|{
-comment|/* 			 * Set blkno and nxrec  			 */
+comment|/* 			 * Set blkno and nxrec 			 */
 if|if
 condition|(
 name|bp
@@ -2647,14 +2515,6 @@ operator|=
 name|SCOM
 expr_stmt|;
 comment|/* force completion */
-name|addr
-operator|->
-name|utcs1
-operator|=
-name|UT_CLEAR
-operator||
-name|UT_GO
-expr_stmt|;
 comment|/* 			 * Stuff so we can unstuff later 			 * to get the residual. 			 */
 name|addr
 operator|->
@@ -2693,69 +2553,6 @@ goto|goto
 name|opdone
 goto|;
 block|}
-name|cs2
-operator|=
-name|addr
-operator|->
-name|utcs2
-expr_stmt|;
-comment|/* save it for printf below */
-if|if
-condition|(
-operator|(
-name|cs1
-operator|=
-name|addr
-operator|->
-name|utcs1
-operator|)
-operator|&
-name|UT_TRE
-condition|)
-name|addr
-operator|->
-name|utcs2
-operator||=
-name|UTCS2_CLR
-expr_stmt|;
-name|addr
-operator|->
-name|utcs1
-operator|=
-name|UT_CLEAR
-operator||
-name|UT_GO
-expr_stmt|;
-comment|/* must clear ERR bit */
-name|printd
-argument_list|(
-literal|"after clear: cs1=%b er=%b cs2=%b ds=%b\n"
-argument_list|,
-name|addr
-operator|->
-name|utcs1
-argument_list|,
-name|UT_BITS
-argument_list|,
-name|addr
-operator|->
-name|uter
-argument_list|,
-name|UTER_BITS
-argument_list|,
-name|addr
-operator|->
-name|utcs2
-argument_list|,
-name|UTCS2_BITS
-argument_list|,
-name|addr
-operator|->
-name|utds
-argument_list|,
-name|UTDS_BITS
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If we were reading from a raw tape and the only error 		 * was that the record was too long, then we don't consider 		 * this an error. 		 */
 if|if
 condition|(

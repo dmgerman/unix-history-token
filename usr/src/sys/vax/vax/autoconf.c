@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.31	81/07/05	*/
+comment|/*	autoconf.c	4.32	81/11/07	*/
 end_comment
 
 begin_comment
@@ -1002,24 +1002,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
-name|dt
-operator|&
-name|MBDT_TYPE
-operator|)
-operator|==
-name|MBDT_TU78
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"tm04/tu78 unsupported\n"
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
 name|dt
 operator|==
 name|MBDT_MOH
@@ -1909,6 +1891,13 @@ argument_list|,
 name|SCB_ISTACK
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set last free interrupt vector for devices with 	 * programmable interrupt vectors.  Use is to decrement 	 * this number and use result as interrupt vector. 	 */
+name|uhp
+operator|->
+name|uh_lastiv
+operator|=
+literal|0x200
+expr_stmt|;
 comment|/* THIS IS A CHEAT: USING THE FACT THAT UMEM and NEXI ARE SAME SIZE */
 name|nxaccess
 argument_list|(
@@ -2551,6 +2540,10 @@ name|ud_probe
 call|)
 argument_list|(
 name|reg
+argument_list|,
+name|um
+operator|->
+name|um_ctlr
 argument_list|)
 expr_stmt|;
 if|#

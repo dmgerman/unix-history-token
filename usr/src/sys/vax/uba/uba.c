@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.35	81/07/22	*/
+comment|/*	uba.c	4.36	81/11/07	*/
 end_comment
 
 begin_include
@@ -741,6 +741,23 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|UBA_HAVEBDP
+condition|)
+name|bdp
+operator|=
+operator|(
+name|flags
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+expr_stmt|;
 name|splx
 argument_list|(
 name|a

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.19	81/08/31	*/
+comment|/*	ht.c	4.20	81/11/07	*/
 end_comment
 
 begin_include
@@ -446,6 +446,38 @@ operator|->
 name|ms_unit
 index|]
 decl_stmt|;
+specifier|register
+name|struct
+name|htdevice
+modifier|*
+name|htaddr
+init|=
+operator|(
+expr|struct
+name|htdevice
+operator|*
+operator|)
+name|mi
+operator|->
+name|mi_drv
+decl_stmt|;
+name|htaddr
+operator|->
+name|httc
+operator|=
+name|ms
+operator|->
+name|ms_slave
+expr_stmt|;
+if|if
+condition|(
+name|htaddr
+operator|->
+name|htdt
+operator|&
+name|HTDT_SPR
+condition|)
+block|{
 name|sc
 operator|->
 name|sc_mi
@@ -471,6 +503,18 @@ name|mi
 operator|->
 name|mi_unit
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
