@@ -1409,7 +1409,7 @@ name|i
 operator|+
 literal|2
 expr_stmt|;
-comment|/* 	 * Figure out a useful size for the VHPT, based on the size of 	 * physical memory and try to locate a region which is large 	 * enough to contain the VHPT (which must be a power of two in 	 * size and aligned to a natural boundary). 	 */
+comment|/* 	 * Figure out a useful size for the VHPT, based on the size of 	 * physical memory and try to locate a region which is large 	 * enough to contain the VHPT (which must be a power of two in 	 * size and aligned to a natural boundary). 	 * Don't use the difference between avail_start and avail_end 	 * as a measure for memory size. The address space is often 	 * enough sparse, causing us to (try to) create a huge VHPT. 	 */
 name|vhpt_size
 operator|=
 literal|15
@@ -1424,9 +1424,7 @@ operator|)
 operator|<
 name|ia64_btop
 argument_list|(
-name|avail_end
-operator|-
-name|avail_start
+name|Maxmem
 argument_list|)
 operator|*
 literal|32
@@ -1946,22 +1944,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* 	 * Set up proc0's PCB. 	 */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|thread0.td_pcb->pcb_hw.apcb_asn = 0;
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* 	 * Reserve some memory for allocating pvs while bootstrapping 	 * the pv allocator. We need to have enough to cover mapping 	 * the kmem_alloc region used to allocate the initial_pvs in 	 * pmap_init. In general, the size of this region is 	 * approximately (# physical pages) * (size of pv entry). 	 */
