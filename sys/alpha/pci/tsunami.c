@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<alpha/isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<alpha/pci/tsunamireg.h>
 end_include
 
