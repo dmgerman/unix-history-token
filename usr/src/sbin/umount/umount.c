@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.6 (Berkeley) %G%"
+literal|"@(#)umount.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,14 +236,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|p1
-decl_stmt|,
-modifier|*
-name|p2
-decl_stmt|;
 name|argc
 operator|--
 operator|,
@@ -429,6 +421,11 @@ name|getfsent
 argument_list|()
 operator|)
 operator|==
+operator|(
+expr|struct
+name|fstab
+operator|*
+operator|)
 literal|0
 condition|)
 return|return;
@@ -558,6 +555,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -569,6 +569,9 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|fs
@@ -598,6 +601,9 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|fs
@@ -627,6 +633,9 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|fs
@@ -798,9 +807,6 @@ name|so
 init|=
 name|RPC_ANYSOCK
 decl_stmt|;
-name|u_short
-name|tport
-decl_stmt|;
 name|char
 modifier|*
 name|hostp
@@ -925,6 +931,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: not a directory or special device\n"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1204,15 +1212,13 @@ name|int
 name|what
 decl_stmt|;
 block|{
-name|long
+name|int
 name|mntsize
 decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
 name|statfs
-name|statfsbuf
-decl_stmt|,
 modifier|*
 name|mntbuf
 decl_stmt|;
@@ -1223,6 +1229,11 @@ name|mntsize
 operator|=
 name|getfsstat
 argument_list|(
+operator|(
+expr|struct
+name|statfs
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0
@@ -1255,6 +1266,10 @@ name|mntbuf
 condition|)
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|mntbuf
 argument_list|)
 expr_stmt|;
@@ -1284,6 +1299,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|i
 argument_list|)
 operator|)
