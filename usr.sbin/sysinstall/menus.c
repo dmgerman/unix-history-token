@@ -1431,7 +1431,7 @@ name|configRouter
 block|,
 name|NULL
 block|,
-literal|"router"
+literal|"router_enable"
 block|}
 block|,
 block|{
@@ -8324,7 +8324,7 @@ name|configRouter
 block|,
 name|NULL
 block|,
-literal|"router"
+literal|"router_enable"
 block|}
 block|,
 block|{
