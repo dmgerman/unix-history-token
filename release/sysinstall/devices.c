@@ -623,6 +623,19 @@ block|,
 literal|"SiS 900/SiS 7016 PCI ethernet card"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"snc"
+block|,
+literal|"SONIC ethernet card"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
@@ -746,14 +759,6 @@ block|,
 ifdef|#
 directive|ifdef
 name|PC98
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"snc"
-block|,
-literal|"SONIC ethernet card"
-block|}
-block|,
 block|{
 name|DEVICE_TYPE_DISK
 block|,
