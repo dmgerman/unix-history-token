@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: look.c,v 1.8 1997/09/15 08:31:20 jkh Exp $"
+literal|"$Id: look.c,v 1.9 1997/09/15 11:02:10 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,8 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|termchar
+decl_stmt|,
+name|match
 decl_stmt|;
 name|unsigned
 name|char
@@ -469,30 +471,21 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|argc
+operator|==
+literal|0
 condition|)
-block|{
-case|case
-literal|2
-case|:
-comment|/* Don't set -df for user. */
-name|string
-operator|=
-operator|*
-name|argv
-operator|++
+name|usage
+argument_list|()
 expr_stmt|;
-name|file
-operator|=
-operator|*
-name|argv
-expr_stmt|;
-break|break;
-case|case
+if|if
+condition|(
+name|argc
+operator|==
 literal|1
-case|:
+condition|)
 comment|/* But set -df by default. */
 name|dflag
 operator|=
@@ -504,13 +497,20 @@ name|string
 operator|=
 operator|*
 name|argv
+operator|++
 expr_stmt|;
-break|break;
-default|default:
-name|usage
-argument_list|()
+if|if
+condition|(
+name|argc
+operator|>=
+literal|2
+condition|)
+name|file
+operator|=
+operator|*
+name|argv
+operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|termchar
@@ -536,6 +536,12 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+name|match
+operator|=
+literal|1
+expr_stmt|;
+do|do
+block|{
 if|if
 condition|(
 operator|(
@@ -640,8 +646,9 @@ name|sb
 operator|.
 name|st_size
 expr_stmt|;
-name|exit
-argument_list|(
+name|match
+operator|*=
+operator|(
 name|look
 argument_list|(
 name|string
@@ -650,6 +657,33 @@ name|front
 argument_list|,
 name|back
 argument_list|)
+operator|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|argc
+operator|--
+operator|>
+literal|2
+operator|&&
+operator|(
+name|file
+operator|=
+operator|*
+name|argv
+operator|++
+operator|)
+condition|)
+do|;
+name|exit
+argument_list|(
+name|match
 argument_list|)
 expr_stmt|;
 block|}
@@ -1267,7 +1301,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: look [-df] [-t char] string [file]\n"
+literal|"usage: look [-df] [-t char] string [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
