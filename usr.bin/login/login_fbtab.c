@@ -480,6 +480,31 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* clear flags of the device */
+if|if
+condition|(
+name|chflags
+argument_list|(
+name|path
+argument_list|,
+literal|0
+argument_list|)
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: chflags(%s): %m"
+argument_list|,
+name|table
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chmod

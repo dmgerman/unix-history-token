@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.46 1999/04/07 14:05:03 brian Exp $"
+literal|"$Id: login.c,v 1.47 1999/04/24 17:26:32 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2221,9 +2221,27 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+comment|/* 	 * Clear flags of the tty.  None should be set, and when the 	 * user sets them otherwise, this can cause the chown to fail. 	 * Since it isn't clear that flags are useful on character 	 * devices, we just clear them. 	 */
+if|if
+condition|(
+name|chflags
+argument_list|(
+name|ttyn
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"chmod(%s): %m"
+argument_list|,
+name|ttyn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|chown
 argument_list|(
 name|ttyn
@@ -2248,6 +2266,15 @@ else|:
 name|pwd
 operator|->
 name|pw_gid
+argument_list|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"chmod(%s): %m"
+argument_list|,
+name|ttyn
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Preserve TERM if it happens to be already set. 	 */
