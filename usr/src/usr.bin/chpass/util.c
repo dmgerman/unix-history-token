@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.11 (Berkeley) %G%"
+literal|"@(#)util.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,6 +590,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * print --  *	print out the file for the user to edit; strange side-effect:  *	return if the user is allowed to modify their shell.  */
+end_comment
+
 begin_macro
 name|print
 argument_list|(
@@ -621,6 +625,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|shellval
+decl_stmt|;
 name|char
 modifier|*
 name|getusershell
@@ -634,6 +641,10 @@ modifier|*
 name|ttoa
 argument_list|()
 decl_stmt|;
+name|shellval
+operator|=
+literal|1
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -826,6 +837,11 @@ else|:
 name|_PATH_BSHELL
 argument_list|)
 expr_stmt|;
+else|else
+name|shellval
+operator|=
+literal|0
+expr_stmt|;
 name|p
 operator|=
 name|strsep
@@ -940,6 +956,11 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|shellval
+operator|)
+return|;
 block|}
 end_block
 

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.12 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,6 +353,10 @@ block|,
 name|e1
 block|,   }
 block|,
+define|#
+directive|define
+name|E_SHELL
+value|12
 block|{
 literal|"Shell"
 block|,
@@ -1355,12 +1359,25 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * if print doesn't print out a shell field, make it restricted. 	 * Not particularly pretty, but print is the routine that checks 	 * to see if the user can change their shell. 	 */
+if|if
+condition|(
+operator|!
 name|print
 argument_list|(
 name|fp
 argument_list|,
 name|pw
 argument_list|)
+condition|)
+name|list
+index|[
+name|E_SHELL
+index|]
+operator|.
+name|restricted
+operator|=
+literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -1693,7 +1710,27 @@ name|restricted
 operator|&&
 name|uid
 condition|)
-break|break;
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: you may not change the %s field.\n"
+argument_list|,
+name|ep
+operator|->
+name|prompt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
