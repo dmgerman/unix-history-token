@@ -656,6 +656,90 @@ value|0
 end_define
 
 begin_comment
+comment|/* mbuf and mbuf cluster wait count variables... */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|m_mballoc_wid
+init|=
+literal|0
+decl_stmt|,
+name|m_clalloc_wid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|__inline
+name|void
+name|m_mballoc_wakeup
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|__inline
+name|void
+name|m_clalloc_wakeup
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* We'll need wakeup_one(). */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Identifying number passed to the m_mballoc_wait function, allowing  * us to determine that the call came from an MGETHDR and not an MGET --  * this way we are sure to run the MGETHDR macro when the call came from there.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MGETHDR_C
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGET_C
+value|2
+end_define
+
+begin_comment
 comment|/* Freelists:  *  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
 end_comment
 
@@ -677,6 +761,72 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_comment
+comment|/*  * mbuf and mbuf cluster wakeup inline routines.  */
+end_comment
+
+begin_comment
+comment|/*  * Wakeup the next instance -- if any -- of m_mballoc_wait() which  * is waiting for an mbuf to be freed. Make sure to decrement sleep count.  * XXX: If there is another free mbuf, this routine will be called [again]  * from the m_mballoc_wait routine in order to wake another sleep instance.  * Should be called at splimp()  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_mballoc_wakeup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m_mballoc_wid
+condition|)
+block|{
+name|m_mballoc_wid
+operator|--
+expr_stmt|;
+name|wakeup_one
+argument_list|(
+operator|&
+name|m_mballoc_wid
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Same as above, only for mbuf cluster(s). Should be called at splimp()  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_clalloc_wakeup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m_clalloc_wid
+condition|)
+block|{
+name|m_clalloc_wid
+operator|--
+expr_stmt|;
+name|wakeup_one
+argument_list|(
+operator|&
+name|m_clalloc_wid
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * mbuf utility macros:  *  *	MBUFLOCK(code)  * prevents a section of code from from being interrupted by network  * drivers.  */
@@ -708,7 +858,8 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 		splx(_ms); \ 	} else { \ 		splx(_ms); \ 		(m) = m_retry((how), (type)); \ 	} \ }
+define|\
+value|do { \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 		splx(_ms); \ 	  } else { \ 		splx(_ms); \ 		if (((m) = m_retry((how), (type))) == NULL&& (how) == M_WAIT) \ 			(m) = m_mballoc_wait(MGET_C, (type)); \ 	  } \ 	} while (0)
 end_define
 
 begin_define
@@ -722,7 +873,8 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 		splx(_ms); \ 	} else { \ 		splx(_ms); \ 		(m) = m_retryhdr((how), (type)); \ 	} \ }
+define|\
+value|do { \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 		splx(_ms); \ 	  } else { \ 		splx(_ms); \ 		if (((m) = m_retryhdr((how), (type))) == NULL&& \ 		    (how) == M_WAIT) \ 			(m) = m_mballoc_wait(MGETHDR_C, (type)); \ 	  } \ 	} while (0)
 end_define
 
 begin_comment
@@ -739,7 +891,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|MBUFLOCK( \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, (how)); \ 	  if (((p) = (caddr_t)mclfree) != 0) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	)
+value|do { \ 	  int _ms = splimp(); \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, (how)); \ 	  if (((p) = (caddr_t)mclfree) != 0) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 		splx(_ms); \ 	  } else if ((how) == M_WAIT) { \ 		splx(_ms); \ 		(p) = m_clalloc_wait(); \ 	  } \  	} while (0)
 end_define
 
 begin_define
@@ -763,7 +915,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do { \ 	  	if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 	  	} \ 	} while (0)
+value|do { \ 	  	if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 			m_clalloc_wakeup(); \ 	  	} \ 	} while (0)
 end_define
 
 begin_define
@@ -813,7 +965,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|MBUFLOCK(  \ 	  mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		MEXTFREE1(m); \ 	  } \ 	  (n) = (m)->m_next; \ 	  (m)->m_type = MT_FREE; \ 	  mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_next = mmbfree; \ 	  mmbfree = (m); \ 	)
+value|MBUFLOCK(  \ 	  mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		MEXTFREE1(m); \ 	  } \ 	  (n) = (m)->m_next; \ 	  (m)->m_type = MT_FREE; \ 	  mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_next = mmbfree; \ 	  mmbfree = (m); \ 	  m_mballoc_wakeup(); \ 	)
 end_define
 
 begin_comment
@@ -1159,6 +1311,33 @@ comment|/* MHLEN - max_hdr */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|mbuf_wait
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mbuf sleep time */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_mballoc_wait
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
@@ -1480,6 +1659,18 @@ operator|(
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|m_clalloc_wait
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

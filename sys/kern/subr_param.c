@@ -234,6 +234,18 @@ begin_comment
 comment|/* maximum # of timer events */
 end_comment
 
+begin_decl_stmt
+name|int
+name|mbuf_wait
+init|=
+literal|32
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mbuf sleep time in ticks */
+end_comment
+
 begin_comment
 comment|/* maximum # of sf_bufs (sendfile(2) zero-copy virtual buffers) */
 end_comment
