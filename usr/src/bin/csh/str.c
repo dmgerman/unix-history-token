@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.4 (Berkeley) %G%"
+literal|"@(#)str.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,7 +1015,7 @@ while|while
 condition|(
 operator|--
 name|n
-operator|>
+operator|!=
 literal|0
 condition|)
 operator|*
