@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.21 1999/02/05 02:46:21 mjacob Exp $"
+literal|"$Id: mt.c,v 1.22 1999/03/02 06:27:59 mjacob Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3230,7 +3230,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"0x%2x"
+literal|"0x%x"
 argument_list|,
 name|comp
 argument_list|)
