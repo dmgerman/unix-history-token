@@ -361,6 +361,24 @@ operator|=
 name|read_header
 argument_list|()
 expr_stmt|;
+comment|/* check if the namelist got emptied during the course of reading */
+comment|/* the tape, if so stop by setting status to EOF */
+if|if
+condition|(
+operator|(
+name|namelist
+operator|==
+name|NULL
+operator|)
+operator|&&
+name|nlpsfreed
+condition|)
+block|{
+name|status
+operator|=
+name|EOF
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|status
