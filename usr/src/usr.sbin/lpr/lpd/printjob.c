@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.11 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,12 +169,37 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of files actually printed */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|remote
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* true if sending files to remote */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|fromhost
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user's host machine */
 end_comment
 
 begin_decl_stmt
@@ -481,8 +506,6 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
-operator||
-name|O_TRUNC
 argument_list|,
 literal|0644
 argument_list|)
@@ -885,7 +908,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * Check to see if we should try reprinting the job. 		 */
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+comment|/* file ok and printed */
+name|count
+operator|++
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|i
@@ -893,6 +926,7 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* try reprinting the job */
 name|log
 argument_list|(
 literal|"restarting"
@@ -1044,6 +1078,14 @@ name|done
 label|:
 if|if
 condition|(
+name|count
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Files actually printed */
+if|if
+condition|(
 operator|!
 name|SF
 operator|&&
@@ -1087,6 +1129,7 @@ name|TR
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -1246,7 +1289,7 @@ literal|'H'
 case|:
 name|strcpy
 argument_list|(
-name|host
+name|fromhost
 argument_list|,
 name|line
 operator|+
@@ -1640,6 +1683,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|bombed
+condition|?
+operator|-
+literal|1
+else|:
 literal|0
 operator|)
 return|;
@@ -2523,7 +2571,7 @@ name|n
 operator|++
 index|]
 operator|=
-name|host
+name|fromhost
 expr_stmt|;
 name|av
 index|[
@@ -4367,7 +4415,7 @@ name|line
 operator|+
 literal|1
 argument_list|,
-name|host
+name|fromhost
 argument_list|)
 expr_stmt|;
 name|execl
@@ -4408,11 +4456,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"To: %s\n"
+literal|"To: %s@%s\n"
 argument_list|,
 name|line
 operator|+
 literal|1
+argument_list|,
+name|fromhost
 argument_list|)
 expr_stmt|;
 name|printf
