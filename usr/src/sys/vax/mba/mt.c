@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -679,10 +679,21 @@ name|mtds
 operator|&
 name|MTDS_PRES
 condition|)
+block|{
+name|muinfo
+index|[
+name|ms
+operator|->
+name|ms_unit
+index|]
+operator|=
+name|ms
+expr_stmt|;
 name|rtn
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* cancel the interrupt, then wait a little while for it to go away */
 name|mtaddr
 operator|->
