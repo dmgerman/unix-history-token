@@ -1421,9 +1421,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|DROP_GIANT_NOSWITCH
-argument_list|()
-expr_stmt|;
 name|WITNESS_SLEEP
 argument_list|(
 literal|0
@@ -1438,6 +1435,9 @@ name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|DROP_GIANT_NOSWITCH
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1628,7 +1628,7 @@ index|]
 argument_list|,
 name|p
 argument_list|,
-name|p_procq
+name|p_slpq
 argument_list|)
 expr_stmt|;
 if|if
@@ -2165,7 +2165,7 @@ index|]
 argument_list|,
 name|p
 argument_list|,
-name|p_procq
+name|p_slpq
 argument_list|)
 expr_stmt|;
 block|}
@@ -2230,9 +2230,6 @@ argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT_NOSWITCH
-argument_list|()
-expr_stmt|;
 name|WITNESS_SLEEP
 argument_list|(
 literal|0
@@ -2247,6 +2244,9 @@ name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|DROP_GIANT_NOSWITCH
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2947,7 +2947,7 @@ index|]
 argument_list|,
 name|p
 argument_list|,
-name|p_procq
+name|p_slpq
 argument_list|)
 expr_stmt|;
 name|p
@@ -3036,7 +3036,7 @@ argument|p
 argument_list|,
 argument|qp
 argument_list|,
-argument|p_procq
+argument|p_slpq
 argument_list|)
 block|{
 if|if
@@ -3054,7 +3054,7 @@ name|qp
 argument_list|,
 name|p
 argument_list|,
-name|p_procq
+name|p_slpq
 argument_list|)
 expr_stmt|;
 name|p
@@ -3245,7 +3245,7 @@ argument|p
 argument_list|,
 argument|qp
 argument_list|,
-argument|p_procq
+argument|p_slpq
 argument_list|)
 block|{
 if|if
@@ -3263,7 +3263,7 @@ name|qp
 argument_list|,
 name|p
 argument_list|,
-name|p_procq
+name|p_slpq
 argument_list|)
 expr_stmt|;
 name|p

@@ -5999,9 +5999,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT_NOSWITCH
-argument_list|()
-expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
@@ -6009,6 +6006,9 @@ name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|DROP_GIANT_NOSWITCH
+argument_list|()
 expr_stmt|;
 name|mi_switch
 argument_list|()
@@ -6230,9 +6230,6 @@ argument_list|,
 name|SIGCHLD
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT_NOSWITCH
-argument_list|()
-expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
@@ -6240,6 +6237,9 @@ name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|DROP_GIANT_NOSWITCH
+argument_list|()
 expr_stmt|;
 name|mi_switch
 argument_list|()

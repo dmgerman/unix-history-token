@@ -327,7 +327,14 @@ argument|proc
 argument_list|)
 name|p_procq
 expr_stmt|;
-comment|/* run/sleep queue. */
+comment|/* run/mutex queue. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_slpq
+expr_stmt|;
+comment|/* sleep queue. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc

@@ -3316,6 +3316,8 @@ name|sleep_list
 index|[]
 init|=
 block|{
+literal|"Giant"
+block|,
 name|NULL
 block|}
 decl_stmt|;
