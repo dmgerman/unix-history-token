@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: printjob.c,v 1.18 1997/12/02 20:45:58 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8237,11 +8237,11 @@ condition|(
 operator|*
 name|ep
 operator|!=
-literal|':'
+literal|'@'
 operator|||
 name|port
 operator|>
-literal|65536
+literal|65535
 condition|)
 block|{
 name|syslog
