@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -141,22 +141,17 @@ begin_comment
 comment|/* zero valued cookie for wildcard searches */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rtable_init
-argument_list|(
-argument|table
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|table
+parameter_list|)
 name|void
 modifier|*
 modifier|*
 name|table
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|domain
@@ -201,14 +196,12 @@ name|dom_rtoffset
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|route_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|rn_init
 argument_list|()
@@ -225,26 +218,24 @@ name|rt_tables
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Packet routing routines.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|rtalloc
-argument_list|(
+parameter_list|(
 name|ro
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|route
-operator|*
+modifier|*
 name|ro
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -285,7 +276,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -553,20 +544,18 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|rtfree
-argument_list|(
+parameter_list|(
 name|rt
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|rtentry
-operator|*
+modifier|*
 name|rt
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -675,7 +664,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -761,30 +750,28 @@ begin_comment
 comment|/*  * Force a routing table entry to the specified  * destination to go through the given gateway.  * Normally called as a result of a routing redirect  * message from the network layer.  *  * N.B.: must be called at splnet  *  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rtredirect
-argument_list|(
-argument|dst
-argument_list|,
-argument|gateway
-argument_list|,
-argument|netmask
-argument_list|,
-argument|flags
-argument_list|,
-argument|src
-argument_list|,
-argument|rtp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dst
+parameter_list|,
+name|gateway
+parameter_list|,
+name|netmask
+parameter_list|,
+name|flags
+parameter_list|,
+name|src
+parameter_list|,
+name|rtp
+parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|,
-modifier|*
+decl|*
 name|gateway
 decl_stmt|,
 modifier|*
@@ -793,7 +780,7 @@ decl_stmt|,
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -1192,38 +1179,27 @@ begin_comment
 comment|/* * Routing table ioctl interface. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rtioctl
-argument_list|(
-argument|req
-argument_list|,
-argument|data
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|req
+parameter_list|,
+name|data
+parameter_list|,
+name|p
+parameter_list|)
 name|int
 name|req
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1231,7 +1207,7 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -1405,10 +1381,6 @@ modifier|*
 name|oifa
 init|=
 name|ifa
-decl_stmt|,
-modifier|*
-name|ifaof_ifpforaddr
-argument_list|()
 decl_stmt|;
 name|ifa
 operator|=
@@ -1450,44 +1422,39 @@ parameter_list|)
 value|(a>0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
 end_define
 
-begin_macro
+begin_function
+name|int
 name|rtrequest
-argument_list|(
-argument|req
-argument_list|,
-argument|dst
-argument_list|,
-argument|gateway
-argument_list|,
-argument|netmask
-argument_list|,
-argument|flags
-argument_list|,
-argument|ret_nrt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|req
+parameter_list|,
+name|dst
+parameter_list|,
+name|gateway
+parameter_list|,
+name|netmask
+parameter_list|,
+name|flags
+parameter_list|,
+name|ret_nrt
+parameter_list|)
 name|int
 name|req
 decl_stmt|,
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|,
-modifier|*
+decl|*
 name|gateway
 decl_stmt|,
 modifier|*
 name|netmask
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|struct
@@ -1533,10 +1500,6 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
-decl_stmt|,
-modifier|*
-name|ifa_ifwithdstaddr
-argument_list|()
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -1597,14 +1560,8 @@ name|rnh
 operator|->
 name|rnh_deladdr
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dst
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|netmask
 argument_list|,
 name|rnh
@@ -2096,35 +2053,30 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|rt_setgate
-argument_list|(
-argument|rt0
-argument_list|,
-argument|dst
-argument_list|,
-argument|gate
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rt0
+parameter_list|,
+name|dst
+parameter_list|,
+name|gate
+parameter_list|)
 name|struct
 name|rtentry
 modifier|*
 name|rt0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|,
-modifier|*
+decl|*
 name|gate
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2334,30 +2286,28 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|rt_maskedcopy
-argument_list|(
-argument|src
-argument_list|,
-argument|dst
-argument_list|,
-argument|netmask
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|netmask
+parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|src
 decl_stmt|,
-modifier|*
+decl|*
 name|dst
 decl_stmt|,
 modifier|*
 name|netmask
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2491,32 +2441,27 @@ begin_comment
 comment|/*  * Set up a routing table entry, normally  * for an interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|rtinit
-argument_list|(
+parameter_list|(
 name|ifa
-argument_list|,
+parameter_list|,
 name|cmd
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifaddr
-operator|*
+modifier|*
 name|ifa
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|,
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2895,7 +2840,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
