@@ -1769,6 +1769,36 @@ value|0x0200
 end_define
 
 begin_comment
+comment|/*  * A generic structure.  * This can be used by bypass routines to identify generic arguments.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vop_generic_args
+block|{
+name|struct
+name|vnodeop_desc
+modifier|*
+name|a_desc
+decl_stmt|;
+comment|/* other random data follows, presumably */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|int
+name|vop_bypass_t
+parameter_list|(
+name|struct
+name|vop_generic_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * VDESC_NO_OFFSET is used to identify the end of the offset list  * and in places where no such field exists.  */
 end_comment
 
@@ -1787,10 +1817,6 @@ begin_struct
 struct|struct
 name|vnodeop_desc
 block|{
-name|int
-name|vdesc_offset
-decl_stmt|;
-comment|/* offset in vector,first for speed */
 name|char
 modifier|*
 name|vdesc_name
@@ -1800,6 +1826,11 @@ name|int
 name|vdesc_flags
 decl_stmt|;
 comment|/* VDESC_* flags */
+name|vop_bypass_t
+modifier|*
+name|vdesc_call
+decl_stmt|;
+comment|/* Function to call */
 comment|/* 	 * These ops are used by bypass routines to map and locate arguments. 	 * Creds and procs are not needed in bypass routines, but sometimes 	 * they are useful to (for example) transport layers. 	 * Nameidata is useful because it has a cred in it. 	 */
 name|int
 modifier|*
@@ -1877,24 +1908,6 @@ parameter_list|)
 define|\
 value|((s_type)(((char*)(struct_p)) + (s_offset)))
 end_define
-
-begin_comment
-comment|/*  * A generic structure.  * This can be used by bypass routines to identify generic arguments.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vop_generic_args
-block|{
-name|struct
-name|vnodeop_desc
-modifier|*
-name|a_desc
-decl_stmt|;
-comment|/* other random data follows, presumably */
-block|}
-struct|;
-end_struct
 
 begin_ifdef
 ifdef|#
@@ -2331,13 +2344,9 @@ define|#
 directive|define
 name|VCALL
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
 name|c
 parameter_list|)
-value|vcall((a), (b), (c))
+value|((c)->a_desc->vdesc_call(c))
 end_define
 
 begin_define
@@ -2348,16 +2357,6 @@ parameter_list|(
 name|OP
 parameter_list|)
 value|(& __CONCAT(OP,_desc))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOFFSET
-parameter_list|(
-name|OP
-parameter_list|)
-value|(VDESC(OP)->vdesc_offset)
 end_define
 
 begin_comment
@@ -3962,25 +3961,6 @@ name|vop_stdgetvobject
 parameter_list|(
 name|struct
 name|vop_getvobject_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vcall
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|u_int
-name|off
-parameter_list|,
-name|void
 modifier|*
 name|ap
 parameter_list|)

@@ -473,17 +473,8 @@ return|;
 comment|/* XXX: Doesn't this just recurse back here ? */
 return|return
 operator|(
-name|VCALL
+name|VOP_IOCTL_AP
 argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|,
-name|VOFFSET
-argument_list|(
-name|vop_ioctl
-argument_list|)
-argument_list|,
 name|ap
 argument_list|)
 operator|)
@@ -559,15 +550,8 @@ operator|)
 return|;
 return|return
 operator|(
-name|VCALL
+name|VOP_LOCK_AP
 argument_list|(
-name|vp
-argument_list|,
-name|VOFFSET
-argument_list|(
-name|vop_lock
-argument_list|)
-argument_list|,
 name|ap
 argument_list|)
 operator|)
