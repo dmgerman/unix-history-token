@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id$  *  *	Copyright (c) 1997  *	OLICOM A/S  *	Denmark  *  *	All Rights Reserved  *  *	This source file is subject to the terms and conditions of the  *	OLICOM Software License Agreement which restricts the manner  *	in which it may be used.  *  *---------------------------------------------------------------------------  *  *	Description: Olicom Hawkeye adapter micro-code  *  *---------------------------------------------------------------------------  */
+comment|/*  * $FreeBSD$  *  *	Copyright (c) 1997  *	OLICOM A/S  *	Denmark  *  *	All Rights Reserved  *  *	This source file is subject to the terms and conditions of the  *	OLICOM Software License Agreement which restricts the manner  *	in which it may be used.  *  *---------------------------------------------------------------------------  *  *	Description: Olicom Hawkeye adapter micro-code  *  *---------------------------------------------------------------------------  */
 end_comment
 
 begin_include
