@@ -820,6 +820,12 @@ name|ub
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ub
+operator|->
+name|st_mode
+operator|=
+name|S_IFSOCK
+expr_stmt|;
 return|return
 operator|(
 call|(
