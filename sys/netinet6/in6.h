@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|__KAME_VERSION
-value|"19991101/FreeBSD4.x"
+value|"SNAP 19991101"
 end_define
 
 begin_comment
