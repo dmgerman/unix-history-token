@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.36 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1308,6 +1308,9 @@ specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 specifier|register
 name|int
@@ -1509,7 +1512,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|p
+name|q
 operator|=
 name|ksprintn
 argument_list|(
@@ -1525,7 +1528,7 @@ init|;
 name|ch
 operator|=
 operator|*
-name|p
+name|q
 operator|--
 condition|;
 control|)
