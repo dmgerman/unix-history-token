@@ -6716,15 +6716,6 @@ operator|!=
 name|VGE_TX_DESC_CNT
 condition|)
 block|{
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|VGE_TXQCSRS
-argument_list|,
-name|VGE_TXQCSR_WAK0
-argument_list|)
-expr_stmt|;
 name|CSR_WRITE_1
 argument_list|(
 name|sc
