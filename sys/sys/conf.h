@@ -1283,19 +1283,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|cdev
-modifier|*
-name|getdiskbyname
-parameter_list|(
-name|char
-modifier|*
-name|_name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|devfs_create
 parameter_list|(
