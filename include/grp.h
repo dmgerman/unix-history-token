@@ -15,6 +15,18 @@ directive|define
 name|_GRP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -60,12 +72,6 @@ comment|/* group members */
 block|}
 struct|;
 end_struct
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
