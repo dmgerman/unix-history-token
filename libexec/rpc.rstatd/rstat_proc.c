@@ -257,7 +257,7 @@ end_decl_stmt
 
 begin_function_decl
 name|int
-name|havedisk
+name|haveadisk
 parameter_list|(
 name|void
 parameter_list|)
@@ -598,7 +598,7 @@ literal|0
 expr_stmt|;
 name|have
 operator|=
-name|havedisk
+name|haveadisk
 argument_list|()
 expr_stmt|;
 return|return
@@ -1647,7 +1647,7 @@ end_comment
 
 begin_function
 name|int
-name|havedisk
+name|haveadisk
 parameter_list|(
 name|void
 parameter_list|)
