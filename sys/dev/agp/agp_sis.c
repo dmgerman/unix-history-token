@@ -199,11 +199,155 @@ literal|"SiS 5591 host to AGP bridge"
 operator|)
 return|;
 case|case
+literal|0x05301039
+case|:
+return|return
+operator|(
+literal|"SiS 530 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x05401039
+case|:
+return|return
+operator|(
+literal|"SiS 540 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x05501039
+case|:
+return|return
+operator|(
+literal|"SiS 550 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06201039
+case|:
+return|return
+operator|(
+literal|"SiS 620 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06301039
+case|:
+return|return
+operator|(
+literal|"SiS 630 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06451039
+case|:
+return|return
+operator|(
+literal|"SiS 645 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06461039
+case|:
+return|return
+operator|(
+literal|"SiS 645DX host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x06481039
 case|:
 return|return
 operator|(
 literal|"SiS 648 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06501039
+case|:
+return|return
+operator|(
+literal|"SiS 650 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06511039
+case|:
+return|return
+operator|(
+literal|"SiS 651 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06551039
+case|:
+return|return
+operator|(
+literal|"SiS 655 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x06611039
+case|:
+return|return
+operator|(
+literal|"SiS 661 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07301039
+case|:
+return|return
+operator|(
+literal|"SiS 730 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07351039
+case|:
+return|return
+operator|(
+literal|"SiS 735 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07401039
+case|:
+return|return
+operator|(
+literal|"SiS 740 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07411039
+case|:
+return|return
+operator|(
+literal|"SiS 741 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07451039
+case|:
+return|return
+operator|(
+literal|"SiS 745 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07461039
+case|:
+return|return
+operator|(
+literal|"SiS 746 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x07601039
+case|:
+return|return
+operator|(
+literal|"SiS 760 host to AGP bridge"
 operator|)
 return|;
 block|}
