@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.2 83/11/01"
+literal|"@(#)dr_1.c	2.3 83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,16 @@ operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTSTP
 argument_list|,
 name|SIG_IGN
 argument_list|)
