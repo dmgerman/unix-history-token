@@ -1029,6 +1029,16 @@ name|sc_txq
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>
+literal|4
 name|_IF_DROP
 argument_list|(
 operator|&
@@ -1037,6 +1047,18 @@ operator|->
 name|sc_txq
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|IF_DROP
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"iavc%d: tx overflow, message dropped\n"
