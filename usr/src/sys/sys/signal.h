@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -927,6 +927,21 @@ parameter_list|,
 name|sig
 parameter_list|)
 value|(u.u_signal[(sig)])
+end_define
+
+begin_comment
+comment|/*  * Determine signal that should be delivered to process p, the current process,  * 0 if none.  If there is a pending stop signal with default action,  * the process stops in issig().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CURSIG
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|(((p)->p_sig == 0 || \ 	    ((p)->p_flag&STRC) == 0&& ((p)->p_sig&~ (p)->p_sigmask) == 0) ? \ 	    0 : issig())
 end_define
 
 begin_endif
