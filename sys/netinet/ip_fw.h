@@ -466,7 +466,7 @@ value|fw_un.fu_fwd_ip
 end_define
 
 begin_comment
-comment|/**  *  *   rule_ptr  -------------+  *                          V  *     [ next.le_next ]---->[ next.le_next ]---- [ next.le_next ]--->  *     [ next.le_prev ]<----[ next.le_prev ]<----[ next.le_prev ]<---  *     [<ip_fw> body ]     [<ip_fw> body ]     [<ip_fw> body ]  *  */
+comment|/*  *  *   rule_ptr  -------------+  *                          V  *     [ next.le_next ]---->[ next.le_next ]---- [ next.le_next ]--->  *     [ next.le_prev ]<----[ next.le_prev ]<----[ next.le_prev ]<---  *     [<ip_fw> body ]     [<ip_fw> body ]     [<ip_fw> body ]  *  */
 end_comment
 
 begin_comment
@@ -952,7 +952,7 @@ comment|/* All possible flag bits mask */
 end_comment
 
 begin_comment
-comment|/*   * Flags for the 'fw_ipflg' field, for comparing values  * of ip and its protocols.  */
+comment|/*  * Flags for the 'fw_ipflg' field, for comparing values  * of ip and its protocols.  */
 end_comment
 
 begin_define
