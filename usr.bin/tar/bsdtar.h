@@ -97,6 +97,10 @@ name|option_stdout
 decl_stmt|;
 comment|/* -p */
 name|char
+name|option_unlink_first
+decl_stmt|;
+comment|/* -U */
+name|char
 name|option_warn_links
 decl_stmt|;
 comment|/* -l */

@@ -1473,7 +1473,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Gaurd against symlink tricks.  Reject any archive entry whose 	 * destination would be altered by a symlink. 	 */
-comment|/* XXX TODO: Make this faster!!! XXX */
+comment|/* XXX TODO: Make this faster by comparing current path to 	 * prefix of last successful check to avoid duplicate lstat() 	 * calls. XXX */
 name|pn
 operator|=
 name|name
@@ -1685,6 +1685,46 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|pn
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* Last element is symlink; just remove it. */
+name|unlink
+argument_list|(
+name|bsdtar
+operator|->
+name|security
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|option_unlink_first
+condition|)
+block|{
+comment|/* User asked us to remove problems. */
+name|unlink
+argument_list|(
+name|bsdtar
+operator|->
+name|security
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bsdtar_warnc
 argument_list|(
 literal|0
@@ -1705,6 +1745,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 block|}
 return|return

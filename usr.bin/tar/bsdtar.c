@@ -1286,6 +1286,12 @@ name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_UNLINK
 expr_stmt|;
+name|bsdtar
+operator|->
+name|option_unlink_first
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'u'
