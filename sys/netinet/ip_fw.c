@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.65 1997/11/05 20:17:19 joerg Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.66 1997/12/19 03:36:15 julian Exp $  */
 end_comment
 
 begin_comment
@@ -3783,12 +3783,31 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ( frwl ) 		printf("ipfw: Entry %d cleared.\n", frwl->fw_number); 	else 		printf("ipfw: Accounting cleared.\n");
-endif|#
-directive|endif
+if|if
+condition|(
+name|fw_verbose
+condition|)
+block|{
+if|if
+condition|(
+name|frwl
+condition|)
+name|printf
+argument_list|(
+literal|"ipfw: Entry %d cleared.\n"
+argument_list|,
+name|frwl
+operator|->
+name|fw_number
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ipfw: Accounting cleared.\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
