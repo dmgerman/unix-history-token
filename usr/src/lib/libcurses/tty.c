@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.8 (Berkeley) %G%"
+literal|"@(#)tty.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_include
 begin_decl_stmt
 name|struct
 name|termios
-name|origtermio
+name|__orig_termios
 decl_stmt|;
 end_decl_stmt
 
@@ -100,7 +100,7 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 operator|&
-name|origtermio
+name|__orig_termios
 argument_list|)
 condition|)
 return|return
@@ -111,7 +111,7 @@ return|;
 name|GT
 operator|=
 operator|(
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_oflag
 operator|&
@@ -123,7 +123,7 @@ expr_stmt|;
 name|NONL
 operator|=
 operator|(
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_oflag
 operator|&
@@ -134,7 +134,7 @@ literal|0
 expr_stmt|;
 name|norawt
 operator|=
-name|origtermio
+name|__orig_termios
 expr_stmt|;
 name|norawt
 operator|.
@@ -601,7 +601,12 @@ block|{
 if|if
 condition|(
 name|curscr
-operator|&&
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|curscr
 operator|->
 name|flags
@@ -624,6 +629,26 @@ name|flags
 operator|&=
 operator|~
 name|__WSTANDOUT
+expr_stmt|;
+block|}
+name|mvcur
+argument_list|(
+name|curscr
+operator|->
+name|cury
+argument_list|,
+name|curscr
+operator|->
+name|cury
+argument_list|,
+name|curscr
+operator|->
+name|maxy
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
@@ -650,25 +675,6 @@ argument_list|,
 name|__cputchar
 argument_list|)
 expr_stmt|;
-name|mvcur
-argument_list|(
-name|curscr
-operator|->
-name|cury
-argument_list|,
-name|curscr
-operator|->
-name|cury
-argument_list|,
-name|curscr
-operator|->
-name|maxy
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -679,7 +685,7 @@ argument_list|)
 expr_stmt|;
 name|__echoit
 operator|=
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_lflag
 operator|&
@@ -687,7 +693,7 @@ name|ECHO
 expr_stmt|;
 name|__rawmode
 operator|=
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_lflag
 operator|&
@@ -695,7 +701,7 @@ name|ICANON
 expr_stmt|;
 name|__pfast
 operator|=
-name|origtermio
+name|__orig_termios
 operator|.
 name|c_iflag
 operator|&
@@ -714,10 +720,36 @@ argument_list|,
 name|TCSADRAIN
 argument_list|,
 operator|&
-name|origtermio
+name|__orig_termios
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|__startwin
+parameter_list|()
+block|{
+name|tputs
+argument_list|(
+name|TI
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
+argument_list|)
+expr_stmt|;
+name|tputs
+argument_list|(
+name|VS
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
