@@ -185,7 +185,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|test_fegsetmask
+name|test_masking
 parameter_list|(
 name|void
 parameter_list|)
@@ -287,7 +287,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"1..1\n"
+literal|"1..8\n"
 argument_list|)
 expr_stmt|;
 name|init_exceptsets
@@ -296,30 +296,65 @@ expr_stmt|;
 name|test_dfl_env
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 1 - fenv\n"
+argument_list|)
+expr_stmt|;
 name|test_fetestclearexcept
 argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 2 - fenv\n"
+argument_list|)
 expr_stmt|;
 name|test_fegsetexceptflag
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 3 - fenv\n"
+argument_list|)
+expr_stmt|;
 name|test_feraiseexcept
 argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 4 - fenv\n"
+argument_list|)
 expr_stmt|;
 name|test_fegsetround
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 5 - fenv\n"
+argument_list|)
+expr_stmt|;
 name|test_fegsetenv
 argument_list|()
 expr_stmt|;
-name|test_fegsetmask
+name|printf
+argument_list|(
+literal|"ok 6 - fenv\n"
+argument_list|)
+expr_stmt|;
+name|test_masking
 argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 7 - fenv\n"
+argument_list|)
 expr_stmt|;
 name|test_feholdupdate
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ok 1 - fenv\n"
+literal|"ok 8 - fenv\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1417,13 +1452,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test fegetmask() and fesetmask().  *  * Prerequisites: fetestexcept(), feraiseexcept()  */
+comment|/*  * Test fegetexcept(), fedisableexcept(), and feenableexcept().  *  * Prerequisites: fetestexcept(), feraiseexcept()  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|test_fegsetmask
+name|test_masking
 parameter_list|(
 name|void
 parameter_list|)
@@ -1443,6 +1478,118 @@ name|raise
 decl_stmt|,
 name|status
 decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|fegetexcept
+argument_list|()
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|feenableexcept
+argument_list|(
+name|FE_INVALID
+operator||
+name|FE_OVERFLOW
+argument_list|)
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|feenableexcept
+argument_list|(
+name|FE_UNDERFLOW
+argument_list|)
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+operator|(
+name|FE_INVALID
+operator||
+name|FE_OVERFLOW
+operator|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|fedisableexcept
+argument_list|(
+name|FE_OVERFLOW
+argument_list|)
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+operator|(
+name|FE_INVALID
+operator||
+name|FE_OVERFLOW
+operator||
+name|FE_UNDERFLOW
+operator|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|fegetexcept
+argument_list|()
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+operator|(
+name|FE_INVALID
+operator||
+name|FE_UNDERFLOW
+operator|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|fedisableexcept
+argument_list|(
+name|FE_ALL_EXCEPT
+argument_list|)
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+operator|(
+name|FE_INVALID
+operator||
+name|FE_UNDERFLOW
+operator|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|fegetexcept
+argument_list|()
+operator|&
+name|ALL_STD_EXCEPT
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
@@ -1532,7 +1679,7 @@ comment|/* child */
 name|assert
 argument_list|(
 operator|(
-name|fegetmask
+name|fegetexcept
 argument_list|()
 operator|&
 name|ALL_STD_EXCEPT
@@ -1544,7 +1691,7 @@ expr_stmt|;
 name|assert
 argument_list|(
 operator|(
-name|fesetmask
+name|feenableexcept
 argument_list|(
 name|except
 argument_list|)
@@ -1557,7 +1704,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|fegetmask
+name|fegetexcept
 argument_list|()
 operator|==
 name|except
@@ -1703,7 +1850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test feholdexcept() and feupdateenv().  *  * Prerequisites: fetestexcept(), fegetround(), fesetround(), fesetmask()  */
+comment|/*  * Test feholdexcept() and feupdateenv().  *  * Prerequisites: fetestexcept(), fegetround(), fesetround(),  *	fedisableexcept(), feenableexcept()  */
 end_comment
 
 begin_function
@@ -1828,7 +1975,7 @@ condition|)
 name|assert
 argument_list|(
 operator|(
-name|fesetmask
+name|feenableexcept
 argument_list|(
 name|except
 argument_list|)
