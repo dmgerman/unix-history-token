@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.82
+literal|3.83
 operator|%
 name|G
 operator|%
@@ -370,6 +370,28 @@ name|getpid
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|V6
+end_ifndef
+
+begin_expr_stmt
+name|FullName
+operator|=
+name|getenv
+argument_list|(
+literal|"NAME"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|V6
+end_endif
 
 begin_comment
 comment|/* set up the main envelope */
