@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_machdep.c	7.3	86/12/15	*/
+comment|/*	kdb_machdep.c	7.4	87/03/13	*/
 end_comment
 
 begin_include
@@ -72,57 +72,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/psl.h"
+file|"psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/pte.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/reg.h"
+file|"reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/trap.h"
+file|"trap.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|KDB_IPL
-value|0xf
-end_define
-
-begin_comment
-comment|/* highest priority software interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|setsoftkdb
-parameter_list|()
-value|mtpr(SIRR, KDB_IPL)
-end_define
+begin_include
+include|#
+directive|include
+file|"kdbparam.h"
+end_include
 
 begin_define
 define|#
@@ -417,6 +404,30 @@ name|escape
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Transfer control to the debugger only if the 	 * system was booted with RB_KDB and the trap 	 * enable flag (RB_NOYSNC) is set. 	 */
+if|if
+condition|(
+operator|(
+name|boothowto
+operator|&
+operator|(
+name|RB_KDB
+operator||
+name|RB_NOSYNC
+operator|)
+operator|)
+operator|!=
+operator|(
+name|RB_KDB
+operator||
+name|RB_NOSYNC
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|c
 operator|&=
 literal|0177
@@ -441,25 +452,8 @@ name|escape
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Transfer control to the debugger only if the 	 * system was booted with RB_KDB and the trap 	 * enable flag (RB_NOYSNC) is set. 	 */
 if|if
 condition|(
-operator|(
-name|boothowto
-operator|&
-operator|(
-name|RB_KDB
-operator||
-name|RB_NOSYNC
-operator|)
-operator|)
-operator|!=
-operator|(
-name|RB_KDB
-operator||
-name|RB_NOSYNC
-operator|)
-operator|||
 operator|(
 name|c
 operator|!=
@@ -937,7 +931,7 @@ name|code
 condition|)
 name|printf
 argument_list|(
-literal|", code = %d"
+literal|", code = %x"
 argument_list|,
 name|code
 argument_list|)

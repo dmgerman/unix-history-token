@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdbparam.h	7.5	86/12/15	*/
+comment|/*	kdbparam.h	7.6	87/03/13	*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/vm.h>
-end_include
 
 begin_define
 define|#
@@ -91,6 +85,25 @@ define|#
 directive|define
 name|TBIT
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDB_IPL
+value|0xf
+end_define
+
+begin_comment
+comment|/* highest priority software interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setsoftkdb
+parameter_list|()
+value|mtpr(SIRR, KDB_IPL)
 end_define
 
 begin_define
@@ -312,13 +325,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KERNBASE
-value|0xc0000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|KERNOFF
 value|(KERNBASE + 0x800)
 end_define
@@ -327,15 +333,9 @@ begin_comment
 comment|/* start of kernel's text */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KVTOPH
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)&~ 0xc0000000)
-end_define
+begin_comment
+comment|/* #define	KVTOPH(x)	((x)&~ 0xc0000000) sometimes */
+end_comment
 
 end_unit
 
