@@ -419,8 +419,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": unable to open contents file '%s' for input"
+literal|"%s: unable to open contents file '%s' for input"
+argument_list|,
+name|__func__
 argument_list|,
 name|Contents
 argument_list|)
@@ -538,7 +539,7 @@ literal|2
 argument_list|,
 literal|"%s: alloca() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Not reached */
@@ -812,7 +813,7 @@ literal|2
 argument_list|,
 literal|"%s: asprintf() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1258,8 +1259,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't open file %s for writing"
+literal|"%s: can't open file %s for writing"
+argument_list|,
+name|__func__
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -1290,8 +1292,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": error while closing %s"
+literal|"%s: error while closing %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -1622,8 +1625,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": cannot create pipe"
+literal|"%s: cannot create pipe"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1649,8 +1653,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": cannot fork process for tar"
+literal|"%s: cannot fork process for tar"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1713,8 +1718,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": failed to execute tar command"
+literal|"%s: failed to execute tar command"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1755,8 +1761,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": fdopen failed"
+literal|"%s: fdopen failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1982,8 +1989,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": tar command failed with code %d"
+literal|"%s: tar command failed with code %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|ret
 argument_list|)
@@ -2013,8 +2021,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": required package comment string is missing (-c comment)"
+literal|"%s: required package comment string is missing (-c comment)"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2033,8 +2042,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": required package description string is missing (-d desc)"
+literal|"%s: required package description string is missing (-d desc)"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2053,8 +2063,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": required package contents list is missing (-f [-]file)"
+literal|"%s: required package contents list is missing (-f [-]file)"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

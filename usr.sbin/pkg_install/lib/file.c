@@ -1,29 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * Miscellaneous file access utilities.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1392,8 +1384,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't stat '%s'"
+literal|"%s: can't stat '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|fname
 argument_list|)
@@ -1441,8 +1434,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": unable to open '%s' for reading"
+literal|"%s: unable to open '%s' for reading"
+argument_list|,
+name|__func__
 argument_list|,
 name|fname
 argument_list|)
@@ -1475,8 +1469,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": short read on '%s' - did not get %qd bytes"
+literal|"%s: short read on '%s' - did not get %qd bytes"
+argument_list|,
+name|__func__
 argument_list|,
 name|fname
 argument_list|,
@@ -1775,8 +1770,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": cannot fopen '%s' for writing"
+literal|"%s: cannot fopen '%s' for writing"
+argument_list|,
+name|__func__
 argument_list|,
 name|name
 argument_list|)
@@ -1814,8 +1810,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": short fwrite on '%s', tried to write %ld bytes"
+literal|"%s: short fwrite on '%s', tried to write %ld bytes"
+argument_list|,
+name|__func__
 argument_list|,
 name|name
 argument_list|,
@@ -1843,8 +1840,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": failure to fclose '%s'"
+literal|"%s: failure to fclose '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|name
 argument_list|)
@@ -1934,8 +1932,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": could not perform '%s'"
+literal|"%s: could not perform '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 argument_list|)
@@ -2025,8 +2024,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": could not perform '%s'"
+literal|"%s: could not perform '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 argument_list|)
@@ -2144,8 +2144,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": could not perform '%s'"
+literal|"%s: could not perform '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 argument_list|)

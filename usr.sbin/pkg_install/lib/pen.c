@@ -1,29 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * Routines for managing the "play pen".  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -344,10 +336,11 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't find enough temporary space to extract the files, please set your\n"
+literal|"%s: can't find enough temporary space to extract the files, please set your\n"
 literal|"PKG_TMPDIR environment variable to a location with at least %ld bytes\n"
 literal|"free"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|long
@@ -415,8 +408,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": stack overflow.\n"
+literal|"%s: stack overflow.\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|pstack
@@ -529,8 +523,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't mktemp '%s'"
+literal|"%s: can't mktemp '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|pen
 argument_list|)
@@ -557,8 +552,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't mkdir '%s'"
+literal|"%s: can't mkdir '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|pen
 argument_list|)
@@ -621,10 +617,11 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": not enough free space to create '%s'.\n"
+literal|"%s: not enough free space to create '%s'.\n"
 literal|"Please set your PKG_TMPDIR environment variable to a location\n"
 literal|"with more space and\ntry the command again"
+argument_list|,
+name|__func__
 argument_list|,
 name|pen
 argument_list|)
@@ -669,8 +666,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't chdir to '%s'"
+literal|"%s: can't chdir to '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|pen
 argument_list|)
@@ -756,8 +754,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't chdir back to '%s'"
+literal|"%s: can't chdir back to '%s'"
+argument_list|,
+name|__func__
 argument_list|,
 name|Previous
 argument_list|)

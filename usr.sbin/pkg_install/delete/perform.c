@@ -1,29 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the delete module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -365,7 +357,7 @@ name|warnx
 argument_list|(
 literal|"%s(): alloca() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|err_cnt
@@ -409,7 +401,7 @@ name|warnx
 argument_list|(
 literal|"%s(): alloca() failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|err_cnt
@@ -664,8 +656,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": unable to get current working directory!"
+literal|"%s: unable to get current working directory!"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1148,8 +1141,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": unable to return to working directory %s!"
+literal|"%s: unable to return to working directory %s!"
+argument_list|,
+name|__func__
 argument_list|,
 name|home
 argument_list|)
@@ -1276,8 +1270,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": unable to return to working directory %s!"
+literal|"%s: unable to return to working directory %s!"
+argument_list|,
+name|__func__
 argument_list|,
 name|home
 argument_list|)
@@ -1525,8 +1520,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": installed package %s has no %s file!"
+literal|"%s: installed package %s has no %s file!"
+argument_list|,
+name|__func__
 argument_list|,
 name|pkg
 argument_list|,
