@@ -22,6 +22,7 @@ file|<unistd.h>
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
