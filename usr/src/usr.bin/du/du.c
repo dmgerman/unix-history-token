@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.8 (Berkeley) %G%"
+literal|"@(#)du.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,46 +334,7 @@ name|fts_info
 condition|)
 block|{
 case|case
-name|FTS_DNR
-case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"du: %s: unable to read.\n"
-argument_list|,
-name|p
-operator|->
-name|fts_path
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|FTS_DNX
-case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"du: %s: unable to search.\n"
-argument_list|,
-name|p
-operator|->
-name|fts_path
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|FTS_D
-case|:
-case|case
-name|FTS_DC
 case|:
 break|break;
 case|case
@@ -437,7 +398,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|FTS_DNR
+case|:
+case|case
 name|FTS_ERR
+case|:
+case|case
+name|FTS_NS
 case|:
 operator|(
 name|void
@@ -463,24 +430,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-case|case
-name|FTS_NS
-case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"du: unable to stat: %s.\n"
-argument_list|,
-name|p
-operator|->
-name|fts_path
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 if|if
 condition|(
