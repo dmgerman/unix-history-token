@@ -401,6 +401,14 @@ name|f_fstypename
 argument_list|,
 literal|"union"
 argument_list|)
+operator|||
+operator|(
+name|sfb
+operator|.
+name|f_flags
+operator|&
+name|MNT_UNION
+operator|)
 expr_stmt|;
 block|}
 else|else
