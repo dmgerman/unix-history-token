@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000, Boris Popov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Boris Popov.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: view.c,v 1.8 2001/08/22 03:33:38 bp Exp $  */
+comment|/*  * Copyright (c) 2000-2002, Boris Popov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Boris Popov.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: view.c,v 1.9 2002/02/20 09:26:42 bp Exp $  */
 end_comment
 
 begin_include
@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mchain.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netsmb/smb_lib.h>
 end_include
 
@@ -105,10 +111,12 @@ literal|"disk"
 block|,
 literal|"printer"
 block|,
-literal|"pipe"
-block|,
 literal|"comm"
 block|,
+comment|/* Communications device */
+literal|"pipe"
+block|,
+comment|/* IPC Inter process communication */
 literal|"unknown"
 block|}
 decl_stmt|;
@@ -148,6 +156,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|u_int16_t
+name|type
 decl_stmt|;
 name|int
 name|error
@@ -359,8 +370,9 @@ argument_list|)
 expr_stmt|;
 name|bufsize
 operator|=
-literal|65535
+literal|0xffe0
 expr_stmt|;
+comment|/* samba notes win2k bug with 65535 */
 name|rpbuf
 operator|=
 name|malloc
@@ -434,6 +446,15 @@ name|ep
 operator|++
 control|)
 block|{
+name|type
+operator|=
+name|letohs
+argument_list|(
+name|ep
+operator|->
+name|shi1_type
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -456,9 +477,21 @@ name|shi1_netname
 argument_list|,
 name|shtype
 index|[
-name|ep
-operator|->
-name|shi1_type
+name|min
+argument_list|(
+name|type
+argument_list|,
+sizeof|sizeof
+name|shtype
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|-
+literal|1
+argument_list|)
 index|]
 argument_list|,
 name|ep

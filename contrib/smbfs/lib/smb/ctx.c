@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000, Boris Popov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Boris Popov.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ctx.c,v 1.22 2001/12/26 04:10:52 bp Exp $  */
+comment|/*  * Copyright (c) 2000-2002, Boris Popov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Boris Popov.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ctx.c,v 1.24 2002/04/13 14:35:28 bp Exp $  */
 end_comment
 
 begin_include
@@ -167,6 +167,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|uid_t
+name|euid
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -174,6 +177,11 @@ name|arg
 decl_stmt|,
 modifier|*
 name|cp
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pwd
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -349,15 +357,30 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pwd
+operator|=
+name|getpwuid
+argument_list|(
+name|euid
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|smb_ctx_setuser
 argument_list|(
 name|ctx
 argument_list|,
-name|getpwuid
-argument_list|(
-name|geteuid
-argument_list|()
-argument_list|)
+name|pwd
 operator|->
 name|pw_name
 argument_list|)
@@ -365,6 +388,25 @@ expr_stmt|;
 name|endpwent
 argument_list|()
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|euid
+operator|==
+literal|0
+condition|)
+name|smb_ctx_setuser
+argument_list|(
+name|ctx
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+else|else
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|argv
@@ -2947,7 +2989,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* 	 * First try to open as clone 	 */
+comment|/* 	 * First, try to open as cloned device 	 */
 name|fd
 operator|=
 name|open
