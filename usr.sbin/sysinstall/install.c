@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.137 1996/11/08 05:38:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.138 1996/11/09 11:57:40 joerg Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1180,7 +1180,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Link the spwd.db file */
+comment|/* Link the /etc/ files */
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1201,6 +1201,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|symlink
 argument_list|(
 literal|"/mnt2/etc/spwd.db"
@@ -1214,10 +1215,43 @@ operator|&&
 name|errno
 operator|!=
 name|EEXIST
+operator|)
+operator|||
+operator|(
+name|symlink
+argument_list|(
+literal|"/mnt2/etc/protocols"
+argument_list|,
+literal|"/etc/protocols"
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|EEXIST
+operator|)
+operator|||
+operator|(
+name|symlink
+argument_list|(
+literal|"/mnt2/etc/services"
+argument_list|,
+literal|"/etc/services"
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|EEXIST
+operator|)
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Couldn't symlink the /etc/spwd.db file!  I'm not sure I like this.."
+literal|"Couldn't symlink the /etc/ files!  I'm not sure I like this.."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1303,16 +1337,6 @@ argument_list|(
 literal|"fixit shell: Unable to get terminal attributes!\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"When you're finished with this shell, please type exit.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"The fixit floppy itself is mounted as /mnt2\n"
-argument_list|)
-expr_stmt|;
 name|setenv
 argument_list|(
 literal|"PATH"
@@ -1320,6 +1344,21 @@ argument_list|,
 literal|"/bin:/sbin:/usr/bin:/usr/sbin:/stand:/mnt2/stand"
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* use the .profile from the fixit floppy */
+name|setenv
+argument_list|(
+literal|"HOME"
+argument_list|,
+literal|"/mnt2"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|chdir
+argument_list|(
+literal|"/mnt2"
 argument_list|)
 expr_stmt|;
 name|execlp
