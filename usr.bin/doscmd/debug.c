@@ -309,12 +309,6 @@ literal|1024
 index|]
 decl_stmt|;
 name|char
-name|buf2
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|char
 modifier|*
 name|m
 decl_stmt|;
@@ -538,7 +532,7 @@ name|debug
 argument_list|(
 name|D_ALWAYS
 argument_list|,
-literal|"ip=%x eflags=%x\n"
+literal|"ip=%x eflags=%lx\n"
 argument_list|,
 name|R_IP
 argument_list|,

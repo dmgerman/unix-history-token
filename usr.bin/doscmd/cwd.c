@@ -160,10 +160,6 @@ name|paths
 index|[
 name|MAX_DRIVE
 index|]
-init|=
-block|{
-literal|0
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -734,7 +730,7 @@ name|where
 parameter_list|,
 name|u_char
 modifier|*
-name|newpath
+name|new_path
 parameter_list|)
 block|{
 name|int
@@ -761,9 +757,9 @@ index|]
 decl_stmt|;
 name|u_char
 modifier|*
-name|snewpath
+name|snew_path
 init|=
-name|newpath
+name|new_path
 decl_stmt|;
 if|if
 condition|(
@@ -791,7 +787,7 @@ name|where
 argument_list|)
 expr_stmt|;
 operator|*
-name|newpath
+name|new_path
 operator|++
 operator|=
 operator|*
@@ -799,7 +795,7 @@ name|where
 operator|++
 expr_stmt|;
 operator|*
-name|newpath
+name|new_path
 operator|++
 operator|=
 operator|*
@@ -814,7 +810,7 @@ operator|=
 name|diskdrive
 expr_stmt|;
 operator|*
-name|newpath
+name|new_path
 operator|++
 operator|=
 name|drntol
@@ -823,7 +819,7 @@ name|diskdrive
 argument_list|)
 expr_stmt|;
 operator|*
-name|newpath
+name|new_path
 operator|++
 operator|=
 literal|':'
@@ -906,7 +902,7 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|=
-name|newpath
+name|new_path
 expr_stmt|;
 if|if
 condition|(
@@ -1011,7 +1007,7 @@ operator|)
 return|;
 name|np
 operator|=
-name|newpath
+name|new_path
 expr_stmt|;
 while|while
 condition|(
@@ -1042,11 +1038,11 @@ condition|)
 block|{
 name|np
 operator|=
-name|newpath
+name|new_path
 operator|+
 literal|1
 expr_stmt|;
-name|newpath
+name|new_path
 index|[
 literal|0
 index|]
@@ -1126,7 +1122,7 @@ name|np
 operator|-
 literal|1
 operator|>
-name|newpath
+name|new_path
 condition|)
 operator|--
 name|np
@@ -1163,7 +1159,7 @@ operator|)
 operator|&&
 name|np
 operator|-
-name|snewpath
+name|snew_path
 operator|<
 literal|1023
 condition|)
@@ -1199,13 +1195,13 @@ name|where
 parameter_list|)
 block|{
 name|u_char
-name|newpath
+name|new_path
 index|[
 literal|1024
 index|]
 decl_stmt|;
 name|u_char
-name|realpath
+name|real_path
 index|[
 literal|1024
 index|]
@@ -1239,7 +1235,7 @@ name|dos_makepath
 argument_list|(
 name|where
 argument_list|,
-name|newpath
+name|new_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -1255,9 +1251,9 @@ name|error
 operator|=
 name|dos_to_real_path
 argument_list|(
-name|newpath
+name|new_path
 argument_list|,
-name|realpath
+name|real_path
 argument_list|,
 operator|&
 name|drive
@@ -1276,7 +1272,7 @@ if|if
 condition|(
 name|ustat
 argument_list|(
-name|realpath
+name|real_path
 argument_list|,
 operator|&
 name|sb
@@ -1301,7 +1297,7 @@ if|if
 condition|(
 name|uaccess
 argument_list|(
-name|realpath
+name|real_path
 argument_list|,
 name|R_OK
 operator||
@@ -1327,7 +1323,7 @@ name|len
 operator|=
 name|ustrlen
 argument_list|(
-name|newpath
+name|new_path
 operator|+
 literal|2
 argument_list|)
@@ -1396,7 +1392,7 @@ argument_list|(
 name|drive
 argument_list|)
 argument_list|,
-name|newpath
+name|new_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -1411,7 +1407,7 @@ name|d
 operator|->
 name|cwd
 argument_list|,
-name|newpath
+name|new_path
 operator|+
 literal|2
 argument_list|)
@@ -1425,7 +1421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a DOS path dospath and a drive, convert it to a BSD pathname  * and store the result in realpath.  * Return DOS errno on failure.  */
+comment|/*  * Given a DOS path dospath and a drive, convert it to a BSD pathname  * and store the result in real_path.  * Return DOS errno on failure.  */
 end_comment
 
 begin_function
@@ -1438,7 +1434,7 @@ name|dospath
 parameter_list|,
 name|u_char
 modifier|*
-name|realpath
+name|real_path
 parameter_list|,
 name|int
 modifier|*
@@ -1450,7 +1446,7 @@ modifier|*
 name|d
 decl_stmt|;
 name|u_char
-name|newpath
+name|new_path
 index|[
 literal|1024
 index|]
@@ -1545,7 +1541,7 @@ operator|)
 return|;
 name|ustrcpy
 argument_list|(
-name|realpath
+name|real_path
 argument_list|,
 name|d
 operator|->
@@ -1554,7 +1550,7 @@ argument_list|)
 expr_stmt|;
 name|rp
 operator|=
-name|realpath
+name|real_path
 expr_stmt|;
 while|while
 condition|(
@@ -1566,7 +1562,7 @@ name|rp
 expr_stmt|;
 name|ustrcpy
 argument_list|(
-name|newpath
+name|new_path
 argument_list|,
 name|dospath
 argument_list|)
@@ -1575,7 +1571,7 @@ name|dirs
 operator|=
 name|get_entries
 argument_list|(
-name|newpath
+name|new_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -4504,12 +4500,12 @@ end_macro
 begin_block
 block|{
 name|u_char
-name|newpath
+name|new_path
 index|[
 literal|1024
 index|]
 decl_stmt|,
-name|realpath
+name|real_path
 index|[
 literal|1024
 index|]
@@ -4544,6 +4540,9 @@ name|path
 argument_list|,
 name|attr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dta
 argument_list|)
 expr_stmt|;
@@ -4553,7 +4552,7 @@ name|dos_makepath
 argument_list|(
 name|path
 argument_list|,
-name|newpath
+name|new_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -4567,7 +4566,7 @@ operator|)
 return|;
 name|expr
 operator|=
-name|newpath
+name|new_path
 expr_stmt|;
 name|slash
 operator|=
@@ -4611,9 +4610,9 @@ name|error
 operator|=
 name|dos_to_real_path
 argument_list|(
-name|newpath
+name|new_path
 argument_list|,
-name|realpath
+name|real_path
 argument_list|,
 operator|&
 name|drive
@@ -4660,7 +4659,7 @@ name|dp
 operator|=
 name|opendir
 argument_list|(
-name|realpath
+name|real_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -4682,7 +4681,7 @@ name|search
 operator|->
 name|searchdir
 argument_list|,
-name|realpath
+name|real_path
 argument_list|)
 expr_stmt|;
 name|search

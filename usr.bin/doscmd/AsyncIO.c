@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -24,19 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -48,13 +30,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"AsyncIO.h"
 end_include
 
 begin_define
@@ -99,10 +111,6 @@ begin_decl_stmt
 specifier|static
 name|fd_set
 name|fdset
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +134,7 @@ parameter_list|,
 name|REGISTERS
 parameter_list|)
 function_decl|;
-comment|/* Function to call when data arrives */
+comment|/* Function to call on data arrival */
 name|void
 function_decl|(
 modifier|*
@@ -320,10 +328,6 @@ condition|(
 name|firsttime
 condition|)
 block|{
-name|struct
-name|sigaction
-name|sa
-decl_stmt|;
 name|firsttime
 operator|=
 literal|0
@@ -338,6 +342,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|handlers
 index|[
 name|fd
@@ -346,6 +351,9 @@ operator|.
 name|func
 operator|=
 name|func
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|as

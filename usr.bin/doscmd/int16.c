@@ -148,9 +148,6 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|int
-name|c
-decl_stmt|;
 if|if
 condition|(
 operator|!

@@ -68,7 +68,7 @@ name|table
 index|[]
 parameter_list|,
 name|int
-name|index
+name|idx
 index|[]
 parameter_list|)
 block|{
@@ -89,7 +89,7 @@ name|hn
 operator|++
 control|)
 comment|/* initialise all no-handler state */
-name|index
+name|idx
 index|[
 name|hn
 index|]
@@ -119,7 +119,7 @@ control|)
 comment|/* walk list of handlers and add references */
 if|if
 condition|(
-name|index
+name|idx
 index|[
 name|table
 index|[
@@ -133,7 +133,7 @@ operator|-
 literal|1
 condition|)
 comment|/* reference first handler */
-name|index
+name|idx
 index|[
 name|table
 index|[
@@ -164,7 +164,7 @@ name|table
 index|[]
 parameter_list|,
 name|int
-name|index
+name|idx
 index|[]
 parameter_list|,
 name|int
@@ -177,7 +177,7 @@ block|{
 name|int
 name|ent
 init|=
-name|index
+name|idx
 index|[
 name|func
 index|]

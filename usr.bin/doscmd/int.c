@@ -85,7 +85,7 @@ name|D_TRAPS
 operator||
 name|intnum
 argument_list|,
-literal|"Int%x [%04x:%04x]\n"
+literal|"INT%x [%04x:%04x]\n"
 argument_list|,
 name|intnum
 argument_list|,
@@ -253,7 +253,7 @@ name|D_TRAPS
 operator||
 name|intnum
 argument_list|,
-literal|"Int%x [%04x:%04x]\n"
+literal|"INT%x [%04x:%04x]\n"
 argument_list|,
 name|intnum
 argument_list|,
