@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c 1.11 %G%"
+literal|"@(#)printsym.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1639,7 +1639,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"inline procedure"
+literal|"inline procedure\n"
 argument_list|)
 expr_stmt|;
 block|}
