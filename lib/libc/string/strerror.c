@@ -91,7 +91,7 @@ if|if
 condition|(
 operator|(
 name|errnum
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|&&
@@ -124,7 +124,7 @@ return|return
 operator|(
 operator|(
 name|len
-operator|<=
+operator|<
 name|buflen
 operator|)
 condition|?
@@ -200,7 +200,7 @@ if|if
 condition|(
 operator|(
 name|num
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|&&
@@ -222,6 +222,11 @@ name|num
 index|]
 operator|)
 return|;
+comment|/* 	 * Set errno to EINVAL per P1003.1-200x Draft June 14, 2001. 	 */
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 comment|/* 	 * Print unknown errno by hand so we don't link to stdio(3). 	 * This collects the ASCII digits in reverse order. 	 */
 name|uerr
 operator|=
@@ -343,6 +348,30 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"strerror(0) yeilds: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"strerror(1) yeilds: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"strerror(47) yeilds: %s\n"
@@ -355,6 +384,50 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"strerror(sys_nerr - 1) yeilds: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|sys_nerr
+operator|-
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"errno = %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"strerror(sys_nerr) yeilds: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|sys_nerr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"errno = %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"strerror(437) yeilds: %s\n"
 argument_list|,
 name|strerror
@@ -362,6 +435,17 @@ argument_list|(
 literal|437
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"errno = %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 name|printf
 argument_list|(
