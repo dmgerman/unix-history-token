@@ -2294,7 +2294,7 @@ operator|->
 name|ignore_user_known_hosts
 expr_stmt|;
 goto|goto
-name|parse_int
+name|parse_flag
 goto|;
 case|case
 name|sRhostsAuthentication
