@@ -7815,7 +7815,9 @@ empty_stmt|;
 if|if
 condition|(
 name|b
-operator|&&
+operator|==
+name|NULL
+operator|||
 name|b
 operator|->
 name|pipe_nr
@@ -8045,7 +8047,9 @@ empty_stmt|;
 if|if
 condition|(
 name|b
-operator|&&
+operator|==
+name|NULL
+operator|||
 name|b
 operator|->
 name|fs_nr
