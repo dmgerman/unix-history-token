@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_maint.c,v 8.38 1998/03/16 19:40:25 halley Exp $"
+literal|"$Id: ns_maint.c,v 8.39 1998/04/14 00:34:39 halley Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,6 +530,7 @@ name|z_serial
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX should we clear Z_AUTH here? */
 block|}
 if|if
 condition|(

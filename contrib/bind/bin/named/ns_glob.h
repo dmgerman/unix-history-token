@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.34 1998/03/20 01:18:07 halley Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.35 1998/05/05 19:44:20 halley Exp $  */
 end_comment
 
 begin_comment
@@ -1263,6 +1263,17 @@ name|NULL
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|DECL
+name|int
+name|loading
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

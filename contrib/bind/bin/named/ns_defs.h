@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.38 1998/03/17 03:22:27 halley Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.39 1998/04/14 00:35:09 halley Exp $  */
 end_comment
 
 begin_comment
@@ -506,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_OPTION_FLAGS
-value|(OPTION_HOSTSTATS)
+value|0
 end_define
 
 begin_ifdef
