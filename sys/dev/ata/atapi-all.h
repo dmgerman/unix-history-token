@@ -607,6 +607,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_PLAY_10
+value|0x45
+end_define
+
+begin_comment
+comment|/* play by lba */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_PLAY_MSF
 value|0x47
 end_define
@@ -794,7 +805,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_PLAY_BIG
+name|ATAPI_PLAY_12
 value|0xa5
 end_define
 

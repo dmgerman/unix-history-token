@@ -4068,6 +4068,14 @@ literal|"READ_TOC"
 operator|)
 return|;
 case|case
+literal|0x45
+case|:
+return|return
+operator|(
+literal|"PLAY_10"
+operator|)
+return|;
+case|case
 literal|0x47
 case|:
 return|return
@@ -4208,7 +4216,7 @@ literal|0xa5
 case|:
 return|return
 operator|(
-literal|"PLAY_BIG"
+literal|"PLAY_12"
 operator|)
 return|;
 case|case
