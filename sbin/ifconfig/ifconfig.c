@@ -5701,7 +5701,7 @@ name|scopeid
 condition|)
 name|printf
 argument_list|(
-literal|" scopeid 0x%x"
+literal|"scopeid 0x%x "
 argument_list|,
 name|scopeid
 argument_list|)
