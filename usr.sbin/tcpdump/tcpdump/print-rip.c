@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /a/cvs/386BSD/src/contrib/tcpdump/tcpdump/print-rip.c,v 1.1.1.1 1993/06/12 14:42:07 rgrimes Exp $ (LBL)"
+literal|"@(#) $Header: /a/cvs/386BSD/src/contrib/tcpdump/tcpdump/print-rip.c,v 1.2 1994/02/10 09:17:57 davidg Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,9 @@ name|printf
 argument_list|(
 literal|" %02x%02x"
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|ni
 operator|->
 name|rip_dst
@@ -292,6 +295,9 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|ni
 operator|->
 name|rip_dst
