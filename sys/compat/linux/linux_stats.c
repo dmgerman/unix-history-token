@@ -132,6 +132,17 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tbuf
 operator|.
 name|st_dev
