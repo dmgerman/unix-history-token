@@ -1101,28 +1101,26 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_ACPICA
-comment|/* 	 * Traverse the MADT to discover IOSAPIC and Local SAPIC 	 * information. 	 */
 if|if
 condition|(
 operator|!
 name|ia64_running_in_simulator
 argument_list|()
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEV_ACPICA
+comment|/* 		 * Traverse the MADT to discover IOSAPIC and Local SAPIC 		 * information. 		 */
 name|ia64_probe_sapics
+argument_list|()
+expr_stmt|;
+name|ia64_mca_init
 argument_list|()
 expr_stmt|;
 else|#
 directive|else
-comment|/* 	 * It is an error to boot a SKI-only kernel on hardware. 	 */
-if|if
-condition|(
-operator|!
-name|ia64_running_in_simulator
-argument_list|()
-condition|)
+comment|/* 		 * It is an error to boot a SKI-only kernel on hardware. 		 */
 name|panic
 argument_list|(
 literal|"Mandatory 'device acpica' is missing"
@@ -1130,9 +1128,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ia64_mca_init
-argument_list|()
-expr_stmt|;
+block|}
 block|}
 end_function
 
