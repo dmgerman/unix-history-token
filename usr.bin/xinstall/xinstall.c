@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.27 1997/10/28 14:20:10 ache Exp $"
+literal|"$Id: xinstall.c,v 1.28 1998/01/09 06:05:13 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +226,8 @@ decl_stmt|,
 name|dostrip
 decl_stmt|,
 name|verbose
+decl_stmt|,
+name|nommap
 decl_stmt|;
 end_decl_stmt
 
@@ -605,7 +607,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CcdDf:g:m:o:psv"
+literal|"CcdDf:g:m:Mo:psv"
 argument_list|)
 operator|)
 operator|!=
@@ -727,6 +729,14 @@ name|set
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|nommap
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3328,6 +3338,8 @@ name|stfs
 decl_stmt|;
 if|if
 condition|(
+name|nommap
+operator|||
 name|fstatfs
 argument_list|(
 name|fd
