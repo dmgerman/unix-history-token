@@ -4,7 +4,11 @@ empty|#
 end_empty
 
 begin_comment
-comment|/*  * Pseudo-teletype Driver  * (Actually two drivers, requiring two entries in 'cdevsw')  *  * Overhauled, and ported to VAX/VMUNIX (V7) Bruce Borden, July 80  */
+comment|/*	@(#)tty_pty.c	1.2	1.2	%G%	*/
+end_comment
+
+begin_comment
+comment|/*  * Pseudo-teletype Driver  * (Actually two drivers, requiring two entries in 'cdevsw')  *  * Overhauled, and ported to VAX/VMUNIX (V7) Bruce Borden, July 80  * Modified and integrated into 4bsd by Kipp Hickman and Michael Toy  */
 end_comment
 
 begin_include
