@@ -120,6 +120,16 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/*  * These ioctls are only implemented in SunOS. Maybe someday  * if somebody writes a driver for DES hardware that works  * with FreeBSD, we can being that back.  */
+end_comment
+
 begin_comment
 comment|/*  * Encrypt an arbitrary sized buffer  */
 end_comment
@@ -141,6 +151,11 @@ directive|define
 name|DESIOCQUICK
 value|_IOWR(d, 7, struct desparams)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Software DES.  */
