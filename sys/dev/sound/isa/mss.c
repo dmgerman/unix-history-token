@@ -42,7 +42,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|MSS_BUFFSIZE
+name|MSS_DEFAULT_BUFSZ
 value|(4096)
 end_define
 
@@ -211,6 +211,10 @@ name|int
 name|passwdreg
 decl_stmt|;
 comment|/* password register */
+name|unsigned
+name|int
+name|bufsize
+decl_stmt|;
 name|struct
 name|mss_chinfo
 name|pch
@@ -1820,7 +1824,9 @@ name|isa_dmainit
 argument_list|(
 name|pdma
 argument_list|,
-name|MSS_BUFFSIZE
+name|mss
+operator|->
+name|bufsize
 argument_list|)
 expr_stmt|;
 name|mss
@@ -1855,7 +1861,9 @@ name|isa_dmainit
 argument_list|(
 name|rdma
 argument_list|,
-name|MSS_BUFFSIZE
+name|mss
+operator|->
+name|bufsize
 argument_list|)
 expr_stmt|;
 name|mss
@@ -5978,7 +5986,9 @@ name|mss
 operator|->
 name|parent_dmat
 argument_list|,
-name|MSS_BUFFSIZE
+name|mss
+operator|->
+name|bufsize
 argument_list|)
 operator|==
 operator|-
@@ -8342,6 +8352,21 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mss
+operator|->
+name|bufsize
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|MSS_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8783,7 +8808,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|MSS_BUFFSIZE
+name|mss
+operator|->
+name|bufsize
 argument_list|,
 comment|/*nsegments*/
 literal|1
