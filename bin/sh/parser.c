@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parser.c,v 1.22 1998/05/18 06:44:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3325,6 +3325,11 @@ name|type
 operator|)
 argument_list|)
 expr_stmt|;
+name|rmquotes0
+argument_list|(
+name|wordtext
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|here
@@ -4696,6 +4701,14 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
+else|else
+name|USTPUTC
+argument_list|(
+name|CTLQUOTEMARK
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
 name|USTPUTC
 argument_list|(
 name|c
@@ -4711,6 +4724,13 @@ break|break;
 case|case
 name|CSQUOTE
 case|:
+name|USTPUTC
+argument_list|(
+name|CTLQUOTEMARK
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
 name|syntax
 operator|=
 name|SQSYNTAX
@@ -4719,6 +4739,13 @@ break|break;
 case|case
 name|CDQUOTE
 case|:
+name|USTPUTC
+argument_list|(
+name|CTLQUOTEMARK
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
 name|syntax
 operator|=
 name|DQSYNTAX
@@ -6516,6 +6543,25 @@ expr_stmt|;
 name|USTPUTC
 argument_list|(
 name|CTLARI
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dblquote
+condition|)
+name|USTPUTC
+argument_list|(
+literal|'"'
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+else|else
+name|USTPUTC
+argument_list|(
+literal|' '
 argument_list|,
 name|out
 argument_list|)

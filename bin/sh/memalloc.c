@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: memalloc.c,v 1.9 1998/05/18 06:43:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -760,7 +760,13 @@ argument_list|,
 name|stackblock
 argument_list|()
 argument_list|,
+name|rmquotes
+argument_list|(
+name|stackblock
+argument_list|()
+argument_list|,
 name|len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sstrnleft

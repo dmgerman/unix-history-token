@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mksyntax.c,v 1.11 1998/05/18 06:44:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1422,6 +1422,15 @@ index|[
 name|base
 operator|+
 name|CTLENDARI
+index|]
+operator|=
+literal|"CCTL"
+expr_stmt|;
+name|syntax
+index|[
+name|base
+operator|+
+name|CTLQUOTEMARK
 index|]
 operator|=
 literal|"CCTL"
