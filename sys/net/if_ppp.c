@@ -2160,6 +2160,11 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+name|npx
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: quiet gcc */
 switch|switch
 condition|(
 name|npi
