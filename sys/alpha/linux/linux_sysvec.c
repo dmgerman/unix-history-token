@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.35 1998/10/05 16:37:36 jfieber Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.36 1998/10/11 21:08:02 alex Exp $  */
 end_comment
 
 begin_comment
@@ -130,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -2231,26 +2237,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LKM
-end_ifndef
-
 begin_comment
 comment|/*  * XXX: this is WRONG, it needs to be SI_SUB_EXEC, but this is just at the  * "proof of concept" stage and will be fixed shortly  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
-name|linux_elf_init
+name|int
+name|linux_elf_modevent
 name|__P
 argument_list|(
 operator|(
+name|module_t
+name|mod
+operator|,
+name|modeventtype_t
+name|type
+operator|,
 name|void
 operator|*
-name|dummy
+name|data
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2258,15 +2264,19 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
-name|linux_elf_init
+name|int
+name|linux_elf_modevent
 parameter_list|(
-name|dummy
-parameter_list|)
+name|module_t
+name|mod
+parameter_list|,
+name|modeventtype_t
+name|type
+parameter_list|,
 name|void
 modifier|*
-name|dummy
-decl_stmt|;
+name|data
+parameter_list|)
 block|{
 name|Elf32_Brandinfo
 modifier|*
@@ -2280,6 +2290,14 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
 for|for
 control|(
 name|brandinfo
@@ -2310,7 +2328,7 @@ literal|0
 condition|)
 name|error
 operator|=
-literal|1
+name|EINVAL
 expr_stmt|;
 if|if
 condition|(
@@ -2331,29 +2349,99 @@ argument_list|(
 literal|"Linux-ELF exec handler installed\n"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+for|for
+control|(
+name|brandinfo
+operator|=
+operator|&
+name|linux_brandlist
+index|[
+literal|0
+index|]
+init|;
+operator|*
+name|brandinfo
+operator|!=
+name|NULL
+condition|;
+operator|++
+name|brandinfo
+control|)
+if|if
+condition|(
+name|elf_remove_brand_entry
+argument_list|(
+operator|*
+name|brandinfo
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"Could not deinstall ELF interpreter entry\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Linux-elf exec handler removed\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+return|return
+name|error
+return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|linux_elf_mod
+init|=
+block|{
+literal|"linuxelf"
+block|,
+name|linux_elf_modevent
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
-name|SYSINIT
+name|DECLARE_MODULE
 argument_list|(
 name|linuxelf
 argument_list|,
-name|SI_SUB_VFS
+name|linux_elf_mod
+argument_list|,
+name|SI_SUB_EXEC
 argument_list|,
 name|SI_ORDER_ANY
-argument_list|,
-name|linux_elf_init
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.33 1998/06/16 14:36:40 bde Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.34 1998/07/15 05:00:26 bde Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -1848,9 +1848,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TEXT_SET
+name|EXEC_SET
 argument_list|(
-name|execsw_set
+name|execgzip
 argument_list|,
 name|gzip_execsw
 argument_list|)
