@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sleep.c,v 1.22 1997/10/17 09:35:50 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,22 +93,22 @@ name|struct
 name|timespec
 name|time_remaining
 decl_stmt|;
-comment|/* 	 * Avoid overflow when `seconds' is huge.  This assumes that 	 * the maximum value for a time_t is>= LONG_MAX. 	 */
+comment|/* 	 * Avoid overflow when `seconds' is huge.  This assumes that 	 * the maximum value for a time_t is>= INT_MAX. 	 */
 if|if
 condition|(
 name|seconds
 operator|>
-name|LONG_MAX
+name|INT_MAX
 condition|)
 return|return
 operator|(
 name|seconds
 operator|-
-name|LONG_MAX
+name|INT_MAX
 operator|+
 name|sleep
 argument_list|(
-name|LONG_MAX
+name|INT_MAX
 argument_list|)
 operator|)
 return|;
