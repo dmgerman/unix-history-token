@@ -940,7 +940,7 @@ decl_stmt|;
 name|long
 name|blksize
 decl_stmt|;
-name|int
+name|size_t
 name|headerlen
 decl_stmt|;
 name|char
