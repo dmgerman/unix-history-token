@@ -3916,6 +3916,12 @@ operator|->
 name|exc
 operator|==
 name|EXC_BPT
+operator|||
+name|frame
+operator|->
+name|exc
+operator|==
+name|EXC_DSI
 operator|)
 condition|)
 block|{
