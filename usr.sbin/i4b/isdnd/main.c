@@ -631,11 +631,16 @@ break|break;
 case|case
 literal|'L'
 case|:
-name|strcpy
+name|strlcpy
 argument_list|(
 name|logfile
 argument_list|,
 name|optarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|logfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
