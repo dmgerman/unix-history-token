@@ -1003,6 +1003,11 @@ name|error
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500000
 comment|/* 	 * The cute little Symbol LA4100-series CF cards need to have 	 * code downloaded to them. 	 */
 name|pccard_get_vendor
 argument_list|(
@@ -1081,6 +1086,8 @@ return|;
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|wi_generic_attach

@@ -55,13 +55,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|WI_RID_MONITOR_MODE
-value|0x0500
-end_define
-
 begin_comment
 comment|/*  * Technically I don't think there's a limit to a record  * length. The largest record is the one that contains the CIS  * data, which is 240 words long, so 256 should be a safe  * value.  */
 end_comment
@@ -130,6 +123,20 @@ define|#
 directive|define
 name|WI_RID_FWDOWNLOAD
 value|0x0500
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_MONITOR_MODE
+value|0x0600
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_MIF
+value|0x0700
 end_define
 
 begin_struct
@@ -2973,17 +2980,6 @@ directive|define
 name|SIOCGPRISM2DEBUG
 value|_IOWR('i', 138, struct ifreq)
 end_define
-
-begin_define
-define|#
-directive|define
-name|WI_CMD_DEBUG
-value|0x0038
-end_define
-
-begin_comment
-comment|/* prism2 debug */
-end_comment
 
 begin_define
 define|#
