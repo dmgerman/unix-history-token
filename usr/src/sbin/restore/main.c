@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,23 +236,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|terminal
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1406,6 +1389,7 @@ directive|endif
 end_endif
 
 begin_function
+name|__dead
 name|void
 if|#
 directive|if

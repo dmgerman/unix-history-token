@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	5.7 (Berkeley) %G%"
+literal|"@(#)symtab.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,7 +666,7 @@ if|if
 condition|(
 name|tailindex
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(

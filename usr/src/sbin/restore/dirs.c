@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.26 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,7 @@ if|if
 condition|(
 name|df
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
@@ -652,7 +652,7 @@ if|if
 condition|(
 name|mf
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|fprintf
@@ -1345,6 +1345,10 @@ condition|)
 name|path
 operator|++
 expr_stmt|;
+name|dp
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1380,7 +1384,7 @@ name|name
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1455,7 +1459,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|rst_seekdir
@@ -2596,7 +2600,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -3729,6 +3733,7 @@ comment|/*  * Clean up and exit  */
 end_comment
 
 begin_function
+name|__dead
 name|void
 name|done
 parameter_list|(

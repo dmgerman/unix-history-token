@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.19 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,22 +241,6 @@ operator|*
 operator|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|fmtentry
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|afile
 operator|*
 operator|)
 argument_list|)

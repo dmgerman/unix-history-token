@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.35 (Berkeley) %G%"
+literal|"@(#)tape.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -898,8 +898,6 @@ operator|=
 name|rmtopen
 argument_list|(
 name|magtape
-argument_list|,
-name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|)
