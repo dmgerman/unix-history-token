@@ -37,7 +37,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	1.2 %G%"
+literal|"@(#)aux.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1562,20 +1562,26 @@ begin_comment
 comment|/* Top of file stack */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_struct
+struct|struct
+name|sstack
+block|{
 name|FILE
 modifier|*
+name|s_file
+decl_stmt|;
+comment|/* File we were in. */
+name|int
+name|s_cond
+decl_stmt|;
+comment|/* Saved state of conditionals */
+block|}
 name|sstack
 index|[
 name|_NFILE
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Saved input files */
-end_comment
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Pushdown current input file and switch to a new one.  * Set the global flag "sourcing" so that others will realize  * that they are no longer reading from a tty (in all probability).  */
@@ -1659,8 +1665,23 @@ index|[
 operator|++
 name|ssp
 index|]
+operator|.
+name|s_file
 operator|=
 name|input
+expr_stmt|;
+name|sstack
+index|[
+name|ssp
+index|]
+operator|.
+name|s_cond
+operator|=
+name|cond
+expr_stmt|;
+name|cond
+operator|=
+name|CANY
 expr_stmt|;
 name|input
 operator|=
@@ -1772,6 +1793,26 @@ argument_list|(
 name|input
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cond
+operator|!=
+name|CANY
+condition|)
+name|printf
+argument_list|(
+literal|"Unmatched \"if\"\n"
+argument_list|)
+expr_stmt|;
+name|cond
+operator|=
+name|sstack
+index|[
+name|ssp
+index|]
+operator|.
+name|s_cond
+expr_stmt|;
 name|input
 operator|=
 name|sstack
@@ -1779,6 +1820,8 @@ index|[
 name|ssp
 operator|--
 index|]
+operator|.
+name|s_file
 expr_stmt|;
 if|if
 condition|(
