@@ -816,7 +816,7 @@ name|thr_exit_args
 modifier|*
 name|uap
 parameter_list|)
-comment|/* NULL */
+comment|/* long *state */
 block|{
 name|struct
 name|proc
@@ -828,6 +828,32 @@ operator|=
 name|td
 operator|->
 name|td_proc
+expr_stmt|;
+comment|/* Signal userland that it can free the stack. */
+if|if
+condition|(
+operator|(
+name|void
+operator|*
+operator|)
+name|uap
+operator|->
+name|state
+operator|!=
+name|NULL
+condition|)
+name|suword
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|uap
+operator|->
+name|state
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(

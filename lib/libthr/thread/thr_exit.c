@@ -70,7 +70,9 @@ specifier|extern
 name|int
 name|_thr_exit
 parameter_list|(
-name|void
+name|long
+modifier|*
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -419,12 +421,6 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|->
-name|isdead
-operator|=
-literal|1
-expr_stmt|;
 comment|/* If we're the last thread, call it quits */
 if|if
 condition|(
@@ -453,7 +449,16 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * This function will not return unless we are the last 	 * thread, which we can't be because we've already checked 	 * for that. 	 */
 name|_thr_exit
-argument_list|()
+argument_list|(
+operator|(
+name|long
+operator|*
+operator|)
+operator|&
+name|curthread
+operator|->
+name|isdead
+argument_list|)
 expr_stmt|;
 comment|/* This point should not be reached. */
 name|PANIC

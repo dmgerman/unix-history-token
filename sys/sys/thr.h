@@ -69,7 +69,9 @@ begin_function_decl
 name|void
 name|thr_exit
 parameter_list|(
-name|void
+name|long
+modifier|*
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl
