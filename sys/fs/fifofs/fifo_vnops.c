@@ -962,9 +962,7 @@ name|ap
 operator|->
 name|a_td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|ap
 operator|->
@@ -1018,9 +1016,7 @@ name|ap
 operator|->
 name|a_td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|ap
 operator|->

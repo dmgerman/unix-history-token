@@ -3228,9 +3228,7 @@ name|suser_xxx
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|NULL
 argument_list|,
@@ -3439,9 +3437,7 @@ name|suser_xxx
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|NULL
 argument_list|,
@@ -6520,9 +6516,7 @@ name|vap
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -6548,9 +6542,7 @@ name|FREAD
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -6644,9 +6636,7 @@ name|td
 condition|?
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 else|:
 name|NULL
 decl_stmt|;

@@ -982,9 +982,9 @@ argument_list|,
 operator|&
 name|va
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

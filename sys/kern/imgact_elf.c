@@ -3487,9 +3487,9 @@ name|ucred
 modifier|*
 name|cred
 init|=
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 decl_stmt|;
 name|int
 name|error

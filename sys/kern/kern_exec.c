@@ -3520,9 +3520,19 @@ name|imgp
 operator|->
 name|attr
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+comment|/* XXXKSE */
 comment|/* Get file attributes */
 name|error
 operator|=
@@ -3532,14 +3542,13 @@ name|vp
 argument_list|,
 name|attr
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -3582,13 +3591,11 @@ operator|!=
 name|VREG
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-block|}
 comment|/* 	 * Zero length files can't be exec'd 	 */
 if|if
 condition|(
@@ -3612,14 +3619,13 @@ name|vp
 argument_list|,
 name|VEXEC
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -3650,26 +3656,16 @@ name|vp
 argument_list|,
 name|FREAD
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
-operator|)
-return|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}

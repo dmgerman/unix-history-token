@@ -2319,9 +2319,7 @@ name|cred
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 comment|/* XXX */
 name|np
@@ -2825,9 +2823,7 @@ name|cred
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 comment|/* XXX */
 name|VOP_OPEN
@@ -2918,9 +2914,7 @@ name|cred
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 comment|/* XXX */
 comment|/*	VOP_OPEN(vp, FWRITE, cred, td);*/

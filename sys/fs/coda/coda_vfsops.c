@@ -1198,9 +1198,9 @@ argument_list|(
 name|vfsp
 argument_list|)
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|p
 argument_list|,
@@ -1792,9 +1792,9 @@ name|cfid
 operator|->
 name|cfid_fid
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|p
 argument_list|,

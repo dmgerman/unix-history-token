@@ -1667,9 +1667,7 @@ name|crhold
 argument_list|(
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1680,9 +1678,7 @@ name|crhold
 argument_list|(
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2093,9 +2089,7 @@ literal|0
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -3077,9 +3071,7 @@ name|crhold
 argument_list|(
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3090,9 +3082,7 @@ name|crhold
 argument_list|(
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3980,9 +3970,7 @@ name|ioflags
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|cnt

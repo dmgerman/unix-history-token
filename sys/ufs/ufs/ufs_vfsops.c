@@ -280,9 +280,7 @@ name|uid
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_ruid
 expr_stmt|;
@@ -310,9 +308,7 @@ name|uid
 operator|==
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_ruid
 condition|)

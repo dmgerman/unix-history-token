@@ -807,9 +807,7 @@ name|req
 operator|->
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_prison
 expr_stmt|;
@@ -1046,9 +1044,7 @@ name|req
 operator|->
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_prison
 expr_stmt|;

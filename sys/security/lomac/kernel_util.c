@@ -1594,9 +1594,7 @@ name|f_owner
 operator|!=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 operator|)
@@ -3074,9 +3072,7 @@ name|VEXEC
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|curthread
 argument_list|)

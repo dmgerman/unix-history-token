@@ -839,9 +839,7 @@ name|VWRITE
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -1044,9 +1042,7 @@ name|fs
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 operator|)
 condition|)
@@ -1269,9 +1265,7 @@ name|accessmode
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -1638,9 +1632,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -2508,9 +2500,7 @@ name|td
 condition|?
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 else|:
 name|NOCRED
 expr_stmt|;
@@ -4768,9 +4758,7 @@ name|um_devvp
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,

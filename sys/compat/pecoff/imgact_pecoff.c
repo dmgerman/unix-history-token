@@ -651,9 +651,7 @@ name|cred
 init|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 decl_stmt|;
 specifier|register
 name|struct
@@ -3422,9 +3420,7 @@ name|IO_NODELOCKED
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|resid

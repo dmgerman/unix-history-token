@@ -372,9 +372,7 @@ name|cmode
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 operator|)
 return|;
@@ -2516,9 +2514,7 @@ name|vap
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -2887,9 +2883,7 @@ name|suser_xxx
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 literal|0
 argument_list|,
@@ -3056,9 +3050,7 @@ name|vattr
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -3202,9 +3194,7 @@ name|f_flag
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -4103,9 +4093,7 @@ name|MNT_WAIT
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

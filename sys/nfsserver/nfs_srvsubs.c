@@ -4418,14 +4418,8 @@ argument_list|,
 name|curthread
 argument_list|,
 name|curthread
-condition|?
-name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
-else|:
-name|NULL
+name|td_ucred
 argument_list|)
 operator|)
 return|;

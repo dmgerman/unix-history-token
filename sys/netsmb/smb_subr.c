@@ -178,9 +178,7 @@ name|cred
 else|:
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 block|}
 else|else

@@ -3265,9 +3265,7 @@ name|cred
 init|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 decl_stmt|;
 name|struct
 name|shmid_ds

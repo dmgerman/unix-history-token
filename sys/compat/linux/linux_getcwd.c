@@ -349,9 +349,7 @@ name|va
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -410,9 +408,7 @@ name|cn_cred
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 name|cn
 operator|.
@@ -624,9 +620,7 @@ name|uio
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|eofflag
@@ -1089,9 +1083,7 @@ name|perms
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

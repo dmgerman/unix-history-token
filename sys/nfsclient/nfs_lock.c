@@ -570,9 +570,9 @@ name|lm_cred
 operator|=
 operator|*
 operator|(
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|)
 expr_stmt|;
 comment|/* 	 * Open the lock fifo.  If for any reason we don't find the fifo, it 	 * means that the lock daemon isn't running.  Translate any missing 	 * file error message for the user, otherwise the application will 	 * complain that the user's file is missing, which isn't the case. 	 * Note that we use proc0's cred, so the fifo is opened as root. 	 * 	 * XXX: Note that this behavior is relative to the root directory 	 * of the current process, and this may result in a variety of 	 * {functional, security} problems in chroot() environments. 	 */
@@ -925,9 +925,7 @@ literal|0
 operator|&&
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_svuid
 operator|!=

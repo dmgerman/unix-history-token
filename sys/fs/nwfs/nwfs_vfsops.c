@@ -895,9 +895,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|NCPM_EXECUTE
 argument_list|,
@@ -1458,9 +1456,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|NCPM_WRITE
 operator||
@@ -1598,9 +1594,7 @@ name|cred
 init|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 decl_stmt|;
 name|int
 name|error
@@ -2517,9 +2511,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if

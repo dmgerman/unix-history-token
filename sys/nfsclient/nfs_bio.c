@@ -304,9 +304,7 @@ name|cred
 operator|=
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 comment|/* XXX */
 name|nmp
@@ -909,9 +907,7 @@ name|cred
 operator|=
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 comment|/* XXX */
 name|nmp

@@ -762,9 +762,9 @@ argument_list|,
 operator|&
 name|attr
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -838,9 +838,9 @@ name|vp
 argument_list|,
 name|VEXEC
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -862,9 +862,9 @@ name|vp
 argument_list|,
 name|FREAD
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

@@ -2942,9 +2942,7 @@ name|cr
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 name|dp
 operator|=
@@ -3324,9 +3322,7 @@ name|dvp
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,

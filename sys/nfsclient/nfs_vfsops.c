@@ -1416,9 +1416,7 @@ name|vp
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -1475,9 +1473,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -2518,9 +2514,7 @@ literal|0
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -3283,9 +3277,7 @@ name|vpp
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 operator|)
 operator|!=
@@ -4638,9 +4630,7 @@ name|vp
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
 return|return
@@ -5058,9 +5048,7 @@ name|attrs
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|curthread
 argument_list|)

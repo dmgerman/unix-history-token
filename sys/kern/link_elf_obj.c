@@ -2488,16 +2488,6 @@ init|=
 name|curthread
 decl_stmt|;
 comment|/* XXX */
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-comment|/* XXX */
 name|Elf_Ehdr
 modifier|*
 name|hdr
@@ -2705,9 +2695,9 @@ name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|resid
@@ -3348,9 +3338,9 @@ name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|resid
@@ -3616,9 +3606,9 @@ name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|resid
@@ -3793,9 +3783,9 @@ name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|resid
@@ -3837,9 +3827,9 @@ name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|resid
@@ -4032,9 +4022,9 @@ name|ni_vp
 argument_list|,
 name|FREAD
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
