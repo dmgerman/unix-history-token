@@ -130,9 +130,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n"
-literal|"\tgetconf [-v prog_env] system_var\n"
-literal|"\tgetconf [-v prog_env] path_var pathname\n"
+literal|"usage: getconf [-v prog_env] system_var\n"
+literal|"       getconf [-v prog_env] path_var pathname\n"
 argument_list|)
 expr_stmt|;
 name|exit

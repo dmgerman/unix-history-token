@@ -1714,7 +1714,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nl [-p] [-b type] [-d delim] [-f type] \ [-h type] [-i incr] [-l num]\n\t[-n format] [-s sep] [-v startnum] [-w width] \ [file]\n"
+literal|"usage: nl [-p] [-b type] [-d delim] [-f type] [-h type] [-i incr] [-l num]\n"
+literal|"          [-n format] [-s sep] [-v startnum] [-w width] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
