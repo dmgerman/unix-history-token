@@ -335,7 +335,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* NOTREACHED */
 block|}
 comment|/* 		 * Dumpdates does not exist, make an empty one. 		 */
 name|msg
@@ -374,7 +373,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* NOTREACHED */
 block|}
 operator|(
 name|void
