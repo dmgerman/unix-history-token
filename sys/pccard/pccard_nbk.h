@@ -15,6 +15,14 @@ directive|define
 name|PCCARD_PCCARD_NBK_H
 end_define
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_machdep_pccard
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|pccard_device
