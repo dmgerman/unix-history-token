@@ -145,26 +145,45 @@ begin_comment
 comment|/* routines for parsing /etc/rpc */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|sun
-end_ifndef
+begin_struct
+struct|struct
+name|rpcent
+block|{
+name|char
+modifier|*
+name|r_name
+decl_stmt|;
+comment|/* name of server for this rpc program */
+name|char
+modifier|*
+modifier|*
+name|r_aliases
+decl_stmt|;
+comment|/* alias list */
+name|int
+name|r_number
+decl_stmt|;
+comment|/* rpc program number */
+block|}
+struct|;
+end_struct
 
-begin_include
-include|#
-directive|include
-file|<rpc/netdb.h>
-end_include
-
-begin_comment
-comment|/* structures and routines to parse /etc/rpc */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|struct
+name|rpcent
+modifier|*
+name|getrpcbyname
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getrpcbynumber
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getrpcent
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
