@@ -345,7 +345,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"simple_httpd\n"
+literal|"simple_httpd:%d\n"
 argument_list|,
 name|http_port
 argument_list|)
