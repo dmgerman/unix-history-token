@@ -147,6 +147,9 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %2\n\t"
 comment|/* load old value */
@@ -191,6 +194,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -209,6 +217,9 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %2\n\t"
 comment|/* load old value */
@@ -253,6 +264,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -271,6 +287,9 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %2\n\t"
 comment|/* load old value */
@@ -315,6 +334,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -333,6 +357,9 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %2\n\t"
 comment|/* load old value */
@@ -377,6 +404,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -394,6 +426,9 @@ name|result
 decl_stmt|,
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"wmb\n"
 comment|/* ensure pending writes have drained */
@@ -439,6 +474,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_return
 return|return
 name|result
@@ -463,6 +503,9 @@ block|{
 name|u_int64_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %2\n\t"
 comment|/* load old value */
@@ -507,6 +550,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -525,6 +573,9 @@ block|{
 name|u_int64_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %2\n\t"
 comment|/* load old value */
@@ -569,6 +620,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -587,6 +643,9 @@ block|{
 name|u_int64_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %2\n\t"
 comment|/* load old value */
@@ -631,6 +690,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -649,6 +713,9 @@ block|{
 name|u_int64_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %2\n\t"
 comment|/* load old value */
@@ -693,6 +760,11 @@ block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|}  static
 name|__inline
@@ -710,6 +782,9 @@ name|result
 decl_stmt|,
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"wmb\n"
 comment|/* ensure pending writes have drained */
@@ -754,6 +829,11 @@ literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_return
 return|return
@@ -1093,6 +1173,9 @@ block|{
 name|u_int32_t
 name|ret
 block|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %4\n\t"
 comment|/* load old value */
@@ -1154,6 +1237,11 @@ block|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_return
 return|return
 name|ret
@@ -1186,6 +1274,9 @@ block|{
 name|u_int64_t
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
 literal|"1:\tldq_l %0, %4\n\t"
 comment|/* load old value */
@@ -1240,6 +1331,11 @@ literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_return
 return|return
