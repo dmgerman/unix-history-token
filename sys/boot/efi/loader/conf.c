@@ -70,10 +70,10 @@ index|[]
 init|=
 block|{
 operator|&
-name|netdev
+name|efifs_dev
 block|,
 operator|&
-name|efifs_dev
+name|netdev
 block|,
 name|NULL
 block|}
