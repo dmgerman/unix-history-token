@@ -4299,10 +4299,18 @@ operator|&
 name|RTF_GATEWAY
 condition|)
 block|{
-comment|/* XXX LOR here */
+name|struct
+name|rtentry
+modifier|*
+name|gwrt
+decl_stmt|;
+name|RT_UNLOCK
+argument_list|(
 name|rt
-operator|->
-name|rt_gwroute
+argument_list|)
+expr_stmt|;
+comment|/* XXX workaround LOR */
+name|gwrt
 operator|=
 name|rtalloc1
 argument_list|(
@@ -4312,6 +4320,17 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+name|rt
+operator|->
+name|rt_gwroute
+operator|=
+name|gwrt
 expr_stmt|;
 if|if
 condition|(
@@ -4392,12 +4411,12 @@ name|rt0
 operator|=
 name|rt
 expr_stmt|;
-comment|/* XXX workaround LOR */
 name|RT_UNLOCK
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+comment|/* XXX workaround LOR */
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
