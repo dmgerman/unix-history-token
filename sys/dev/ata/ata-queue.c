@@ -737,7 +737,7 @@ operator|&
 name|ATA_IMMEDIATE_MODE
 condition|)
 return|return;
-comment|/* lock the ATA HW for this request */
+comment|/* if we dont have any work, ask the subdriver(s) */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -746,35 +746,6 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
-name|ch
-operator|->
-name|locking
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_LF_LOCK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ATA_LOCK_CH
-argument_list|(
-name|ch
-argument_list|)
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|queue_mtx
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* if we dont have any work, ask the subdriver(s) */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -861,6 +832,7 @@ name|queue_mtx
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* if we have work todo, try to lock the ATA HW and start transaction */
 if|if
 condition|(
 operator|(
@@ -876,6 +848,34 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|ch
+operator|->
+name|locking
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_LF_LOCK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ATA_LOCK_CH
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|queue_mtx
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -954,7 +954,6 @@ operator|==
 name|ATA_OP_CONTINUES
 condition|)
 return|return;
-block|}
 comment|/* unlock ATA channel HW */
 name|ATA_UNLOCK_CH
 argument_list|(
@@ -970,16 +969,13 @@ argument_list|,
 name|ATA_LF_UNLOCK
 argument_list|)
 expr_stmt|;
-comment|/* if we have a request here it failed and should be completed */
-if|if
-condition|(
-name|request
-condition|)
+comment|/* finish up this (failed) request */
 name|ata_finish
 argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|mtx_unlock
 argument_list|(

@@ -1626,12 +1626,12 @@ operator|=
 name|dir
 condition|?
 operator|(
-name|ATA_DMA_ACTIVE
+name|ATA_DMA_LOADED
 operator||
 name|ATA_DMA_READ
 operator|)
 else|:
-name|ATA_DMA_ACTIVE
+name|ATA_DMA_LOADED
 expr_stmt|;
 return|return
 literal|0
@@ -1725,8 +1725,9 @@ operator|->
 name|dma
 operator|->
 name|flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|ATA_DMA_LOADED
 expr_stmt|;
 return|return
 literal|0

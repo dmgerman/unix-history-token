@@ -305,13 +305,6 @@ return|return
 name|ATA_OP_FINISHED
 return|;
 block|}
-comment|/* record the request as running */
-name|ch
-operator|->
-name|running
-operator|=
-name|request
-expr_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
 name|request
@@ -534,7 +527,6 @@ name|status
 operator|&
 name|ATA_S_ERROR
 condition|)
-block|{
 name|request
 operator|->
 name|error
@@ -546,8 +538,6 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-comment|//request->result = EIO;
-block|}
 break|break;
 block|}
 comment|/* if write command output the data */
@@ -604,7 +594,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* return and wait for interrupt */
+comment|/* record the request as running and return for interrupt */
+name|ch
+operator|->
+name|running
+operator|=
+name|request
+expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -752,7 +748,13 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
-comment|/* return and wait for interrupt */
+comment|/* record the request as running and return for interrupt */
+name|ch
+operator|->
+name|running
+operator|=
+name|request
+expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -880,9 +882,17 @@ operator|)
 operator|==
 name|ATA_DRQ_INTR
 condition|)
+block|{
+name|ch
+operator|->
+name|running
+operator|=
+name|request
+expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
+block|}
 comment|/* wait for ready to write ATAPI command block */
 block|{
 name|int
@@ -1019,7 +1029,13 @@ else|:
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* return and wait for interrupt */
+comment|/* record the request as running and return for interrupt */
+name|ch
+operator|->
+name|running
+operator|=
+name|request
+expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -1330,7 +1346,13 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
-comment|/* return and wait for interrupt */
+comment|/* record the request as running and return for interrupt */
+name|ch
+operator|->
+name|running
+operator|=
+name|request
+expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -1344,7 +1366,7 @@ name|dma
 operator|->
 name|flags
 operator|&
-name|ATA_DMA_ACTIVE
+name|ATA_DMA_LOADED
 condition|)
 name|ch
 operator|->
@@ -1354,12 +1376,6 @@ name|unload
 argument_list|(
 name|ch
 argument_list|)
-expr_stmt|;
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 name|ATA_OP_FINISHED

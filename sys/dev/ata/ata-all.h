@@ -1600,14 +1600,19 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|ATA_DMA_ACTIVE
+name|ATA_DMA_READ
 value|0x01
-comment|/* DMA transfer in progress */
+comment|/* transaction is a read */
 define|#
 directive|define
-name|ATA_DMA_READ
+name|ATA_DMA_LOADED
 value|0x02
-comment|/* transaction is a read */
+comment|/* DMA tables etc loaded */
+define|#
+directive|define
+name|ATA_DMA_ACTIVE
+value|0x04
+comment|/* DMA transfer in progress */
 name|void
 function_decl|(
 modifier|*
