@@ -15857,6 +15857,15 @@ name|sc_touch_scrn_saver
 argument_list|()
 expr_stmt|;
 comment|/* do the /dev/random device a favour */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
+condition|)
 name|random_harvest
 argument_list|(
 operator|(
