@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id$ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.86.2.5 1999/05/07 23:43:07 julian Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -815,6 +815,7 @@ condition|(
 name|type
 condition|)
 block|{
+comment|/* Intel -- vendor 0x8086 */
 case|case
 literal|0x00088086
 case|:
@@ -968,7 +969,7 @@ literal|0x12508086
 case|:
 return|return
 operator|(
-literal|"Intel 82439"
+literal|"Intel 82439HX PCI cache memory controller"
 operator|)
 return|;
 case|case
@@ -1115,22 +1116,6 @@ literal|"Intel 82454NX PCI Expander Bridge"
 operator|)
 return|;
 case|case
-literal|0x00221014
-case|:
-return|return
-operator|(
-literal|"IBM 82351 PCI-PCI bridge"
-operator|)
-return|;
-case|case
-literal|0x00011011
-case|:
-return|return
-operator|(
-literal|"DEC 21050 PCI-PCI bridge"
-operator|)
-return|;
-case|case
 literal|0x124b8086
 case|:
 return|return
@@ -1169,6 +1154,22 @@ case|:
 return|return
 operator|(
 literal|"SiS 85c601"
+operator|)
+return|;
+case|case
+literal|0x55911039
+case|:
+return|return
+operator|(
+literal|"SiS 5591 host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00011039
+case|:
+return|return
+operator|(
+literal|"SiS 5591 host to AGP bridge"
 operator|)
 return|;
 comment|/* VLSI -- vendor 0x1004 */
@@ -1228,7 +1229,7 @@ operator|(
 literal|"VLSI 82C147 IrDA Controller"
 operator|)
 return|;
-comment|/* VIA Technologies -- vendor 0x1106  	 * Note that the old Apollo Master chipset is not in here, as VIA 	 * does not seem to have any docs on their website for it, and I do 	 * not have a Master board in my posession. -LC */
+comment|/* VIA Technologies -- vendor 0x1106  	 * Note that the old Apollo Master chipset is not in here, as VIA 	 * does not seem to have any docs on their website for it, and I do 	 * not have a Master board in my posession. -LC 	 */
 case|case
 literal|0x05851106
 case|:
@@ -1406,6 +1407,23 @@ expr_stmt|;
 return|return
 operator|(
 literal|"Ross (?) host to PCI bridge"
+operator|)
+return|;
+comment|/* Others */
+case|case
+literal|0x00221014
+case|:
+return|return
+operator|(
+literal|"IBM 82351 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00011011
+case|:
+return|return
+operator|(
+literal|"DEC 21050 PCI-PCI bridge"
 operator|)
 return|;
 block|}
