@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.10 (Berkeley) %G%"
+literal|"@(#)main.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,11 +253,11 @@ while|while
 condition|(
 name|argc
 operator|>
-literal|0
+literal|1
 operator|&&
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 index|[
 literal|0
@@ -270,7 +270,7 @@ switch|switch
 condition|(
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 index|[
 literal|1
