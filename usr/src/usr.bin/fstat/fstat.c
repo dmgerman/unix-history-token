@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.28 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,19 +273,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -303,13 +297,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -500,7 +506,7 @@ parameter_list|(
 name|d
 parameter_list|)
 define|\
-value|if ((d)> maxfiles) { \ 		free(ofiles); \ 		ofiles = (struct file **)malloc((d) * sizeof(struct file *)); \ 		if (ofiles == NULL) { \ 			fprintf(stderr, "fstat: out of memory\n"); \ 			exit(1); \ 		} \ 		maxfiles = (d); \ 	}
+value|if ((d)> maxfiles) { \ 		free(ofiles); \ 		ofiles = malloc((d) * sizeof(struct file *)); \ 		if (ofiles == NULL) { \ 			fprintf(stderr, "fstat: %s\n", strerror(errno)); \ 			exit(1); \ 		} \ 		maxfiles = (d); \ 	}
 end_define
 
 begin_comment
@@ -521,20 +527,6 @@ parameter_list|)
 value|(kvm_read((kaddr), (paddr), (len)) == (len))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|main
 parameter_list|(
@@ -551,26 +543,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|passwd
-modifier|*
-name|passwd
-decl_stmt|;
-name|int
-name|what
-init|=
-name|KINFO_PROC_ALL
-decl_stmt|,
-name|arg
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -580,14 +552,32 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
-name|char
+specifier|register
+name|struct
+name|passwd
 modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
+name|passwd
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|arg
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|what
+decl_stmt|;
+name|arg
+operator|=
+literal|0
+expr_stmt|;
+name|what
+operator|=
+name|KINFO_PROC_ALL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -599,7 +589,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p:u:fnv"
+literal|"fnp:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -613,6 +603,43 @@ operator|)
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+comment|/* NOTYET: set count to optarg. */
+name|usage
+argument_list|()
+expr_stmt|;
+case|case
+literal|'f'
+case|:
+name|fsflg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+comment|/* NOTYET: set kernel to optarg. */
+name|usage
+argument_list|()
+expr_stmt|;
+case|case
+literal|'N'
+case|:
+comment|/* NOTYET: set memory to optarg. */
+name|usage
+argument_list|()
+expr_stmt|;
+case|case
+literal|'n'
+case|:
+name|nflg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -634,11 +661,11 @@ name|optarg
 argument_list|)
 condition|)
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"fstat: -p option requires a process id.\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"fstat: -p requires a process id\n"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -708,26 +735,20 @@ name|pw_uid
 expr_stmt|;
 break|break;
 case|case
-literal|'f'
-case|:
-name|fsflg
-operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'n'
-case|:
-name|nflg
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'v'
 case|:
 name|vflg
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'w'
+case|:
+comment|/* NOTYET: set wait interval to optarg. */
+name|usage
+argument_list|()
+expr_stmt|;
 case|case
 literal|'?'
 case|:
@@ -786,7 +807,7 @@ argument_list|(
 literal|256
 argument_list|)
 expr_stmt|;
-comment|/* reverse space for file pointers */
+comment|/* reserve space for file pointers */
 if|if
 condition|(
 name|fsflg
@@ -911,19 +932,19 @@ if|if
 condition|(
 name|nflg
 condition|)
-name|fputs
+name|printf
 argument_list|(
-literal|"USER     CMD          PID   FD  DEV    INUM       MODE SZ|DV"
+literal|"%s"
 argument_list|,
-name|stdout
+literal|"USER     CMD          PID   FD  DEV    INUM       MODE SZ|DV"
 argument_list|)
 expr_stmt|;
 else|else
-name|fputs
+name|printf
 argument_list|(
-literal|"USER     CMD          PID   FD MOUNT      INUM MODE         SZ|DV"
+literal|"%s"
 argument_list|,
-name|stdout
+literal|"USER     CMD          PID   FD MOUNT      INUM MODE         SZ|DV"
 argument_list|)
 expr_stmt|;
 if|if
@@ -934,11 +955,9 @@ name|fsflg
 operator|==
 literal|0
 condition|)
-name|fputs
+name|printf
 argument_list|(
 literal|" NAME\n"
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
 else|else
@@ -1005,7 +1024,7 @@ name|PREFIX
 parameter_list|(
 name|i
 parameter_list|)
-value|printf("%-8.8s %-10s %5d", Uname, Comm, Pid); \ 	switch(i) { \ 	case TEXT: \ 		fputs(" text", stdout); \ 		break; \ 	case CDIR: \ 		fputs("   wd", stdout); \ 		break; \ 	case RDIR: \ 		fputs(" root", stdout); \ 		break; \ 	case TRACE: \ 		fputs("   tr", stdout); \ 		break; \ 	default: \ 		printf(" %4d", i); \ 		break; \ 	}
+value|printf("%-8.8s %-10s %5d", Uname, Comm, Pid); \ 	switch(i) { \ 	case TEXT: \ 		printf(" text"); \ 		break; \ 	case CDIR: \ 		printf("   wd"); \ 		break; \ 	case RDIR: \ 		printf(" root"); \ 		break; \ 	case TRACE: \ 		printf("   tr"); \ 		break; \ 	default: \ 		printf(" %4d", i); \ 		break; \ 	}
 end_define
 
 begin_comment
