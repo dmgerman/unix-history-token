@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002 Tim J. Robbins  * All rights reserved.  *  * R
 end_comment
 
 begin_comment
-comment|/*  * Test program for wcrtomb(), as specified by IEEE Std. 1003.1-2001 and  * ISO/IEC 9899:1999.  *  * The function is tested with both the "C" ("POSIX") LC_CTYPE seting and  * ja_JP.eucJP. Other encodings are not tested.  */
+comment|/*  * Test program for wcrtomb(), as specified by IEEE Std. 1003.1-2001 and  * ISO/IEC 9899:1999.  *  * The function is tested with both the "C" ("POSIX") LC_CTYPE setting and  * "ja_JP.eucJP". Other encodings are not tested.  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include

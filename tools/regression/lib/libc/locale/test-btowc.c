@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002 Tim J. Robbins  * All rights reserved.  *  * R
 end_comment
 
 begin_comment
-comment|/*  * Test program for btowc() and wctob() as specified by IEEE Std. 1003.1-2001  * and * ISO/IEC 9899:1999.  *  * The function is tested in only the "C" locale.  */
+comment|/*  * Test program for btowc() and wctob() as specified by IEEE Std. 1003.1-2001  * and ISO/IEC 9899:1999.  *  * The function is tested in only the "C" locale.  */
 end_comment
 
 begin_include
