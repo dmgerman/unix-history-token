@@ -342,6 +342,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|dev_cleanup
+argument_list|()
+expr_stmt|;
 name|__exec
 argument_list|(
 operator|(

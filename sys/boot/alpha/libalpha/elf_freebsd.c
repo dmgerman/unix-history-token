@@ -441,6 +441,9 @@ expr_stmt|;
 name|closeall
 argument_list|()
 expr_stmt|;
+name|dev_cleanup
+argument_list|()
+expr_stmt|;
 name|alpha_pal_imb
 argument_list|()
 expr_stmt|;

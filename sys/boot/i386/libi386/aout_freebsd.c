@@ -324,6 +324,9 @@ name|bi_esymtab
 operator|=
 name|esym
 expr_stmt|;
+name|dev_cleanup
+argument_list|()
+expr_stmt|;
 name|__exec
 argument_list|(
 operator|(
