@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.166 1998/05/24 20:01:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.167 1998/07/20 10:48:11 yokota Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -308,13 +308,25 @@ end_function
 begin_define
 define|#
 directive|define
+name|_IS_SET
+parameter_list|(
+name|dist
+parameter_list|,
+name|set
+parameter_list|)
+value|(((dist)& (set)) == (set))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_DEVELOPER
 parameter_list|(
 name|dist
 parameter_list|,
 name|extra
 parameter_list|)
-value|((((dist)& (_DIST_DEVELOPER | (extra))) == (_DIST_DEVELOPER | (extra))) || \ 				   (((dist)& (_DIST_DEVELOPER | DIST_DES | (extra))) == (_DIST_DEVELOPER | DIST_DES | (extra))))
+value|(_IS_SET(dist, _DIST_DEVELOPER | extra) || \ 	_IS_SET(dist, _DIST_DEVELOPER | DIST_DES | extra))
 end_define
 
 begin_define
@@ -326,7 +338,7 @@ name|dist
 parameter_list|,
 name|extra
 parameter_list|)
-value|((((dist)& (_DIST_USER | (extra))) == (_DIST_USER | (extra))) || \ 			      (((dist)& (_DIST_USER | DIST_DES | (extra))) == (_DIST_USER | DIST_DES | (extra))))
+value|(_IS_SET(dist, _DIST_USER | extra) || \ 	_IS_SET(dist, _DIST_USER | DIST_DES | extra))
 end_define
 
 begin_function
@@ -340,7 +352,6 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|IS_DEVELOPER
 argument_list|(
 name|Dists
@@ -348,10 +359,12 @@ argument_list|,
 literal|0
 argument_list|)
 operator|&&
+name|_IS_SET
+argument_list|(
 name|SrcDists
-operator|==
+argument_list|,
 name|DIST_SRC_ALL
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -367,7 +380,6 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|IS_DEVELOPER
 argument_list|(
 name|Dists
@@ -375,10 +387,12 @@ argument_list|,
 name|DIST_XF86
 argument_list|)
 operator|&&
+name|_IS_SET
+argument_list|(
 name|SrcDists
-operator|==
+argument_list|,
 name|DIST_SRC_ALL
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -394,7 +408,6 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|IS_DEVELOPER
 argument_list|(
 name|Dists
@@ -402,10 +415,12 @@ argument_list|,
 literal|0
 argument_list|)
 operator|&&
+name|_IS_SET
+argument_list|(
 name|SrcDists
-operator|==
+argument_list|,
 name|DIST_SRC_SYS
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -421,14 +436,12 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|IS_USER
 argument_list|(
 name|Dists
 argument_list|,
 literal|0
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -444,14 +457,12 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|IS_USER
 argument_list|(
 name|Dists
 argument_list|,
 name|DIST_XF86
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -467,11 +478,9 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|Dists
 operator|==
 name|DIST_BIN
-operator|)
 return|;
 block|}
 end_function
@@ -487,27 +496,40 @@ name|self
 parameter_list|)
 block|{
 return|return
-operator|(
 name|Dists
 operator|==
 name|DIST_ALL
 operator|&&
+name|_IS_SET
+argument_list|(
 name|SrcDists
-operator|==
+argument_list|,
 name|DIST_SRC_ALL
+argument_list|)
 operator|&&
+expr|\
+name|_IS_SET
+argument_list|(
 name|XF86Dists
-operator|==
+argument_list|,
 name|DIST_XF86_ALL
+argument_list|)
 operator|&&
+expr|\
+name|_IS_SET
+argument_list|(
 name|XF86ServerDists
-operator|==
+argument_list|,
 name|DIST_XF86_SERVER_ALL
+argument_list|)
 operator|&&
+expr|\
+name|_IS_SET
+argument_list|(
 name|XF86FontDists
-operator|==
+argument_list|,
 name|DIST_XF86_FONTS_ALL
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -555,7 +577,9 @@ name|item
 parameter_list|)
 block|{
 return|return
-name|XF86Dists
+name|Dists
+operator|&
+name|DIST_XF86
 return|;
 block|}
 end_function
@@ -4223,7 +4247,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.3.2 distribution"
+literal|"The XFree86 3.3.2.3 distribution"
 block|,
 name|x11FlagCheck
 block|,
@@ -4947,9 +4971,9 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.3.2 Distribution"
+literal|"XFree86 3.3.2.3 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.3.2\n"
+literal|"Please select the components you need from the XFree86 3.3.2.3\n"
 literal|"distribution sets."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
@@ -5059,7 +5083,7 @@ name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.3.2 base distribution types"
+literal|"XFree86 3.3.2.3 base distribution types"
 block|,
 literal|"Please check off the basic XFree86 components you wish to install.\n"
 literal|"Bin, lib, and set are recommended for a minimum installaion."
@@ -5325,7 +5349,7 @@ block|,
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.3.2 standard sources"
+literal|"XFree86 3.3.2.3 standard sources"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5348,7 +5372,7 @@ block|,
 block|{
 literal|"csources"
 block|,
-literal|"XFree86 3.3.2 contrib sources"
+literal|"XFree86 3.3.2.3 contrib sources"
 block|,
 name|dmenuFlagCheck
 block|,
