@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.17 (Berkeley) %G%"
+literal|"@(#)route.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,6 +210,24 @@ block|{
 name|RTF_MODIFIED
 block|,
 literal|'M'
+block|}
+block|,
+block|{
+name|RTF_CLONING
+block|,
+literal|'C'
+block|}
+block|,
+block|{
+name|RTF_XRESOLVE
+block|,
+literal|'R'
+block|}
+block|,
+block|{
+name|RTF_LLINFO
+block|,
+literal|'L'
 block|}
 block|,
 block|{
@@ -866,7 +884,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-44.44s "
+literal|44
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -987,7 +1005,6 @@ argument_list|(
 literal|"out of space\n"
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -1206,7 +1223,7 @@ name|sa
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-36.36s "
+literal|36
 argument_list|)
 expr_stmt|;
 else|else
@@ -1219,7 +1236,7 @@ name|rtm
 operator|->
 name|rtm_flags
 argument_list|,
-literal|"%-16.16s "
+literal|16
 argument_list|)
 expr_stmt|;
 if|if
@@ -1264,7 +1281,7 @@ name|sa
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-18.18s "
+literal|18
 argument_list|)
 expr_stmt|;
 block|}
@@ -1294,7 +1311,7 @@ argument|sa
 argument_list|,
 argument|flags
 argument_list|,
-argument|format
+argument|width
 argument_list|)
 end_macro
 
@@ -1309,19 +1326,19 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|format
+decl_stmt|,
+name|width
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 name|char
+name|format
+index|[
+literal|20
+index|]
+decl_stmt|,
 name|workbuf
 index|[
 literal|128
@@ -1509,9 +1526,27 @@ name|workbuf
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|nflag
+condition|)
 name|printf
 argument_list|(
-name|format
+literal|"%-*s "
+argument_list|,
+name|width
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-*.*s "
+argument_list|,
+name|width
+argument_list|,
+name|width
 argument_list|,
 name|cp
 argument_list|)
@@ -1647,7 +1682,7 @@ name|rt
 operator|->
 name|rt_flags
 argument_list|,
-literal|"%-16.16s "
+literal|16
 argument_list|)
 expr_stmt|;
 name|p_sockaddr
@@ -1661,10 +1696,9 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-18.18s "
+literal|18
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|p_flags
 argument_list|(
 name|rt
@@ -1800,7 +1834,7 @@ name|rt
 operator|->
 name|rt_flags
 argument_list|,
-literal|"%-16.16s "
+literal|16
 argument_list|)
 expr_stmt|;
 name|p_sockaddr
@@ -1812,7 +1846,7 @@ name|rt_gateway
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-18.18s "
+literal|18
 argument_list|)
 expr_stmt|;
 name|p_flags
