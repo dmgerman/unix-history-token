@@ -36,6 +36,11 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|function
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|file
 parameter_list|,
 name|int
@@ -49,9 +54,11 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"assertion \"%s\" failed: file \"%s\", line %d\n"
+literal|"assertion (%s) failed: function %s(), file %s:%d\n"
 argument_list|,
 name|expression
+argument_list|,
+name|function
 argument_list|,
 name|file
 argument_list|,
