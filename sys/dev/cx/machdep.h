@@ -430,6 +430,11 @@ directive|if
 name|__GNUC__
 operator|>=
 literal|2
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_define

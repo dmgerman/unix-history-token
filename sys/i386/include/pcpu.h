@@ -104,6 +104,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_elif
 
 begin_comment

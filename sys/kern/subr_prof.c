@@ -1102,9 +1102,16 @@ argument_list|(
 name|__i386__
 argument_list|)
 operator|&&
+operator|(
 name|__GNUC__
 operator|>=
 literal|2
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|)
 asm|__asm("pushl %0; call __mcount; popl %%ecx"
 block|: 		      :
 literal|"i"
@@ -1195,9 +1202,16 @@ argument_list|(
 name|__i386__
 argument_list|)
 operator|&&
+operator|(
 name|__GNUC__
 operator|>=
 literal|2
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|)
 asm|__asm("call " __XSTRING(HIDENAME(mexitcount)) "; 1:"
 block|: : :
 literal|"ax"
@@ -2708,6 +2722,12 @@ operator|&&
 name|__GNUC__
 operator|>=
 literal|2
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_comment

@@ -54,6 +54,7 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__GNUC__
@@ -71,6 +72,13 @@ operator|||
 name|__GNUC__
 operator|>=
 literal|3
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 operator|)
 end_if
 
@@ -143,7 +151,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ! __GNUC__ post GCC 2.95 */
+comment|/* ! (__GNUC__ post GCC 2.95 || __INTEL_COMPILER) */
 end_comment
 
 begin_define
@@ -157,11 +165,20 @@ define|\
 value|(((sizeof(type) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -219,6 +236,32 @@ parameter_list|)
 define|\
 value|(*(type *)((ap) += __va_size(type), (ap) - __va_size(type)))
 end_define
+
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
+begin_define
+define|#
+directive|define
+name|va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|((dest) = (src))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

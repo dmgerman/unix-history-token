@@ -1527,10 +1527,17 @@ begin_if
 if|#
 directive|if
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|)
 end_if
 
 begin_define

@@ -23,11 +23,19 @@ begin_comment
 comment|/*  * Private macros, not to be used outside this header file.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -48,7 +56,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_ifndef
@@ -60,7 +68,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-literal|"This file needs to be compiled by GCC or lint"
+literal|"This file needs to be compiled by GCC, an Intel compiler or lint"
 end_error
 
 begin_endif
@@ -90,7 +98,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
 begin_comment

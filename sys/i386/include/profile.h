@@ -225,11 +225,19 @@ name|_MCOUNT_DECL
 value|static __inline void _mcount
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -249,7 +257,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_define
@@ -266,7 +274,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
 begin_typedef
@@ -429,9 +437,17 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 name|void
 name|mcount
 argument_list|(

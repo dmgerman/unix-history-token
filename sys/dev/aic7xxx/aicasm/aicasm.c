@@ -569,7 +569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:i:l:n:o:p:r:I:"
+literal|"d:i:l:n:o:p:r:I:X"
 argument_list|)
 operator|)
 operator|!=
@@ -1011,6 +1011,11 @@ block|}
 break|break;
 block|}
 case|case
+literal|'X'
+case|:
+comment|/* icc version of -nostdinc */
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -1226,7 +1231,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %-16s [-nostdinc] [-I-] [-I directory] [-o output_file]\n"
+literal|"usage: %-16s [-nostdinc|-X] [-I-] [-I directory] [-o output_file]\n"
 literal|"	[-r register_output_file [-p register_diag_file -i includefile]]\n"
 literal|"	[-l program_list_file]\n"
 literal|"	input_file\n"

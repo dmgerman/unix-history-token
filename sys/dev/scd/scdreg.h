@@ -15,11 +15,19 @@ directive|define
 name|SCD_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -27,6 +35,11 @@ directive|if
 name|__GNUC__
 operator|>=
 literal|2
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_pragma

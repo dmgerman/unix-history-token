@@ -93,11 +93,19 @@ begin_comment
 comment|/* !KLD_MODULE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * For userland, assume the SMP case and use lock prefixes so that  * the binaries will run on both types of systems.  */
@@ -170,7 +178,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_define
@@ -198,7 +206,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
 begin_comment
@@ -211,6 +219,11 @@ directive|if
 name|defined
 argument_list|(
 name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
 argument_list|)
 end_if
 
@@ -393,7 +406,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__GNUC__) */
+comment|/* defined(__GNUC__) || defined(__INTEL_COMPILER) */
 end_comment
 
 begin_if
@@ -402,6 +415,11 @@ directive|if
 name|defined
 argument_list|(
 name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
 argument_list|)
 end_if
 
@@ -482,7 +500,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !defined(__GNUC__) */
+comment|/* !(defined(__GNUC__) || defined(__INTEL_COMPILER)) */
 end_comment
 
 begin_function_decl
@@ -522,7 +540,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__GNUC__) */
+comment|/* defined(__GNUC__) || defined(__INTEL_COMPILER) */
 end_comment
 
 begin_endif
@@ -1628,6 +1646,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_function
@@ -1731,7 +1754,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !defined(__GNUC__) */
+comment|/* !(defined(__GNUC__) || defined(__INTEL_COMPILER)) */
 end_comment
 
 begin_function_decl
@@ -1764,7 +1787,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__GNUC__) */
+comment|/* defined(__GNUC__) || defined(__INTEL_COMPILER) */
 end_comment
 
 begin_endif

@@ -27,118 +27,113 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_comment
-comment|/*  * Define the order of 32-bit words in 64-bit words.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_define
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/*  * Define the order of 32-bit words in 64-bit words.  */
 define|#
 directive|define
 name|_QUAD_HIGHWORD
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|_QUAD_LOWWORD
 value|0
-end_define
-
-begin_comment
 comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_LITTLE_ENDIAN
 value|1234
-end_define
-
-begin_comment
 comment|/* LSB first: i386, vax */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_BIG_ENDIAN
 value|4321
-end_define
-
-begin_comment
 comment|/* MSB first: 68000, ibm, net */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_PDP_ENDIAN
 value|3412
-end_define
-
-begin_comment
 comment|/* LSB first in word, MSW first in long */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_BYTE_ORDER
 value|_LITTLE_ENDIAN
-end_define
-
-begin_comment
 comment|/*  * Deprecated variants that don't have enough underscores to be useful in more  * strict namespaces.  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
-end_if
-
-begin_define
 define|#
 directive|define
 name|LITTLE_ENDIAN
 value|_LITTLE_ENDIAN
-end_define
-
-begin_define
 define|#
 directive|define
 name|BIG_ENDIAN
 value|_BIG_ENDIAN
-end_define
-
-begin_define
 define|#
 directive|define
 name|PDP_ENDIAN
 value|_PDP_ENDIAN
-end_define
-
-begin_define
 define|#
 directive|define
 name|BYTE_ORDER
 value|_BYTE_ORDER
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+if|#
+directive|if
+name|__INTEL_COMPILER
+operator|>=
+literal|800
+define|#
+directive|define
+name|__INTEL_COMPILER_with_FreeBSD_endian
+value|1
+endif|#
+directive|endif
+else|#
+directive|else
+define|#
+directive|define
+name|__INTEL_COMPILER_with_FreeBSD_endian
+value|1
+endif|#
+directive|endif
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
-
-begin_define
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER_with_FreeBSD_endian
+argument_list|)
 define|#
 directive|define
 name|__word_swap_int_var
@@ -147,15 +142,9 @@ name|x
 parameter_list|)
 define|\
 value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("rorl $16, %0" : "+r" (__X)); \    __X; })
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__OPTIMIZE__
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|__word_swap_int_const
@@ -164,9 +153,6 @@ name|x
 parameter_list|)
 define|\
 value|((((x)& 0xffff0000)>> 16) | \ 	 (((x)& 0x0000ffff)<< 16))
-end_define
-
-begin_define
 define|#
 directive|define
 name|__word_swap_int
@@ -174,18 +160,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(__builtin_constant_p(x) ? \ 	__word_swap_int_const(x) : __word_swap_int_var(x))
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* __OPTIMIZE__ */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__word_swap_int
@@ -193,18 +170,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__word_swap_int_var(x)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* __OPTIMIZE__ */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -234,9 +202,6 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_int_var
@@ -245,14 +210,8 @@ name|x
 parameter_list|)
 define|\
 value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("bswap %0" : "+r" (__X)); \    __X; })
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_int_var
@@ -261,20 +220,11 @@ name|x
 parameter_list|)
 define|\
 value|__extension__ ({ register __uint32_t __X = (x); \    __asm ("xchgb %h0, %b0\n\trorl $16, %0\n\txchgb %h0, %b0" \        : "+q" (__X)); \    __X; })
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__OPTIMIZE__
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_int_const
@@ -283,9 +233,6 @@ name|x
 parameter_list|)
 define|\
 value|((((x)& 0xff000000)>> 24) | \ 	 (((x)& 0x00ff0000)>>  8) | \ 	 (((x)& 0x0000ff00)<<  8) | \ 	 (((x)& 0x000000ff)<< 24))
-end_define
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_int
@@ -293,18 +240,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(__builtin_constant_p(x) ? \ 	__byte_swap_int_const(x) : __byte_swap_int_var(x))
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* __OPTIMIZE__ */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_int
@@ -312,18 +250,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__byte_swap_int_var(x)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* __OPTIMIZE__ */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_word_var
@@ -332,15 +261,9 @@ name|x
 parameter_list|)
 define|\
 value|__extension__ ({ register __uint16_t __X = (x); \    __asm ("xchgb %h0, %b0" : "+q" (__X)); \    __X; })
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__OPTIMIZE__
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_word_const
@@ -349,9 +272,6 @@ name|x
 parameter_list|)
 define|\
 value|((((x)& 0xff00)>> 8) | \ 	 (((x)& 0x00ff)<< 8))
-end_define
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_word
@@ -359,18 +279,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(__builtin_constant_p(x) ? \ 	__byte_swap_word_const(x) : __byte_swap_word_var(x))
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* __OPTIMIZE__ */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|__byte_swap_word
@@ -378,18 +289,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__byte_swap_word_var(x)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* __OPTIMIZE__ */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|__uint64_t
@@ -498,9 +400,6 @@ operator|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|__inline
 name|__uint32_t
@@ -519,9 +418,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|__inline
 name|__uint16_t
@@ -540,9 +436,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|__htonl
@@ -550,9 +443,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__bswap32(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|__htons
@@ -560,9 +450,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__bswap16(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|__ntohl
@@ -570,9 +457,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__bswap32(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|__ntohs
@@ -580,35 +464,26 @@ parameter_list|(
 name|x
 parameter_list|)
 value|__bswap16(x)
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUC__ */
-end_comment
-
-begin_comment
+comment|/* !(__GNUC__ || __INTEL_COMPILER_with_FreeBSD_endian) */
 comment|/*  * No optimizations are available for this compiler.  Fall back to  * non-optimized functions by defining the constant usually used to prevent  * redefinition.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_BYTEORDER_FUNC_DEFINED
-end_define
+endif|#
+directive|endif
+comment|/* __GNUC__ || __INTEL_COMPILER_with_FreeBSD_endian */
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __GNUC__ */
-end_comment
 
 begin_endif
 endif|#

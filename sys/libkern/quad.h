@@ -236,18 +236,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * XXX  * Compensate for gcc 1 vs gcc 2.  Gcc 1 defines ?sh?di3's second argument  * as u_quad_t, while gcc 2 correctly uses int.  Unfortunately, we still use  * both compilers.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>=
-literal|2
-end_if
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -255,23 +243,6 @@ name|int
 name|qshift_t
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|u_quad_t
-name|qshift_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -123,10 +123,17 @@ name|ICHSMB_DEBUG
 operator|!=
 literal|0
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|)
 end_if
 
 begin_define

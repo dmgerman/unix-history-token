@@ -240,11 +240,19 @@ begin_comment
 comment|/* GUPROF */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_asm
 asm|__asm("								\n\ GM_STATE	=	0					\n\ GMON_PROF_OFF	=	3					\n\ 								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	__mcount					\n\ 	.type	__mcount,@function				\n\ __mcount:							\n\ 	#							\n\ 	# Check that we are profiling.  Do it early for speed.	\n\ 	#							\n\ 	cmpl	$GMON_PROF_OFF," __XSTRING(CNAME(_gmonparam)) "+GM_STATE \n\  	je	.mcount_exit					\n\  	#							\n\  	# __mcount is the same as [.]mcount except the caller	\n\  	# hasn't changed the stack except to call here, so the	\n\ 	# caller's raddr is above our raddr.			\n\ 	#							\n\  	movl	4(%esp),%edx					\n\  	jmp	.got_frompc					\n\  								\n\  	.p2align 4,0x90						\n\  	.globl	" __XSTRING(HIDENAME(mcount)) "			\n\ " __XSTRING(HIDENAME(mcount)) ":				\n\  	.globl	__cyg_profile_func_enter			\n\ __cyg_profile_func_enter:					\n\ 	cmpl	$GMON_PROF_OFF," __XSTRING(CNAME(_gmonparam)) "+GM_STATE \n\ 	je	.mcount_exit					\n\ 	#							\n\ 	# The caller's stack frame has already been built, so	\n\ 	# %ebp is the caller's frame pointer.  The caller's	\n\ 	# raddr is in the caller's frame following the caller's	\n\ 	# caller's frame pointer.				\n\ 	#							\n\ 	movl	4(%ebp),%edx					\n\ .got_frompc:							\n\ 	#							\n\ 	# Our raddr is the caller's pc.				\n\ 	#							\n\ 	movl	(%esp),%eax					\n\ 								\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	pushl	%edx						\n\ 	cli							\n\ 	call	" __XSTRING(CNAME(mcount)) "			\n\ 	addl	$8,%esp						\n\ 	popfl							\n\ .mcount_exit:							\n\ 	ret							\n\ ");
@@ -256,7 +264,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_error
@@ -270,7 +278,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
 begin_ifdef
@@ -283,11 +291,19 @@ begin_comment
 comment|/*  * [.]mexitcount saves the return register(s), loads selfpc and calls  * mexitcount(selfpc) to do the work.  Someday it should be in a machine  * dependent file together with cputime(), __mcount and [.]mcount.  cputime()  * can't just be put in machdep.c because it has to be compiled without -pg.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_asm
 asm|__asm("								\n\ 	.text							\n\ #								\n\ # Dummy label to be seen when gprof -u hides [.]mexitcount.	\n\ #								\n\ 	.p2align 4,0x90						\n\ 	.globl	__mexitcount					\n\ 	.type	__mexitcount,@function				\n\ __mexitcount:							\n\ 	nop							\n\ 								\n\ GMON_PROF_HIRES	=	4					\n\ 								\n\ 	.p2align 4,0x90						\n\ 	.globl	" __XSTRING(HIDENAME(mexitcount)) "		\n\ " __XSTRING(HIDENAME(mexitcount)) ":				\n\  	.globl	__cyg_profile_func_exit				\n\ __cyg_profile_func_exit:					\n\ 	cmpl	$GMON_PROF_HIRES," __XSTRING(CNAME(_gmonparam)) "+GM_STATE \n\ 	jne	.mexitcount_exit				\n\ 	pushl	%edx						\n\ 	pushl	%eax						\n\ 	movl	8(%esp),%eax					\n\ 	pushfl							\n\ 	pushl	%eax						\n\ 	cli							\n\ 	call	" __XSTRING(CNAME(mexitcount)) "		\n\ 	addl	$4,%esp						\n\ 	popfl							\n\ 	popl	%eax						\n\ 	popl	%edx						\n\ .mexitcount_exit:						\n\ 	ret							\n\ ");
@@ -299,7 +315,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_error
@@ -313,7 +329,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
 begin_comment
@@ -1092,11 +1108,19 @@ begin_comment
 comment|/* !GUPROF */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_asm
 asm|__asm("								\n\ 	.text							\n\ 	.p2align 4,0x90						\n\ 	.globl	" __XSTRING(HIDENAME(mexitcount)) "		\n\ " __XSTRING(HIDENAME(mexitcount)) ":				\n\ 	ret							\n\ ");
@@ -1108,7 +1132,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_error
@@ -1122,7 +1146,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
 begin_endif

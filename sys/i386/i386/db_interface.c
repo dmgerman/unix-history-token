@@ -177,12 +177,23 @@ block|{
 name|u_short
 name|ss
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 asm|__asm __volatile("mov %%ss,%0" : "=r" (ss));
 else|#
 directive|else
+error|#
+directive|error
+error|Function rss() needs to get ported to this compiler.
 name|ss
 operator|=
 literal|0

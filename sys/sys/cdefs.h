@@ -64,11 +64,20 @@ begin_comment
 comment|/*  * Macro to test if we're using a specific version of gcc or later.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -239,11 +248,22 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -261,7 +281,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_endif
@@ -320,11 +340,22 @@ parameter_list|)
 value|"x"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -407,7 +438,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__GNUC__ */
+comment|/* !(__GNUC__ || __INTEL_COMPILER) */
 end_comment
 
 begin_endif
@@ -486,6 +517,12 @@ literal|2
 operator|,
 literal|5
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_define
@@ -525,6 +562,12 @@ operator|&&
 name|__GNUC_MINOR__
 operator|<
 literal|7
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_define
@@ -620,6 +663,68 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__dead2
+value|__attribute__((__noreturn__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__pure2
+value|__attribute__((__const__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__unused
+value|__attribute__((__unused__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__packed
+value|__attribute__((__packed__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__aligned
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((__aligned__(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__section
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((__section__(x)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -634,6 +739,17 @@ literal|3
 operator|,
 literal|1
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|&&
+name|__INTEL_COMPILER
+operator|>=
+literal|800
+operator|)
 end_if
 
 begin_define
@@ -713,6 +829,12 @@ literal|2
 operator|,
 literal|7
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_define
@@ -730,9 +852,23 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
 name|__GNUC__
 operator|>=
 literal|2
+operator|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -912,6 +1048,12 @@ literal|2
 operator|,
 literal|7
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_define
@@ -982,6 +1124,17 @@ directive|if
 name|__FreeBSD_cc_version
 operator|>=
 literal|300001
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_define
@@ -1018,11 +1171,25 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__INTEL_COMPILER
+end_ifndef
 
 begin_define
 define|#
@@ -1036,6 +1203,11 @@ parameter_list|)
 define|\
 value|extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)));
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1115,14 +1287,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUC__ */
+comment|/* __GNUC__ || __INTEL_COMPILER */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
+end_if
 
 begin_define
 define|#

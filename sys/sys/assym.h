@@ -18,6 +18,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASSYM_BIAS
+value|0x10000
+end_define
+
+begin_comment
+comment|/* avoid zero-length arrays */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ASSYM_ABS
 parameter_list|(
 name|value
@@ -35,7 +46,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|char name ## sign[(value)< 0 ? 1 : 0];				\ char name ## w0[ASSYM_ABS(value)& 0xFFFFU];			\ char name ## w1[(ASSYM_ABS(value)& 0xFFFF0000UL)>> 16];	\ char name ## w2[(ASSYM_ABS(value)& 0xFFFF00000000ULL)>> 32];	\ char name ## w3[(ASSYM_ABS(value)& 0xFFFF000000000000ULL)>> 48]
+value|char name ## sign[((value)< 0 ? 1 : 0) + ASSYM_BIAS];			      \ char name ## w0[(ASSYM_ABS(value)& 0xFFFFU) + ASSYM_BIAS];		      \ char name ## w1[((ASSYM_ABS(value)& 0xFFFF0000UL)>> 16) + ASSYM_BIAS];      \ char name ## w2[((ASSYM_ABS(value)& 0xFFFF00000000ULL)>> 32) + ASSYM_BIAS]; \ char name ## w3[((ASSYM_ABS(value)& 0xFFFF000000000000ULL)>> 48) + ASSYM_BIAS]
 end_define
 
 begin_endif

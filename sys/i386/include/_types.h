@@ -106,6 +106,11 @@ name|defined
 argument_list|(
 name|__GNUC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_elif
 
 begin_typedef
@@ -498,6 +503,7 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__GNUC__
@@ -515,6 +521,13 @@ operator|||
 name|__GNUC__
 operator|>=
 literal|3
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 operator|)
 end_if
 
@@ -548,14 +561,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* post GCC 2.95 */
+comment|/* ! (__GNUC__ post 2.95 || __INTEL_COMPILER) */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 operator|&&
 operator|!
 name|defined
