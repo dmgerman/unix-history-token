@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.29 1995/03/23 09:00:20 rgrimes Exp $  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.30 1995/04/12 20:48:09 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2905,13 +2905,24 @@ comment|/* 	 * Otherwise, put the results of the operation 	 * into the xfer and
 if|if
 condition|(
 operator|(
+operator|(
 name|mscp
 operator|->
 name|ha_status
-operator|==
+operator|!=
 name|UHA_NO_ERR
 operator|)
 operator|||
+operator|(
+name|mscp
+operator|->
+name|targ_status
+operator|!=
+name|SCSI_OK
+operator|)
+operator|)
+operator|&&
+operator|(
 operator|(
 name|xs
 operator|->
@@ -2919,23 +2930,10 @@ name|flags
 operator|&
 name|SCSI_ERR_OK
 operator|)
+operator|==
+literal|0
+operator|)
 condition|)
-block|{
-comment|/* All went correctly  OR errors expected */
-name|xs
-operator|->
-name|resid
-operator|=
-literal|0
-expr_stmt|;
-name|xs
-operator|->
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
 block|{
 name|s1
 operator|=
@@ -2972,9 +2970,12 @@ name|ha_status
 condition|)
 block|{
 case|case
+name|UHA_SBUS_ABORT_ERR
+case|:
+case|case
 name|UHA_SBUS_TIMEOUT
 case|:
-comment|/* No response */
+comment|/* No sel response */
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -2984,7 +2985,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"timeout reported back\n"
+literal|"abort or timeout; ha_status 0x%x\n"
+operator|,
+name|mscp
+operator|->
+name|ha_status
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3018,9 +3023,35 @@ operator|=
 name|XS_DRIVER_STUFFUP
 expr_stmt|;
 break|break;
-case|case
-name|UHA_BAD_SG_LIST
-case|:
+default|default:
+comment|/* Other scsi protocol messes */
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"uha%d: unexpected ha_status 0x%x (target status 0x%x)\n"
+argument_list|,
+name|unit
+argument_list|,
+name|mscp
+operator|->
+name|ha_status
+argument_list|,
+name|mscp
+operator|->
+name|targ_status
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+comment|/* Target status problem */
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -3030,8 +3061,57 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"bad sg list reported back\n"
+literal|"target err 0x%x\n"
+operator|,
+name|mscp
+operator|->
+name|targ_status
 operator|)
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|mscp
+operator|->
+name|targ_status
+condition|)
+block|{
+case|case
+literal|0x02
+case|:
+operator|*
+name|s2
+operator|=
+operator|*
+name|s1
+expr_stmt|;
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_SENSE
+expr_stmt|;
+break|break;
+case|case
+literal|0x08
+case|:
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_BUSY
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"uha%d: unexpected targ_status 0x%x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|mscp
+operator|->
+name|targ_status
 argument_list|)
 expr_stmt|;
 name|xs
@@ -3041,70 +3121,24 @@ operator|=
 name|XS_DRIVER_STUFFUP
 expr_stmt|;
 break|break;
-default|default:
-comment|/* Other scsi protocol messes */
-name|xs
-operator|->
-name|error
-operator|=
-name|XS_DRIVER_STUFFUP
-expr_stmt|;
-name|SC_DEBUG
-argument_list|(
-name|xs
-operator|->
-name|sc_link
-argument_list|,
-name|SDEV_DB3
-argument_list|,
-operator|(
-literal|"unexpected ha_status: %x\n"
-operator|,
-name|mscp
-operator|->
-name|ha_status
-operator|)
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|mscp
-operator|->
-name|targ_status
-operator|!=
-literal|0
-condition|)
-comment|/*  * I have no information for any possible value of target status field  * other than 0 means no error!! So I guess any error is unexpected in that  * event!!  */
-block|{
-name|SC_DEBUG
-argument_list|(
+comment|/* All went correctly  OR  errors expected */
 name|xs
 operator|->
-name|sc_link
-argument_list|,
-name|SDEV_DB3
-argument_list|,
-operator|(
-literal|"unexpected targ_status: %x\n"
-operator|,
-name|mscp
-operator|->
-name|targ_status
-operator|)
-argument_list|)
+name|resid
+operator|=
+literal|0
 expr_stmt|;
 name|xs
 operator|->
 name|error
 operator|=
-name|XS_DRIVER_STUFFUP
+literal|0
 expr_stmt|;
-block|}
-block|}
 block|}
 name|done
 label|:
