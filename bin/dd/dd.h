@@ -43,7 +43,7 @@ define|#
 directive|define
 name|ISPIPE
 value|0x02
-comment|/* pipe-like (not truncatable) */
+comment|/* pipe-like (see position.c) */
 define|#
 directive|define
 name|ISTAPE
@@ -59,9 +59,15 @@ directive|define
 name|NOREAD
 value|0x10
 comment|/* not readable */
+define|#
+directive|define
+name|ISTRUNC
+value|0x20
+comment|/* valid to ftruncate() */
 name|u_int
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
