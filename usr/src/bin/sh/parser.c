@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	5.9 (Berkeley) %G%"
+literal|"@(#)parser.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1804,6 +1804,22 @@ name|args
 operator|=
 name|ap
 expr_stmt|;
+if|if
+condition|(
+name|lasttoken
+operator|!=
+name|TNL
+operator|&&
+name|lasttoken
+operator|!=
+name|TSEMI
+condition|)
+name|synexpect
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1892,7 +1908,7 @@ name|args
 operator|=
 name|n2
 expr_stmt|;
-block|}
+comment|/* 			 * Newline or semicolon here is optional (but note 			 * that the original Bourne shell only allowed NL). 			 */
 if|if
 condition|(
 name|lasttoken
@@ -1903,12 +1919,10 @@ name|lasttoken
 operator|!=
 name|TSEMI
 condition|)
-name|synexpect
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+name|tokpushback
+operator|++
 expr_stmt|;
+block|}
 name|checkkwd
 operator|=
 literal|2
