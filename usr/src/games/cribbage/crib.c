@@ -1306,11 +1306,6 @@ else|:
 literal|"Discard a card --> "
 operator|)
 expr_stmt|;
-name|msg
-argument_list|(
-name|prompt
-argument_list|)
-expr_stmt|;
 name|cdiscard
 argument_list|(
 name|mycrib
@@ -1357,11 +1352,6 @@ operator|=
 name|crd
 expr_stmt|;
 comment|/* next four lines same as last four except for cdiscard() */
-name|msg
-argument_list|(
-name|prompt
-argument_list|)
-expr_stmt|;
 name|crd
 operator|=
 name|phand
@@ -2314,11 +2304,6 @@ init|;
 condition|;
 control|)
 block|{
-name|msg
-argument_list|(
-literal|"Your play: "
-argument_list|)
-expr_stmt|;
 name|prhand
 argument_list|(
 name|ph

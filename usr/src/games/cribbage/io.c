@@ -803,6 +803,11 @@ init|;
 condition|;
 control|)
 block|{
+name|msg
+argument_list|(
+name|prompt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|incard
@@ -994,11 +999,6 @@ else|else
 name|msg
 argument_list|(
 literal|"Sorry, I missed that"
-argument_list|)
-expr_stmt|;
-name|msg
-argument_list|(
-name|prompt
 argument_list|)
 expr_stmt|;
 block|}
