@@ -1736,6 +1736,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|"where"
+block|,
+name|db_stack_trace_cmd
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"call"
 block|,
 name|db_fncall
