@@ -8958,7 +8958,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 		 * XXXKSE  What about threads that are waiting on mutexes? 		 * Shouldn't they abort too? 		 * No, hopefully mutexes are short lived.. They'll 		 * eventually hit thread_suspend_check(). 		 */
+comment|/* 		 * Mutexes are short lived. Threads waiting on them will 		 * hit thread_suspend_check() soon. 		 */
 block|}
 elseif|else
 if|if
