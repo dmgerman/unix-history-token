@@ -8128,13 +8128,6 @@ name|mbuf
 operator|*
 operator|)
 literal|0
-argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

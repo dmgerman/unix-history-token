@@ -22,13 +22,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPXT_NTIMERS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|SPXT_REXMT
 value|0
 end_define

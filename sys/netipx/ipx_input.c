@@ -1332,10 +1332,7 @@ index|]
 argument_list|,
 name|ipx_abort
 argument_list|,
-operator|(
-name|long
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipx/ipx.h>
 end_include
 
@@ -97,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<netipx/ipx_error.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipx/ipx_ip.h>
 end_include
 
 begin_comment
