@@ -242,6 +242,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<timeconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -1813,6 +1819,9 @@ operator|)
 operator|&
 name|ss
 decl_stmt|;
+name|time_t
+name|t
+decl_stmt|;
 name|int
 name|isaddr
 decl_stmt|;
@@ -2205,14 +2214,21 @@ else|:
 literal|"-"
 argument_list|)
 expr_stmt|;
-name|pr_attime
+name|t
+operator|=
+name|_time_to_time32
 argument_list|(
-operator|&
 name|ep
 operator|->
 name|utmp
 operator|.
 name|ut_time
+argument_list|)
+expr_stmt|;
+name|pr_attime
+argument_list|(
+operator|&
+name|t
 argument_list|,
 operator|&
 name|now
