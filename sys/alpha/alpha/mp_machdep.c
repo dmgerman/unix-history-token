@@ -1075,6 +1075,10 @@ name|mp_ncpus
 operator|=
 literal|1
 expr_stmt|;
+name|mp_maxid
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Make sure we have at least one secondary CPU. */
 name|cpus
 operator|=
@@ -1196,6 +1200,10 @@ condition|)
 block|{
 continue|continue;
 block|}
+name|mp_maxid
+operator|=
+name|i
+expr_stmt|;
 name|cpus
 operator|++
 expr_stmt|;

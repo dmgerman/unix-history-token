@@ -117,6 +117,12 @@ name|all_cpus
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|mp_maxid
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -345,8 +351,53 @@ name|smp_rv_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|mp_probe_status
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Initialize MI SMP variables and call the MD SMP initialization code.  */
+comment|/*  * Initialize MI SMP variables.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|mp_probe
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
+block|{
+name|mp_probe_status
+operator|=
+name|cpu_mp_probe
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|cpu_mp_probe
+argument_list|,
+name|SI_SUB_TUNABLES
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|mp_probe
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Call the MD SMP initialization code.  */
 end_comment
 
 begin_function
@@ -362,8 +413,7 @@ block|{
 comment|/* Probe for MP hardware. */
 if|if
 condition|(
-name|cpu_mp_probe
-argument_list|()
+name|mp_probe_status
 operator|==
 literal|0
 condition|)

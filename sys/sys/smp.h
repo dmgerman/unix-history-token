@@ -104,6 +104,13 @@ name|stopped_cpus
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mp_maxid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Macro allowing us to determine whether a CPU is absent at any given  * time, thus permitting us to configure sparse maps of cpuid-dependent  * (per-CPU) structures.  */
 end_comment

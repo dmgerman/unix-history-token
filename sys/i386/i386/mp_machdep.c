@@ -3317,6 +3317,10 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* includes BSP */
+name|mp_maxid
+operator|=
+literal|1
+expr_stmt|;
 name|mp_nbusses
 operator|=
 name|default_data
@@ -3443,9 +3447,14 @@ name|cpu_flags
 operator|&
 name|PROCENTRY_FLAG_EN
 condition|)
+block|{
 operator|++
 name|mp_naps
 expr_stmt|;
+name|mp_maxid
+operator|++
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|1
