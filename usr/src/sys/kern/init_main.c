@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1065,6 +1065,9 @@ name|swdevt
 modifier|*
 name|swp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a swapon() 	 * system is issued, usually when the system goes multi-user. 	 */
 name|nswdev
 operator|=
@@ -1166,11 +1169,30 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
 name|swfree
 argument_list|(
 literal|0
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"swfree errno %d\n"
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
+comment|/* XXX */
+name|panic
+argument_list|(
+literal|"swapinit swfree 0"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Now set up swap buffer headers. 	 */
 name|bswlist
 operator|.

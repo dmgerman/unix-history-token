@@ -3744,6 +3744,9 @@ name|so
 operator|->
 name|so_rcv
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|*
 name|mtod
 argument_list|(
