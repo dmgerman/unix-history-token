@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2722,6 +2722,16 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
+break|break;
+case|case
+name|DIOCWLABEL
+case|:
+case|case
+name|DIOCSDINFO
+case|:
+case|case
+name|DIOCWDINFO
+case|:
 break|break;
 default|default:
 name|error
