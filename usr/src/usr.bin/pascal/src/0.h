@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.6 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.7 %G%"; */
 end_comment
 
 begin_define
@@ -1890,6 +1890,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|long
+name|tmpalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|nl
 modifier|*
@@ -1941,6 +1948,21 @@ begin_function_decl
 name|char
 modifier|*
 name|savestr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|parnam
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|fcompat
 parameter_list|()
 function_decl|;
 end_function_decl
