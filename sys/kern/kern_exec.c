@@ -1144,12 +1144,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ERESTART
@@ -2887,6 +2881,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|exit1
 argument_list|(
 name|td
