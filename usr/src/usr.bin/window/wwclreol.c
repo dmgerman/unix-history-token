@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreol.c	3.10 83/12/02"
+literal|"@(#)wwclreol.c	3.11 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,11 +196,6 @@ decl_stmt|,
 modifier|*
 name|win
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|touched
-decl_stmt|;
 name|i
 operator|=
 name|col
@@ -218,13 +213,9 @@ index|]
 expr_stmt|;
 name|s
 operator|=
-operator|&
 name|wwns
 index|[
 name|row
-index|]
-index|[
-name|i
 index|]
 expr_stmt|;
 name|win
@@ -232,14 +223,6 @@ operator|=
 name|w
 operator|->
 name|ww_win
-index|[
-name|row
-index|]
-expr_stmt|;
-name|touched
-operator|=
-operator|&
-name|wwtouched
 index|[
 name|row
 index|]
@@ -279,8 +262,10 @@ block|{
 if|if
 condition|(
 name|s
-operator|++
-operator|->
+index|[
+name|i
+index|]
+operator|.
 name|c_w
 operator|==
 literal|' '
@@ -288,16 +273,8 @@ condition|)
 name|nblank
 operator|++
 expr_stmt|;
-continue|continue;
 block|}
-name|ncleared
-operator|++
-expr_stmt|;
-operator|*
-name|touched
-operator|=
-literal|1
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|win
@@ -311,18 +288,38 @@ block|{
 name|nblank
 operator|++
 expr_stmt|;
+if|if
+condition|(
 name|s
+index|[
+name|i
+index|]
+operator|.
+name|c_w
+operator|!=
+literal|' '
+condition|)
+block|{
+name|ncleared
 operator|++
-operator|->
+expr_stmt|;
+name|s
+index|[
+name|i
+index|]
+operator|.
 name|c_w
 operator|=
 literal|' '
 expr_stmt|;
 block|}
+block|}
 else|else
 name|s
-operator|++
-operator|->
+index|[
+name|i
+index|]
+operator|.
 name|c_w
 operator|=
 literal|' '
@@ -335,6 +332,19 @@ operator|<<
 name|WWC_MSHIFT
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ncleared
+operator|>
+literal|0
+condition|)
+name|wwtouched
+index|[
+name|row
+index|]
+operator||=
+name|WWU_TOUCHED
+expr_stmt|;
 block|}
 comment|/* 	 * Can/Should we use clear eol? 	 */
 if|if
@@ -355,16 +365,8 @@ operator|-
 name|col
 operator|-
 name|nblank
-operator|&&
-name|nblank
-operator|>
-operator|(
-name|wwncol
-operator|-
-name|col
-operator|)
-operator|/
-literal|2
+operator|+
+literal|4
 condition|)
 block|{
 specifier|register

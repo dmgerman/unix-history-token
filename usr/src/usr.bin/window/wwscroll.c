@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwscroll.c	3.10 83/09/15"
+literal|"@(#)wwscroll.c	3.11 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,8 +841,8 @@ operator|++
 expr_stmt|;
 operator|*
 name|p
-operator|=
-literal|1
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 else|else
@@ -877,8 +877,10 @@ control|)
 operator|*
 name|p
 operator|++
-operator|=
-literal|1
+operator||=
+name|WWU_MAJOR
+operator||
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 name|wwredrawwin1
@@ -1026,8 +1028,10 @@ name|q
 expr_stmt|;
 operator|*
 name|q
-operator|=
-literal|1
+operator||=
+name|WWU_MAJOR
+operator||
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 else|else
@@ -1062,8 +1066,8 @@ control|)
 operator|*
 name|p
 operator|++
-operator|=
-literal|1
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 name|wwredrawwin1

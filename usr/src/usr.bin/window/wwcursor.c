@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwcursor.c	3.4 83/11/23"
+literal|"@(#)wwcursor.c	3.5 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,8 +258,8 @@ name|ww_cur
 operator|.
 name|r
 index|]
-operator|=
-literal|1
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 block|}

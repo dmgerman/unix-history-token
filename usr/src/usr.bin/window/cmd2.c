@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.13 83/11/02"
+literal|"@(#)cmd2.c	3.14 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -856,7 +856,7 @@ name|w
 operator|=
 name|openiwin
 argument_list|(
-literal|4
+literal|6
 argument_list|,
 literal|"IO Statics"
 argument_list|)
@@ -882,7 +882,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\tnupdate\tntouchd\tnmiss\n"
+literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -892,7 +892,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n"
+literal|"%d\t%d\t%d\t%d\t%d\t%d\n"
 argument_list|,
 name|nread
 argument_list|,
@@ -905,12 +905,36 @@ argument_list|,
 name|wwnwrite
 argument_list|,
 name|wwnwritec
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"nupdate\tnupdlin\tnupdmis\tnmajlin\tnmajmis\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"%d\t%d\t%d\t%d\t%d\n"
 argument_list|,
 name|wwnupdate
 argument_list|,
-name|wwntouched
+name|wwnupdline
 argument_list|,
-name|wwnmiss
+name|wwnupdmiss
+argument_list|,
+name|wwnmajline
+argument_list|,
+name|wwnmajmiss
 argument_list|)
 expr_stmt|;
 name|waitnl

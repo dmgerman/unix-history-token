@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwframe.c	3.11 83/11/23"
+literal|"@(#)wwframe.c	3.12 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1319,8 +1319,8 @@ name|wwtouched
 index|[
 name|r
 index|]
-operator|=
-literal|1
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 name|wwns
 index|[

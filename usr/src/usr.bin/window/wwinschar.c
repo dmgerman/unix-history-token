@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinschar.c	3.11 83/12/02"
+literal|"@(#)wwinschar.c	3.12 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -339,8 +339,8 @@ name|ww_index
 condition|)
 continue|continue;
 name|touched
-operator|=
-literal|1
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 if|if
 condition|(

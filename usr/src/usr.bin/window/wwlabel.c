@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	3.9 83/12/02"
+literal|"@(#)wwlabel.c	3.10 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,8 +329,8 @@ operator|<<
 name|WWC_MSHIFT
 expr_stmt|;
 name|touched
-operator|=
-literal|1
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 name|fmap

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwunframe.c	3.11 83/11/28"
+literal|"@(#)wwunframe.c	3.12 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,13 +120,10 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|char
-name|touched
+name|int
+name|nchanged
 init|=
-name|wwtouched
-index|[
-name|i
-index|]
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -208,18 +205,39 @@ name|c_w
 operator|=
 literal|' '
 expr_stmt|;
-name|touched
-operator|=
-literal|1
+name|nchanged
+operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|nchanged
+operator|>
+literal|4
+condition|)
 name|wwtouched
 index|[
 name|i
 index|]
-operator|=
-name|touched
+operator||=
+name|WWU_MAJOR
+operator||
+name|WWU_TOUCHED
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nchanged
+operator|>
+literal|0
+condition|)
+name|wwtouched
+index|[
+name|i
+index|]
+operator||=
+name|WWU_TOUCHED
 expr_stmt|;
 name|w
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.20 83/12/01	  */
+comment|/*  *	@(#)ww.h	3.21 83/12/02	  */
 end_comment
 
 begin_include
@@ -528,6 +528,10 @@ name|WWX_NOBODY
 value|NWW
 end_define
 
+begin_comment
+comment|/* error codes */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -610,6 +614,32 @@ end_define
 
 begin_comment
 comment|/* dumb terminal */
+end_comment
+
+begin_comment
+comment|/* wwtouched[] bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWU_TOUCHED
+value|0x01
+end_define
+
+begin_comment
+comment|/* touched */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWU_MAJOR
+value|0x02
+end_define
+
+begin_comment
+comment|/* major change */
 end_comment
 
 begin_decl_stmt
@@ -873,9 +903,13 @@ begin_decl_stmt
 name|int
 name|wwnupdate
 decl_stmt|,
-name|wwntouched
+name|wwnupdline
 decl_stmt|,
-name|wwnmiss
+name|wwnupdmiss
+decl_stmt|,
+name|wwnmajline
+decl_stmt|,
+name|wwnmajmiss
 decl_stmt|;
 end_decl_stmt
 
