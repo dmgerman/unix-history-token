@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_eb164.c,v 1.3 1998/07/22 08:18:34 dfr Exp $ */
+comment|/* $Id: dec_eb164.c,v 1.4 1998/08/10 07:53:58 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -340,6 +340,10 @@ case|:
 comment|/* serial console ... */
 comment|/* XXX */
 block|{
+specifier|extern
+name|int
+name|comconsole
+decl_stmt|;
 comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
 name|DELAY
 argument_list|(
@@ -347,6 +351,11 @@ literal|160000000
 operator|/
 name|comcnrate
 argument_list|)
+expr_stmt|;
+comment|/*                           * force a comconsole on com1 if the SRM has a serial 			 * console                          */
+name|comconsole
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
