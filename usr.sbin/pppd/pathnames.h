@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_CONNERRS
-value|"/etc/ppp/connect-errors"
+value|"/var/log/connect-errors"
 end_define
 
 begin_define
