@@ -3783,7 +3783,7 @@ argument_list|)
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" wIndex=%04x type=%d name='%s' unit='%s' "
+literal|" wIndex=%04x type=%d ctl='%d' "
 literal|"min=%d max=%d\n"
 operator|,
 name|mc
@@ -3813,7 +3813,7 @@ directive|else
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" wIndex=%04x type=%d ctl='%d' "
+literal|" wIndex=%04x type=%d name='%s' unit='%s' "
 literal|"min=%d max=%d\n"
 operator|,
 name|mc
