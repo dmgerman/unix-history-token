@@ -2515,14 +2515,6 @@ name|scu
 operator|->
 name|sbuf
 operator|.
-name|base
-operator|=
-name|NULL
-expr_stmt|;
-name|scu
-operator|->
-name|sbuf
-operator|.
 name|size
 operator|=
 name|INVALID
