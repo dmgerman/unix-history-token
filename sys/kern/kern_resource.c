@@ -3460,7 +3460,7 @@ operator|!=
 literal|0
 condition|)
 comment|/* XXX no %qd in kernel.  Truncate. */
-name|panic
+name|printf
 argument_list|(
 literal|"freeing uidinfo: uid = %d, sbsize = %ld"
 argument_list|,
@@ -3484,7 +3484,7 @@ name|ui_proccnt
 operator|!=
 literal|0
 condition|)
-name|panic
+name|printf
 argument_list|(
 literal|"freeing uidinfo: uid = %d, proccnt = %ld"
 argument_list|,
@@ -3589,7 +3589,7 @@ name|ui_proccnt
 operator|<
 literal|0
 condition|)
-name|panic
+name|printf
 argument_list|(
 literal|"negative proccnt for uid = %d"
 argument_list|,
@@ -3703,7 +3703,7 @@ name|ui_sbsize
 operator|<
 literal|0
 condition|)
-name|panic
+name|printf
 argument_list|(
 literal|"negative sbsize for uid = %d"
 argument_list|,
