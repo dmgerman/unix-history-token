@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for Alpha FreeBSD systems.    Copyright (C) 1998-9 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for Alpha FreeBSD systems.    Copyright (C) 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -99,7 +99,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-D__alpha__ -D__ELF__ -Acpu(alpha) -Amachine(alpha)"  \   CPP_FBSD_PREDEFINES
+value|"-D__alpha__ -D__alpha -D__ELF__ -Acpu(alpha) -Amachine(alpha)"  	\   CPP_FBSD_PREDEFINES
 end_define
 
 begin_undef
@@ -232,7 +232,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   alpha_write_verstamp (FILE);					\   output_file_directive (FILE, main_input_filename);		\   fprintf (FILE, "\t.version\t\"01.01\"\n");			\   fprintf (FILE, "\t.set noat\n");				\ }
+value|{									\   alpha_write_verstamp (FILE);						\   output_file_directive ((FILE), main_input_filename);			\   fprintf ((FILE), "\t.version\t\"01.01\"\n");				\   fprintf ((FILE), "\t.set noat\n");					\ }
 end_define
 
 begin_undef
@@ -251,7 +251,7 @@ parameter_list|,
 name|LINE
 parameter_list|)
 define|\
-value|alpha_output_lineno (STREAM, LINE)
+value|alpha_output_lineno ((STREAM), (LINE))
 end_define
 
 begin_function_decl
@@ -326,7 +326,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|fprintf(FILE, "\t%s \"GCC (%s) %s\"\n", IDENT_ASM_OP,	\ 	 lang_identify(), version_string)
+value|fprintf((FILE), "\t%s \"GCC (%s) %s\"\n", IDENT_ASM_OP,		\ 	 lang_identify(), version_string)
 end_define
 
 begin_else
@@ -348,7 +348,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {				 				\      fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",		\ 	      IDENT_ASM_OP, version_string);			\    } while (0)
+value|do {				 					\      fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",			\ 	      IDENT_ASM_OP, version_string);				\    } while (0)
 end_define
 
 begin_endif
@@ -386,7 +386,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|fprintf (FILE, "\t%s\t\"%s\"\n", IDENT_ASM_OP, NAME);
+value|fprintf ((FILE), "\t%s\t\"%s\"\n", IDENT_ASM_OP, (NAME));
 end_define
 
 begin_comment
@@ -422,7 +422,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf (FILE, "\t%s\t%u\n", SKIP_ASM_OP, (SIZE))
+value|fprintf ((FILE), "\t%s\t%u\n", SKIP_ASM_OP, (SIZE))
 end_define
 
 begin_comment
@@ -490,7 +490,7 @@ parameter_list|,
 name|JUMPTABLE
 parameter_list|)
 define|\
-value|do {									\     ASM_OUTPUT_BEFORE_CASE_LABEL (FILE, PREFIX, NUM, JUMPTABLE)		\     ASM_OUTPUT_INTERNAL_LABEL (FILE, PREFIX, NUM);			\   } while (0)
+value|do {									\     ASM_OUTPUT_BEFORE_CASE_LABEL ((FILE), (PREFIX), (NUM), (JUMPTABLE))	\     ASM_OUTPUT_INTERNAL_LABEL ((FILE), (PREFIX), (NUM));		\   } while (0)
 end_define
 
 begin_comment
@@ -513,7 +513,7 @@ parameter_list|,
 name|FUN
 parameter_list|)
 define|\
-value|ASM_GLOBALIZE_LABEL (FILE, XSTR (FUN, 0))
+value|ASM_GLOBALIZE_LABEL ((FILE), XSTR ((FUN), 0))
 end_define
 
 begin_comment
@@ -593,7 +593,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "\t%s\t", LOCAL_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), "\n");						\   ASM_OUTPUT_ALIGNED_COMMON (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+value|do {									\   fprintf ((FILE), "\t%s\t", LOCAL_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), "\n");						\   ASM_OUTPUT_ALIGNED_COMMON ((FILE), (NAME), (SIZE), (ALIGN));		\ } while (0)
 end_define
 
 begin_comment
@@ -843,7 +843,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|fprintf (FILE, ".section\t%s,\"%s\",@progbits\n", NAME, \ 	   (DECL)&& TREE_CODE (DECL) == FUNCTION_DECL ? "ax" : \ 	   (DECL)&& DECL_READONLY_SECTION (DECL, RELOC) ? "a" : "aw")
+value|fprintf ((FILE), ".section\t%s,\"%s\",@progbits\n", (NAME),		\ 	   (DECL)&& TREE_CODE (DECL) == FUNCTION_DECL ? "ax" :		\ 	   (DECL)&& DECL_READONLY_SECTION ((DECL), (RELOC)) ? "a" : "aw")
 end_define
 
 begin_comment
@@ -866,7 +866,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     ctors_section ();							\     fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);						\     fprintf (FILE, "\n");						\   } while (0)
+value|do {									\     ctors_section ();							\     fprintf ((FILE), "\t%s\t ", INT_ASM_OP);				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), "\n");						\   } while (0)
 end_define
 
 begin_comment
@@ -889,7 +889,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     dtors_section ();                   				\     fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n");						\   } while (0)
+value|do {									\     dtors_section ();                   				\     fprintf ((FILE), "\t%s\t ", INT_ASM_OP);				\     assemble_name ((FILE), (NAME));            				\     fprintf ((FILE), "\n");						\   } while (0)
 end_define
 
 begin_comment
@@ -912,7 +912,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((flag_pic&& RELOC)						\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
+value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((flag_pic&& (RELOC))						\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	data_section ();						\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
 end_define
 
 begin_comment
@@ -989,7 +989,7 @@ parameter_list|,
 name|NAME2
 parameter_list|)
 define|\
-value|do { assemble_name(FILE, NAME1); 	 \        fputs(" = ", FILE);		 \        assemble_name(FILE, NAME2);	 \        fputc('\n', FILE); } while (0)
+value|do { assemble_name((FILE), (NAME1));					\        fputs(" = ", (FILE));						\        assemble_name((FILE), (NAME2));					\        fputc('\n', (FILE)); } while (0)
 end_define
 
 begin_comment
@@ -1060,6 +1060,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|DBX_DEBUG
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|LINK_SPEC
 end_undef
 
@@ -1067,7 +1080,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64alpha 				\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}		\   %{Wl,*:%*}							\   %{assert*} %{R*} %{rpath*} %{defsym*}				\   %{shared:-Bshareable %{h*} %{soname*}}			\   %{symbolic:-Bsymbolic}					\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}}"
+value|"-m elf64alpha 					\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}			\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}}	\     %{static:-Bstatic}}"
 end_define
 
 begin_undef
@@ -1081,7 +1094,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \      %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}	\      %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
 begin_comment
@@ -1146,7 +1159,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do { fputs ("\t.globl\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); \        fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
+value|do { fputs ("\t.globl\t", (FILE)); assemble_name ((FILE), (NAME));	\        fputc ('\n', (FILE));						\        fputs ("\t.weak\t", (FILE)); assemble_name ((FILE), (NAME));	\        fputc ('\n', (FILE)); } while (0)
 end_define
 
 begin_comment
