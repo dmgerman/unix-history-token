@@ -484,6 +484,9 @@ name|struct
 name|vcomm
 name|mi_vcomm
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
