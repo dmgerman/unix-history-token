@@ -208,6 +208,17 @@ end_comment
 begin_typedef
 typedef|typedef
 name|__uint32_t
+name|__udev_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* device number */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
 name|__uid_t
 typedef|;
 end_typedef
@@ -259,6 +270,52 @@ name|__ct_rune_t
 name|__wint_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * dev_t has differing meanings in userland and the kernel.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|cdev
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cdev
+modifier|*
+name|__dev_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|__udev_t
+name|__dev_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* device number */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * mbstate_t is an opaque object to keep conversion state during multibyte  * stream conversions.  */

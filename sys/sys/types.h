@@ -500,6 +500,34 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_DEV_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__dev_t
+name|dev_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* device number or struct cdev */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_DEV_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_FFLAGS_T_DECLARED
 end_ifndef
 
@@ -1024,6 +1052,17 @@ name|u_register_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__udev_t
+name|udev_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* device number */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1173,32 +1212,6 @@ name|vm_page_t
 typedef|;
 end_typedef
 
-begin_struct_decl
-struct_decl|struct
-name|cdev
-struct_decl|;
-end_struct_decl
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|udev_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* device number */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|cdev
-modifier|*
-name|dev_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -1209,33 +1222,6 @@ parameter_list|,
 name|field
 parameter_list|)
 value|__offsetof(type, field)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|dev_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* device number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|udev_t
-value|dev_t
 end_define
 
 begin_endif

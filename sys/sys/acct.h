@@ -26,36 +26,6 @@ name|comp_t
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__dev_t
-value|udev_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__dev_t
-value|dev_t
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -106,7 +76,7 @@ name|comp_t
 name|ac_io
 decl_stmt|;
 comment|/* count of IO blocks */
-name|__dev_t
+name|__udev_t
 name|ac_tty
 decl_stmt|;
 comment|/* controlling tty */
@@ -143,12 +113,6 @@ comment|/* accounting flags */
 block|}
 struct|;
 end_struct
-
-begin_undef
-undef|#
-directive|undef
-name|__dev_t
-end_undef
 
 begin_comment
 comment|/*  * 1/AHZ is the granularity of the data encoded in the comp_t fields.  * This is not necessarily equal to hz.  */

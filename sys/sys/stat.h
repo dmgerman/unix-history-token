@@ -28,8 +28,32 @@ file|<sys/_types.h>
 end_include
 
 begin_comment
-comment|/* XXX missing blkcnt_t, blksize_t, dev_t. */
+comment|/* XXX missing blkcnt_t, blksize_t. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DEV_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__dev_t
+name|dev_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_DEV_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -267,40 +291,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* XXX __dev_t should be in<sys/_types.h>. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__dev_t
-value|udev_t
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__dev_t
-value|dev_t
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -391,7 +381,7 @@ begin_struct
 struct|struct
 name|stat
 block|{
-name|__dev_t
+name|__udev_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
@@ -415,7 +405,7 @@ name|gid_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|__dev_t
+name|__udev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
@@ -611,7 +601,7 @@ begin_struct
 struct|struct
 name|nstat
 block|{
-name|__dev_t
+name|__udev_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
@@ -635,7 +625,7 @@ name|gid_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|__dev_t
+name|__udev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
@@ -732,12 +722,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|__dev_t
-end_undef
 
 begin_if
 if|#
