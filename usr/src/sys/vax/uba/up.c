@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.28	81/03/03	*/
+comment|/*	up.c	4.29	81/03/06	*/
 end_comment
 
 begin_include
@@ -1907,7 +1907,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"up%d not ready"
+literal|"up%d: not ready"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2331,24 +2331,6 @@ goto|goto
 name|doattn
 goto|;
 block|}
-if|if
-condition|(
-operator|(
-name|upaddr
-operator|->
-name|upcs1
-operator|&
-name|UP_RDY
-operator|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"upintr !RDY\n"
-argument_list|)
-expr_stmt|;
-comment|/* shouldn't happen */
 comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_dinfo for the drive.  Select the drive. 	 */
 name|dp
 operator|=
@@ -2458,37 +2440,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|upaddr
-operator|->
-name|upds
-operator|&
-name|UP_DREADY
-operator|)
-operator|!=
-name|UP_DREADY
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"up%d not ready"
-argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|upaddr
 operator|->
 name|uper1
@@ -2499,7 +2450,7 @@ block|{
 comment|/* 			 * Give up on write locked devices 			 * immediately. 			 */
 name|printf
 argument_list|(
-literal|"up%d is write locked\n"
+literal|"up%d: write locked\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2528,46 +2479,16 @@ literal|27
 condition|)
 block|{
 comment|/* 			 * After 28 retries (16 without offset, and 			 * 12 with offset positioning) give up. 			 */
-if|if
-condition|(
-name|upaddr
-operator|->
-name|upcs2
-operator|&
-operator|(
-name|UP_NEM
-operator||
-name|UP_MXF
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"FLAKEY UP "
-argument_list|)
-expr_stmt|;
-name|ubareset
-argument_list|(
-name|um
-operator|->
-name|um_ubanum
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|harderr
 argument_list|(
 name|bp
+argument_list|,
+literal|"up"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"up%d cs2=%b er1=%b er2=%b\n"
-argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
+literal|"cs2=%b er1=%b er2=%b\n"
 argument_list|,
 name|upaddr
 operator|->
@@ -3243,7 +3164,7 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SOFT ECC up%d%c bn%d\n"
+literal|"up%d%c: soft ecc bn%d\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -3590,6 +3511,12 @@ argument|uban
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|uban
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -3609,11 +3536,6 @@ name|sc21
 operator|,
 name|unit
 expr_stmt|;
-name|int
-name|any
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|sc21
@@ -3654,28 +3576,13 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|any
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|" up"
+literal|" sc%d"
+argument_list|,
+name|sc21
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10000000
-argument_list|)
-expr_stmt|;
-comment|/* give it time to self-test */
-name|any
-operator|++
-expr_stmt|;
-block|}
 name|um
 operator|->
 name|um_tab
@@ -3695,6 +3602,15 @@ operator|->
 name|um_tab
 operator|.
 name|b_actl
+operator|=
+literal|0
+expr_stmt|;
+name|up_softc
+index|[
+name|sc21
+index|]
+operator|.
+name|sc_recal
 operator|=
 literal|0
 expr_stmt|;
@@ -3778,6 +3694,12 @@ operator|->
 name|ui_alive
 operator|==
 literal|0
+operator|||
+name|ui
+operator|->
+name|ui_mi
+operator|!=
+name|um
 condition|)
 continue|continue;
 name|uputab
@@ -3811,7 +3733,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Wake up every second and if an interrupt is pending  * but nothing has happened increment a counter.  * If nothing happens for 20 seconds, reset the controller  * and begin anew.  */
+comment|/*  * Wake up every second and if an interrupt is pending  * but nothing has happened increment a counter.  * If nothing happens for 20 seconds, reset the UNIBUS  * and begin anew.  */
 end_comment
 
 begin_macro
@@ -3969,7 +3891,9 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LOST upintr "
+literal|"sc%d: lost interrupt\n"
+argument_list|,
+name|sc21
 argument_list|)
 expr_stmt|;
 name|ubareset
@@ -4138,11 +4062,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|DELAY
-argument_list|(
-literal|2000000
-argument_list|)
-expr_stmt|;
 name|upaddr
 operator|=
 operator|(
