@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.71	83/02/21	*/
+comment|/*	up.c	4.72	83/03/23	*/
 end_comment
 
 begin_include
@@ -1015,12 +1015,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|updevice
-modifier|*
-name|upaddr
-decl_stmt|;
 if|if
 condition|(
 name|upwstart
@@ -1084,17 +1078,6 @@ index|]
 operator|.
 name|sc_ndrive
 operator|++
-expr_stmt|;
-name|upaddr
-operator|=
-operator|(
-expr|struct
-name|updevice
-operator|*
-operator|)
-name|ui
-operator|->
-name|ui_addr
 expr_stmt|;
 name|ui
 operator|->
