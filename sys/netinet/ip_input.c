@@ -2571,6 +2571,14 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+operator|!=
+name|NULL
+operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 operator|->
 name|if_flags
 operator|&
