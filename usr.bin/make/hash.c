@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*	$NetBSD: hash.c,v 1.5 1995/06/14 15:19:15 christos Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)hash.c	8.1 (Berkeley) 6/6/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.2 (Berkeley) 4/28/95"
+literal|"$NetBSD: hash.c,v 1.5 1995/06/14 15:19:15 christos Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -69,7 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * The following defines the ratio of # entries to # buckets  * at which we rebuild the table to make it larger.  */
+comment|/*  * The following defines the ratio of # entries to # buckets  * at which we rebuild the table to make it larger.  */
 end_comment
 
 begin_define
@@ -80,7 +101,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  *---------------------------------------------------------  *   * Hash_InitTable --  *  *	This routine just sets up the hash table.  *  * Results:	  *	None.  *  * Side Effects:  *	Memory is allocated for the initial bucket area.  *  *---------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------  *  * Hash_InitTable --  *  *	This routine just sets up the hash table.  *  * Results:  *	None.  *  * Side Effects:  *	Memory is allocated for the initial bucket area.  *  *---------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -113,7 +134,7 @@ modifier|*
 modifier|*
 name|hp
 decl_stmt|;
-comment|/* 	 * Round up the size to a power of two.  	 */
+comment|/* 	 * Round up the size to a power of two. 	 */
 if|if
 condition|(
 name|numBuckets
@@ -202,7 +223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *---------------------------------------------------------  *  * Hash_DeleteTable --  *  *	This routine removes everything from a hash table  *	and frees up the memory space it occupied (except for  *	the space in the Hash_Table structure).  *  * Results:	  *	None.  *  * Side Effects:  *	Lots of memory is freed up.  *  *---------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------  *  * Hash_DeleteTable --  *  *	This routine removes everything from a hash table  *	and frees up the memory space it occupied (except for  *	the space in the Hash_Table structure).  *  * Results:  *	None.  *  * Side Effects:  *	Lots of memory is freed up.  *  *---------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -301,7 +322,7 @@ operator|->
 name|bucketPtr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up the hash table to cause memory faults on any future access 	 * attempts until re-initialization.  	 */
+comment|/* 	 * Set up the hash table to cause memory faults on any future access 	 * attempts until re-initialization. 	 */
 name|t
 operator|->
 name|bucketPtr
@@ -596,7 +617,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * The desired entry isn't there.  Before allocating a new entry, 	 * expand the table if necessary (and this changes the resulting 	 * bucket chain).  	 */
+comment|/* 	 * The desired entry isn't there.  Before allocating a new entry, 	 * expand the table if necessary (and this changes the resulting 	 * bucket chain). 	 */
 if|if
 condition|(
 name|t
@@ -827,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *---------------------------------------------------------  *  * Hash_EnumFirst --  *	This procedure sets things up for a complete search  *	of all entries recorded in the hash table.  *  * Results:	  *	The return value is the address of the first entry in  *	the hash table, or NULL if the table is empty.  *  * Side Effects:  *	The information in searchPtr is initialized so that successive  *	calls to Hash_Next will return successive HashEntry's  *	from the table.  *  *---------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------  *  * Hash_EnumFirst --  *	This procedure sets things up for a complete search  *	of all entries recorded in the hash table.  *  * Results:  *	The return value is the address of the first entry in  *	the hash table, or NULL if the table is empty.  *  * Side Effects:  *	The information in searchPtr is initialized so that successive  *	calls to Hash_Next will return successive HashEntry's  *	from the table.  *  *---------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -849,7 +870,7 @@ name|Hash_Search
 modifier|*
 name|searchPtr
 decl_stmt|;
-comment|/* Area in which to keep state  					 * about search.*/
+comment|/* Area in which to keep state 					 * about search.*/
 block|{
 name|searchPtr
 operator|->
@@ -894,7 +915,7 @@ name|Hash_Search
 modifier|*
 name|searchPtr
 decl_stmt|;
-comment|/* Area used to keep state about  					    search. */
+comment|/* Area used to keep state about 					    search. */
 block|{
 specifier|register
 name|Hash_Entry
@@ -979,7 +1000,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *---------------------------------------------------------  *  * RebuildTable --  *	This local routine makes a new hash table that  *	is larger than the old one.  *  * Results:	  * 	None.  *  * Side Effects:  *	The entire hash table is moved, so any bucket numbers  *	from the old table are invalid.  *  *---------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------  *  * RebuildTable --  *	This local routine makes a new hash table that  *	is larger than the old one.  *  * Results:  * 	None.  *  * Side Effects:  *	The entire hash table is moved, so any bucket numbers  *	from the old table are invalid.  *  *---------------------------------------------------------  */
 end_comment
 
 begin_function

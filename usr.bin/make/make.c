@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: make.c,v 1.9 1996/08/30 23:21:10 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)make.c	8.1 (Berkeley) 6/6/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)make.c	8.3 (Berkeley) 6/13/95"
+literal|"$NetBSD: make.c,v 1.9 1996/08/30 23:21:10 christos Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -167,7 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_TimeStamp --  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via Lst_ForEach.   *  * Results:  *	Always returns 0.   *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Make_TimeStamp --  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via Lst_ForEach.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -258,7 +279,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_OODate --  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.   *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Make_OODate --  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.  *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -291,8 +312,6 @@ operator||
 name|OP_USE
 operator||
 name|OP_EXEC
-operator||
-name|OP_PHONY
 operator|)
 operator|)
 operator|==
@@ -348,33 +367,6 @@ block|}
 block|}
 block|}
 comment|/*      * A target is remade in one of the following circumstances:      *	its modification time is smaller than that of its youngest child      *	    and it would actually be run (has commands or type OP_NOP)      *	it's the object of a force operator      *	it has no children, was on the lhs of an operator and doesn't exist      *	    already.      *      * Libraries are only considered out-of-date if the archive module says      * they are.      *      * These weird rules are brought to you by Backward-Compatability and      * the strange people who wrote 'Make'.      */
-if|if
-condition|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_PHONY
-condition|)
-block|{
-comment|/* 	 * A PHONY node is always out of date 	 */
-if|if
-condition|(
-name|DEBUG
-argument_list|(
-name|MAKE
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"phony..."
-argument_list|)
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-block|}
-elseif|else
 if|if
 condition|(
 name|gn
@@ -498,6 +490,8 @@ operator|(
 name|OP_FORCE
 operator||
 name|OP_EXEC
+operator||
+name|OP_PHONY
 operator|)
 condition|)
 block|{
@@ -522,6 +516,22 @@ block|{
 name|printf
 argument_list|(
 literal|"! operator..."
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|gn
+operator|->
+name|type
+operator|&
+name|OP_PHONY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|".PHONY node..."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1028,7 +1038,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_Update  --  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.   *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Make_Update  --  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1612,7 +1622,36 @@ decl_stmt|;
 name|char
 modifier|*
 name|p1
+init|=
+name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|OP_NOP
+argument_list|(
+name|cgn
+operator|->
+name|type
+argument_list|)
+condition|)
+block|{
+comment|/* 	     * this node is only source; use the specific pathname for it 	     */
+name|child
+operator|=
+name|cgn
+operator|->
+name|path
+condition|?
+name|cgn
+operator|->
+name|path
+else|:
+name|cgn
+operator|->
+name|name
+expr_stmt|;
+block|}
+else|else
 name|child
 operator|=
 name|Var_Value
@@ -2331,7 +2370,7 @@ name|numNodes
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Make an initial downward pass over the graph, marking nodes to be made      * as we go down. We call Suff_FindDeps to find where a node is and      * to get some children for it if it has none and also has no commands.      * If the node is a leaf, we stick it on the toBeMade queue to      * be looked at in a minute, otherwise we add its children to our queue      * and go on about our business.       */
+comment|/*      * Make an initial downward pass over the graph, marking nodes to be made      * as we go down. We call Suff_FindDeps to find where a node is and      * to get some children for it if it has none and also has no commands.      * If the node is a leaf, we stick it on the toBeMade queue to      * be looked at in a minute, otherwise we add its children to our queue      * and go on about our business.      */
 while|while
 condition|(
 operator|!
@@ -2453,7 +2492,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 	 * Initialization. At the moment, no jobs are running and until some 	 * get started, nothing will happen since the remaining upward 	 * traversal of the graph is performed by the routines in job.c upon 	 * the finishing of a job. So we fill the Job table as much as we can 	 * before going into our loop.  	 */
+comment|/* 	 * Initialization. At the moment, no jobs are running and until some 	 * get started, nothing will happen since the remaining upward 	 * traversal of the graph is performed by the routines in job.c upon 	 * the finishing of a job. So we fill the Job table as much as we can 	 * before going into our loop. 	 */
 operator|(
 name|void
 operator|)

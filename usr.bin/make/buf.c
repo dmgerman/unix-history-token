@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*	$NetBSD: buf.c,v 1.7 1996/03/29 02:17:13 jtc Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)buf.c	8.1 (Berkeley) 6/6/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)buf.c	8.2 (Berkeley) 4/28/95"
+literal|"$NetBSD: buf.c,v 1.7 1996/03/29 02:17:13 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -87,7 +108,7 @@ parameter_list|,
 name|nb
 parameter_list|)
 define|\
-value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb)+1,BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *) realloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
+value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb)+1,BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *) erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
 end_define
 
 begin_define
@@ -993,7 +1014,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_Discard --  *	Throw away bytes in a buffer.  *  * Results:  *	None.  *  * Side Effects:  *	The bytes are discarded.   *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Buf_Discard --  *	Throw away bytes in a buffer.  *  * Results:  *	None.  *  * Side Effects:  *	The bytes are discarded.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1243,6 +1264,62 @@ operator|*
 operator|)
 name|buf
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*-  *-----------------------------------------------------------------------  * Buf_ReplaceLastByte --  *     Replace the last byte in a buffer.  *  * Results:  *     None.  *  * Side Effects:  *     If the buffer was empty intially, then a new byte will be added.  *     Otherwise, the last byte is overwritten.  *  *-----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+name|void
+name|Buf_ReplaceLastByte
+parameter_list|(
+name|buf
+parameter_list|,
+name|byte
+parameter_list|)
+name|Buffer
+name|buf
+decl_stmt|;
+comment|/* buffer to augment */
+name|Byte
+name|byte
+decl_stmt|;
+comment|/* byte to be written */
+block|{
+if|if
+condition|(
+name|buf
+operator|->
+name|inPtr
+operator|==
+name|buf
+operator|->
+name|outPtr
+condition|)
+name|Buf_AddByte
+argument_list|(
+name|buf
+argument_list|,
+name|byte
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+operator|(
+name|buf
+operator|->
+name|inPtr
+operator|-
+literal|1
+operator|)
+operator|=
+name|byte
 expr_stmt|;
 block|}
 end_function

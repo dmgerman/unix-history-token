@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: var.c,v 1.14 1996/08/13 16:42:25 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)var.c	8.3 (Berkeley) 3/19/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)var.c	8.4 (Berkeley) 4/28/95"
+literal|"$NetBSD: var.c,v 1.14 1996/08/13 16:42:25 christos Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -225,11 +246,6 @@ directive|define
 name|VAR_MATCH_END
 value|4
 comment|/* Match at end of word */
-define|#
-directive|define
-name|VAR_NO_SUB
-value|8
-comment|/* Substitution is non-global and already done */
 block|}
 name|VarPattern
 typedef|;
@@ -403,6 +419,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVVARSUB
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|Boolean
@@ -422,6 +444,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -896,7 +923,7 @@ name|v
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -1117,7 +1144,7 @@ name|v
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2505,7 +2532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2598,8 +2625,14 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVVARSUB
+end_ifdef
+
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2726,8 +2759,13 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2886,18 +2924,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|pattern
-operator|->
-name|flags
-operator|&
-name|VAR_NO_SUB
-operator|)
-operator|==
-literal|0
+literal|1
 condition|)
 block|{
-comment|/* 	 * Still substituting -- break it down into simple anchored cases 	 * and if none of them fits, perform the general substitution case. 	 */
+comment|/* substitute in each word of the variable */
+comment|/* 	 * Break substitution down into simple anchored cases 	 * and if none of them fits, perform the general substitution case. 	 */
 if|if
 condition|(
 operator|(
@@ -3239,7 +3270,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Pattern is unanchored: search for the pattern in the word using 	     * String_FindSubstring, copying unmatched portions and the 	     * right-hand-side for each match found, handling non-global 	     * subsititutions correctly, etc. When the loop is done, any 	     * remaining part of the word (word and wordLen are adjusted 	     * accordingly through the loop) is copied straight into the 	     * buffer. 	     * addSpace is set FALSE as soon as a space is added to the 	     * buffer. 	     */
+comment|/* 	     * Pattern is unanchored: search for the pattern in the word using 	     * String_FindSubstring, copying unmatched portions and the 	     * right-hand-side for each match found, handling non-global 	     * substitutions correctly, etc. When the loop is done, any 	     * remaining part of the word (word and wordLen are adjusted 	     * accordingly through the loop) is copied straight into the 	     * buffer. 	     * addSpace is set FALSE as soon as a space is added to the 	     * buffer. 	     */
 specifier|register
 name|Boolean
 name|done
@@ -3379,15 +3410,7 @@ condition|(
 name|wordLen
 operator|==
 literal|0
-condition|)
-block|{
-name|done
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|||
 operator|(
 name|pattern
 operator|->
@@ -3402,12 +3425,6 @@ block|{
 name|done
 operator|=
 name|TRUE
-expr_stmt|;
-name|pattern
-operator|->
-name|flags
-operator||=
-name|VAR_NO_SUB
 expr_stmt|;
 block|}
 block|}
@@ -3472,27 +3489,7 @@ name|addSpace
 operator|)
 return|;
 block|}
-comment|/* 	 * Common code for anchored substitutions: if performed a substitution 	 * and it's not supposed to be global, mark the pattern as requiring 	 * no more substitutions. addSpace was set TRUE if characters were 	 * added to the buffer. 	 */
-if|if
-condition|(
-operator|(
-name|pattern
-operator|->
-name|flags
-operator|&
-name|VAR_SUB_GLOBAL
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|pattern
-operator|->
-name|flags
-operator||=
-name|VAR_NO_SUB
-expr_stmt|;
-block|}
+comment|/* 	 * Common code for anchored substitutions: 	 * addSpace was set TRUE if characters were added to the buffer. 	 */
 return|return
 operator|(
 name|addSpace
@@ -3781,6 +3778,8 @@ comment|/* Ending character when variable in parens 				 * or braces */
 specifier|register
 name|char
 name|startc
+init|=
+literal|0
 decl_stmt|;
 comment|/* Starting character when variable in parens 				 * or braces */
 name|int
@@ -5963,8 +5962,84 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*FALLTHRU*/
+ifdef|#
+directive|ifdef
+name|SUNSHCMD
+case|case
+literal|'s'
+case|:
+if|if
+condition|(
+name|tstr
+index|[
+literal|1
+index|]
+operator|==
+literal|'h'
+operator|&&
+operator|(
+name|tstr
+index|[
+literal|2
+index|]
+operator|==
+name|endc
+operator|||
+name|tstr
+index|[
+literal|2
+index|]
+operator|==
+literal|':'
+operator|)
+condition|)
+block|{
+name|char
+modifier|*
+name|err
+decl_stmt|;
+name|newStr
+operator|=
+name|Cmd_Exec
+argument_list|(
+name|str
+argument_list|,
+operator|&
+name|err
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|Error
+argument_list|(
+name|err
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|tstr
+operator|+
+literal|2
+expr_stmt|;
+name|termc
+operator|=
+operator|*
+name|cp
+expr_stmt|;
+break|break;
+block|}
+comment|/*FALLTHRU*/
+endif|#
+directive|endif
 default|default:
 block|{
+ifdef|#
+directive|ifdef
+name|SYSVVARSUB
 comment|/* 		     * This can either be a bogus modifier or a System-V 		     * substitution command. 		     */
 name|VarPattern
 name|pattern
@@ -6195,6 +6270,8 @@ name|endc
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|Error
 argument_list|(
@@ -7188,7 +7265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Init --  *	Initialize the module  *  * Results:  *	None  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created   *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Init --  *	Initialize the module  *  * Results:  *	None  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

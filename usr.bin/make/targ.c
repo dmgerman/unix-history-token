@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: targ.c,v 1.9 1996/08/30 17:59:43 thorpej Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)targ.c	8.2 (Berkeley) 3/19/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
+modifier|*
+name|rcsid
 init|=
-literal|"@(#)targ.c	8.3 (Berkeley) 4/28/95"
+literal|"$NetBSD: targ.c,v 1.9 1996/08/30 17:59:43 thorpej Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -267,7 +288,7 @@ name|gn
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -338,6 +359,12 @@ operator|->
 name|childMade
 operator|=
 name|FALSE
+expr_stmt|;
+name|gn
+operator|->
+name|order
+operator|=
+literal|0
 expr_stmt|;
 name|gn
 operator|->
@@ -727,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_FindList --  *	Make a complete list of GNodes from the given list of names   *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.   *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  * -----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Targ_FindList --  *	Make a complete list of GNodes from the given list of names  *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.  *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  * -----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1054,7 +1081,7 @@ comment|/* the main target, as set by Targ_SetMain */
 end_comment
 
 begin_comment
-comment|/*-   *-----------------------------------------------------------------------  * Targ_SetMain --  *	Set our idea of the main target we'll be creating. Used for  *	debugging output.  *  * Results:  *	None.  *  * Side Effects:  *	"mainTarg" is set to the main target's node.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Targ_SetMain --  *	Set our idea of the main target we'll be creating. Used for  *	debugging output.  *  * Results:  *	None.  *  * Side Effects:  *	"mainTarg" is set to the main target's node.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1274,7 +1301,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d:%02d:%02d %s %d, 19%d"
+literal|"%d:%02d:%02d %s %d, %d"
 argument_list|,
 name|parts
 operator|->
@@ -1299,6 +1326,8 @@ name|parts
 operator|->
 name|tm_mday
 argument_list|,
+literal|1900
+operator|+
 name|parts
 operator|->
 name|tm_year

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: suff.c,v 1.12 1996/08/13 16:42:16 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)suff.c	8.4 (Berkeley) 3/21/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)suff.c	8.5 (Berkeley) 4/28/95"
+literal|"$NetBSD: suff.c,v 1.12 1996/08/13 16:42:16 christos Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -54,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bit.h"
 end_include
 
 begin_decl_stmt
@@ -367,6 +382,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|SuffGNHasNameP
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|,
+name|ClientData
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|SuffUnRef
 name|__P
 argument_list|(
 operator|(
@@ -1874,7 +1904,7 @@ operator|==
 name|NILLNODE
 condition|)
 block|{
-comment|/* 	 * Make a new graph node for the transformation. It will be filled in 	 * by the Parse module.  	 */
+comment|/* 	 * Make a new graph node for the transformation. It will be filled in 	 * by the Parse module. 	 */
 name|gn
 operator|=
 name|Targ_NewGN
@@ -1967,7 +1997,7 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-comment|/*      * link the two together in the proper relationship and order       */
+comment|/*      * link the two together in the proper relationship and order      */
 if|if
 condition|(
 name|DEBUG
@@ -2490,7 +2520,7 @@ name|s
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|str
 argument_list|)
@@ -3135,7 +3165,7 @@ name|s2
 operator|->
 name|file
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|targ
 operator|->
@@ -4217,7 +4247,7 @@ name|ret
 operator|->
 name|file
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|s
 operator|->
@@ -6199,7 +6229,7 @@ name|targ
 operator|->
 name|file
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|gn
 operator|->
@@ -6363,7 +6393,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tNo known suffix on %s. Using .NULL suffix: "
+literal|"\tNo known suffix on %s. Using .NULL suffix\n"
 argument_list|,
 name|gn
 operator|->
@@ -6389,7 +6419,7 @@ name|targ
 operator|->
 name|file
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|gn
 operator|->
@@ -6435,7 +6465,7 @@ name|targ
 operator|->
 name|pref
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|sopref
 argument_list|)
@@ -6740,6 +6770,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
 name|Var_Set
 argument_list|(
 name|TARGET
@@ -6760,7 +6794,7 @@ condition|)
 block|{
 comment|/* 		     * Suffix known for the thing -- trim the suffix off 		     * the path to form the proper .PREFIX variable. 		     */
 name|int
-name|len
+name|savep
 init|=
 name|strlen
 argument_list|(
@@ -6768,6 +6802,12 @@ name|gn
 operator|->
 name|path
 argument_list|)
+operator|-
+name|targ
+operator|->
+name|suff
+operator|->
+name|nameLen
 decl_stmt|;
 name|char
 name|savec
@@ -6806,37 +6846,50 @@ name|gn
 operator|->
 name|path
 index|[
-name|len
-operator|-
-name|targ
-operator|->
-name|suff
-operator|->
-name|nameLen
+name|savep
 index|]
 expr_stmt|;
 name|gn
 operator|->
 name|path
 index|[
-name|len
-operator|-
-name|targ
-operator|->
-name|suff
-operator|->
-name|nameLen
+name|savep
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ptr
+operator|=
+name|strrchr
+argument_list|(
+name|gn
+operator|->
+name|path
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|ptr
+operator|++
+expr_stmt|;
+else|else
+name|ptr
+operator|=
+name|gn
+operator|->
+name|path
 expr_stmt|;
 name|Var_Set
 argument_list|(
 name|PREFIX
 argument_list|,
-name|gn
-operator|->
-name|path
+name|ptr
 argument_list|,
 name|gn
 argument_list|)
@@ -6845,13 +6898,7 @@ name|gn
 operator|->
 name|path
 index|[
-name|len
-operator|-
-name|targ
-operator|->
-name|suff
-operator|->
-name|nameLen
+name|savep
 index|]
 operator|=
 name|savec
@@ -6879,13 +6926,38 @@ name|suffix
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ptr
+operator|=
+name|strrchr
+argument_list|(
+name|gn
+operator|->
+name|path
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|ptr
+operator|++
+expr_stmt|;
+else|else
+name|ptr
+operator|=
+name|gn
+operator|->
+name|path
+expr_stmt|;
 name|Var_Set
 argument_list|(
 name|PREFIX
 argument_list|,
-name|gn
-operator|->
-name|path
+name|ptr
 argument_list|,
 name|gn
 argument_list|)
@@ -6957,7 +7029,7 @@ name|gn
 operator|->
 name|path
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|gn
 operator|->
@@ -7083,7 +7155,7 @@ goto|goto
 name|sfnd_abort
 goto|;
 block|}
-comment|/*      * We now have a list of Src structures headed by 'bottom' and linked via      * their 'parent' pointers. What we do next is create links between      * source and target nodes (which may or may not have been created)      * and set the necessary local variables in each target. The      * commands for each target are set from the commands of the      * transformation rule used to get from the src suffix to the targ      * suffix. Note that this causes the commands list of the original      * node, gn, to be replaced by the commands of the final      * transformation rule. Also, the unmade field of gn is incremented.      * Etc.       */
+comment|/*      * We now have a list of Src structures headed by 'bottom' and linked via      * their 'parent' pointers. What we do next is create links between      * source and target nodes (which may or may not have been created)      * and set the necessary local variables in each target. The      * commands for each target are set from the commands of the      * transformation rule used to get from the src suffix to the targ      * suffix. Note that this causes the commands list of the original      * node, gn, to be replaced by the commands of the final      * transformation rule. Also, the unmade field of gn is incremented.      * Etc.      */
 if|if
 condition|(
 name|bottom
@@ -7308,7 +7380,7 @@ name|gn
 operator|->
 name|path
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|gn
 operator|->
@@ -7778,7 +7850,7 @@ name|suffNull
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 literal|""
 argument_list|)

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*	$NetBSD: dir.c,v 1.11 1996/08/13 16:42:02 christos Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,15 +13,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)dir.c	8.2 (Berkeley) 1/2/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dir.c	8.3 (Berkeley) 4/28/95"
+literal|"$NetBSD: dir.c,v 1.11 1996/08/13 16:42:02 christos Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -619,7 +640,7 @@ argument_list|,
 operator|(
 name|isDot
 condition|?
-name|strdup
+name|estrdup
 argument_list|(
 name|entry
 operator|->
@@ -1745,7 +1766,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2212,7 +2233,7 @@ block|{
 comment|/* 		 * Checking in dot -- DON'T put a leading ./ on the thing. 		 */
 name|file
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2508,7 +2529,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2587,7 +2608,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2661,7 +2682,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2701,7 +2722,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_MTime  --  *	Find the modification time of the file described by gn along the  *	search path dirSearchPath.  *   * Results:  *	The modification time or 0 if it doesn't exist  *  * Side Effects:  *	The modification time is placed in the node's mtime slot.  *	If the node didn't have a path entry before, and Dir_FindFile  *	found one for it, the full name is placed in the path slot.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_MTime  --  *	Find the modification time of the file described by gn along the  *	search path dirSearchPath.  *  * Results:  *	The modification time or 0 if it doesn't exist  *  * Side Effects:  *	The modification time is placed in the node's mtime slot.  *	If the node didn't have a path entry before, and Dir_FindFile  *	found one for it, the full name is placed in the path slot.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2794,7 +2815,7 @@ condition|)
 block|{
 name|fullName
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|gn
 operator|->
@@ -2972,7 +2993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is   *	read and hashed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is  *	read and hashed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3142,7 +3163,7 @@ name|p
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -3206,9 +3227,18 @@ operator|)
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|d_ino
+argument_list|)
+comment|/* d_ino is a sunos4 #define for d_fileno */
 comment|/* 		 * The sun directory library doesn't check for a 0 inode 		 * (0-inode slots just take up space), so we have to do 		 * it ourselves. 		 */
 if|if
 condition|(
@@ -3223,7 +3253,7 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* sun&& d_ino */
 operator|(
 name|void
 operator|)
@@ -3380,7 +3410,7 @@ decl_stmt|;
 comment|/* the structure describing the current directory */
 name|str
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 literal|""
 argument_list|)
