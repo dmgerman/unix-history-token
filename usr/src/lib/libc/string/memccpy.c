@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memccpy.c	5.7 (Berkeley) %G%"
+literal|"@(#)memccpy.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,8 @@ specifier|register
 name|unsigned
 name|char
 modifier|*
+name|tp
+init|=
 name|t
 decl_stmt|;
 specifier|register
@@ -95,14 +97,9 @@ specifier|const
 name|unsigned
 name|char
 modifier|*
-name|f
-decl_stmt|;
-specifier|register
-name|unsigned
-name|char
-name|ch
+name|fp
 init|=
-name|c
+name|f
 decl_stmt|;
 do|do
 block|{
@@ -110,11 +107,11 @@ if|if
 condition|(
 operator|(
 operator|*
-name|t
+name|tp
 operator|++
 operator|=
 operator|*
-name|f
+name|fp
 operator|++
 operator|)
 operator|==
