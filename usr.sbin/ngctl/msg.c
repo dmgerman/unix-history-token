@@ -332,9 +332,7 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|NG_PATHLEN
-operator|+
-literal|1
+name|NG_PATHSIZ
 index|]
 decl_stmt|;
 comment|/* Get incoming message (in binary form) */

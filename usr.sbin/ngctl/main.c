@@ -359,9 +359,7 @@ block|{
 name|char
 name|name
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 name|int
@@ -969,9 +967,7 @@ decl_stmt|;
 name|char
 name|hook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 name|int
