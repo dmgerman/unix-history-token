@@ -58,15 +58,6 @@ name|char
 modifier|*
 name|mountpoint
 init|=
-operator|(
-operator|!
-name|Chrooted
-operator|&&
-name|RunningAsInit
-operator|)
-condition|?
-literal|"/mnt/dist"
-else|:
 literal|"/dist"
 decl_stmt|;
 name|Device
@@ -115,11 +106,13 @@ name|FALSE
 return|;
 name|msgNotify
 argument_list|(
-literal|"Mounting %s over NFS."
+literal|"Mounting %s over NFS on %s"
 argument_list|,
 name|dev
 operator|->
 name|name
+argument_list|,
+name|mountpoint
 argument_list|)
 expr_stmt|;
 if|if
@@ -365,15 +358,6 @@ name|char
 modifier|*
 name|mountpoint
 init|=
-operator|(
-operator|!
-name|Chrooted
-operator|&&
-name|RunningAsInit
-operator|)
-condition|?
-literal|"/mnt/dist"
-else|:
 literal|"/dist"
 decl_stmt|;
 if|if

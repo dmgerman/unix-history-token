@@ -45,16 +45,6 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
-name|Chrooted
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Yow, have we chrooted yet? */
-end_comment
-
-begin_decl_stmt
-name|Boolean
 name|DialogActive
 decl_stmt|;
 end_decl_stmt
@@ -166,10 +156,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|RunningAsInit
-operator|=
-name|FALSE
-expr_stmt|;
-name|Chrooted
 operator|=
 name|FALSE
 expr_stmt|;

@@ -1814,9 +1814,16 @@ argument_list|(
 literal|"/dev/mouse"
 argument_list|)
 condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"No /dev/mouse device!\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 if|if
 condition|(
 name|readlink
@@ -1832,9 +1839,16 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"Can't read /dev/mouse symlink!\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 if|if
 condition|(
 name|isDebug

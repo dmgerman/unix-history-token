@@ -1450,17 +1450,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|Chrooted
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Are we chroot()ed?			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|Boolean
 name|DialogActive
 decl_stmt|;
 end_decl_stmt
@@ -4901,37 +4890,6 @@ end_function_decl
 begin_comment
 comment|/* system.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|alarm_clear
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|alarm_set
-parameter_list|(
-name|int
-name|delay
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|handler
-function_decl|)
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern

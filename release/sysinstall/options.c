@@ -405,7 +405,7 @@ name|varCheck
 block|}
 block|,
 block|{
-literal|"Browser Pkg"
+literal|"Browser package"
 block|,
 literal|"This is the browser package that will be used for viewing HTML docs"
 block|,

@@ -435,14 +435,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|chroot
-argument_list|(
-name|variable_get
-argument_list|(
-name|VAR_INSTALL_ROOT
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|execl
