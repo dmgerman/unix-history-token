@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worms.c	5.6 (Berkeley) %G%"
+literal|"@(#)worms.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1061,7 +1061,7 @@ end_define
 begin_decl_stmt
 name|char
 modifier|*
-name|TE
+name|tcp
 decl_stmt|;
 end_decl_stmt
 
@@ -1295,9 +1295,6 @@ name|IP
 decl_stmt|,
 modifier|*
 name|SR
-decl_stmt|,
-modifier|*
-name|tcp
 decl_stmt|;
 name|char
 modifier|*
@@ -1768,16 +1765,6 @@ operator|=
 name|tgetstr
 argument_list|(
 literal|"sr"
-argument_list|,
-operator|&
-name|tcp
-argument_list|)
-expr_stmt|;
-name|TE
-operator|=
-name|tgetstr
-argument_list|(
-literal|"te"
 argument_list|,
 operator|&
 name|tcp
@@ -2654,7 +2641,10 @@ name|flavor
 index|[
 name|n
 operator|%
-literal|6
+sizeof|sizeof
+argument_list|(
+name|flavor
+argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
@@ -2929,7 +2919,10 @@ name|flavor
 index|[
 name|n
 operator|%
-literal|6
+sizeof|sizeof
+argument_list|(
+name|flavor
+argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
@@ -2970,7 +2963,28 @@ begin_block
 block|{
 name|tputs
 argument_list|(
-name|TE
+name|tgetstr
+argument_list|(
+literal|"cl"
+argument_list|,
+operator|&
+name|tcp
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|fputchar
+argument_list|)
+expr_stmt|;
+name|tputs
+argument_list|(
+name|tgetstr
+argument_list|(
+literal|"te"
+argument_list|,
+operator|&
+name|tcp
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
