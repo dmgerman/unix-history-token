@@ -250,7 +250,7 @@ argument|scheduler
 argument_list|,
 argument|SI_SUB_RUN_SCHEDULER
 argument_list|,
-argument|SI_ORDER_FIRST
+argument|SI_ORDER_ANY
 argument_list|,
 argument|scheduler
 argument_list|,
