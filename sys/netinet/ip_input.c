@@ -1071,7 +1071,7 @@ name|RTCACHE_GET
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	RTCACHE_UNLOCK();					\ } while (0);
+value|do {					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	RTCACHE_UNLOCK();					\ } while (0)
 end_define
 
 begin_comment
@@ -1085,7 +1085,7 @@ name|RTCACHE_UPDATE
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {				\ 	if ((_ro)->ro_rt != ip_fwdcache.rc_ro.ro_rt) {	\ 		RTCACHE_LOCK();					\ 		ip_fwdcache.rc_ro = *(_ro);			\ 		RTCACHE_UNLOCK();				\ 	}							\ } while (0);
+value|do {				\ 	if ((_ro)->ro_rt != ip_fwdcache.rc_ro.ro_rt) {		\ 		RTCACHE_LOCK();					\ 		ip_fwdcache.rc_ro = *(_ro);			\ 		RTCACHE_UNLOCK();				\ 	}							\ } while (0)
 end_define
 
 begin_comment
