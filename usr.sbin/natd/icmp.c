@@ -308,7 +308,7 @@ name|icmp
 operator|->
 name|icmp_cksum
 operator|=
-name|InternetChecksum
+name|PacketAliasInternetChecksum
 argument_list|(
 operator|(
 name|u_short

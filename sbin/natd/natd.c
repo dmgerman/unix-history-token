@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software ois provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari (ari@kn6-045.ktvlpr.inet.fi, ari@ps.carel.fi)  *  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software ois provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  */
 end_comment
 
 begin_include
@@ -391,6 +391,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|FlushPacketBuffer
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Globals.  */
 end_comment
@@ -495,6 +506,38 @@ name|icmpSock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|packetBuf
+index|[
+name|IP_MAXPACKET
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|packetLen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr_in
+name|packetAddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|packetSock
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -527,11 +570,14 @@ decl_stmt|;
 name|fd_set
 name|readMask
 decl_stmt|;
+name|fd_set
+name|writeMask
+decl_stmt|;
 name|int
 name|fdMax
 decl_stmt|;
 comment|/*   * Initialize packet aliasing software.  * Done already here to be able to alter option bits  * during command line and configuration file processing.  */
-name|InitPacketAlias
+name|PacketAliasInit
 argument_list|()
 expr_stmt|;
 comment|/*  * Parse options.  */
@@ -585,6 +631,12 @@ expr_stmt|;
 name|dynamicMode
 operator|=
 literal|0
+expr_stmt|;
+comment|/*  * Mark packet buffer empty.  */
+name|packetSock
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|ParseArgs
 argument_list|(
@@ -1035,35 +1087,11 @@ name|s_addr
 operator|!=
 name|INADDR_NONE
 condition|)
-name|SetPacketAliasAddress
+name|PacketAliasSetAddress
 argument_list|(
 name|aliasAddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|divertInOut
-operator|!=
-operator|-
-literal|1
-operator|&&
-operator|!
-name|ifName
-condition|)
-block|{
-comment|/*   * When using only one socket, just call   * DoAliasing repeatedly to process packets.  */
-while|while
-condition|(
-name|running
-condition|)
-name|DoAliasing
-argument_list|(
-name|divertInOut
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/*  * We need largest descriptor number for select.  */
 name|fdMax
 operator|=
@@ -1115,6 +1143,30 @@ condition|(
 name|running
 condition|)
 block|{
+if|if
+condition|(
+name|divertInOut
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|!
+name|ifName
+operator|&&
+name|packetSock
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/*  * When using only one socket, just call   * DoAliasing repeatedly to process packets.  */
+name|DoAliasing
+argument_list|(
+name|divertInOut
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/*   * Build read mask from socket descriptors to select.  */
 name|FD_ZERO
 argument_list|(
@@ -1122,6 +1174,33 @@ operator|&
 name|readMask
 argument_list|)
 expr_stmt|;
+name|FD_ZERO
+argument_list|(
+operator|&
+name|writeMask
+argument_list|)
+expr_stmt|;
+comment|/*  * If there is unsent packet in buffer, use select  * to check when socket comes writable again.  */
+if|if
+condition|(
+name|packetSock
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|FD_SET
+argument_list|(
+name|packetSock
+argument_list|,
+operator|&
+name|writeMask
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*  * No unsent packet exists - safe to check if  * new ones are available.  */
 if|if
 condition|(
 name|divertIn
@@ -1167,6 +1246,8 @@ operator|&
 name|readMask
 argument_list|)
 expr_stmt|;
+block|}
+comment|/*  * Routing info is processed always.  */
 if|if
 condition|(
 name|routeSock
@@ -1193,7 +1274,8 @@ argument_list|,
 operator|&
 name|readMask
 argument_list|,
-name|NULL
+operator|&
+name|writeMask
 argument_list|,
 name|NULL
 argument_list|,
@@ -1217,6 +1299,28 @@ literal|"Select failed."
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|packetSock
+operator|!=
+operator|-
+literal|1
+condition|)
+if|if
+condition|(
+name|FD_ISSET
+argument_list|(
+name|packetSock
+argument_list|,
+operator|&
+name|writeMask
+argument_list|)
+condition|)
+name|FlushPacketBuffer
+argument_list|(
+name|packetSock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|divertIn
@@ -1305,7 +1409,6 @@ argument_list|(
 name|routeSock
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1543,19 +1646,6 @@ decl_stmt|;
 name|int
 name|origBytes
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|IP_MAXPACKET
-index|]
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|addr
-decl_stmt|;
-name|int
-name|wrote
-decl_stmt|;
 name|int
 name|addrSize
 decl_stmt|;
@@ -1563,12 +1653,6 @@ name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|;
-name|char
-name|msgBuf
-index|[
-literal|80
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -1589,7 +1673,7 @@ comment|/*  * Get packet from socket.  */
 name|addrSize
 operator|=
 sizeof|sizeof
-name|addr
+name|packetAddr
 expr_stmt|;
 name|origBytes
 operator|=
@@ -1597,10 +1681,10 @@ name|recvfrom
 argument_list|(
 name|fd
 argument_list|,
-name|buf
+name|packetBuf
 argument_list|,
 sizeof|sizeof
-name|buf
+name|packetBuf
 argument_list|,
 literal|0
 argument_list|,
@@ -1610,7 +1694,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|addr
+name|packetAddr
 argument_list|,
 operator|&
 name|addrSize
@@ -1645,7 +1729,7 @@ expr|struct
 name|ip
 operator|*
 operator|)
-name|buf
+name|packetBuf
 expr_stmt|;
 if|if
 condition|(
@@ -1655,7 +1739,7 @@ block|{
 comment|/*  * Print packet direction and protocol type.  */
 if|if
 condition|(
-name|addr
+name|packetAddr
 operator|.
 name|sin_addr
 operator|.
@@ -1725,7 +1809,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|addr
+name|packetAddr
 operator|.
 name|sin_addr
 operator|.
@@ -1737,7 +1821,7 @@ block|{
 comment|/*  * Outgoing packets. Do aliasing.  */
 name|PacketAliasOut
 argument_list|(
-name|buf
+name|packetBuf
 argument_list|,
 name|IP_MAXPACKET
 argument_list|)
@@ -1745,28 +1829,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  * Incoming packets may have ip checksum zeroed  * when read from divert socket. Re-calculate it.  */
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_sum
-operator|==
-literal|0
-condition|)
-name|ip
-operator|->
-name|ip_sum
-operator|=
-name|in_cksum_hdr
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 comment|/*  * Do aliasing.  */
 name|PacketAliasIn
 argument_list|(
-name|buf
+name|packetBuf
 argument_list|,
 name|IP_MAXPACKET
 argument_list|)
@@ -1785,7 +1851,7 @@ expr_stmt|;
 comment|/*  * Update alias overhead size for outgoing packets.  */
 if|if
 condition|(
-name|addr
+name|packetAddr
 operator|.
 name|sin_addr
 operator|.
@@ -1832,6 +1898,40 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|packetLen
+operator|=
+name|bytes
+expr_stmt|;
+name|packetSock
+operator|=
+name|fd
+expr_stmt|;
+name|FlushPacketBuffer
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|FlushPacketBuffer
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+block|{
+name|int
+name|wrote
+decl_stmt|;
+name|char
+name|msgBuf
+index|[
+literal|80
+index|]
+decl_stmt|;
 comment|/*  * Put packet back for processing.  */
 name|wrote
 operator|=
@@ -1839,9 +1939,9 @@ name|sendto
 argument_list|(
 name|fd
 argument_list|,
-name|buf
+name|packetBuf
 argument_list|,
-name|bytes
+name|packetLen
 argument_list|,
 literal|0
 argument_list|,
@@ -1851,19 +1951,27 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|addr
+name|packetAddr
 argument_list|,
 sizeof|sizeof
-name|addr
+name|packetAddr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|wrote
 operator|!=
-name|bytes
+name|packetLen
 condition|)
 block|{
+comment|/*  * If buffer space is not available,  * just return. Main loop will take care of   * retrying send when space becomes available.  */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOBUFS
+condition|)
+return|return;
 if|if
 condition|(
 name|errno
@@ -1873,7 +1981,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|addr
+name|packetAddr
 operator|.
 name|sin_addr
 operator|.
@@ -1895,7 +2003,7 @@ expr|struct
 name|ip
 operator|*
 operator|)
-name|buf
+name|packetBuf
 argument_list|,
 name|ifMTU
 operator|-
@@ -1919,6 +2027,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|packetSock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -3420,7 +3533,7 @@ name|packetAliasOpt
 else|:
 literal|0
 expr_stmt|;
-name|SetPacketAliasMode
+name|PacketAliasSetMode
 argument_list|(
 name|aliasValue
 argument_list|,
