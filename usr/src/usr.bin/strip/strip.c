@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.3 (Berkeley) %G%"
+literal|"@(#)strip.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,14 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|struct
+name|exec
+name|EXEC
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -96,11 +104,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-typedef|typedef
-name|struct
-name|exec
-name|EXEC
-typedef|;
 specifier|register
 name|off_t
 name|fsize
@@ -193,6 +196,9 @@ name|head
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -226,19 +232,7 @@ name|head
 operator|.
 name|a_drsize
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"strip: %s already stripped.\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 name|fsize
 operator|=
 name|head
@@ -351,36 +345,46 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|error
 argument_list|(
 argument|fname
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|fname
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"strip: %s: "
+literal|"strip: %s: %s.\n"
 argument_list|,
 name|fname
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
