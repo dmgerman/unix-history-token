@@ -38,7 +38,8 @@ name|res
 parameter_list|)
 block|{
 comment|/* $1 and $2 are t0 and t1 respectively. */
-asm|__asm (	"   ldq     $1, %1\n"
+asm|__asm __volatile (
+literal|"   ldq     $1, %1\n"
 comment|/* get cache line before lock */
 literal|"1: ldq_l   $1, %1\n"
 comment|/* load *dst asserting lock */
@@ -101,7 +102,8 @@ name|res
 parameter_list|)
 block|{
 comment|/* $1 and $2 are t0 and t1 respectively. */
-asm|__asm (	"   ldl     $1, %1\n"
+asm|__asm __volatile (
+literal|"   ldl     $1, %1\n"
 comment|/* get cache line before lock */
 literal|"1: ldl_l   $1, %1\n"
 comment|/* load *dst asserting lock */
