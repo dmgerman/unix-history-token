@@ -1028,6 +1028,20 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"boot: not running on cpu 0"
+operator|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* collect extra flags that shutdown_nice might have set */
@@ -1040,25 +1054,6 @@ name|kdb_active
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-if|if
-condition|(
-name|smp_active
-condition|)
-name|printf
-argument_list|(
-literal|"boot() called on cpu#%d\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Do any callouts that should be done BEFORE syncing the filesystems. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
