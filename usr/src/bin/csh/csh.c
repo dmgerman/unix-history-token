@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.17 (Berkeley) %G%"
+literal|"@(#)csh.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2070,21 +2070,21 @@ literal|1
 condition|)
 block|{
 comment|/* Setup the new values of the state stuff saved above */
-name|copy
+name|bcopy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|saveB
+name|B
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|B
+name|saveB
 argument_list|,
 sizeof|sizeof
 name|saveB
@@ -2242,21 +2242,21 @@ name|fbuf
 argument_list|)
 expr_stmt|;
 comment|/* Reset input arena */
-name|copy
+name|bcopy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|B
+name|saveB
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|saveB
+name|B
 argument_list|,
 sizeof|sizeof
 name|B
