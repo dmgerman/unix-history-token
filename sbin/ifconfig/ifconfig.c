@@ -486,6 +486,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|setmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|doalias
 decl_stmt|;
 end_decl_stmt
@@ -3966,7 +3972,11 @@ if|if
 condition|(
 name|newaddr
 operator|&&
+operator|(
 name|setaddr
+operator|||
+name|setmask
+operator|)
 condition|)
 block|{
 name|strncpy
@@ -4605,6 +4615,9 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|setmask
+operator|++
+expr_stmt|;
 call|(
 modifier|*
 name|afp
