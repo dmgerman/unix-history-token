@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dkbad.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dkbad.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,26 +11,26 @@ begin_struct
 struct|struct
 name|dkbad
 block|{
-name|long
+name|int32_t
 name|bt_csn
 decl_stmt|;
 comment|/* cartridge serial number */
-name|u_short
+name|u_int16_t
 name|bt_mbz
 decl_stmt|;
 comment|/* unused; should be 0 */
-name|u_short
+name|u_int16_t
 name|bt_flag
 decl_stmt|;
 comment|/* -1 => alignment cartridge */
 struct|struct
 name|bt_bad
 block|{
-name|u_short
+name|u_int16_t
 name|bt_cyl
 decl_stmt|;
 comment|/* cylinder number of bad sector */
-name|u_short
+name|u_int16_t
 name|bt_trksec
 decl_stmt|;
 comment|/* track and sector number */
