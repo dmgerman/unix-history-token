@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.21 (Berkeley) %G%"
+literal|"@(#)main.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,7 +324,7 @@ comment|/* DAEMON */
 define|#
 directive|define
 name|MAXCONFIGLEVEL
-value|3
+value|4
 comment|/* highest config version level known */
 expr|main
 operator|(

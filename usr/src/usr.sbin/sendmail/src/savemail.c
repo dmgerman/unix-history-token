@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.8 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1598,15 +1598,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ee
 operator|->
-name|e_returnpath
-operator|=
-literal|"<>"
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ee
-operator|->
 name|e_sender
 operator|=
 name|newstr
@@ -1615,6 +1606,30 @@ name|buf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|ConfigLevel
+operator|>=
+literal|4
+condition|)
+name|ee
+operator|->
+name|e_returnpath
+operator|=
+literal|"<>"
+expr_stmt|;
+else|else
+name|ee
+operator|->
+name|e_returnpath
+operator|=
+name|ee
+operator|->
+name|e_sender
+expr_stmt|;
+end_if
 
 begin_if
 if|if
