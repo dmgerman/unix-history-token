@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_conv.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_conv.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -890,6 +890,7 @@ comment|/*  * MSWAP -- Actually swap the bytes on the meta page.  *  * Parameter
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mswap
 parameter_list|(
