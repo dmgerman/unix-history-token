@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)exec.h	8.1 (Berkeley) 6/11/93  * $Id$  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)exec.h	8.1 (Berkeley) 6/11/93  * $Id: exec.h,v 1.3 1994/08/02 07:38:45 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,20 @@ directive|define
 name|_EXEC_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -22,63 +36,36 @@ name|__LDPGSZ
 value|4096
 end_define
 
-begin_comment
-comment|/* Valid magic number check. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|N_BADMAG
-parameter_list|(
-name|ex
-parameter_list|)
-define|\
-value|(N_GETMAGIC(ex) != OMAGIC&& N_GETMAGIC(ex) != NMAGIC&& \ 	 N_GETMAGIC(ex) != ZMAGIC&& N_GETMAGIC(ex) != QMAGIC&& \ 	 N_GETMAGIC_NET(ex) != OMAGIC&& N_GETMAGIC_NET(ex) != NMAGIC&& \ 	 N_GETMAGIC_NET(ex) != ZMAGIC&& N_GETMAGIC_NET(ex) != QMAGIC)
+name|__LDPGSZ
+value|1024
 end_define
 
-begin_define
-define|#
-directive|define
-name|N_ALIGN
-parameter_list|(
-name|ex
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|(N_GETMAGIC(ex) == ZMAGIC || N_GETMAGIC(ex) == QMAGIC || \ 	 N_GETMAGIC_NET(ex) == ZMAGIC || N_GETMAGIC_NET(ex) == QMAGIC ? \ 	 ((x) + __LDPGSZ - 1)& ~(__LDPGSZ - 1) : (x))
-end_define
-
-begin_comment
-comment|/* Address of the bottom of the text segment. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_TXTADDR
-parameter_list|(
-name|ex
-parameter_list|)
-define|\
-value|((N_GETMAGIC(ex) == OMAGIC || N_GETMAGIC(ex) == NMAGIC || \ 	N_GETMAGIC(ex) == ZMAGIC) ? 0 : __LDPGSZ)
-end_define
-
-begin_comment
-comment|/* Address of the bottom of the data segment. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_DATADDR
-parameter_list|(
-name|ex
-parameter_list|)
-define|\
-value|N_ALIGN(ex, N_TXTADDR(ex) + (ex).a_text)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -178,6 +165,64 @@ name|flag
 parameter_list|)
 define|\
 value|( (ex).a_midmag = htonl( (((flag)&0x3f)<<26) | (((mid)&0x03ff)<<16) | \ 	(((mag)&0xffff)) ) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_ALIGN
+parameter_list|(
+name|ex
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|(N_GETMAGIC(ex) == ZMAGIC || N_GETMAGIC(ex) == QMAGIC || \ 	 N_GETMAGIC_NET(ex) == ZMAGIC || N_GETMAGIC_NET(ex) == QMAGIC ? \ 	 ((x) + __LDPGSZ - 1)& ~(__LDPGSZ - 1) : (x))
+end_define
+
+begin_comment
+comment|/* Valid magic number check. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_BADMAG
+parameter_list|(
+name|ex
+parameter_list|)
+define|\
+value|(N_GETMAGIC(ex) != OMAGIC&& N_GETMAGIC(ex) != NMAGIC&& \ 	 N_GETMAGIC(ex) != ZMAGIC&& N_GETMAGIC(ex) != QMAGIC&& \ 	 N_GETMAGIC_NET(ex) != OMAGIC&& N_GETMAGIC_NET(ex) != NMAGIC&& \ 	 N_GETMAGIC_NET(ex) != ZMAGIC&& N_GETMAGIC_NET(ex) != QMAGIC)
+end_define
+
+begin_comment
+comment|/* Address of the bottom of the text segment. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_TXTADDR
+parameter_list|(
+name|ex
+parameter_list|)
+define|\
+value|((N_GETMAGIC(ex) == OMAGIC || N_GETMAGIC(ex) == NMAGIC || \ 	N_GETMAGIC(ex) == ZMAGIC) ? 0 : __LDPGSZ)
+end_define
+
+begin_comment
+comment|/* Address of the bottom of the data segment. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_DATADDR
+parameter_list|(
+name|ex
+parameter_list|)
+define|\
+value|N_ALIGN(ex, N_TXTADDR(ex) + (ex).a_text)
 end_define
 
 begin_comment
@@ -363,6 +408,113 @@ end_define
 
 begin_comment
 comment|/* "compact" demand load format */
+end_comment
+
+begin_comment
+comment|/* a_mid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_ZERO
+value|0
+end_define
+
+begin_comment
+comment|/* unknown - implementation dependent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_SUN010
+value|1
+end_define
+
+begin_comment
+comment|/* sun 68010/68020 binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_SUN020
+value|2
+end_define
+
+begin_comment
+comment|/* sun 68020-only binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_I386
+value|134
+end_define
+
+begin_comment
+comment|/* i386 BSD binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HP200
+value|200
+end_define
+
+begin_comment
+comment|/* hp200 (68010) BSD binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HP300
+value|300
+end_define
+
+begin_comment
+comment|/* hp300 (68020+68881) BSD binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HPUX
+value|0x20C
+end_define
+
+begin_comment
+comment|/* hp200/300 HP-UX binary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MID_HPUX800
+value|0x20B
+end_define
+
+begin_comment
+comment|/* hp800 HP-UX binary */
+end_comment
+
+begin_comment
+comment|/*  * a_flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_DYNAMIC
+value|0x20
+end_define
+
+begin_comment
+comment|/* a.out contains run-time link-edit info */
 end_comment
 
 begin_endif
