@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -50,6 +44,31 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501102
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -114,18 +133,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_message.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_da.h>
 end_include
 
 begin_include
@@ -8318,7 +8325,19 @@ argument|SBP_IND_MAX,
 comment|/*maxsegsz*/
 argument|SBP_SEG_MAX,
 comment|/*flags*/
-argument|BUS_DMA_ALLOCNOW,&sbp->dmat); 	if (error !=
+argument|BUS_DMA_ALLOCNOW,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501102
+comment|/*lockfunc*/
+argument|busdma_lock_mutex,
+comment|/*lockarg*/
+argument|&Giant,
+endif|#
+directive|endif
+argument|&sbp->dmat); 	if (error !=
 literal|0
 argument|) { 		printf(
 literal|"sbp_attach: Could not allocate DMA tag "
