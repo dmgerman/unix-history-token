@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	5.2 (Berkeley) %G%"
+literal|"@(#)arff.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1676,6 +1676,9 @@ operator|-=
 literal|512
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|lread
 argument_list|(
 name|startad
@@ -1950,6 +1953,8 @@ name|c
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
 name|lread
 argument_list|(
 literal|6
@@ -1969,6 +1974,11 @@ name|rt_dir
 index|[
 literal|0
 index|]
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 name|dirnum
@@ -2034,6 +2044,8 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
 name|lread
 argument_list|(
 operator|(
@@ -2059,6 +2071,11 @@ name|rt_dir
 index|[
 name|i
 index|]
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3771,6 +3788,15 @@ literal|512
 else|:
 literal|128
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|rt_init
 argument_list|()
 expr_stmt|;
@@ -3823,17 +3849,32 @@ argument_list|)
 operator|!=
 name|size
 condition|)
+block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arff: read error block %d\n"
+literal|"arff: read error block %d: "
 argument_list|,
 name|startad
 operator|/
 name|size
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|error
+expr_stmt|;
+name|perror
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 name|obuff
 operator|+=
 name|size
@@ -3843,6 +3884,11 @@ operator|+=
 name|size
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
