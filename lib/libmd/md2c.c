@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"md2.h"
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"md2.h"
 end_include
 
 begin_typedef
