@@ -766,6 +766,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|kbd
+operator|&&
 operator|(
 operator|*
 name|kbdsw
