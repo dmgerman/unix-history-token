@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.8	84/11/20	*/
+comment|/*	kern_sig.c	6.9	84/12/31	*/
 end_comment
 
 begin_include
@@ -1916,6 +1916,9 @@ case|:
 case|case
 name|SIGCHLD
 case|:
+case|case
+name|SIGWINCH
+case|:
 comment|/* 			 * These signals are special in that they 			 * don't get propogated... if the process 			 * isn't interested, forget it. 			 */
 if|if
 condition|(
@@ -2445,6 +2448,9 @@ name|SIGURG
 case|:
 case|case
 name|SIGIO
+case|:
+case|case
+name|SIGWINCH
 case|:
 comment|/* 				 * These signals are normally not 				 * sent if the action is the default. 				 */
 continue|continue;
