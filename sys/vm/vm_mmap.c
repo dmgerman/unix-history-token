@@ -2590,13 +2590,17 @@ block|{
 comment|/* 		 * ignore submaps (for now) or null objects 		 */
 if|if
 condition|(
+operator|(
 name|current
 operator|->
-name|is_a_map
-operator|||
-name|current
-operator|->
-name|is_sub_map
+name|eflags
+operator|&
+operator|(
+name|MAP_ENTRY_IS_A_MAP
+operator||
+name|MAP_ENTRY_IS_SUB_MAP
+operator|)
+operator|)
 operator|||
 name|current
 operator|->

@@ -363,7 +363,9 @@ if|if
 condition|(
 name|entry
 operator|->
-name|nofault
+name|eflags
+operator|&
+name|MAP_ENTRY_NOFAULT
 condition|)
 block|{
 name|panic
@@ -383,9 +385,13 @@ operator|==
 name|VM_FAULT_USER_WIRE
 operator|)
 operator|&&
+operator|(
 name|entry
 operator|->
-name|needs_copy
+name|eflags
+operator|&
+name|MAP_ENTRY_NEEDS_COPY
+operator|)
 condition|)
 block|{
 if|if

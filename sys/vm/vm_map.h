@@ -91,36 +91,26 @@ name|offset
 decl_stmt|;
 comment|/* offset into object */
 name|u_char
-name|is_a_map
-range|:
-literal|1
-decl_stmt|,
-comment|/* Is "object" a map? */
-name|is_sub_map
-range|:
-literal|1
-decl_stmt|,
-comment|/* Is "object" a submap? */
-name|copy_on_write
-range|:
-literal|1
-decl_stmt|,
-comment|/* is data copy-on-write */
-name|needs_copy
-range|:
-literal|1
-decl_stmt|,
-comment|/* does object need to be copied */
-name|nofault
-range|:
-literal|1
-decl_stmt|,
-comment|/* should never fault */
-name|user_wired
-range|:
-literal|1
+name|eflags
 decl_stmt|;
+comment|/* map entry flags */
+if|#
+directive|if
+literal|0
+block|u_char is_a_map:1,
+comment|/* Is "object" a map? */
+block|is_sub_map:1,
+comment|/* Is "object" a submap? */
+block|copy_on_write:1,
+comment|/* is data copy-on-write */
+block|needs_copy:1,
+comment|/* does object need to be copied */
+block|nofault:1,
+comment|/* should never fault */
+block|user_wired:1;
 comment|/* wired by user */
+endif|#
+directive|endif
 comment|/* Only in task maps: */
 name|vm_prot_t
 name|protection
@@ -141,6 +131,48 @@ comment|/* can be paged if = 0 */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_IS_A_MAP
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_IS_SUB_MAP
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_COW
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_NEEDS_COPY
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_NOFAULT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_USER_WIRED
+value|0x20
+end_define
 
 begin_comment
 comment|/*  *	Maps are doubly-linked lists of map entries, kept sorted  *	by address.  A single hint is provided to start  *	searches again from the last successful search,  *	insertion, or removal.  */
