@@ -287,7 +287,7 @@ begin_define
 define|#
 directive|define
 name|__REALLY_HAVE_MTRR
-value|(__HAVE_MTRR)
+value|(__HAVE_MTRR)&& (__FreeBSD_version>= 500000)
 end_define
 
 begin_else
@@ -1222,63 +1222,72 @@ name|int
 name|atomic_cmpset_int
 parameter_list|(
 specifier|volatile
-name|int
+name|u_int
 modifier|*
 name|dst
 parameter_list|,
-name|int
-name|old
+name|u_int
+name|exp
 parameter_list|,
-name|int
-name|new
+name|u_int
+name|src
 parameter_list|)
 block|{
 name|int
-name|s
+name|res
 init|=
-name|splhigh
-argument_list|()
+name|exp
 decl_stmt|;
-if|if
-condition|(
+asm|__asm __volatile (
+literal|"	lock ;			"
+literal|"	cmpxchgl %1,%2 ;	"
+literal|"       setz	%%al ;		"
+literal|"	movzbl	%%al,%0 ;	"
+literal|"1:				"
+literal|"# atomic_cmpset_int"
+operator|:
+literal|"+a"
+operator|(
+name|res
+operator|)
+comment|/* 0 (result) */
+operator|:
+literal|"r"
+operator|(
+name|src
+operator|)
+operator|,
+comment|/* 1 */
+literal|"m"
+operator|(
 operator|*
+operator|(
 name|dst
-operator|==
-name|old
-condition|)
-block|{
-operator|*
-name|dst
-operator|=
-name|new
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
+operator|)
+operator|)
+comment|/* 2 */
+operator|:
+literal|"memory"
+block|)
+function|;
 end_function
 
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|atomic_t
 name|test_and_set_bit
