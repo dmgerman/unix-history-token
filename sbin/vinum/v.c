@@ -419,6 +419,11 @@ name|char
 modifier|*
 name|argv
 index|[]
+parameter_list|,
+name|char
+modifier|*
+name|envp
+index|[]
 parameter_list|)
 block|{
 if|#
@@ -441,11 +446,31 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong module loaded: %s.  Please start %s.\n"
+literal|"Wrong module loaded: %s.  Starting %s.\n"
 argument_list|,
 name|VINUMMOD
 argument_list|,
 name|WRONGMOD
+argument_list|)
+expr_stmt|;
+name|argv
+index|[
+literal|0
+index|]
+operator|=
+literal|"/sbin/"
+name|WRONGMOD
+expr_stmt|;
+name|execve
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+argument_list|,
+name|envp
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1791,6 +1816,7 @@ argument_list|,
 name|VINUMMOD
 literal|": /dev is mounted read-only, not rebuilding "
 name|VINUM_DIR
+literal|"\n"
 argument_list|)
 expr_stmt|;
 else|else
