@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.15	82/06/23	*/
+comment|/*	if.h	4.16	82/10/31	*/
 end_comment
 
 begin_comment
@@ -121,11 +121,11 @@ comment|/* output routine */
 name|int
 function_decl|(
 modifier|*
-name|if_ubareset
+name|if_reset
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* uba reset routine */
+comment|/* bus reset routine */
 name|int
 function_decl|(
 modifier|*
