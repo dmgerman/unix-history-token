@@ -890,12 +890,9 @@ begin_comment
 comment|/* Define if you have the<sgtty.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SGTTY_H
-value|1
-end_define
+begin_comment
+comment|/* #define HAVE_SGTTY_H 1 */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<stdbool.h> header file. */
