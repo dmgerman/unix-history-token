@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.74 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1370,12 +1370,21 @@ name|q_owner
 operator|==
 name|owner
 condition|)
+block|{
 name|q
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QQUEUEUP
+expr_stmt|;
+block|}
 for|for
 control|(
 name|q
@@ -1402,12 +1411,21 @@ name|q_owner
 operator|!=
 name|owner
 condition|)
+block|{
 name|q
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QQUEUEUP
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|e
