@@ -1044,12 +1044,49 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"can't set up interrupt\n"
+literal|"can't set up FAST interrupt\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bus_setup_intr
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+name|sc
+operator|->
+name|aac_irq
+argument_list|,
+name|INTR_MPSAFE
+operator||
+name|INTR_TYPE_BIO
+argument_list|,
+name|aac_intr
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|aac_intr
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"can't set up MPSAFE interrupt\n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 comment|/* assume failure is 'out of memory' */
 name|error
