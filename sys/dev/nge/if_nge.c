@@ -8,7 +8,7 @@ comment|/*  * National Semiconductor DP83820/DP83821 gigabit ethernet driver  * 
 end_comment
 
 begin_comment
-comment|/*  * The NatSemi DP83820 and 83821 controllers are enhanced versions  * of the NatSemi MacPHYTER 10/100 devices. They support 10, 100  * and 1000Mbps speeds with 1000baseX (ten bit interface), MII and GMII  * ports. Other features include 8K TX FIFO and 32K RX FIFO, TCP/IP  * hardware checksum offload (IPv4 only), VLAN tagging and filtering,  * priority TX and RX queues, a 2048 bit multicast hash filter, 4 RX pattern  * matching buffers, one perfect address filter buffer and interrupt  * moderation. The 83820 supports both 64-bit and 32-bit addressing  * and data transfers: the 64-bit support can be toggled on or off  * via software. This affects the size of certain fields in the DMA  * descriptors.  *  * As far as I can tell, the 83820 and 83821 are decent chips, marred by  * only one flaw: the RX buffers must be aligned on 64-bit boundaries.  * So far this is the only gigE MAC that I've encountered with this  * requirement.  */
+comment|/*  * The NatSemi DP83820 and 83821 controllers are enhanced versions  * of the NatSemi MacPHYTER 10/100 devices. They support 10, 100  * and 1000Mbps speeds with 1000baseX (ten bit interface), MII and GMII  * ports. Other features include 8K TX FIFO and 32K RX FIFO, TCP/IP  * hardware checksum offload (IPv4 only), VLAN tagging and filtering,  * priority TX and RX queues, a 2048 bit multicast hash filter, 4 RX pattern  * matching buffers, one perfect address filter buffer and interrupt  * moderation. The 83820 supports both 64-bit and 32-bit addressing  * and data transfers: the 64-bit support can be toggled on or off  * via software. This affects the size of certain fields in the DMA  * descriptors.  *  * There are two bugs/misfeatures in the 83820/83821 that I have  * discovered so far:  *  * - Receive buffers must be aligned on 64-bit boundaries, which means  *   you must resort to copying data in order to fix up the payload  *   alignment.  *  * - In order to transmit jumbo frames larger than 8170 bytes, you have  *   to turn off transmit checksum offloading, because the chip can't  *   compute the checksum on an outgoing frame unless it fits entirely  *   within the TX FIFO, which is only 8192 bytes in size. If you have  *   TX checksum offload enabled and you transmit attempt to transmit a  *   frame larger than 8170 bytes, the transmitter will wedge.  *  * To work around the latter problem, TX checksum offload is disabled  * if the user selects an MTU larger than 8152 (8170 - 18).  */
 end_comment
 
 begin_include
@@ -5807,13 +5807,6 @@ expr_stmt|;
 comment|/* Do IP checksum checking. */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_hwassist
-condition|)
-block|{
-if|if
-condition|(
 name|extsts
 operator|&
 name|NGE_RXEXTSTS_IPPKT
@@ -5890,7 +5883,6 @@ name|csum_data
 operator|=
 literal|0xffff
 expr_stmt|;
-block|}
 block|}
 if|#
 directive|if
@@ -7599,12 +7591,6 @@ name|NGE_RXCFG
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable hardware checksum validation for all IPv4 	 * packets, do not reject packets with bad checksums. 	 */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_hwassist
-condition|)
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -7644,12 +7630,6 @@ name|NGE_TXCFG
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable TX IPv4 checksumming on a per-packet basis. 	 */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_hwassist
-condition|)
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8104,6 +8084,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
+block|{
 name|ifp
 operator|->
 name|if_mtu
@@ -8112,6 +8093,29 @@ name|ifr
 operator|->
 name|ifr_mtu
 expr_stmt|;
+comment|/* 			 * Workaround: if the MTU is larger than 			 * 8152 (TX FIFO size minus 64 minus 18), turn off 			 * TX checksum offloading. 			 */
+if|if
+condition|(
+name|ifr
+operator|->
+name|ifr_mtu
+operator|==
+literal|8152
+condition|)
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|NGE_CSUM_FEATURES
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCSIFFLAGS
