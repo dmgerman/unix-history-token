@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -48,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -61,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -708,6 +726,9 @@ modifier|*
 name|vec
 parameter_list|)
 block|{
+name|vm_offset_t
+name|off
+decl_stmt|;
 name|u_long
 name|ps
 decl_stmt|;
@@ -748,6 +769,22 @@ argument_list|(
 literal|"sparc64_init: no loader metadata"
 argument_list|)
 expr_stmt|;
+name|boothowto
+operator|=
+name|bi
+operator|->
+name|bi_howto
+expr_stmt|;
+name|kern_envp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|bi
+operator|->
+name|bi_envp
+expr_stmt|;
 name|preload_metadata
 operator|=
 operator|(
@@ -774,10 +811,6 @@ name|pmap_bootstrap
 argument_list|(
 name|bi
 operator|->
-name|bi_kpa
-argument_list|,
-name|bi
-operator|->
 name|bi_end
 argument_list|)
 expr_stmt|;
@@ -802,6 +835,45 @@ argument_list|,
 name|tl0_base
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Map and initialize the message buffer (after setting trap table). 	 */
+for|for
+control|(
+name|off
+operator|=
+literal|0
+init|;
+name|off
+operator|<
+name|round_page
+argument_list|(
+name|MSGBUF_SIZE
+argument_list|)
+condition|;
+name|off
+operator|+=
+name|PAGE_SIZE
+control|)
+name|pmap_kenter
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|msgbufp
+operator|+
+name|off
+argument_list|,
+name|msgbuf_phys
+operator|+
+name|off
+argument_list|)
+expr_stmt|;
+name|msgbufinit
+argument_list|(
+name|msgbufp
+argument_list|,
+name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
 name|proc_linkup
@@ -878,6 +950,12 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|frame0
+operator|.
+name|tf_tstate
+operator|=
+name|TSTATE_IE
+expr_stmt|;
 name|thread0
 operator|->
 name|td_frame
@@ -898,24 +976,6 @@ name|globalp
 operator|=
 operator|&
 name|__globaldata
-expr_stmt|;
-comment|/* 	 * Setup pointers to interrupt data tables. 	 */
-name|globalp
-operator|->
-name|gd_iq
-operator|=
-operator|&
-name|intr_queues
-index|[
-literal|0
-index|]
-expr_stmt|;
-comment|/* XXX cpuno */
-name|globalp
-operator|->
-name|gd_ivt
-operator|=
-name|intr_vectors
 expr_stmt|;
 comment|/* 	 * Put the globaldata pointer in the alternate and interrupt %g7 also. 	 * globaldata is tied to %g7. We could therefore also use assignments to 	 * globaldata here. 	 * The alternate %g6 additionally points to a small per-cpu stack that 	 * is used to temporarily store global registers in special spill 	 * handlers. 	 */
 name|ps
@@ -967,7 +1027,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm __volatile("mov %0, %%g7" : : "r" (&__globaldata));
+asm|__asm __volatile("mov %0, %%g6" : : "r" (&__globaldata.gd_iq));
+end_asm
+
+begin_asm
+asm|__asm __volatile("mov %0, %%g7" : : "r" (&intr_vectors));
 end_asm
 
 begin_expr_stmt
@@ -1146,15 +1210,20 @@ modifier|*
 name|td
 decl_stmt|;
 name|struct
+name|frame
+modifier|*
+name|fp
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|u_long
-name|sp
-decl_stmt|;
 name|int
 name|oonstack
+decl_stmt|;
+name|u_long
+name|sp
 decl_stmt|;
 name|oonstack
 operator|=
@@ -1474,6 +1543,17 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * grow_stack() will return 0 if *sfp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
+name|fp
+operator|=
+operator|(
+expr|struct
+name|frame
+operator|*
+operator|)
+name|sfp
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|vm_map_growstack
@@ -1483,7 +1563,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|sfp
+name|fp
 argument_list|)
 operator|!=
 name|KERN_SUCCESS
@@ -1494,8 +1574,14 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|sfp
+name|fp
 argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|fp
+argument_list|)
+operator|+
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1757,6 +1843,26 @@ argument_list|)
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|suword
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|f_in
+index|[
+literal|6
+index|]
+argument_list|,
+name|tf
+operator|->
+name|tf_out
+index|[
+literal|6
+index|]
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * Something is wrong with the stack pointer. 		 * ...Kill the process. 		 */
@@ -1817,7 +1923,7 @@ operator|=
 operator|(
 name|u_long
 operator|)
-name|sfp
+name|fp
 operator|-
 name|SPOFF
 expr_stmt|;
@@ -2324,6 +2430,12 @@ name|pcb_rw
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_nsaved
+operator|=
+literal|0
+expr_stmt|;
 comment|/* The inital window for the process (%cw = 0). */
 name|fp
 operator|=
@@ -2500,6 +2612,38 @@ argument_list|(
 expr|struct
 name|frame
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_out
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|td
+operator|->
+name|td_retval
+index|[
+literal|1
+index|]
+operator|=
+name|td
+operator|->
+name|td_frame
+operator|->
+name|tf_out
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|wr
 argument_list|(
