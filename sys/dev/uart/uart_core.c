@@ -1195,6 +1195,20 @@ name|sc_leaving
 operator|=
 literal|1
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_hwmtx
+argument_list|,
+literal|"uart_hwmtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Re-allocate. We expect that the softc contains the information 	 * collected by uart_bus_probe() intact. 	 */
 name|sc
 operator|->

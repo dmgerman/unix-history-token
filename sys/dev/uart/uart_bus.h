@@ -405,6 +405,11 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
+name|mtx
+name|sc_hwmtx
+decl_stmt|;
+comment|/* Spinlock protecting hardware. */
+name|struct
 name|resource
 modifier|*
 name|sc_rres
