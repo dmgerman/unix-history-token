@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.7 (Berkeley) %G%"
+literal|"@(#)eval.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3118,7 +3118,7 @@ block|{
 comment|/* command not found */
 name|exitstatus
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|flushout
 argument_list|(
@@ -3195,7 +3195,7 @@ argument_list|)
 expr_stmt|;
 name|exitstatus
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|flushout
 argument_list|(

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.4 (Berkeley) %G%"
+literal|"@(#)main.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +363,16 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * When a shell procedure is executed, we raise the 		 * exception EXSHELLPROC to clean up before executing 		 * the shell procedure. 		 */
+if|if
+condition|(
+name|exception
+operator|==
+name|EXERROR
+condition|)
+name|exitstatus
+operator|=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|exception
