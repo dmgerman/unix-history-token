@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.25 1996/09/10 08:27:39 bde Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.26 1996/09/11 07:52:18 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -1770,7 +1770,7 @@ name|file_node
 operator|->
 name|ctime
 operator|.
-name|ts_sec
+name|tv_sec
 condition|)
 block|{
 name|vap
@@ -1804,7 +1804,7 @@ name|file_node
 operator|->
 name|mtime
 operator|.
-name|ts_sec
+name|tv_sec
 condition|)
 block|{
 name|vap
@@ -1838,7 +1838,7 @@ name|file_node
 operator|->
 name|atime
 operator|.
-name|ts_sec
+name|tv_sec
 condition|)
 block|{
 name|vap
@@ -2066,7 +2066,7 @@ name|vap
 operator|->
 name|va_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 operator|)
@@ -2096,7 +2096,7 @@ name|vap
 operator|->
 name|va_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 condition|)
@@ -2116,7 +2116,7 @@ name|vap
 operator|->
 name|va_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 condition|)
@@ -2136,7 +2136,7 @@ name|vap
 operator|->
 name|va_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 condition|)
