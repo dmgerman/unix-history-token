@@ -134,13 +134,6 @@ name|printall
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -274,10 +267,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
-name|f
-operator|=
 name|freopen
 argument_list|(
 name|argv
@@ -289,7 +278,8 @@ literal|"r"
 argument_list|,
 name|stdin
 argument_list|)
-operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|fflush
@@ -693,12 +683,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|first
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -708,6 +692,10 @@ name|int
 name|ol
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|first
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
