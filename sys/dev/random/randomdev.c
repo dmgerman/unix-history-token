@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dev/randomdev/yarrow.h"
+file|<dev/randomdev/yarrow.h>
 end_include
 
 begin_decl_stmt
