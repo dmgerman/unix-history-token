@@ -713,6 +713,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|INTERSIL
+argument_list|,
+name|DWL650
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|INTERSIL2
 argument_list|,
 name|PRISM2
