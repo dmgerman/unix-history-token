@@ -286,8 +286,8 @@ comment|/* mss_write */
 block|,
 name|mss_ioctl
 block|,
-name|sndpoll
-comment|/* mss_poll */
+name|sndselect
+comment|/* mss_select */
 block|,
 name|mss_intr
 block|,

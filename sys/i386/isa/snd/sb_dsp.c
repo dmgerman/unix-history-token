@@ -221,7 +221,7 @@ comment|/* use generic sndwrite */
 block|,
 name|sb_dsp_ioctl
 block|,
-name|sndpoll
+name|sndselect
 block|,
 name|sbintr
 block|,

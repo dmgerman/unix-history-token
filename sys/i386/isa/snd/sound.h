@@ -165,12 +165,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -238,7 +232,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|d_poll_t
+name|d_select_t
 value|void
 end_define
 
@@ -423,9 +417,9 @@ name|d_ioctl_t
 modifier|*
 name|ioctl
 decl_stmt|;
-name|d_poll_t
+name|d_select_t
 modifier|*
-name|poll
+name|select
 decl_stmt|;
 name|irq_proc_t
 modifier|*
@@ -1800,8 +1794,8 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|d_poll_t
-name|sndpoll
+name|d_select_t
+name|sndselect
 decl_stmt|;
 end_decl_stmt
 
