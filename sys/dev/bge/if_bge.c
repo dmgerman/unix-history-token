@@ -12956,7 +12956,11 @@ operator|!
 operator|(
 name|status
 operator|&
+operator|(
 name|BGE_MACSTAT_PORT_DECODE_ERROR
+operator||
+name|BGE_MACSTAT_MI_COMPLETE
+operator|)
 operator|)
 condition|)
 block|{
