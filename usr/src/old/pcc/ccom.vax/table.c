@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.4 (Berkeley) %G%"
+literal|"@(#)table.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -735,6 +735,8 @@ block|,
 name|TFLOAT
 block|,
 name|NAREG
+operator||
+name|NASR
 block|,
 name|RESCC
 block|,
@@ -757,6 +759,8 @@ block|,
 name|TDOUBLE
 block|,
 name|NAREG
+operator||
+name|NASL
 block|,
 name|RESCC
 block|,
