@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.1 1994/09/19 15:41:46 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -7609,6 +7609,14 @@ name|msdosfs_vnodeop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|VNODEOP_SET
+argument_list|(
+name|msdosfs_vnodeop_opv_desc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
