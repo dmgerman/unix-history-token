@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.138 2001/10/02 17:59:38 pooka Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.140 2001/10/24 20:20:03 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6256,7 +6256,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"%s: uhci_softintr\n"
+literal|"%s: uhci_softintr (%d)\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -6266,6 +6266,12 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|)
+operator|,
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|intr_context
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6877,12 +6883,9 @@ name|status
 operator|=
 name|USBD_NORMAL_COMPLETION
 expr_stmt|;
-name|usb_transfer_complete
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 ifdef|#
 directive|ifdef
@@ -7021,7 +7024,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"uhci_check_intr: actlen=%d, status=0x%x\n"
+literal|"uhci_idone: actlen=%d, status=0x%x\n"
 operator|,
 name|actlen
 operator|,
@@ -7137,6 +7140,8 @@ operator|=
 name|USBD_NORMAL_COMPLETION
 expr_stmt|;
 block|}
+name|end
+label|:
 name|usb_transfer_complete
 argument_list|(
 name|xfer
