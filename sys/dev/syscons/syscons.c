@@ -17775,12 +17775,6 @@ begin_comment
 comment|/* !SC_NO_FONT_LOADING */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SC_NO_CUTPASTE
-end_ifndef
-
 begin_function
 name|void
 name|sc_paste
@@ -17887,15 +17881,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SC_NO_CUTPASTE */
-end_comment
 
 begin_function
 name|void

@@ -2154,12 +2154,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SC_NO_CUTPASTE
-end_ifndef
-
 begin_function_decl
 name|void
 name|sc_paste
@@ -2177,15 +2171,6 @@ name|count
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SC_NO_CUTPASTE */
-end_comment
 
 begin_function_decl
 name|void
