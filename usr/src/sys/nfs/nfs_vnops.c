@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1744,8 +1744,6 @@ name|vpp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN */
-comment|/* old: nfs_lookup(vp, ndp, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -3992,8 +3990,6 @@ name|cnp
 parameter_list|,
 name|vap
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_mknod(ndp, vap, cred, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -4322,8 +4318,6 @@ name|cnp
 parameter_list|,
 name|vap
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_create(ndp, vap, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -4600,8 +4594,6 @@ name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: ufs_remove(ndp, p) */
 name|struct
 name|vnode
 modifier|*
@@ -4700,7 +4692,6 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
-comment|/* NEEDSWORK */
 block|}
 else|else
 block|{
@@ -5002,8 +4993,6 @@ name|tvp
 parameter_list|,
 name|tcnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_rename(sndp, tndp, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -5480,8 +5469,6 @@ name|tdvp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_link(vp, ndp, procp) */
 specifier|register
 name|struct
 name|vnode
@@ -5681,8 +5668,6 @@ name|vap
 parameter_list|,
 name|nm
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_symlink(ndp, vap, nm, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -5954,7 +5939,6 @@ name|dvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Kludge: Map EEXIST => 0 assuming that it is a reply to a retry. 	 */
-comment|/* 	 * NEEDSWORK: what about *vpp? 	 */
 if|if
 condition|(
 name|error
@@ -5989,8 +5973,6 @@ name|cnp
 parameter_list|,
 name|vap
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_mkdir(ndp, vap, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -6391,8 +6373,6 @@ name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.   */
-comment|/* old: nfs_rmdir(ndp, procp) */
 name|struct
 name|vnode
 modifier|*
@@ -7642,6 +7622,16 @@ init|=
 operator|&
 name|nami
 decl_stmt|;
+name|struct
+name|componentname
+modifier|*
+name|cnp
+init|=
+operator|&
+name|ndp
+operator|->
+name|ni_cnd
+decl_stmt|;
 name|off_t
 name|off
 decl_stmt|,
@@ -8203,9 +8193,9 @@ name|iov_len
 operator|-=
 name|DIRHDSIZ
 expr_stmt|;
-name|ndp
+name|cnp
 operator|->
-name|ni_ptr
+name|cn_nameptr
 operator|=
 name|uiop
 operator|->
@@ -8213,9 +8203,9 @@ name|uio_iov
 operator|->
 name|iov_base
 expr_stmt|;
-name|ndp
+name|cnp
 operator|->
-name|ni_namelen
+name|cn_namelen
 operator|=
 name|len
 expr_stmt|;
@@ -8285,9 +8275,9 @@ name|uio_resid
 operator|-=
 name|tlen
 expr_stmt|;
-name|ndp
+name|cnp
 operator|->
-name|ni_hash
+name|cn_hash
 operator|=
 literal|0
 expr_stmt|;
@@ -8295,9 +8285,9 @@ for|for
 control|(
 name|cp
 operator|=
-name|ndp
+name|cnp
 operator|->
-name|ni_ptr
+name|cn_nameptr
 operator|,
 name|i
 operator|=
@@ -8313,9 +8303,9 @@ operator|,
 name|cp
 operator|++
 control|)
-name|ndp
+name|cnp
 operator|->
-name|ni_hash
+name|cn_hash
 operator|+=
 operator|(
 name|unsigned
@@ -8557,6 +8547,14 @@ expr_stmt|;
 name|cache_enter
 argument_list|(
 name|ndp
+operator|->
+name|ni_dvp
+argument_list|,
+name|ndp
+operator|->
+name|ni_vp
+argument_list|,
+name|cnp
 argument_list|)
 expr_stmt|;
 block|}
@@ -8817,8 +8815,6 @@ name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* NEEDSWORK */
-comment|/* old: nfs_sillyrename(ndp, p) */
 name|struct
 name|vnode
 modifier|*
