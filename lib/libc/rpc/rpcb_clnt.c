@@ -1216,7 +1216,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This routine will return a client handle that is connected to the  * rpcbind. Returns NULL on error and free's everything.  */
+comment|/*  * This routine will return a client handle that is connected to the  * rpcbind. If targaddr is non-NULL, the "universal address" of the  * host will be stored in *targaddr; the caller is responsible for  * freeing this string.  * On error, returns NULL and free's everything.  */
 end_comment
 
 begin_function
@@ -1367,9 +1367,12 @@ condition|)
 operator|*
 name|targaddr
 operator|=
+name|strdup
+argument_list|(
 name|ad_cache
 operator|->
 name|ac_uaddr
+argument_list|)
 expr_stmt|;
 name|rwlock_unlock
 argument_list|(
