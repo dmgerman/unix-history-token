@@ -1754,6 +1754,17 @@ comment|/*fall through*/
 case|case
 name|SIOCGIFPREFIX_IN6
 case|:
+if|if
+condition|(
+name|ip6_forwarding
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 return|return
 operator|(
 name|in6_prefix_ioctl
