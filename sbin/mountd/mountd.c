@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.10 1998/06/15 15:44:35 joerg Exp $"
+literal|"$Id: mountd.c,v 1.11.2.11 1998/06/25 21:27:24 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2691,7 +2691,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Mount successfull.\n"
+literal|"Mount successful.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4375,12 +4375,12 @@ argument|] == fsid->val[
 literal|1
 argument|]) 			return (ep); 		ep = ep->ex_next; 	} 	return (ep); }
 comment|/*  * Add a directory path to the list.  */
-argument|char * add_expdir(dpp, cp, len) 	struct dirlist **dpp; 	char *cp; 	int len; { 	struct dirlist *dp;  	dp = (struct dirlist *)malloc(sizeof (struct dirlist) + len); 	dp->dp_left = *dpp; 	dp->dp_right = (struct dirlist *)NULL; 	dp->dp_flag =
+argument|char * add_expdir(dpp, cp, len) 	struct dirlist **dpp; 	char *cp; 	int len; { 	struct dirlist *dp;  	dp = (struct dirlist *)malloc(sizeof (struct dirlist) + len); 	if (dp == (struct dirlist *)NULL) 		out_of_mem(); 	dp->dp_left = *dpp; 	dp->dp_right = (struct dirlist *)NULL; 	dp->dp_flag =
 literal|0
 argument|; 	dp->dp_hosts = (struct hostlist *)NULL; 	strcpy(dp->dp_dirp, cp); 	*dpp = dp; 	return (dp->dp_dirp); }
 comment|/*  * Hang the dir list element off the dirpath binary tree as required  * and update the entry for host.  */
 argument|void hang_dirp(dp, grp, ep, flags) 	struct dirlist *dp; 	struct grouplist *grp; 	struct exportlist *ep; 	int flags; { 	struct hostlist *hp; 	struct dirlist *dp2;  	if (flags& OP_ALLDIRS) { 		if (ep->ex_defdir) 			free((caddr_t)dp); 		else 			ep->ex_defdir = dp; 		if (grp == (struct grouplist *)NULL) { 			ep->ex_defdir->dp_flag |= DP_DEFSET; 			if (flags& OP_KERB) 				ep->ex_defdir->dp_flag |= DP_KERB; 		} else while (grp) { 			hp = get_ht(); 			if (flags& OP_KERB) 				hp->ht_flag |= DP_KERB; 			hp->ht_grp = grp; 			hp->ht_next = ep->ex_defdir->dp_hosts; 			ep->ex_defdir->dp_hosts = hp; 			grp = grp->gr_next; 		} 	} else {
-comment|/* 		 * Loop throught the directories adding them to the tree. 		 */
+comment|/* 		 * Loop through the directories adding them to the tree. 		 */
 argument|while (dp) { 			dp2 = dp->dp_left; 			add_dlist(&ep->ex_dirl, dp, grp, flags); 			dp = dp2; 		} 	} }
 comment|/*  * Traverse the binary tree either updating a node that is already there  * for the new directory or adding the new node.  */
 argument|void add_dlist(dpp, newdp, grp, flags) 	struct dirlist **dpp; 	struct dirlist *newdp; 	struct grouplist *grp; 	int flags; { 	struct dirlist *dp; 	struct hostlist *hp; 	int cmp;  	dp = *dpp; 	if (dp) { 		cmp = strcmp(dp->dp_dirp, newdp->dp_dirp); 		if (cmp>
@@ -4686,7 +4686,7 @@ literal|1
 argument|)) { 		inetaddr = inet_makeaddr(netaddr,
 literal|0
 argument|);
-comment|/* 		 * Due to arbritrary subnet masks, you don't know how many 		 * bits to shift the address to make it into a network, 		 * however you do know how to make a network address into 		 * a host with host == 0 and then compare them. 		 * (What a pest) 		 */
+comment|/* 		 * Due to arbitrary subnet masks, you don't know how many 		 * bits to shift the address to make it into a network, 		 * however you do know how to make a network address into 		 * a host with host == 0 and then compare them. 		 * (What a pest) 		 */
 argument|if (!maskflg) { 			setnetent(
 literal|0
 argument|); 			while (np = getnetent()) { 				inetaddr2 = inet_makeaddr(np->n_net,
@@ -4758,7 +4758,7 @@ comment|/*  * Parse a description of a credential.  */
 argument|void parsecred(namelist, cr) 	char *namelist; 	struct ucred *cr; { 	char *name; 	int cnt; 	char *names; 	struct passwd *pw; 	struct group *gr; 	int ngroups, groups[NGROUPS +
 literal|1
 argument|];
-comment|/* 	 * Set up the unpriviledged user. 	 */
+comment|/* 	 * Set up the unprivileged user. 	 */
 argument|cr->cr_ref =
 literal|1
 argument|; 	cr->cr_uid = -
@@ -4831,7 +4831,7 @@ argument|, _PATH_RMOUNTLIST); 		return; 	} 	mlpp =&mlhead; 	while (fgets(str, ST
 literal|'\t'
 argument|)) == NULL&& 		    (dirp = index(str,
 literal|' '
-argument|)) == NULL) 			continue; 		mlp = (struct mountlist *)malloc(sizeof (*mlp)); 		len = dirp-str; 		if (len> RPCMNT_NAMELEN) 			len = RPCMNT_NAMELEN; 		bcopy(str, mlp->ml_host, len); 		mlp->ml_host[len] =
+argument|)) == NULL) 			continue; 		mlp = (struct mountlist *)malloc(sizeof (*mlp)); 		if (mlp == (struct mountlist *)NULL) 			out_of_mem(); 		len = dirp-str; 		if (len> RPCMNT_NAMELEN) 			len = RPCMNT_NAMELEN; 		bcopy(str, mlp->ml_host, len); 		mlp->ml_host[len] =
 literal|'\0'
 argument|; 		while (*dirp ==
 literal|'\t'
@@ -4855,7 +4855,7 @@ argument|)) == NULL) { 			syslog(LOG_ERR,
 literal|"Can't update %s"
 argument|, _PATH_RMOUNTLIST); 			return; 		} 		mlp = mlhead; 		while (mlp) { 			fprintf(mlfile,
 literal|"%s %s\n"
-argument|, mlp->ml_host, mlp->ml_dirp); 			mlp = mlp->ml_next; 		} 		fclose(mlfile); 	} }  void add_mlist(hostp, dirp) 	char *hostp, *dirp; { 	struct mountlist *mlp, **mlpp; 	FILE *mlfile;  	mlpp =&mlhead; 	mlp = mlhead; 	while (mlp) { 		if (!strcmp(mlp->ml_host, hostp)&& !strcmp(mlp->ml_dirp, dirp)) 			return; 		mlpp =&mlp->ml_next; 		mlp = mlp->ml_next; 	} 	mlp = (struct mountlist *)malloc(sizeof (*mlp)); 	strncpy(mlp->ml_host, hostp, RPCMNT_NAMELEN); 	mlp->ml_host[RPCMNT_NAMELEN] =
+argument|, mlp->ml_host, mlp->ml_dirp); 			mlp = mlp->ml_next; 		} 		fclose(mlfile); 	} }  void add_mlist(hostp, dirp) 	char *hostp, *dirp; { 	struct mountlist *mlp, **mlpp; 	FILE *mlfile;  	mlpp =&mlhead; 	mlp = mlhead; 	while (mlp) { 		if (!strcmp(mlp->ml_host, hostp)&& !strcmp(mlp->ml_dirp, dirp)) 			return; 		mlpp =&mlp->ml_next; 		mlp = mlp->ml_next; 	} 	mlp = (struct mountlist *)malloc(sizeof (*mlp)); 	if (mlp == (struct mountlist *)NULL) 		out_of_mem(); 	strncpy(mlp->ml_host, hostp, RPCMNT_NAMELEN); 	mlp->ml_host[RPCMNT_NAMELEN] =
 literal|'\0'
 argument|; 	strncpy(mlp->ml_dirp, dirp, RPCMNT_PATHLEN); 	mlp->ml_dirp[RPCMNT_PATHLEN] =
 literal|'\0'
