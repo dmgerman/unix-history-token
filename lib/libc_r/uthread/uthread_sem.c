@@ -715,9 +715,7 @@ name|nwaiters
 operator|>
 literal|0
 condition|)
-block|{
-comment|/* 		 * We must use pthread_cond_broadcast() rather than 		 * pthread_cond_signal() in order to assure that the highest 		 * priority thread is run by the scheduler, since 		 * pthread_cond_signal() signals waiting threads in FIFO order. 		 */
-name|pthread_cond_broadcast
+name|pthread_cond_signal
 argument_list|(
 operator|&
 operator|(
@@ -728,7 +726,6 @@ operator|->
 name|gtzero
 argument_list|)
 expr_stmt|;
-block|}
 name|pthread_mutex_unlock
 argument_list|(
 operator|&
