@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.16 1994/04/02 20:43:25 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.17 1994/04/21 14:20:07 sos Exp $  */
 end_comment
 
 begin_comment
@@ -407,6 +407,9 @@ operator|)
 operator|)
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ALLOW_CONFLICT_IOADDR
 name|conflict
 argument_list|(
 name|dvp
@@ -426,6 +429,8 @@ name|status
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* 		 * Check for Memory address conflict.  We can check for 		 * range overlap, but it will not catch all cases since the 		 * driver may adjust the msize paramater during probe, for 		 * now we just check that the starting address does not 		 * fall within any allocated region. 		 * XXX could add a second check after the probe for overlap, 		 * since at that time we would know the full range. 		 * XXX KERNBASE is a hack, we should have vaddr in the table! 		 */
@@ -471,6 +476,9 @@ operator|)
 operator|)
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ALLOW_CONFLICT_MEMADDR
 name|conflict
 argument_list|(
 name|dvp
@@ -490,11 +498,13 @@ name|status
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 ifndef|#
 directive|ifndef
-name|COM_MULTIPORT
+name|ALLOW_CONFLICT_IRQ
 comment|/* 		 * Check for IRQ conflicts. 		 */
 if|if
 condition|(
@@ -542,6 +552,9 @@ block|}
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|ALLOW_CONFLICT_DRQ
 comment|/* 		 * Check for DRQ conflicts. 		 */
 if|if
 condition|(
@@ -585,6 +598,8 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
