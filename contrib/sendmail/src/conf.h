@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.37 2001/02/12 21:40:16 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.43 2001/05/20 22:29:59 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -493,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|MAXQFNAME
-value|20
+value|21
 end_define
 
 begin_comment
@@ -3686,6 +3686,44 @@ begin_comment
 comment|/* SOLARIS>= 20800 || (SOLARIS< 10000&& SOLARIS>= 208) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|20900
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|209
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASURANDOMDEV
+value|1
+end_define
+
+begin_comment
+comment|/* /dev/[u]random added in S9 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS>= 20900 || (SOLARIS< 10000&& SOLARIS>= 209) */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -6864,6 +6902,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASSETREUID
+value|0
+end_define
+
+begin_comment
+comment|/* OpenBSD has broken setreuid(2) emulation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASURANDOMDEV
 value|1
 end_define
@@ -9836,7 +9885,7 @@ if|#
 directive|if
 operator|(
 name|GLIBC_VERSION
-operator|==
+operator|>=
 literal|0x201
 operator|&&
 operator|!
@@ -9864,7 +9913,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (GLIBC_VERSION == 0x201&& ! NEEDSGETIPNODE) */
+comment|/* (GLIBC_VERSION>= 0x201&& !defined(NEEDSGETIPNODE)) */
 end_comment
 
 begin_undef
@@ -14218,6 +14267,12 @@ begin_comment
 comment|/* has getdtablesize(2) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSETREUID
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -14227,6 +14282,15 @@ end_define
 
 begin_comment
 comment|/* has setreuid(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! HASSETREUID */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: headers.c,v 8.203.4.12 2001/01/22 19:00:22 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.203.4.13 2001/05/03 17:24:06 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1385,7 +1385,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|sp
 argument_list|)

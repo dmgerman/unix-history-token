@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: err.c,v 8.120.4.1 2000/05/25 18:56:15 gshapiro Exp $"
+literal|"@(#)$Id: err.c,v 8.120.4.2 2001/05/03 17:24:06 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,7 @@ name|e_message
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CurEnv
 operator|->
@@ -432,8 +432,7 @@ name|pw
 operator|=
 name|sm_getpwuid
 argument_list|(
-name|getuid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 if|if
@@ -466,8 +465,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|getuid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 block|}
@@ -814,7 +812,7 @@ name|e_message
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CurEnv
 operator|->
@@ -1120,7 +1118,7 @@ name|e_message
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CurEnv
 operator|->
@@ -1357,7 +1355,7 @@ name|e_message
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CurEnv
 operator|->
@@ -1510,7 +1508,7 @@ name|e_message
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|CurEnv
 operator|->

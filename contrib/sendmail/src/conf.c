@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 8.646.2.2.2.69 2001/02/27 19:50:11 gshapiro Exp $"
+literal|"@(#)$Id: conf.c,v 8.646.2.2.2.86 2001/05/17 18:18:40 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3710,7 +3710,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 operator|(
 name|void
@@ -4561,7 +4561,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETSIGNAL -- set a signal handler ** **	This is essentially old BSD "signal(3)". */
+comment|/* **  SETSIGNAL -- set a signal handler ** **	This is essentially old BSD "signal(3)". ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
 end_comment
 
 begin_function
@@ -4579,16 +4579,39 @@ name|sigfunc_t
 name|handler
 decl_stmt|;
 block|{
-comment|/* 	**  First, try for modern signal calls 	**  and restartable syscalls 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SA_RESTART
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|SYS5SIGNALS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSD4_3
+argument_list|)
+operator|)
 name|struct
 name|sigaction
 name|n
 decl_stmt|,
 name|o
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* defined(SA_RESTART) || (!defined(SYS5SIGNALS)&& !defined(BSD4_3)) */
+comment|/* 	**  First, try for modern signal calls 	**  and restartable syscalls 	*/
+ifdef|#
+directive|ifdef
+name|SA_RESTART
 name|memset
 argument_list|(
 operator|&
@@ -4717,12 +4740,6 @@ else|#
 directive|else
 comment|/* defined(SYS5SIGNALS) || defined(BSD4_3) */
 comment|/* 	**  Finally, if nothing else is available, 	**  go for a default 	*/
-name|struct
-name|sigaction
-name|n
-decl_stmt|,
-name|o
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -4769,6 +4786,348 @@ comment|/* defined(SYS5SIGNALS) || defined(BSD4_3) */
 endif|#
 directive|endif
 comment|/* SA_RESTART */
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  ALLSIGNALS -- act on all signals ** **	Parameters: **		block -- whether to block or release all signals. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|allsignals
+parameter_list|(
+name|block
+parameter_list|)
+name|bool
+name|block
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|BSD4_3
+ifndef|#
+directive|ifndef
+name|sigmask
+define|#
+directive|define
+name|sigmask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<< ((s) - 1))
+endif|#
+directive|endif
+comment|/* ! sigmask */
+if|if
+condition|(
+name|block
+condition|)
+block|{
+name|int
+name|mask
+init|=
+literal|0
+decl_stmt|;
+name|mask
+operator||=
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+name|mask
+operator||=
+name|sigmask
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+name|mask
+operator||=
+name|sigmask
+argument_list|(
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|mask
+operator||=
+name|sigmask
+argument_list|(
+name|SIGINT
+argument_list|)
+expr_stmt|;
+name|mask
+operator||=
+name|sigmask
+argument_list|(
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|mask
+operator||=
+name|sigmask
+argument_list|(
+name|SIGUSR1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigblock
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* BSD4_3 */
+ifdef|#
+directive|ifdef
+name|ALTOS_SYSTEM_V
+if|if
+condition|(
+name|block
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigset
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* ALTOS_SYSTEM_V */
+name|sigset_t
+name|sset
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sigemptyset
+argument_list|(
+operator|&
+name|sset
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|SIGINT
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|SIGUSR1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|block
+condition|?
+name|SIG_BLOCK
+else|:
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|sset
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ALTOS_SYSTEM_V */
+endif|#
+directive|endif
+comment|/* BSD4_3 */
 block|}
 end_function
 
@@ -9928,7 +10287,7 @@ operator|-
 literal|1
 decl_stmt|;
 specifier|static
-name|int
+name|pid_t
 name|kmempid
 init|=
 operator|-
@@ -10654,7 +11013,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		sig -- the signal that got us here (unused). ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. **		Control socket exits may restart/shutdown daemon. */
+comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		sig -- the signal that got us here (unused). ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. **		Control socket exits may restart/shutdown daemon. ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
 end_comment
 
 begin_comment
@@ -10692,6 +11051,32 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+else|#
+directive|else
+comment|/* HASWAITPID */
+ifdef|#
+directive|ifdef
+name|WNOHANG
+name|union
+name|wait
+name|status
+decl_stmt|;
+else|#
+directive|else
+comment|/* WNOHANG */
+specifier|auto
+name|int
+name|status
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* WNOHANG */
+endif|#
+directive|endif
+comment|/* HASWAITPID */
+if|#
+directive|if
+name|HASWAITPID
 name|count
 operator|=
 literal|0
@@ -10727,38 +11112,13 @@ operator|++
 operator|>
 literal|1000
 condition|)
-block|{
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|0
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_ALERT
-argument_list|,
-name|NOQID
-argument_list|,
-literal|"reapchild: waitpid loop: pid=%d, status=%x"
-argument_list|,
-name|pid
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 else|#
 directive|else
 comment|/* HASWAITPID */
 ifdef|#
 directive|ifdef
 name|WNOHANG
-name|union
-name|wait
-name|status
-decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -10792,10 +11152,6 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* WNOHANG */
-specifier|auto
-name|int
-name|status
-decl_stmt|;
 comment|/* 	**  Catch one zombie -- we will be re-invoked (we hope) if there 	**  are more.  Unreliable signals probably break this, but this 	**  is the "old system" situation -- waitpid or wait3 are to be 	**  strongly preferred. 	*/
 if|if
 condition|(
@@ -10849,13 +11205,10 @@ operator|==
 name|EX_RESTART
 condition|)
 block|{
-comment|/* emulate a SIGHUP restart */
-name|sighup
-argument_list|(
-literal|0
-argument_list|)
+name|RestartRequest
+operator|=
+literal|"control socket"
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 elseif|else
 if|if
@@ -10869,31 +11222,21 @@ name|EX_SHUTDOWN
 condition|)
 block|{
 comment|/* emulate a SIGTERM shutdown */
-name|intsig
-argument_list|(
-literal|0
-argument_list|)
+name|ShutdownRequest
+operator|=
+literal|"control socket"
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SYS5SIGNALS
-operator|(
-name|void
-operator|)
-name|setsignal
+name|FIX_SYSV_SIGNAL
 argument_list|(
-name|SIGCHLD
+name|sig
 argument_list|,
 name|reapchild
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SYS5SIGNALS */
 name|errno
 operator|=
 name|save_errno
@@ -11057,7 +11400,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -11072,16 +11415,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newenv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 name|first
 operator|=
 name|FALSE
@@ -11114,7 +11447,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|realloc
+name|xrealloc
 argument_list|(
 operator|(
 name|char
@@ -11135,16 +11468,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|newenv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 block|}
 comment|/* actually add in the new entry */
 name|environ
@@ -16068,10 +16391,6 @@ directive|if
 name|NETINET6
 operator|&&
 name|NEEDSGETIPNODE
-operator|&&
-name|__RES
-operator|<
-literal|19990909
 ifndef|#
 directive|ifndef
 name|AI_DEFAULT
@@ -16299,7 +16618,7 @@ directive|endif
 comment|/* _FFR_FREEHOSTENT */
 endif|#
 directive|endif
-comment|/* NEEDSGETIPNODE&& NETINET6&& __RES< 19990909 */
+comment|/* NEEDSGETIPNODE&& NETINET6 */
 name|struct
 name|hostent
 modifier|*
@@ -17207,12 +17526,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NETINET6 */
-return|return
-name|hp
-return|;
 endif|#
 directive|endif
 comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) */
+return|return
+name|hp
+return|;
 block|}
 comment|/* **  SM_GETPW{NAM,UID} -- wrapper for getpwnam and getpwuid */
 name|struct
@@ -18233,7 +18552,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|lifc
 operator|.
@@ -18377,7 +18696,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|free
+name|sm_free
 argument_list|(
 name|lifc
 operator|.
@@ -18941,7 +19260,7 @@ name|sa
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|sm_free
 argument_list|(
 name|lifc
 operator|.
@@ -19171,7 +19490,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|ifc
 operator|.
@@ -19851,7 +20170,7 @@ name|sa
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|sm_free
 argument_list|(
 name|ifc
 operator|.
@@ -20412,7 +20731,7 @@ name|buf
 operator|!=
 name|buf0
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|buf
 argument_list|)
@@ -21023,6 +21342,14 @@ name|CompileOptions
 index|[]
 init|=
 block|{
+if|#
+directive|if
+name|EGD
+literal|"EGD"
+block|,
+endif|#
+directive|endif
+comment|/* EGD */
 ifdef|#
 directive|ifdef
 name|HESIOD
