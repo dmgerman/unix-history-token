@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.19 1994/11/02 22:06:24 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.20 1994/11/03 00:28:05 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -460,29 +460,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|dialog_msgbox
-argument_list|(
-literal|"Progress"
-argument_list|,
-name|p
-argument_list|,
-name|strheight
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|2
-argument_list|,
-name|strwidth
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|4
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* XXX This is broken just now, on second or third call it will hang 	dialog_msgbox("Progress", p, strheight(p)+2, strwidth(p)+4, 0); */
 name|free
 argument_list|(
 name|p
