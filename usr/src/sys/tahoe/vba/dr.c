@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dr.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dr.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1066,7 +1066,6 @@ name|dr_flags
 operator|&
 name|DR_TMDM
 condition|)
-block|{
 name|dra
 operator|->
 name|dr_flags
@@ -1075,14 +1074,6 @@ operator|~
 name|DR_TMDM
 expr_stmt|;
 comment|/* Clear timeout flag */
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Made the error ourself, ignore it */
-block|}
 return|return
 operator|(
 name|err
@@ -1344,7 +1335,6 @@ name|dr_flags
 operator|&
 name|DR_TMDM
 condition|)
-block|{
 name|dra
 operator|->
 name|dr_flags
@@ -1353,14 +1343,6 @@ operator|~
 name|DR_TMDM
 expr_stmt|;
 comment|/* Clear timeout flag */
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Made the error ourself, ignore it */
-block|}
 return|return
 operator|(
 name|err
@@ -1757,18 +1739,10 @@ index|]
 operator|<
 literal|1
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|temp
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|dra
 operator|->
 name|rtimoticks
@@ -1867,18 +1841,10 @@ index|]
 operator|<
 literal|1
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|temp
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|dra
 operator|->
 name|wtimoticks
