@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printlist.c	5.1 (Berkeley) %G%"
+literal|"@(#)printlist.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,54 @@ end_include
 begin_comment
 comment|/*      *	these are the lists of names:      *	there is the list head and then the listname      *	is a pointer to the list head      *	(for ease of passing to stringlist functions).      */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|stringlist
+name|kfromhead
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|stringlist
+modifier|*
+name|kfromlist
+init|=
+operator|&
+name|kfromhead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|stringlist
+name|ktohead
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|stringlist
+modifier|*
+name|ktolist
+init|=
+operator|&
+name|ktohead
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
