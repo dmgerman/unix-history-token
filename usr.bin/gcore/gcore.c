@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)gcore.c	8.2 (Berkeley) 9/23/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)gcore.c	8.2 (Berkeley) 9/23/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -429,7 +449,7 @@ name|kd
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -477,7 +497,7 @@ name|cnt
 operator|!=
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -509,7 +529,7 @@ name|uid
 operator|!=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -526,7 +546,7 @@ name|p_stat
 operator|==
 name|SZOMB
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -543,9 +563,9 @@ name|p_flag
 operator|&
 name|P_WEXIT
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"process exiting"
 argument_list|)
@@ -559,7 +579,7 @@ operator|&
 name|P_SYSTEM
 condition|)
 comment|/* Swapper or pagedaemon. */
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -620,14 +640,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|corefile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|efd
@@ -654,17 +669,12 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cnt
@@ -691,7 +701,7 @@ argument_list|(
 name|exec
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -739,16 +749,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|0
+literal|1
 argument_list|,
-literal|"%d: stop signal: %s"
+literal|"%d: stop signal"
 argument_list|,
 name|pid
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|core
@@ -775,16 +780,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|0
+literal|1
 argument_list|,
-literal|"%d: continue signal: %s"
+literal|"%d: continue signal"
 argument_list|,
 name|pid
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -925,7 +925,7 @@ argument_list|(
 name|uarea
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -981,7 +981,7 @@ argument_list|(
 name|uarea
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1200,12 +1200,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read executable: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read executable"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1238,7 +1233,7 @@ name|cc
 operator|!=
 name|PAGE_SIZE
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1361,7 +1356,7 @@ name|cc
 operator|!=
 name|PAGE_SIZE
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1410,140 +1405,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-name|int
-name|fatal
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fatal
-parameter_list|,
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|int
-name|fatal
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gcore: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 

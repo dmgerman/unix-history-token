@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -330,7 +336,7 @@ name|cc
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -351,7 +357,7 @@ argument_list|(
 name|tf
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -397,12 +403,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"lseek: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -475,7 +476,7 @@ name|cc
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -496,7 +497,7 @@ argument_list|(
 name|fs
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -552,12 +553,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"lseek: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek"
 argument_list|)
 expr_stmt|;
 name|cc
@@ -599,15 +595,10 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read"
 argument_list|)
 expr_stmt|;
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -713,7 +704,7 @@ operator|<
 operator|-
 name|NBPG
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -813,7 +804,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
