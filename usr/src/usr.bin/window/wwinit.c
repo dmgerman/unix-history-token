@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.28 (Berkeley) %G%"
+literal|"@(#)wwinit.c	3.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,7 +921,7 @@ name|setenv
 argument_list|(
 literal|"TERM"
 argument_list|,
-literal|"window"
+name|WWT_TERM
 argument_list|,
 literal|1
 argument_list|)
