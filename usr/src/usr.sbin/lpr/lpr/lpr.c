@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.13	83/03/29	*/
+comment|/*	lpr.c	4.14	83/04/05	*/
 end_comment
 
 begin_comment
@@ -976,7 +976,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2428,7 +2428,9 @@ literal|'d'
 condition|)
 do|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*  * Test to see if this is a printable file.  * Return -1 if it is not, 1 if we should try to link and or in 2 if  * we should remove it after printing.  */
@@ -2888,7 +2890,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|3
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
