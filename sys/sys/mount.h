@@ -1980,27 +1980,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|vfs_start_t
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
 name|vfs_unmount_t
 parameter_list|(
 name|struct
@@ -2318,10 +2297,6 @@ name|vfs_cmount_t
 modifier|*
 name|vfs_cmount
 decl_stmt|;
-name|vfs_start_t
-modifier|*
-name|vfs_start
-decl_stmt|;
 name|vfs_unmount_t
 modifier|*
 name|vfs_unmount
@@ -2394,20 +2369,6 @@ parameter_list|,
 name|P
 parameter_list|)
 value|(*(MP)->mnt_op->vfs_mount)(MP, P)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_START
-parameter_list|(
-name|MP
-parameter_list|,
-name|FLAGS
-parameter_list|,
-name|P
-parameter_list|)
-value|(*(MP)->mnt_op->vfs_start)(MP, FLAGS, P)
 end_define
 
 begin_define
@@ -3269,12 +3230,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * Declarations for these vfs default operations are located in  * kern/vfs_default.c, they should be used instead of making "dummy"  * functions or casting entries in the VFS op table to "enopnotsupp()".  */
 end_comment
-
-begin_decl_stmt
-name|vfs_start_t
-name|vfs_stdstart
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|vfs_root_t

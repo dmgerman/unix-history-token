@@ -609,21 +609,6 @@ if|if
 condition|(
 name|vfsops
 operator|->
-name|vfs_start
-operator|==
-name|NULL
-condition|)
-comment|/* make a file system operational */
-name|vfsops
-operator|->
-name|vfs_start
-operator|=
-name|vfs_stdstart
-expr_stmt|;
-if|if
-condition|(
-name|vfsops
-operator|->
 name|vfs_root
 operator|==
 name|NULL
