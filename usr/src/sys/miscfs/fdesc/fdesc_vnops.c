@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	1.4 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	1.5 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fdesc/fdesc.h>
+file|<miscfs/fdesc/fdesc.h>
 end_include
 
 begin_comment
@@ -117,6 +117,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -477,6 +478,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_open_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -713,6 +715,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_getattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -971,6 +974,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_setattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1167,6 +1171,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_readdir_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1413,6 +1418,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1466,6 +1472,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1538,6 +1545,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1550,6 +1558,11 @@ argument_list|(
 literal|"tag VT_NON, fdesc vnode\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1567,6 +1580,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_vfree_args
+comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1574,7 +1588,11 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1752,117 +1770,126 @@ begin_define
 define|#
 directive|define
 name|fdesc_symlink
-value|((int (*) __P((struct  vop_symlink_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))fdesc_enotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_readlink
-value|((int (*) __P((struct  vop_readlink_args *)))fdesc_enotsupp)
 end_define
 
-begin_define
+begin_expr_stmt
+operator|(
+operator|(
+name|int
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readlink_args
+operator|*
+operator|)
+argument_list|)
+operator|)
+name|fdesc_enotsupp
+operator|)
 define|#
 directive|define
 name|fdesc_abortop
 value|((int (*) __P((struct  vop_abortop_args *)))nullop)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_lock
 value|((int (*) __P((struct  vop_lock_args *)))nullop)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_unlock
 value|((int (*) __P((struct  vop_unlock_args *)))nullop)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_bmap
 value|((int (*) __P((struct  vop_bmap_args *)))fdesc_badop)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_strategy
 value|((int (*) __P((struct  vop_strategy_args *)))fdesc_badop)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_islocked
 value|((int (*) __P((struct  vop_islocked_args *)))nullop)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_advlock
-value|((int (*) __P((struct  vop_advlock_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
+value|((int (*) __P((struct vop_advlock_args *)))fdesc_enotsupp)
 define|#
 directive|define
 name|fdesc_blkatoff
-value|((int (*) __P((struct  vop_blkatoff_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
+operator|(
+operator|(
+name|int
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_blkatoff_args
+operator|*
+operator|)
+argument_list|)
+operator|)
+name|fdesc_enotsupp
+operator|)
 define|#
 directive|define
 name|fdesc_vget
 value|((int (*) __P((struct  vop_vget_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_valloc
 value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) fdesc_enotsupp)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_truncate
-value|((int (*) __P((struct  vop_truncate_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
+operator|(
+operator|(
+name|int
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_truncate_args
+operator|*
+operator|)
+argument_list|)
+operator|)
+name|fdesc_enotsupp
+operator|)
 define|#
 directive|define
 name|fdesc_update
 value|((int (*) __P((struct  vop_update_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
 define|#
 directive|define
 name|fdesc_bwrite
 value|((int (*) __P((struct  vop_bwrite_args *)))fdesc_enotsupp)
-end_define
-
-begin_function_decl
 name|int
-function_decl|(
-modifier|*
-modifier|*
+argument_list|(
+operator|*
+operator|*
 name|fdesc_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|)
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
