@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.2		%G%"
+literal|"@(#)cpr.c	1.3		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_decl_stmt
 name|struct
 name|sgttyb
 name|tbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|SysLine
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +70,15 @@ block|)
 function|;
 end_function
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* be nice on interrupts, etc. */
 end_comment
@@ -81,6 +96,32 @@ end_expr_stmt
 begin_comment
 comment|/* set the terminal to output to printer */
 end_comment
+
+begin_expr_stmt
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"SYSLINE"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+name|SysLine
+operator|=
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_expr_stmt
 name|setupterm
@@ -312,6 +353,19 @@ name|sg_flags
 operator|=
 name|oldflags
 expr_stmt|;
+if|if
+condition|(
+name|SysLine
+operator|>
+literal|0
+condition|)
+name|kill
+argument_list|(
+name|SysLine
+argument_list|,
+name|SIGSTOP
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -398,6 +452,19 @@ literal|1
 argument_list|,
 operator|&
 name|tbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SysLine
+operator|>
+literal|0
+condition|)
+name|kill
+argument_list|(
+name|SysLine
+argument_list|,
+name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
