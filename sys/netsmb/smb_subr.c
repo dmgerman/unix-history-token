@@ -973,6 +973,12 @@ case|:
 return|return
 name|EEXIST
 return|;
+case|case
+name|ERRquota
+case|:
+return|return
+name|EDQUOT
+return|;
 block|}
 break|break;
 case|case
@@ -991,6 +997,9 @@ name|EINVAL
 return|;
 case|case
 name|ERRbadpw
+case|:
+case|case
+name|ERRpasswordExpired
 case|:
 return|return
 name|EAUTH
@@ -1026,11 +1035,22 @@ return|return
 name|EIO
 return|;
 case|case
-literal|2239
+name|ERRaccountExpired
 case|:
-comment|/* NT: account exists but disabled */
+case|case
+name|ERRbadClient
+case|:
+case|case
+name|ERRbadLogonTime
+case|:
 return|return
 name|EPERM
+return|;
+case|case
+name|ERRnosupport
+case|:
+return|return
+name|EBADRPC
 return|;
 block|}
 break|break;

@@ -1652,6 +1652,17 @@ begin_comment
 comment|/* The file named in the request already exists */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ERRquota
+value|112
+end_define
+
+begin_comment
+comment|/* W2K returns this if quota space exceeds */
+end_comment
+
 begin_comment
 comment|/*  * Error codes for the ERRSRV class  */
 end_comment
@@ -1930,6 +1941,49 @@ end_define
 begin_comment
 comment|/* Continue in MPX mode */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ERRbadPassword
+value|254
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERRaccountExpired
+value|2239
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERRbadClient
+value|2240
+end_define
+
+begin_comment
+comment|/* Cannot access the server from this workstation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERRbadLogonTime
+value|2241
+end_define
+
+begin_comment
+comment|/* Cannot access the server at this time **/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERRpasswordExpired
+value|2242
+end_define
 
 begin_define
 define|#
