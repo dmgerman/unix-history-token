@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: join.c,v 1.7 1997/07/15 09:57:28 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2683,6 +2683,17 @@ operator|==
 literal|'-'
 condition|)
 return|return;
+comment|/* skip if not an option */
+if|if
+condition|(
+name|ap
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+condition|)
+continue|continue;
 switch|switch
 condition|(
 name|ap
