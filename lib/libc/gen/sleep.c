@@ -88,6 +88,10 @@ name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
+name|time_remaining
+operator|=
+name|time_to_sleep
+expr_stmt|;
 operator|(
 name|void
 operator|)
