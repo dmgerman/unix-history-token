@@ -3908,6 +3908,7 @@ block|{
 comment|/* XXX should we stop the queue on all errors? */
 if|if
 condition|(
+operator|(
 name|xfer
 operator|->
 name|status
@@ -3919,7 +3920,15 @@ operator|->
 name|status
 operator|==
 name|USBD_TIMEOUT
+operator|)
+operator|&&
+name|pipe
+operator|->
+name|iface
+operator|!=
+name|NULL
 condition|)
+comment|/* not control pipe */
 name|pipe
 operator|->
 name|running
@@ -4276,7 +4285,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"ohci_abort_req in interrupt context"
+literal|"usbd_do_request: in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
