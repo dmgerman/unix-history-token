@@ -11394,8 +11394,6 @@ name|buf
 modifier|*
 parameter_list|)
 function_decl|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|s
 operator|=
 name|splbio
