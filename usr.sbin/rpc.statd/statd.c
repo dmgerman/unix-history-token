@@ -164,10 +164,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|SVCXPRT
-modifier|*
-name|transp
-decl_stmt|;
 name|struct
 name|sigaction
 name|sa
