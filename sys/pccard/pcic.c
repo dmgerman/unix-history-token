@@ -3045,7 +3045,7 @@ literal|50
 expr_stmt|;
 break|break;
 default|default:
-comment|/* I have no idea how do do this for others */
+comment|/* I have no idea how to do this for others */
 break|break;
 block|}
 comment|/* 			 * Regardless of the above, setting the Auto Power 			 * Switch Enable appears to help. 			 */
