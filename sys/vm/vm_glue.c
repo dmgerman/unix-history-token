@@ -590,7 +590,9 @@ operator|+
 name|len
 argument_list|)
 argument_list|,
-name|FALSE
+name|VM_MAP_WIRE_SYSTEM
+operator||
+name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
 block|}
@@ -643,7 +645,9 @@ operator|+
 name|len
 argument_list|)
 argument_list|,
-name|FALSE
+name|VM_MAP_WIRE_SYSTEM
+operator||
+name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
 block|}

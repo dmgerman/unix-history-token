@@ -3521,7 +3521,9 @@ index|]
 operator|->
 name|p_memsz
 argument_list|,
-name|FALSE
+name|VM_MAP_WIRE_SYSTEM
+operator||
+name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
 endif|#

@@ -43,6 +43,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|u_char
+name|vm_flags_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u_int
 name|vm_eflags_t
 typedef|;
@@ -358,6 +365,10 @@ name|u_char
 name|infork
 decl_stmt|;
 comment|/* Am I in fork processing? */
+name|vm_flags_t
+name|flags
+decl_stmt|;
+comment|/* flags for this vm_map */
 name|vm_map_entry_t
 name|root
 decl_stmt|;
@@ -388,6 +399,21 @@ comment|/* (c) */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * vm_flags_t values  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_WIREFUTURE
+value|0x01
+end_define
+
+begin_comment
+comment|/* wire all future pages */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -452,6 +478,40 @@ operator|->
 name|pmap
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_map_modflags
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+name|vm_flags_t
+name|set
+parameter_list|,
+name|vm_flags_t
+name|clear
+parameter_list|)
+block|{
+name|map
+operator|->
+name|flags
+operator|=
+operator|(
+name|map
+operator|->
+name|flags
+operator||
+name|set
+operator|)
+operator|&
+operator|~
+name|clear
+expr_stmt|;
 block|}
 end_function
 
@@ -1002,6 +1062,54 @@ begin_comment
 comment|/* Dirty the page */
 end_comment
 
+begin_comment
+comment|/*  * vm_map_wire and vm_map_unwire option flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAP_WIRE_SYSTEM
+value|0
+end_define
+
+begin_comment
+comment|/* wiring in a kernel map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAP_WIRE_USER
+value|1
+end_define
+
+begin_comment
+comment|/* wiring in a user map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAP_WIRE_NOHOLES
+value|0
+end_define
+
+begin_comment
+comment|/* region must not have holes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MAP_WIRE_HOLESOK
+value|2
+end_define
+
+begin_comment
+comment|/* region may have holes */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1376,8 +1484,8 @@ parameter_list|,
 name|vm_offset_t
 name|end
 parameter_list|,
-name|boolean_t
-name|user_unwire
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1395,8 +1503,8 @@ parameter_list|,
 name|vm_offset_t
 name|end
 parameter_list|,
-name|boolean_t
-name|user_wire
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
