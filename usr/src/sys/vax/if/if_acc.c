@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.30	82/11/13	*/
+comment|/*	if_acc.c	4.31	82/11/15	*/
 end_comment
 
 begin_include
@@ -468,7 +468,7 @@ expr|struct
 name|ifimpcb
 operator|*
 operator|)
-name|impattacch
+name|impattach
 argument_list|(
 name|ui
 argument_list|,
