@@ -3379,6 +3379,12 @@ argument_list|(
 literal|"newaliases"
 argument_list|)
 expr_stmt|;
+comment|/* BOGON #6: Remove /stand (finally) */
+name|vsystem
+argument_list|(
+literal|"rm -rf /stand"
+argument_list|)
+expr_stmt|;
 comment|/* Now run all the mtree stuff to fix things up */
 name|vsystem
 argument_list|(
