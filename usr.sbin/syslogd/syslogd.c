@@ -937,6 +937,18 @@ comment|/* debug flag */
 end_comment
 
 begin_decl_stmt
+name|int
+name|resolve
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* resolve hostname */
+end_comment
+
+begin_decl_stmt
 name|char
 name|LocalHostName
 index|[
@@ -1569,7 +1581,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:dl:f:m:p:suv"
+literal|"a:dl:f:m:p:rsuv"
 argument_list|)
 operator|)
 operator|!=
@@ -1640,6 +1652,14 @@ literal|0
 index|]
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|resolve
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2746,12 +2766,26 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|resolve
+condition|)
 name|hname
 operator|=
 name|cvthname
 argument_list|(
 operator|&
 name|frominet
+argument_list|)
+expr_stmt|;
+else|else
+name|hname
+operator|=
+name|inet_ntoa
+argument_list|(
+name|frominet
+operator|.
+name|sin_addr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2915,7 +2949,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-dsuv] [-a allowed_peer] [-f config_file]"
+literal|"usage: syslogd [-drsuv] [-a allowed_peer] [-f config_file]"
 argument_list|,
 literal|"               [-m mark_interval] [-p log_socket]"
 argument_list|,
