@@ -4,22 +4,6 @@ comment|/*-  * Copyright (c) 2001 FreeBSD, Inc  *  * Redistribution and use in s
 end_comment
 
 begin_decl_stmt
-name|int
-name|login_access
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|login_fbtab
 name|__P
