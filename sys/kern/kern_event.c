@@ -2236,7 +2236,7 @@ name|kn_fop
 operator|=
 name|fops
 expr_stmt|;
-comment|/* 			 * apply reference count to knode structure, so 			 * do not release it at the end of this routine. 			 */
+comment|/* 			 * apply reference count to knote structure, and 			 * do not release it at the end of this routine. 			 */
 name|fp
 operator|=
 name|NULL
