@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.16 1997/02/22 09:40:48 peter Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.17 1997/02/26 14:23:14 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2471,6 +2471,12 @@ name|mnt_vfc
 operator|->
 name|vfc_typenum
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+name|MNT_LOCAL
+expr_stmt|;
 name|devvp
 operator|->
 name|v_specflags
@@ -2771,6 +2777,13 @@ operator|(
 name|qaddr_t
 operator|)
 literal|0
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_flag
+operator|&=
+operator|~
+name|MNT_LOCAL
 expr_stmt|;
 return|return
 name|error
