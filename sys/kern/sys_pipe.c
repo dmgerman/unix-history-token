@@ -2762,6 +2762,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wpipe
@@ -2837,12 +2843,6 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
