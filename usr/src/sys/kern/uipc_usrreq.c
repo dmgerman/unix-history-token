@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.1	82/10/28	*/
+comment|/*	uipc_usrreq.c	1.2	82/11/03	*/
 end_comment
 
 begin_include
@@ -80,7 +80,9 @@ argument|req
 argument_list|,
 argument|m
 argument_list|,
-argument|addr
+argument|nam
+argument_list|,
+argument|opt
 argument_list|)
 end_macro
 
@@ -103,12 +105,17 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|,
+modifier|*
+name|nam
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|caddr_t
-name|addr
+name|struct
+name|socketopt
+modifier|*
+name|opt
 decl_stmt|;
 end_decl_stmt
 
@@ -175,13 +182,6 @@ operator|=
 name|unp_attach
 argument_list|(
 name|so
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -203,12 +203,7 @@ name|unp_connect
 argument_list|(
 name|so
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr_un
-operator|*
-operator|)
-name|addr
+name|nam
 argument_list|)
 expr_stmt|;
 break|break;
@@ -231,12 +226,14 @@ name|sockaddr_un
 modifier|*
 name|soun
 init|=
-operator|(
+name|mtod
+argument_list|(
+name|nam
+argument_list|,
 expr|struct
 name|sockaddr_un
 operator|*
-operator|)
-name|addr
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -406,7 +403,7 @@ name|SOCK_DGRAM
 case|:
 if|if
 condition|(
-name|addr
+name|nam
 condition|)
 block|{
 if|if
@@ -428,7 +425,7 @@ name|unp_connect
 argument_list|(
 name|so
 argument_list|,
-name|addr
+name|nam
 argument_list|)
 expr_stmt|;
 if|if
@@ -482,13 +479,13 @@ name|so2
 argument_list|,
 name|m
 argument_list|,
-name|addr
+name|nam
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
 if|if
 condition|(
-name|addr
+name|nam
 condition|)
 name|unp_disconnect
 argument_list|(
