@@ -4692,11 +4692,9 @@ operator|&
 name|SCF_SIGNATURE
 operator|)
 condition|?
-operator|(
 name|TCPOLEN_SIGNATURE
 operator|+
 literal|2
-operator|)
 else|:
 literal|0
 expr_stmt|;
