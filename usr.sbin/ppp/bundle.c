@@ -6280,6 +6280,10 @@ name|prompt
 argument_list|,
 literal|"\n Queued:        %lu of %u\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ip_QueueLen
 argument_list|(
 operator|&
