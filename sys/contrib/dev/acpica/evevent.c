@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose Even handling and dispatch  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose Even handling and dispatch  *              $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1138,7 +1138,7 @@ name|BitMask
 operator|=
 name|AcpiGbl_DecodeTo8bit
 index|[
-name|i
+name|j
 index|]
 expr_stmt|;
 name|GpeNumberIndex
@@ -1751,6 +1751,7 @@ end_comment
 begin_function
 specifier|static
 name|void
+name|ACPI_SYSTEM_XFACE
 name|AcpiEvAsynchExecuteGpeMethod
 parameter_list|(
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -81,6 +81,20 @@ modifier|*
 name|RegionContext
 parameter_list|)
 block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionDesc
+init|=
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+name|Handle
+decl_stmt|;
+name|ACPI_MEM_SPACE_CONTEXT
+modifier|*
+name|LocalRegionContext
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"EvSystemMemoryRegionSetup"
@@ -118,8 +132,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Activate.  Create a new context */
-operator|*
-name|RegionContext
+name|LocalRegionContext
 operator|=
 name|ACPI_MEM_CALLOCATE
 argument_list|(
@@ -133,8 +146,7 @@ if|if
 condition|(
 operator|!
 operator|(
-operator|*
-name|RegionContext
+name|LocalRegionContext
 operator|)
 condition|)
 block|{
@@ -144,6 +156,32 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Save the region length and address for use in the handler */
+name|LocalRegionContext
+operator|->
+name|Length
+operator|=
+name|RegionDesc
+operator|->
+name|Region
+operator|.
+name|Length
+expr_stmt|;
+name|LocalRegionContext
+operator|->
+name|Address
+operator|=
+name|RegionDesc
+operator|->
+name|Region
+operator|.
+name|Address
+expr_stmt|;
+operator|*
+name|RegionContext
+operator|=
+name|LocalRegionContext
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

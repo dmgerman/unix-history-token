@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 38 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 39 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -722,6 +722,7 @@ end_comment
 
 begin_function
 name|void
+name|ACPI_SYSTEM_XFACE
 name|AcpiDbMethodThread
 parameter_list|(
 name|void

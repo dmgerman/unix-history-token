@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -215,6 +215,21 @@ begin_include
 include|#
 directive|include
 file|"acefi.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acdos16.h"
 end_include
 
 begin_elif
@@ -889,6 +904,34 @@ directive|ifndef
 name|ACPI_ASM_MACROS
 end_ifndef
 
+begin_comment
+comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces   * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTERNAL_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTERNAL_VAR_XFACE
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1005,11 +1048,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/******************************************************************************  *  * Compiler-specific  *  *****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* this has been moved to compiler-specific headers, which are included from the    platform header. */
+comment|/******************************************************************************  *  * Compiler-specific information is contained in the compiler-specific  * headers.  *  *****************************************************************************/
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -112,6 +112,12 @@ name|RegionContext
 decl_stmt|;
 name|UINT32
 name|Length
+decl_stmt|;
+name|UINT32
+name|WindowSize
+decl_stmt|;
+name|UINT32
+name|Remaining
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -231,13 +237,48 @@ name|MappedLength
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*           * Don't attempt to map memory beyond the end of the region, and          * constrain the maximum mapping size to something reasonable.          */
+name|Remaining
+operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
+operator|(
 name|MemInfo
 operator|->
-name|MappedLength
-operator|=
-literal|0
+name|Address
+operator|+
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
+name|MemInfo
+operator|->
+name|Length
+operator|)
+operator|-
+name|Address
+argument_list|)
 expr_stmt|;
-comment|/* In case of failure below */
+if|if
+condition|(
+name|Remaining
+operator|>
+name|SYSMEM_REGION_WINDOW_SIZE
+condition|)
+block|{
+name|WindowSize
+operator|=
+name|SYSMEM_REGION_WINDOW_SIZE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|WindowSize
+operator|=
+name|Remaining
+expr_stmt|;
+block|}
 comment|/* Create a new mapping starting at the address given */
 name|Status
 operator|=
@@ -245,7 +286,7 @@ name|AcpiOsMapMemory
 argument_list|(
 name|Address
 argument_list|,
-name|SYSMEM_REGION_WINDOW_SIZE
+name|WindowSize
 argument_list|,
 operator|(
 name|void
@@ -266,6 +307,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|MemInfo
+operator|->
+name|MappedLength
+operator|=
+literal|0
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -283,7 +330,7 @@ name|MemInfo
 operator|->
 name|MappedLength
 operator|=
-name|SYSMEM_REGION_WINDOW_SIZE
+name|WindowSize
 expr_stmt|;
 block|}
 comment|/*      * Generate a logical pointer corresponding to the address we want to      * access      */

@@ -122,6 +122,7 @@ begin_typedef
 typedef|typedef
 name|UINT32
 function_decl|(
+name|ACPI_SYSTEM_XFACE
 modifier|*
 name|OSD_HANDLER
 function_decl|)
@@ -137,6 +138,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
+name|ACPI_SYSTEM_XFACE
 modifier|*
 name|OSD_EXECUTION_CALLBACK
 function_decl|)
@@ -584,6 +586,7 @@ end_comment
 
 begin_function_decl
 name|void
+name|ACPI_INTERNAL_VAR_XFACE
 name|AcpiOsPrintf
 parameter_list|(
 specifier|const

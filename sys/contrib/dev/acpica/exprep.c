@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 113 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 114 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -123,66 +123,20 @@ name|ByteAlignment
 operator|=
 literal|1
 expr_stmt|;
+name|BitLength
+operator|=
+literal|8
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*          * TBD: optimize          *          * Any attempt to optimize the access size to the size of the field          * must take into consideration the length of the region and take          * care that an access to the field will not attempt to access          * beyond the end of the region.          */
 comment|/* Use the length to set the access type */
-if|if
-condition|(
-name|Length
-operator|<=
-literal|8
-condition|)
-block|{
-name|BitLength
-operator|=
-literal|8
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Length
-operator|<=
-literal|16
-condition|)
-block|{
-name|BitLength
-operator|=
-literal|16
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Length
-operator|<=
-literal|32
-condition|)
-block|{
-name|BitLength
-operator|=
-literal|32
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Length
-operator|<=
-literal|64
-condition|)
-block|{
-name|BitLength
-operator|=
-literal|64
-expr_stmt|;
-block|}
-else|else
-block|{
+block|if (Length<= 8)         {             BitLength = 8;         }         else if (Length<= 16)         {             BitLength = 16;         }         else if (Length<= 32)         {             BitLength = 32;         }         else if (Length<= 64)         {             BitLength = 64;         }         else         {
 comment|/* Larger than Qword - just use byte-size chunks */
-name|BitLength
-operator|=
-literal|8
-expr_stmt|;
-block|}
+block|BitLength = 8;         }
+endif|#
+directive|endif
 break|break;
 case|case
 name|AML_FIELD_ACCESS_BYTE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -481,6 +481,7 @@ end_comment
 
 begin_function
 name|void
+name|ACPI_SYSTEM_XFACE
 name|AcpiEvNotifyDispatch
 parameter_list|(
 name|void
@@ -654,6 +655,7 @@ end_comment
 begin_function
 specifier|static
 name|void
+name|ACPI_SYSTEM_XFACE
 name|AcpiEvGlobalLockThread
 parameter_list|(
 name|void

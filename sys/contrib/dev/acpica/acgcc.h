@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 17 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 19 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,6 +39,34 @@ value|unsigned long
 end_define
 
 begin_comment
+comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces   * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTERNAL_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTERNAL_VAR_XFACE
+end_define
+
+begin_comment
 comment|/* Single threaded */
 end_comment
 
@@ -47,6 +75,10 @@ define|#
 directive|define
 name|ACPI_APPLICATION
 end_define
+
+begin_comment
+comment|/* Asm macros */
+end_comment
 
 begin_define
 define|#
@@ -164,6 +196,38 @@ directive|define
 name|COMPILER_DEPENDENT_UINT64
 value|unsigned long long
 end_define
+
+begin_comment
+comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces   * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SYSTEM_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXTERNAL_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTERNAL_XFACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_INTERNAL_VAR_XFACE
+end_define
+
+begin_comment
+comment|/* Asm macros */
+end_comment
 
 begin_define
 define|#
