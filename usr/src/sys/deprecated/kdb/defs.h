@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	7.2	86/11/20	*/
+comment|/*	defs.h	7.3	86/11/23	*/
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine.h"
+file|"../machine/kdbparam.h"
 end_include
 
 begin_comment

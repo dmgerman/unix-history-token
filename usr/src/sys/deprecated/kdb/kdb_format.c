@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_format.c	7.2	86/11/20	*/
+comment|/*	kdb_format.c	7.3	86/11/23	*/
 end_comment
 
 begin_include
@@ -209,6 +209,9 @@ operator|==
 literal|0
 condition|)
 break|break;
+ifdef|#
+directive|ifdef
+name|ENTRYMASK
 comment|/* check for entry mask */
 if|if
 condition|(
@@ -266,6 +269,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|fp
 operator|=
 name|exform
@@ -1176,13 +1181,12 @@ name|incr
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|addrwrap
+argument_list|(
 name|dot
-operator|^
+argument_list|,
 name|newdot
-operator|)
-operator|>>
-literal|24
+argument_list|)
 condition|)
 name|error
 argument_list|(

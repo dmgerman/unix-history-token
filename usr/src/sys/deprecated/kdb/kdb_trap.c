@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_trap.c	7.3	86/11/20	*/
+comment|/*	kdb_trap.c	7.4	86/11/23	*/
 end_comment
 
 begin_comment
@@ -157,12 +157,10 @@ block|{
 case|case
 name|SINGLE
 case|:
-name|pcb
-operator|.
-name|pcb_psl
-operator||=
-name|TBIT
+name|setsstep
+argument_list|()
 expr_stmt|;
+comment|/* hardware single step */
 comment|/* fall thru... */
 case|case
 name|CONTIN
