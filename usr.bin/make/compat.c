@@ -548,7 +548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * shellneed --  *  * Results:  *	Returns 1 if a specified line must be executed by the shell,  *	0 if it can be run via execve, and -1 if the command is a no-op.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * shellneed --  *  * Results:  *	Returns 1 if a specified line must be executed by the shell,  *	and 0 if it can be run via execve.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -693,14 +693,6 @@ modifier|*
 name|av
 decl_stmt|;
 comment|/* Argument vector for thing to exec */
-name|int
-name|argc
-decl_stmt|;
-comment|/* Number of arguments in av or 0 if not 				 * dynamically allocated */
-name|int
-name|internal
-decl_stmt|;
-comment|/* Various values.. */
 name|char
 modifier|*
 name|cmd
@@ -1092,22 +1084,14 @@ name|av
 operator|=
 name|shargv
 expr_stmt|;
-name|argc
-operator|=
-literal|0
-expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|internal
-operator|=
 name|shellneed
 argument_list|(
 name|cmd
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* 	 * This command must be passed by the shell for other reasons.. 	 * or.. possibly not at all. 	 */
@@ -1119,21 +1103,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|internal
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* Command does not need to be executed */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|shargv
 index|[
 literal|0
@@ -1172,10 +1141,6 @@ name|av
 operator|=
 name|shargv
 expr_stmt|;
-name|argc
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1186,8 +1151,7 @@ name|brk_string
 argument_list|(
 name|cmd
 argument_list|,
-operator|&
-name|argc
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|)

@@ -674,6 +674,12 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|store_argc
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|store_argc
 operator|=
