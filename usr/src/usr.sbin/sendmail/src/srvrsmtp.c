@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.52 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.53 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.52 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.53 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2309,6 +2309,24 @@ case|case
 name|CMDVERB
 case|:
 comment|/* set verbose mode */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|PRIV_NOEXPN
+argument_list|,
+name|PrivacyFlags
+argument_list|)
+condition|)
+block|{
+comment|/* this would give out the same info */
+name|message
+argument_list|(
+literal|"502 Verbose unavailable"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|Verbose
 operator|=
 name|TRUE
@@ -2321,7 +2339,7 @@ name|SM_DELIVER
 expr_stmt|;
 name|message
 argument_list|(
-literal|"200 Verbose mode"
+literal|"250 Verbose mode"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2335,7 +2353,7 @@ name|TRUE
 expr_stmt|;
 name|message
 argument_list|(
-literal|"200 Only one transaction"
+literal|"250 Only one transaction"
 argument_list|)
 expr_stmt|;
 break|break;
