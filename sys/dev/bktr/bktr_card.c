@@ -2906,18 +2906,6 @@ operator|.
 name|card
 index|]
 expr_stmt|;
-name|select_tuner
-argument_list|(
-name|bktr
-argument_list|,
-name|bt848_card_signature
-index|[
-name|i
-index|]
-operator|.
-name|tuner
-argument_list|)
-expr_stmt|;
 name|eeprom_i2c_address
 operator|=
 name|locate_eeprom_address
@@ -2976,6 +2964,25 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|tuner_i2c_address
+operator|=
+name|locate_tuner_address
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|bt848_card_signature
+index|[
+name|i
+index|]
+operator|.
+name|tuner
+argument_list|)
+expr_stmt|;
 goto|goto
 name|checkDBX
 goto|;
@@ -3271,7 +3278,7 @@ case|:
 comment|/* Hauppauge kindly supplied the following Tuner Table */
 comment|/* FIXME: I think the tuners the driver selects for types */
 comment|/* 0x08 and 0x15 may be incorrect but no one has complained. */
-comment|/*    	    	ID Tuner Model          Format         	We select Format 	   	 0 NONE                		 1 EXTERNAL              		 2 OTHER                 		 3 Philips FI1216       BG  		 4 Philips FI1216MF     BGLL'		PHILIPS_SECAM 		 5 Philips FI1236       MN 		PHILIPS_NTSC 		 6 Philips FI1246       I 		PHILIPS_PALI 		 7 Philips FI1256       DK  		 8 Philips FI1216 MK2   BG 		PHILIPS_PALI 		 9 Philips FI1216MF MK2 BGLL' 		PHILIPS_SECAM 		 a Philips FI1236 MK2   MN 		PHILIPS_NTSC 		 b Philips FI1246 MK2   I 		PHILIPS_PALI 		 c Philips FI1256 MK2   DK  		 d Temic 4032FY5        NTSC		TEMIC_NTSC 		 e Temic 4002FH5        BG		TEMIC_PAL 		 f Temic 4062FY5        I 		TEMIC_PALI 		10 Philips FR1216 MK2   BG  		11 Philips FR1216MF MK2 BGLL' 		PHILIPS_FR1236_SECAM 		12 Philips FR1236 MK2   MN 		PHILIPS_FR1236_NTSC 		13 Philips FR1246 MK2   I  		14 Philips FR1256 MK2   DK  		15 Philips FM1216       BG 		PHILIPS_FR1216_PAL 		16 Philips FM1216MF     BGLL' 		PHILIPS_FR1236_SECAM 		17 Philips FM1236       MN 		PHILIPS_FR1236_NTSC 		18 Philips FM1246       I  		19 Philips FM1256       DK  		1a Temic 4036FY5        MN - FI1236 MK2 clone 		1b Samsung TCPN9082D    MN  		1c Samsung TCPM9092P    Pal BG/I/DK  		1d Temic 4006FH5        BG 		PHILIPS_PALI clone 		1e Samsung TCPN9085D    MN/Radio  		1f Samsung TCPB9085P    Pal BG/I/DK / Radio  		20 Samsung TCPL9091P    Pal BG& Secam L/L'  		21 Temic 4039FY5        NTSC Radio  	    */
+comment|/*    	    	ID Tuner Model          Format         	We select Format 	   	 0 NONE                		 1 EXTERNAL              		 2 OTHER                 		 3 Philips FI1216       BG  		 4 Philips FI1216MF     BGLL'		PHILIPS_SECAM 		 5 Philips FI1236       MN 		PHILIPS_NTSC 		 6 Philips FI1246       I 		PHILIPS_PALI 		 7 Philips FI1256       DK  		 8 Philips FI1216 MK2   BG 		PHILIPS_PALI 		 9 Philips FI1216MF MK2 BGLL' 		PHILIPS_SECAM 		 a Philips FI1236 MK2   MN 		PHILIPS_NTSC 		 b Philips FI1246 MK2   I 		PHILIPS_PALI 		 c Philips FI1256 MK2   DK  		 d Temic 4032FY5        NTSC		TEMIC_NTSC 		 e Temic 4002FH5        BG		TEMIC_PAL 		 f Temic 4062FY5        I 		TEMIC_PALI 		10 Philips FR1216 MK2   BG  		11 Philips FR1216MF MK2 BGLL' 		PHILIPS_FR1236_SECAM 		12 Philips FR1236 MK2   MN 		PHILIPS_FR1236_NTSC 		13 Philips FR1246 MK2   I  		14 Philips FR1256 MK2   DK  		15 Philips FM1216       BG 		PHILIPS_FR1216_PAL 		16 Philips FM1216MF     BGLL' 		PHILIPS_FR1236_SECAM 		17 Philips FM1236       MN 		PHILIPS_FR1236_NTSC 		18 Philips FM1246       I  		19 Philips FM1256       DK  		1a Temic 4036FY5        MN - FI1236 MK2 clone PHILIPS_NTSC 		1b Samsung TCPN9082D    MN  		1c Samsung TCPM9092P    Pal BG/I/DK  		1d Temic 4006FH5        BG 		PHILIPS_PALI clone 		1e Samsung TCPN9085D    MN/Radio  		1f Samsung TCPB9085P    Pal BG/I/DK / Radio  		20 Samsung TCPL9091P    Pal BG& Secam L/L'  		21 Temic 4039FY5        NTSC Radio  	    */
 comment|/* Determine the model number from the eeprom */
 if|if
 condition|(
@@ -3419,6 +3426,25 @@ condition|(
 name|tuner_code
 condition|)
 block|{
+case|case
+literal|0x5
+case|:
+case|case
+literal|0x0a
+case|:
+case|case
+literal|0x1a
+case|:
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|PHILIPS_NTSC
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
 case|case
 literal|0x4
 case|:
