@@ -604,7 +604,7 @@ argument_list|,
 literal|"AMD 756/766/768 Power Management Controller"
 argument_list|)
 expr_stmt|;
-comment|/*  	       * We have to do this, since the BIOS won't give us the 	       * resource info (not mine, anyway). 	       */
+comment|/*  		 * We have to do this, since the BIOS won't give us the 		 * resource info (not mine, anyway). 		 */
 name|base
 operator|=
 name|pci_read_config
