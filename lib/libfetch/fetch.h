@@ -56,6 +56,9 @@ block|{
 name|off_t
 name|offset
 decl_stmt|;
+name|size_t
+name|length
+decl_stmt|;
 name|char
 name|scheme
 index|[
