@@ -9282,8 +9282,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 block|}
-else|else
 name|VI_UNLOCK
 argument_list|(
 name|vp
@@ -9291,7 +9295,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENOENT
+name|EBUSY
 operator|)
 return|;
 block|}
