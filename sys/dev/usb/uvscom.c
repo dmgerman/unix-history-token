@@ -995,6 +995,13 @@ name|uvscom_devs
 index|[]
 init|=
 block|{
+comment|/* SUNTAC U-Cable type D2 */
+block|{
+name|USB_VENDOR_SUNTAC
+block|,
+name|USB_PRODUCT_SUNTAC_DS96L
+block|}
+block|,
 comment|/* SUNTAC U-Cable type P1 */
 block|{
 name|USB_VENDOR_SUNTAC
