@@ -2626,6 +2626,7 @@ end_struct
 
 begin_typedef
 typedef|typedef
+specifier|const
 name|void
 modifier|*
 name|macop_t
@@ -2872,8 +2873,7 @@ name|mac_op_constant
 name|mpe_constant
 decl_stmt|;
 comment|/* what this hook implements */
-name|void
-modifier|*
+name|macop_t
 name|mpe_function
 decl_stmt|;
 comment|/* hook's implementation */
