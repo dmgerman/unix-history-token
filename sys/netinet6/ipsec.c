@@ -1387,20 +1387,22 @@ argument_list|(
 literal|"ipsec4_getpolicybysock: NULL pointer was passed.\n"
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
+operator|(
+name|sotoinpcb
+argument_list|(
 name|so
+argument_list|)
 operator|->
-name|so_proto
-operator|->
-name|pr_domain
-operator|->
-name|dom_family
+name|inp_vflag
+operator|&
+name|INP_IPV4
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-case|case
-name|AF_INET
-case|:
 comment|/* set spidx in pcb */
 name|ipsec4_setspidx_inpcb
 argument_list|(
@@ -1421,13 +1423,27 @@ argument_list|)
 operator|->
 name|inp_sp
 expr_stmt|;
-break|break;
+block|}
 ifdef|#
 directive|ifdef
 name|INET6
-case|case
-name|AF_INET6
-case|:
+elseif|else
+if|if
+condition|(
+operator|(
+name|sotoinpcb
+argument_list|(
+name|so
+argument_list|)
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV6
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 comment|/* set spidx in pcb */
 name|ipsec6_setspidx_in6pcb
 argument_list|(
@@ -1448,16 +1464,15 @@ argument_list|)
 operator|->
 name|in6p_sp
 expr_stmt|;
-break|break;
+block|}
 endif|#
 directive|endif
-default|default:
+else|else
 name|panic
 argument_list|(
 literal|"ipsec4_getpolicybysock: unsupported address family\n"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* sanity check */
 if|if
 condition|(

@@ -1074,8 +1074,6 @@ operator|(
 expr|struct
 name|tcpcb
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

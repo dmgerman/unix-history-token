@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ipsec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -347,6 +353,23 @@ include|#
 directive|include
 file|<netinet6/ipsec.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ipsec6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
