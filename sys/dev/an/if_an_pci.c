@@ -206,6 +206,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AIRONET_DEVICEID_35x
+value|0x0350
+end_define
+
+begin_define
+define|#
+directive|define
 name|AIRONET_DEVICEID_4500
 value|0x4500
 end_define
@@ -254,6 +261,14 @@ name|an_devs
 index|[]
 init|=
 block|{
+block|{
+name|AIRONET_VENDORID
+block|,
+name|AIRONET_DEVICEID_35x
+block|,
+literal|"Cisco Aironet 350 Series"
+block|}
+block|,
 block|{
 name|AIRONET_VENDORID
 block|,
