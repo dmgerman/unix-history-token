@@ -3852,6 +3852,7 @@ modifier|*
 name|abortProc
 function_decl|)
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

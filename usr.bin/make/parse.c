@@ -1094,6 +1094,7 @@ parameter_list|(
 name|int
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt

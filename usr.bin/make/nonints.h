@@ -208,6 +208,7 @@ begin_function_decl
 name|void
 name|Error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -220,6 +221,7 @@ begin_function_decl
 name|void
 name|Fatal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -232,6 +234,7 @@ begin_function_decl
 name|void
 name|Punt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -347,6 +350,7 @@ name|Parse_Error
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
