@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	6.2	83/09/26	*/
+comment|/*	tty_pty.c	6.3	83/10/01	*/
 end_comment
 
 begin_comment
