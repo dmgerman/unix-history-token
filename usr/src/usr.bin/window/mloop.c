@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.18 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,33 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|w
+operator|->
+name|ww_pty
+argument_list|,
+name|wwibp
+operator|++
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -198,6 +225,8 @@ name|wwibp
 operator|=
 name|p
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
