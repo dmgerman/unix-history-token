@@ -533,7 +533,6 @@ if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
@@ -1377,8 +1376,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* End of main() */
+end_comment
+
+begin_comment
 comment|/*  * Print program usage  */
+end_comment
+
+begin_function
 name|void
 name|Usage
 parameter_list|(
