@@ -2667,8 +2667,6 @@ if|#
 directive|if
 operator|!
 name|OLD_NEWDB
-operator|&&
-name|HASFLOCK
 name|fd
 operator|=
 name|db
@@ -2678,6 +2676,11 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HASFLOCK
 if|#
 directive|if
 operator|!
@@ -3091,8 +3094,6 @@ if|#
 directive|if
 operator|!
 name|OLD_NEWDB
-operator|&&
-name|HASFLOCK
 name|fd
 operator|=
 name|db
@@ -3102,6 +3103,11 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|HASFLOCK
 if|#
 directive|if
 operator|!
