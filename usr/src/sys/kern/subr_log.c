@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -351,7 +351,11 @@ name|sc_state
 operator||=
 name|LOG_RDWAIT
 expr_stmt|;
-name|sleep
+if|if
+condition|(
+name|error
+operator|=
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -360,8 +364,26 @@ operator|&
 name|msgbuf
 argument_list|,
 name|LOG_RDPRI
+operator||
+name|PCATCH
+argument_list|,
+literal|"klog"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 block|}
 name|splx
 argument_list|(
