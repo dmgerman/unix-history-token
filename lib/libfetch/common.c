@@ -990,6 +990,8 @@ condition|(
 name|errno
 operator|==
 name|EINTR
+operator|&&
+name|fetchRestartCalls
 condition|)
 continue|continue;
 comment|/* EBADF or EINVAL: shouldn't happen */
@@ -1043,6 +1045,8 @@ condition|(
 name|errno
 operator|==
 name|EINTR
+operator|&&
+name|fetchRestartCalls
 condition|)
 continue|continue;
 comment|/* any other error is bad news */
