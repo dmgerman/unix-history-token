@@ -285,7 +285,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Not configured but loadable via an LKM:  */
+comment|/* Not configured but loadable via a module:  */
 end_comment
 
 begin_function

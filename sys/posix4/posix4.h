@@ -46,7 +46,7 @@ file|<posix4/sched.h>
 end_include
 
 begin_comment
-comment|/* Generate syscall stubs for when something is optionally  * LKM'd.  References "syscall_not_present".   * XXX Good candidate for sys/syscall.h  */
+comment|/* Generate syscall stubs for when something is optionally  * loadable as a module.  References "syscall_not_present".   * XXX Good candidate for sys/syscall.h  */
 end_comment
 
 begin_struct_decl

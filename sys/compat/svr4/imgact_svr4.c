@@ -900,7 +900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tell kern_execve.c about it, with a little help from the linker.  * Since `const' objects end up in the text segment, TEXT_SET is the  * correct directive to use.  Do not staticize; used by Linux LKM.  */
+comment|/*  * Tell kern_execve.c about it, with a little help from the linker.  * Since `const' objects end up in the text segment, TEXT_SET is the  * correct directive to use.  */
 end_comment
 
 begin_decl_stmt

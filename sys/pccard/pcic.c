@@ -1036,7 +1036,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *	pcic_unload - Called when unloading a LKM.  *	Disables interrupts and resets PCIC.  */
+comment|/*  *	pcic_unload - Called when unloading a kernel module.  *	Disables interrupts and resets PCIC.  */
 end_comment
 
 begin_function

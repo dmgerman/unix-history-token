@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.22 1999/03/14 08:30:23 semenu Exp $ */
+comment|/*	$Id: if_tx.c,v 1.23 1999/03/31 13:50:52 nsayer Exp $ */
 end_comment
 
 begin_comment
@@ -9482,18 +9482,6 @@ expr_stmt|;
 block|}
 block|}
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void epic_kldinit (void * a) { 	pci_register_lkm (&txdevice, 0); } PSEUDO_SET(epic_kldinit,if_tx);
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
