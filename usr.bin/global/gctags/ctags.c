@@ -436,6 +436,15 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* too ugly to explain */
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|lint
