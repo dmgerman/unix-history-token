@@ -668,11 +668,34 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|warning
+name|struct
+name|so_list
+modifier|*
+name|inferior_sos
+decl_stmt|;
+name|inferior_sos
+operator|=
+name|kgdb_current_sos
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|inferior_sos
+condition|)
+block|{
+name|solib_add
 argument_list|(
-literal|"kgdb_solib_create_inferior_hook called\n"
+name|NULL
+argument_list|,
+comment|/*from_tty*/
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|auto_solib_add
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
