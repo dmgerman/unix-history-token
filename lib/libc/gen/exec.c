@@ -684,7 +684,6 @@ decl_stmt|;
 comment|/* Get the path we're searching. */
 if|if
 condition|(
-operator|!
 operator|(
 name|path
 operator|=
@@ -693,6 +692,8 @@ argument_list|(
 literal|"PATH"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 name|path
 operator|=
@@ -882,14 +883,17 @@ argument_list|,
 literal|":"
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * It's a SHELL path -- double, leading and trailing colons 		 * mean the current directory. 		 */
 if|if
 condition|(
-operator|!
 operator|*
 name|p
+operator|==
+literal|'\0'
 condition|)
 block|{
 name|p
