@@ -75,9 +75,11 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_comment
-comment|/*  * ferror has traditionally been a macro in<stdio.h>.  That is no  * longer true because it needs to be thread-safe.  *  * #undef ferror  */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|ferror
+end_undef
 
 begin_function
 name|int

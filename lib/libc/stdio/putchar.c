@@ -81,9 +81,11 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_comment
-comment|/*  * putchar has traditionally been a macro in<stdio.h>.  That is no  * longer true because POSIX requires it to be thread-safe.  POSIX  * does define putchar_unlocked() which is defined as a macro and is  * probably what you want to use instead.  *  * #undef putchar  */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|putchar
+end_undef
 
 begin_comment
 comment|/*  * A subroutine version of the macro putchar  */
