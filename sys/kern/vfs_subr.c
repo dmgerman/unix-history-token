@@ -408,8 +408,6 @@ begin_decl_stmt
 specifier|static
 name|u_long
 name|freevnodes
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -445,7 +443,7 @@ comment|/* Number of vnode allocation. */
 end_comment
 
 begin_comment
-unit|static u_long vnodeallocs = 0; SYSCTL_LONG(_debug, OID_AUTO, vnodeallocs, CTLFLAG_RD,&vnodeallocs, 0, "");
+unit|static u_long vnodeallocs; SYSCTL_LONG(_debug, OID_AUTO, vnodeallocs, CTLFLAG_RD,&vnodeallocs, 0, "");
 comment|/* Period of vnode recycle from namecache in vnode allocation times. */
 end_comment
 
@@ -624,8 +622,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nameileafonly
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -663,8 +659,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|vfs_ioopt
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -810,8 +804,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|prtactive
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -823,8 +815,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|syncer_delayno
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,8 +1085,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vnlru_nowhere
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
