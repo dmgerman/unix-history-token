@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tth19.c	3.6 83/08/17"
+literal|"@(#)tth19.c	3.7 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,8 +389,16 @@ condition|)
 name|ICPAD
 argument_list|()
 expr_stmt|;
-name|h19_col
+if|if
+condition|(
 operator|++
+name|h19_col
+operator|>=
+literal|80
+condition|)
+name|h19_col
+operator|=
+literal|79
 expr_stmt|;
 block|}
 end_block
@@ -543,6 +551,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|h19_col
+operator|>=
+literal|80
+condition|)
+name|h19_col
+operator|=
+literal|79
+expr_stmt|;
 block|}
 end_block
 
@@ -620,6 +638,16 @@ literal|' '
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|h19_col
+operator|>=
+literal|80
+condition|)
+name|h19_col
+operator|=
+literal|79
+expr_stmt|;
 block|}
 end_block
 
