@@ -1393,6 +1393,9 @@ name|printf
 argument_list|(
 literal|"vlan_start: %*D\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 expr|*
 name|evl
