@@ -135,7 +135,7 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-literal|2
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
