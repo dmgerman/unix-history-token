@@ -293,6 +293,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_kblocks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print size in kilobytes */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_listdir
 decl_stmt|;
 end_decl_stmt
@@ -586,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTacdfgiloqrstu"
+literal|"1ACFLRTacdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -746,6 +756,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'k'
+case|:
+name|f_kblocks
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 name|f_flags
@@ -871,6 +889,14 @@ expr_stmt|;
 name|blocksize
 operator|/=
 literal|512
+expr_stmt|;
+if|if
+condition|(
+name|f_kblocks
+condition|)
+name|blocksize
+operator|*=
+literal|2
 expr_stmt|;
 block|}
 comment|/* Select a sort function. */
