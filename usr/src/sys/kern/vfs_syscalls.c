@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.97 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.98 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1323,6 +1323,25 @@ begin_comment
 comment|/*  * Sync system call.  * Sync each mounted filesystem.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|syncprt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|sync_args
@@ -1459,6 +1478,19 @@ operator|!=
 name|rootfs
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|syncprt
+condition|)
+name|vfs_bufstats
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 return|return
 operator|(
 literal|0
