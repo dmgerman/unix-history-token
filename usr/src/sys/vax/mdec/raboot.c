@@ -1,17 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_comment
-comment|/* "@(#)raboot.c	6.3 (Berkeley) %G%" */
-end_comment
-
-begin_comment
-comment|/*  * UDA50 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  */
+comment|/* "@(#)raboot.c	6.4 (Berkeley) %G%" */
 end_comment
 
 begin_expr_stmt
+operator|.
+name|set
+name|MAJOR
+operator|,
+literal|9
+comment|/* major("/dev/ra0a") */
+comment|/*  * 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  * Except for MAJOR definition above, should work  * with any disk using 750 boot rom.  */
 operator|.
 name|set
 name|RELOC
@@ -88,9 +91,74 @@ end_label
 
 begin_decl_stmt
 name|movl
+name|$MAJOR
+decl_stmt|,
+name|r10
+comment|/* major("/dev/xx0a") */
+name|extzv
+name|$18
+decl_stmt|,
+name|$1
+decl_stmt|,
 name|r1
 decl_stmt|,
-name|r7
+name|r4
+comment|/* get UBA number from R1 */
+name|xorb2
+name|$0x01
+decl_stmt|,
+name|r4
+comment|/* complement bit */
+name|insv
+name|r4
+decl_stmt|,
+name|$24
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* set UBA number */
+name|insv
+name|r3
+decl_stmt|,
+name|$16
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* drive number */
+name|extzv
+name|$12
+decl_stmt|,
+name|$4
+decl_stmt|,
+name|r5
+decl_stmt|,
+name|r4
+comment|/* get partition from r5 */
+name|bicw2
+name|$0xf000
+decl_stmt|,
+name|r5
+comment|/* remove from r5 */
+name|insv
+name|r4
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* set partition */
+name|movl
+name|r5
+decl_stmt|,
+name|r11
+comment|/* boot flags */
+name|movl
+name|r1
+decl_stmt|,
+name|r9
 comment|/* UNIBUS I/O page address */
 name|movl
 name|r2
@@ -100,13 +168,8 @@ comment|/* boot device CSR */
 name|movl
 name|r3
 decl_stmt|,
-name|r9
+name|r7
 comment|/* unit number */
-name|movl
-name|r5
-decl_stmt|,
-name|r11
-comment|/* boot flags */
 name|movl
 name|$RELOC
 decl_stmt|,
@@ -114,19 +177,19 @@ name|sp
 name|moval
 name|init
 decl_stmt|,
-name|r10
+name|r4
 name|movc3
 name|$end
 decl_stmt|,
 argument_list|(
-name|r10
+name|r4
 argument_list|)
 decl_stmt|,
 argument_list|(
 name|sp
 argument_list|)
 name|movl
-name|r7
+name|r9
 decl_stmt|,
 name|r1
 comment|/* UNIBUS I/O page address */
@@ -136,7 +199,7 @@ decl_stmt|,
 name|r2
 comment|/* boot device CSR */
 name|movl
-name|r9
+name|r7
 decl_stmt|,
 name|r3
 comment|/* unit number */
@@ -206,11 +269,7 @@ name|set
 name|PROGSIZE
 decl_stmt|,
 argument_list|(
-operator|(
 name|BOOTLAST
-operator|-
-literal|1
-operator|)
 operator|*
 name|RABPSECT
 argument_list|)
@@ -228,27 +287,22 @@ comment|/* END FIREWALL */
 name|movl
 name|$PROGSIZE
 decl_stmt|,
-name|r3
+name|r4
 name|clrcor
 range|:
 name|clrq
 argument_list|(
-argument|r3
+argument|r4
 argument_list|)
 name|acbl
 name|$RELOC
 decl_stmt|,
 name|$8
 decl_stmt|,
-name|r3
+name|r4
 decl_stmt|,
 name|clrcor
 comment|/* start loaded program */
-name|movl
-name|$9
-decl_stmt|,
-name|r10
-comment|/* major("/dev/ra0a") */
 name|calls
 name|$0
 decl_stmt|,
