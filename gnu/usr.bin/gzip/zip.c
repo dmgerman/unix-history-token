@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: zip.c,v 0.16 1993/05/28 14:51:17 jloup Exp $"
+literal|"$Id: zip.c,v 0.17 1993/06/10 13:29:25 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include

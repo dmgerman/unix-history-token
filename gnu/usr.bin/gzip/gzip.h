@@ -80,8 +80,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* I don't like nested includes, but the string functions are used too often */
+comment|/* I don't like nested includes, but the string and io functions are used  * too often  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_if
 if|#
@@ -318,8 +324,15 @@ name|PACKED
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|LZHED
+value|3
+end_define
+
 begin_comment
-comment|/* methods 3 to 7 reserved */
+comment|/* methods 4 to 7 reserved */
 end_comment
 
 begin_define
@@ -327,6 +340,13 @@ define|#
 directive|define
 name|DEFLATED
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_METHODS
+value|9
 end_define
 
 begin_decl_stmt
@@ -341,7 +361,7 @@ comment|/* compression method */
 end_comment
 
 begin_comment
-comment|/* To save memory for 16 bit systems, some arrays are overlaid between  * the various modules:  * deflate:  prev+head   window      d_buf  l_buf  outbuf  * unlzw:    tab_prefix  tab_suffix  stack  inbuf  outbuf  * inflate:              window             inbuf  * unpack:               window             inbuf  * For compression, input is done in window[]. For decompression, output  * is done in window except for unlzw.  */
+comment|/* To save memory for 16 bit systems, some arrays are overlaid between  * the various modules:  * deflate:  prev+head   window      d_buf  l_buf  outbuf  * unlzw:    tab_prefix  tab_suffix  stack  inbuf  outbuf  * inflate:              window             inbuf  * unpack:               window             inbuf  prefix_len  * unlzh:    left+right  window      c_table inbuf c_len  * For compression, input is done in window[]. For decompression, output  * is done in window except for unlzw.  */
 end_comment
 
 begin_ifndef
@@ -921,7 +941,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|ulg
+name|long
 name|time_stamp
 decl_stmt|;
 end_decl_stmt
@@ -966,6 +986,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PACK_MAGIC
+value|"\037\036"
+end_define
+
+begin_comment
+comment|/* Magic header for packed files */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GZIP_MAGIC
 value|"\037\213"
 end_define
@@ -988,23 +1019,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LZH_MAGIC
+value|"\037\240"
+end_define
+
+begin_comment
+comment|/* Magic header for SCO LZH Compress files*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PKZIP_MAGIC
 value|"\120\113\003\004"
 end_define
 
 begin_comment
 comment|/* Magic header for pkzip files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACK_MAGIC
-value|"\037\036"
-end_define
-
-begin_comment
-comment|/* Magic header for packed files */
 end_comment
 
 begin_comment
@@ -1272,7 +1303,15 @@ define|#
 directive|define
 name|get_byte
 parameter_list|()
-value|(inptr< insize ? inbuf[inptr++] : fill_inbuf())
+value|(inptr< insize ? inbuf[inptr++] : fill_inbuf(0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|try_byte
+parameter_list|()
+value|(inptr< insize ? inbuf[inptr++] : fill_inbuf(1))
 end_define
 
 begin_comment
@@ -1641,6 +1680,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* in unlzh.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|unlzh
+name|OF
+argument_list|(
+operator|(
+name|int
+name|in
+operator|,
+name|int
+name|out
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* in gzip.c */
 end_comment
 
@@ -1854,6 +1914,23 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|copy
+name|OF
+argument_list|(
+operator|(
+name|int
+name|in
+operator|,
+name|int
+name|out
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|ulg
 name|updcrc
 name|OF
@@ -1890,7 +1967,8 @@ name|fill_inbuf
 name|OF
 argument_list|(
 operator|(
-name|void
+name|int
+name|eof_ok
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1969,6 +2047,21 @@ operator|(
 name|char
 operator|*
 name|fname
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|make_simple_name
+name|OF
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2072,6 +2165,10 @@ name|num
 operator|,
 name|long
 name|den
+operator|,
+name|FILE
+operator|*
+name|file
 operator|)
 argument_list|)
 decl_stmt|;

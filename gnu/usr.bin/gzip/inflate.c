@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inflate.c,v 0.13 1993/04/26 14:18:22 jloup Exp $"
+literal|"$Id: inflate.c,v 0.14 1993/06/10 13:27:04 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,12 +35,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
