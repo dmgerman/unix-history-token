@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.11 (Berkeley) %G%"
+literal|"@(#)collect.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,19 @@ end_include
 begin_comment
 comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|CollectErrorMessage
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|CollectErrno
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|maketemp
@@ -118,6 +131,14 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+name|CollectErrorMessage
+operator|=
+name|NULL
+expr_stmt|;
+name|CollectErrno
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
 name|e
 operator|->
@@ -937,9 +958,42 @@ operator|<
 literal|0
 condition|)
 block|{
+name|tferror
+argument_list|(
+name|tf
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|CollectErrorMessage
+operator|!=
+name|NULL
+operator|&&
+name|Errors
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|CollectErrno
+operator|!=
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|CollectErrno
+expr_stmt|;
 name|syserr
 argument_list|(
-literal|"cannot sync message data to disk (%s)"
+name|CollectErrorMessage
 argument_list|,
 name|e
 operator|->
@@ -950,7 +1004,13 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* An EOF when running SMTP is an error */
+name|usrerr
+argument_list|(
+name|CollectErrorMessage
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|inputerr
@@ -966,6 +1026,7 @@ name|MD_DAEMON
 operator|)
 condition|)
 block|{
+comment|/* An EOF when running SMTP is an error */
 name|char
 modifier|*
 name|host
@@ -1343,11 +1404,6 @@ name|p
 init|=
 name|buf
 decl_stmt|;
-name|bool
-name|printmsg
-init|=
-name|TRUE
-decl_stmt|;
 name|char
 name|junkbuf
 index|[
@@ -1366,18 +1422,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|printmsg
-condition|)
-name|usrerr
-argument_list|(
-literal|"553 header line too long"
-argument_list|)
-expr_stmt|;
-name|printmsg
+name|CollectErrorMessage
 operator|=
-name|FALSE
+literal|"553 header line too long"
+expr_stmt|;
+name|CollectErrno
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1449,6 +1500,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|CollectErrno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -1617,22 +1672,18 @@ name|avail
 argument_list|)
 expr_stmt|;
 block|}
-name|usrerr
-argument_list|(
+name|CollectErrorMessage
+operator|=
 literal|"452 Out of disk space for temp file"
-argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|syserr
-argument_list|(
-literal|"collect: Cannot write %s"
-argument_list|,
-name|e
-operator|->
-name|e_df
-argument_list|)
+block|{
+name|CollectErrorMessage
+operator|=
+literal|"cannot write message body to disk (%s)"
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
