@@ -2937,6 +2937,18 @@ block|,
 block|{
 name|USB_VENDOR_MUSTEK
 block|,
+name|USB_PRODUCT_MUSTEK_1200CUPLUS
+block|,
+literal|0
+block|,
+literal|"Mustek Systems, Inc."
+block|,
+literal|"1200 CU Plus scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MUSTEK
+block|,
 name|USB_PRODUCT_MUSTEK_BEARPAW1200F
 block|,
 literal|0

@@ -5869,6 +5869,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_MUSTEK_1200CUPLUS
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 1200 CU Plus scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_MUSTEK_BEARPAW1200F
 value|0x0010
 end_define
