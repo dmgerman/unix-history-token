@@ -3507,8 +3507,7 @@ operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
-comment|/* We should be able to immediately acquire this */
-comment|/* XXX This looks like it should panic if it fails */
+comment|/* 	 * This vnode may found and locked via some other list, if so we 	 * can't recycle it yet. 	 */
 if|if
 condition|(
 name|vn_lock
@@ -3518,33 +3517,19 @@ argument_list|,
 name|LK_INTERLOCK
 operator||
 name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
 argument_list|,
 name|td
 argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|VOP_ISLOCKED
-argument_list|(
-name|vp
-argument_list|,
-name|td
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"vcanrecycle: locked vnode"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
-block|}
 comment|/* 	 * Don't recycle if its filesystem is being suspended. 	 */
 if|if
 condition|(
@@ -4301,6 +4286,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* Sets up v_id. */
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -4541,18 +4527,10 @@ name|v_mount
 operator|=
 name|mp
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|mntvnode_mtx
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4570,6 +4548,7 @@ operator|->
 name|mnt_nvnodelistsize
 operator|++
 expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7753,6 +7732,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * XXX we have no guarantees about this vnodes 			 * identity due to a lack of interlock. 			 */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -9143,6 +9123,17 @@ operator|!=
 name|curthread
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|LK_NOWAIT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|vp
 operator|->
 name|v_iflag
@@ -9167,6 +9158,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ENOENT
@@ -10175,6 +10167,7 @@ operator|&
 name|mntvnode_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX Does not check vn_lock error.  Should restart loop if 		 * error == ENOENT. 		 */
 name|vn_lock
 argument_list|(
 name|vp
@@ -10722,11 +10715,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|bp
 operator|=
 name|TAILQ_FIRST
@@ -10735,11 +10723,6 @@ operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-argument_list|)
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -11505,6 +11488,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If special device, remove it from special device alias list 	 * if it is on one. 	 */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -11526,11 +11514,6 @@ operator|!=
 name|NODEV
 condition|)
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -11569,11 +11552,6 @@ operator|&
 name|spechash_mtx
 argument_list|)
 expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vp
 operator|->
 name|v_rdev
@@ -11582,11 +11560,6 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. The test of the 	 * VDOOMED flag and the reference count of zero is because 	 * it will be removed from the free list by getnewvnode, 	 * but will not have its reference count incremented until 	 * after calling vgone. If the reference count were 	 * incremented first, vgone would (incorrectly) try to 	 * close the previous instance of the underlying object. 	 */
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vp
