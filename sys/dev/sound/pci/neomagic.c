@@ -219,6 +219,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|nmchan_free
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|nmchan_setdir
 parameter_list|(
 name|void
@@ -615,7 +627,32 @@ block|,
 name|nmchan_getptr
 block|,
 name|nmchan_getcaps
-block|, }
+block|,
+name|nmchan_free
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1847,6 +1884,22 @@ end_function
 begin_function
 specifier|static
 name|int
+name|nmchan_free
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|nmchan_setdir
 parameter_list|(
 name|void
@@ -3068,10 +3121,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|snddev_info
-modifier|*
-name|d
-decl_stmt|;
 name|u_int32_t
 name|data
 decl_stmt|;
@@ -3091,13 +3140,6 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-name|d
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3338,7 +3380,7 @@ if|if
 condition|(
 name|mixer_init
 argument_list|(
-name|d
+name|dev
 argument_list|,
 operator|&
 name|ac97_mixer
@@ -3610,22 +3652,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|snddev_info
-modifier|*
-name|d
-decl_stmt|;
 name|struct
 name|sc_info
 modifier|*
 name|sc
 decl_stmt|;
-name|d
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 name|pcm_getdevinfo
@@ -3661,7 +3692,7 @@ if|if
 condition|(
 name|mixer_reinit
 argument_list|(
-name|d
+name|dev
 argument_list|)
 operator|==
 operator|-

@@ -584,7 +584,32 @@ block|,
 name|csachan_getptr
 block|,
 name|csachan_getcaps
-block|, }
+block|,
+name|NULL
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3295,10 +3320,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|snddev_info
-modifier|*
-name|devinfo
-decl_stmt|;
 name|struct
 name|csa_info
 modifier|*
@@ -3327,13 +3348,6 @@ name|sndcard_func
 modifier|*
 name|func
 decl_stmt|;
-name|devinfo
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|csa
 operator|=
 name|malloc
@@ -3508,7 +3522,7 @@ if|if
 condition|(
 name|mixer_init
 argument_list|(
-name|devinfo
+name|dev
 argument_list|,
 operator|&
 name|ac97_mixer

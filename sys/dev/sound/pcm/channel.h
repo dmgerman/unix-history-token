@@ -110,6 +110,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|chn_kill
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|chn_setdir
 parameter_list|(
 name|pcm_channel
@@ -256,6 +267,17 @@ name|b
 parameter_list|,
 name|bus_dma_tag_t
 name|parent_dmat
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|chn_freebuf
+parameter_list|(
+name|snd_dbuf
+modifier|*
+name|b
 parameter_list|)
 function_decl|;
 end_function_decl

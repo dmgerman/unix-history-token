@@ -433,7 +433,32 @@ block|,
 name|sbchan_getptr
 block|,
 name|sbchan_getcaps
-block|, }
+block|,
+name|NULL
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -788,6 +813,8 @@ block|{
 literal|"SoundBlaster mixer"
 block|,
 name|sbmix_init
+block|,
+name|NULL
 block|,
 name|sbmix_set
 block|,
@@ -2053,15 +2080,6 @@ modifier|*
 name|sb
 parameter_list|)
 block|{
-name|snddev_info
-modifier|*
-name|d
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|void
 modifier|*
 name|ih
@@ -2101,7 +2119,7 @@ name|no
 goto|;
 name|mixer_init
 argument_list|(
-name|d
+name|dev
 argument_list|,
 operator|&
 name|sb_mixer

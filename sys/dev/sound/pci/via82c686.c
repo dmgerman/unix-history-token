@@ -486,7 +486,32 @@ block|,
 name|viachan_getptr
 block|,
 name|viachan_getcaps
-block|, }
+block|,
+name|NULL
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -560,10 +585,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|snddev_info
-modifier|*
-name|d
-decl_stmt|;
 name|struct
 name|via_info
 modifier|*
@@ -617,13 +638,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|sgd_dma_map
 decl_stmt|;
-name|d
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -898,7 +912,7 @@ name|bad
 goto|;
 name|mixer_init
 argument_list|(
-name|d
+name|dev
 argument_list|,
 operator|&
 name|ac97_mixer

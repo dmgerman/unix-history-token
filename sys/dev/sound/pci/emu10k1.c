@@ -394,6 +394,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|emupchan_free
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|emupchan_setdir
 parameter_list|(
 name|void
@@ -712,12 +724,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
@@ -734,11 +740,6 @@ name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -980,7 +981,32 @@ block|,
 name|emupchan_getptr
 block|,
 name|emupchan_getcaps
-block|, }
+block|,
+name|emupchan_free
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,7 +1031,32 @@ block|,
 name|emurchan_getptr
 block|,
 name|emurchan_getcaps
-block|, }
+block|,
+name|NULL
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -4291,6 +4342,47 @@ end_function
 begin_function
 specifier|static
 name|int
+name|emupchan_free
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|struct
+name|sc_pchinfo
+modifier|*
+name|ch
+init|=
+name|data
+decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+init|=
+name|ch
+operator|->
+name|parent
+decl_stmt|;
+return|return
+name|emu_memfree
+argument_list|(
+name|sc
+argument_list|,
+name|ch
+operator|->
+name|buffer
+operator|->
+name|buf
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|emupchan_setdir
 parameter_list|(
 name|void
@@ -6189,12 +6281,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -6371,11 +6457,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -8018,10 +8099,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|snddev_info
-modifier|*
-name|d
-decl_stmt|;
 name|u_int32_t
 name|data
 decl_stmt|;
@@ -8046,13 +8123,6 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-name|d
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8437,7 +8507,7 @@ if|if
 condition|(
 name|mixer_init
 argument_list|(
-name|d
+name|dev
 argument_list|,
 operator|&
 name|ac97_mixer
