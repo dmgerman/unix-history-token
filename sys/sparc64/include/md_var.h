@@ -72,26 +72,19 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpu_reset
+name|cpu_identify
 parameter_list|(
-name|void
+name|u_int
+name|clock
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|fill_dbregs
+name|void
+name|cpu_reset
 parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|dbreg
-modifier|*
-name|dbregs
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
