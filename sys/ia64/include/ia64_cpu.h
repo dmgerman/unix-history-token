@@ -732,6 +732,23 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Sync instruction stream.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_sync_i
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("sync.i");
+block|}
+end_function
+
+begin_comment
 comment|/*  * Calculate address in VHPT for va.  */
 end_comment
 
@@ -1355,6 +1372,47 @@ asm|__asm __volatile("mov %0=cr.lid" : "=r" (result));
 return|return
 name|result
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of cr.tpr.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_tpr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=cr.tpr" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of cr.itv.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_tpr
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov cr.tpr=%0" :: "r" (v));
 block|}
 end_function
 
