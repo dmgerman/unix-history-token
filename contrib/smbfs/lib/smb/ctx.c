@@ -1405,7 +1405,7 @@ name|strlen
 argument_list|(
 name|name
 argument_list|)
-operator|>=
+operator|>
 name|SMB_MAXSRVNAMELEN
 condition|)
 block|{
@@ -1460,7 +1460,7 @@ name|strlen
 argument_list|(
 name|name
 argument_list|)
-operator|>=
+operator|>
 name|SMB_MAXUSERNAMELEN
 condition|)
 block|{
@@ -1515,7 +1515,7 @@ name|strlen
 argument_list|(
 name|name
 argument_list|)
-operator|>=
+operator|>
 name|SMB_MAXUSERNAMELEN
 condition|)
 block|{
@@ -1579,7 +1579,7 @@ name|strlen
 argument_list|(
 name|passwd
 argument_list|)
-operator|>=
+operator|>
 name|SMB_MAXPASSWORDLEN
 condition|)
 block|{
@@ -1675,7 +1675,7 @@ name|strlen
 argument_list|(
 name|share
 argument_list|)
-operator|>=
+operator|>
 name|SMB_MAXSHARENAMELEN
 condition|)
 block|{
