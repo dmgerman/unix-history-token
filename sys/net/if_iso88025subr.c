@@ -275,6 +275,10 @@ parameter_list|)
 value|do { error = (e); goto bad; } while (0)
 end_define
 
+begin_comment
+comment|/*  * Perform common duties while attaching to interface list  */
+end_comment
+
 begin_function
 name|void
 name|iso88025_ifattach
@@ -283,6 +287,9 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|int
+name|bpf
 parameter_list|)
 block|{
 name|struct
@@ -317,6 +324,36 @@ name|if_hdrlen
 operator|=
 name|ISO88025_HDR_LEN
 expr_stmt|;
+name|if_attach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+comment|/* Must be called before additional assignments */
+name|ifp
+operator|->
+name|if_output
+operator|=
+name|iso88025_output
+expr_stmt|;
+name|ifp
+operator|->
+name|if_input
+operator|=
+name|iso88025_input
+expr_stmt|;
+name|ifp
+operator|->
+name|if_resolvemulti
+operator|=
+name|iso88025_resolvemulti
+expr_stmt|;
+name|ifp
+operator|->
+name|if_broadcastaddr
+operator|=
+name|iso88025_broadcastaddr
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -345,12 +382,6 @@ operator|->
 name|if_mtu
 operator|=
 name|ISO88025_DEFAULT_MTU
-expr_stmt|;
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-name|iso88025_broadcastaddr
 expr_stmt|;
 name|ifa
 operator|=
@@ -419,6 +450,20 @@ operator|->
 name|if_addrlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bpf
+condition|)
+name|bpfattach
+argument_list|(
+name|ifp
+argument_list|,
+name|DLT_IEEE802
+argument_list|,
+name|ISO88025_HDR_LEN
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

@@ -360,6 +360,20 @@ name|ISO88025_DEFAULT_MTU
 value|1500
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISO88025_BPF_UNSUPPORTED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISO88025_BPF_SUPPORTED
+value|1
+end_define
+
 begin_function_decl
 name|void
 name|iso88025_ifattach
@@ -367,6 +381,8 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
