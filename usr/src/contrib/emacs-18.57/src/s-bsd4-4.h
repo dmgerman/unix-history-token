@@ -277,7 +277,7 @@ name|PENDING_OUTPUT_COUNT
 parameter_list|(
 name|FILE
 parameter_list|)
-value|((FILE)->_w - (FILE)->_bf._size)
+value|((FILE)->_p - (FILE)->_bf._base)
 end_define
 
 begin_comment
@@ -318,6 +318,17 @@ begin_define
 define|#
 directive|define
 name|LIBS_DEBUG
+end_define
+
+begin_comment
+comment|/* X11 libraries, use R5.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIB_X11_LIB
+value|-L/usr/X11R5/lib -lX11
 end_define
 
 begin_comment
