@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	8.2 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	8.3 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
 end_comment
 
 begin_comment
@@ -271,11 +271,18 @@ operator|&&
 operator|(
 operator|*
 name|this_vp_p
+operator|==
+name|NULL
+operator|||
+operator|(
+operator|*
+name|this_vp_p
 operator|)
 operator|->
 name|v_op
 operator|!=
 name|null_vnodeop_p
+operator|)
 condition|)
 block|{
 name|old_vps
