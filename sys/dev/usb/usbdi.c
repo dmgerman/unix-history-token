@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.88 2001/11/22 04:31:01 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.89 2001/12/02 23:25:25 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -5204,6 +5204,36 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * usbd_ratecheck() can limit the number of error messages that occurs.  * When a device is unplugged it may take up to 0.25s for the hub driver  * to notice it.  If the driver continuosly tries to do I/O operations  * this can generate a large number of messages.  */
+end_comment
+
+begin_function
+name|int
+name|usbd_ratecheck
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+name|last
+parameter_list|)
+block|{
+if|#
+directive|if
+literal|0
+block|static struct timeval errinterval = { 0, 2500000 };
+comment|/* 0.25 s*/
+block|return (ratecheck(last,&errinterval));
+endif|#
+directive|endif
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Search for a vendor/product pair in an array.  The item size is  * given as an argument.  */
 end_comment
 
@@ -5283,36 +5313,6 @@ block|}
 return|return
 operator|(
 name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * usbd_ratecheck() can limit the number of error messages that occurs.  * When a device is unplugged it may take up to 0.25s for the hub driver  * to notice it.  If the driver continuosly tries to do I/O operations  * this can generate a large number of messages.  */
-end_comment
-
-begin_function
-name|int
-name|usbd_ratecheck
-parameter_list|(
-name|struct
-name|timeval
-modifier|*
-name|last
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-block|static struct timeval errinterval = { 0, 2500000 };
-comment|/* 0.25 s*/
-block|return (ratecheck(last,&errinterval));
-endif|#
-directive|endif
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}
