@@ -884,12 +884,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MROUTING
-end_ifdef
-
 begin_extern
 extern|extern int	(*mrt_ioctl
 end_extern
@@ -906,37 +900,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_extern
-extern|extern int	(*mrt_ioctl
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|caddr_t
-operator|,
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
