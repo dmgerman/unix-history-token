@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ct.c	4.4	81/03/11	*/
+comment|/*	ct.c	4.5	81/03/11	*/
 end_comment
 
 begin_include
@@ -199,6 +199,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|CTUNIT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev))
+end_define
+
 begin_macro
 name|ctprobe
 argument_list|(
@@ -245,6 +255,27 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_expr_stmt
+name|ctattach
+argument_list|(
+name|ui
+argument_list|)
+specifier|register
+expr|struct
+name|uba_device
+operator|*
+name|ui
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{  }
 end_block
 
 begin_macro
