@@ -440,7 +440,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Lock to prevent object creation race contion. 	 */
+comment|/* 	 * Lock to prevent object creation race condition. 	 */
 while|while
 condition|(
 name|dev_pager_alloc_lock
