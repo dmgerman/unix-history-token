@@ -1476,7 +1476,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|cpu_pause
+name|pause
 parameter_list|(
 name|void
 parameter_list|)
