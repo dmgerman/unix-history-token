@@ -1016,11 +1016,6 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-name|PROC_LOCK
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
 name|fdfree
 argument_list|(
 name|td
@@ -1032,11 +1027,6 @@ operator|->
 name|p_fd
 operator|=
 name|fdtmp
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p1
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Unshare file descriptors (from parent.) 		 */
@@ -1084,11 +1074,6 @@ operator|->
 name|p_fd
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
 name|fdfree
 argument_list|(
 name|td
@@ -1099,11 +1084,6 @@ operator|->
 name|p_fd
 operator|=
 name|newfd
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p1
-argument_list|)
 expr_stmt|;
 block|}
 else|else
