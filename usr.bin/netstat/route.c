@@ -3068,7 +3068,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%6ld %8ld "
+literal|"%6ld %8lu "
 argument_list|,
 name|rt
 operator|->
