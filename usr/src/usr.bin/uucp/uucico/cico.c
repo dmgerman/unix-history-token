@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.16	(Berkeley) %G%"
+literal|"@(#)cico.c	5.17	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,6 +429,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SETPROCTITLE
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|Argv
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to argument vector */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|LastArgv
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* end of argv */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|SETPROCTITLE
+end_endif
+
 begin_comment
 comment|/*  *	this program is used  to place a call to a  *	remote machine, login, and copy files between the two machines.  */
 end_comment
@@ -439,6 +484,8 @@ parameter_list|(
 name|argc
 parameter_list|,
 name|argv
+parameter_list|,
+name|envp
 parameter_list|)
 name|int
 name|argc
@@ -447,6 +494,11 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|envp
 decl_stmt|;
 block|{
 specifier|register
@@ -983,6 +1035,51 @@ name|chkdebug
 argument_list|()
 expr_stmt|;
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+end_ifdef
+
+begin_comment
+comment|/* 	 *  Save start and extent of argv for setproctitle. 	 */
+end_comment
+
+begin_expr_stmt
+name|Argv
+operator|=
+name|argv
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LastArgv
+operator|=
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+operator|+
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|SETPROCTITLE
+end_endif
 
 begin_comment
 comment|/* Try to run as uucp */
@@ -2285,6 +2382,13 @@ operator|=
 name|q
 expr_stmt|;
 block|}
+name|setproctitle
+argument_list|(
+literal|"%s: startup"
+argument_list|,
+name|Rmtname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|callok
@@ -2446,6 +2550,9 @@ comment|/* come here on SIGPIPE	*/
 name|clsacu
 argument_list|()
 expr_stmt|;
+name|logcls
+argument_list|()
+expr_stmt|;
 name|close
 argument_list|(
 name|Ofn
@@ -2497,6 +2604,11 @@ name|StartTime
 operator|=
 literal|0
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"looking for work"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|gnsys
@@ -2506,6 +2618,13 @@ argument_list|,
 name|Spool
 argument_list|,
 name|CMDPRE
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: startup"
+argument_list|,
+name|Rmtname
 argument_list|)
 expr_stmt|;
 name|setdebug
@@ -2535,6 +2654,9 @@ name|cleanup
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|logcls
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -2745,6 +2867,13 @@ goto|goto
 name|next
 goto|;
 block|}
+name|setproctitle
+argument_list|(
+literal|"%s: starting call"
+argument_list|,
+name|Rmtname
+argument_list|)
+expr_stmt|;
 name|Ofn
 operator|=
 name|Ifn
@@ -2758,7 +2887,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"call to %s via %s"
+literal|"(call to %s via %s)"
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -3305,6 +3434,19 @@ argument_list|,
 name|Loginuser
 argument_list|)
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|Rmtname
+argument_list|,
+name|Role
+condition|?
+literal|"MASTER"
+else|:
+literal|"SLAVE"
+argument_list|)
+expr_stmt|;
 name|ttyn
 operator|=
 name|ttyname
@@ -3356,7 +3498,7 @@ condition|)
 block|{
 name|logent
 argument_list|(
-literal|"startup"
+literal|"(startup)"
 argument_list|,
 name|_FAILED
 argument_list|)
@@ -3497,7 +3639,7 @@ name|sprintf
 argument_list|(
 name|smsg
 argument_list|,
-literal|"startup%s%s%s"
+literal|"(startup%s%s%s)"
 argument_list|,
 name|bpsmsg
 argument_list|,
@@ -3576,7 +3718,7 @@ name|sprintf
 argument_list|(
 name|smsg
 argument_list|,
-literal|"conversation complete %ld sent %ld received"
+literal|"(conversation complete %ld sent %ld received)"
 argument_list|,
 name|Bytes_Sent
 argument_list|,
@@ -4205,11 +4347,11 @@ comment|/* DO_CONNECT_ACCOUNTING */
 argument|}
 comment|/*  *	on interrupt - remove locks and exit  */
 argument|onintr(inter) register int inter; { 	char str[BUFSIZ]; 	signal(inter, SIG_IGN); 	sprintf(str,
-literal|"SIGNAL %d"
+literal|"(SIGNAL %d)"
 argument|, inter); 	logent(str,
 literal|"CAUGHT"
 argument|); 	US_SST(us_s_intr); 	if (*Rmtname&& strncmp(Rmtname, Myname, MAXBASENAME)) 		systat(Rmtname, SS_FAIL, str); 	sprintf(str,
-literal|"conversation complete %ld sent %ld received"
+literal|"(conversation complete %ld sent %ld received)"
 argument|, 		Bytes_Sent, Bytes_Received); 	logent(str, _FAILED); 	if (inter == SIGPIPE&& !onesys) 		longjmp(Pipebuf,
 literal|1
 argument|); 	cleanup(inter); }
@@ -4336,6 +4478,31 @@ literal|' '
 argument|) 		*p++ =
 literal|0
 argument|; 	return p; }
+comment|/*  * clobber argv so ps will show what we're doing.  * stolen from sendmail  */
+comment|/*VARARGS1*/
+argument|setproctitle(fmt, a, b, c) char *fmt; {
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+argument|register char *p; 	register int i; 	extern char **Argv; 	extern char *LastArgv; 	char buf[BUFSIZ];  	(void) sprintf(buf, fmt, a, b, c);
+comment|/* make ps print "(sendmail)" */
+argument|p = Argv[
+literal|0
+argument|]; 	*p++ =
+literal|'-'
+argument|;  	i = strlen(buf); 	if (i> LastArgv - p -
+literal|2
+argument|) { 		i = LastArgv - p -
+literal|2
+argument|; 		buf[i] =
+literal|'\0'
+argument|; 	} 	(void) strcpy(p, buf); 	p += i; 	while (p< LastArgv) 		*p++ =
+literal|' '
+argument|;
+endif|#
+directive|endif
+endif|SETPROCTITLE
+argument|}
 end_block
 
 end_unit
