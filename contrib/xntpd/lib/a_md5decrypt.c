@@ -209,9 +209,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
-operator|==
-name|bcmp
+operator|!
+name|memcmp
 argument_list|(
 operator|(
 name|char

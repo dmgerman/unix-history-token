@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/dcfd.c,v 3.8 1993/11/04 20:02:05 kardel Exp  *    * dcfd.c,v 3.8 1993/11/04 20:02:05 kardel Exp  *  * DCF77 100/200ms pulse synchronisation daemon program (via 50Baud serial line)  *  * Features:  *  DCF77 decoding  *  NTP loopfilter logic for local clock  *  interactive display for debugging  *  * Lacks:  *  Leap second handling (at that level you should switch to xntp3 - really!)  *  * Copyright (c) 1993  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/dcfd.c,v 3.15 1994/01/25 19:05:42 kardel Exp  *    * dcfd.c,v 3.15 1994/01/25 19:05:42 kardel Exp  *  * DCF77 100/200ms pulse synchronisation daemon program (via 50Baud serial line)  *  * Features:  *  DCF77 decoding  *  NTP loopfilter logic for local clock  *  interactive display for debugging  *  * Lacks:  *  Leap second handling (at that level you should switch to xntp3 - really!)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
 end_comment
 
 begin_include
@@ -50,6 +50,10 @@ include|#
 directive|include
 file|<syslog.h>
 end_include
+
+begin_comment
+comment|/*  * NTP compilation environment  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -124,6 +128,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * select which terminal handling to use (currently only SysV variants)  */
+end_comment
 
 begin_if
 if|#
@@ -256,11 +264,19 @@ directive|define
 name|timernormalize
 parameter_list|(
 name|_a_
+parameter_list|)
+define|\
+value|if ((_a_)->tv_usec>= 1000000) \ 			{ \ 				(_a_)->tv_sec  += (_a_)->tv_usec / 1000000; \ 				(_a_)->tv_usec  = (_a_)->tv_usec % 1000000; \ 			} \ 		if ((_a_)->tv_usec< 0) \ 			{ \ 				(_a_)->tv_sec  -= 1 + -(_a_)->tv_usec / 1000000; \ 				(_a_)->tv_usec = 1000000 - (-(_a_)->tv_usec % 1000000); \ 			}
+define|#
+directive|define
+name|timeradd
+parameter_list|(
+name|_a_
 parameter_list|,
 name|_b_
 parameter_list|)
 define|\
-value|if ((_a_)->tv_usec>= 1000000) \ 			{ \ 				(_a_)->tv_sec  += (_a_)->tv_usec / 1000000; \ 				(_a_)->tv_usec -= (_a_)->tv_usec % 1000000; \ 			} \  #define timeradd(_a_, _b_) \ 		(_a_)->tv_sec  += (_b_)->tv_sec; \ 		(_a_)->tv_usec += (_b_)->tv_usec; \ 		timernormalize((_a_), (_b_))
+value|(_a_)->tv_sec  += (_b_)->tv_sec; \ 		(_a_)->tv_usec += (_b_)->tv_usec; \ 		timernormalize((_a_))
 define|#
 directive|define
 name|timersub
@@ -270,11 +286,16 @@ parameter_list|,
 name|_b_
 parameter_list|)
 define|\
-value|(_a_)->tv_sec  -= (_b_)->tv_sec; \ 		(_a_)->tv_usec -= (_b_)->tv_usec; \ 		timernormalize((_a_), (_b_))
+value|(_a_)->tv_sec  -= (_b_)->tv_sec; \ 		(_a_)->tv_usec -= (_b_)->tv_usec; \ 		timernormalize((_a_))
+comment|/*  * debug macros  */
 define|#
 directive|define
 name|PRINTF
 value|if (interactive) printf
+define|#
+directive|define
+name|LPRINTF
+value|if (interactive&& loop_filter_debug) printf
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -301,6 +322,10 @@ name|errno
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * display received data (avoids also detaching from tty)  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -310,6 +335,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * display loopfilter (clock control) variables  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -318,6 +347,38 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * do not set/adjust system time  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|no_set
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * time that passes between start of DCF impulse and time stamping (fine  * adjustment) in microseconds (receiver/OS dependent)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_DELAY
+value|230000
+end_define
+
+begin_comment
+comment|/* rough estimate */
+end_comment
+
+begin_comment
+comment|/*  * The two states we can be in - eithe we receive nothing  * usable or we have the correct time  */
+end_comment
 
 begin_define
 define|#
@@ -384,11 +445,11 @@ begin_define
 define|#
 directive|define
 name|MAX_UNSYNC
-value|(5*60)
+value|(10*60)
 end_define
 
 begin_comment
-comment|/* allow synchronisation loss for 5 minutes */
+comment|/* allow synchronisation loss for 10 minutes */
 end_comment
 
 begin_define
@@ -417,7 +478,7 @@ begin_define
 define|#
 directive|define
 name|TIMECONSTANT
-value|0
+value|2
 end_define
 
 begin_define
@@ -523,7 +584,7 @@ comment|/* discard first adjustment (bad samples) */
 end_comment
 
 begin_comment
-comment|/*  * state flags  */
+comment|/*  * DCF77 state flags  */
 end_comment
 
 begin_define
@@ -578,6 +639,7 @@ block|{
 name|long
 name|wday
 decl_stmt|;
+comment|/* Day of week: 1: Monday - 7: Sunday */
 name|long
 name|day
 decl_stmt|;
@@ -606,7 +668,7 @@ comment|/* in minutes */
 name|long
 name|flags
 decl_stmt|;
-comment|/* current clock status */
+comment|/* current clock status  (DCF77 state flags) */
 block|}
 struct|;
 end_struct
@@ -618,6 +680,10 @@ name|clocktime
 name|clocktime_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * (usually) quick constant multiplications  */
+end_comment
 
 begin_define
 define|#
@@ -661,6 +727,10 @@ begin_comment
 comment|/* *(16 - 1) *4 */
 end_comment
 
+begin_comment
+comment|/*  * generic abs() function  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -672,7 +742,7 @@ value|(((_x_)< 0) ? -(_x_) : (_x_))
 end_define
 
 begin_comment
-comment|/*  * parser related return/error codes  */
+comment|/*  * conversion related return/error codes  */
 end_comment
 
 begin_define
@@ -754,6 +824,10 @@ end_comment
 
 begin_comment
 comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - alternate antenna  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
+end_comment
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * conversion table to map DCF77 bit stream into data fields.  * Encoding:  *   Each field of the DCF77 code is described with two adjacent entries in  *   this table. The first entry specifies the offset into the DCF77 data stream  *   while the length is given as the difference between the start index and  *   the start index of the following field.  */
 end_comment
 
 begin_struct
@@ -856,6 +930,10 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * symbolic names for the fields of DCF77 describes in "rawdcfcode".  * see comment above for the structure of the DCF77 data  */
+end_comment
 
 begin_define
 define|#
@@ -997,6 +1075,10 @@ name|DCF_P3
 value|19
 end_define
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * parity field table (same encoding as rawdcfcode)  * This table describes the sections of the DCF77 code that are  * parity protected  */
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -1030,6 +1112,53 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * offsets for parity field descriptions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCF_P_P1
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCF_P_P2
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCF_P_P3
+value|2
+end_define
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * legal values for time zone information  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCF_Z_MET
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCF_Z_MED
+value|0x1
+end_define
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * symbolic representation if the DCF77 data stream  */
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -1062,40 +1191,9 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|DCF_P_P1
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCF_P_P2
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCF_P_P3
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCF_Z_MET
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCF_Z_MED
-value|0x1
-end_define
+begin_comment
+comment|/*-----------------------------------------------------------------------  * extract a bitfield from DCF77 datastream  * All numeric field are LSB first.  * buf holds a pointer to a DCF77 data buffer in symbolic  *     representation  * idx holds the index to the field description in rawdcfcode  */
+end_comment
 
 begin_function
 specifier|static
@@ -1190,6 +1288,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * check even parity integrity for a bitfield  *  * buf holds a pointer to a DCF77 data buffer in symbolic  *     representation  * idx holds the index to the field description in partab  */
+end_comment
+
 begin_function
 specifier|static
 name|unsigned
@@ -1273,6 +1375,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * convert a DCF77 data buffer into wall clock time + flags  *  * buffer holds a pointer to a DCF77 data buffer in symbolic  *        representation  * size   describes the length of DCF77 information in bits (represented  *        as chars in symbolic notation  * clock  points to a wall clock time description of the DCF77 data (result)  */
+end_comment
+
 begin_function
 specifier|static
 name|unsigned
@@ -1355,7 +1461,7 @@ name|DCF_P_P3
 argument_list|)
 condition|)
 block|{
-comment|/*        * buffer OK        */
+comment|/*        * buffer OK - extract all fields and build wall clock time from them        */
 name|clock
 operator|->
 name|flags
@@ -1530,6 +1636,7 @@ argument_list|,
 name|DCF_DW
 argument_list|)
 expr_stmt|;
+comment|/*        * determine offset to UTC by examining the time zone        */
 switch|switch
 condition|(
 name|ext_bf
@@ -1582,6 +1689,7 @@ operator||
 name|CVT_BADFMT
 return|;
 block|}
+comment|/*        * extract various warnings from DCF77        */
 if|if
 condition|(
 name|ext_bf
@@ -1651,7 +1759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * raw dcf input routine - fix up 50 baud  * characters for 1/0 decision  */
+comment|/*-----------------------------------------------------------------------  * raw dcf input routine - fix up 50 baud  * characters for 1/0 decision  */
 end_comment
 
 begin_function
@@ -1750,7 +1858,8 @@ index|[
 name|BITS
 index|]
 decl_stmt|;
-comment|/*    * the input buffer contains characters with runs of consecutive    * bits set. These set bits are an indication of the DCF77 pulse    * length. We assume that we receive the pulse at 50 Baud. Thus    * a 100ms pulse would generate a 4 bit train (20ms per bit and    * start bit)    * a 200ms pulse would create all zeroes (and probably a frame error)    */
+comment|/*    * the input buffer contains characters with runs of consecutive    * bits set. These set bits are an indication of the DCF77 pulse    * length. We assume that we receive the pulse at 50 Baud. Thus    * a 100ms pulse would generate a 4 bit train (20ms per bit and    * start bit)    * a 200ms pulse would create all zeroes (and probably a frame error)    *    * The basic idea is that on corret reception we must have two    * maxima in the pulse length distribution histogram. (one for    * the zero representing pulses and one for the one representing    * pulses)    * There will always be ones in the datastream, thus we have to see    * two maxima.    * The best point to cut for a 1/0 decision is the minimum between those    * between the maxima. The following code tries to find this cutoff point.    */
+comment|/*    * clear histogram buffer    */
 for|for
 control|(
 name|i
@@ -1781,6 +1890,7 @@ name|lowmax
 operator|=
 literal|0
 expr_stmt|;
+comment|/*    * convert sequences of set bits into bits counts updating    * the histogram alongway    */
 while|while
 condition|(
 name|s
@@ -1798,7 +1908,7 @@ name|s
 operator|^
 literal|0xFF
 decl_stmt|;
-comment|/*        * these lines are left as an excercise to the reader 8-)        */
+comment|/*        * check integrity and update histogramm        */
 if|if
 condition|(
 operator|!
@@ -1817,6 +1927,7 @@ operator|*
 name|s
 condition|)
 block|{
+comment|/* 	   * character ok 	   */
 for|for
 control|(
 name|i
@@ -1855,6 +1966,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 	   * invalid character (no consecutive bit sequence) 	   */
 name|dprintf
 argument_list|(
 operator|(
@@ -1886,6 +1998,7 @@ name|s
 operator|++
 expr_stmt|;
 block|}
+comment|/*    * first cutoff estimate (average bit count - must be between both    * maxima)    */
 if|if
 condition|(
 name|lowmax
@@ -1917,10 +2030,13 @@ name|lowmax
 operator|=
 literal|0
 expr_stmt|;
+comment|/* weighted sum */
 name|highmax
 operator|=
 literal|0
 expr_stmt|;
+comment|/* bitcount */
+comment|/*    * collect weighted sum of lower bits (left of initial guess)    */
 name|dprintf
 argument_list|(
 operator|(
@@ -1978,12 +2094,14 @@ literal|"<M>"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*    * round up    */
 name|lowmax
 operator|+=
 name|highmax
 operator|/
 literal|2
 expr_stmt|;
+comment|/*    * calculate lower bit maximum (weighted sum / bit count)    *    * avoid divide by zero    */
 if|if
 condition|(
 name|highmax
@@ -2005,10 +2123,13 @@ name|highmax
 operator|=
 literal|0
 expr_stmt|;
+comment|/* weighted sum of upper bits counts */
 name|cutoff
 operator|=
 literal|0
 expr_stmt|;
+comment|/* bitcount */
+comment|/*    * collect weighted sum of lower bits (right of initial guess)    */
 for|for
 control|(
 init|;
@@ -2056,6 +2177,7 @@ literal|"\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*    * determine upper maximum (weighted sum / bit count)    */
 if|if
 condition|(
 name|cutoff
@@ -2075,6 +2197,8 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+comment|/*    * following now holds:    * lowmax<= cutoff(initial guess)<= highmax    * best cutoff is the minimum nearest to higher bits    */
+comment|/*    * find the minimum between lowmax and highmax (detecting    * possibly a minimum span)    */
 name|span
 operator|=
 name|cutoff
@@ -2108,10 +2232,9 @@ name|i
 index|]
 condition|)
 block|{
+comment|/* 	   * got a new minimum move beginning of minimum (cutoff) and 	   * end of minimum (span) there 	   */
 name|cutoff
 operator|=
-name|i
-expr_stmt|;
 name|span
 operator|=
 name|i
@@ -2131,12 +2254,14 @@ name|i
 index|]
 condition|)
 block|{
+comment|/* 	     * minimum not better yet - but it spans more than 	     * one bit value - follow it 	     */
 name|span
 operator|=
 name|i
 expr_stmt|;
 block|}
 block|}
+comment|/*    * cutoff point for 1/0 decision is the middle of the minimum section    * in the histogram    */
 name|cutoff
 operator|=
 operator|(
@@ -2160,6 +2285,7 @@ name|cutoff
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*    * convert the bit counts to symbolic 1/0 information for data conversion    */
 name|s
 operator|=
 name|buffer
@@ -2192,6 +2318,7 @@ operator|~
 literal|0
 condition|)
 block|{
+comment|/* 	   * invalid character 	   */
 operator|*
 name|s
 operator|=
@@ -2200,6 +2327,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 	   * symbolic 1/0 representation 	   */
 operator|*
 name|s
 operator|=
@@ -2227,6 +2355,7 @@ name|c
 operator|++
 expr_stmt|;
 block|}
+comment|/*    * if everything went well so far return the result of the symbolic    * conversion routine else just the accumulated errors    */
 return|return
 operator|(
 name|rtc
@@ -2248,9 +2377,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * convert a wall clock time description of DCF77 to a Unix time (seconds  * since 1.1. 1970 UTC)  */
+end_comment
+
 begin_function
 name|time_t
-name|parse_to_unixtime
+name|dcf_to_unixtime
 parameter_list|(
 name|clock
 parameter_list|,
@@ -2315,6 +2448,7 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+comment|/*    * map 2 digit years to 19xx (DCF77 is a 20th century item)    */
 if|if
 condition|(
 name|clock
@@ -2329,13 +2463,14 @@ name|year
 operator|+=
 literal|1900
 expr_stmt|;
+comment|/*    * assume that we convert timecode within the unix/UTC epoch -    * prolonges validity of 2 digit years    */
 if|if
 condition|(
 name|clock
 operator|->
 name|year
 operator|<
-literal|1970
+literal|1994
 condition|)
 name|clock
 operator|->
@@ -2343,7 +2478,8 @@ name|year
 operator|+=
 literal|100
 expr_stmt|;
-comment|/* XXX this will do it till<2070 */
+comment|/* XXX this will do it till<2094 */
+comment|/*    * must have been a really negative year code - drop it    */
 if|if
 condition|(
 name|clock
@@ -2366,6 +2502,7 @@ literal|1
 return|;
 block|}
 comment|/*    * sorry, slow section here - but it's not time critical anyway    */
+comment|/*    * calculate days since 1970 (watching leap years)    */
 name|t
 operator|=
 operator|(
@@ -2435,7 +2572,7 @@ literal|1
 return|;
 comment|/* bad month */
 block|}
-comment|/* adjust leap year */
+comment|/* adjust current leap year */
 if|if
 condition|(
 name|clock
@@ -2456,6 +2593,7 @@ condition|)
 name|t
 operator|++
 expr_stmt|;
+comment|/*    * collect days from months excluding the current one    */
 for|for
 control|(
 name|i
@@ -2539,6 +2677,7 @@ literal|1
 return|;
 comment|/* bad day */
 block|}
+comment|/*    * collect days from date excluding the current one    */
 name|t
 operator|+=
 name|clock
@@ -2576,6 +2715,7 @@ literal|1
 return|;
 comment|/* bad hour */
 block|}
+comment|/*    * calculate hours from 1. 1. 1970    */
 name|t
 operator|=
 name|TIMES24
@@ -2616,6 +2756,7 @@ literal|1
 return|;
 comment|/* bad min */
 block|}
+comment|/*    * calculate minutes from 1. 1. 1970    */
 name|t
 operator|=
 name|TIMES60
@@ -2628,13 +2769,13 @@ operator|->
 name|minute
 expr_stmt|;
 comment|/* sec */
+comment|/*    * calculate UTC in minutes    */
 name|t
 operator|+=
 name|clock
 operator|->
 name|utcoffset
 expr_stmt|;
-comment|/* warp to UTC */
 if|if
 condition|(
 name|clock
@@ -2664,6 +2805,7 @@ literal|1
 return|;
 comment|/* bad sec */
 block|}
+comment|/*    * calculate UTC in seconds - phew !    */
 name|t
 operator|=
 name|TIMES60
@@ -2683,7 +2825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cheap half baked 1/0 decision - for interactive operation only  */
+comment|/*-----------------------------------------------------------------------  * cheap half baked 1/0 decision - for interactive operation only  */
 end_comment
 
 begin_function
@@ -2711,6 +2853,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * week day representation  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2740,6 +2886,10 @@ literal|"Su"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * generate a string representation for a timeval  */
+end_comment
 
 begin_function
 specifier|static
@@ -2821,6 +2971,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * correct the current time by an offset by setting the time rigorously  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2838,14 +2992,26 @@ name|struct
 name|timeval
 name|the_time
 decl_stmt|;
-comment|/*XXX*/
 if|if
 condition|(
-name|loop_filter_debug
+name|no_set
 condition|)
-name|printf
+return|return;
+name|LPRINTF
 argument_list|(
 literal|"set_time: %s "
+argument_list|,
+name|pr_timeval
+argument_list|(
+name|offset
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"setting time (offset %s)"
 argument_list|,
 name|pr_timeval
 argument_list|(
@@ -2907,6 +3073,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * slew the time by a given offset  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2923,6 +3093,11 @@ name|struct
 name|timeval
 name|time_offset
 decl_stmt|;
+if|if
+condition|(
+name|no_set
+condition|)
+return|return;
 name|time_offset
 operator|.
 name|tv_sec
@@ -2939,12 +3114,7 @@ name|offset
 operator|%
 literal|1000000
 expr_stmt|;
-comment|/*XXX*/
-if|if
-condition|(
-name|loop_filter_debug
-condition|)
-name|printf
+name|LPRINTF
 argument_list|(
 literal|"adj_time: %d us "
 argument_list|,
@@ -2971,6 +3141,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * read in a possibly previously written drift value  */
+end_comment
 
 begin_function
 specifier|static
@@ -3027,12 +3201,7 @@ argument_list|(
 name|df
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
-if|if
-condition|(
-name|loop_filter_debug
-condition|)
-name|printf
+name|LPRINTF
 argument_list|(
 literal|"read_drift: %d.%03d ppm "
 argument_list|,
@@ -3067,12 +3236,7 @@ operator|<<
 name|USECSCALE
 operator|)
 expr_stmt|;
-comment|/*XXX*/
-if|if
-condition|(
-name|loop_filter_debug
-condition|)
-name|printf
+name|LPRINTF
 argument_list|(
 literal|"read_drift: drift_comp %d "
 argument_list|,
@@ -3082,6 +3246,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * write out the current drift value  */
+end_comment
 
 begin_function
 specifier|static
@@ -3150,12 +3318,7 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-comment|/*XXX*/
-if|if
-condition|(
-name|loop_filter_debug
-condition|)
-name|printf
+name|LPRINTF
 argument_list|(
 literal|"update_drift: drift_comp %d "
 argument_list|,
@@ -3225,12 +3388,7 @@ argument_list|(
 name|df
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
-if|if
-condition|(
-name|loop_filter_debug
-condition|)
-name|printf
+name|LPRINTF
 argument_list|(
 literal|"update_drift: %d.%03d ppm "
 argument_list|,
@@ -3242,6 +3400,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * process adjustments derived from the DCF77 observation  * (controls clock PLL)  */
+end_comment
 
 begin_function
 specifier|static
@@ -3278,6 +3440,11 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
+if|if
+condition|(
+name|no_set
+condition|)
+return|return;
 if|if
 condition|(
 name|skip_adjust
@@ -3449,12 +3616,7 @@ argument_list|,
 name|reftime
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
-if|if
-condition|(
-name|loop_filter_debug
-condition|)
-name|printf
+name|LPRINTF
 argument_list|(
 literal|"clock_adjust: %s, clock_adjust %d, drift_comp %d(%d) "
 argument_list|,
@@ -3482,6 +3644,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * adjust the clock by a small mount to simulate frequency correction  */
+end_comment
 
 begin_function
 specifier|static
@@ -3528,6 +3694,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * control synchronisation status (warnings) and do periodic adjusts  * (frequency control simulation)  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3538,6 +3708,8 @@ specifier|static
 name|unsigned
 name|long
 name|last_notice
+init|=
+literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -3566,43 +3738,64 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|sync_state
-operator|==
-name|NO_SYNC
-operator|)
-operator|&&
-operator|(
-operator|(
 name|ticks
 operator|-
 name|last_sync
 operator|)
 operator|>
 name|MAX_UNSYNC
-operator|)
-operator|&&
-operator|(
-operator|(
-name|last_notice
-operator|-
-name|ticks
-operator|)
-operator|>
-name|NOTICE_INTERVAL
-operator|)
 condition|)
 block|{
+comment|/*        * not getting time for a while        */
+if|if
+condition|(
+name|sync_state
+operator|==
+name|SYNC
+condition|)
+block|{
+comment|/* 	   * completely lost information 	   */
+name|sync_state
+operator|=
+name|NO_SYNC
+expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
-literal|"still not synchronized - check receiver/signal"
+literal|"DCF77 reception lost (timeout)"
 argument_list|)
 expr_stmt|;
 name|last_notice
 operator|=
 name|ticks
 expr_stmt|;
+block|}
+elseif|else
+comment|/* 	 * in NO_SYNC state - look whether its time to speak up again 	 */
+if|if
+condition|(
+operator|(
+name|ticks
+operator|-
+name|last_notice
+operator|)
+operator|>
+name|NOTICE_INTERVAL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"still not synchronized to DCF77 - check receiver/signal"
+argument_list|)
+expr_stmt|;
+name|last_notice
+operator|=
+name|ticks
+expr_stmt|;
+block|}
 block|}
 ifndef|#
 directive|ifndef
@@ -3621,6 +3814,10 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * break association from terminal to avaoid catching terminal  * or process group related signals (-> daemon operation)  */
+end_comment
 
 begin_function
 specifier|static
@@ -3763,6 +3960,10 @@ comment|/* hpux */
 block|}
 end_function
 
+begin_comment
+comment|/*-----------------------------------------------------------------------  * list possible arguments and options  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3782,6 +3983,13 @@ argument_list|,
 literal|"usage: %s [-f] [-l] [-t] [-i] [-o] [-d<drift_file>]<device>\n"
 argument_list|,
 name|program
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-n              do not change time\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3826,8 +4034,19 @@ argument_list|,
 literal|"\t-d<drift_file> specify alternate drift file\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-D<input delay>specify delay from input edge to processing in micro seconds\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*-----------------------------------------------------------------------  * main loop - argument interpreter / setup / main loop  */
+end_comment
 
 begin_function
 name|int
@@ -3888,6 +4107,12 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|delay
+init|=
+name|DEFAULT_DELAY
+decl_stmt|;
+comment|/* average delay from input edge to time stamping */
+name|int
 name|trace
 init|=
 literal|0
@@ -3897,6 +4122,7 @@ name|errs
 init|=
 literal|0
 decl_stmt|;
+comment|/*    * process arguments    */
 while|while
 condition|(
 operator|--
@@ -3974,6 +4200,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|no_set
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 name|offsets
@@ -3992,6 +4226,49 @@ name|interactive
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+if|if
+condition|(
+name|ac
+operator|>
+literal|1
+condition|)
+block|{
+name|delay
+operator|=
+name|atoi
+argument_list|(
+operator|*
+operator|++
+name|a
+argument_list|)
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: -D requires integer argument\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|errs
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'d'
@@ -4144,6 +4421,7 @@ name|LINES
 operator|+
 literal|1
 expr_stmt|;
+comment|/*    * get access to DCF77 tty port    */
 name|fd
 operator|=
 name|open
@@ -4222,6 +4500,11 @@ name|utc_time
 init|=
 literal|0
 decl_stmt|;
+name|time_t
+name|last_utc_time
+init|=
+literal|0
+decl_stmt|;
 name|long
 name|usecerror
 init|=
@@ -4293,8 +4576,9 @@ name|phase
 operator|.
 name|tv_usec
 operator|=
-literal|230000
+name|delay
 expr_stmt|;
+comment|/*        * setup TTY (50 Baud, Read, 8Bit, No Hangup, 1 character IO)        */
 if|if
 condition|(
 name|TTY_GETATTR
@@ -4400,6 +4684,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*        * loose terminal if in daemon operation        */
 if|if
 condition|(
 operator|!
@@ -4408,6 +4693,7 @@ condition|)
 name|detach
 argument_list|()
 expr_stmt|;
+comment|/*        * get syslog() initialized        */
 ifdef|#
 directive|ifdef
 name|LOG_DAEMON
@@ -4431,6 +4717,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*        * setup periodic operations (state control / frequency control)        */
 ifdef|#
 directive|ifdef
 name|SV_ONSTACK
@@ -4636,6 +4923,7 @@ argument_list|(
 name|drift_file
 argument_list|)
 expr_stmt|;
+comment|/*        * what time is it now (for interval measurement)        */
 name|gettimeofday
 argument_list|(
 operator|&
@@ -4648,8 +4936,10 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+comment|/*        * loop until input trouble ...        */
 do|do
 block|{
+comment|/* 	   * get an impulse 	   */
 while|while
 condition|(
 operator|(
@@ -4724,6 +5014,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	       * timeout -> possible minute mark -> interpretation 	       */
 if|if
 condition|(
 name|timercmp
@@ -4786,6 +5077,7 @@ operator|!=
 name|CVT_OK
 condition|)
 block|{
+comment|/* 		       * this data was bad - well - forget synchronisation for now 		       */
 name|PRINTF
 argument_list|(
 literal|"\n"
@@ -4804,9 +5096,9 @@ name|NO_SYNC
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_INFO
 argument_list|,
-literal|"DCF77 reception lost"
+literal|"DCF77 reception lost (bad data)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4821,6 +5113,7 @@ index|]
 operator|=
 name|c
 expr_stmt|;
+comment|/* 		   * collect first character 		   */
 if|if
 condition|(
 operator|(
@@ -4888,6 +5181,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		   * collect character 		   */
 name|buf
 index|[
 name|i
@@ -4977,12 +5271,13 @@ operator|==
 name|CVT_OK
 condition|)
 block|{
+comment|/* 		   * we got a good time code here - try to convert it to 		   * UTC 		   */
 if|if
 condition|(
 operator|(
 name|utc_time
 operator|=
-name|parse_to_unixtime
+name|dcf_to_unixtime
 argument_list|(
 operator|&
 name|clock
@@ -5002,9 +5297,62 @@ literal|"*** BAD CONVERSION\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|utc_time
+operator|!=
+operator|(
+name|last_utc_time
+operator|+
+literal|60
+operator|)
+condition|)
+block|{
+comment|/* 		       * well, two successive sucessful telegrams are not 60 seconds 		       * apart 		       */
+name|PRINTF
+argument_list|(
+literal|"*** NO MINUTE INC\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sync_state
+operator|==
+name|SYNC
+condition|)
+block|{
+name|sync_state
+operator|=
+name|NO_SYNC
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"DCF77 reception lost (data mismatch)"
+argument_list|)
+expr_stmt|;
+block|}
+name|errs
+operator|++
+expr_stmt|;
+name|rtc
+operator|=
+name|CVT_FAIL
+operator||
+name|CVT_BADTIME
+operator||
+name|CVT_BADDATE
+expr_stmt|;
+block|}
+else|else
 name|usecerror
 operator|=
 literal|0
+expr_stmt|;
+name|last_utc_time
+operator|=
+name|utc_time
 expr_stmt|;
 block|}
 if|if
@@ -5048,6 +5396,29 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		       * valid time code - determine offset and 		       * note regained reception 		       */
+name|last_sync
+operator|=
+name|ticks
+expr_stmt|;
+if|if
+condition|(
+name|sync_state
+operator|==
+name|NO_SYNC
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"receiving DCF77"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			   * we had at least one minute SYNC - thus 			   * last error is valid 			   */
 name|time_offset
 operator|.
 name|tv_sec
@@ -5072,26 +5443,6 @@ argument_list|,
 name|drift_file
 argument_list|,
 name|utc_time
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-name|last_sync
-operator|=
-name|ticks
-expr_stmt|;
-if|if
-condition|(
-name|sync_state
-operator|==
-name|NO_SYNC
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"receiving DCF77"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5145,6 +5496,7 @@ name|tt
 operator|.
 name|tv_usec
 expr_stmt|;
+comment|/* 		   * output interpreted DCF77 data 		   */
 name|PRINTF
 argument_list|(
 name|offsets
@@ -5286,6 +5638,14 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|lasterror
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we cannot calculate phase errors on bad reception */
+block|}
 name|PRINTF
 argument_list|(
 literal|"\r"
@@ -5333,11 +5693,12 @@ name|EINTR
 operator|)
 condition|)
 do|;
+comment|/*        * lost IO - sorry guys        */
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"TERMINATING - cannot read from device %s"
+literal|"TERMINATING - cannot read from device %s (%m)"
 argument_list|,
 name|file
 argument_list|)

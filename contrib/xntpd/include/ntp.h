@@ -1373,7 +1373,7 @@ comment|/* this is the preferred peer */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for the clear() routine.  We use bzero() to clear  * the parts of the peer structure which go to zero.  These are  * used to calculate the start address and length of the area.  */
+comment|/*  * Definitions for the clear() routine.  We use memset() to clear  * the parts of the peer structure which go to zero.  These are  * used to calculate the start address and length of the area.  */
 end_comment
 
 begin_define
@@ -1584,7 +1584,18 @@ value|14
 end_define
 
 begin_comment
-comment|/* reserved for Piete Brooks */
+comment|/* MSF EES M201, UK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_GPSTM_TRUETIME
+value|15
+end_define
+
+begin_comment
+comment|/* TrueTime GPS/TM-TMD */
 end_comment
 
 begin_comment

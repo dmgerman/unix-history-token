@@ -663,7 +663,7 @@ name|in
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 name|progname
 operator|=
@@ -776,7 +776,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -818,7 +818,7 @@ condition|(
 name|errflg
 operator|||
 operator|(
-name|optind
+name|ntp_optind
 operator|+
 literal|3
 operator|)
@@ -858,7 +858,7 @@ name|atouint
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|,
 operator|&
@@ -874,7 +874,7 @@ literal|"undecodeable keyid %s"
 argument_list|,
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;
@@ -888,7 +888,7 @@ name|keyfile
 operator|=
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|1
 index|]
@@ -897,7 +897,7 @@ name|conffile
 operator|=
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|2
 index|]
@@ -1366,11 +1366,11 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|name
-argument_list|,
 name|cp
+argument_list|,
+name|name
 argument_list|,
 name|len
 argument_list|)
@@ -1575,19 +1575,14 @@ return|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Use the first address.  We don't have any way to 	 * tell preferences and older gethostbyname() implementations 	 * only return one. 	 */
-operator|(
-name|void
-operator|)
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -1599,6 +1594,10 @@ operator|->
 name|ce_peeraddr
 operator|)
 argument_list|,
+name|hp
+operator|->
+name|h_addr
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1607,7 +1606,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1665,7 +1666,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1673,6 +1674,8 @@ operator|*
 operator|)
 operator|&
 name|saddr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1898,7 +1901,7 @@ condition|)
 comment|/* nothing */
 empty_stmt|;
 comment|/* 	 * Make up a request packet with the configuration info 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1906,6 +1909,8 @@ operator|*
 operator|)
 operator|&
 name|reqpkt
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1975,17 +1980,17 @@ name|conf_peer
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|reqpkt
+operator|.
+name|data
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 name|conf
-argument_list|,
-name|reqpkt
-operator|.
-name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_compat.h,v 3.1 1993/07/06 01:06:49 jbj Exp  * Collect all machine dependent idiosyncrasies in one place.  */
+comment|/* ntp_machine.h,v 3.1 1993/07/06 01:06:49 jbj Exp  * Collect all machine dependent idiosyncrasies in one place.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|__ntp_machine
 end_define
 
 begin_comment
-comment|/*     Various options.     They can defined with the DEFS directive in the Config file if they     are not defined here.   WHICH NICE    HAVE_ATT_NICE     - Use att nice(priority_change)   HAVE_BSD_NICE     - Use bsd setprioirty(which, who, priority)   HAVE_NO_NICE      - Don't have (or use) either  KERNEL MUCKING - If you porting to a new system see xntpd/ntp_unixclock.c and 		 util/tickadj.c to see what these do. This is very system  	         dependent stuff!!! 		    HAVE_LIBKVM       - Use libkvm to read kernal memory   HAVE_READKMEM     - Use read to read kernal memory    NOKMEM	    - Don't read kmem   HAVE_N_UN         - Have u_nn nlist struct.  WHICH SETPGRP TO USE - Not needed if NTP_POSIX_SOURCE is defined since you 		       better of setsid!    HAVE_ATT_SETPGRP  - setpgrp(void) instead of setpgrp(int, int)   Signaled IO -  Signled IO defines.     HAVE_SIGNALED_IO  - Enable signaled io. Assumes you are going to use SIGIO 		      for tty and udp io.   USE_UDP_SIGPOLL   - Use SIGPOLL on socket io. This assumes that the 		      sockets routines are defined on top of streams.   USE_TTY_SIGPOLL   - Use SIGPOLL on tty io. This assumes streams.   UDP_BACKWARDS_SETOWN - SunOS 3.5 or Ultirx 2.0 system. 	        WHICH TERMINAL MODEL TO USE - I would assume HAVE_POSIX_TTYS if  		      NTP_POSIX_SOURCE was set but cann't.  The  		      posix tty driver is too restrictive on most systems. 		      It defined if you define STREAMS.    HAVE_SYSV_TTYS    - Use SYSV termio.h   HAVE_BSD_TTYS     - Use BSD stty.h   HAVE_POSIX_TTYS   - "struct termios" has c_line defined  THIS MAKES PORTS TO NEW SYSTEMS EASY - You only have to wory about 		                       kernal mucking.    NTP_POSIX_SOURCE  - Use POSIX functions over bsd functions and att functions. 		      This is NOT the same as _POSIX_SOURCE. 		      It is much weeker!   STEP SLEW OR TWO STEP - The Default is to step.    SLEWALWAYS  	    - setttimeofday can not be used to set the time of day at  		      all.    STEP_SLEW 	    - setttimeofday can not set the seconds part of time 		      time use setttimeofday to set the seconds part of the 		      time and the slew the seconds.   FORCE_NTPDATE_STEP - even if SLEWALWAYS is defined, force a step of 		      of the systemtime (via settimeofday()). Only takes 		      affect if STEP_SLEW isn't defined.  WHICH TIMEOFDAY()    SYSV_TIMEOFDAY    - [sg]ettimeofday(struct timeval *) as opposed to BSD                       [sg]ettimeofday(struct timeval *, struct timezone *)  INFO ON NEW KERNEL PLL SYS CALLS    NTP_SYSCALLS_STD  - use the "normal" ones   NTP_SYSCALL_GET   - SYS_ntp_gettime id   NTP_SYSCALL_ADJ   - SYS_ntp_adjtime id  WHAT DOES IOCTL(SIOCGIFCONF) RETURN IN THE BUFFER    UNIX V.4 machines implement a sockets library on top of streams.   When requesting the IP interface configuration with an ioctl(2) calll,   an arrat of ifreq structures are placed in the provided buffer.  Some   implementations also place the length of the buffer information in   the first integer position of the buffer.        SIZE_RETURNED_IN_BUFFER - size integer is in the buffer  WILL IOCTL(SIOCGIFCONF) WORK ON A SOCKET    Some UNIX V.4 machines do not appear to support ioctl() requests for the   IP interface configuration on a socket.  They appear to require the use   of the streams device instead.    USE_STREAMS_DEVICE_FOR_IF_CONFIG - use the /dev/ip device for configuration  MISC      USE_PROTOTYPES    - Prototype functions   DOSYNCTODR        - Resync TODR clock  every hour.   RETSIGTYPE        - Define signal function type.   NO_SIGNED_CHAR_DECL - No "signed char" see include/ntp.h   LOCK_PROCESS      -  Have plock.   UDP_WILDCARD_DELIVERY 		    - these systems deliver broadcast pakets to the wildcard 		      port instead to a port bound to the interface bound 		      to the correct broadcast address - are these 		      implementations broken or did the spec change ?    HAVE_UNISTD_H     - Maybe should be part of NTP_POSIX_SOURCE ?  You could just put the defines on the DEFS line in machines/<os> file. I don't since there are lost of different types compiler that a systemm might have, some that can do proto typing and others that cannot on the saem system. I get a chanse to twiddle some of the configuration paramasters at compile time based on compler/machine combinatsions by using this include file. See convex, aix and sun configurations see how complex it get.  */
+comment|/*     Various options.     They can defined with the DEFS directive in the Config file if they     are not defined here.   WHICH NICE    HAVE_ATT_NICE     - Use att nice(priority_change)   HAVE_BSD_NICE     - Use bsd setprioirty(which, who, priority)   HAVE_NO_NICE      - Don't have (or use) either  KERNEL MUCKING - If you porting to a new system see xntpd/ntp_unixclock.c and 		 util/tickadj.c to see what these do. This is very system  	         dependent stuff!!! 		    HAVE_LIBKVM       - Use libkvm to read kernal memory   HAVE_READKMEM     - Use read to read kernal memory    NOKMEM	    - Don't read kmem   HAVE_N_UN         - Have u_nn nlist struct.  WHICH SETPGRP TO USE - Not needed if NTP_POSIX_SOURCE is defined since you 		       better of setsid!    HAVE_ATT_SETPGRP  - setpgrp(void) instead of setpgrp(int, int)   Signaled IO -  Signled IO defines.     HAVE_SIGNALED_IO  - Enable signaled io. Assumes you are going to use SIGIO 		      for tty and udp io.   USE_UDP_SIGPOLL   - Use SIGPOLL on socket io. This assumes that the 		      sockets routines are defined on top of streams.   USE_TTY_SIGPOLL   - Use SIGPOLL on tty io. This assumes streams.   UDP_BACKWARDS_SETOWN - SunOS 3.5 or Ultirx 2.0 system. 	        WHICH TERMINAL MODEL TO USE - I would assume HAVE_TERMIOS if  		      NTP_POSIX_SOURCE was set but can't.  The  		      posix tty driver is too restrictive on most systems. 		      It defined if you define STREAMS.    HAVE_SYSV_TTYS    - Use SYSV termio.h   HAVE_BSD_TTYS     - Use BSD stty.h   HAVE_TERMIOS      - Use POSIX termios.h  THIS MAKES PORTS TO NEW SYSTEMS EASY - You only have to wory about 		                       kernel mucking.    NTP_POSIX_SOURCE  - Use POSIX functions over bsd functions and att functions. 		      This is NOT the same as _POSIX_SOURCE. 		      It is much weaker!   STEP SLEW OR TWO STEP - The Default is to step.    SLEWALWAYS  	    - setttimeofday can not be used to set the time of day at  		      all.    STEP_SLEW 	    - setttimeofday can not set the seconds part of time 		      time use setttimeofday to set the seconds part of the 		      time and the slew the seconds.   FORCE_NTPDATE_STEP - even if SLEWALWAYS is defined, force a step of 		      of the systemtime (via settimeofday()). Only takes 		      affect if STEP_SLEW isn't defined.  WHICH TIMEOFDAY()    SYSV_TIMEOFDAY    - [sg]ettimeofday(struct timeval *) as opposed to BSD                       [sg]ettimeofday(struct timeval *, struct timezone *)  INFO ON NEW KERNEL PLL SYS CALLS    NTP_SYSCALLS_STD  - use the "normal" ones   NTP_SYSCALL_GET   - SYS_ntp_gettime id   NTP_SYSCALL_ADJ   - SYS_ntp_adjtime id  HOW TO GET IP INTERFACE INFORMATION    Some UNIX V.4 machines implement a sockets library on top of   streams. For these systems, you must use send the SIOCGIFCONF down   the stream in an I_STR ioctl. This ususally also implies   USE_STREAMS_DEVICE FOR IF_CONFIG. Dell UNIX is a notable exception.    STREAMS_TLI - use ioctl(I_STR) to implement ioctl(SIOCGIFCONF)  WHAT DOES IOCTL(SIOCGIFCONF) RETURN IN THE BUFFER    UNIX V.4 machines implement a sockets library on top of streams.   When requesting the IP interface configuration with an ioctl(2) calll,   an array of ifreq structures are placed in the provided buffer.  Some   implementations also place the length of the buffer information in   the first integer position of the buffer.        SIZE_RETURNED_IN_BUFFER - size integer is in the buffer  WILL IOCTL(SIOCGIFCONF) WORK ON A SOCKET    Some UNIX V.4 machines do not appear to support ioctl() requests for the   IP interface configuration on a socket.  They appear to require the use   of the streams device instead.    USE_STREAMS_DEVICE_FOR_IF_CONFIG - use the /dev/ip device for configuration  MISC      USE_PROTOTYPES    - Prototype functions   DOSYNCTODR        - Resync TODR clock  every hour.   RETSIGTYPE        - Define signal function type.   NO_SIGNED_CHAR_DECL - No "signed char" see include/ntp.h   LOCK_PROCESS      - Have plock.   UDP_WILDCARD_DELIVERY 		    - these systems deliver broadcast packets to the wildcard 		      port instead to a port bound to the interface bound 		      to the correct broadcast address - are these 		      implementations broken or did the spec change ?  DEFINITIONS FOR SYSTEM&& PROCESSOR   STR_SYSTEM        - value of system variable   STR_PROCESSOR     - value of processor variable  You could just put the defines on the DEFS line in machines/<os> file. I don't since there are lots of different types of compilers that a system might have, some that can do proto typing and others that cannot on the same system. I get a chance to twiddle some of the configuration parameters at compile time based on compiler/machine combinations by using this include file. See convex, aix and sun configurations see how complex it get.    Note that it _is_ considered reasonable to add some system-specific defines to the machine/<os> file if it would be too inconvenient to puzzle them out in this file.    */
 end_comment
 
 begin_comment
@@ -127,6 +127,24 @@ directive|define
 name|HAVE_BSD_NICE
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/AIX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -148,6 +166,12 @@ argument_list|(
 name|SYS_SUNOS4
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|NTP_NEED_BOPS
+end_define
 
 begin_define
 define|#
@@ -194,6 +218,24 @@ name|NTP_SYSCALL_ADJ
 value|147
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/SunOS 4.x"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -229,6 +271,12 @@ undef|#
 directive|undef
 name|USE_UDP_SIGPOLL
 end_undef
+
+begin_define
+define|#
+directive|define
+name|STREAMS_TLI
+end_define
 
 begin_define
 define|#
@@ -270,6 +318,24 @@ define|#
 directive|define
 name|HAVE_ATT_NICE
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/SINIX-M"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -353,6 +419,24 @@ define|#
 directive|define
 name|UDP_WILDCARD_DELIVERY
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Solaris 2.x"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -497,6 +581,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/ConvexOS"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -568,6 +670,24 @@ directive|define
 name|NTP_POSIX_SOURCE
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/IRIX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -615,6 +735,30 @@ begin_define
 define|#
 directive|define
 name|NTP_SYSCALLS_STD
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Ultrix"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERMIOS
 end_define
 
 begin_endif
@@ -718,6 +862,24 @@ directive|define
 name|HAVE_SIGNALED_IO
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/AUX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -766,6 +928,24 @@ directive|undef
 name|NTP_POSIX_SOURCE
 end_undef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Next"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -799,7 +979,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_UNISTD_H
+name|getdtablesize
+parameter_list|()
+value|sysconf(_SC_OPEN_MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|setlinebuf
+parameter_list|(
+name|f
+parameter_list|)
+value|setvbuf(f, NULL, _IOLBF, 0)
 end_define
 
 begin_define
@@ -863,6 +1055,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/HPUX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -903,6 +1113,36 @@ begin_define
 define|#
 directive|define
 name|HAVE_BSD_NICE
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/BSDI"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|HAVE_BSD_TTYS
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERMIOS
 end_define
 
 begin_endif
@@ -954,11 +1194,15 @@ directive|define
 name|HAVE_SYS_TIMEX_H
 end_define
 
+begin_comment
+comment|/* hope there will be a standard interface   * along with a standard name one day ! */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ntp_adjtime
-value|adjtimex
+value|__adjtimex
 end_define
 
 begin_define
@@ -966,6 +1210,24 @@ define|#
 directive|define
 name|HAVE_BSD_NICE
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Linux"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1019,13 +1281,31 @@ directive|define
 name|HAVE_BSD_NICE
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/*BSD"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * DECOSF1  */
+comment|/*  * DEC AXP OSF/1  */
 end_comment
 
 begin_if
@@ -1067,13 +1347,31 @@ directive|define
 name|HAVE_BSD_NICE
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/DECOSF1"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * I386  */
+comment|/*  * I386  * XXX - what OS?  */
 end_comment
 
 begin_if
@@ -1102,6 +1400,24 @@ define|#
 directive|define
 name|HAVE_BSD_NICE
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/I386"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1133,6 +1449,24 @@ directive|define
 name|HAVE_BSD_NICE
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Mips"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -1156,6 +1490,24 @@ define|#
 directive|define
 name|HAVE_BSD_NICE
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Sequent Dynix 3"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1197,6 +1549,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|STREAMS_TLI
+end_define
 
 begin_define
 define|#
@@ -1350,13 +1708,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Sequent PTX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Sony  */
+comment|/*  * Sony NEWS  */
 end_comment
 
 begin_if
@@ -1386,13 +1762,31 @@ directive|define
 name|HAVE_BSD_NICE
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/Sony"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * VAX  */
+comment|/*  * VAX  * XXX - VMS?  */
 end_comment
 
 begin_if
@@ -1421,6 +1815,24 @@ define|#
 directive|define
 name|HAVE_BSD_NICE
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/VAX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1455,12 +1867,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_UNISTD_H
-end_define
-
-begin_define
-define|#
-directive|define
 name|NTP_POSIX_SOURCE
 end_define
 
@@ -1474,12 +1880,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_READKMEM
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SIGNALED_IO
 end_define
 
 begin_define
@@ -1527,6 +1927,134 @@ define|#
 directive|define
 name|SIZE_RETURNED_IN_BUFFER
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/SysVR4"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * DomainOS  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS_DOMAINOS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_BSD_NICE
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOKMEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGNALED_IO
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_BSD_TTYS
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTP_SYSCALLS_STD
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_PROTOTYPES
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDP_WILDCARD_DELIVERY
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STR_SYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"UNIX/DOMAINOS"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STREAM
+end_ifdef
+
+begin_comment
+comment|/* STREAM implies TERMIOS */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_TERMIOS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_TERMIOS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1636,12 +2164,14 @@ name|defined
 argument_list|(
 name|HAVE_ATT_NICE
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|HAVE_BSD_NICE
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
@@ -1653,6 +2183,130 @@ end_if
 begin_expr_stmt
 name|ERROR
 name|You_must_define_one_of_the_HAVE_xx_NICE_defines
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SYSV_TTYS
+argument_list|)
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_BSD_TTYS
+argument_list|)
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TERMIOS
+argument_list|)
+name|ERROR
+name|no_tty_type_defined
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|XNTP_BIG_ENDIAN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|XNTP_LITTLE_ENDIAN
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XNTP_AUTO_ENDIAN
+argument_list|)
+include|#
+directive|include
+file|<netinet/in.h>
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+define|#
+directive|define
+name|XNTP_BIG_ENDIAN
+endif|#
+directive|endif
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+define|#
+directive|define
+name|XNTP_LITTLE_ENDIAN
+endif|#
+directive|endif
+else|#
+directive|else
+comment|/* AUTO */
+ifdef|#
+directive|ifdef
+name|WORDS_BIGENDIAN
+define|#
+directive|define
+name|XNTP_BIG_ENDIAN
+value|1
+else|#
+directive|else
+define|#
+directive|define
+name|XNTP_LITTLE_ENDIAN
+value|1
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* AUTO */
+endif|#
+directive|endif
+comment|/* !BIG&& !LITTLE */
+comment|/*  * Byte order woes.  The DES code is sensitive to byte order.  This  * used to be resolved by calling ntohl() and htonl() to swap things  * around, but this turned out to be quite costly on Vaxes where those  * things are actual functions.  The code now straightens out byte  * order troubles on its own, with no performance penalty for little  * end first machines, but at great expense to cleanliness.  */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|XNTP_BIG_ENDIAN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|XNTP_LITTLE_ENDIAN
+argument_list|)
+comment|/* 	 * Pick one or the other. 	 */
+name|BYTE_ORDER_NOT_DEFINED_FOR_AUTHENTICATION
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XNTP_BIG_ENDIAN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|XNTP_LITTLE_ENDIAN
+argument_list|)
+comment|/* 	 * Pick one or the other. 	 */
+name|BYTE_ORDER_NOT_DEFINED_FOR_AUTHENTICATION
 end_expr_stmt
 
 begin_endif

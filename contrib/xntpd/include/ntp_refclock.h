@@ -286,10 +286,13 @@ name|lastevent
 decl_stmt|;
 name|u_char
 name|unused
-index|[
-literal|1
-index|]
 decl_stmt|;
+name|struct
+name|ctl_var
+modifier|*
+name|kv_list
+decl_stmt|;
+comment|/* additional variables */
 block|}
 struct|;
 end_struct

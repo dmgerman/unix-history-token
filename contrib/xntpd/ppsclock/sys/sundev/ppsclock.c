@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"ppsclock.c,v 3.1 1993/07/06 01:10:17 jbj Exp (LBL)"
+literal|"@(#) $Header: ppsclock.c,v 1.5 92/08/20 19:46:35 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,6 +399,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+end_ifdef
+
+begin_comment
+comment|/*  * The hardpps() routine is called at every pps interrupt in order to  * discipline the cpu clock oscillator. It requires corresponding kernel  * support.  */
+end_comment
+
+begin_extern
+extern|extern hardpps(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PPS_SYNC */
+end_comment
 
 begin_comment
 comment|/*  * open CLOCK STREAMS module  */
@@ -935,6 +963,16 @@ name|ppsclockev
 operator|.
 name|serial
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+comment|/* 			 * If the 1-pps cpu oscillator discipline has been 			 * configured in the kernel, give it something to 			 * chew on. 			 */
+name|hardpps
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PPS_SYNC */
 block|}
 name|za
 operator|->

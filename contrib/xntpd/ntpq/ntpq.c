@@ -1812,6 +1812,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -2398,6 +2403,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -2449,7 +2459,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sgi */
+comment|/* sgi || bsdi */
 end_comment
 
 begin_comment
@@ -3540,12 +3550,12 @@ literal|0
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|delay_time
 operator|.
@@ -3571,7 +3581,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -3593,7 +3603,7 @@ literal|'c'
 case|:
 name|ADDCMD
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3660,7 +3670,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|optind
+name|ntp_optind
 operator|==
 name|argc
 condition|)
@@ -3676,18 +3686,18 @@ block|{
 for|for
 control|(
 init|;
-name|optind
+name|ntp_optind
 operator|<
 name|argc
 condition|;
-name|optind
+name|ntp_optind
 operator|++
 control|)
 name|ADDHOST
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;
@@ -5644,16 +5654,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Copy the data into the data buffer. 	 */
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|rpkt
-operator|.
-name|data
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -5661,6 +5663,14 @@ operator|)
 name|pktdata
 operator|+
 name|offset
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|rpkt
+operator|.
+name|data
 argument_list|,
 name|count
 argument_list|)
@@ -5910,10 +5920,8 @@ operator|>
 literal|0
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|qdata
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -5921,6 +5929,8 @@ operator|)
 name|qpkt
 operator|.
 name|data
+argument_list|,
+name|qdata
 argument_list|,
 name|qsize
 argument_list|)
@@ -7914,17 +7924,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 name|num
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -9512,6 +9522,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 name|qsort
 argument_list|(
 operator|(
@@ -9554,7 +9569,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sgi */
+comment|/* sgi || bsdi */
 name|maxlength
 operator|=
 literal|0
@@ -9810,6 +9825,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 name|helpsort
 parameter_list|(
 name|t1
@@ -9876,7 +9896,7 @@ decl_stmt|;
 block|{
 endif|#
 directive|endif
-comment|/* sgi */
+comment|/* sgi || bsdi */
 return|return
 name|strcmp
 argument_list|(
@@ -12496,6 +12516,11 @@ name|char
 modifier|*
 name|cpend
 decl_stmt|;
+name|int
+name|quoted
+init|=
+literal|0
+decl_stmt|;
 specifier|static
 name|char
 name|name
@@ -12717,11 +12742,22 @@ name|cp
 operator|<
 name|cpend
 operator|&&
+operator|(
+operator|(
 operator|*
 name|cp
 operator|!=
 literal|','
+operator|)
+operator|||
+name|quoted
+operator|)
 condition|)
+block|{
+name|quoted
+operator|^=
+operator|(
+operator|(
 operator|*
 name|np
 operator|++
@@ -12729,7 +12765,12 @@ operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|==
+literal|'"'
+operator|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|np
@@ -14281,6 +14322,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 name|qsort
 argument_list|(
 operator|(
@@ -14323,7 +14369,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sgi */
+comment|/* sgi || bsdi */
 block|}
 comment|/*  * assoccmp - compare two associations  */
 specifier|static
@@ -14333,6 +14379,11 @@ directive|if
 name|defined
 argument_list|(
 name|sgi
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
 argument_list|)
 name|assoccmp
 parameter_list|(
@@ -14400,7 +14451,7 @@ decl_stmt|;
 block|{
 endif|#
 directive|endif
-comment|/* sgi */
+comment|/* sgi || bsdi */
 if|if
 condition|(
 name|ass1

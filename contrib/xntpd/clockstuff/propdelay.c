@@ -670,12 +670,12 @@ name|long3
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|progname
 operator|=
@@ -689,7 +689,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -723,7 +723,7 @@ name|height
 operator|=
 name|atof
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -742,7 +742,7 @@ name|stderr
 argument_list|,
 literal|"height %s unlikely\n"
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -791,7 +791,7 @@ operator|||
 name|Gflag
 operator|)
 operator|&&
-name|optind
+name|ntp_optind
 operator|+
 literal|4
 operator|!=
@@ -807,7 +807,7 @@ operator|||
 name|Gflag
 operator|)
 operator|&&
-name|optind
+name|ntp_optind
 operator|+
 literal|2
 operator|!=
@@ -873,7 +873,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|,
 literal|1
@@ -885,7 +885,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|1
 index|]
@@ -899,7 +899,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|2
 index|]
@@ -913,7 +913,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|3
 index|]
@@ -995,7 +995,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|,
 literal|1
@@ -1007,7 +1007,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|1
 index|]
@@ -1185,7 +1185,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|,
 literal|1
@@ -1197,7 +1197,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|1
 index|]
@@ -1314,7 +1314,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|,
 literal|1
@@ -1326,7 +1326,7 @@ name|latlong
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 operator|+
 literal|1
 index|]

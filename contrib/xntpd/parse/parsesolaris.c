@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsesolaris.c,v 3.4 1993/11/13 11:13:17 kardel Exp  *    * parsesolaris.c,v 3.4 1993/11/13 11:13:17 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS5.x - not fully tested - buyer beware ! - OS KILLERS may still be  *  lurking in the code!)  *  * Copyright (c) 1993  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsesolaris.c,v 3.9 1994/01/25 19:05:26 kardel Exp  *    * parsesolaris.c,v 3.9 1994/01/25 19:05:26 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS5.x - not fully tested - buyer beware ! - OS KILLERS may still be  *  lurking in the code!)  *  * Copyright (c) 1993,1994  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsesolaris.c,v 3.4 1993/11/13 11:13:17 kardel Exp"
+literal|"parsesolaris.c,v 3.9 1994/01/25 19:05:26 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -453,7 +453,7 @@ name|char
 name|revision
 index|[]
 init|=
-literal|"3.4"
+literal|"3.9"
 decl_stmt|;
 name|char
 modifier|*
@@ -2873,25 +2873,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|parseprintf
-argument_list|(
-name|DD_RPUT
-argument_list|,
-operator|(
-literal|"parse: parserput - M_%s\n"
-operator|,
-operator|(
-name|type
-operator|==
-name|M_DATA
-operator|)
-condition|?
-literal|"DATA"
-else|:
-literal|"BREAK"
-operator|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|parseprintf(DD_RPUT,("parse: parserput - M_%s\n", (type == M_DATA) ? "DATA" : "BREAK"));
+endif|#
+directive|endif
 if|if
 condition|(
 name|type
@@ -3378,7 +3365,49 @@ operator|->
 name|parse_io
 argument_list|)
 expr_stmt|;
+name|freemsg
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|canput
+argument_list|(
+name|q
+operator|->
+name|q_next
+argument_list|)
+operator|||
+operator|(
+name|mp
+operator|->
+name|b_datap
+operator|->
+name|db_type
+operator|>
+name|QPCTL
+operator|)
+condition|)
+block|{
+name|putnext
+argument_list|(
+name|q
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|putq
+argument_list|(
+name|q
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -3904,6 +3933,20 @@ operator|->
 name|zsops
 expr_stmt|;
 comment|/* hook it up */
+comment|/*        * XXX: this is usually done via zsopinit()         * - have yet to find a way to call that routine        */
+name|zs
+operator|->
+name|zs_xsint
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|zs_xsisr
+expr_stmt|;
 name|mutex_exit
 argument_list|(
 name|zs
@@ -4021,6 +4064,17 @@ operator|->
 name|oldzsops
 expr_stmt|;
 comment|/* reset to previous handler functions */
+comment|/*        * XXX: revert xsint (usually done via zsopinit() - have still to find        * a way to call that bugger        */
+name|zs
+operator|->
+name|zs_xsint
+operator|=
+name|zs
+operator|->
+name|zs_ops
+operator|->
+name|zsop_xsint
+expr_stmt|;
 name|mutex_exit
 argument_list|(
 name|zs
@@ -4055,6 +4109,13 @@ return|return;
 block|}
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|ZSRR0_IGNORE
+value|(ZSRR0_CD|ZSRR0_SYNC|ZSRR0_CTS)
+end_define
 
 begin_define
 define|#
@@ -4390,25 +4451,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*        * only pretend that CD has been handled        */
+comment|/*        * only pretend that CD and ignored transistion (SYNC,CTS)        * have been handled        */
 name|za
 operator|->
 name|za_rr0
 operator|=
+operator|(
 name|za
 operator|->
 name|za_rr0
 operator|&
 operator|~
-name|ZSRR0_CD
+name|ZSRR0_IGNORE
+operator|)
 operator||
+operator|(
 name|zsstatus
 operator|&
-name|ZSRR0_CD
+name|ZSRR0_IGNORE
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 operator|(
 name|za
@@ -4419,8 +4483,10 @@ name|zsstatus
 operator|)
 operator|&
 operator|~
-name|ZSRR0_CD
+name|ZSRR0_IGNORE
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 	   * all done - kill status indication and return 	   */
@@ -4433,6 +4499,28 @@ comment|/* might kill other conditions here */
 return|return;
 block|}
 block|}
+name|parseprintf
+argument_list|(
+name|DD_ISR
+argument_list|,
+operator|(
+literal|"zs_xsisr: non CD event 0x%x for \"%s\"\n"
+operator|,
+operator|(
+name|za
+operator|->
+name|za_rr0
+operator|^
+name|zsstatus
+operator|)
+operator|&
+operator|~
+name|ZSRR0_CD
+operator|,
+name|dname
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/*    * we are now gathered here to process some unusual external status    * interrupts.    * any CD events have also been handled and shouldn't be processed    * by the original routine (unless we have a VERY busy port pin)    * some initializations are done here, which could have been done before for    * both code paths but have been avioded for minimum path length to    * the uniq_time routine    */
 name|dname
 operator|=
@@ -4636,7 +4724,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsesolaris.c,v  * Revision 3.4  1993/11/13  11:13:17  kardel  * Solaris 2.3 additional includes  *  * Revision 3.3  1993/11/11  11:20:33  kardel  * declaration fixes  *  * Revision 3.2  1993/11/05  15:40:25  kardel  * shut up nice feature detection  *  * Revision 3.1  1993/11/01  20:00:29  kardel  * parse Solaris support (initial version)  *  *  */
+comment|/*  * History:  *  * parsesolaris.c,v  * Revision 3.9  1994/01/25  19:05:26  kardel  * 94/01/23 reconcilation  *  * Revision 3.8  1994/01/23  17:22:04  kardel  * 1994 reconcilation  *  * Revision 3.7  1993/12/15  18:24:41  kardel  * Now also ignoring state changes on ZSRR0_{SYNC,CTS} to avoid zs driver bugs (Solaris 2.3)  *  * Revision 3.6  1993/12/15  12:48:53  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.5  1993/12/14  21:05:12  kardel  * PPS working now for SunOS 5.x zs external status hook  *  * Revision 3.4  1993/11/13  11:13:17  kardel  * Solaris 2.3 additional includes  *  * Revision 3.3  1993/11/11  11:20:33  kardel  * declaration fixes  *  * Revision 3.2  1993/11/05  15:40:25  kardel  * shut up nice feature detection  *  * Revision 3.1  1993/11/01  20:00:29  kardel  * parse Solaris support (initial version)  *  */
 end_comment
 
 end_unit

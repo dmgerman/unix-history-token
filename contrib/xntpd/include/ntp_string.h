@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Define bcopy, bzero, and bcmp and string op's  */
+comment|/*  * Define string ops: strchr strrchr memcmp memmove memset   */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,14 @@ directive|define
 name|_ntp_string_h
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NTP_POSIX_SOURCE
-end_ifdef
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -47,54 +50,10 @@ directive|include
 file|<string.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|bcopy
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
-value|memcpy(s2, s1, n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|memset(s, 0, n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bcmp
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
-value|memcmp(s1, s2, n)
-end_define
-
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* NTP_POSIX_SOURCE */
-end_comment
 
 begin_include
 include|#
@@ -105,15 +64,37 @@ end_include
 begin_define
 define|#
 directive|define
-name|strrchr
-value|rindex
+name|strchr
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|)
+value|index(s,c)
 end_define
 
 begin_define
 define|#
 directive|define
-name|strchr
-value|index
+name|strrchr
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|)
+value|rindex(s,c)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_NEED_BOPS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NTP_NEED_BOPS
 end_define
 
 begin_endif
@@ -121,8 +102,87 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  NTP_POSIX_SOURCE */
+comment|/* NTP_POSIX_SOURCE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NTP_NEED_BOPS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|memcmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|bcmp(a,b,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|memmove
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|,
+name|c
+parameter_list|)
+value|bcopy(f,t,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|memset
+parameter_list|(
+name|a
+parameter_list|,
+name|x
+parameter_list|,
+name|c
+parameter_list|)
+value|if (x == 0x00) bzero(a,c); else ntp_memset((char*)a,x,c)
+end_define
+
+begin_decl_stmt
+name|void
+name|ntp_memset
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  NTP_NEED_BOPS */
 end_comment
 
 begin_endif

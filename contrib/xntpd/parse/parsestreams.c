@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.9 1993/11/05 15:34:55 kardel Exp  *    * parsestreams.c,v 3.9 1993/11/05 15:34:55 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.12 1994/01/25 19:05:30 kardel Exp  *    * parsestreams.c,v 3.12 1994/01/25 19:05:30 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsestreams.c,v 3.9 1993/11/05 15:34:55 kardel Exp"
+literal|"parsestreams.c,v 3.12 1994/01/25 19:05:30 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|char
 name|revision
 index|[]
 init|=
-literal|"3.9"
+literal|"3.12"
 decl_stmt|;
 name|char
 modifier|*
@@ -3760,7 +3760,49 @@ operator|->
 name|parse_io
 argument_list|)
 expr_stmt|;
+name|freemsg
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|canput
+argument_list|(
+name|q
+operator|->
+name|q_next
+argument_list|)
+operator|||
+operator|(
+name|mp
+operator|->
+name|b_datap
+operator|->
+name|db_type
+operator|>
+name|QPCTL
+operator|)
+condition|)
+block|{
+name|putnext
+argument_list|(
+name|q
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|putq
+argument_list|(
+name|q
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -5029,7 +5071,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsestreams.c,v  * Revision 3.9  1993/11/05  15:34:55  kardel  * shut up nice feature detection  *  * Revision 3.8  1993/10/22  14:27:56  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.7  1993/10/10  18:13:53  kardel  * Makefile reorganisation, file relocation  *  * Revision 3.6  1993/10/09  15:01:18  kardel  * file structure unified  *  * Revision 3.5  1993/10/04  07:59:31  kardel  * Well, at least we should know that a the tv_usec field should be in the range 0..999999  *  * Revision 3.4  1993/09/26  23:41:33  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/11  00:38:34  kardel  * LINEMON must also cover M_[UN]HANGUP handling  *  * Revision 3.2  1993/07/06  10:02:56  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parsestreams.c,v  * Revision 3.12  1994/01/25  19:05:30  kardel  * 94/01/23 reconcilation  *  * Revision 3.11  1994/01/23  17:22:07  kardel  * 1994 reconcilation  *  * Revision 3.10  1993/12/15  12:48:58  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.9  1993/11/05  15:34:55  kardel  * shut up nice feature detection  *  * Revision 3.8  1993/10/22  14:27:56  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.7  1993/10/10  18:13:53  kardel  * Makefile reorganisation, file relocation  *  * Revision 3.6  1993/10/09  15:01:18  kardel  * file structure unified  *  * Revision 3.5  1993/10/04  07:59:31  kardel  * Well, at least we should know that a the tv_usec field should be in the range 0..999999  *  * Revision 3.4  1993/09/26  23:41:33  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/11  00:38:34  kardel  * LINEMON must also cover M_[UN]HANGUP handling  *  * Revision 3.2  1993/07/06  10:02:56  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit
