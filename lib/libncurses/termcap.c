@@ -712,6 +712,15 @@ operator|)
 operator|!=
 name|NULL
 operator|&&
+operator|*
+operator|(
+name|tok
+operator|-
+literal|2
+operator|)
+operator|!=
+literal|'\\'
+operator|&&
 operator|(
 operator|*
 name|tok
