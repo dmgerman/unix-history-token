@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.9 1996/02/07 06:41:56 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.10 1996/02/09 04:36:36 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -184,6 +184,18 @@ include|#
 directive|include
 file|<vm/vm_page.h>
 end_include
+
+begin_comment
+comment|/*  * Use this define if you want to disable *fancy* VM things.  Expect an  * approx 30% decrease in transfer rate.  This could be useful for  * NetBSD or OpenBSD.  */
+end_comment
+
+begin_comment
+comment|/* #define PIPE_NODIRECT */
+end_comment
+
+begin_comment
+comment|/*  * interfaces to the outside world  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -460,6 +472,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -549,6 +567,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -920,7 +943,7 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * Create an object, I don't like the idea of paging to/from 	 * kernel_object. 	 */
+comment|/* 	 * Create an object, I don't like the idea of paging to/from 	 * kernel_object. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
 name|cpipe
 operator|->
 name|pipe_buffer
@@ -948,7 +971,7 @@ argument_list|(
 name|kernel_map
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Insert the object into the kernel map, and allocate kva for it. 	 * The map entry is, by default, pageable. 	 */
+comment|/* 	 * Insert the object into the kernel map, and allocate kva for it. 	 * The map entry is, by default, pageable. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
 name|error
 operator|=
 name|vm_map_find
@@ -1133,6 +1156,9 @@ operator|->
 name|pipe_sel
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
 comment|/* 	 * pipe data structure initializations to support direct pipe I/O 	 */
 name|cpipe
 operator|->
@@ -1166,6 +1192,8 @@ name|npages
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1308,6 +1336,54 @@ return|return;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|pipeselwakeup
+parameter_list|(
+name|cpipe
+parameter_list|)
+name|struct
+name|pipe
+modifier|*
+name|cpipe
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|cpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_SEL
+condition|)
+block|{
+name|cpipe
+operator|->
+name|pipe_state
+operator|&=
+operator|~
+name|PIPE_SEL
+expr_stmt|;
+name|selwakeup
+argument_list|(
+operator|&
+name|cpipe
+operator|->
+name|pipe_sel
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -1316,6 +1392,11 @@ end_if
 
 begin_endif
 unit|static void pipe_mark_pages_clean(cpipe) 	struct pipe *cpipe; { 	vm_size_t off; 	vm_page_t m;  	for(off = 0; off< cpipe->pipe_buffer.object->size; off += 1) { 		m = vm_page_lookup(cpipe->pipe_buffer.object, off); 		if ((m != NULL)&& (m->busy == 0)&& (m->flags& PG_BUSY) == 0) { 			m->dirty = 0; 			pmap_clear_modify(VM_PAGE_TO_PHYS(m)); 		} 	} }
+endif|#
+directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
 end_endif
@@ -1543,6 +1624,9 @@ name|nread
 operator|+=
 name|size
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
 comment|/* 		 * Direct copy, bypassing a kernel buffer. 		 */
 block|}
 elseif|else
@@ -1683,6 +1767,8 @@ name|rpipe
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1993,34 +2079,38 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|rpipe
 operator|->
-name|pipe_state
-operator|&
-name|PIPE_SEL
+name|pipe_buffer
+operator|.
+name|size
+operator|-
+name|rpipe
+operator|->
+name|pipe_buffer
+operator|.
+name|cnt
+operator|)
+operator|>
+literal|0
 condition|)
-block|{
-name|rpipe
-operator|->
-name|pipe_state
-operator|&=
-operator|~
-name|PIPE_SEL
-expr_stmt|;
-name|selwakeup
+name|pipeselwakeup
 argument_list|(
-operator|&
 name|rpipe
-operator|->
-name|pipe_sel
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|error
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
+end_ifndef
 
 begin_comment
 comment|/*  * Map the sending processes' buffer into kernel space and wire it.  * This is similar to a physical write operation.  */
@@ -2819,28 +2909,6 @@ goto|goto
 name|error1
 goto|;
 block|}
-if|if
-condition|(
-name|wpipe
-operator|->
-name|pipe_state
-operator|&
-name|PIPE_WANTR
-condition|)
-block|{
-name|wpipe
-operator|->
-name|pipe_state
-operator|&=
-operator|~
-name|PIPE_WANTR
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|wpipe
-argument_list|)
-expr_stmt|;
-block|}
 name|error
 operator|=
 literal|0
@@ -2885,6 +2953,11 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
+name|pipeselwakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
 name|wakeup
 argument_list|(
 name|wpipe
@@ -2916,6 +2989,11 @@ name|wpipe
 argument_list|)
 expr_stmt|;
 block|}
+name|pipeselwakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|tsleep
@@ -2983,6 +3061,11 @@ name|error
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3104,6 +3187,9 @@ block|{
 name|int
 name|space
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
 comment|/* 		 * If the transfer is large, we can gain performance if 		 * we do process-to-process copies directly. 		 */
 if|if
 condition|(
@@ -3142,6 +3228,8 @@ break|break;
 block|}
 continue|continue;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * Pipe buffered writes cannot be coincidental with 		 * direct writes.  We wait until the currently executing 		 * direct write is completed before we start filling the 		 * pipe buffer. 		 */
 name|retrywrite
 label|:
@@ -3423,6 +3511,12 @@ name|EAGAIN
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * We have no more space and have something to offer, 			 * wake up selects. 			 */
+name|pipeselwakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
 name|wpipe
 operator|->
 name|pipe_state
@@ -3599,31 +3693,22 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * We have something to offer, 	 * wake up select. 	 */
 if|if
 condition|(
 name|wpipe
 operator|->
-name|pipe_state
-operator|&
-name|PIPE_SEL
+name|pipe_buffer
+operator|.
+name|cnt
+operator|>
+literal|0
 condition|)
-block|{
-name|wpipe
-operator|->
-name|pipe_state
-operator|&=
-operator|~
-name|PIPE_SEL
-expr_stmt|;
-name|selwakeup
+name|pipeselwakeup
 argument_list|(
-operator|&
 name|wpipe
-operator|->
-name|pipe_sel
 argument_list|)
 expr_stmt|;
-block|}
 operator|--
 name|wpipe
 operator|->
@@ -3835,6 +3920,28 @@ return|;
 case|case
 name|FIONREAD
 case|:
+if|if
+condition|(
+name|mpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_DIRECTW
+condition|)
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+name|mpipe
+operator|->
+name|pipe_map
+operator|.
+name|cnt
+expr_stmt|;
+else|else
 operator|*
 operator|(
 name|int
@@ -4332,31 +4439,11 @@ condition|(
 name|cpipe
 condition|)
 block|{
-if|if
-condition|(
-name|cpipe
-operator|->
-name|pipe_state
-operator|&
-name|PIPE_SEL
-condition|)
-block|{
-name|cpipe
-operator|->
-name|pipe_state
-operator|&=
-operator|~
-name|PIPE_SEL
-expr_stmt|;
-name|selwakeup
+name|pipeselwakeup
 argument_list|(
-operator|&
 name|cpipe
-operator|->
-name|pipe_sel
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * If the other side is blocked, wake it up saying that 		 * we want to close it down. 		 */
 while|while
 condition|(
@@ -4400,31 +4487,11 @@ operator|->
 name|pipe_peer
 condition|)
 block|{
-if|if
-condition|(
-name|ppipe
-operator|->
-name|pipe_state
-operator|&
-name|PIPE_SEL
-condition|)
-block|{
-name|ppipe
-operator|->
-name|pipe_state
-operator|&=
-operator|~
-name|PIPE_SEL
-expr_stmt|;
-name|selwakeup
+name|pipeselwakeup
 argument_list|(
-operator|&
 name|ppipe
-operator|->
-name|pipe_sel
 argument_list|)
 expr_stmt|;
-block|}
 name|ppipe
 operator|->
 name|pipe_state
@@ -4482,6 +4549,9 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|PIPE_NODIRECT
 if|if
 condition|(
 name|cpipe
@@ -4521,6 +4591,8 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|cpipe
