@@ -2067,9 +2067,13 @@ block|{
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2679,9 +2683,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 name|orbi
@@ -3494,9 +3502,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 name|orbi
@@ -4927,9 +4939,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 name|orbi
@@ -5563,9 +5579,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 name|orbi
@@ -6077,9 +6097,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 goto|goto

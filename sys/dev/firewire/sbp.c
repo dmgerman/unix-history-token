@@ -5814,9 +5814,13 @@ block|{
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"%s: xfer->resp != 0\n"
+literal|"%s: xfer->resp = %d\n"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6137,7 +6141,7 @@ comment|/* XXX */
 end_comment
 
 begin_endif
-unit|printf("%s: xfer->resp != 0\n", __FUNCTION__); 	} 	sbp_xfer_free(xfer); 	return; }  static void sbp_doorbell(struct sbp_dev *sdev) { 	struct fw_xfer *xfer; 	struct fw_pkt *fp; SBP_DEBUG(1) 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_doorbell\n"); END_DEBUG  	xfer = sbp_write_cmd(sdev, FWTCODE_WREQQ, 0x10); 	if (xfer == NULL) 		return; 	xfer->act.hand = sbp_cmd_callback; 	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.wreqq.data = htonl(0xf); 	fw_asyreq(xfer->fc, -1, xfer); }
+unit|printf("%s: xfer->resp = %d\n", __FUNCTION__, xfer->resp); 	} 	sbp_xfer_free(xfer); 	return; }  static void sbp_doorbell(struct sbp_dev *sdev) { 	struct fw_xfer *xfer; 	struct fw_pkt *fp; SBP_DEBUG(1) 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_doorbell\n"); END_DEBUG  	xfer = sbp_write_cmd(sdev, FWTCODE_WREQQ, 0x10); 	if (xfer == NULL) 		return; 	xfer->act.hand = sbp_cmd_callback; 	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.wreqq.data = htonl(0xf); 	fw_asyreq(xfer->fc, -1, xfer); }
 endif|#
 directive|endif
 end_endif
@@ -7973,7 +7977,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sbp_recv: xfer->resp != 0\n"
+literal|"sbp_recv: xfer->resp = %d\n"
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 goto|goto
