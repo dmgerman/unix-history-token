@@ -1270,6 +1270,13 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"driver is using old-style compatability shims\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
