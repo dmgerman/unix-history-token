@@ -12,7 +12,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -30,49 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
+file|<sys/vmmeter.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -90,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_page.h>
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -102,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
+file|<vm/vm_page.h>
 end_include
 
 begin_include
@@ -138,13 +150,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/ufsmount.h>
+file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/ufs_extern.h>
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
