@@ -162,7 +162,7 @@ typedef|;
 typedef|typedef
 struct|struct
 block|{
-name|UNS32
+name|FICL_UNS
 name|count
 decl_stmt|;
 name|char
@@ -194,7 +194,7 @@ name|si
 parameter_list|,
 name|len
 parameter_list|)
-value|(si.count = (UNS32)(len))
+value|(si.count = (FICL_UNS)(len))
 define|#
 directive|define
 name|SI_SETPTR
@@ -230,7 +230,7 @@ comment|/* ** Ficl uses a this little structure to hold the address of  ** the b
 typedef|typedef
 struct|struct
 block|{
-name|INT32
+name|FICL_INT
 name|index
 decl_stmt|;
 name|char
@@ -583,11 +583,11 @@ modifier|*
 name|runningWord
 decl_stmt|;
 comment|/* address of currently running word (often just *(ip-1) ) */
-name|UNS32
+name|FICL_UNS
 name|state
 decl_stmt|;
 comment|/* compiling or interpreting        */
-name|UNS32
+name|FICL_UNS
 name|base
 decl_stmt|;
 comment|/* number conversion base           */
@@ -893,6 +893,39 @@ name|char
 name|delimiter
 parameter_list|)
 function_decl|;
+name|STRINGINFO
+name|vmParseStringEx
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|char
+name|delimiter
+parameter_list|,
+name|char
+name|fSkipLeading
+parameter_list|)
+function_decl|;
+name|CELL
+name|vmPop
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+name|void
+name|vmPush
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|CELL
+name|c
+parameter_list|)
+function_decl|;
 name|void
 name|vmPopIP
 parameter_list|(
@@ -939,6 +972,19 @@ name|OUTFUNC
 name|textOut
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|FICL_WANT_DEBUGGER
+name|void
+name|vmStep
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 name|void
 name|vmTextOut
 parameter_list|(
@@ -989,12 +1035,12 @@ value|((pVM)->runningWord)
 comment|/* ** The inner interpreter - coded as a macro (see note for  ** INLINE_INNER_LOOP in sysdep.h for complaints about VC++ 5 */
 define|#
 directive|define
-name|M_INNER_LOOP
+name|M_VM_STEP
 parameter_list|(
 name|pVM
 parameter_list|)
 define|\
-value|for (;;) \     {  \         FICL_WORD *tempFW = *(pVM)->ip++; \         (pVM)->runningWord = tempFW; \         tempFW->code(pVM); \     }
+value|FICL_WORD *tempFW = *(pVM)->ip++; \         (pVM)->runningWord = tempFW; \         tempFW->code(pVM); \  #define M_INNER_LOOP(pVM) \     for (;;)  { M_VM_STEP(pVM) }
 if|#
 directive|if
 name|INLINE_INNER_LOOP
@@ -1046,7 +1092,7 @@ name|char
 modifier|*
 name|text
 parameter_list|,
-name|INT32
+name|FICL_INT
 name|nChars
 parameter_list|,
 name|TIB
@@ -1363,10 +1409,8 @@ name|size
 decl_stmt|;
 comment|/* Number of cells in dict (total)*/
 name|CELL
+modifier|*
 name|dict
-index|[
-literal|1
-index|]
 decl_stmt|;
 comment|/* Base of dictionary memory      */
 block|}
@@ -1686,7 +1730,7 @@ name|char
 modifier|*
 name|pText
 parameter_list|,
-name|INT32
+name|FICL_INT
 name|nChars
 parameter_list|)
 function_decl|;
@@ -1720,6 +1764,15 @@ modifier|*
 name|ficlNewVM
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/* ** Force deletion of a VM. You do not need to do this  ** unless you're creating and discarding a lot of VMs. ** For systems that use a constant pool of VMs for the life ** of the system, ficltermSystem takes care of VM cleanup ** automatically. */
+name|void
+name|ficlFreeVM
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
 parameter_list|)
 function_decl|;
 comment|/* ** Set the stack sizes (return and parameter) to be used for all ** subsequently created VMs. Returns actual stack size to be used. */
@@ -1762,7 +1815,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|value
 parameter_list|)
 function_decl|;
@@ -1773,10 +1826,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|hi
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|lo
 parameter_list|)
 function_decl|;
@@ -1841,6 +1894,17 @@ modifier|*
 name|pVM
 parameter_list|)
 function_decl|;
+comment|/* ** Dictionary on-demand resizing */
+specifier|extern
+name|unsigned
+name|int
+name|dictThreshold
+decl_stmt|;
+specifier|extern
+name|unsigned
+name|int
+name|dictIncrease
+decl_stmt|;
 comment|/* ** So we can more easily debug... */
 ifdef|#
 directive|ifdef
@@ -1851,6 +1915,7 @@ name|ficl_trace
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* ** Various FreeBSD goodies */
 if|#
 directive|if
 name|defined
@@ -1875,6 +1940,69 @@ function_decl|;
 specifier|extern
 name|void
 name|ficlInb
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TESTMAIN
+argument_list|)
+specifier|extern
+name|void
+name|ficlSetenv
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|ficlSetenvq
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|ficlGetenv
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|ficlUnsetenv
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|ficlCopyin
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|ficlCopyout
 parameter_list|(
 name|FICL_VM
 modifier|*
