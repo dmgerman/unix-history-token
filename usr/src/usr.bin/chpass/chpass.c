@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.1 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -829,6 +829,13 @@ name|save
 argument_list|,
 name|list
 index|[
+name|E_LOCATE
+index|]
+operator|.
+name|save
+argument_list|,
+name|list
+index|[
 name|E_BPHONE
 index|]
 operator|.
@@ -837,13 +844,6 @@ argument_list|,
 name|list
 index|[
 name|E_HPHONE
-index|]
-operator|.
-name|save
-argument_list|,
-name|list
-index|[
-name|E_LOCATE
 index|]
 operator|.
 name|save

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.2 (Berkeley) %G%"
+literal|"@(#)util.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -880,7 +880,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Home Phone: %s\n"
+literal|"Office Phone: %s\n"
 argument_list|,
 name|p
 condition|?
@@ -906,7 +906,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Office Phone: %s\n"
+literal|"Home Phone: %s\n"
 argument_list|,
 name|p
 condition|?
