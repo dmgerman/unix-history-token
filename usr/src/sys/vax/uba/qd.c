@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 	@(#)qd.c	1.5  Berkeley  %G%  *  * derived from: "@(#)qd.c	1.40	ULTRIX	10/2/86";  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 	@(#)qd.c	1.6  Berkeley  %G%  *  * derived from: "@(#)qd.c	ULTRIX";  */
 end_comment
 
 begin_comment
-comment|/************************************************************************ *									* *			Copyright (c) 1985, 1986 by			* *		Digital Equipment Corporation, Maynard, MA		* *			All rights reserved.				* *									* *   This software is furnished under a license and may be used and	* *   copied  only  in accordance with the terms of such license and	* *   with the  inclusion  of  the  above  copyright  notice.   This	* *   software  or  any  other copies thereof may not be provided or	* *   otherwise made available to any other person.  No title to and	* *   ownership of the software is hereby transferred.			* *									* *   The information in this software is subject to change  without	* *   notice  and should not be construed as a commitment by Digital	* *   Equipment Corporation.						* *									* *   Digital assumes no responsibility for the use  or  reliability	* *   of its software on equipment which is not supplied by Digital.	* *									* *************************************************************************/
+comment|/************************************************************************ *									* *			Copyright (c) 1985-1988 by			* *		Digital Equipment Corporation, Maynard, MA		* *			All rights reserved.				* *									* *   This software is furnished under a license and may be used and	* *   copied  only  in accordance with the terms of such license and	* *   with the  inclusion  of  the  above  copyright  notice.   This	* *   software  or  any  other copies thereof may not be provided or	* *   otherwise made available to any other person.  No title to and	* *   ownership of the software is hereby transferred.			* *									* *   The information in this software is subject to change  without	* *   notice  and should not be construed as a commitment by Digital	* *   Equipment Corporation.						* *									* *   Digital assumes no responsibility for the use  or  reliability	* *   of its software on equipment which is not supplied by Digital.	* *									* *************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * qd.c - QDSS display driver  */
+comment|/*  * qd.c  *  * Modification history  *  * QDSS workstation driver  *  *  *  1-Dec-87 - Tim Burke  *  *	Added support for both System V termio(7) and POSIX termios(7).  These  *	changes also include support for 8-bit canonical processing.  Changes  *	involve:  *  *	- Default settings on first open depend on mode of open.  For termio  *	  opens the defaults are "RAW" style, while non-termio opens default  *	  to the traditional "cooked" style.  *	- The driver now represents its terminal attributes and special   *	  characters in the POSIX termios data structure.  This contrasts the  *	  original approach of storing attributes and special chars in the  *	  t_flags, ltchars and tchars.  *	- Addition of LPASS8 to local mode word for 8-bit canonical support.  *  * 28-Sep-87 - Ali Rafieymehr  *    Fixed a bug in qddint() routine. The bug was discovered on CVAX.  *    Incorrect logic was used when taking an entry from the request queue.  *  * 12-Oct-87 - Tim Burke  *	Modified driver to provide 8-bit support to the console port.  To do   *	this characters are defined in the remainder of the first 15 rows of  *	off screen memory as well as in next 15 rows.  *  *  2-Aug-87 - Fred Canter  *    Use TANDEM mode on qconsole for flow control of writes to  *    /dev/console.  *  * 12-Jun-87 - Tim Burke  *  *	Added full TERMIO functionality to terminal subsystem.  *	Changed open routine to setup propper default settings if the line  *	is not being used as a graphics device.  Added defines of defaults.  *  *  * 14-May-87 - Fred Canter  *	Changed default state of kernel_loop to on.  *  * 21-Apr-87 - Brian Stevens  *	Xos support  *  * 16-Apr-87 - Fred Canter (for Brian Stevens)  *	Multi-head GPX changes.  *  * 19-Mar-87 - Fred Canter (for Brian Stevens)  *	Added X in the kernel support.  *  * 16-Dec-86 - Brian Stevens  *  *	added support so "select" could be called on tty type device  *      fixed rlogin bug  *  * 30-Oct-86 - Brian Stevens  *  *	Removed the mprintf for "unexpected interrupts"  *  * 26-Aug-86 - rsp (Ricky Palmer)  *  *	Cleaned up devioctl code to (1) zero out devget structure  *	upon entry and (2) use strlen instead of fixed storage  *	for bcopy's.  *  * 21-Jul-86 - Ram Rao  *	allowed cursor rectangle to hang (partially) off the  *	top and left of screen  *  * 11-Jul-86 - ricky palmer  *  *	Added adpt and nexus fields to DEVIOCGET code.  *  * 02-July-86 - Brian Stevens  *  *	added support for console writing to second QDSS display  *  * 20-May-86 - ricky palmer  *  *	Added new DEVIOCGET ioctl request code. V2.0  *  * 16-Apr-86 -- darrell  *	 badaddr is now called via the macro BADADDR  *  * 14-Apr-86 -- afd  *	 Changed UMEMmap to QVmap and umem to qvmem.  *  *	 v_console() is now refered to as v_consputc, and there is a  *	 corresponding v_consgetc() (defined in /sys/vax/conf.c).  *  *	 Added "qdgetc()" routine for console read.  Needed to read  *	 user's answer to the "root device?" prompt with a generic kernel.  *  * 19-Mar-86 -- pmk  *	 Change DELAY to 20000, because microdelay now in real microsec.  *  * 18-mar-86  -- jaw	 br/cvec changed to NOT use registers.  *  * 11 mar 86  darrell	replaced percpu with cpusw, and removed all but  *			 one global reference  * 19 feb 86  bstevens	no report of motion event on puck/stylus button action  * 18 feb 86  bstevens	put in cursor box support for tablets  * 18-Mar-86 -- jaw  add routines to cpu switch for nexus/unibus addreses  *		      also got rid of some globals like nexnum.  *		      ka8800 cleanup.  * 06 dec 85  longo  added LK-201 error reporting for graphics device ops  * 03 dec 85  longo  made qddint() clear active bit on error  * 02 dec 85  longo  fixed up some crocks in the error messages  * 25 nov 85  longo  added error handling to DMA ISR and single user locking  * 19 nov 85  longo  eliminated "set_defaults()" by breaking out sub-calls.  *		     Changed init_shared to do real init of scroll struct  * 12 nov 85  longo  fixed bug in open that broke alternate console re-direct  * 11 nov 85  longo  changed "_vs_eventqueue" references to "qdinput"  * 08 nov 85  longo  improved select service for read/write select wakeup.  *		     Also set ISR's to ipl4 to allow the interval timer in.  * 04 nov 85  longo  fixed bugs in mouse button reporting and dma request stuff  * 30 oct 85  longo  DMA to/from user space is in place  * 14 oct 85  longo  added kernel msg redirect and QD_RDCURSOR ioctl  * 03 oct 85  longo  added support for multiple QDSS's  * 02 oct 85  longo  added color map loading services in qdioctl()& qdaint()  * 30 sep 85  longo  added DMA interrupt services  * 18 sep 85  longo  added scroll services to "qdaint()" adder intrpt service  *		     and put in supporting ioctl's  * 04 sep 85  longo  initial implementation of DMA is working  * 17 aug 85  longo  added support for the QDSS to be system console  * 05 aug 85  longo  now using qfont (QVSS& QDSS) as linked object  * 12 jun 85  longo  added mouse event loading to "qdiint()"  * 31 may 85  longo  put live interrupts into the probe() routine  * 30 may 85  longo  event queue shared memory implementation is now alive  * 29 may 85  longo  LK-201 input is now interrupt driven  * 25 apr 85  longo  MAPDEVICE works  * 14 mar 85  longo  created  *  *	 todo:	 fix rlogin bug in console stuff  *		 cat -u console redirection  *		 check error return from strategy routine  *		 verify TOY time stuff (what format?)  *		 look at system based macro implementation of VTOP  *  */
 end_comment
 
 begin_include
@@ -16,6 +16,10 @@ include|#
 directive|include
 file|"qd.h"
 end_include
+
+begin_comment
+comment|/* # of QDSS's the system is configured for */
+end_comment
 
 begin_if
 if|#
@@ -28,14 +32,28 @@ end_if
 begin_include
 include|#
 directive|include
+file|"types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../machine/pte.h"
 end_include
+
+begin_comment
+comment|/* page table values */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|"../machine/mtpr.h"
 end_include
+
+begin_comment
+comment|/* VAX register access stuff */
+end_comment
 
 begin_include
 include|#
@@ -49,11 +67,19 @@ directive|include
 file|"param.h"
 end_include
 
+begin_comment
+comment|/* general system params& macros */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"conf.h"
 end_include
+
+begin_comment
+comment|/* "linesw" tty driver dispatch */
+end_comment
 
 begin_include
 include|#
@@ -61,17 +87,29 @@ directive|include
 file|"dir.h"
 end_include
 
+begin_comment
+comment|/* for directory handling */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"user.h"
 end_include
 
+begin_comment
+comment|/* user structure (what else?) */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"qdioctl.h"
 end_include
+
+begin_comment
+comment|/* ioctl call values */
+end_comment
 
 begin_include
 include|#
@@ -85,11 +123,19 @@ directive|include
 file|"map.h"
 end_include
 
+begin_comment
+comment|/* resource allocation map struct */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"buf.h"
 end_include
+
+begin_comment
+comment|/* buf structs */
+end_comment
 
 begin_include
 include|#
@@ -97,11 +143,29 @@ directive|include
 file|"vm.h"
 end_include
 
+begin_comment
+comment|/* includes 'vm' header files */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"bk.h"
+end_include
+
+begin_comment
+comment|/* BKINPUT macro for line stuff */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"clist.h"
 end_include
+
+begin_comment
+comment|/* char list handling structs */
+end_comment
 
 begin_include
 include|#
@@ -109,16 +173,67 @@ directive|include
 file|"file.h"
 end_include
 
+begin_comment
+comment|/* file I/O definitions */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"uio.h"
 end_include
 
+begin_comment
+comment|/* write/read call structs */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_comment
+comment|/* clock handling structs */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/* notneeded */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"cpuconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"devio.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"exec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -127,11 +242,19 @@ directive|include
 file|"ubareg.h"
 end_include
 
+begin_comment
+comment|/* uba& 'qba' register structs */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"ubavar.h"
 end_include
+
+begin_comment
+comment|/* uba structs& uba map externs */
+end_comment
 
 begin_include
 include|#
@@ -146,7 +269,7 @@ file|"qduser.h"
 end_include
 
 begin_comment
-comment|/* definitions shared with client */
+comment|/* definitions shared with my client */
 end_comment
 
 begin_include
@@ -156,7 +279,11 @@ file|"qdreg.h"
 end_include
 
 begin_comment
-comment|/* * QDSS driver status flags for tracking operational state  */
+comment|/* QDSS device register structures */
+end_comment
+
+begin_comment
+comment|/*----------------------------------------------------------- * QDSS driver status flags for tracking operational state */
 end_comment
 
 begin_struct
@@ -178,7 +305,7 @@ comment|/* user mapping status word */
 name|u_int
 name|kernel_loop
 decl_stmt|;
-comment|/* if kernel console is redirected (DEFUNCT) */
+comment|/* if kernel console is redirected */
 name|u_int
 name|user_dma
 decl_stmt|;
@@ -214,10 +341,6 @@ comment|/* mask for active qd select entries */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* #define POSIXTTY (4.4BSD) */
-end_comment
 
 begin_comment
 comment|/* bit definitions for "inuse" entry  */
@@ -330,7 +453,7 @@ comment|/* write select is active */
 end_comment
 
 begin_comment
-comment|/* * constants used in shared memory operations  */
+comment|/*---------------------------------------------- * constants used in shared memory operations */
 end_comment
 
 begin_define
@@ -366,7 +489,36 @@ value|((sizeof(struct color_buf) + 512)& ~0x01FF)
 end_define
 
 begin_comment
-comment|/* * reference to an array of "uba_device" structures built by the auto * configuration program.  The uba_device structure decribes the device * sufficiently for the driver to talk to it.  The auto configuration code * fills in the uba_device structures (located in ioconf.c) from user * maintained info.   */
+comment|/*******************************************************************/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|qvmem
+index|[]
+index|[
+literal|128
+operator|*
+name|NBPG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pte
+name|QVmap
+index|[]
+index|[
+literal|128
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*-------------------------------------------------------------------------- * reference to an array of "uba_device" structures built by the auto * configuration program.  The uba_device structure decribes the device * sufficiently for the driver to talk to it.  The auto configuration code * fills in the uba_device structures (located in ioconf.c) from user * maintained info.  */
 end_comment
 
 begin_decl_stmt
@@ -419,7 +571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * static storage used by multiple functions in this code    */
+comment|/*---------------------------------------------------------- * static storage used by multiple functions in this code  */
 end_comment
 
 begin_decl_stmt
@@ -504,7 +656,7 @@ comment|/* lock for single process access */
 end_comment
 
 begin_comment
-comment|/* * The array "event_shared[]" is made up of a number of event queue buffers * equal to the number of QDSS's configured into the running kernel (NQD). * Each event queue buffer begins with an event queue header (struct qdinput) * followed by a group of event queue entries (struct _vs_event).  The array * "*eq_header[]" is an array of pointers to the start of each event queue * buffer in "event_shared[]".   */
+comment|/*------------------------------------------------------------------------ * the array "event_shared[]" is made up of a number of event queue buffers * equal to the number of QDSS's configured into the running kernel (NQD). * Each event queue buffer begins with an event queue header (struct qdinput) * followed by a group of event queue entries (struct _vs_event).  The array * "*eq_header[]" is an array of pointers to the start of each event queue * buffer in "event_shared[]".  */
 end_comment
 
 begin_define
@@ -543,7 +695,7 @@ comment|/* event queue header pntrs */
 end_comment
 
 begin_comment
-comment|/* * This allocation method reserves enough memory pages for NQD shared DMA I/O * buffers.  Each buffer must consume an integral number of memory pages to * guarantee that a following buffer will begin on a page boundary.  Also, * enough space is allocated so that the FIRST I/O buffer can start at the * 1st page boundary after "&DMA_shared".  Page boundaries are used so that * memory protections can be turned on/off for individual buffers.  */
+comment|/*-------------------------------------------------------------------------- * This allocation method reserves enough memory pages for NQD shared DMA I/O * buffers.  Each buffer must consume an integral number of memory pages to * guarantee that a following buffer will begin on a page boundary.  Also, * enough space is allocated so that the FIRST I/O buffer can start at the * 1st page boundary after "&DMA_shared".  Page boundaries are used so that * memory protections can be turned on/off for individual buffers. */
 end_comment
 
 begin_define
@@ -582,7 +734,7 @@ comment|/* DMA buffer header pntrs */
 end_comment
 
 begin_comment
-comment|/* * The driver assists a client in scroll operations by loading dragon * registers from an interrupt service routine.	The loading is done using * parameters found in memory shrade between the driver and it's client. * The scroll parameter structures are ALL loacted in the same memory page * for reasons of memory economy.   */
+comment|/*------------------------------------------------------------------------- * The driver assists a client in scroll operations by loading dragon * registers from an interrupt service routine.	The loading is done using * parameters found in memory shrade between the driver and it's client. * The scroll parameter structures are ALL loacted in the same memory page * for reasons of memory economy.  */
 end_comment
 
 begin_decl_stmt
@@ -616,7 +768,7 @@ comment|/* pointers to scroll structures */
 end_comment
 
 begin_comment
-comment|/* * the driver is programmable to provide the user with color map write * services at VSYNC interrupt time.  At interrupt time the driver loads * the color map with any user-requested load data found in shared memory  */
+comment|/*----------------------------------------------------------------------- * the driver is programmable to provide the user with color map write * services at VSYNC interrupt time.  At interrupt time the driver loads * the color map with any user-requested load data found in shared memory */
 end_comment
 
 begin_define
@@ -636,7 +788,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* color bufs */
+comment|/* reserve space: color bufs */
 end_comment
 
 begin_decl_stmt
@@ -655,7 +807,7 @@ comment|/* pointers to color bufs */
 end_comment
 
 begin_comment
-comment|/* * mouse input event structures  */
+comment|/*-------------------------------- * mouse input event structures */
 end_comment
 
 begin_decl_stmt
@@ -679,7 +831,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* * input event "select" use  */
+comment|/*---------------------------- * input event "select" use */
 end_comment
 
 begin_decl_stmt
@@ -698,7 +850,7 @@ comment|/* process waiting for select */
 end_comment
 
 begin_comment
-comment|/* * console cursor structure  */
+comment|/*---------------------------- * console cursor structure */
 end_comment
 
 begin_decl_stmt
@@ -710,6 +862,22 @@ name|NQD
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*---------------------------- * count of successfully probed qd's */
+end_comment
+
+begin_decl_stmt
+name|int
+name|qdcount
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/************************************************************************/
+end_comment
 
 begin_decl_stmt
 name|int
@@ -727,8 +895,74 @@ name|DMA_BUFSIZ
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|QDSSMAJOR
+value|41
+end_define
+
 begin_comment
-comment|/*  * macro to get system time.  Used to time stamp event queue entries   */
+comment|/* QDSS major device number */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/* on ultrix */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ws_display_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ws_display_units
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* don't need these  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ws_display_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ws_display_units
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|QDlast_DMAtype
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* type of the last DMA operation */
+end_comment
+
+begin_comment
+comment|/*--------------------------------------------------------------------- * macro to get system time.  Used to time stamp event queue entries */
 end_comment
 
 begin_define
@@ -739,7 +973,7 @@ value|((time.tv_sec * 100) + (time.tv_usec / 10000))
 end_define
 
 begin_comment
-comment|/* * the "ioconf.c" program, built and used by auto config, externally refers * to definitions below.   */
+comment|/*-------------------------------------------------------------------------- * the "ioconf.c" program, built and used by auto config, externally refers * to definitions below.  */
 end_comment
 
 begin_function_decl
@@ -827,56 +1061,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|qvmem
-index|[]
-index|[
-literal|128
-operator|*
-name|NBPG
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|QVmap
-index|[]
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * v_putc is used to redirect the console cnputc to the virtual console  * vputc.  consops is used to direct the console device to the qvss console.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-function_decl|(
-modifier|*
-name|v_putc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cdevsw
-modifier|*
-name|consops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* * general defines */
+comment|/*------------------- * general defines */
 end_comment
 
 begin_define
@@ -885,6 +1071,10 @@ directive|define
 name|QDPRIOR
 value|(PZERO-1)
 end_define
+
+begin_comment
+comment|/* must be negative */
+end_comment
 
 begin_define
 define|#
@@ -915,7 +1105,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Macro to create a system virtual page number from system virtual adrs.  */
+comment|/*----------------------------------------------------------------------- * macro to create a system virtual page number from system virtual adrs */
 end_comment
 
 begin_define
@@ -929,7 +1119,15 @@ value|(((int)x& ~0xC0000000)>> PGSHIFT)
 end_define
 
 begin_comment
-comment|/*  * QDSS register address offsets from start of QDSS address space   */
+comment|/* convert qvmem adrs */
+end_comment
+
+begin_comment
+comment|/* to system page # */
+end_comment
+
+begin_comment
+comment|/*------------------------------------------------------------------ * QDSS register address offsets from start of QDSS address space */
 end_comment
 
 begin_define
@@ -1063,7 +1261,7 @@ value|(CLRSTART+0x400)
 end_define
 
 begin_comment
-comment|/*  * Values used in mapping QDSS hardware into the Q memory space.  */
+comment|/*--------------------------------------------------------------- * values used in mapping QDSS hardware into the Q memory space */
 end_comment
 
 begin_define
@@ -1081,18 +1279,11 @@ value|(1024 * 1024 * 4)
 end_define
 
 begin_comment
-comment|/* * QDSS minor device numbers.  The *real* minor device numbers are in * the bottom two bits of the major/minor device spec.  Bits 2 and up are * used to specify the QDSS device number (ie: which one?) */
+comment|/* 4 meg */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|QDSSMAJOR
-value|41
-end_define
-
 begin_comment
-comment|/* QDSS major device number */
+comment|/*---------------------------------------------------------------------- * QDSS minor device numbers.  The *real* minor device numbers are in * the bottom two bits of the major/minor device spec.  Bits 2 and up are * used to specify the QDSS device number (ie: which one?) */
 end_comment
 
 begin_define
@@ -1117,7 +1308,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * console cursor bitmap (block cursor type)   */
+comment|/*---------------------------------------------- * console cursor bitmap (block cursor type)  */
 end_comment
 
 begin_decl_stmt
@@ -1199,14 +1390,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * constants used in font operations   */
+comment|/*------------------------------------- * constants used in font operations */
+end_comment
+
+begin_comment
+comment|/* Originaly this was CHARS 95 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CHARS
-value|95
+value|190
 end_define
 
 begin_comment
@@ -1272,8 +1467,15 @@ value|(2048 - CHAR_HEIGHT)
 end_define
 
 begin_comment
-comment|/* #define FONT_Y		200 */
+comment|/* Offset to second row characters */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FONT_OFFSET
+value|((MAX_SCREEN_X/CHAR_WIDTH)*CHAR_HEIGHT)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1289,7 +1491,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|u_short
 name|q_key
 index|[]
 decl_stmt|;
@@ -1301,7 +1503,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|u_short
 name|q_shift_key
 index|[]
 decl_stmt|;
@@ -1317,7 +1519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * definitions for cursor acceleration reporting  */
+comment|/*-------------------------------------------------- * definitions for cursor acceleration reporting  */
 end_comment
 
 begin_define
@@ -1331,6 +1533,26 @@ begin_comment
 comment|/* acceleration is inactive */
 end_comment
 
+begin_comment
+comment|/*-------------------------------------------------------------------------- * v_consputc is the switch that is used to redirect the console cnputc() to * the virtual console qdputc(). * v_consgetc is the switch that is used to redirect the console getchar() to * the virtual console qdgetc(). */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|v_consputc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|qdputc
@@ -1339,7 +1561,81 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* used to direct kernel console output * int qdstart();		/* used to direct /dev/console output *  /*  * LK-201 state storage for input console keyboard conversion to ASCII   */
+comment|/* used to direct kernel console output */
+end_comment
+
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|v_consgetc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|qdgetc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* used to read kernel console input */
+end_comment
+
+begin_function_decl
+name|int
+name|qdstart
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* used to direct /dev/console output */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|v_putc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cdevsw
+modifier|*
+name|consops
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|qdputc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|qdstart
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*------------------------------------------------------------------------ * LK-201 state storage for input console keyboard conversion to ASCII */
 end_comment
 
 begin_struct
@@ -1384,7 +1680,65 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************* * *	qdcons_init - init QDSS as console (BEFORE probe routine) * *********************************************************************/
+comment|/*-------------------------------------------------- * ULTRIX settings for first open.		  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLAGS
+value|(EVENP|ECHO|XTABS|CRMOD)
+end_define
+
+begin_comment
+comment|/*------------------------------------------------------------------------ * termio flags will be set to these default values in non-termio mode to * provide a backward compatible ULTRIX environment. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POSIXTTY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IFLAG
+value|(BRKINT|ISTRIP|IXON|IXANY|ICRNL|IEXTEN|IMAXBEL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFLAG
+value|(OPOST|OXTABS|ONLCR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LFLAG
+value|(ISIG|ICANON|ECHO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CFLAG
+value|(PARENB|CREAD|CS7|CLOCAL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/***************************************************************** ****************************************************************** ****************************************************************** * *	DRIVER FUNCTIONS START HERE: * ****************************************************************** ****************************************************************** *****************************************************************/
+end_comment
+
+begin_comment
+comment|/********************************************************************* * *	qdcons_init()... init QDSS as console (before probe routine) * *********************************************************************/
 end_comment
 
 begin_macro
@@ -1398,18 +1752,6 @@ specifier|register
 name|u_int
 name|unit
 decl_stmt|;
-name|struct
-name|percpu
-modifier|*
-name|pcpu
-decl_stmt|;
-comment|/* pointer to percpu structure */
-specifier|register
-name|struct
-name|qbus
-modifier|*
-name|qb
-decl_stmt|;
 name|int
 modifier|*
 name|ptep
@@ -1422,7 +1764,19 @@ comment|/* physical QDSS base adrs */
 name|u_int
 name|mapix
 decl_stmt|;
-comment|/* index into QMEMmap[] array */
+comment|/* index into QVmap[] array */
+name|struct
+name|percpu
+modifier|*
+name|pcpu
+decl_stmt|;
+comment|/* pointer to cpusw structure  */
+specifier|register
+name|struct
+name|qbus
+modifier|*
+name|qb
+decl_stmt|;
 name|u_short
 modifier|*
 name|qdaddr
@@ -1433,7 +1787,7 @@ modifier|*
 name|devptr
 decl_stmt|;
 comment|/* vitual device space */
-extern|extern	cnputc(
+extern|extern cnputc(
 block|)
 end_block
 
@@ -1441,20 +1795,12 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|/* standard serial console putc */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|QDSSCSR
 value|0x1F00
 end_define
-
-begin_comment
-comment|/* 	 * if console already configured, dont do again. 	 */
-end_comment
 
 begin_if
 if|if
@@ -1474,7 +1820,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * find the cpusw entry that matches this machine.  	 */
+comment|/*---------------------------------------------------- * find the cpusw entry that matches this machine. */
 end_comment
 
 begin_for
@@ -1508,8 +1854,263 @@ condition|)
 return|return;
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
-comment|/* 	 * Map device registers - the last 8K of umem. 	 */
+comment|/* the ultrix way */
+end_comment
+
+begin_comment
+comment|/*------------------------------------------------------ * Map the Q-bus memory space into the system memory. */
+end_comment
+
+begin_expr_stmt
+name|ubaaccess
+argument_list|(
+operator|(
+call|(
+modifier|*
+name|cpup
+operator|->
+name|v_umaddr
+call|)
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+argument_list|,
+name|QVmap
+index|[
+literal|0
+index|]
+argument_list|,
+name|cpup
+operator|->
+name|pc_umsize
+argument_list|,
+name|PG_V
+operator||
+name|PG_KW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ubaaccess
+argument_list|(
+operator|(
+call|(
+modifier|*
+name|cpup
+operator|->
+name|v_udevaddr
+call|)
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+argument_list|,
+name|QVmap
+index|[
+literal|0
+index|]
+operator|+
+name|btop
+argument_list|(
+name|cpup
+operator|->
+name|pc_umsize
+argument_list|)
+argument_list|,
+name|DEVSPACESIZE
+argument_list|,
+name|PG_V
+operator||
+name|PG_KW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*--------------------------------------------------------------------- * map the QDSS into the Qbus memory (which is now in system space)  */
+end_comment
+
+begin_expr_stmt
+name|devptr
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|qvmem
+index|[
+literal|0
+index|]
+operator|+
+name|cpup
+operator|->
+name|pc_umsize
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|qdaddr
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|(
+operator|(
+name|u_int
+operator|)
+name|devptr
+operator|+
+name|ubdevreg
+argument_list|(
+name|QDSSCSR
+argument_list|)
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|BADADDR
+argument_list|(
+name|qdaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+end_if
+
+begin_comment
+comment|/*--------------------------------------------------- 	* tell QDSS which Q memory address base to decode */
+end_comment
+
+begin_expr_stmt
+name|mapix
+operator|=
+operator|(
+name|int
+operator|)
+name|VTOP
+argument_list|(
+name|QMEMSIZE
+operator|-
+name|CHUNK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ptep
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|QVmap
+index|[
+literal|0
+index|]
+operator|+
+name|mapix
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|phys_adr
+operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
+operator|(
+operator|(
+name|int
+operator|)
+operator|*
+name|ptep
+operator|&
+literal|0x001FFFFF
+operator|)
+operator|<<
+name|PGSHIFT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+name|qdaddr
+operator|=
+call|(
+name|u_short
+call|)
+argument_list|(
+operator|(
+name|int
+operator|)
+name|phys_adr
+operator|>>
+literal|16
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|qdflags
+index|[
+name|unit
+index|]
+operator|.
+name|config
+operator|=
+operator|*
+operator|(
+name|u_short
+operator|*
+operator|)
+name|qdaddr
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*notdef*/
+end_comment
+
+begin_comment
+comment|/* the BSD way */
+end_comment
+
+begin_comment
+comment|/* 	 * Map device registers - the last 8K of qvmem. 	 */
 end_comment
 
 begin_expr_stmt
@@ -1614,10 +2215,8 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|log
+name|printf
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"Can't find qdss (badaddr)\n"
 argument_list|)
 expr_stmt|;
@@ -1725,7 +2324,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * load qdmap struct with the virtual addresses of the QDSS elements  	 */
+comment|/*---------------------------------------------------------------------- * load qdmap struct with the virtual addresses of the QDSS elements */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/*ultrix way */
 end_comment
 
 begin_expr_stmt
@@ -1734,13 +2343,42 @@ index|[
 name|unit
 index|]
 operator|=
-operator|(
+call|(
 name|caddr_t
-operator|)
+call|)
+argument_list|(
 name|qvmem
 index|[
 literal|0
 index|]
+operator|+
+name|QMEMSIZE
+operator|-
+name|CHUNK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|qdbase
+index|[
+name|unit
+index|]
+operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
+name|qvmem
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1897,12 +2535,32 @@ comment|/* init shadow variables */
 end_comment
 
 begin_comment
-comment|/* 	 * init the QDSS  	 */
+comment|/*------------------ * init the QDSS  */
 end_comment
 
-begin_comment
-comment|/*** 	printf("qdbase[0] = %x, qdmap[0].memcsr = %x\n", 		(char *)qdbase[0], qdmap[0].memcsr); 	***/
-end_comment
+begin_expr_stmt
+name|printf
+argument_list|(
+literal|"qdbase[0] = %x, qdmap[0].memcsr = %x\n"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|qdbase
+index|[
+literal|0
+index|]
+argument_list|,
+name|qdmap
+index|[
+literal|0
+index|]
+operator|.
+name|memcsr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 operator|*
@@ -2023,6 +2681,56 @@ begin_comment
 comment|/* init the DUART */
 end_comment
 
+begin_comment
+comment|/*---------------------------------------------------- * smash the system's virtual console address table */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/* the ultrix way */
+end_comment
+
+begin_expr_stmt
+name|v_consputc
+operator|=
+name|qdputc
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|v_consgetc
+operator|=
+name|qdgetc
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cdevsw
+index|[
+literal|0
+index|]
+operator|=
+name|cdevsw
+index|[
+name|QDSSMAJOR
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* the bsd way */
+end_comment
+
 begin_expr_stmt
 name|v_putc
 operator|=
@@ -2041,6 +2749,17 @@ index|]
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ws_display_type
+operator|=
+name|QDSSMAJOR
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Idenify QDSS as graphics device */
+end_comment
+
 begin_return
 return|return
 operator|(
@@ -2055,7 +2774,7 @@ comment|/* qdcons_init */
 end_comment
 
 begin_comment
-comment|/********************************************************************* * *	qdprobe()... configure QDSS into Q memory and make it intrpt * ********************************************************************** * *  calling convention: *			qdprobe(reg, ctlr); *			caddr_t reg; *			int ctlr; * *	where: reg - a character pointer to the QDSS I/O page register *	       ctlr - controller number (?) * *  side effects: QDSS gets mapped into Qbus memory space at the first *		 vacant 64kb boundary counting back from the top of *		 Qbus memory space (qmem+4mb) * *  return: QDSS bus request level and vector address returned in *	   registers by UNIX convention. * *****************/
+comment|/********************************************************************* * *	qdprobe()... configure QDSS into Q memory and make it intrpt * ********************************************************************** * *  calling convention: *			qdprobe(reg, ctlr); *			caddr_t reg; *			int ctlr; * *	where: reg - a character pointer to the QDSS I/O page register *	       ctlr - controller number (?) * *  side effects: QDSS gets mapped into Qbus memory space at the first *		 vacant 64kb boundary counting back from the top of *		 Qbus memory space (qvmem+4mb) * *  return: QDSS bus request level and vector address returned in *	   registers by UNIX convention. * *****************/
 end_comment
 
 begin_expr_stmt
@@ -2108,24 +2827,7 @@ comment|/* physical QDSS base adrs */
 name|u_int
 name|mapix
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|br
-operator|=
-literal|0
-expr_stmt|;
-name|cvec
-operator|=
-name|br
-expr_stmt|;
-name|br
-operator|=
-name|cvec
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	* calculate board unit number from I/O page register address   	*/
+comment|/*--------------------------------------------------------------- * calculate board unit number from I/O page register address  */
 name|unit
 operator|=
 call|(
@@ -2144,12 +2846,40 @@ operator|&
 literal|0x0007
 argument_list|)
 expr_stmt|;
-comment|/* * QDSS regs must be mapped to Qbus memory space at a 64kb physical boundary. * The Qbus memory space is mapped into the system memory space at config * time.  After config runs, "qmem[0]" (ubavar.h) holds the system virtual adrs * of the start of Qbus memory.	The Qbus memory page table is found via * an array of pte ptrs called "QMEMmap[]" (ubavar.h) which is also loaded at * config time.	These are the variables used below to find a vacant 64kb * boundary in Qbus memory, and load it's corresponding physical adrs into * the QDSS's I/O page CSR.   */
+comment|/*--------------------------------------------------------------------------- * QDSS regs must be mapped to Qbus memory space at a 64kb physical boundary. * The Qbus memory space is mapped into the system memory space at config * time.  After config runs, "qvmem[0]" (ubavar.h) holds the system virtual adrs * of the start of Qbus memory.	The Qbus memory page table is found via * an array of pte ptrs called "QVmap[]" (ubavar.h) which is also loaded at * config time.	These are the variables used below to find a vacant 64kb * boundary in Qbus memory, and load it's corresponding physical adrs into * the QDSS's I/O page CSR.  */
+comment|/* 	 * Only if QD is the graphics device. 	 */
+if|if
+condition|(
+name|ws_display_type
+operator|&&
+operator|(
+name|ws_display_type
+operator|!=
+name|QDSSMAJOR
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* if this QDSS is NOT the console, then do init here.. */
-comment|/****** XXX - REMOVED (can't test) - STILL NEED TO DO FOR NQD> 1 ***/
+if|if
+condition|(
+name|unit
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"qd: can't support two qdss's (yet)\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
+comment|/* notyet */
 if|if
 condition|(
 name|v_consputc
@@ -2161,7 +2891,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	     * read QDSS config info 	     */
+comment|/*------------------------- 	    * read QDSS config info */
 name|qdflags
 index|[
 name|unit
@@ -2176,7 +2906,7 @@ operator|*
 operator|)
 name|reg
 expr_stmt|;
-comment|/* 	     * find an empty 64kb adrs boundary  	     */
+comment|/*------------------------------------ 	    * find an empty 64kb adrs boundary */
 name|qdbase
 index|[
 name|unit
@@ -2186,7 +2916,7 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
-name|qmem
+name|qvmem
 index|[
 literal|0
 index|]
@@ -2196,7 +2926,7 @@ operator|-
 name|CHUNK
 argument_list|)
 expr_stmt|;
-comment|/* 	     * find the cpusw entry that matches this machine.  	     */
+comment|/*---------------------------------------------------- 	    * find the cpusw entry that matches this machine. */
 name|cpup
 operator|=
 operator|&
@@ -2230,7 +2960,7 @@ index|]
 operator|-=
 name|CHUNK
 expr_stmt|;
-comment|/* 	     * tell QDSS which Q memory address base to decode  	     */
+comment|/*--------------------------------------------------- 	    * tell QDSS which Q memory address base to decode */
 name|mapix
 operator|=
 call|(
@@ -2247,7 +2977,7 @@ argument_list|)
 operator|-
 name|VTOP
 argument_list|(
-name|qmem
+name|qvmem
 index|[
 literal|0
 index|]
@@ -2260,7 +2990,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|QMEMmap
+name|QVmap
 index|[
 literal|0
 index|]
@@ -2305,7 +3035,7 @@ operator|>>
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/* 	     * load QDSS adrs map with system addresses of device regs 	     */
+comment|/*----------------------------------------------------------- 	    * load QDSS adrs map with system addresses of device regs */
 name|qdmap
 index|[
 name|unit
@@ -2489,11 +3219,11 @@ name|memcsr
 operator||=
 name|SYNC_ON
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* notdef */
-comment|/*  * the QDSS interrupts at HEX vectors xx0 (DMA) xx4 (ADDER) and xx8 (DUART).  * Therefore, we take three vectors from the vector pool, and then continue  * to take them until we get a xx0 HEX vector.  The pool provides vectors  * in contiguous decending order.    */
+comment|/*notdef*/
+block|}
+comment|/*-------------------------------------------------------------------------- * the QDSS interrupts at HEX vectors xx0 (DMA) xx4 (ADDER) and xx8 (DUART). * Therefore, we take three vectors from the vector pool, and then continue * to take them until we get a xx0 HEX vector.  The pool provides vectors * in contiguous decending order.  */
 name|vector
 operator|=
 operator|(
@@ -2533,7 +3263,7 @@ operator|)
 expr_stmt|;
 comment|/* ..take another vector */
 block|}
-comment|/* 	 * setup DGA to do a DMA interrupt (transfer count = 0) 	 */
+comment|/*--------------------------------------------------------- 	* setup DGA to do a DMA interrupt (transfer count = 0)	*/
 name|dga
 operator|=
 operator|(
@@ -2616,6 +3346,7 @@ operator|=
 name|HALT
 expr_stmt|;
 comment|/* stop the wheels */
+comment|/*---------- * exits  */
 if|if
 condition|(
 name|cvec
@@ -2629,6 +3360,18 @@ literal|0
 operator|)
 return|;
 comment|/* ..return = 'no device' */
+comment|/* 	 * score this as an existing qdss 	 */
+name|qdcount
+operator|++
+expr_stmt|;
+name|ws_display_units
+operator||=
+operator|(
+literal|1
+operator|<<
+name|unit
+operator|)
+expr_stmt|;
 return|return
 operator|(
 sizeof|sizeof
@@ -2639,32 +3382,17 @@ operator|)
 return|;
 comment|/* return size of QDSS I/O page reg */
 block|}
-end_block
-
-begin_comment
 comment|/* qdprobe */
-end_comment
-
-begin_comment
-comment|/***************************************************************** * *	qdattach - one-time initialization * ****************************************************************** * *  calling convention: *			qdattach(ui); *			struct uba_device *ui; * *		where: ui - pointer to the QDSS's uba_device structure * *  side effects: none *	 return: none * *************************/
-end_comment
-
-begin_macro
+comment|/***************************************************************** * *	qdattach()... do the one-time initialization * ****************************************************************** * *  calling convention: *			qdattach(ui); *			struct uba_device *ui; * *		where: ui - pointer to the QDSS's uba_device structure * *  side effects: none *	 return: none * *************************/
 name|qdattach
 argument_list|(
 argument|ui
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|struct
 name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_int
@@ -2678,7 +3406,7 @@ operator|->
 name|ui_unit
 expr_stmt|;
 comment|/* get QDSS number */
-comment|/* 	 * init "qdflags[]" for this QDSS  	 */
+comment|/*---------------------------------- * init "qdflags[]" for this QDSS */
 name|qdflags
 index|[
 name|unit
@@ -2705,7 +3433,8 @@ index|]
 operator|.
 name|kernel_loop
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|qdflags
 index|[
@@ -2763,8 +3492,8 @@ name|adder_ie
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	* init structures used in kbd/mouse interrupt service.	This code must 	* come after the "init_shared()" routine has run since that routine  	* inits the eq_header[unit] structure used here.    	*/
-comment|/* 	* init the "latest mouse report" structure  	*/
+comment|/*---------------------------------------------------------------------- * init structures used in kbd/mouse interrupt service.	This code must * come after the "init_shared()" routine has run since that routine inits * the eq_header[unit] structure used here.   */
+comment|/*-------------------------------------------- 	* init the "latest mouse report" structure */
 name|last_rep
 index|[
 name|unit
@@ -2801,7 +3530,7 @@ name|bytcnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	* init the event queue (except mouse position) 	*/
+comment|/*------------------------------------------------ 	* init the event queue (except mouse position) */
 name|eq_header
 index|[
 name|unit
@@ -2865,7 +3594,7 @@ name|tail
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	* init single process access lock switch  	*/
+comment|/*------------------------------------------ * init single process access lock switch */
 name|one_only
 index|[
 name|unit
@@ -2874,38 +3603,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/* qdattach */
-end_comment
-
-begin_comment
-comment|/*************************************************************** * *	qdopen - open a minor device * **************************************************************** * *  calling convention: qdopen(dev, flag); *		       dev_t dev; *		       int flag; * *  side effects: none * *********************/
-end_comment
-
-begin_macro
+comment|/*************************************************************** * *	qdopen()... open a minor device * **************************************************************** * *  calling convention: qdopen(dev, flag); *		       dev_t dev; *		       int flag; * *  side effects: none * *********************/
 name|qdopen
 argument_list|(
 argument|dev
 argument_list|,
 argument|flag
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2927,10 +3638,6 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|int
-name|qdstart
-parameter_list|()
-function_decl|;
 name|struct
 name|adder
 modifier|*
@@ -2964,7 +3671,7 @@ name|minor_dev
 operator|>>
 literal|2
 expr_stmt|;
-comment|/* check for illegal conditions	*/
+comment|/*--------------------------------- * check for illegal conditions	*/
 name|ui
 operator|=
 name|qdinfo
@@ -2991,7 +3698,7 @@ name|ENXIO
 operator|)
 return|;
 comment|/* no such device or address */
-comment|/* init stuff */
+comment|/*-------------- * init stuff */
 name|adder
 operator|=
 operator|(
@@ -3034,7 +3741,7 @@ index|]
 operator|.
 name|dga
 expr_stmt|;
-comment|/* if this is the graphic device... */
+comment|/*------------------------------------ * if this is the graphic device... */
 if|if
 condition|(
 operator|(
@@ -3099,9 +3806,19 @@ index|]
 operator|.
 name|duart_imask
 expr_stmt|;
-comment|/* 	 * if the open call is to the console or the alternate console...  	 */
+comment|/*------------------------------------------------------------------ * if the open call is to the console or the alternate console... */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|minor_dev
+operator|&
+literal|0x03
+operator|)
+operator|!=
+literal|2
+condition|)
 block|{
 name|qdflags
 index|[
@@ -3162,6 +3879,48 @@ name|t_oproc
 operator|=
 name|qdstart
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* never */
+comment|/*--------------------------------------------------------------------- 	* Look at the compatibility mode to specify correct default parameters 	* and to insure only standard specified functionality. */
+if|if
+condition|(
+operator|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_progenv
+operator|==
+name|A_SYSV
+operator|)
+operator|||
+operator|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_progenv
+operator|==
+name|A_POSIX
+operator|)
+condition|)
+block|{
+name|flag
+operator||=
+name|O_TERMIO
+expr_stmt|;
+name|tp
+operator|->
+name|t_line
+operator|=
+name|TERMIODISC
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/*notdef*/
 if|if
 condition|(
 operator|(
@@ -3182,11 +3941,9 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_state
+name|t_flags
 operator|=
-name|TS_ISOPEN
-operator||
-name|TS_CARR_ON
+name|IFLAGS
 expr_stmt|;
 name|tp
 operator|->
@@ -3200,6 +3957,46 @@ name|t_ospeed
 operator|=
 name|B9600
 expr_stmt|;
+name|tp
+operator|->
+name|t_state
+operator|=
+name|TS_ISOPEN
+operator||
+name|TS_CARR_ON
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* never */
+name|tp
+operator|->
+name|t_cflag
+operator|=
+name|tp
+operator|->
+name|t_cflag_ext
+operator|=
+name|B9600
+expr_stmt|;
+name|tp
+operator|->
+name|t_iflag_ext
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_oflag_ext
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_lflag_ext
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3211,47 +4008,137 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/*---------------------------------------------------- 			* Ultrix defaults to a "COOKED" mode on the first 			* open, while termio defaults to a "RAW" style. 			* Base this decision by a flag set in the termio 			* emulation routine for open, or set by an explicit 			* ioctl call. */
+if|if
+condition|(
+name|flag
+operator|&
+name|O_TERMIO
+condition|)
+block|{
+comment|/*-------------------------------------- 				* Provide a termio style environment. 				* "RAW" style by default. */
 name|tp
 operator|->
 name|t_flags
 operator|=
-name|XTABS
-operator||
-name|EVENP
-operator||
-name|ECHO
-operator||
-name|CRMOD
+name|RAW
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|POSIXTTY
 name|tp
 operator|->
 name|t_iflag
 operator|=
-name|TTYDEF_IFLAG
+literal|0
 expr_stmt|;
 name|tp
 operator|->
 name|t_oflag
 operator|=
-name|TTYDEF_OFLAG
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_cflag
+operator||=
+name|CS8
+operator||
+name|CREAD
+operator||
+name|HUPCL
 expr_stmt|;
 name|tp
 operator|->
 name|t_lflag
 operator|=
-name|TTYDEF_LFLAG
+literal|0
+expr_stmt|;
+comment|/*------------------------------------- 				 * Change to System V line discipline.*/
+name|tp
+operator|->
+name|t_line
+operator|=
+name|TERMIODISC
+expr_stmt|;
+comment|/*----------------------------------------- 				* The following three control chars have  				* different default values than ULTRIX.	*/
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VERASE
+index|]
+operator|=
+literal|'#'
+expr_stmt|;
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VKILL
+index|]
+operator|=
+literal|'@'
+expr_stmt|;
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VINTR
+index|]
+operator|=
+literal|0177
+expr_stmt|;
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VMIN
+index|]
+operator|=
+literal|6
+expr_stmt|;
+name|tp
+operator|->
+name|t_cc
+index|[
+name|VTIME
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*-------------------------------------- 				* Provide a backward compatible ULTRIX  				* environment.  "COOKED" style.	*/
+name|tp
+operator|->
+name|t_flags
+operator|=
+name|IFLAGS
+expr_stmt|;
+name|tp
+operator|->
+name|t_iflag
+operator|=
+name|IFLAG
+expr_stmt|;
+name|tp
+operator|->
+name|t_oflag
+operator|=
+name|OFLAG
+expr_stmt|;
+name|tp
+operator|->
+name|t_lflag
+operator|=
+name|LFLAG
 expr_stmt|;
 name|tp
 operator|->
 name|t_cflag
-operator|=
-name|TTYDEF_CFLAG
+operator||=
+name|CFLAG
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 block|}
 else|else
 block|{
@@ -3261,7 +4148,55 @@ name|t_flags
 operator|=
 name|RAW
 expr_stmt|;
+name|tp
+operator|->
+name|t_iflag
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_oflag
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_cflag
+operator||=
+name|CS8
+operator||
+name|CREAD
+operator||
+name|HUPCL
+expr_stmt|;
+name|tp
+operator|->
+name|t_lflag
+operator|=
+literal|0
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|minor_dev
+operator|&
+literal|0x03
+operator|)
+operator|==
+literal|1
+condition|)
+name|tp
+operator|->
+name|t_iflag
+operator||=
+name|IXOFF
+expr_stmt|;
+comment|/* flow control for qconsole */
+endif|#
+directive|endif
+comment|/*notdef*/
 block|}
 comment|/*---------------------------------------- 	    * enable intrpts, open line discipline */
 name|dga
@@ -3305,38 +4240,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/* qdopen */
-end_comment
-
-begin_comment
-comment|/*************************************************************** * *	qdclose - clean up on the way out * **************************************************************** * *  calling convention: qdclose(); * *  side effects: none * *  return: none * *********************/
-end_comment
-
-begin_macro
+comment|/*************************************************************** * *	qdclose()... clean up on the way out * **************************************************************** * *  calling convention: qdclose(); * *  side effects: none * *  return: none * *********************/
 name|qdclose
 argument_list|(
 argument|dev
 argument_list|,
 argument|flag
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3407,7 +4324,7 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-comment|/* 	 * if this is the graphic device...  	 */
+comment|/*------------------------------------ * if this is the graphic device... */
 if|if
 condition|(
 operator|(
@@ -3419,6 +4336,7 @@ operator|==
 literal|2
 condition|)
 block|{
+comment|/*----------------- 	    * unlock driver */
 if|if
 condition|(
 name|one_only
@@ -3428,7 +4346,6 @@ index|]
 operator|!=
 literal|1
 condition|)
-comment|/* unlock driver */
 return|return
 operator|(
 name|EBUSY
@@ -3442,7 +4359,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	    * re-protect device memory  	    */
+comment|/*---------------------------- 	    * re-protect device memory */
 if|if
 condition|(
 name|qdflags
@@ -3455,7 +4372,7 @@ operator|&
 name|MAPDEV
 condition|)
 block|{
-comment|/* TEMPLATE RAM */
+comment|/*---------------- 		* TEMPLATE RAM */
 name|mapix
 operator|=
 name|VTOP
@@ -3523,7 +4440,7 @@ name|PG_V
 operator||
 name|PG_KW
 expr_stmt|;
-comment|/* ADDER */
+comment|/*--------- 		* ADDER */
 name|mapix
 operator|=
 name|VTOP
@@ -3591,7 +4508,7 @@ name|PG_V
 operator||
 name|PG_KW
 expr_stmt|;
-comment|/* COLOR MAPS */
+comment|/*-------------- 		* COLOR MAPS */
 name|mapix
 operator|=
 name|VTOP
@@ -3660,7 +4577,7 @@ operator||
 name|PG_KW
 expr_stmt|;
 block|}
-comment|/*  	     * re-protect DMA buffer and free the map registers  	     */
+comment|/*---------------------------------------------------- 	    * re-protect DMA buffer and free the map registers */
 if|if
 condition|(
 name|qdflags
@@ -3840,7 +4757,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * re-protect 1K (2 pages) event queue  	     */
+comment|/*--------------------------------------- 	    * re-protect 1K (2 pages) event queue */
 if|if
 condition|(
 name|qdflags
@@ -3914,7 +4831,7 @@ operator||
 name|PG_V
 expr_stmt|;
 block|}
-comment|/* 	     * re-protect scroll param area and disable scroll intrpts   	     */
+comment|/*------------------------------------------------------------ 	    * re-protect scroll param area and disable scroll intrpts  */
 if|if
 condition|(
 name|qdflags
@@ -4008,7 +4925,7 @@ operator|.
 name|adder_ie
 expr_stmt|;
 block|}
-comment|/* 	     * re-protect color map write buffer area and kill intrpts  	     */
+comment|/*----------------------------------------------------------- 	    * re-protect color map write buffer area and kill intrpts */
 if|if
 condition|(
 name|qdflags
@@ -4126,7 +5043,7 @@ operator|.
 name|adder_ie
 expr_stmt|;
 block|}
-comment|/* 	     * flag that everthing is unmapped  	     */
+comment|/*----------------------------------- 	    * flag that everthing is unmapped */
 name|mtpr
 argument_list|(
 name|TBIA
@@ -4134,7 +5051,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* invalidate translation buf */
+comment|/* smash CPU's translation buf */
 name|qdflags
 index|[
 name|unit
@@ -4144,7 +5061,7 @@ name|mapped
 operator|=
 literal|0
 expr_stmt|;
-comment|/* flag everything unmapped */
+comment|/* flag everything now unmapped */
 name|qdflags
 index|[
 name|unit
@@ -4173,7 +5090,7 @@ name|curs_thr
 operator|=
 literal|128
 expr_stmt|;
-comment|/* 	     * restore the console  	     */
+comment|/*--------------------- 	    * restore the console */
 name|dga
 operator|=
 operator|(
@@ -4323,7 +5240,7 @@ name|y
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	     * shut off the mouse rcv intrpt and turn on kbd intrpts  	     */
+comment|/* shut off the mouse rcv intrpt and turn on kbd intrpts */
 name|duart
 operator|=
 operator|(
@@ -4370,7 +5287,7 @@ index|]
 operator|.
 name|duart_imask
 expr_stmt|;
-comment|/* 	     * shut off interrupts if all is closed   	     */
+comment|/*----------------------------------------- 	    * shut off interrupts if all is closed  */
 if|if
 condition|(
 operator|!
@@ -4417,9 +5334,9 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+comment|/*---------------------------------------------------- * if this is the console or the alternate console  */
 else|else
 block|{
-comment|/* if this is the console or the alternate console  */
 name|tp
 operator|=
 operator|&
@@ -4454,6 +5371,42 @@ name|t_state
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Remove termio flags that do not map */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* never */
+name|tp
+operator|->
+name|t_iflag
+operator|&=
+operator|~
+name|TERMIO_ONLY_IFLAG
+expr_stmt|;
+name|tp
+operator|->
+name|t_oflag
+operator|&=
+operator|~
+name|TERMIO_ONLY_OFLAG
+expr_stmt|;
+name|tp
+operator|->
+name|t_cflag
+operator|&=
+operator|~
+name|TERMIO_ONLY_CFLAG
+expr_stmt|;
+name|tp
+operator|->
+name|t_lflag
+operator|&=
+operator|~
+name|TERMIO_ONLY_LFLAG
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*notdef*/
 name|qdflags
 index|[
 name|unit
@@ -4464,7 +5417,7 @@ operator|&=
 operator|~
 name|CONS_DEV
 expr_stmt|;
-comment|/* 	     * if graphics device is closed, kill interrupts  	     */
+comment|/*------------------------------------------------- 	    * if graphics device is closed, kill interrupts */
 if|if
 condition|(
 operator|!
@@ -4507,23 +5460,15 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+comment|/*-------- * exit */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/* qdclose */
-end_comment
-
-begin_comment
-comment|/*************************************************************** * *	qdioctl - provide QDSS control services * **************************************************************** * *  calling convention:	qdioctl(dev, cmd, datap, flags); * *		where:	dev - the major/minor device number *			cmd - the user-passed command argument *			datap - ptr to user input buff (128 bytes max) *			flags - "f_flags" from "struct file" in file.h * * *	- here is the format for the input "cmd" argument * *	31     29 28	23 22	      16 15		8 7		 0 *	+----------------------------------------------------------------+ *	|I/O type|	  | buff length | device ID char |  user command | *	+----------------------------------------------------------------+ * *  Return data is in the data buffer pointed to by "datap" input spec * *********************/
-end_comment
-
-begin_macro
+comment|/*************************************************************** * *	qdioctl()... provide QDSS control services * **************************************************************** * *  calling convention:	qdioctl(dev, cmd, datap, flags); * *		where:	dev - the major/minor device number *			cmd - the user-passed command argument *			datap - ptr to user input buff (128 bytes max) *			flags - "f_flags" from "struct file" in file.h * * *	- here is the format for the input "cmd" argument * *	31     29 28	23 22	      16 15		8 7		 0 *	+----------------------------------------------------------------+ *	|I/O type|	  | buff length | device ID char |  user command | *	+----------------------------------------------------------------+ * *  Return data is in the data buffer pointed to by "datap" input spec * *********************/
 name|qdioctl
 argument_list|(
 argument|dev
@@ -4534,33 +5479,18 @@ argument|datap
 argument_list|,
 argument|flags
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|datap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -4666,7 +5596,16 @@ operator|->
 name|ui_unit
 index|]
 decl_stmt|;
-comment|/* struct devget *devget; */
+ifdef|#
+directive|ifdef
+name|notdef
+name|struct
+name|devget
+modifier|*
+name|devget
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
@@ -4702,13 +5641,13 @@ modifier|*
 name|temp
 decl_stmt|;
 comment|/* a pointer to template RAM */
-comment|/* service graphic device ioctl commands */
+comment|/*----------------------------------------- * service graphic device ioctl commands */
 switch|switch
 condition|(
 name|cmd
 condition|)
 block|{
-comment|/* 	     * extract the oldest event from the event queue  	     */
+comment|/*------------------------------------------------- 	    * extract the oldest event from the event queue */
 case|case
 name|QD_GETEVENT
 case|:
@@ -4757,7 +5696,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|spltty
+name|spl5
 argument_list|()
 expr_stmt|;
 name|GETEND
@@ -4848,6 +5787,10 @@ comment|/*--------------------------------------------------------------- 	    *
 case|case
 name|QD_CLRSCRN
 case|:
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* has caused problems and is not necessary */
 name|setup_dragon
 argument_list|(
 name|unit
@@ -4858,6 +5801,8 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 comment|/*------------------------------------ 	    * load a cursor into template RAM  */
 case|case
@@ -4959,7 +5904,7 @@ name|datap
 expr_stmt|;
 name|s
 operator|=
-name|spltty
+name|spl5
 argument_list|()
 expr_stmt|;
 name|dga
@@ -5031,7 +5976,7 @@ name|datap
 expr_stmt|;
 name|s
 operator|=
-name|spltty
+name|spl5
 argument_list|()
 expr_stmt|;
 name|qdflags
@@ -5487,7 +6432,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"qd%d: qdioctl: QBA setup error\n"
+literal|"\nqd%d: qdioctl: QBA setup error"
 argument_list|,
 name|unit
 argument_list|)
@@ -5867,7 +6812,7 @@ name|unit
 index|]
 operator|.
 name|adder
-expr_stmt|;
+operator|.
 name|qdflags
 index|[
 name|unit
@@ -5888,7 +6833,7 @@ index|]
 operator|.
 name|adder_ie
 expr_stmt|;
-comment|/* return scroll area address */
+comment|/* return color area address */
 operator|*
 operator|(
 name|int
@@ -6212,7 +7157,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdioctl: timeout on XMT_RDY [1]\n"
+literal|"\nqd%d: qdioctl: timeout on XMT_RDY [1]"
 argument_list|,
 name|unit
 argument_list|)
@@ -6276,7 +7221,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nqd%d: qdioctl: timeout on XMT_RDY [2]\n"
+literal|"\nqd%d: qdioctl: timeout on XMT_RDY [2]"
 argument_list|,
 name|unit
 argument_list|)
@@ -6340,7 +7285,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdioctl: timeout on XMT_RDY [3]\n"
+literal|"\nqd%d: qdioctl: timeout on XMT_RDY [3]"
 argument_list|,
 name|unit
 argument_list|)
@@ -6412,7 +7357,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdioctl: timeout on XMT_RDY [4]\n"
+literal|"\nqd%d: qdioctl: timeout on XMT_RDY [4]"
 argument_list|,
 name|unit
 argument_list|)
@@ -6436,6 +7381,34 @@ name|unit
 index|]
 operator|.
 name|config
+expr_stmt|;
+break|break;
+comment|/*-------------------------------------------------------------- 	    * re-route kernel console messages to the alternate console  */
+case|case
+name|QD_KERN_LOOP
+case|:
+name|qdflags
+index|[
+name|unit
+index|]
+operator|.
+name|kernel_loop
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|QD_KERN_UNLOOP
+case|:
+name|qdflags
+index|[
+name|unit
+index|]
+operator|.
+name|kernel_loop
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 comment|/*---------------------- 	    * program the tablet */
@@ -6502,7 +7475,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdioctl: timeout on XMT_RDY [5]\n"
+literal|"\nqd%d: qdioctl: timeout on XMT_RDY [5]"
 argument_list|,
 name|unit
 argument_list|)
@@ -6528,14 +7501,186 @@ operator|)
 name|datap
 expr_stmt|;
 break|break;
-comment|/* 	     * ultrix has a bizarre scheme for routing console output 	     * to an alternate window (xcons).  these ioctls are 	     * left in as no-ops so the X11R2 qdss server code doesn't 	     * have to be modified. console redirection is accomplished 	     * by a more sensible method using TIOCCONS in 4.3.tahoe BSD. 	     */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* never */
 case|case
-name|QD_KERN_LOOP
+name|DEVIOCGET
 case|:
-case|case
-name|QD_KERN_UNLOOP
-case|:
+comment|/* device status */
+name|devget
+operator|=
+operator|(
+expr|struct
+name|devget
+operator|*
+operator|)
+name|datap
+expr_stmt|;
+name|bzero
+argument_list|(
+name|devget
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|devget
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|devget
+operator|->
+name|category
+operator|=
+name|DEV_TERMINAL
+expr_stmt|;
+name|devget
+operator|->
+name|bus
+operator|=
+name|DEV_QB
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|DEV_VCB02
+argument_list|,
+name|devget
+operator|->
+name|interface
+argument_list|,
+name|strlen
+argument_list|(
+name|DEV_VCB02
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|DEV_VR290
+argument_list|,
+name|devget
+operator|->
+name|device
+argument_list|,
+name|strlen
+argument_list|(
+name|DEV_VR290
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* terminal */
+name|devget
+operator|->
+name|adpt_num
+operator|=
+name|ui
+operator|->
+name|ui_adpt
+expr_stmt|;
+comment|/* which adapter*/
+name|devget
+operator|->
+name|nexus_num
+operator|=
+name|ui
+operator|->
+name|ui_nexus
+expr_stmt|;
+comment|/* which nexus  */
+name|devget
+operator|->
+name|bus_num
+operator|=
+name|ui
+operator|->
+name|ui_ubanum
+expr_stmt|;
+comment|/* which QB     */
+name|devget
+operator|->
+name|ctlr_num
+operator|=
+name|unit
+expr_stmt|;
+comment|/* which interf.*/
+name|devget
+operator|->
+name|slave_num
+operator|=
+name|unit
+expr_stmt|;
+comment|/* which line   */
+name|bcopy
+argument_list|(
+name|ui
+operator|->
+name|ui_driver
+operator|->
+name|ud_dname
+argument_list|,
+name|devget
+operator|->
+name|dev_name
+argument_list|,
+name|strlen
+argument_list|(
+name|ui
+operator|->
+name|ui_driver
+operator|->
+name|ud_dname
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Ultrix "qd"  */
+name|devget
+operator|->
+name|unit_num
+operator|=
+name|unit
+expr_stmt|;
+comment|/* qd line?     */
+name|devget
+operator|->
+name|soft_count
+operator|=
+name|sc
+operator|->
+name|sc_softcnt
+expr_stmt|;
+comment|/* soft er. cnt.*/
+name|devget
+operator|->
+name|hard_count
+operator|=
+name|sc
+operator|->
+name|sc_hardcnt
+expr_stmt|;
+comment|/* hard er cnt. */
+name|devget
+operator|->
+name|stat
+operator|=
+name|sc
+operator|->
+name|sc_flags
+expr_stmt|;
+comment|/* status	    */
+name|devget
+operator|->
+name|category_stat
+operator|=
+name|sc
+operator|->
+name|sc_category_flags
+expr_stmt|;
+comment|/* cat. stat.   */
 break|break;
+endif|#
+directive|endif
+comment|/*notdef*/
 default|default:
 comment|/*----------------------------- 		* service tty type ioctl's  */
 if|if
@@ -6628,38 +7773,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/* qdioctl */
-end_comment
-
-begin_comment
 comment|/********************************************************************** * *	qdselect()... service select call for event queue input * **********************************************************************/
-end_comment
-
-begin_macro
 name|qdselect
 argument_list|(
 argument|dev
 argument_list|,
 argument|rw
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|rw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -6669,17 +7796,28 @@ specifier|register
 name|int
 name|unit
 decl_stmt|;
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
-name|unit
-operator|=
+specifier|register
+name|struct
+name|tty
+modifier|*
+name|tp
+decl_stmt|;
+name|u_int
+name|minor_dev
+init|=
 name|minor
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|s
+operator|=
+name|spl5
+argument_list|()
+expr_stmt|;
+name|unit
+operator|=
+name|minor_dev
 operator|>>
 literal|2
 expr_stmt|;
@@ -6691,7 +7829,18 @@ block|{
 case|case
 name|FREAD
 case|:
-comment|/* event available? */
+if|if
+condition|(
+operator|(
+name|minor_dev
+operator|&
+literal|0x03
+operator|)
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* 		     * this is a graphics device, so check for events 		     */
 if|if
 condition|(
 operator|!
@@ -6716,7 +7865,6 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* return "1" if event exists */
 block|}
 name|rsel
 index|[
@@ -6746,10 +7894,67 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+else|else
+block|{
+comment|/* 		     * this is a tty device 		     */
+name|tp
+operator|=
+operator|&
+name|qd_tty
+index|[
+name|minor_dev
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|ttnread
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|tp
+operator|->
+name|t_rsel
+operator|=
+name|u
+operator|.
+name|u_procp
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 case|case
 name|FWRITE
 case|:
-comment|/* DMA done? */
+if|if
+condition|(
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+literal|0x03
+operator|)
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* 		     * this is a graphics device, so check for dma buffers 		     */
 if|if
 condition|(
 name|DMA_ISEMPTY
@@ -6771,7 +7976,6 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* return "1" if DMA is done */
 block|}
 name|rsel
 index|[
@@ -6802,23 +8006,63 @@ literal|0
 operator|)
 return|;
 block|}
+else|else
+block|{
+comment|/* 		     * this is a tty device 		     */
+name|tp
+operator|=
+operator|&
+name|qd_tty
+index|[
+name|minor_dev
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
+operator|<=
+name|TTLOWAT
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|tp
+operator|->
+name|t_wsel
+operator|=
+name|u
+operator|.
+name|u_procp
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+block|}
+block|}
+comment|/* qdselect() */
+comment|/*************************************************************** * *	qdwrite()... output to the QDSS screen as a TTY * ***************************************************************/
+extern|extern qd_strategy(
+block|)
 end_block
 
-begin_comment
-comment|/* qdselect() */
-end_comment
-
-begin_comment
-comment|/*************************************************************** * *	qdwrite()... output to the QDSS screen as a TTY * ***************************************************************/
-end_comment
-
-begin_extern
-extern|extern qd_strategy(
-end_extern
-
 begin_empty_stmt
-unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -7190,7 +8434,7 @@ operator|)
 operator|&
 literal|0x07
 expr_stmt|;
-comment|/* 	* init pointers  	*/
+comment|/*----------------- * init pointers */
 if|if
 condition|(
 operator|(
@@ -7211,7 +8455,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qd_strategy: QBA setup error\n"
+literal|"\nqd%d: qd_strategy: QBA setup error"
 argument_list|,
 name|unit
 argument_list|)
@@ -7236,7 +8480,7 @@ name|dga
 expr_stmt|;
 name|s
 operator|=
-name|spltty
+name|spl5
 argument_list|()
 expr_stmt|;
 name|qdflags
@@ -7470,7 +8714,7 @@ comment|/* qd_strategy */
 end_comment
 
 begin_comment
-comment|/******************************************************************* * *	qdstart()... startup output to the console screen * ******************************************************************** * NOTE - You must have tty.c fixed so it doesn't try to sleep *	waiting for a transmitter interrupt (which would never occur). *	Writes to the QDSS are synchronous and have (essentially) *	completed by the time the start routine returns. * *	calling convention: * *		qdstart(tp); *		struct tty *tp; 	# pointer to tty structure * ********/
+comment|/******************************************************************* * *	qdstart()... startup output to the console screen * ******************************************************************** * *	calling convention: * *		qdstart(tp); *		struct tty *tp; 	;pointer to tty structure * ********/
 end_comment
 
 begin_expr_stmt
@@ -7496,8 +8740,22 @@ name|unit
 decl_stmt|,
 name|c
 decl_stmt|;
+specifier|register
+name|struct
+name|tty
+modifier|*
+name|tp0
+decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+name|int
+name|curs_on
+decl_stmt|;
+name|struct
+name|dga
+modifier|*
+name|dga
 decl_stmt|;
 name|unit
 operator|=
@@ -7507,6 +8765,20 @@ name|tp
 operator|->
 name|t_dev
 argument_list|)
+expr_stmt|;
+name|tp0
+operator|=
+operator|&
+name|qd_tty
+index|[
+operator|(
+name|unit
+operator|&
+literal|0x0FC
+operator|)
+operator|+
+literal|1
+index|]
 expr_stmt|;
 name|which_unit
 operator|=
@@ -7518,13 +8790,16 @@ operator|)
 operator|&
 literal|0x3
 expr_stmt|;
-comment|/* unit&= 0x03; */
-comment|/* If it's currently active, or delaying, no need to do anything. */
+name|unit
+operator|&=
+literal|0x03
+expr_stmt|;
 name|s
 operator|=
-name|spltty
+name|spl5
 argument_list|()
 expr_stmt|;
+comment|/*------------------------------------------------------------------ * If it's currently active, or delaying, no need to do anything. */
 if|if
 condition|(
 name|tp
@@ -7542,7 +8817,8 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * XXX - this loop is at spltty.  not good, but hardly worth 	 * fixing since the glass tty is only used when the window 	 * system isn't running.  if you debug window systems you 	 * might want to rethink this. 	 */
+comment|/*------------------------------------------------------------------- * Display chars until the queue is empty, if the alternate console device * is open direct chars there.  Drop input from anything but the console * device on the floor.	*/
+comment|/* TANDEM is set on the second subchannel for flow control. */
 while|while
 condition|(
 name|tp
@@ -7562,23 +8838,203 @@ operator|->
 name|t_outq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|==
+literal|0
+condition|)
 name|blitc
 argument_list|(
 name|which_unit
 argument_list|,
+call|(
+name|char
+call|)
+argument_list|(
 name|c
 operator|&
 literal|0xFF
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
-name|tp
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* never never never */
+if|if
+condition|(
+name|unit
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* console device */
+if|if
+condition|(
+name|tp0
 operator|->
 name|t_state
-operator|&=
-operator|~
-name|TS_BUSY
+operator|&
+name|TS_ISOPEN
+condition|)
+block|{
+if|if
+condition|(
+name|tp0
+operator|->
+name|t_state
+operator|&
+name|TS_TBLOCK
+condition|)
+goto|goto
+name|out
+goto|;
+name|c
+operator|=
+name|getc
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp0
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+name|c
+operator|,
+name|tp0
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|c
+operator|=
+name|getc
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
+name|blitc
+argument_list|(
+name|which_unit
+argument_list|,
+call|(
+name|char
+call|)
+argument_list|(
+name|c
+operator|&
+literal|0xFF
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|unit
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* qconsole, do flow control */
+name|c
+operator|=
+name|getc
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tp0
+operator|->
+name|t_state
+operator|&
+name|TS_TBLOCK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|tp
+operator|=
+operator|&
+name|qd_tty
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|unit
+operator|=
+name|minor
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
+expr_stmt|;
+name|unit
+operator|&=
+literal|0x03
+expr_stmt|;
+continue|continue;
+block|}
+else|else
+goto|goto
+name|out
+goto|;
+block|}
+else|else
+name|c
+operator|=
+name|getc
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/*-------------------------------------------------------- * If there are sleepers, and output has drained below low * water mark, wake up the sleepers. */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
+operator|<=
+name|TTLOWAT
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|tp
@@ -7607,6 +9063,14 @@ name|t_outq
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TS_BUSY
+expr_stmt|;
 name|out
 label|:
 name|splx
@@ -7652,13 +9116,9 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* not needed - qdss is synchronous */
 name|s
 operator|=
-name|spltty
+name|spl5
 argument_list|()
 expr_stmt|;
 comment|/* block intrpts during state modification */
@@ -7705,8 +9165,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -7730,6 +9188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|chr
 decl_stmt|;
@@ -7753,17 +9212,14 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|static
-name|short
-name|inescape
-index|[
-name|NQD
-index|]
-decl_stmt|;
 name|short
 name|x
 decl_stmt|;
-comment|/* init stuff  */
+name|unsigned
+name|char
+name|savechar
+decl_stmt|;
+comment|/*--------------- * init stuff  */
 name|adder
 operator|=
 operator|(
@@ -7792,199 +9248,11 @@ index|]
 operator|.
 name|dga
 expr_stmt|;
+comment|/*--------------------------- * non display character?  */
 name|chr
 operator|&=
-literal|0x7F
+literal|0xFF
 expr_stmt|;
-comment|/* 	 *  Support cursor addressing so vi will work. 	 *  Decode for "\E=%.%." cursor motion description. 	 * 	 *  If we've seen an escape, grab up to three more 	 *  characters, bailing out if necessary.  	 */
-if|if
-condition|(
-name|inescape
-index|[
-name|unit
-index|]
-condition|)
-block|{
-switch|switch
-condition|(
-name|inescape
-index|[
-name|unit
-index|]
-operator|++
-condition|)
-block|{
-case|case
-literal|1
-case|:
-if|if
-condition|(
-name|chr
-operator|!=
-literal|'='
-condition|)
-block|{
-comment|/* bogus escape sequence */
-name|inescape
-index|[
-name|unit
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|blitc
-argument_list|(
-name|unit
-argument_list|,
-name|chr
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-literal|2
-case|:
-comment|/* position row */
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-operator|=
-name|CHAR_HEIGHT
-operator|*
-name|chr
-expr_stmt|;
-if|if
-condition|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-operator|>
-literal|863
-operator|-
-name|CHAR_HEIGHT
-condition|)
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-operator|=
-literal|863
-operator|-
-name|CHAR_HEIGHT
-expr_stmt|;
-name|dga
-operator|->
-name|y_cursor
-operator|=
-name|TRANY
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-literal|3
-case|:
-comment|/* position column */
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-operator|=
-name|CHAR_WIDTH
-operator|*
-name|chr
-expr_stmt|;
-if|if
-condition|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-operator|>
-literal|1024
-operator|-
-name|CHAR_WIDTH
-condition|)
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-operator|=
-literal|1023
-operator|-
-name|CHAR_WIDTH
-expr_stmt|;
-name|dga
-operator|->
-name|x_cursor
-operator|=
-name|TRANX
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-argument_list|)
-expr_stmt|;
-name|inescape
-index|[
-name|unit
-index|]
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-default|default:
-name|inescape
-index|[
-name|unit
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|blitc
-argument_list|(
-name|unit
-argument_list|,
-name|chr
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 switch|switch
 condition|(
 name|chr
@@ -8003,6 +9271,20 @@ name|x
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|qdflags
+index|[
+name|unit
+index|]
+operator|.
+name|inuse
+operator|&
+name|GRAPHIC_DEV
+operator|)
+condition|)
 name|dga
 operator|->
 name|x_cursor
@@ -8132,6 +9414,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|qdflags
+index|[
+name|unit
+index|]
+operator|.
+name|inuse
+operator|&
+name|GRAPHIC_DEV
+operator|)
+condition|)
 name|dga
 operator|->
 name|y_cursor
@@ -8176,162 +9472,36 @@ name|x
 operator|-=
 name|CHAR_WIDTH
 expr_stmt|;
-name|dga
-operator|->
-name|x_cursor
-operator|=
-name|TRANX
+name|blitc
 argument_list|(
+name|unit
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
 name|cursor
 index|[
 name|unit
 index|]
 operator|.
 name|x
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|CTRL
-argument_list|(
-literal|'k'
-argument_list|)
-case|:
-comment|/* cursor up */
-if|if
-condition|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-operator|>
-literal|0
-condition|)
-block|{
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
 operator|-=
-name|CHAR_HEIGHT
+name|CHAR_WIDTH
 expr_stmt|;
-name|dga
-operator|->
-name|y_cursor
-operator|=
-name|TRANY
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|CTRL
-argument_list|(
-literal|'^'
-argument_list|)
-case|:
-comment|/* home cursor */
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-operator|=
-literal|0
-expr_stmt|;
-name|dga
-operator|->
-name|x_cursor
-operator|=
-name|TRANX
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-argument_list|)
-expr_stmt|;
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-operator|=
-literal|0
-expr_stmt|;
-name|dga
-operator|->
-name|y_cursor
-operator|=
-name|TRANY
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|CTRL
-argument_list|(
-literal|'l'
-argument_list|)
-case|:
-comment|/* cursor right */
 if|if
 condition|(
-name|cursor
+operator|!
+operator|(
+name|qdflags
 index|[
 name|unit
 index|]
 operator|.
-name|x
-operator|<
-literal|1023
-operator|-
-name|CHAR_WIDTH
+name|inuse
+operator|&
+name|GRAPHIC_DEV
+operator|)
 condition|)
-block|{
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-operator|+=
-name|CHAR_WIDTH
-expr_stmt|;
 name|dga
 operator|->
 name|x_cursor
@@ -8347,106 +9517,36 @@ name|x
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|CTRL
-argument_list|(
-literal|'z'
-argument_list|)
-case|:
-comment|/* clear screen */
-name|setup_dragon
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-name|clear_qd_screen
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* and home cursor - termcap seems to assume this */
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-operator|=
-literal|0
-expr_stmt|;
-name|dga
-operator|->
-name|x_cursor
-operator|=
-name|TRANX
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|x
-argument_list|)
-expr_stmt|;
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-operator|=
-literal|0
-expr_stmt|;
-name|dga
-operator|->
-name|y_cursor
-operator|=
-name|TRANY
-argument_list|(
-name|cursor
-index|[
-name|unit
-index|]
-operator|.
-name|y
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-literal|'\033'
-case|:
-comment|/* start escape sequence */
-name|inescape
-index|[
-name|unit
-index|]
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 default|default:
+comment|/*---------------------------------------------------------- 		 * Weed out unprintable characters.  Printable characters fall 		 * between space (0x20) and tilde (0x7E).  For 8-bit support 		 * another range of printable characters are those between 		 * 0xA1 and 0xFD. */
 if|if
 condition|(
+operator|(
 name|chr
 operator|<
 literal|' '
+operator|)
 operator|||
+operator|(
+name|chr
+operator|>
+literal|0xFD
+operator|)
+operator|||
+operator|(
+name|chr
+operator|<
+literal|0xA1
+operator|&&
 name|chr
 operator|>
 literal|'~'
+operator|)
 condition|)
 return|return
 operator|(
@@ -8454,7 +9554,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* setup VIPER operand control registers  */
+comment|/*------------------------------------------ * setup VIPER operand control registers  */
 name|write_ID
 argument_list|(
 name|adder
@@ -8561,7 +9661,31 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* load DESTINATION origin and vectors  */
+name|adder
+operator|->
+name|x_clip_min
+operator|=
+literal|0
+expr_stmt|;
+name|adder
+operator|->
+name|x_clip_max
+operator|=
+literal|1024
+expr_stmt|;
+name|adder
+operator|->
+name|y_clip_min
+operator|=
+literal|0
+expr_stmt|;
+name|adder
+operator|->
+name|y_clip_max
+operator|=
+literal|864
+expr_stmt|;
+comment|/*---------------------------------------- * load DESTINATION origin and vectors  */
 name|adder
 operator|->
 name|fast_dest_dy
@@ -8635,7 +9759,52 @@ name|slow_dest_dy
 operator|=
 name|CHAR_HEIGHT
 expr_stmt|;
-comment|/* load SOURCE origin and vectors  */
+comment|/*----------------------------------- * load SOURCE origin and vectors  */
+if|if
+condition|(
+name|chr
+operator|>
+literal|'~'
+condition|)
+block|{
+name|savechar
+operator|=
+name|chr
+expr_stmt|;
+name|chr
+operator|-=
+literal|34
+expr_stmt|;
+comment|/* These are to skip the (32) 8-bit control chars.  			      as well as DEL and 0xA0 which aren't printable */
+block|}
+if|if
+condition|(
+operator|(
+name|chr
+operator|-
+literal|' '
+operator|)
+operator|>
+operator|(
+name|CHARS
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Invalid character (x)%x in blitc\n"
+argument_list|,
+name|chr
+argument_list|)
+expr_stmt|;
+name|chr
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+comment|/* X position is modulo the number of characters per line */
 name|adder
 operator|->
 name|source_1_x
@@ -8644,19 +9813,48 @@ name|FONT_X
 operator|+
 operator|(
 operator|(
+operator|(
 name|chr
 operator|-
 literal|' '
+operator|)
+operator|%
+operator|(
+name|MAX_SCREEN_X
+operator|/
+name|CHAR_WIDTH
+operator|)
 operator|)
 operator|*
 name|CHAR_WIDTH
 operator|)
 expr_stmt|;
+comment|/* Point to either first or second row */
 name|adder
 operator|->
 name|source_1_y
 operator|=
-name|FONT_Y
+literal|2048
+operator|-
+literal|15
+operator|*
+operator|(
+operator|(
+operator|(
+name|chr
+operator|-
+literal|' '
+operator|)
+operator|/
+operator|(
+name|MAX_SCREEN_X
+operator|/
+name|CHAR_WIDTH
+operator|)
+operator|)
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 name|adder
 operator|->
@@ -8695,7 +9893,7 @@ name|S1E
 operator||
 name|DTE
 expr_stmt|;
-comment|/* update console cursor coordinates */
+comment|/*------------------------------------- * update console cursor coordinates */
 name|cursor
 index|[
 name|unit
@@ -8705,6 +9903,20 @@ name|x
 operator|+=
 name|CHAR_WIDTH
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|qdflags
+index|[
+name|unit
+index|]
+operator|.
+name|inuse
+operator|&
+name|GRAPHIC_DEV
+operator|)
+condition|)
 name|dga
 operator|->
 name|x_cursor
@@ -8719,7 +9931,6 @@ operator|.
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* auto-wrap margin */
 if|if
 condition|(
 name|cursor
@@ -8777,7 +9988,7 @@ block|{}
 end_block
 
 begin_comment
-comment|/****************************************************************** * *	INTERRUPT SERVICE ROUTINES START HERE: * ******************************************************************/
+comment|/****************************************************************** ******************************************************************* ******************************************************************* * *	INTERRUPT SERVICE ROUTINES START HERE: * ******************************************************************* ******************************************************************* ******************************************************************/
 end_comment
 
 begin_comment
@@ -8833,7 +10044,7 @@ name|spl4
 argument_list|()
 expr_stmt|;
 comment|/* allow interval timer in */
-comment|/* 	* init pointers  	*/
+comment|/*----------------- * init pointers */
 name|header
 operator|=
 name|DMAheader
@@ -8870,7 +10081,7 @@ index|]
 operator|.
 name|adder
 expr_stmt|;
-comment|/* 	* if this interrupt flagged as bogus for interrupt flushing purposes..  	*/
+comment|/*------------------------------------------------------------------------ * if this interrupt flagged as bogus for interrupt flushing purposes.. */
 if|if
 condition|(
 name|DMA_ISIGNORE
@@ -8906,7 +10117,7 @@ name|PARITY_ERR
 condition|)
 name|printf
 argument_list|(
-literal|"qd%d: qddint: DMA hardware parity fault.\n"
+literal|"\nqd%d: qddint: DMA hardware parity fault."
 argument_list|,
 name|qd
 argument_list|)
@@ -8921,7 +10132,7 @@ name|BUS_ERR
 condition|)
 name|printf
 argument_list|(
-literal|"qd%d: qddint: DMA hardware bus error.\n"
+literal|"\nqd%d: qddint: DMA hardware bus error."
 argument_list|,
 name|qd
 argument_list|)
@@ -9175,6 +10386,20 @@ name|DMAdone
 operator||=
 name|REQUEST_DONE
 expr_stmt|;
+name|QDlast_DMAtype
+operator|=
+name|header
+operator|->
+name|DMAreq
+index|[
+name|header
+operator|->
+name|oldest
+index|]
+operator|.
+name|DMAtype
+expr_stmt|;
+comment|/* check for unexpected interrupt */
 if|if
 condition|(
 name|DMA_ISEMPTY
@@ -9182,16 +10407,7 @@ argument_list|(
 name|header
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"qd%d: qddint: unexpected interrupt\n"
-argument_list|,
-name|qd
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|DMA_GETEND
 argument_list|(
 name|header
@@ -9268,6 +10484,31 @@ argument_list|(
 name|header
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|->
+name|DMAtype
+operator|!=
+name|QDlast_DMAtype
+condition|)
+block|{
+name|dga
+operator|->
+name|csr
+operator|&=
+operator|~
+literal|0x0600
+expr_stmt|;
+comment|/* halt DMA (reset fifo) */
+name|adder
+operator|->
+name|command
+operator|=
+name|CANCEL
+expr_stmt|;
+comment|/* cancel adder activity */
+block|}
 switch|switch
 condition|(
 name|request
@@ -9278,37 +10519,147 @@ block|{
 case|case
 name|DISPLIST
 case|:
+if|if
+condition|(
+name|request
+operator|->
+name|DMAtype
+operator|!=
+name|QDlast_DMAtype
+condition|)
+block|{
 name|dga
 operator|->
 name|csr
 operator||=
 name|DL_ENB
 expr_stmt|;
+name|dga
+operator|->
+name|csr
+operator|&=
+operator|~
+operator|(
+name|BTOP_ENB
+operator||
+name|BYTE_DMA
+operator|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|PTOB
 case|:
+if|if
+condition|(
+name|request
+operator|->
+name|DMAtype
+operator|!=
+name|QDlast_DMAtype
+condition|)
+block|{
+if|if
+condition|(
+name|request
+operator|->
+name|DMAdone
+operator|&
+name|BYTE_PACK
+condition|)
+name|dga
+operator|->
+name|csr
+operator||=
+operator|(
+name|PTOB_ENB
+operator||
+name|BYTE_DMA
+operator|)
+expr_stmt|;
+else|else
+block|{
 name|dga
 operator|->
 name|csr
 operator||=
 name|PTOB_ENB
 expr_stmt|;
+name|dga
+operator|->
+name|csr
+operator|&=
+operator|~
+name|BYTE_DMA
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|BTOP
 case|:
+if|if
+condition|(
+name|request
+operator|->
+name|DMAtype
+operator|!=
+name|QDlast_DMAtype
+condition|)
+block|{
+if|if
+condition|(
+name|request
+operator|->
+name|DMAdone
+operator|&
+name|BYTE_PACK
+condition|)
+block|{
+name|dga
+operator|->
+name|csr
+operator|&=
+operator|~
+name|DL_ENB
+expr_stmt|;
+name|dga
+operator|->
+name|csr
+operator||=
+operator|(
+name|BTOP_ENB
+operator||
+name|BYTE_DMA
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dga
 operator|->
 name|csr
 operator||=
 name|BTOP_ENB
 expr_stmt|;
+name|dga
+operator|->
+name|csr
+operator|&=
+operator|~
+operator|(
+name|BYTE_DMA
+operator||
+name|DL_ENB
+operator|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"qd%d: qddint: illegal DMAtype parameter.\n"
+literal|"\nqd%d: qddint: illegal DMAtype parameter."
 argument_list|,
 name|qd
 argument_list|)
@@ -9391,6 +10742,12 @@ name|csr
 operator||=
 name|DMA_IE
 expr_stmt|;
+name|QDlast_DMAtype
+operator|=
+name|request
+operator|->
+name|DMAtype
+expr_stmt|;
 name|cookie
 operator|=
 operator|(
@@ -9470,6 +10827,12 @@ begin_comment
 comment|/***************************************************************** * *	qdaint()... ADDER interrupt service * *****************************************************************/
 end_comment
 
+begin_decl_stmt
+name|int
+name|Nqdaint
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|qdaint
 argument_list|(
@@ -9525,6 +10888,10 @@ name|spl4
 argument_list|()
 expr_stmt|;
 comment|/* allow interval timer in */
+name|Nqdaint
+operator|++
+expr_stmt|;
+comment|/* debug */
 name|adder
 operator|=
 operator|(
@@ -9759,7 +11126,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdaint: timeout on ID_SCROLL_READY\n"
+literal|"\nqd%d: qdaint: timeout on ID_SCROLL_READY"
 argument_list|,
 name|qd
 argument_list|)
@@ -9910,7 +11277,7 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|char
+name|u_short
 name|chr
 decl_stmt|;
 name|int
@@ -10066,7 +11433,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: event queue overflow\n"
+literal|"\nqd%d: qdiint: event queue overflow"
 argument_list|,
 name|qd
 argument_list|)
@@ -10103,7 +11470,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: keyboard error, code = %x\n"
+literal|"\nqd%d: qdiint: keyboard error, code = %x"
 argument_list|,
 name|qd
 argument_list|,
@@ -10251,7 +11618,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: event queue overflow\n"
+literal|"\nqd%d: qdiint: event queue overflow"
 argument_list|,
 name|qd
 argument_list|)
@@ -10838,7 +12205,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: event queue overflow\n"
+literal|"\nqd%d: qdiint: event queue overflow"
 argument_list|,
 name|qd
 argument_list|)
@@ -11031,7 +12398,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: event queue overflow\n"
+literal|"\nqd%d: qdiint: event queue overflow"
 argument_list|,
 name|qd
 argument_list|)
@@ -11497,7 +12864,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: event queue overflow\n"
+literal|"\nqd%d: qdiint: event queue overflow"
 argument_list|,
 name|qd
 argument_list|)
@@ -11734,7 +13101,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/*----------------------------------------------------------------- 	* if the graphic device is not turned on, this is console input */
+comment|/*----------------------------------------------------------------- * if the graphic device is not turned on, this is console input */
 else|else
 block|{
 name|ui
@@ -11817,7 +13184,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd%d: qdiint: Keyboard error, code = %x\n"
+literal|"\nqd%d: qdiint: Keyboard error, code = %x"
 argument_list|,
 name|qd
 argument_list|,
@@ -11959,6 +13326,21 @@ name|chr
 operator|&=
 literal|0x1F
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|chr
+operator|>=
+literal|0xA1
+operator|&&
+name|chr
+operator|<=
+literal|0xFE
+condition|)
+name|chr
+operator|&=
+literal|0x9F
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -11999,7 +13381,7 @@ if|if
 condition|(
 name|chr
 operator|&
-literal|0x80
+literal|0x100
 condition|)
 block|{
 name|char
@@ -12042,6 +13424,64 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* notneeded */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_iflag
+operator|&
+name|ISTRIP
+condition|)
+comment|/* Strip to 7 bits. */
+name|c
+operator|&=
+literal|0177
+expr_stmt|;
+else|else
+block|{
+comment|/* Take the full 8-bits */
+comment|/* If ISTRIP is not set a valid character of 377 			 	* is read as 0377,0377 to avoid ambiguity with 			 	* the PARMARK sequence. 			 	*/
+if|if
+condition|(
+operator|(
+name|c
+operator|==
+literal|0377
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_line
+operator|==
+name|TERMIODISC
+operator|)
+condition|)
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+literal|0377
+operator|,
+name|tp
+operator|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/*notdef*/
 operator|(
 operator|*
 name|linesw
@@ -12062,6 +13502,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/*---------------------- * cleanup and exit  */
 return|return
 operator|(
 literal|0
@@ -12075,7 +13516,7 @@ comment|/* qdiint */
 end_comment
 
 begin_comment
-comment|/****************************************************************** * *	THE SUBROUTINES START HERE: * ******************************************************************/
+comment|/****************************************************************** ******************************************************************* ******************************************************************* * *	THE SUBROUTINES START HERE: * ******************************************************************/
 end_comment
 
 begin_comment
@@ -12311,7 +13752,13 @@ end_expr_stmt
 
 begin_block
 block|{
-comment|/* if system is now physical, forget it (ie: crash DUMP) */
+specifier|register
+name|struct
+name|tty
+modifier|*
+name|tp0
+decl_stmt|;
+comment|/*--------------------------------------------------------- * if system is now physical, forget it (ie: crash DUMP) */
 if|if
 condition|(
 operator|(
@@ -12326,6 +13773,70 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/*-------------------------------------------------- * direct kernel output char to the proper place  */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* never */
+name|tp0
+operator|=
+operator|&
+name|qd_tty
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|qdflags
+index|[
+literal|0
+index|]
+operator|.
+name|kernel_loop
+operator|!=
+literal|0
+operator|&&
+name|tp0
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+condition|)
+block|{
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp0
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+name|chr
+operator|,
+name|tp0
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|blitc
+argument_list|(
+literal|0
+argument_list|,
+name|chr
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/*notdef*/
 name|blitc
 argument_list|(
 literal|0
@@ -12884,6 +14395,9 @@ decl_stmt|;
 name|short
 name|packed
 decl_stmt|;
+name|int
+name|max_chars_line
+decl_stmt|;
 name|adder
 operator|=
 operator|(
@@ -12898,7 +14412,7 @@ index|]
 operator|.
 name|adder
 expr_stmt|;
-comment|/*------------------------------------------ 	* setup VIPER operand control registers  */
+comment|/*------------------------------------------ * setup VIPER operand control registers  */
 name|write_ID
 argument_list|(
 name|adder
@@ -12985,7 +14499,7 @@ name|DST_INDEX_ENABLE
 operator||
 name|NORMAL
 expr_stmt|;
-comment|/*-------------------------- 	* load destination data  */
+comment|/*-------------------------- * load destination data  */
 name|wait_status
 argument_list|(
 name|adder
@@ -13005,6 +14519,19 @@ name|destination_y
 operator|=
 name|FONT_Y
 expr_stmt|;
+if|if
+condition|(
+name|FONT_WIDTH
+operator|>
+name|MAX_SCREEN_X
+condition|)
+name|adder
+operator|->
+name|fast_dest_dx
+operator|=
+name|MAX_SCREEN_X
+expr_stmt|;
+else|else
 name|adder
 operator|->
 name|fast_dest_dx
@@ -13017,7 +14544,7 @@ name|slow_dest_dy
 operator|=
 name|CHAR_HEIGHT
 expr_stmt|;
-comment|/*--------------------------------------- 	* setup for processor to bitmap xfer  */
+comment|/*--------------------------------------- * setup for processor to bitmap xfer  */
 name|write_ID
 argument_list|(
 name|adder
@@ -13041,7 +14568,42 @@ name|DTE
 operator||
 literal|2
 expr_stmt|;
-comment|/*----------------------------------------------- 	* iteratively do the processor to bitmap xfer */
+comment|/*--------------------------------------- * Figure out how many characters can be stored on one "line" of offscreen memory */
+name|max_chars_line
+operator|=
+name|MAX_SCREEN_X
+operator|/
+operator|(
+name|CHAR_WIDTH
+operator|*
+literal|2
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|CHARS
+operator|/
+literal|2
+operator|+
+name|CHARS
+operator|%
+literal|2
+operator|)
+operator|<
+name|max_chars_line
+condition|)
+name|max_chars_line
+operator|=
+name|CHARS
+operator|/
+literal|2
+operator|+
+name|CHARS
+operator|%
+literal|2
+expr_stmt|;
+comment|/*----------------------------------------------- * iteratively do the processor to bitmap xfer */
 for|for
 control|(
 name|i
@@ -13069,7 +14631,7 @@ name|i
 init|;
 name|j
 operator|<
-literal|48
+name|max_chars_line
 condition|;
 operator|++
 name|j
@@ -13096,6 +14658,210 @@ operator|)
 name|q_font
 index|[
 name|k
+index|]
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+name|k
+operator|+=
+name|ROWS
+expr_stmt|;
+name|wait_status
+argument_list|(
+name|adder
+argument_list|,
+name|TX_READY
+argument_list|)
+expr_stmt|;
+name|adder
+operator|->
+name|id_data
+operator|=
+name|packed
+expr_stmt|;
+block|}
+block|}
+comment|/*--------------------------------------- * Copy the second row of characters. * Subtract the first row from the total number.  Divide this quantity by 2  * because 2 chars are stored in a short in the PTOB loop below. * Figure out how many characters can be stored on one "line" of offscreen memory */
+name|max_chars_line
+operator|=
+name|MAX_SCREEN_X
+operator|/
+operator|(
+name|CHAR_WIDTH
+operator|*
+literal|2
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|CHARS
+operator|/
+literal|2
+operator|+
+name|CHARS
+operator|%
+literal|2
+operator|)
+operator|<
+name|max_chars_line
+condition|)
+return|return;
+name|max_chars_line
+operator|=
+operator|(
+name|CHARS
+operator|/
+literal|2
+operator|+
+name|CHARS
+operator|%
+literal|2
+operator|)
+operator|-
+name|max_chars_line
+expr_stmt|;
+comment|/* 95 - 64 */
+comment|/* Paranoia check to see if 3rd row may be needed */
+if|if
+condition|(
+name|max_chars_line
+operator|>
+operator|(
+name|MAX_SCREEN_X
+operator|/
+operator|(
+name|CHAR_WIDTH
+operator|*
+literal|2
+operator|)
+operator|)
+condition|)
+name|max_chars_line
+operator|=
+name|MAX_SCREEN_X
+operator|/
+operator|(
+name|CHAR_WIDTH
+operator|*
+literal|2
+operator|)
+expr_stmt|;
+comment|/*-----------------------------------------------*/
+name|adder
+operator|->
+name|destination_x
+operator|=
+name|FONT_X
+expr_stmt|;
+name|adder
+operator|->
+name|destination_y
+operator|=
+name|FONT_Y
+operator|-
+name|CHAR_HEIGHT
+expr_stmt|;
+name|adder
+operator|->
+name|fast_dest_dx
+operator|=
+name|max_chars_line
+operator|*
+name|CHAR_WIDTH
+operator|*
+literal|2
+expr_stmt|;
+name|adder
+operator|->
+name|slow_dest_dy
+operator|=
+name|CHAR_HEIGHT
+expr_stmt|;
+comment|/*--------------------------------------- * setup for processor to bitmap xfer  */
+name|write_ID
+argument_list|(
+name|adder
+argument_list|,
+name|CS_UPDATE_MASK
+argument_list|,
+literal|0x0001
+argument_list|)
+expr_stmt|;
+name|adder
+operator|->
+name|cmd
+operator|=
+name|PBT
+operator||
+name|OCRB
+operator||
+literal|2
+operator||
+name|DTE
+operator||
+literal|2
+expr_stmt|;
+comment|/*----------------------------------------------- * iteratively do the processor to bitmap xfer */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ROWS
+condition|;
+operator|++
+name|i
+control|)
+block|{
+comment|/* PTOB a scan line */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+operator|,
+name|k
+operator|=
+name|i
+init|;
+name|j
+operator|<
+name|max_chars_line
+condition|;
+operator|++
+name|j
+control|)
+block|{
+comment|/* PTOB one scan of a char cell */
+name|packed
+operator|=
+name|q_font
+index|[
+name|k
+operator|+
+name|FONT_OFFSET
+index|]
+expr_stmt|;
+name|k
+operator|+=
+name|ROWS
+expr_stmt|;
+name|packed
+operator||=
+operator|(
+operator|(
+name|short
+operator|)
+name|q_font
+index|[
+name|k
+operator|+
+name|FONT_OFFSET
 index|]
 operator|<<
 literal|8
@@ -13304,7 +15070,7 @@ end_expr_stmt
 
 begin_block
 block|{
-comment|/*------------------------------------------ 	* setup VIPER operand control registers  */
+comment|/*------------------------------------------ * setup VIPER operand control registers  */
 name|wait_status
 argument_list|(
 name|adder
@@ -13383,7 +15149,7 @@ operator||
 name|NO_BAR_SHIFT_DELAY
 argument_list|)
 expr_stmt|;
-comment|/*---------------------------------------- 	* load DESTINATION origin and vectors  */
+comment|/*---------------------------------------- * load DESTINATION origin and vectors  */
 name|adder
 operator|->
 name|fast_dest_dy
@@ -13442,7 +15208,7 @@ literal|864
 operator|-
 name|CHAR_HEIGHT
 expr_stmt|;
-comment|/*----------------------------------- 	* load SOURCE origin and vectors  */
+comment|/*----------------------------------- * load SOURCE origin and vectors  */
 name|adder
 operator|->
 name|source_1_x
@@ -13496,7 +15262,7 @@ name|S1E
 operator||
 name|DTE
 expr_stmt|;
-comment|/*-------------------------------------------- 	* do a rectangle clear of last screen line */
+comment|/*-------------------------------------------- * do a rectangle clear of last screen line */
 name|write_ID
 argument_list|(
 name|adder
@@ -13685,7 +15451,7 @@ index|]
 operator|.
 name|dga
 expr_stmt|;
-comment|/*-------------------------------------------------- 	* initialize the event queue pointers and header */
+comment|/*-------------------------------------------------- * initialize the event queue pointers and header */
 name|eq_header
 index|[
 name|unit
@@ -13818,7 +15584,7 @@ name|bottom
 operator|=
 literal|0
 expr_stmt|;
-comment|/*--------------------------------------------------------- 	* assign a pointer to the DMA I/O buffer for this QDSS. */
+comment|/*--------------------------------------------------------- * assign a pointer to the DMA I/O buffer for this QDSS. */
 name|DMAheader
 index|[
 name|unit
@@ -13947,7 +15713,7 @@ name|newest
 operator|=
 literal|0
 expr_stmt|;
-comment|/*----------------------------------------------------------- 	* assign a pointer to the scroll structure for this QDSS. */
+comment|/*----------------------------------------------------------- * assign a pointer to the scroll structure for this QDSS. */
 name|scroll
 index|[
 name|unit
@@ -14042,7 +15808,7 @@ name|y_index_pending
 operator|=
 literal|0
 expr_stmt|;
-comment|/*---------------------------------------------------------------- 	* assign a pointer to the color map write buffer for this QDSS */
+comment|/*---------------------------------------------------------------- * assign a pointer to the color map write buffer for this QDSS */
 name|color_buf
 index|[
 name|unit
@@ -14172,7 +15938,7 @@ name|short
 modifier|*
 name|blue
 decl_stmt|;
-comment|/*------------------ 	* init for setup */
+comment|/*------------------ * init for setup */
 name|adder
 operator|=
 operator|(
@@ -14238,7 +16004,7 @@ name|command
 operator|=
 name|CANCEL
 expr_stmt|;
-comment|/*---------------------- 	* set monitor timing */
+comment|/*---------------------- * set monitor timing */
 name|adder
 operator|->
 name|x_scan_count_0
@@ -14293,7 +16059,7 @@ name|x_scan_conf
 operator|=
 literal|0x00C8
 expr_stmt|;
-comment|/*--------------------------------------------------------- 	* got a bug in secound pass ADDER! lets take care of it */
+comment|/*--------------------------------------------------------- * got a bug in secound pass ADDER! lets take care of it */
 comment|/* normally, just use the code in the following bug fix code, but to 	* make repeated demos look pretty, load the registers as if there was 	* no bug and then test to see if we are getting sync */
 name|adder
 operator|->
@@ -14406,7 +16172,7 @@ operator||
 name|UNBLANK
 expr_stmt|;
 comment|/* turn off leds and turn on video */
-comment|/*---------------------------- 	* zero the index registers */
+comment|/*---------------------------- * zero the index registers */
 name|adder
 operator|->
 name|x_index_pending
@@ -14449,7 +16215,7 @@ name|pause
 operator|=
 literal|0
 expr_stmt|;
-comment|/*---------------------------------------- 	* set rasterop mode to normal pen down */
+comment|/*---------------------------------------- * set rasterop mode to normal pen down */
 name|adder
 operator|->
 name|rasterop_mode
@@ -14460,7 +16226,7 @@ name|DST_INDEX_ENABLE
 operator||
 name|NORMAL
 expr_stmt|;
-comment|/*-------------------------------------------------- 	* set the rasterop registers to a default values */
+comment|/*-------------------------------------------------- * set the rasterop registers to a default values */
 name|adder
 operator|->
 name|source_1_dx
@@ -14533,7 +16299,7 @@ name|error_2
 operator|=
 literal|0
 expr_stmt|;
-comment|/*------------------------ 	* scale factor = unity */
+comment|/*------------------------ * scale factor = unity */
 name|adder
 operator|->
 name|fast_scale
@@ -14546,7 +16312,7 @@ name|slow_scale
 operator|=
 name|UNITY
 expr_stmt|;
-comment|/*------------------------------- 	* set the source 2 parameters */
+comment|/*------------------------------- * set the source 2 parameters */
 name|adder
 operator|->
 name|source_2_x
@@ -14565,7 +16331,7 @@ name|source_2_size
 operator|=
 literal|0x0022
 expr_stmt|;
-comment|/*----------------------------------------------- 	* initialize plane addresses for eight vipers */
+comment|/*----------------------------------------------- * initialize plane addresses for eight vipers */
 name|write_ID
 argument_list|(
 name|adder
@@ -14773,7 +16539,7 @@ argument_list|,
 literal|0x0000
 argument_list|)
 expr_stmt|;
-comment|/*---------------------------------------------------- 	* set clipping and scrolling limits to full screen */
+comment|/*---------------------------------------------------- * set clipping and scrolling limits to full screen */
 for|for
 control|(
 name|i
@@ -14815,7 +16581,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"qd%d: setup_dragon: timeout on ADDRESS_COMPLETE\n"
+literal|"\nqd%d: setup_dragon: timeout on ADDRESS_COMPLETE"
 argument_list|,
 name|unit
 argument_list|)
@@ -14976,7 +16742,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"qd%d: setup_dragon: timeout on ADDRESS_COMPLETE\n"
+literal|"\nqd%d: setup_dragon: timeout on ADDRESS_COMPLETE"
 argument_list|,
 name|unit
 argument_list|)
@@ -14999,7 +16765,7 @@ argument_list|,
 literal|0x0000
 argument_list|)
 expr_stmt|;
-comment|/*------------------------------------------------------------ 	* set source and the mask register to all ones (ie: white) */
+comment|/*------------------------------------------------------------ * set source and the mask register to all ones (ie: white) */
 name|write_ID
 argument_list|(
 name|adder
@@ -15040,7 +16806,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*-------------------------------------------------------------- 	* initialize Operand Control Register banks for fill command */
+comment|/*-------------------------------------------------------------- * initialize Operand Control Register banks for fill command */
 name|write_ID
 argument_list|(
 name|adder
@@ -15131,7 +16897,7 @@ operator||
 name|NO_WAIT
 argument_list|)
 expr_stmt|;
-comment|/*------------------------------------------------------------------ 	* init Logic Unit Function registers, (these are just common values, * and may be changed as required).  */
+comment|/*------------------------------------------------------------------ * init Logic Unit Function registers, (these are just common values, * and may be changed as required).  */
 name|write_ID
 argument_list|(
 name|adder
@@ -15178,7 +16944,7 @@ operator||
 name|LF_D_XOR_S
 argument_list|)
 expr_stmt|;
-comment|/*---------------------------------------- 	* load the color map for black& white */
+comment|/*---------------------------------------- * load the color map for black& white */
 for|for
 control|(
 name|i
@@ -15220,7 +16986,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"qd%d: setup_dragon: timeout on VSYNC\n"
+literal|"\nqd%d: setup_dragon: timeout on VSYNC"
 argument_list|,
 name|unit
 argument_list|)
@@ -15403,7 +17169,7 @@ decl_stmt|;
 name|short
 name|status
 decl_stmt|;
-comment|/*--------------- 	* init stuff */
+comment|/*--------------- * init stuff */
 name|duart
 operator|=
 operator|(
@@ -15424,7 +17190,7 @@ name|imask
 operator|=
 literal|0
 expr_stmt|;
-comment|/*--------------------------------------------- 	* setup the DUART for kbd& pointing device */
+comment|/*--------------------------------------------- * setup the DUART for kbd& pointing device */
 name|duart
 operator|->
 name|cmdA
@@ -15552,7 +17318,7 @@ operator||
 name|EN_XMT
 expr_stmt|;
 comment|/* enbl xmt& rcv for pointer device */
-comment|/*-------------------------------------------- 	* init keyboard defaults (DUART channel A) */
+comment|/*-------------------------------------------- * init keyboard defaults (DUART channel A) */
 for|for
 control|(
 name|i
@@ -15626,7 +17392,7 @@ operator|->
 name|dataA
 expr_stmt|;
 comment|/* flush the ACK */
-comment|/*-------------------------------- 	* identify the pointing device */
+comment|/*-------------------------------- * identify the pointing device */
 for|for
 control|(
 name|i
@@ -15703,7 +17469,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd[%d]: setup_input: timeout on 1st byte of self test\n"
+literal|"\nqd[%d]: setup_input: timeout on 1st byte of self test"
 argument_list|,
 name|unit
 argument_list|)
@@ -15758,7 +17524,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd[%d]: setup_input: timeout on 2nd byte of self test\n"
+literal|"\nqd[%d]: setup_input: timeout on 2nd byte of self test"
 argument_list|,
 name|unit
 argument_list|)
@@ -15819,7 +17585,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd[%d]: setup_input: timeout on 3rd byte of self test\n"
+literal|"\nqd[%d]: setup_input: timeout on 3rd byte of self test"
 argument_list|,
 name|unit
 argument_list|)
@@ -15873,7 +17639,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"qd[%d]: setup_input: timeout on 4th byte of self test\n"
+literal|"\nqd[%d]: setup_input: timeout on 4th byte of self test\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -16002,7 +17768,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/*-------- 	* exit */
+comment|/*-------- * exit */
 name|OUT
 label|:
 name|duart
@@ -16105,7 +17871,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"wait_status: timeout polling for 0x%x in adder->status\n"
+literal|"\nwait_status: timeout polling for 0x%x in adder->status"
 argument_list|,
 name|mask
 argument_list|)
@@ -16277,7 +18043,7 @@ name|ERR
 label|:
 name|printf
 argument_list|(
-literal|"write_ID: timeout trying to write to VIPER\n"
+literal|"\nwrite_ID: timeout trying to write to VIPER"
 argument_list|)
 expr_stmt|;
 return|return
