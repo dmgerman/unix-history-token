@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"mount.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -678,6 +684,8 @@ begin_macro
 name|nfs_inactive
 argument_list|(
 argument|vp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -686,6 +694,14 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -808,6 +824,8 @@ expr_stmt|;
 name|nfs_removeit
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|nfs_nput
