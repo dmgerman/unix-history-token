@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.17 1999/05/06 22:03:14 peter Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.18 1999/05/30 16:51:36 phk Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
 end_comment
 
 begin_include
@@ -303,6 +303,22 @@ name|pps_data
 modifier|*
 name|sc
 decl_stmt|;
+specifier|static
+name|int
+name|once
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|once
+operator|++
+condition|)
+name|cdevsw_add
+argument_list|(
+operator|&
+name|pps_cdevsw
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -442,9 +458,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|dev_t
-name|devt
-decl_stmt|;
 comment|/* 	 * Report ourselves 	 */
 name|printf
 argument_list|(
@@ -494,26 +507,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|devt
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|devt
-argument_list|,
-operator|&
-name|pps_cdevsw
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1

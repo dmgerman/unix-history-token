@@ -1138,27 +1138,10 @@ name|cookie
 decl_stmt|;
 endif|#
 directive|endif
-name|dev_t
-name|isadev
-decl_stmt|;
-name|isadev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|isadev
-argument_list|,
-operator|&
 name|snd_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*      * initialize standard parameters for the device. This can be      * overridden by device-specific configurations but better do      * here the generic things.      */

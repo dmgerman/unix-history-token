@@ -1494,15 +1494,6 @@ return|;
 block|}
 if|if
 condition|(
-name|major
-argument_list|(
-name|devvp
-operator|->
-name|v_rdev
-argument_list|)
-operator|>=
-name|nblkdev
-operator|||
 name|bdevsw
 argument_list|(
 name|devvp

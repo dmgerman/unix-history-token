@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) Comtrol Corporation<support@comtrol.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted prodived that the follwoing conditions  * are met.  * 1. Redistributions of source code must retain the above copyright   *    notive, this list of conditions and the following disclainer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials prodided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *       This product includes software developed by Comtrol Corporation.  * 4. The name of Comtrol Corporation may not be used to endorse or   *    promote products derived from this software without specific   *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY COMTROL CORPORATION ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL COMTROL CORPORATION BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rp.c,v 1.26 1999/05/09 17:07:20 peter Exp $  */
+comment|/*   * Copyright (c) Comtrol Corporation<support@comtrol.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted prodived that the follwoing conditions  * are met.  * 1. Redistributions of source code must retain the above copyright   *    notive, this list of conditions and the following disclainer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials prodided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *       This product includes software developed by Comtrol Corporation.  * 4. The name of Comtrol Corporation may not be used to endorse or   *    promote products derived from this software without specific   *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY COMTROL CORPORATION ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL COMTROL CORPORATION BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rp.c,v 1.27 1999/05/30 16:52:22 phk Exp $  */
 end_comment
 
 begin_comment
@@ -5315,9 +5315,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|dev_t
-name|rp_dev
-decl_stmt|;
 name|int
 name|success
 decl_stmt|,
@@ -5644,24 +5641,10 @@ argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
-name|rp_dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|rp_dev
-argument_list|,
-operator|&
 name|rp_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|port
@@ -5950,9 +5933,6 @@ modifier|*
 name|dev
 decl_stmt|;
 block|{
-name|dev_t
-name|rp_dev
-decl_stmt|;
 name|int
 name|iobase
 decl_stmt|,
@@ -6300,24 +6280,10 @@ argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
-name|rp_dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|rp_dev
-argument_list|,
-operator|&
 name|rp_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|port

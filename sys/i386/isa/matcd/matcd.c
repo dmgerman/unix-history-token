@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.39 1999/05/07 07:03:36 phk Exp $ */
+comment|/* $Id: matcd.c,v 1.40 1999/05/30 16:52:35 phk Exp $ */
 end_comment
 
 begin_comment
@@ -4240,6 +4240,22 @@ operator|->
 name|id_iobase
 decl_stmt|;
 comment|/*Take port hint from config file*/
+specifier|static
+name|int
+name|once
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|once
+operator|++
+condition|)
+name|cdevsw_add
+argument_list|(
+operator|&
+name|matcd_cdevsw
+argument_list|)
+expr_stmt|;
 name|cdrive
 operator|=
 name|nextcontroller
@@ -11747,62 +11763,6 @@ end_endif
 begin_comment
 comment|/*FULLDRIVER*/
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|matcd_devsw_installed
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|matcd_drvinit
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|matcd_devsw_installed
-condition|)
-block|{
-name|cdevsw_add_generic
-argument_list|(
-name|BDEV_MAJOR
-argument_list|,
-name|CDEV_MAJOR
-argument_list|,
-operator|&
-name|matcd_cdevsw
-argument_list|)
-expr_stmt|;
-name|matcd_devsw_installed
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|matcddev
-argument_list|,
-argument|SI_SUB_DRIVERS
-argument_list|,
-argument|SI_ORDER_MIDDLE+CDEV_MAJOR
-argument_list|,
-argument|matcd_drvinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
 
 begin_comment
 comment|/*End of matcd.c*/

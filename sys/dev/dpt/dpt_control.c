@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.12 1999/05/13 05:24:53 jkh Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.13 1999/05/30 16:51:20 phk Exp $"
 end_empty
 
 begin_include
@@ -4024,9 +4024,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
-name|dev
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4049,45 +4046,10 @@ name|DPT_CTL_PATCH
 argument_list|)
 expr_stmt|;
 comment|/* Add the I/O (data) channel */
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|dev
-argument_list|,
-operator|&
 name|dpt_cdevsw
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* Add the Control (IOCTL) channel */
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-name|SCSI_CONTROL_MASK
-argument_list|)
-expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|dev
-argument_list|,
-operator|&
-name|dpt_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|dpt_devsw_installed

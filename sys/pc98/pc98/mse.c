@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.20 1999/05/09 04:37:17 kato Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.21 1999/05/30 16:53:19 phk Exp $  */
 end_comment
 
 begin_comment
@@ -4582,33 +4582,16 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
-name|dev
-decl_stmt|;
 if|if
 condition|(
 operator|!
 name|mse_devsw_installed
 condition|)
 block|{
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|dev
-argument_list|,
-operator|&
 name|mse_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|mse_devsw_installed

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.10 1999/05/09 17:07:12 peter Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.11 1999/05/30 16:53:37 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
 
 begin_include
@@ -1211,6 +1211,22 @@ decl_stmt|,
 modifier|*
 name|type
 decl_stmt|;
+specifier|static
+name|int
+name|once
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|once
+operator|++
+condition|)
+name|cdevsw_add
+argument_list|(
+operator|&
+name|xrpu_cdevsw
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1271,16 +1287,6 @@ name|struct
 name|softc
 modifier|*
 name|sc
-decl_stmt|;
-name|dev_t
-name|cdev
-init|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-name|unit
-argument_list|)
 decl_stmt|;
 name|sc
 operator|=
@@ -1382,22 +1388,6 @@ operator|)
 name|sc
 operator|->
 name|virbase
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|unit
-condition|)
-name|cdevsw_add
-argument_list|(
-operator|&
-name|cdev
-argument_list|,
-operator|&
-name|xrpu_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 ifdef|#
