@@ -316,13 +316,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|__stdcall
-value|__attribute__((__stdcall__))
-end_define
-
 begin_function_decl
 specifier|static
 name|int
