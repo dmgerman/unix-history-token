@@ -130,13 +130,6 @@ name|CS4615_PCI_ID
 value|0x60041013
 end_define
 
-begin_define
-define|#
-directive|define
-name|CS4281_PCI_ID
-value|0x60051013
-end_define
-
 begin_comment
 comment|/* Here is the parameter structure per a device. */
 end_comment
@@ -699,6 +692,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -724,6 +719,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -738,6 +735,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -752,6 +751,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -766,6 +767,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -780,6 +783,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|,
 comment|/* Not sure if the 570 needs the clkrun hack */
@@ -795,6 +800,8 @@ block|,
 name|NULL
 block|,
 name|clkrun_hack
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -809,6 +816,8 @@ block|,
 name|NULL
 block|,
 name|clkrun_hack
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -823,6 +832,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -837,6 +848,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -862,6 +875,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -885,6 +900,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -45,6 +45,9 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
+name|int
+name|inv_eapd
+decl_stmt|;
 block|}
 struct|;
 end_struct
