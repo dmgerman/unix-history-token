@@ -181,7 +181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"amnrsv"
+literal|"amnprsv"
 argument_list|)
 operator|)
 operator|!=
@@ -211,6 +211,9 @@ name|VFLAG
 operator|)
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
 case|case
 literal|'m'
 case|:
