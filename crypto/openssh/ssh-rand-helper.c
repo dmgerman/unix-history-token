@@ -85,7 +85,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-rand-helper.c,v 1.8 2002/07/28 20:42:24 stevesk Exp $"
+literal|"$Id: ssh-rand-helper.c,v 1.10 2003/03/17 05:13:53 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1644,6 +1644,13 @@ name|error_abort
 operator|=
 literal|1
 expr_stmt|;
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGINT
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -2522,6 +2529,8 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|RAND_bytes
 argument_list|(
 name|seed
@@ -2530,6 +2539,13 @@ sizeof|sizeof
 argument_list|(
 name|seed
 argument_list|)
+argument_list|)
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"PRNG seed extration failed"
 argument_list|)
 expr_stmt|;
 comment|/* Don't care if the seed doesn't exist */
@@ -3784,11 +3800,20 @@ argument_list|(
 literal|"Not enough entropy in RNG"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|RAND_bytes
 argument_list|(
 name|buf
 argument_list|,
 name|bytes
+argument_list|)
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"Couldn't extract entropy from PRNG"
 argument_list|)
 expr_stmt|;
 if|if

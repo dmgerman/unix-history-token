@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: authfd.h,v 1.31 2002/09/11 18:27:25 stevesk Exp $	*/
+comment|/*	$OpenBSD: authfd.h,v 1.32 2003/01/23 13:50:27 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -206,6 +206,13 @@ name|SSH_AGENT_CONSTRAIN_LIFETIME
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSH_AGENT_CONSTRAIN_CONFIRM
+value|2
+end_define
+
 begin_comment
 comment|/* extended failure messages */
 end_comment
@@ -376,6 +383,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|)

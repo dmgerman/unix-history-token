@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: packet.h,v 1.35 2002/06/19 18:01:00 markus Exp $	*/
+comment|/*	$OpenBSD: packet.h,v 1.37 2003/04/01 10:22:21 markus Exp $	*/
 end_comment
 
 begin_comment

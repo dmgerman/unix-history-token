@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.57 2002/09/11 18:27:26 stevesk Exp $"
+literal|"$OpenBSD: authfd.c,v 1.58 2003/01/23 13:50:27 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2103,6 +2103,9 @@ name|comment
 parameter_list|,
 name|u_int
 name|life
+parameter_list|,
+name|u_int
+name|confirm
 parameter_list|)
 block|{
 name|Buffer
@@ -2115,8 +2118,8 @@ name|constrained
 init|=
 operator|(
 name|life
-operator|!=
-literal|0
+operator|||
+name|confirm
 operator|)
 decl_stmt|;
 name|buffer_init
@@ -2238,6 +2241,20 @@ name|life
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|confirm
+operator|!=
+literal|0
+condition|)
+name|buffer_put_char
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|SSH_AGENT_CONSTRAIN_CONFIRM
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2314,6 +2331,8 @@ argument_list|,
 name|key
 argument_list|,
 name|comment
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

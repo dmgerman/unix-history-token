@@ -34,9 +34,10 @@ begin_function_decl
 name|void
 name|session_setup_sia
 parameter_list|(
-name|char
+name|struct
+name|passwd
 modifier|*
-name|user
+name|pw
 parameter_list|,
 name|char
 modifier|*

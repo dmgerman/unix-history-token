@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$OpenBSD: setenv.c,v 1.4 2001/07/09 06:57:45 deraadt Exp $"
+literal|"$OpenBSD: setenv.c,v 1.5 2002/12/10 22:44:13 mickey Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_function_decl
+name|char
+modifier|*
+name|__findenv
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+modifier|*
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * __findenv --  *	Returns pointer to value associated with name, if any, else NULL.  *	Sets offset to be the offset of the name/value combination in the  *	environmental array, for use by setenv(3) and unsetenv(3).  *	Explicitly removes '=' in argument name.  *  *	This routine *should* be a static; don't use it.  */
@@ -285,11 +302,6 @@ name|l_value
 decl_stmt|,
 name|offset
 decl_stmt|;
-name|char
-modifier|*
-name|__findenv
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|*

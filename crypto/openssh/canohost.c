@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.34 2002/09/23 20:46:27 stevesk Exp $"
+literal|"$OpenBSD: canohost.c,v 1.35 2002/11/26 02:38:54 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -270,6 +270,14 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|from4
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -296,6 +304,22 @@ block|}
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_INET6
+condition|)
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getnameinfo
@@ -878,7 +902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns the remote IP-address of socket as a string.  The returned  * string must be freed.  */
+comment|/*  * Returns the local/remote IP-address/hostname of socket as a string.  * The returned string must be freed.  */
 end_comment
 
 begin_function
@@ -986,6 +1010,23 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* Work around Linux IPv6 weirdness */
+if|if
+condition|(
+name|addr
+operator|.
+name|ss_family
+operator|==
+name|AF_INET6
+condition|)
+name|addrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+expr_stmt|;
 comment|/* Get the address in ascii. */
 if|if
 condition|(
@@ -1020,7 +1061,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"get_socket_ipaddr: getnameinfo %d failed"
+literal|"get_socket_address: getnameinfo %d failed"
 argument_list|,
 name|flags
 argument_list|)
@@ -1401,6 +1442,23 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* Work around Linux IPv6 weirdness */
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_INET6
+condition|)
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+expr_stmt|;
 comment|/* Return port number. */
 if|if
 condition|(

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  COPYRIGHT (C) 1986 Gary S. Brown.  You may use this program, or  *  code or tables extracted from it, as desired without restriction.  *  *  First, the polynomial itself and its table of feedback terms.  The  *  polynomial is  *  X^32+X^26+X^23+X^22+X^16+X^12+X^11+X^10+X^8+X^7+X^5+X^4+X^2+X^1+X^0  *  *  Note that we take it "backwards" and put the highest-order term in  *  the lowest-order bit.  The X^32 term is "implied"; the LSB is the  *  X^31 term, etc.  The X^0 term (usually shown as "+1") results in  *  the MSB being 1  *  *  Note that the usual hardware shift register implementation, which  *  is what we're using (we're merely optimizing it by doing eight-bit  *  chunks at a time) shifts bits into the lowest-order term.  In our  *  implementation, that means shifting towards the right.  Why do we  *  do it this way?  Because the calculated CRC must be transmitted in  *  order from highest-order term to lowest-order term.  UARTs transmit  *  characters in order from LSB to MSB.  By storing the CRC this way  *  we hand it to the UART in the order low-byte to high-byte; the UART  *  sends each low-bit to hight-bit; and the result is transmission bit  *  by bit from highest- to lowest-order term without requiring any bit  *  shuffling on our part.  Reception works similarly  *  *  The feedback terms table consists of 256, 32-bit entries.  Notes  *  *      The table can be generated at runtime if desired; code to do so  *      is shown later.  It might not be obvious, but the feedback  *      terms simply represent the results of eight shift/xor opera  *      tions for all combinations of data and CRC register values  *  *      The values must be right-shifted by eight bits by the "updcrc  *      logic; the shift must be u_(bring in zeroes).  On some  *      hardware you could probably optimize the shift in assembler by  *      using byte-swap instructions  *      polynomial $edb88320  */
+comment|/*	$OpenBSD: crc32.c,v 1.9 2003/02/12 21:39:50 markus Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 2003 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: crc32.c,v 1.8 2000/12/19 23:17:56 markus Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -25,8 +21,9 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|u_int
-name|crc32_tab
+specifier|const
+name|u_int32_t
+name|crc32tab
 index|[]
 init|=
 block|{
@@ -545,30 +542,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Return a 32-bit CRC of the contents of the buffer. */
-end_comment
-
 begin_function
-name|u_int
+name|u_int32_t
 name|ssh_crc32
 parameter_list|(
 specifier|const
 name|u_char
 modifier|*
-name|s
+name|buf
 parameter_list|,
-name|u_int
-name|len
+name|u_int32_t
+name|size
 parameter_list|)
 block|{
-name|u_int
+name|u_int32_t
 name|i
+decl_stmt|,
+name|crc
 decl_stmt|;
-name|u_int
-name|crc32val
-decl_stmt|;
-name|crc32val
+name|crc
 operator|=
 literal|0
 expr_stmt|;
@@ -580,20 +572,19 @@ literal|0
 init|;
 name|i
 operator|<
-name|len
+name|size
 condition|;
 name|i
 operator|++
 control|)
-block|{
-name|crc32val
+name|crc
 operator|=
-name|crc32_tab
+name|crc32tab
 index|[
 operator|(
-name|crc32val
+name|crc
 operator|^
-name|s
+name|buf
 index|[
 name|i
 index|]
@@ -603,14 +594,13 @@ literal|0xff
 index|]
 operator|^
 operator|(
-name|crc32val
+name|crc
 operator|>>
 literal|8
 operator|)
 expr_stmt|;
-block|}
 return|return
-name|crc32val
+name|crc
 return|;
 block|}
 end_function

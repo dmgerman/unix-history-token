@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.43 2002/06/08 05:17:01 markus Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.46 2003/04/01 10:22:21 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -319,6 +319,9 @@ index|]
 decl_stmt|;
 name|int
 name|clear_forwardings
+decl_stmt|;
+name|int
+name|enable_ssh_keysign
 decl_stmt|;
 name|int
 name|no_host_authentication_for_localhost

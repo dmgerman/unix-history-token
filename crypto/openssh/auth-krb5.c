@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb5.c,v 1.9 2002/09/09 06:48:06 itojun Exp $"
+literal|"$OpenBSD: auth-krb5.c,v 1.10 2002/11/21 23:03:51 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

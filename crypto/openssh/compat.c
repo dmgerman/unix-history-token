@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compat.c,v 1.65 2002/09/27 10:42:09 mickey Exp $"
+literal|"$OpenBSD: compat.c,v 1.66 2003/04/01 10:31:26 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -265,6 +265,8 @@ operator||
 name|SSH_BUG_RSASIGMD5
 operator||
 name|SSH_BUG_HBSERVICE
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -281,6 +283,8 @@ operator||
 name|SSH_BUG_RSASIGMD5
 operator||
 name|SSH_BUG_HBSERVICE
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -313,6 +317,8 @@ operator||
 name|SSH_BUG_OPENFAILURE
 operator||
 name|SSH_BUG_DUMMYCHAN
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -340,6 +346,8 @@ operator||
 name|SSH_BUG_OPENFAILURE
 operator||
 name|SSH_BUG_DUMMYCHAN
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -368,6 +376,8 @@ operator||
 name|SSH_BUG_DERIVEKEY
 operator||
 name|SSH_BUG_DUMMYCHAN
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -379,6 +389,8 @@ operator||
 name|SSH_BUG_DEBUG
 operator||
 name|SSH_BUG_RSASIGMD5
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -387,6 +399,8 @@ block|,
 name|SSH_BUG_DEBUG
 operator||
 name|SSH_BUG_RSASIGMD5
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{
@@ -400,6 +414,8 @@ block|{
 literal|"2.*"
 block|,
 name|SSH_BUG_DEBUG
+operator||
+name|SSH_BUG_FIRSTKEX
 block|}
 block|,
 block|{

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-common.c,v 1.7 2002/09/11 22:41:50 djm Exp $"
+literal|"$OpenBSD: sftp-common.c,v 1.8 2002/10/16 14:31:48 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1089,7 +1089,9 @@ argument_list|,
 name|group
 argument_list|,
 operator|(
-name|u_int64_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|st
 operator|->

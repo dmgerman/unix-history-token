@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.104 2002/08/22 19:38:42 stevesk Exp $"
+literal|"$OpenBSD: clientloop.c,v 1.107 2003/04/01 10:22:21 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3325,7 +3325,18 @@ expr_stmt|;
 name|client_init_dispatch
 argument_list|()
 expr_stmt|;
-comment|/* Set signal handlers to restore non-blocking mode.  */
+comment|/* 	 * Set signal handlers, (e.g. to restore non-blocking mode) 	 * but don't overwrite SIG_IGN, matches behaviour from rsh(1) 	 */
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -3333,6 +3344,17 @@ argument_list|,
 name|signal_handler
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -3340,6 +3362,17 @@ argument_list|,
 name|signal_handler
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGTERM

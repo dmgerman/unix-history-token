@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-int.h,v 1.5 2002/02/13 00:59:23 djm Exp $ */
+comment|/* $OpenBSD: sftp-int.h,v 1.6 2003/01/08 23:53:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2001,2002 Damien Miller.  All rights reserved.  *  *
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|interactive_loop
 parameter_list|(
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: setproctitle.h,v 1.2 2001/02/09 01:55:36 djm Exp $ */
+comment|/* $Id: setproctitle.h,v 1.3 2003/01/09 22:53:13 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,21 @@ modifier|*
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|compat_init_setproctitle
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl

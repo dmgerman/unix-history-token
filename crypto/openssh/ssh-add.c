@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.63 2002/09/19 15:51:23 markus Exp $"
+literal|"$OpenBSD: ssh-add.c,v 1.66 2003/03/05 22:33:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -157,6 +157,19 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lifetime
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* User has to confirm key use */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|confirm
 init|=
 literal|0
 decl_stmt|;
@@ -614,6 +627,8 @@ argument_list|,
 name|comment
 argument_list|,
 name|lifetime
+argument_list|,
+name|confirm
 argument_list|)
 condition|)
 block|{
@@ -645,6 +660,19 @@ argument_list|,
 literal|"Lifetime set to %d seconds\n"
 argument_list|,
 name|lifetime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|confirm
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"The user has to confirm each use of the key\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -727,6 +755,12 @@ name|char
 modifier|*
 name|pin
 decl_stmt|;
+name|int
+name|ret
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|pin
 operator|=
 name|read_passphrase
@@ -775,9 +809,10 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 literal|0
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -796,11 +831,20 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
 block|}
+name|xfree
+argument_list|(
+name|pin
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 
@@ -1319,6 +1363,13 @@ argument_list|,
 literal|"  -t life     Set lifetime (in seconds) when adding identities.\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -c          Require confirmation to sign using identities\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMARTCARD
@@ -1444,7 +1495,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lLdDxXe:s:t:"
+literal|"lLcdDxXe:s:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -1520,6 +1571,14 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|confirm
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'d'

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.183 2002/09/17 07:47:02 itojun Exp $"
+literal|"$OpenBSD: channels.c,v 1.187 2003/03/05 22:33:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1657,7 +1657,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|if (!compat20&& 			    buffer_len(&c->input)> packet_get_maxsize()) { 				debug("channel %d: big input buffer %d", 				    c->self, buffer_len(&c->input)); 				return 0; 			}
+block|if (!compat20&& 			    buffer_len(&c->input)> packet_get_maxsize()) { 				debug2("channel %d: big input buffer %d", 				    c->self, buffer_len(&c->input)); 				return 0; 			}
 endif|#
 directive|endif
 if|if
@@ -1674,7 +1674,7 @@ name|packet_get_maxsize
 argument_list|()
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: big output buffer %d> %d"
 argument_list|,
@@ -2269,9 +2269,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|debug
+name|debug2
 argument_list|(
-literal|"send channel open %d"
+literal|"channel %d: send open"
 argument_list|,
 name|id
 argument_list|)
@@ -2320,7 +2320,7 @@ name|void
 name|channel_request_start
 parameter_list|(
 name|int
-name|local_id
+name|id
 parameter_list|,
 name|char
 modifier|*
@@ -2336,7 +2336,7 @@ name|c
 init|=
 name|channel_lookup
 argument_list|(
-name|local_id
+name|id
 argument_list|)
 decl_stmt|;
 if|if
@@ -2350,16 +2350,16 @@ name|log
 argument_list|(
 literal|"channel_request_start: %d: unknown channel id"
 argument_list|,
-name|local_id
+name|id
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|debug
 argument_list|(
-literal|"channel request %d: %s"
+literal|"channel %d: request %s"
 argument_list|,
-name|local_id
+name|id
 argument_list|,
 name|service
 argument_list|)
@@ -9482,6 +9482,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|xfree
+argument_list|(
+name|originator_string
+argument_list|)
+expr_stmt|;
 name|packet_start
 argument_list|(
 name|SSH_MSG_CHANNEL_OPEN_FAILURE
@@ -10740,7 +10745,26 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|ai
+operator|->
+name|ai_next
+operator|==
+name|NULL
+condition|)
 name|error
+argument_list|(
+literal|"socket: %.100s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|verbose
 argument_list|(
 literal|"socket: %.100s"
 argument_list|,
@@ -12336,6 +12360,11 @@ expr_stmt|;
 name|packet_put_int
 argument_list|(
 name|remote_id
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|remote_host
 argument_list|)
 expr_stmt|;
 block|}

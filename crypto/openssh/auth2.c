@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2.c,v 1.95 2002/08/22 21:33:58 markus Exp $"
+literal|"$OpenBSD: auth2.c,v 1.96 2003/02/06 21:22:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -942,9 +942,6 @@ expr_stmt|;
 comment|/* Special handling for root */
 if|if
 condition|(
-operator|!
-name|use_privsep
-operator|&&
 name|authenticated
 operator|&&
 name|authctxt

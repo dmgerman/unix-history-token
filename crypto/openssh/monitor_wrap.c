@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor_wrap.c,v 1.19 2002/09/26 11:38:43 markus Exp $"
+literal|"$OpenBSD: monitor_wrap.c,v 1.24 2003/04/01 10:22:21 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-options.h"
 end_include
 
 begin_include
@@ -1554,6 +1560,10 @@ name|int
 name|allowed
 init|=
 literal|0
+decl_stmt|,
+name|have_forced
+init|=
+literal|0
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -1673,6 +1683,29 @@ argument_list|(
 operator|&
 name|m
 argument_list|)
+expr_stmt|;
+comment|/* fake forced command */
+name|auth_clear_options
+argument_list|()
+expr_stmt|;
+name|have_forced
+operator|=
+name|buffer_get_int
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+name|forced_command
+operator|=
+name|have_forced
+condition|?
+name|xstrdup
+argument_list|(
+literal|"true"
+argument_list|)
+else|:
+name|NULL
 expr_stmt|;
 comment|/* Send potential debug messages */
 name|mm_send_debug
@@ -3804,8 +3837,8 @@ block|{
 name|Buffer
 name|m
 decl_stmt|;
-name|int
-name|res
+name|u_int
+name|success
 decl_stmt|;
 name|char
 modifier|*
@@ -3848,7 +3881,7 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
-name|res
+name|success
 operator|=
 name|buffer_get_int
 argument_list|(
@@ -3858,10 +3891,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|success
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|debug3
@@ -4094,8 +4126,9 @@ name|m
 decl_stmt|;
 name|int
 name|len
-decl_stmt|,
-name|res
+decl_stmt|;
+name|u_int
+name|success
 decl_stmt|;
 name|char
 modifier|*
@@ -4141,7 +4174,7 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
-name|res
+name|success
 operator|=
 name|buffer_get_int
 argument_list|(
@@ -4151,10 +4184,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|success
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|debug3
@@ -4504,6 +4536,10 @@ name|int
 name|allowed
 init|=
 literal|0
+decl_stmt|,
+name|have_forced
+init|=
+literal|0
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -4557,6 +4593,29 @@ argument_list|(
 operator|&
 name|m
 argument_list|)
+expr_stmt|;
+comment|/* fake forced command */
+name|auth_clear_options
+argument_list|()
+expr_stmt|;
+name|have_forced
+operator|=
+name|buffer_get_int
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+name|forced_command
+operator|=
+name|have_forced
+condition|?
+name|xstrdup
+argument_list|(
+literal|"true"
+argument_list|)
+else|:
+name|NULL
 expr_stmt|;
 if|if
 condition|(

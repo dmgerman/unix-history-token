@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: servconf.c,v 1.115 2002/09/04 18:52:42 stevesk Exp $"
+literal|"$OpenBSD: servconf.c,v 1.116 2003/02/21 09:05:53 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4981,6 +4981,13 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|debug2
+argument_list|(
+literal|"read_server_config: filename %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|fopen

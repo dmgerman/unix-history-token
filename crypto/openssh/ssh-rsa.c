@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-rsa.c,v 1.26 2002/08/27 17:13:56 stevesk Exp $"
+literal|"$OpenBSD: ssh-rsa.c,v 1.28 2003/02/12 09:33:04 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -57,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|"key.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh-rsa.h"
 end_include
 
 begin_include

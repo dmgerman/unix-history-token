@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-dss.c,v 1.17 2002/07/04 10:41:47 markus Exp $"
+literal|"$OpenBSD: ssh-dss.c,v 1.18 2003/02/12 09:33:04 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"key.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh-dss.h"
 end_include
 
 begin_define

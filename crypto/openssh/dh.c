@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dh.c,v 1.22 2002/06/27 08:49:44 markus Exp $"
+literal|"$OpenBSD: dh.c,v 1.23 2002/11/21 22:22:50 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -905,7 +905,7 @@ condition|)
 name|bits_set
 operator|++
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"bits set: %d/%d"
 argument_list|,
@@ -1133,7 +1133,7 @@ condition|)
 name|bits_set
 operator|++
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"dh_gen_key: priv key bits set: %d/%d"
 argument_list|,

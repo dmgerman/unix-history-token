@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth1.c,v 1.44 2002/09/26 11:38:43 markus Exp $"
+literal|"$OpenBSD: auth1.c,v 1.47 2003/02/06 21:22:42 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1086,13 +1086,6 @@ operator|&
 name|dlen
 argument_list|)
 decl_stmt|;
-name|debug
-argument_list|(
-literal|"got response '%s'"
-argument_list|,
-name|response
-argument_list|)
-expr_stmt|;
 name|packet_check_eom
 argument_list|()
 expr_stmt|;
@@ -1270,9 +1263,6 @@ directive|else
 comment|/* Special handling for root */
 if|if
 condition|(
-operator|!
-name|use_privsep
-operator|&&
 name|authenticated
 operator|&&
 name|authctxt
