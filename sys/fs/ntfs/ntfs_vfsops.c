@@ -692,7 +692,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If updating, check whether changing from read-only to 	 * read/write; if there is no device name, that's all we do. 	 */
+comment|/* 	 * If updating, check whether changing from read-only to 	 * read/write. 	 */
 if|if
 condition|(
 name|mp
@@ -700,14 +700,6 @@ operator|->
 name|mnt_flag
 operator|&
 name|MNT_UPDATE
-condition|)
-block|{
-comment|/* if not updating name...*/
-if|if
-condition|(
-name|from
-operator|==
-name|NULL
 condition|)
 block|{
 name|error
@@ -729,13 +721,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
-condition|)
-return|return
 operator|(
 name|error
+operator|==
+literal|0
 operator|)
-return|;
+operator|&&
+name|export
+operator|.
+name|ex_flags
+operator|!=
+literal|0
+condition|)
+block|{
 comment|/* 			 * Process export requests.  Jumping to "success" 			 * will return the vfs_export() error code. 			 */
 name|err
 operator|=
