@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbm.c	4.2 (Berkeley) %G%"
+literal|"@(#)dbm.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2598,7 +2598,7 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"bad block\n"
+literal|"dbm: bad block\n"
 argument_list|)
 expr_stmt|;
 name|abort
