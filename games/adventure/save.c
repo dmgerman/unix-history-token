@@ -43,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
@@ -588,6 +594,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|uid_t
+name|euid_save
+decl_stmt|;
 name|crc_start
 argument_list|()
 expr_stmt|;
@@ -627,6 +636,17 @@ operator|)
 name|sum
 argument_list|)
 expr_stmt|;
+name|euid_save
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -650,6 +670,11 @@ argument_list|,
 literal|"Hmm.  The name \"%s\" appears to be magically blocked.\n"
 argument_list|,
 name|outfile
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid_save
 argument_list|)
 expr_stmt|;
 return|return
@@ -747,6 +772,11 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid_save
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -790,6 +820,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|uid_t
+name|euid_save
+decl_stmt|;
+name|euid_save
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid_save
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -813,6 +856,11 @@ argument_list|,
 literal|"Hmm.  The file \"%s\" appears to be magically blocked.\n"
 argument_list|,
 name|infile
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid_save
 argument_list|)
 expr_stmt|;
 return|return
@@ -916,6 +964,11 @@ block|}
 name|fclose
 argument_list|(
 name|in
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid_save
 argument_list|)
 expr_stmt|;
 name|crc_start
