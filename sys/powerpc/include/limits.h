@@ -397,6 +397,13 @@ begin_comment
 comment|/* min value for a quad_t */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LONG_BIT
+value|32
+end_define
+
 begin_endif
 endif|#
 directive|endif
