@@ -202,6 +202,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|iaddr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* unsigned long same size as pointer	*/
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|saddr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* signed long same size as pointer	*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
