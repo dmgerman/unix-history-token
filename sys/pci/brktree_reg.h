@@ -638,28 +638,12 @@ name|color_fmt
 argument_list|)
 expr_stmt|;
 comment|/* d4, d5,d6,d7 */
-name|BTBYTE
-argument_list|(
-name|color_ctl
-argument_list|)
-expr_stmt|;
-comment|/* d8, d9,da,db */
-define|#
-directive|define
-name|BT848_COLOR_CTL_EXT_FRMRATE
-value|(1<<7)
-define|#
-directive|define
-name|BT848_COLOR_CTL_COLOR_BARS
-value|(1<<6)
-define|#
-directive|define
-name|BT848_COLOR_CTL_RGB_DED
-value|(1<<5)
-define|#
-directive|define
-name|BT848_COLOR_CTL_GAMMA
-value|(1<<4)
+name|bregister_t
+name|color_ctl_swap
+range|:
+literal|4
+decl_stmt|;
+comment|/* d8 */
 define|#
 directive|define
 name|BT848_COLOR_CTL_WSWAP_ODD
@@ -676,6 +660,31 @@ define|#
 directive|define
 name|BT848_COLOR_CTL_BSWAP_EVEN
 value|(1<<0)
+name|bregister_t
+name|color_ctl_gamma
+range|:
+literal|1
+decl_stmt|;
+name|bregister_t
+name|color_ctl_rgb_ded
+range|:
+literal|1
+decl_stmt|;
+name|bregister_t
+name|color_ctl_color_bars
+range|:
+literal|1
+decl_stmt|;
+name|bregister_t
+name|color_ctl_ext_frmrate
+range|:
+literal|1
+decl_stmt|;
+name|int
+label|:
+literal|24
+expr_stmt|;
+comment|/* d9,da,db */
 name|BTBYTE
 argument_list|(
 name|cap_ctl
@@ -1466,6 +1475,14 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|bktr_clip
+name|bktr_clip_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * BrookTree 848  info structure, one per bt848 card installed.  */
 end_comment
@@ -1547,10 +1564,14 @@ name|short
 name|cols
 decl_stmt|;
 comment|/* number of columns in a frame */
-name|short
-name|depth
+name|int
+name|pixfmt
 decl_stmt|;
-comment|/* number of byte per pixel */
+comment|/* active pixel format (idx into fmt tbl) */
+name|int
+name|pixfmt_compat
+decl_stmt|;
+comment|/* Y/N - in meteor pix fmt compat mode */
 name|u_long
 name|format
 decl_stmt|;
@@ -1795,6 +1816,42 @@ decl_stmt|;
 comment|/* mute state of the audio */
 name|u_char
 name|format_params
+decl_stmt|;
+name|u_long
+name|current_sol
+decl_stmt|;
+name|u_long
+name|current_col
+decl_stmt|;
+name|int
+name|clip_start
+decl_stmt|;
+name|int
+name|line_length
+decl_stmt|;
+name|int
+name|last_y
+decl_stmt|;
+name|int
+name|y
+decl_stmt|;
+name|int
+name|y2
+decl_stmt|;
+name|int
+name|yclip
+decl_stmt|;
+name|int
+name|yclip2
+decl_stmt|;
+name|int
+name|max_clip_node
+decl_stmt|;
+name|bktr_clip_t
+name|clip_list
+index|[
+literal|100
+index|]
 decl_stmt|;
 block|}
 struct|;
