@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	1.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1550,6 +1550,8 @@ operator||
 name|ISIG
 operator||
 name|ICANON
+operator||
+name|IEXTEN
 operator|)
 expr_stmt|;
 block|}
@@ -1561,8 +1563,6 @@ name|BRKINT
 operator||
 name|IXON
 operator||
-name|IEXTEN
-operator||
 name|IMAXBEL
 expr_stmt|;
 name|oflag
@@ -1572,6 +1572,8 @@ expr_stmt|;
 name|lflag
 operator||=
 name|ISIG
+operator||
+name|IEXTEN
 expr_stmt|;
 if|if
 condition|(
