@@ -10628,6 +10628,14 @@ name|error
 decl_stmt|,
 name|state
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|hp
+operator|=
+name|NULL
+expr_stmt|;
 name|sc
 operator|=
 name|dev
