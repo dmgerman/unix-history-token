@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|LUN_TQAE
-value|0x00000001
+value|0x00000002
 end_define
 
 begin_comment
@@ -919,7 +919,7 @@ begin_define
 define|#
 directive|define
 name|AT_TQAE
-value|0x00000001
+value|0x00000002
 end_define
 
 begin_comment
@@ -995,6 +995,66 @@ end_define
 begin_comment
 comment|/* CDB received */
 end_comment
+
+begin_comment
+comment|/*  * Macros to create and fetch and test concatenated handle and tag value macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_MAKE_TAGID
+parameter_list|(
+name|tid
+parameter_list|,
+name|aep
+parameter_list|)
+define|\
+value|tid = ((aep)->at_handle<< 16);					\ 	if ((aep)->at_flags& AT_TQAE)					\ 		(tid) |= ((aep)->at_tag_val + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CT_MAKE_TAGID
+parameter_list|(
+name|tid
+parameter_list|,
+name|ct
+parameter_list|)
+define|\
+value|tid = ((ct)->ct_fwhandle<< 16);				\ 	if ((ct)->ct_flags& CT_TQAE)					\ 		(tid) |= ((ct)->ct_tag_val + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_HAS_TAG
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_GET_TAG
+parameter_list|(
+name|val
+parameter_list|)
+value|AT_HAS_TAG(val) - 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_GET_HANDLE
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)>> 16)
+end_define
 
 begin_comment
 comment|/*  * Accept Target I/O Entry structure, Type 2  */
@@ -1271,7 +1331,7 @@ begin_define
 define|#
 directive|define
 name|CT_TQAE
-value|0x00000001
+value|0x00000002
 end_define
 
 begin_comment
@@ -2307,25 +2367,22 @@ begin_comment
 comment|/*  * This function handles new response queue entry appropriate for target mode.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_target_notify
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Enable/Disable/Modify a logical unit.  */
@@ -2349,104 +2406,85 @@ name|DFLT_INOTIFY
 value|(4)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_lun_cmd
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * General request queue 'put' routine for target mode entries.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_target_put_entry
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
+modifier|*
 name|isp
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * General routine to put back an ATIO entry-  * used for replenishing f/w resource counts.  */
+comment|/*  * General routine to put back an ATIO entry-  * used for replenishing f/w resource counts.  * The argument is a pointer to a source ATIO  * or ATIO2.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_target_put_atio
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * General routine to send a final CTIO for a command- used mostly for  * local responses.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_endcmd
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2459,23 +2497,20 @@ begin_comment
 comment|/*  * Handle an asynchronous event  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_target_async
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
