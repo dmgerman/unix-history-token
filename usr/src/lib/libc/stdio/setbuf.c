@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)setbuf.c	4.1 (Berkeley) %G% */
+comment|/* @(#)setbuf.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -79,13 +79,22 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|iop
 operator|->
 name|_flag
 operator||=
 name|_IONBF
 expr_stmt|;
+name|iop
+operator|->
+name|_bufsiz
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
+block|{
 name|iop
 operator|->
 name|_ptr
@@ -94,6 +103,13 @@ name|iop
 operator|->
 name|_base
 expr_stmt|;
+name|iop
+operator|->
+name|_bufsiz
+operator|=
+name|BUFSIZ
+expr_stmt|;
+block|}
 name|iop
 operator|->
 name|_cnt

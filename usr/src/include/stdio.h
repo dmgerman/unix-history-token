@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)stdio.h	1.1 (Berkeley) %G%	*/
+comment|/*	@(#)stdio.h	1.2 (Berkeley) %G%	*/
 end_comment
 
 begin_define
@@ -38,6 +38,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|_base
+decl_stmt|;
+name|int
+name|_bufsiz
 decl_stmt|;
 name|short
 name|_flag

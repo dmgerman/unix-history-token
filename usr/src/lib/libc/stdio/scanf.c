@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)scanf.c	4.1 (Berkeley) %G% */
+comment|/* @(#)scanf.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -148,6 +148,14 @@ name|_strbuf
 operator|.
 name|_cnt
 operator|++
+expr_stmt|;
+name|_strbuf
+operator|.
+name|_bufsiz
+operator|=
+name|_strbuf
+operator|.
+name|_cnt
 expr_stmt|;
 return|return
 operator|(

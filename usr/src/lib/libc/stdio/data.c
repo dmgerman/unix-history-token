@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)data.c	4.1 (Berkeley) %G% */
+comment|/* @(#)data.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -9,11 +9,17 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_decl_stmt
 name|char
 name|_sibuf
 index|[
-name|BUFSIZ
+name|MAXBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -22,7 +28,7 @@ begin_decl_stmt
 name|char
 name|_sobuf
 index|[
-name|BUFSIZ
+name|MAXBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -39,9 +45,11 @@ block|{
 block|{
 literal|0
 block|,
-name|_sibuf
+name|NULL
 block|,
-name|_sibuf
+name|NULL
+block|,
+name|NULL
 block|,
 name|_IOREAD
 block|,
@@ -55,6 +63,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|_IOWRT
 block|,
 literal|1
@@ -62,6 +72,8 @@ block|}
 block|,
 block|{
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
