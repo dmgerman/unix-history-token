@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_file.c	5.4 (Berkeley) %G%"
+literal|"@(#)kvm_file.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,6 +364,9 @@ name|KREAD
 argument_list|(
 name|kd
 argument_list|,
+operator|(
+name|long
+operator|)
 name|fp
 argument_list|,
 operator|(
