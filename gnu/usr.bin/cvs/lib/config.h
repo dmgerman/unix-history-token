@@ -55,6 +55,17 @@ comment|/* #undef gid_t */
 end_comment
 
 begin_comment
+comment|/* Define if your system has a working fnmatch function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FNMATCH
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you support file names longer than 14 characters.  */
 end_comment
 
@@ -73,6 +84,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ST_BLKSIZE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if your struct stat has st_rdev.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ST_RDEV
 value|1
 end_define
 
@@ -280,18 +302,10 @@ begin_comment
 comment|/* Define if you have the connect function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CONNECT */
-end_comment
-
-begin_comment
-comment|/* Define if this system supports chown(), link(), and friends.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|PRESERVE_PERMISSIONS_SUPPORT
+name|HAVE_CONNECT
 value|1
 end_define
 
@@ -349,6 +363,47 @@ begin_define
 define|#
 directive|define
 name|HAVE_CRYPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getspnam function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETSPNAM */
+end_comment
+
+begin_comment
+comment|/* Define to force lib/regex.c to use malloc instead of alloca.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REGEX_MALLOC
+value|1
+end_define
+
+begin_comment
+comment|/* Define to force lib/regex.c to define re_comp et al.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_REGEX_RE_COMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the dup2 function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DUP2
 value|1
 end_define
 
@@ -416,11 +471,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the getspnam function.  */
+comment|/* Define if you have the getpassphrase function.  */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_GETSPNAM */
+comment|/* #undef HAVE_GETPASSPHRASE */
 end_comment
 
 begin_comment
@@ -441,6 +496,39 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_KRB_GET_ERR_TEXT */
 end_comment
+
+begin_comment
+comment|/* Define if you have the memmove function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMMOVE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the mkdir function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKDIR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the mknod function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKNOD
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the mktemp function.  */
@@ -472,6 +560,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_READLINK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the rename function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RENAME
 value|1
 end_define
 
@@ -531,6 +630,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strerror function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRERROR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strstr function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRSTR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strtoul function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOUL
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the tempnam function.  */
 end_comment
 
@@ -564,6 +696,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the valloc function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VALLOC
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the vprintf function.  */
 end_comment
 
@@ -582,6 +725,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_WAIT3
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the waitpid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WAITPID
 value|1
 end_define
 
@@ -656,6 +810,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_IO_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<krb5.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_H */
 end_comment
 
 begin_comment
@@ -823,62 +985,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the crypt library (-lcrypt).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LIBCRYPT
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the gen library (-lgen).  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBGEN */
-end_comment
-
-begin_comment
-comment|/* Define if you have the inet library (-linet).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBINET */
-end_comment
-
-begin_comment
-comment|/* Define if you have the nsl library (-lnsl).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBNSL */
-end_comment
-
-begin_comment
-comment|/* Define if you have the nsl_s library (-lnsl_s).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBNSL_S */
-end_comment
-
-begin_comment
-comment|/* Define if you have the sec library (-lsec).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSEC */
-end_comment
-
-begin_comment
-comment|/* Define if you have the socket library (-lsocket).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSOCKET */
 end_comment
 
 end_unit
