@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.11	%G%	*/
+comment|/*	conf.c	3.12	%G%	*/
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"../h/acct.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/pte.h"
 end_include
 
 begin_include
@@ -1039,25 +1045,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-modifier|*
-name|mbaloc
+specifier|extern
+name|struct
+name|pte
+name|MBA0map
+index|[]
+decl_stmt|,
+name|MBA1map
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mba_info
+name|mbainfo
 index|[]
 init|=
 block|{
-comment|/* virtual location of mba */
-operator|(
-name|int
-operator|*
-operator|)
 name|MBA0
 block|,
-operator|(
-name|int
-operator|*
-operator|)
+name|PHYSMBA0
+block|,
+name|MBA0map
+block|,
 name|MBA1
-block|, }
+block|,
+name|PHYSMBA1
+block|,
+name|MBA1map
+block|}
 decl_stmt|;
 end_decl_stmt
 
