@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2000 Taku YAMAMOTO<taku@cent.saitama-u.ac.jp>  * Al
 end_comment
 
 begin_comment
-comment|/*  * Credits:  *  * Part of this code (especially in many magic numbers) was heavily inspired  * by the Linux driver originally written by  * Alan Cox<alan.cox@linux.org>, modified heavily by  * Zach Brown<zab@zabbo.net>.  *  * busdma()-ize and buffer size reduction were suggested by  * Cameron Grant<gandalf@vilnya.demon.co.uk>.  * Also he showed me the way to use busdma() suite.  *  * Internal speaker problems on NEC VersaPro's and Dell Inspiron 7500  * were looked at by  * Munehiro Matsuda<haro@tk.kubota.co.jp>,  * who brought patches based on the Linux driver with some simplification.  */
+comment|/*  * Credits:  *  * Part of this code (especially in many magic numbers) was heavily inspired  * by the Linux driver originally written by  * Alan Cox<alan.cox@linux.org>, modified heavily by  * Zach Brown<zab@zabbo.net>.  *  * busdma()-ize and buffer size reduction were suggested by  * Cameron Grant<cg@freebsd.org>.  * Also he showed me the way to use busdma() suite.  *  * Internal speaker problems on NEC VersaPro's and Dell Inspiron 7500  * were looked at by  * Munehiro Matsuda<haro@tk.kubota.co.jp>,  * who brought patches based on the Linux driver with some simplification.  */
 end_comment
 
 begin_include
