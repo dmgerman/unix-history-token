@@ -1256,7 +1256,15 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|fp
+operator|->
+name|_flags
+operator|&
+name|__SOPT
+condition|)
 block|{
 name|fp
 operator|->
