@@ -450,7 +450,7 @@ name|dma
 operator|->
 name|max_iosize
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -495,7 +495,7 @@ literal|1
 argument_list|,
 name|MAXTABSZ
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -729,7 +729,7 @@ literal|1
 argument_list|,
 name|MAXWSPCSZ
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
