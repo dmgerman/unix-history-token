@@ -2120,7 +2120,6 @@ name|EXCLUDE_AUDIO
 end_ifndef
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|audio_operations
 name|sb_dsp_operations

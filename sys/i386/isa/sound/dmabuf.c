@@ -69,6 +69,30 @@ name|DMODE_INPUT
 value|2
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sb_dsp_ok
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|audio_operations
+name|sb_dsp_operations
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|force_reset
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DEFINE_WAIT_QUEUES
 argument_list|(
@@ -1025,6 +1049,23 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|force_reset
+operator|&&
+name|sb_dsp_ok
+operator|&&
+name|dsp_devs
+index|[
+name|dev
+index|]
+operator|==
+operator|&
+name|sb_dsp_operations
+condition|)
+return|return;
+comment|/* We don't need this code for SB */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -1450,7 +1491,11 @@ name|dev
 index|]
 condition|)
 block|{
-comment|/* dma_reset (dev); */
+name|dma_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|dev_needs_restart
 index|[
 name|dev
@@ -1475,7 +1520,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* dma_reset (dev); */
+name|dma_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|dma_mode
 index|[
 name|dev
@@ -1979,10 +2028,18 @@ block|{
 case|case
 name|SNDCTL_DSP_RESET
 case|:
+name|force_reset
+operator|=
+literal|1
+expr_stmt|;
 name|dma_reset
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|force_reset
+operator|=
+literal|0
 expr_stmt|;
 return|return
 literal|0
@@ -1996,7 +2053,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* dma_reset (dev); */
+name|dma_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2212,7 +2273,11 @@ name|DMODE_INPUT
 condition|)
 comment|/* Was input -> Direction change */
 block|{
-comment|/* dma_reset (dev); */
+name|dma_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|dma_mode
 index|[
 name|dev
@@ -2236,7 +2301,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* dma_reset (dev); */
+name|dma_reset
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 name|dev_needs_restart
 index|[
