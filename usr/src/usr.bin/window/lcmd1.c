@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.13 84/01/12"
+literal|"@(#)lcmd1.c	3.14 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -1377,7 +1377,7 @@ name|a
 operator|->
 name|arg_str
 operator|=
-name|str_cpy
+name|str_itoa
 argument_list|(
 name|a
 operator|->

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwenviron.c	3.7 84/01/11"
+literal|"@(#)wwenviron.c	3.8 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,10 @@ name|int
 operator|)
 name|TIOCSPGRP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|pgrp
 argument_list|)

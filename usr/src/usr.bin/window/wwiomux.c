@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwiomux.c	3.5 83/12/01"
+literal|"@(#)wwiomux.c	3.6 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,9 @@ return|return
 operator|-
 literal|1
 return|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout

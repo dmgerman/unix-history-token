@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	3.6 83/12/01"
+literal|"@(#)wwspawn.c	3.7 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,9 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sighold
 argument_list|(
 name|SIGCHLD
@@ -103,6 +106,9 @@ name|wwerrno
 operator|=
 name|WWE_SYS
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
 name|SIGCHLD
@@ -149,6 +155,9 @@ name|wwerrno
 operator|=
 name|WWE_SYS
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
 name|SIGCHLD
@@ -173,6 +182,9 @@ name|ww_state
 operator|=
 name|WWS_HASPROC
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
 name|SIGCHLD
