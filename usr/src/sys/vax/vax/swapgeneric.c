@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	4.6	83/05/18	*/
+comment|/*	swapgeneric.c	4.7	83/05/18	*/
 end_comment
 
 begin_include
@@ -143,19 +143,9 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dmmin
-init|=
-literal|32
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|dmmax
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|dmtext
 decl_stmt|;
 end_decl_stmt
@@ -214,12 +204,6 @@ decl_stmt|;
 name|dev_t
 name|gc_root
 decl_stmt|;
-name|long
-name|gc_nswap
-decl_stmt|;
-name|long
-name|gc_dumpsize
-decl_stmt|;
 block|}
 name|genericconf
 index|[]
@@ -240,13 +224,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|33440
-block|,
-literal|10
-operator|*
-literal|2048
-block|}
+block|,	}
 block|,
 block|{
 operator|(
@@ -263,13 +241,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|33440
-block|,
-literal|10
-operator|*
-literal|2048
-block|}
+block|,	}
 block|,
 block|{
 operator|(
@@ -286,13 +258,7 @@ literal|9
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|33440
-block|,
-literal|10
-operator|*
-literal|2048
-block|}
+block|,	}
 block|,
 block|{
 operator|(
@@ -309,13 +275,7 @@ literal|11
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|33440
-block|,
-literal|10
-operator|*
-literal|2048
-block|}
+block|,	}
 block|,
 block|{
 operator|(
@@ -332,11 +292,7 @@ literal|11
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|4480
-block|,
-literal|0
-block|}
+block|,	}
 block|,
 block|{
 operator|(
@@ -353,17 +309,7 @@ literal|3
 argument_list|,
 literal|0
 argument_list|)
-block|,
-literal|10032
-block|,
-literal|2
-operator|*
-operator|(
-literal|2048
-operator|+
-literal|1024
-operator|)
-block|}
+block|,	}
 block|,
 block|{
 literal|0
@@ -752,37 +698,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|swdevt
-index|[
-literal|0
-index|]
-operator|.
-name|sw_nblks
-operator|=
-name|gc
-operator|->
-name|gc_nswap
-expr_stmt|;
-name|dumplo
-operator|=
-name|gc
-operator|->
-name|gc_nswap
-operator|-
-name|gc
-operator|->
-name|gc_dumpsize
-expr_stmt|;
-if|if
-condition|(
-name|dumplo
-operator|<
-literal|0
-condition|)
-name|dumplo
-operator|=
-literal|0
-expr_stmt|;
+comment|/* swap size and dumplo set during autoconfigure */
 if|if
 condition|(
 name|swaponroot
