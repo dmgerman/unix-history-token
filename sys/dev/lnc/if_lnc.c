@@ -181,15 +181,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|lnc_softc_t
-name|lnc_softc
-index|[
-name|NLNC
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 specifier|const
