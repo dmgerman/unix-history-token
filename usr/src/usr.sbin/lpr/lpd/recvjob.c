@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	recvjob.c	4.2	83/05/13	*/
+comment|/*	recvjob.c	4.2	83/05/16	*/
 end_comment
 
 begin_comment
@@ -44,6 +44,10 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 name|char
 modifier|*
 name|bp
@@ -53,10 +57,6 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|name
-operator|=
-literal|"recvjob"
-expr_stmt|;
 comment|/* 	 * Perform lookup for printer name or abbreviation 	 */
 if|if
 condition|(
@@ -130,6 +130,26 @@ name|SD
 operator|=
 name|DEFSPOOL
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|LO
+operator|=
+name|pgetstr
+argument_list|(
+literal|"lo"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|LO
+operator|=
+name|DEFLOCK
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -168,6 +188,40 @@ argument_list|,
 name|SD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|LO
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+literal|010
+operator|)
+condition|)
+block|{
+comment|/* queue is disabled */
+name|putchar
+argument_list|(
+literal|'\1'
+argument_list|)
+expr_stmt|;
+comment|/* return error code */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|readjob
