@@ -50,16 +50,6 @@ parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.tte_list))
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_resident_count
-parameter_list|(
-name|pm
-parameter_list|)
-value|(pm->pm_stats.resident_count)
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct

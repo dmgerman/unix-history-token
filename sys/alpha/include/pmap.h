@@ -581,16 +581,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|pmap_resident_count
-parameter_list|(
-name|pmap
-parameter_list|)
-value|(pmap)->pm_stats.resident_count
-end_define
-
-begin_define
-define|#
-directive|define
 name|PM_FLAG_LOCKED
 value|0x1
 end_define

@@ -1130,16 +1130,6 @@ parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_resident_count
-parameter_list|(
-name|pmap
-parameter_list|)
-value|(pmap)->pm_stats.resident_count
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct

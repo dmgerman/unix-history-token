@@ -930,6 +930,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|vmspace_wired_count
+parameter_list|(
+name|struct
+name|vmspace
+modifier|*
+name|vmspace
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

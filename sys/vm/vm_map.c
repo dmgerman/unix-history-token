@@ -1861,6 +1861,28 @@ return|;
 block|}
 end_function
 
+begin_function
+name|long
+name|vmspace_wired_count
+parameter_list|(
+name|struct
+name|vmspace
+modifier|*
+name|vmspace
+parameter_list|)
+block|{
+return|return
+name|pmap_wired_count
+argument_list|(
+name|vmspace_pmap
+argument_list|(
+name|vmspace
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  *	vm_map_create:  *  *	Creates and returns a new empty VM map with  *	the given physical map structure, and having  *	the given lower and upper address bounds.  */
 end_comment

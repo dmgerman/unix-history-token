@@ -139,16 +139,6 @@ parameter_list|)
 value|(!LIST_EMPTY(&(m)->md.mdpg_pvoh))
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_resident_count
-parameter_list|(
-name|pm
-parameter_list|)
-value|(pm->pm_stats.resident_count)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
