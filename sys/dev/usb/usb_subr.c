@@ -4285,7 +4285,7 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-comment|/* XXX bit of a hack, only for hubs the detach is called 	 * the code should register a detach function and use that one 	 * to detach a device porperly 	 */
+comment|/* XXX bit of a hack, only for hubs the detach is called 	 * 	 * easiest solution, register a detach method in the softc, call that 	 * one and pass the device struct to it, or the softc. Whatever. 	 */
 if|if
 condition|(
 name|dev

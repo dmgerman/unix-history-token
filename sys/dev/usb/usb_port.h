@@ -33,14 +33,6 @@ define|\
 value|printf("%s: ", (bdev).dv_xname)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEVICE_MSG
-parameter_list|(
-name|bdev
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct

@@ -51,7 +51,7 @@ name|__FreeBSD__
 argument_list|)
 name|struct
 name|callout_handle
-name|callout_handler
+name|timeout_handle
 decl_stmt|;
 endif|#
 directive|endif
@@ -274,9 +274,6 @@ name|__FreeBSD__
 argument_list|)
 name|int
 name|sc_iobase
-decl_stmt|;
-name|int
-name|sc_int
 decl_stmt|;
 name|int
 name|unit

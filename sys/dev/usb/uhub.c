@@ -254,6 +254,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|uhub_detach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_elif
 elif|#
 directive|elif
@@ -274,6 +288,13 @@ begin_decl_stmt
 specifier|static
 name|device_attach_t
 name|uhub_attach
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_detach_t
+name|uhub_detach
 decl_stmt|;
 end_decl_stmt
 
@@ -443,6 +464,13 @@ argument_list|,
 name|uhub_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|uhub_detach
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -559,7 +587,7 @@ argument_list|)
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|1
+literal|5
 argument_list|,
 operator|(
 literal|"uhub_match, dd=%p\n"

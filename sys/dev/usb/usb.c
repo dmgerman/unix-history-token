@@ -1137,7 +1137,7 @@ parameter_list|(
 name|module_t
 name|mod
 parameter_list|,
-name|modeventtype_t
+name|int
 name|what
 parameter_list|,
 name|void

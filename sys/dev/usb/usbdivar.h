@@ -603,7 +603,7 @@ name|__FreeBSD__
 argument_list|)
 name|struct
 name|callout_handle
-name|callout_handler
+name|timo_handle
 decl_stmt|;
 endif|#
 directive|endif
@@ -860,7 +860,7 @@ operator|(
 name|module_t
 name|mod
 operator|,
-name|modeventtype_t
+name|int
 name|what
 operator|,
 name|void
