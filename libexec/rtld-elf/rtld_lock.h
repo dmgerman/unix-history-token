@@ -36,7 +36,9 @@ function_decl|(
 modifier|*
 name|lock_create
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|void
 function_decl|(
@@ -101,7 +103,9 @@ function_decl|(
 modifier|*
 name|at_fork
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 block|}
 struct|;
