@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -190,6 +190,10 @@ name|int
 name|um_ubinfo
 decl_stmt|;
 comment|/* save unibus registers, etc */
+name|int
+name|um_bdp
+decl_stmt|;
+comment|/* for controllers that hang on to bdp's */
 name|struct
 name|buf
 name|um_tab
@@ -355,6 +359,10 @@ name|short
 name|ud_xclu
 decl_stmt|;
 comment|/* want exclusive use of bdp's */
+name|short
+name|ud_keepbdp
+decl_stmt|;
+comment|/* hang on to bdp's once allocated */
 name|int
 function_decl|(
 modifier|*
@@ -489,6 +497,16 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ubago
+parameter_list|(
+name|ui
+parameter_list|)
+value|ubaqueue(ui, 0)
+end_define
 
 begin_comment
 comment|/*  * UBA related kernel variables  */
