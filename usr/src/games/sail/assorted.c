@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)assorted.c	2.1 83/10/31"
+literal|"@(#)assorted.c	2.2 83/11/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,6 +1146,7 @@ operator|<
 name|NSHIP
 operator|&&
 operator|(
+operator|!
 name|s
 operator|->
 name|turnfoul
@@ -1367,6 +1368,7 @@ operator|<
 name|NSHIP
 operator|&&
 operator|(
+operator|!
 name|s
 operator|->
 name|turnfoul
@@ -1393,7 +1395,7 @@ name|NSHIP
 condition|)
 name|Write
 argument_list|(
-name|W_FOUL
+name|W_GRAP
 argument_list|,
 name|to
 argument_list|,
