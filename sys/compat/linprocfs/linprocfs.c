@@ -274,6 +274,12 @@ directive|include
 file|<fs/pseudofs/pseudofs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fs/procfs/procfs.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -3094,6 +3100,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 block|,
@@ -3107,15 +3115,19 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* PFS_FILE(   "mem",	procfs_domem,		NULL, NULL, PFS_RDWR|PFS_RAW), */
+comment|/* PFS_FILE(   "mem",	procfs_domem, 	    NULL,	NULL,		NULL,	PFS_RDWR|PFS_RAW), */
 name|PFS_FILE
 argument_list|(
 literal|"stat"
 argument_list|,
 name|linprocfs_doprocstat
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3129,6 +3141,8 @@ argument_list|(
 literal|"status"
 argument_list|,
 name|linprocfs_doprocstatus
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3164,6 +3178,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 block|,
@@ -3184,12 +3200,13 @@ name|PFS_THIS
 block|,
 name|PFS_PARENT
 block|,
-comment|/*	    name	flags uid  gid	mode  data */
 name|PFS_FILE
 argument_list|(
 literal|"cmdline"
 argument_list|,
 name|linprocfs_docmdline
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3208,6 +3225,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 block|,
@@ -3216,6 +3235,8 @@ argument_list|(
 literal|"devices"
 argument_list|,
 name|linprocfs_dodevices
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3234,6 +3255,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 block|,
@@ -3247,13 +3270,15 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 block|,
 if|#
 directive|if
 literal|0
-block|PFS_FILE(   "mdodules",	linprocfs_domodules,	NULL, NULL, PFS_RD),
+block|PFS_FILE(   "modules",	linprocfs_domodules, 	    NULL,	NULL,		NULL,	PFS_RD),
 endif|#
 directive|endif
 name|PFS_FILE
@@ -3261,6 +3286,8 @@ argument_list|(
 literal|"stat"
 argument_list|,
 name|linprocfs_dostat
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3279,6 +3306,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|PFS_RD
 argument_list|)
 block|,
@@ -3287,6 +3316,8 @@ argument_list|(
 literal|"version"
 argument_list|,
 name|linprocfs_doversion
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3305,12 +3336,16 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 block|,
 name|PFS_PROCDIR
 argument_list|(
 name|linprocfs_proc_nodes
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3324,6 +3359,8 @@ argument_list|(
 literal|"self"
 argument_list|,
 name|linprocfs_doselflink
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
