@@ -586,7 +586,7 @@ name|FILE
 modifier|*
 name|ut
 decl_stmt|;
-name|u_long
+name|in_addr_t
 name|l
 decl_stmt|;
 name|time_t
