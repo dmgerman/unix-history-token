@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.15 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/dinode.h>
 end_include
 
@@ -78,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/quota.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -101,13 +113,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -833,15 +863,18 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n\t%s\n\t%s\n"
+literal|"usage:\t%s\n\t%s\n"
 argument_list|,
-literal|"quotacheck [-g] [-u] [-v] -a"
+literal|"quotacheck -a [-guv]"
 argument_list|,
-literal|"quotacheck [-g] [-u] [-v] filesys ..."
+literal|"quotacheck [-guv] filesys ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1554,10 +1587,6 @@ name|struct
 name|dqblk
 name|dqbuf
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|static
 name|int
 name|warned
@@ -1593,24 +1622,9 @@ block|{
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|ENOENT
 condition|)
-block|{
-name|perror
-argument_list|(
-name|quotafile
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-operator|(
 name|qfo
 operator|=
 name|fopen
@@ -1619,31 +1633,28 @@ name|quotafile
 argument_list|,
 literal|"w+"
 argument_list|)
-operator|)
-operator|==
-name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|qfo
 condition|)
 block|{
-name|perror
-argument_list|(
-name|quotafile
-argument_list|)
-expr_stmt|;
-return|return
 operator|(
-literal|1
+name|void
 operator|)
-return|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Creating quota file %s\n"
+literal|"quotacheck: creating quota file %s\n"
 argument_list|,
 name|quotafile
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|MODE
+value|(S_IRUSR|S_IWUSR|S_IRGRP)
 operator|(
 name|void
 operator|)
@@ -1671,9 +1682,35 @@ argument_list|(
 name|qfo
 argument_list|)
 argument_list|,
-literal|0640
+name|MODE
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"quotacheck: %s: %s\n"
+argument_list|,
+name|quotafile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1691,11 +1728,26 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"quotacheck: %s: %s\n"
+argument_list|,
 name|quotafile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|qfo
@@ -2631,12 +2683,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|fup
