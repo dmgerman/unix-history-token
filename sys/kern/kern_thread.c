@@ -2441,6 +2441,15 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nivcsw
+operator|++
+expr_stmt|;
 name|mi_switch
 argument_list|()
 expr_stmt|;
