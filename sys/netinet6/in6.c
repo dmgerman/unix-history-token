@@ -3020,8 +3020,8 @@ name|AF_INET6
 operator|)
 condition|)
 block|{
-name|int
-name|scopeid
+name|u_int32_t
+name|zoneid
 decl_stmt|;
 if|if
 condition|(
@@ -3063,7 +3063,7 @@ operator|.
 name|sin6_addr
 argument_list|,
 operator|&
-name|scopeid
+name|zoneid
 argument_list|)
 condition|)
 return|return
@@ -3084,7 +3084,7 @@ name|dst6
 operator|.
 name|sin6_scope_id
 operator|=
-name|scopeid
+name|zoneid
 expr_stmt|;
 elseif|else
 if|if
@@ -3093,7 +3093,7 @@ name|dst6
 operator|.
 name|sin6_scope_id
 operator|!=
-name|scopeid
+name|zoneid
 condition|)
 return|return
 operator|(
@@ -3166,6 +3166,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX: noisy message */
 name|nd6log
 argument_list|(
 operator|(
@@ -7338,19 +7339,19 @@ modifier|*
 name|cp
 decl_stmt|;
 specifier|const
-name|u_short
+name|u_int16_t
 modifier|*
 name|a
 init|=
 operator|(
 specifier|const
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 name|addr
 decl_stmt|;
 specifier|const
-name|u_char
+name|u_int8_t
 modifier|*
 name|d
 decl_stmt|;
