@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comm.c	5.4 (Berkeley) %G%"
+literal|"@(#)comm.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINELEN
-value|(LINE_MAX + 1)
+value|(_BSD_LINE_MAX + 1)
 end_define
 
 begin_decl_stmt
