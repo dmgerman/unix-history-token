@@ -8314,9 +8314,11 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
 name|freevnodes
 operator|++
 expr_stmt|;
+block|}
 name|vp
 operator|->
 name|v_flag
