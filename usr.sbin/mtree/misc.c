@@ -136,6 +136,14 @@ name|NEEDVALUE
 block|}
 block|,
 block|{
+literal|"flags"
+block|,
+name|F_FLAGS
+block|,
+name|NEEDVALUE
+block|}
+block|,
+block|{
 literal|"gid"
 block|,
 name|F_GID
