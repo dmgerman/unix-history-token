@@ -6206,8 +6206,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|void
-modifier|*
+name|bus_addr_t
 modifier|*
 name|phys
 init|=
@@ -6221,8 +6220,7 @@ condition|?
 literal|0
 else|:
 operator|(
-name|void
-operator|*
+name|bus_addr_t
 operator|)
 name|segs
 operator|->
@@ -6335,6 +6333,7 @@ literal|0
 argument_list|)
 operator|||
 operator|!
+operator|*
 name|addr
 condition|)
 return|return
@@ -6659,7 +6658,6 @@ operator|(
 name|u_int8_t
 operator|*
 operator|)
-operator|&
 name|blk
 operator|->
 name|buf_addr
