@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dofio[] = "@(#)dofio.c	1.3";  *  * fortran format executer  */
+comment|/* char id_dofio[] = "@(#)dofio.c	1.4";  *  * fortran format executer  */
 end_comment
 
 begin_include
@@ -497,13 +497,34 @@ name|pc
 operator|++
 expr_stmt|;
 break|break;
+case|case
+name|B
+case|:
+comment|/*** NOT STANDARD FORTRAN ***/
+if|if
+condition|(
+name|external
+condition|)
+name|cblank
+operator|=
+name|curunit
+operator|->
+name|ublnk
+expr_stmt|;
+else|else
+name|cblank
+operator|=
+literal|0
+expr_stmt|;
+comment|/* blank = 'NULL' */
+name|pc
+operator|++
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 case|case
-name|BN
-case|:
-case|case
-name|BZ
+name|BNZ
 case|:
 name|cblank
 operator|=
