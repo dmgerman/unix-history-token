@@ -1098,6 +1098,8 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+init|=
+name|NULL
 decl_stmt|;
 name|socklen_t
 name|namelen
@@ -1276,7 +1278,7 @@ operator|=
 name|EWOULDBLOCK
 expr_stmt|;
 goto|goto
-name|done
+name|noconnection
 goto|;
 block|}
 while|while
@@ -1343,7 +1345,7 @@ name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
 goto|goto
-name|done
+name|noconnection
 goto|;
 block|}
 block|}
@@ -1370,7 +1372,7 @@ name|ACCEPT_UNLOCK
 argument_list|()
 expr_stmt|;
 goto|goto
-name|done
+name|noconnection
 goto|;
 block|}
 name|so
