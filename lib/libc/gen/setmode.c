@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)setmode.c	8.2 (Berkeley) 3/25/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)setmode.c	8.2 (Berkeley) 3/25/94"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1009,6 +1022,9 @@ case|:
 comment|/* If only "other" bits ignore set-id. */
 if|if
 condition|(
+operator|!
+name|who
+operator|||
 name|who
 operator|&
 operator|~
@@ -1027,6 +1043,9 @@ case|:
 comment|/* If only "other" bits ignore sticky. */
 if|if
 condition|(
+operator|!
+name|who
+operator|||
 name|who
 operator|&
 operator|~
