@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: icmp.c,v 1.1 1997/09/24 02:43:39 wollman Exp $"
+literal|"$Id: tcp.c,v 1.1 1997/09/27 00:44:55 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,8 +542,6 @@ modifier|*
 name|sub
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|divisor
 init|=
 literal|1

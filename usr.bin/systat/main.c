@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.8 1998/06/09 04:17:19 imp Exp $"
+literal|"$Id: main.c,v 1.9 1998/07/06 22:07:58 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -684,6 +696,9 @@ name|keyboard
 argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
+return|return
+name|EXIT_SUCCESS
+return|;
 block|}
 end_function
 

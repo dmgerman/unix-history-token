@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: netstat.c,v 1.9 1998/06/09 04:17:23 imp Exp $"
+literal|"$Id: netstat.c,v 1.10 1998/06/12 14:15:24 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -696,9 +696,6 @@ block|{
 specifier|register
 name|struct
 name|inpcb
-modifier|*
-name|prev
-decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;

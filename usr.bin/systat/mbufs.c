@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbufs.c,v 1.6 1997/09/24 02:43:40 wollman Exp $"
+literal|"$Id: mbufs.c,v 1.7 1998/06/09 04:17:21 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,7 +536,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|" %d"
+literal|" %ld"
 argument_list|,
 name|mb
 operator|->

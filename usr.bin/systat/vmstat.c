@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.27 1998/09/15 08:16:40 gibbs Exp $"
+literal|"$Id: vmstat.c,v 1.28 1998/10/05 04:04:27 ken Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,12 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"devs.h"
 end_include
 
 begin_struct
@@ -944,12 +950,6 @@ name|cp
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-specifier|static
-name|int
-name|once
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -4985,10 +4985,6 @@ block|{
 name|long
 modifier|*
 name|intrcnt
-decl_stmt|;
-name|struct
-name|devinfo
-name|tmp_dinfo
 decl_stmt|;
 comment|/* 	 * time, wds, seek, and xfer are malloc'd so we have to 	 * save the pointers before the structure copy and then 	 * copy by hand. 	 */
 name|intrcnt

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: swap.c,v 1.5 1997/07/06 04:37:22 bde Exp $"
+literal|"$Id: swap.c,v 1.6 1998/06/09 04:17:27 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,18 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -222,7 +234,9 @@ define|#
 directive|define
 name|VM_DMMAX
 value|4
+block|{
 literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -408,12 +422,10 @@ begin_comment
 comment|/*  * The meat of all the swap stuff is stolen from pstat(8)'s  * swapmode(), which is based on a program called swapinfo written by  * Kevin Lahey<kml@rokkaku.atl.ga.us>.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|initswap
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -678,7 +690,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1014,8 +1026,6 @@ parameter_list|()
 block|{
 name|int
 name|col
-decl_stmt|,
-name|row
 decl_stmt|,
 name|div
 decl_stmt|,
