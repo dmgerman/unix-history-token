@@ -3063,12 +3063,6 @@ operator|&
 name|snpdisc
 argument_list|)
 expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|snp_cdevsw
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -3113,12 +3107,6 @@ expr_stmt|;
 name|ldisc_deregister
 argument_list|(
 name|snooplinedisc
-argument_list|)
-expr_stmt|;
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|snp_cdevsw
 argument_list|)
 expr_stmt|;
 break|break;
