@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/console.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vgl.h"
 end_include
 

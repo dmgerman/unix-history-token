@@ -48,6 +48,7 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|VGLBitmap
+modifier|*
 name|tmp
 decl_stmt|;
 comment|// set graphics mode, here 320x240 256 colors
@@ -80,39 +81,31 @@ name|VGLDisplay
 operator|->
 name|Ysize
 expr_stmt|;
-comment|// alloc a new bitmap (there should be a function for this)
+comment|// alloc a new bitmap
 name|tmp
-operator|.
-name|Type
 operator|=
-name|MEMBUF
-expr_stmt|;
-name|tmp
-operator|.
-name|Bitmap
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|VGLBitmapCreate
 argument_list|(
+name|MEMBUF
+argument_list|,
 literal|256
-operator|*
+argument_list|,
 literal|256
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+name|VGLBitmapAllocateBits
+argument_list|(
 name|tmp
-operator|.
-name|Xsize
-operator|=
-literal|256
+argument_list|)
 expr_stmt|;
+name|VGLClear
+argument_list|(
 name|tmp
-operator|.
-name|Ysize
-operator|=
-literal|256
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|// fill the screen with colored lines
 for|for
@@ -381,7 +374,7 @@ name|j
 operator|++
 control|)
 name|tmp
-operator|.
+operator|->
 name|Bitmap
 index|[
 name|i
@@ -397,7 +390,6 @@ literal|16
 expr_stmt|;
 name|VGLBitmapCopy
 argument_list|(
-operator|&
 name|tmp
 argument_list|,
 literal|0
@@ -442,7 +434,7 @@ name|j
 operator|++
 control|)
 name|tmp
-operator|.
+operator|->
 name|Bitmap
 index|[
 name|i
@@ -458,7 +450,6 @@ literal|16
 expr_stmt|;
 name|VGLBitmapCopy
 argument_list|(
-operator|&
 name|tmp
 argument_list|,
 literal|0
@@ -489,7 +480,6 @@ literal|237
 argument_list|,
 literal|311
 argument_list|,
-operator|&
 name|tmp
 argument_list|,
 literal|64
@@ -503,7 +493,6 @@ argument_list|)
 expr_stmt|;
 name|VGLBitmapCopy
 argument_list|(
-operator|&
 name|tmp
 argument_list|,
 literal|32
