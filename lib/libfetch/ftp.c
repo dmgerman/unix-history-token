@@ -4691,6 +4691,10 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+name|flags
+operator|!=
+name|NULL
+operator|&&
 name|strchr
 argument_list|(
 name|flags
