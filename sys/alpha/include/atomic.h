@@ -159,8 +159,6 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -229,8 +227,6 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -293,8 +289,6 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -357,8 +351,6 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -426,7 +418,7 @@ literal|"br 3f\n"
 comment|/* it worked, exit */
 literal|"2:\tbr 1b\n"
 comment|/* *addr not updated, loop */
-literal|"3:\tmb\n"
+literal|"3:\n"
 comment|/* it worked */
 operator|:
 literal|"=&r"
@@ -492,8 +484,6 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -556,8 +546,6 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -620,8 +608,6 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -684,8 +670,6 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|".section .text3,\"ax\"\n"
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
@@ -753,7 +737,7 @@ literal|"br 3f\n"
 comment|/* it worked, exit */
 literal|"2:\tbr 1b\n"
 comment|/* *addr not updated, loop */
-literal|"3:\tmb\n"
+literal|"3:\n"
 comment|/* it worked */
 operator|:
 literal|"=&r"
@@ -928,11 +912,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline void							\ atomic_##NAME##_acq_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\
-comment|/* alpha_mb(); */
-value|\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	alpha_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }									\ 									\ static __inline void							\ atomic_##NAME##_acq_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\
-comment|/* alpha_mb(); */
-value|\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	alpha_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }
+value|static __inline void							\ atomic_##NAME##_acq_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\ 	alpha_mb(); 							\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	alpha_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }									\ 									\ static __inline void							\ atomic_##NAME##_acq_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\ 	alpha_mb();							\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v)\ {									\ 	alpha_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }
 end_define
 
 begin_expr_stmt
@@ -1137,8 +1117,6 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|"2:\n"
 comment|/* done */
 literal|".section .text3,\"ax\"\n"
@@ -1232,8 +1210,6 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
-literal|"mb\n\t"
-comment|/* drain to memory */
 literal|"2:\n"
 comment|/* done */
 literal|".section .text3,\"ax\"\n"
