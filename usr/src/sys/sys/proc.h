@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -162,9 +162,10 @@ name|char
 name|p_slptime
 decl_stmt|;
 comment|/* time since last block */
-name|char
-name|p_cursig
+name|u_char
+name|p_dupfd
 decl_stmt|;
+comment|/* sideways return value from fdopen XXX */
 name|int
 name|p_sig
 decl_stmt|;
@@ -215,7 +216,7 @@ comment|/* process id of parent */
 name|u_short
 name|p_xstat
 decl_stmt|;
-comment|/* Exit status for wait */
+comment|/* Exit status for wait; also stop signal */
 name|struct
 name|rusage
 modifier|*
