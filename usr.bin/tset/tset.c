@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tset.c	8.1 (Berkeley) 6/9/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcdif
 index|[]
 init|=
-literal|"@(#)tset.c	8.1 (Berkeley) 6/9/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,25 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -98,13 +100,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -267,8 +281,6 @@ decl_stmt|,
 name|usingupper
 decl_stmt|;
 name|char
-name|savech
-decl_stmt|,
 modifier|*
 name|p
 decl_stmt|,
@@ -295,12 +307,9 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"standard error: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"standard error"
 argument_list|)
 expr_stmt|;
 name|oldmode
@@ -317,6 +326,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strrchr
@@ -326,6 +336,7 @@ name|argv
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|p
@@ -1177,6 +1188,7 @@ index|]
 operator|!=
 literal|'-'
 operator|||
+operator|(
 name|argv
 index|[
 literal|1
@@ -1191,7 +1203,9 @@ literal|0
 index|]
 operator|!=
 literal|'-'
+operator|)
 operator|||
+operator|(
 name|argv
 index|[
 literal|0
@@ -1221,6 +1235,7 @@ literal|1
 index|]
 operator|!=
 literal|'k'
+operator|)
 operator|||
 name|argv
 index|[
@@ -1294,7 +1309,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tset [-IQrSs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: tset  [-IQrSs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]"
+argument_list|,
+literal|"       reset [-IQrSs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]"
 argument_list|)
 expr_stmt|;
 name|exit

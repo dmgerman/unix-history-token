@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)term.c	8.1 (Berkeley) 6/9/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)term.c	8.1 (Berkeley) 6/9/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,19 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ttyent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -68,6 +75,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ttyent.h>
 end_include
 
 begin_include
@@ -176,12 +195,14 @@ block|}
 comment|/* Try the environment. */
 if|if
 condition|(
+operator|(
 name|ttype
 operator|=
 name|getenv
 argument_list|(
 literal|"TERM"
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|map
@@ -189,16 +210,19 @@ goto|;
 comment|/* Try ttyname(3); check for dialup or other mapping. */
 if|if
 condition|(
+operator|(
 name|ttypath
 operator|=
 name|ttyname
 argument_list|(
 name|STDERR_FILENO
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|rindex
@@ -207,6 +231,7 @@ name|ttypath
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|p
@@ -332,14 +357,9 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tset: terminal type %s is unknown\n"
+literal|"terminal type %s is unknown"
 argument_list|,
 name|ttype
 argument_list|)
@@ -359,8 +379,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"termcap: %s"
 argument_list|,
 name|strerror
@@ -532,6 +554,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|index
@@ -540,6 +563,7 @@ name|answer
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|p
