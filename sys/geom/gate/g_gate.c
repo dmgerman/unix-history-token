@@ -1016,7 +1016,7 @@ operator|->
 name|sc_queue_size
 condition|)
 block|{
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|sc
