@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.7 81/10/22 */
+comment|/* tcp_usrreq.c 1.8 81/10/23 */
 end_comment
 
 begin_include
@@ -1248,12 +1248,22 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|m_free
-argument_list|(
+name|m
+operator|=
 name|dtom
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_off
+operator|=
+literal|0
+expr_stmt|;
+name|m_free
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|up
@@ -1392,7 +1402,6 @@ name|tp
 operator|->
 name|snd_off
 expr_stmt|;
-comment|/* count number of mbufs in send data */
 for|for
 control|(
 name|m
@@ -1417,6 +1426,20 @@ operator|->
 name|uc_ssize
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_off
+operator|>
+name|MSIZE
+condition|)
+name|up
+operator|->
+name|uc_ssize
+operator|+=
+name|NMBPG
+expr_stmt|;
 name|last
 operator|+=
 name|m
@@ -1424,7 +1447,6 @@ operator|->
 name|m_len
 expr_stmt|;
 block|}
-comment|/* find end of send buffer and append data */
 if|if
 condition|(
 operator|(
@@ -1434,11 +1456,17 @@ name|up
 operator|->
 name|uc_sbuf
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
+name|up
+operator|->
+name|uc_sbuf
+operator|=
+name|n
+expr_stmt|;
+else|else
 block|{
-comment|/* something in send buffer */
 while|while
 condition|(
 name|m
@@ -1448,7 +1476,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* find the end */
 name|m
 operator|=
 name|m
@@ -1462,13 +1489,21 @@ operator|->
 name|m_len
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|m
+operator|->
+name|m_off
+operator|<=
+name|MSIZE
+condition|)
+block|{
 name|last
 operator|+=
 name|m
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* if there's room in old buffer for new data, consolidate */
 name|off
 operator|=
 name|m
@@ -1482,8 +1517,12 @@ expr_stmt|;
 while|while
 condition|(
 name|n
-operator|!=
-name|NULL
+operator|&&
+name|n
+operator|->
+name|m_off
+operator|<=
+name|MSIZE
 operator|&&
 operator|(
 name|MSIZE
@@ -1556,6 +1595,7 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|m
 operator|->
 name|m_next
@@ -1563,14 +1603,6 @@ operator|=
 name|n
 expr_stmt|;
 block|}
-else|else
-comment|/* nothing in send buffer */
-name|up
-operator|->
-name|uc_sbuf
-operator|=
-name|n
-expr_stmt|;
 if|if
 condition|(
 name|up
@@ -1579,15 +1611,12 @@ name|uc_flags
 operator|&
 name|UEOL
 condition|)
-block|{
-comment|/* set EOL */
 name|tp
 operator|->
 name|snd_end
 operator|=
 name|last
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|up
@@ -1597,7 +1626,6 @@ operator|&
 name|UURG
 condition|)
 block|{
-comment|/* urgent data */
 name|tp
 operator|->
 name|snd_urp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.c 1.6 81/10/21 */
+comment|/* uipc_mbuf.c 1.2 81/10/23 */
 end_comment
 
 begin_include
@@ -386,6 +386,12 @@ name|i
 operator|++
 control|)
 block|{
+name|m
+operator|->
+name|m_off
+operator|=
+literal|0
+expr_stmt|;
 name|m_free
 argument_list|(
 name|m
@@ -568,6 +574,12 @@ name|j
 operator|++
 control|)
 block|{
+name|m
+operator|->
+name|m_off
+operator|=
+literal|0
+expr_stmt|;
 name|m_free
 argument_list|(
 name|m
