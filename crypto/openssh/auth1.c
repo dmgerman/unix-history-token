@@ -736,8 +736,8 @@ block|}
 else|else
 block|{
 comment|/* Try Kerberos authentication. */
-name|KTEXT_ST
-name|auth
+name|u_int
+name|len
 decl_stmt|;
 name|char
 modifier|*
@@ -751,14 +751,8 @@ name|kdata
 init|=
 name|packet_get_string
 argument_list|(
-operator|(
-name|u_int
-operator|*
-operator|)
 operator|&
-name|auth
-operator|.
-name|length
+name|len
 argument_list|)
 decl_stmt|;
 name|packet_integrity_check
@@ -767,9 +761,7 @@ name|plen
 argument_list|,
 literal|4
 operator|+
-name|auth
-operator|.
-name|length
+name|len
 argument_list|,
 name|type
 argument_list|)
@@ -799,6 +791,15 @@ comment|/* 4 == KRB_PROT_VERSION */
 ifdef|#
 directive|ifdef
 name|KRB4
+name|KTEXT_ST
+name|auth
+decl_stmt|;
+name|auth
+operator|.
+name|length
+operator|=
+name|len
+expr_stmt|;
 if|if
 condition|(
 name|auth
@@ -888,9 +889,7 @@ name|k5data
 operator|.
 name|length
 operator|=
-name|auth
-operator|.
-name|length
+name|len
 expr_stmt|;
 name|k5data
 operator|.
