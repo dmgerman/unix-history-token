@@ -225,6 +225,10 @@ modifier|*
 name|gif_netgraph
 decl_stmt|;
 comment|/* ng_gif(4) netgraph node info */
+name|int
+name|called
+decl_stmt|;
+comment|/* anti foot-shooter */
 name|LIST_ENTRY
 argument_list|(
 argument|gif_softc
