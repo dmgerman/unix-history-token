@@ -60,7 +60,6 @@ comment|/* bytes for +Infinity on a sparc */
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|char
 name|__infinity
 index|[]
