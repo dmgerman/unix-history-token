@@ -131,8 +131,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ret
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Assume that we have incomplete locale file (without 		 * "yesstr" and "nostr" declared. Try it also. 		 */
@@ -163,8 +164,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ret
+operator|==
+literal|0
 condition|)
 block|{
 name|_messages_locale

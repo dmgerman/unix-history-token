@@ -150,8 +150,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ret
+operator|==
+literal|0
 operator|&&
 name|_numeric_using_locale
 condition|)
