@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.7 1998/08/31 15:26:09 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.49 1998/09/04 15:30:02 wpaul Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang" and "cyclone" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * Dell Optiplex GX1 on-board 3c905B 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang" and "cyclone" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c980-TX	10/100Mbps server adapter  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.7 1998/08/31 15:26:09 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.49 1998/09/04 15:30:02 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,7 @@ name|TC_VENDORID
 block|,
 name|TC_DEVICEID_CYCLONE_10BT
 block|,
-literal|"3Com 3c905B Etherlink XL 10BaseT"
+literal|"3Com 3c900B Etherlink XL 10BaseT"
 block|}
 block|,
 block|{
@@ -244,7 +244,7 @@ name|TC_VENDORID
 block|,
 name|TC_DEVICEID_CYCLONE_10BT_COMBO
 block|,
-literal|"3Com 3c905B Etherlink XL 10BaseT Combo"
+literal|"3Com 3c900B Etherlink XL 10BaseT Combo"
 block|}
 block|,
 block|{
@@ -261,6 +261,14 @@ block|,
 name|TC_DEVICEID_CYCLONE_10_100BT4
 block|,
 literal|"3Com 3c905B Fast Etherlink XL 10/100BaseT4"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
+name|TC_DEVICEID_CYCLONE_10_100BT_SERV
+block|,
+literal|"3Com 3c980 Fast Etherlink XL 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -4897,7 +4905,47 @@ operator|~
 name|XL_MEDIAOPT_VCO
 operator|)
 condition|)
+block|{
+comment|/* 	 	* Check the XCVR value. If it's not in the normal range 	 	* of values, we need to fake it up here. 	 	*/
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_xcvr
+operator|<=
+name|XL_XCVR_AUTO
+condition|)
 return|return;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"xl%d: bogus xcvr value "
+literal|"in EEPROM (%x)\n"
+argument_list|,
+name|sc
+operator|->
+name|xl_unit
+argument_list|,
+name|sc
+operator|->
+name|xl_xcvr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xl%d: choosing new default based "
+literal|"on card type\n"
+argument_list|,
+name|sc
+operator|->
+name|xl_unit
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"xl%d: WARNING: no media options bits set in "
@@ -4928,6 +4976,7 @@ operator|->
 name|xl_unit
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Read the device ID from the EEPROM. 	 * This is what's loaded into the PCI device ID register, so it has 	 * to be correct otherwise we wouldn't have gotten this far. 	 */
 name|xl_read_eeprom
 argument_list|(
@@ -4958,12 +5007,18 @@ comment|/* 3c900-TP */
 case|case
 name|TC_DEVICEID_CYCLONE_10BT
 case|:
-comment|/* 3c905B-TP */
+comment|/* 3c900B-TP */
 name|sc
 operator|->
 name|xl_media
 operator|=
 name|XL_MEDIAOPT_BT
+expr_stmt|;
+name|sc
+operator|->
+name|xl_xcvr
+operator|=
+name|XL_XCVR_10BT
 expr_stmt|;
 name|printf
 argument_list|(
@@ -4982,7 +5037,7 @@ comment|/* 3c900-COMBO */
 case|case
 name|TC_DEVICEID_CYCLONE_10BT_COMBO
 case|:
-comment|/* 3c905B-COMBO */
+comment|/* 3c900B-COMBO */
 name|sc
 operator|->
 name|xl_media
@@ -4992,6 +5047,12 @@ operator||
 name|XL_MEDIAOPT_BNC
 operator||
 name|XL_MEDIAOPT_AUI
+expr_stmt|;
+name|sc
+operator|->
+name|xl_xcvr
+operator|=
+name|XL_XCVR_10BT
 expr_stmt|;
 name|printf
 argument_list|(
@@ -5012,6 +5073,12 @@ operator|->
 name|xl_media
 operator|=
 name|XL_MEDIAOPT_MII
+expr_stmt|;
+name|sc
+operator|->
+name|xl_xcvr
+operator|=
+name|XL_XCVR_MII
 expr_stmt|;
 name|printf
 argument_list|(
@@ -5037,6 +5104,12 @@ name|xl_media
 operator|=
 name|XL_MEDIAOPT_BT4
 expr_stmt|;
+name|sc
+operator|->
+name|xl_xcvr
+operator|=
+name|XL_XCVR_MII
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xl%d: guessing 100BaseT4/MII\n"
@@ -5051,11 +5124,21 @@ case|case
 name|TC_DEVICEID_CYCLONE_10_100BT
 case|:
 comment|/* 3c905B-TX */
+case|case
+name|TC_DEVICEID_CYCLONE_10_100BT_SERV
+case|:
+comment|/* 3c980-TX */
 name|sc
 operator|->
 name|xl_media
 operator|=
 name|XL_MEDIAOPT_BTX
+expr_stmt|;
+name|sc
+operator|->
+name|xl_xcvr
+operator|=
+name|XL_XCVR_AUTO
 expr_stmt|;
 name|printf
 argument_list|(
@@ -5894,11 +5977,6 @@ operator|->
 name|xl_media
 argument_list|)
 expr_stmt|;
-name|xl_mediacheck
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|xl_read_eeprom
 argument_list|(
 name|sc
@@ -5930,6 +6008,11 @@ operator|->
 name|xl_xcvr
 operator|>>=
 name|XL_ICFG_CONNECTOR_BITS
+expr_stmt|;
+name|xl_mediacheck
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
