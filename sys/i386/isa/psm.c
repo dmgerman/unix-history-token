@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.26 1996/11/15 05:30:52 nate Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.27 1996/11/15 05:41:34 nate Exp $  */
 end_comment
 
 begin_comment
-comment|/*  *  Ported to 386bsd Oct 17, 1992  *  Sandi Donno, Computer Science, University of Cape Town, South Africa  *  Please send bug reports to sandi@cs.uct.ac.za  *  *  Thanks are also due to Rick Macklem, rick@snowhite.cis.uoguelph.ca -  *  although I was only partially successful in getting the alpha release  *  of his "driver for the Logitech and ATI Inport Bus mice for use with  *  386bsd and the X386 port" to work with my Microsoft mouse, I nevertheless  *  found his code to be an invaluable reference when porting this driver  *  to 386bsd.  *  *  Further modifications for latest 386BSD+patchkit and port to NetBSD,  *  Andrew Herbert<andrew@werple.apana.org.au> - 8 June 1993  *  *  Cloned from the Microsoft Bus Mouse driver, also by Erik Forsberg, by  *  Andrew Herbert - 12 June 1993  *  *  Modified for PS/2 mouse by Charles Hannum<mycroft@ai.mit.edu>  *  - 13 June 1993  *  *  Modified for PS/2 AUX mouse by Shoji Yuen<yuen@nuie.nagoya-u.ac.jp>  *  - 24 October 1993  *  *  Hardware access routines and probe logic rewritten by  *  Kazutaka Yokota<yokota@zodiac.mech.utsunomiya-u.ac.jp>  *  - 3 October 1996.   *  - 14 October 1996.  *  - 22 October 1996.  *  - 28 October 1996. Start adding IOCTLs.  *  - 12 November 1996. IOCTLs and rearranging `psmread', `psmioctl'...  *  - 14 November 1996. Uses `kbdio.c'.  */
+comment|/*  *  Ported to 386bsd Oct 17, 1992  *  Sandi Donno, Computer Science, University of Cape Town, South Africa  *  Please send bug reports to sandi@cs.uct.ac.za  *  *  Thanks are also due to Rick Macklem, rick@snowhite.cis.uoguelph.ca -  *  although I was only partially successful in getting the alpha release  *  of his "driver for the Logitech and ATI Inport Bus mice for use with  *  386bsd and the X386 port" to work with my Microsoft mouse, I nevertheless  *  found his code to be an invaluable reference when porting this driver  *  to 386bsd.  *  *  Further modifications for latest 386BSD+patchkit and port to NetBSD,  *  Andrew Herbert<andrew@werple.apana.org.au> - 8 June 1993  *  *  Cloned from the Microsoft Bus Mouse driver, also by Erik Forsberg, by  *  Andrew Herbert - 12 June 1993  *  *  Modified for PS/2 mouse by Charles Hannum<mycroft@ai.mit.edu>  *  - 13 June 1993  *  *  Modified for PS/2 AUX mouse by Shoji Yuen<yuen@nuie.nagoya-u.ac.jp>  *  - 24 October 1993  *  *  Hardware access routines and probe logic rewritten by  *  Kazutaka Yokota<yokota@zodiac.mech.utsunomiya-u.ac.jp>  *  - 3 October 1996.  *  - 14 October 1996.  *  - 22 October 1996.  *  - 28 October 1996. Start adding IOCTLs.  *  - 12 November 1996. IOCTLs and rearranging `psmread', `psmioctl'...  *  - 14 November 1996. Uses `kbdio.c'.  */
 end_comment
 
 begin_include
@@ -86,10 +86,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*DEVFS*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -121,7 +117,7 @@ file|<i386/isa/kbdio.h>
 end_include
 
 begin_comment
-comment|/* driver specific options: the following options may be set by    `options' statements in the kernel configuration file. */
+comment|/*  * driver specific options: the following options may be set by  * `options' statements in the kernel configuration file.  */
 end_comment
 
 begin_comment
@@ -142,7 +138,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* controls debug logging:  				   0: no logging, 1: brief, 2: verbose */
+comment|/* logging: 0: none, 1: brief, 2: verbose */
 end_comment
 
 begin_endif
@@ -155,7 +151,7 @@ comment|/* features */
 end_comment
 
 begin_comment
-comment|/* #define PSM_NOCHECKSYNC	   the driver does not check the header data 				   byte, if defined */
+comment|/* #define PSM_NOCHECKSYNC	   if defined, don't check the header data byte */
 end_comment
 
 begin_ifndef
@@ -172,7 +168,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* the default acceleration factor, must  			           be one or greater; acceleration will be  				   disabled if zero */
+comment|/* must be one or greater; acceleration will be 				 * disabled if zero */
 end_comment
 
 begin_endif
@@ -430,7 +426,7 @@ comment|/* mouse status queue */
 name|packetfunc_t
 name|mkpacket
 decl_stmt|;
-comment|/* func. to turn queued data  				   into output format */
+comment|/* func. to turn queued data into output format */
 name|char
 name|ipacket
 index|[
@@ -1214,7 +1210,7 @@ name|INT_MAX
 block|,
 name|PSMD_MAX_RESOLUTION
 block|}
-block|, 	}
+block|,     }
 struct|;
 name|int
 name|ret
@@ -1249,7 +1245,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 if|if
 condition|(
 name|rescode
@@ -1262,7 +1257,6 @@ operator|>=
 name|res
 condition|)
 break|break;
-block|}
 for|for
 control|(
 init|;
@@ -1337,7 +1331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* NOTE: once `set_mouse_mode()' is called, the mouse device must be    re-enabled by calling `enable_aux_dev()' */
+comment|/*  * NOTE: once `set_mouse_mode()' is called, the mouse device must be  * re-enabled by calling `enable_aux_dev()'  */
 end_comment
 
 begin_function
@@ -1407,7 +1401,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* NOTE: a special sequence to obtain Logitech-Mouse-specific 	   information: set resolution to 25 ppi, set scaling to 1:1, 	   set scaling to 1:1, set scaling to 1:1. Then the second 	   byte of the mouse status bytes is the number of available  	   buttons. */
+comment|/*      * NOTE: a special sequence to obtain Logitech-Mouse-specific      * information: set resolution to 25 ppi, set scaling to 1:1, set      * scaling to 1:1, set scaling to 1:1. Then the second byte of the      * mouse status bytes is the number of available buttons.      */
 if|if
 condition|(
 operator|!
@@ -1494,7 +1488,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FIXME: someday, I will get the list of valid pointing devices and    their IDs... */
+comment|/*  * FIXME:XXX  * someday, I will get the list of valid pointing devices and  * their IDs...  */
 end_comment
 
 begin_function
@@ -1523,7 +1517,12 @@ literal|1
 comment|/* end of table */
 block|}
 decl_stmt|;
-comment|/* 	int i;  	for(i = 0; valid_ids[i]>= 0; ++i) { 	    if (valid_ids[i] == id) 		return TRUE; 	} 	return FALSE; 	*/
+if|#
+directive|if
+literal|0
+block|int i;       for(i = 0; valid_ids[i]>= 0; ++i)          if (valid_ids[i] == id)              return TRUE;      return FALSE;
+endif|#
+directive|endif
 return|return
 name|TRUE
 return|;
@@ -1545,9 +1544,14 @@ argument_list|(
 name|port
 argument_list|)
 expr_stmt|;
-comment|/* NOTE: KBDC_RESET_KBD may not restore the communication between 	   the keyboard and the controller. */
-comment|/* reset_kbd(port); */
-comment|/* NOTE: somehow diagnostic and keyboard port test commands bring 	   the keyboard back. */
+if|#
+directive|if
+literal|0
+comment|/*      * NOTE: KBDC_RESET_KBD may not restore the communication between the      * keyboard and the controller.      */
+block|reset_kbd(port);
+else|#
+directive|else
+comment|/*      * NOTE: somehow diagnostic and keyboard port test commands bring the      * keyboard back.      */
 name|test_controller
 argument_list|(
 name|port
@@ -1558,6 +1562,8 @@ argument_list|(
 name|port
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1661,8 +1667,8 @@ condition|)
 operator|++
 name|verbose
 expr_stmt|;
-comment|/* FIXME: the keyboard interrupt should be disabled while 	   probing a mouse? */
-comment|/* NOTE: two bits in the command byte controls the operation of 	   the aux port (mouse port): the aux port disable bit (bit 5) and 	   the aux port interrupt (IRQ 12) enable bit (bit 2). 	   When this probe routine is called, there are following possibilities 	   about the presence of the aux port and the PS/2 mouse.  	   Case 1: aux port disabled (bit 5:1), aux int. disabled (bit 2:0) 	   The aux port most certainly exists. A device may or may not be 	   connected to the port. No driver is probably installed yet.  	   Case 2: aux port enabled (bit 5:0), aux int. disabled (bit 2:0) 	   Three possibile situations here:  	   Case 2a:  	   The aux port does not exist, therefore, is not explicitly disabled. 	   Case 2b: 	   The aux port exists. A device and a driver may exist, 	   using the device in the polling(remote) mode. 	   Case 2c: 	   The aux port exists. A device may exist, but someone who knows 	   nothing about the aux port has set the command byte this way 	   (this is the case with `syscons').  	   Case 3: aux port disabled (bit 5:1), aux int. enabled (bit 2:1) 	   The aux port exists, but someone is controlloing the device and 	   temporalily disabled the port.  	   Case 4: aux port enabled (bit 5:0), aux int. enabled (bit 2:1) 	   The aux port exists, a device is attached to the port, and 	   someone is controlling the device. Some BIOS set the bits this 	   way after boot.  	   All in all, it is no use examing the bits for detecting 	   the presence of the port and the mouse device. 	*/
+comment|/*      * FIXME:XXX      * the keyboard interrupt should be disabled while probing a      * mouse?      */
+comment|/*      * NOTE: two bits in the command byte controls the operation of the      * aux port (mouse port): the aux port disable bit (bit 5) and the aux      * port interrupt (IRQ 12) enable bit (bit 2). When this probe routine      * is called, there are following possibilities about the presence of      * the aux port and the PS/2 mouse.      *       * Case 1: aux port disabled (bit 5:1), aux int. disabled (bit 2:0) The      * aux port most certainly exists. A device may or may not be      * connected to the port. No driver is probably installed yet.      *       * Case 2: aux port enabled (bit 5:0), aux int. disabled (bit 2:0) Three      * possibile situations here:      *       * Case 2a: The aux port does not exist, therefore, is not explicitly      * disabled. Case 2b: The aux port exists. A device and a driver may      * exist, using the device in the polling(remote) mode. Case 2c: The      * aux port exists. A device may exist, but someone who knows nothing      * about the aux port has set the command byte this way (this is the      * case with `syscons').      *       * Case 3: aux port disabled (bit 5:1), aux int. enabled (bit 2:1) The      * aux port exists, but someone is controlloing the device and      * temporalily disabled the port.      *       * Case 4: aux port enabled (bit 5:0), aux int. enabled (bit 2:1) The aux      * port exists, a device is attached to the port, and someone is      * controlling the device. Some BIOS set the bits this way after boot.      *       * All in all, it is no use examing the bits for detecting the presence      * of the port and the mouse device.      */
 comment|/* save the current command byte; it will be used later */
 name|write_controller_command
 argument_list|(
@@ -1720,7 +1726,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* disable the keyboard port while probing the aux port, which 	   must be enabled during this routine */
+comment|/*      * disable the keyboard port while probing the aux port, which must be      * enabled during this routine      */
 name|write_controller_command
 argument_list|(
 name|ioport
@@ -1752,7 +1758,7 @@ operator||
 name|KBD_DISABLE_AUX_INT
 argument_list|)
 expr_stmt|;
-comment|/* NOTE: `test_aux_port()' is designed to return with zero 	   if the aux port exists and is functioning. However, some 	   controllers appears to respond with zero even when the aux port 	   doesn't exist. (It may be that this is only the case when the 	   controller DOES have the aux port but the port is not wired 	   on the motherboard.) The keyboard controllers without the port, 	   such as the original AT, are supporsed to return with 	   an error code or simply time out. In any case, we have to 	   continue probing the port even when the controller passes  	   this test. 	*/
+comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      */
 switch|switch
 condition|(
 operator|(
@@ -1817,7 +1823,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* NOTE: some controllers appears to hang the `keyboard' when 	   the aux port doesn't exist and `PSMC_RESET_DEV' is issued. */
+comment|/*      * NOTE: some controllers appears to hang the `keyboard' when the aux      * port doesn't exist and `PSMC_RESET_DEV' is issued.      */
 if|if
 condition|(
 operator|!
@@ -1858,7 +1864,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* both the aux port and the aux device is functioning, see 	   if the device can be enabled. 	   NOTE: when enabled, the device will start sending data; 	   we shall immediately disable the device once we know  	   the device can be enabled. */
+comment|/*      * both the aux port and the aux device is functioning, see if the      * device can be enabled. NOTE: when enabled, the device will start      * sending data; we shall immediately disable the device once we know      * the device can be enabled.      */
 if|if
 condition|(
 operator|!
@@ -2043,8 +2049,8 @@ name|ioport
 argument_list|)
 expr_stmt|;
 comment|/* set mouse parameters */
-comment|/* FIXME: I don't know if these parameters are reasonable */
-comment|/* FIXME: should we set them in `psmattach()' rather than here? */
+comment|/* FIXME:XXX I don't know if these parameters are reasonable */
+comment|/* FIXME:XXX should we set them in `psmattach()' rather than here? */
 name|sc
 operator|->
 name|mode
@@ -2122,7 +2128,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* disable the aux port for now... */
-comment|/* WARNING: we save the controller command byte and use it later 	   during `psmopen()' and `psmclose()'. This will be OK, so long 	   as the keyboard/console device driver won't change the command 	   byte in the course of its operation (this is the case with 	   `syscons'). If not,... */
+comment|/*      * WARNING: we save the controller command byte and use it later      * during `psmopen()' and `psmclose()'. This will be OK, so long as      * the keyboard/console device driver won't change the command byte in      * the course of its operation (this is the case with `syscons'). If      * not,...      */
 name|sc
 operator|->
 name|command_byte
@@ -2306,7 +2312,6 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* return (0); XXX eh? usually 1 indicates success */
 block|}
 end_function
 
@@ -2768,7 +2773,7 @@ operator||
 name|MOUSE_MSS_BUTTON2DOWN
 operator||
 name|MOUSE_MSS_BUTTON1DOWN
-block|, 	}
+block|,     }
 decl_stmt|;
 name|unsigned
 name|char
@@ -2998,7 +3003,7 @@ operator||
 name|MOUSE_MSC_BUTTON2UP
 operator||
 name|MOUSE_MSC_BUTTON1UP
-block|, 	}
+block|,     }
 decl_stmt|;
 name|unsigned
 name|char
@@ -3188,8 +3193,7 @@ parameter_list|,
 name|int
 name|maxlen
 parameter_list|,
-name|r
-name|egister
+specifier|register
 name|mousestatus_t
 modifier|*
 name|status
@@ -3226,7 +3230,7 @@ operator||
 name|MOUSE_PS2_BUTTON2DOWN
 operator||
 name|MOUSE_PS2_BUTTON1DOWN
-block|, 	}
+block|,     }
 decl_stmt|;
 specifier|register
 name|int
@@ -4179,7 +4183,7 @@ break|break;
 case|case
 name|MOUSEIOCREAD
 case|:
-comment|/* FIXME: this should go... */
+comment|/* FIXME:XXX this should go... */
 name|error
 operator|=
 name|EINVAL
@@ -4373,7 +4377,7 @@ name|int
 name|unit
 parameter_list|)
 block|{
-comment|/* the table to turn PS/2 mouse button bits (MOUSE_PS2_BUTTON?DOWN)  	   into `mouseinfo' button bits (BUT?STAT). */
+comment|/*      * the table to turn PS/2 mouse button bits (MOUSE_PS2_BUTTON?DOWN)      * into `mouseinfo' button bits (BUT?STAT).      */
 specifier|static
 name|butmap
 index|[
@@ -4481,7 +4485,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* interpret data bytes  	   FIXME: there seems no way to reliably re-synchronize with  	   the PS/2 mouse once we are out of sync. Sure, there is 	   sync bits in the first data byte, but the second and the  	   third bytes may have these bits on (they are not functioning 	   as sync bits then!). There need to be two consequtive  	   bytes with these bits off to re-sync. (This can be done 	   if the user clicks buttons without moving the mouse?) 	*/
+comment|/*      * interpret data bytes FIXME: there seems no way to reliably      * re-synchronize with the PS/2 mouse once we are out of sync. Sure,      * there is sync bits in the first data byte, but the second and the      * third bytes may have these bits on (they are not functioning as      * sync bits then!). There need to be two consequtive bytes with these      * bits off to re-sync. (This can be done if the user clicks buttons      * without moving the mouse?)      */
 if|if
 condition|(
 name|sc
@@ -4791,7 +4795,7 @@ literal|2
 index|]
 expr_stmt|;
 block|}
-comment|/* FIXME: we shouldn't store data if no movement  			   and no button status change is detected? */
+comment|/*              * FIXME:XXX              * we shouldn't store data if no movement and              * no button status change is detected?              */
 name|ms
 operator|=
 operator|&
