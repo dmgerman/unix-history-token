@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -1062,6 +1062,16 @@ name|hp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|strcpy
+argument_list|(
+name|hostbuf
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hp
@@ -1069,6 +1079,7 @@ operator|->
 name|h_aliases
 operator|)
 return|;
+block|}
 else|else
 return|return
 operator|(
