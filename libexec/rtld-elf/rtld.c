@@ -2722,9 +2722,13 @@ name|r_debug
 expr_stmt|;
 break|break;
 default|default:
-name|xprintf
+name|dbg
 argument_list|(
-literal|"Ignored d_tag %d\n"
+literal|"Ignoring d_tag %d = %#x"
+argument_list|,
+name|dynp
+operator|->
+name|d_tag
 argument_list|,
 name|dynp
 operator|->
