@@ -28,7 +28,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|i386
+name|__i386__
 end_ifdef
 
 begin_if

@@ -95,13 +95,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|i386
-operator|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_include
 include|#
@@ -1970,6 +1968,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_function
 specifier|static
 name|unsigned
@@ -2170,6 +2174,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_ifdef
 ifdef|#

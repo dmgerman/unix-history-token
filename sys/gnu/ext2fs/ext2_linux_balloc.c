@@ -83,16 +83,10 @@ directive|include
 file|<gnu/ext2fs/fs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|i386
+name|__i386__
 end_ifdef
 
 begin_include
@@ -2024,6 +2018,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_function
 specifier|static
 name|unsigned
@@ -2219,6 +2219,15 @@ directive|endif
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unused */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -2263,6 +2272,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
 
 begin_function
 specifier|static
@@ -2647,6 +2662,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_comment
 comment|/*  *  this function is taken from   *  linux/fs/ext2/bitmap.c  */
