@@ -2231,7 +2231,7 @@ literal|0
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
-literal|4
+literal|2
 expr_stmt|;
 name|ED_PC_MISC
 operator|=
