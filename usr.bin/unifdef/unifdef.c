@@ -58,7 +58,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.156 2003/06/30 14:30:54 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.160 2003/07/01 15:21:25 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -811,6 +811,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|done
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|error
 parameter_list|(
 specifier|const
@@ -1248,9 +1258,6 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|input
 operator|=
 name|fopen
@@ -1259,32 +1266,20 @@ name|filename
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|input
+operator|==
 name|NULL
 condition|)
-block|{
-name|process
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|input
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|err
 argument_list|(
 literal|2
 argument_list|,
 literal|"can't open %s"
 argument_list|,
-operator|*
-name|argv
+name|filename
 argument_list|)
 expr_stmt|;
 block|}
@@ -1298,15 +1293,14 @@ name|input
 operator|=
 name|stdin
 expr_stmt|;
+block|}
 name|process
 argument_list|()
 expr_stmt|;
-block|}
-name|exit
-argument_list|(
-name|exitstat
-argument_list|)
+name|abort
+argument_list|()
 expr_stmt|;
+comment|/* bug */
 block|}
 end_function
 
@@ -1335,7 +1329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line. A NULL entry  * indicates that processing is complete.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
+comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
 end_comment
 
 begin_typedef
@@ -2029,7 +2023,7 @@ name|Eendif
 block|,
 name|print
 block|,
-name|NULL
+name|done
 block|}
 block|,
 comment|/* IS_FALSE_PREFIX */
@@ -2466,6 +2460,31 @@ end_comment
 begin_function
 specifier|static
 name|void
+name|done
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|incomment
+condition|)
+name|error
+argument_list|(
+literal|"EOF in comment"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|exitstat
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ignoreoff
 parameter_list|(
 name|void
@@ -2656,10 +2675,6 @@ block|{
 name|Linetype
 name|lineval
 decl_stmt|;
-name|state_fn
-modifier|*
-name|trans
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -2674,8 +2689,6 @@ operator|=
 name|getline
 argument_list|()
 expr_stmt|;
-name|trans
-operator|=
 name|trans_table
 index|[
 name|ifstate
@@ -2686,16 +2699,8 @@ index|]
 index|[
 name|lineval
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|trans
-operator|==
-name|NULL
-condition|)
-break|break;
-name|trans
-argument_list|()
+operator|(
+operator|)
 expr_stmt|;
 name|debug
 argument_list|(
@@ -2718,15 +2723,6 @@ name|depth
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|incomment
-condition|)
-name|error
-argument_list|(
-literal|"EOF in comment"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4004,11 +4000,22 @@ name|false
 expr_stmt|;
 block|}
 else|else
+block|{
+name|debug
+argument_list|(
+literal|"eval%d bad expr"
+argument_list|,
+name|ops
+operator|-
+name|eval_ops
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|LT_IF
 operator|)
 return|;
+block|}
 operator|*
 name|cpp
 operator|=
@@ -4316,6 +4323,13 @@ argument_list|,
 name|cpp
 argument_list|)
 expr_stmt|;
+name|debug
+argument_list|(
+literal|"eval = %d"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|keepthis
@@ -4395,6 +4409,7 @@ name|cp
 operator|!=
 literal|'\0'
 condition|)
+comment|/* don't reset to LS_START after a line continuation */
 if|if
 condition|(
 name|strncmp
@@ -4706,10 +4721,10 @@ name|C_COMMENT
 expr_stmt|;
 continue|continue;
 default|default:
-comment|/* bug */
 name|abort
 argument_list|()
 expr_stmt|;
+comment|/* bug */
 block|}
 return|return
 operator|(
