@@ -2914,9 +2914,17 @@ block|{
 name|int
 name|line
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+if|#
+directive|if
+literal|0
+ifndef|#
+directive|ifndef
+name|PC98
+block|int		i;
+endif|#
+directive|endif
+endif|#
+directive|endif
 if|if
 condition|(
 name|bmp_info
