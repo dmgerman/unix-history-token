@@ -1575,7 +1575,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * Now we are ready to switch, so  kill off any current power      * resource references.      */
+comment|/*      * Now we are ready to switch, so kill off any current power      * resource references.      */
 name|res_changed
 operator|=
 literal|0
