@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.11 %G%"
+literal|"@(#)nl.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,12 @@ directive|include
 file|"0.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PI
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -36,12 +42,6 @@ include|#
 directive|include
 file|"objfmt.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PI
-end_ifdef
 
 begin_comment
 comment|/*  * NAMELIST SEGMENT DEFINITIONS  */
