@@ -66,6 +66,31 @@ directive|define
 name|HAVE_OLD_BPF
 end_define
 
+begin_comment
+comment|/*  * Deprecated.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PSEUDO_SET
+parameter_list|(
+name|sym
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		void (*initfunc)(void *) = (void (*)(void *))data; \ 		switch (type) { \ 		case MOD_LOAD: \
+comment|/* printf(#name " module load\n"); */
+value|\ 			initfunc(NULL); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)sym \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_PSEUDO, SI_ORDER_ANY)
+end_define
+
 begin_endif
 endif|#
 directive|endif
