@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	1.2	86/01/23	*/
+comment|/*	macdefs.h	1.3	86/02/04	*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACDEFS_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACDEFS_
+end_define
 
 begin_define
 define|#
@@ -28,6 +40,10 @@ directive|define
 name|AUTOINIT
 value|(13*SZINT)
 end_define
+
+begin_comment
+comment|/*  * Storage space requirements.  */
+end_comment
 
 begin_define
 define|#
@@ -77,6 +93,10 @@ directive|define
 name|SZPOINT
 value|32
 end_define
+
+begin_comment
+comment|/*  * Alignment constraints  */
+end_comment
 
 begin_define
 define|#
@@ -141,27 +161,16 @@ name|ALSTACK
 value|32
 end_define
 
-begin_comment
-comment|/*	size in which constants are converted */
-end_comment
-
-begin_comment
-comment|/*	should be long if feasable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONSZ
-value|long
-end_define
-
 begin_define
 define|#
 directive|define
 name|ACONFMT
 value|"$0x%lx"
 end_define
+
+begin_comment
+comment|/* format for printing address constants */
+end_comment
 
 begin_define
 define|#
@@ -171,18 +180,40 @@ value|"%ld"
 end_define
 
 begin_comment
-comment|/*	size in which offsets are kept /*	should be large enough to cover address space in bits */
+comment|/* format for printing constants */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|OFFSZ
-value|long
+name|LABFMT
+value|"L%d"
 end_define
 
 begin_comment
-comment|/* 	character set macro */
+comment|/* format for printing labels */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|CONSZ
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* size in which constants are converted */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|OFFSZ
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* size in which offsets are kept */
 end_comment
 
 begin_define
@@ -196,7 +227,11 @@ value|x
 end_define
 
 begin_comment
-comment|/* register cookie for stack pointer */
+comment|/* character set macro */
+end_comment
+
+begin_comment
+comment|/*  * Register cookie for stack pointer.  */
 end_comment
 
 begin_define
@@ -207,15 +242,12 @@ value|13
 end_define
 
 begin_comment
-comment|/*	maximum and minimum register variables */
+comment|/* stack pointer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXRVAR
-value|12
-end_define
+begin_comment
+comment|/*  * Maximum and minimum register variables  */
+end_comment
 
 begin_define
 define|#
@@ -225,24 +257,18 @@ value|6
 end_define
 
 begin_comment
-comment|/* various standard pieces of code are used */
+comment|/* use R6 thru ... */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STDPRTREE
-end_define
-
-begin_define
-define|#
-directive|define
-name|LABFMT
-value|"L%d"
+name|MAXRVAR
+value|12
 end_define
 
 begin_comment
-comment|/* show stack grows negatively */
+comment|/* ... R12 */
 end_comment
 
 begin_define
@@ -251,6 +277,10 @@ directive|define
 name|BACKAUTO
 end_define
 
+begin_comment
+comment|/* stack grows negatively for automatics */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -258,39 +288,16 @@ name|BACKTEMP
 end_define
 
 begin_comment
-comment|/* no field hardware support on Tahoe #define FIELDOPS */
+comment|/* stack grows negatively for temporaries */
 end_comment
 
 begin_comment
-comment|/* bytes are numbered from left to right #define RTOLBYTES */
+comment|/*#define FIELDOPS	/* no hardware field support */
 end_comment
 
 begin_comment
-comment|/* we want prtree included */
+comment|/*#define RTOLBYTES	/* bytes are number from left to right */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|STDPRTREE
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FORT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ONEPASS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -305,11 +312,7 @@ value|INT
 end_define
 
 begin_comment
-comment|/* register char and short are not allowed #define REG_CHAR */
-end_comment
-
-begin_comment
-comment|/* addr of reg+offset is computed */
+comment|/* enums are always stored in full int */
 end_comment
 
 begin_define
@@ -338,17 +341,28 @@ parameter_list|)
 value|fixarg(p)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ncopy
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|FIXSTRUCT
+name|ncopy
 parameter_list|(
-name|a
+name|q
 parameter_list|,
-name|b
+name|p
 parameter_list|)
-value|outstruct(a,b)
+value|((q)->in = (p)->in)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -357,58 +371,22 @@ name|PRTDCON
 end_define
 
 begin_comment
-comment|/* use local version of prtdcon */
+comment|/* use machine-specific prtdcon routine */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ASSTRINGS
-end_define
+begin_extern
+extern|extern	prtdcon(
+end_extern
 
-begin_comment
-comment|/* assembler recognizes strings */
-end_comment
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
-begin_define
-define|#
-directive|define
-name|STABDOT
-end_define
-
-begin_comment
-comment|/* output .stabdot entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCOMM
-end_define
-
-begin_comment
-comment|/* .lcomm for non-global commons */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFSTDERR
-end_define
-
-begin_comment
-comment|/* buffer error messages */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLEXNAMES
-end_define
-
-begin_comment
-comment|/* unlimited name length */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

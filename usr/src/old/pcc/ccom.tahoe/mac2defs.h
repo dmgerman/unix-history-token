@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mac2defs.h	1.1	86/01/11	*/
+comment|/*	mac2defs.h	1.2	86/02/04	*/
 end_comment
 
 begin_comment
-comment|/*	Tahoe Registers */
+comment|/*  * Tahoe Registers  */
 end_comment
 
 begin_comment
-comment|/* scratch registers */
+comment|/*  * Scratch registers  */
 end_comment
 
 begin_define
@@ -54,7 +54,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* register variables */
+comment|/*  * Register variables  */
 end_comment
 
 begin_define
@@ -107,7 +107,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* special purpose */
+comment|/*  * Special purpose registers  */
 end_comment
 
 begin_define
@@ -144,7 +144,7 @@ comment|/* program counter */
 end_comment
 
 begin_comment
-comment|/* floating registers */
+comment|/*  * Floating registers  */
 end_comment
 
 begin_define
@@ -156,6 +156,39 @@ end_define
 
 begin_comment
 comment|/* accumulator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMPREG
+value|FP
+end_define
+
+begin_comment
+comment|/* reg off which temporaries are referenced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REGSZ
+value|16
+end_define
+
+begin_comment
+comment|/* size of register set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R2REGS
+value|1
+end_define
+
+begin_comment
+comment|/* permit double indexing */
 end_comment
 
 begin_decl_stmt
@@ -192,6 +225,10 @@ parameter_list|)
 value|(BYTEOFF(k)==0)
 end_define
 
+begin_comment
+comment|/* word align */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -206,28 +243,8 @@ begin_comment
 comment|/* bit offset to oreg offset */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|REGSZ
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPREG
-value|FP
-end_define
-
-begin_define
-define|#
-directive|define
-name|R2REGS
-end_define
-
 begin_comment
-comment|/* permit double indexing */
+comment|/*  * Some macros used in store():  *	just evaluate the arguments, and be done with it...  */
 end_comment
 
 begin_define
@@ -238,10 +255,6 @@ parameter_list|(
 name|p
 parameter_list|)
 end_define
-
-begin_comment
-comment|/* just evaluate the arguments, and be done with it... */
-end_comment
 
 begin_define
 define|#
@@ -261,10 +274,77 @@ name|p
 parameter_list|)
 end_define
 
+begin_comment
+comment|/*  * Some short routines that get called an awful lot are actually macros.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
-name|NESTCALLS
+name|szty
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == DOUBLE ? 2 : 1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|szty
+parameter_list|(
+name|t
+parameter_list|)
+value|(((t) == DOUBLE || (t) == FLOAT) ? 2 : 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|shltype
+parameter_list|(
+name|o
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((o) == REG || (o) == NAME || (o) == ICON || \ 	 (o) == OREG || ((o) == UNARY MUL&& shumul((p)->in.left)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ncopy
+parameter_list|(
+name|q
+parameter_list|,
+name|p
+parameter_list|)
+value|((q)->in = (p)->in)
 end_define
 
 begin_define
@@ -302,6 +382,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* additional special shapes */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -309,7 +393,7 @@ name|callchk
 parameter_list|(
 name|p
 parameter_list|)
-value|if(p->in.op!=FORTCALL)allchk()
+value|if ((p)->in.op != FORTCALL) allchk()
 end_define
 
 end_unit
