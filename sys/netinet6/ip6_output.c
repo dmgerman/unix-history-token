@@ -243,6 +243,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6protosw.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -441,6 +447,25 @@ name|ip6_exthdrs
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ip6protosw
+name|inet6sw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|ip6_protox
+index|[
+name|IPPROTO_MAX
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -3237,9 +3262,9 @@ argument_list|(
 name|PFIL_OUT
 argument_list|,
 operator|&
-name|inetsw
+name|inet6sw
 index|[
-name|ip_protox
+name|ip6_protox
 index|[
 name|IPPROTO_IPV6
 index|]

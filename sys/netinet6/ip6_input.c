@@ -1173,9 +1173,9 @@ argument_list|(
 name|PFIL_IN
 argument_list|,
 operator|&
-name|inetsw
+name|inet6sw
 index|[
-name|ip_protox
+name|ip6_protox
 index|[
 name|IPPROTO_IPV6
 index|]
