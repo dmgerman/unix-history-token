@@ -139,20 +139,12 @@ name|LABELSECTOR
 value|1
 end_define
 
-begin_comment
-comment|/* sector containing label */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LABELOFFSET
 value|0
 end_define
-
-begin_comment
-comment|/* offset of label in sector */
-end_comment
 
 begin_endif
 endif|#
@@ -171,10 +163,6 @@ directive|define
 name|LABELSECTOR
 value|0
 end_define
-
-begin_comment
-comment|/* sector containing label */
-end_comment
 
 begin_endif
 endif|#
@@ -193,10 +181,6 @@ directive|define
 name|LABELOFFSET
 value|64
 end_define
-
-begin_comment
-comment|/* offset of label in sector */
-end_comment
 
 begin_endif
 endif|#
@@ -485,18 +469,22 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
+name|__inline
 name|u_int16_t
 name|dkcksum
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|disklabel
-modifier|*
+operator|*
 name|lp
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -504,11 +492,13 @@ name|__inline
 name|u_int16_t
 name|dkcksum
 parameter_list|(
+name|lp
+parameter_list|)
 name|struct
 name|disklabel
 modifier|*
 name|lp
-parameter_list|)
+decl_stmt|;
 block|{
 name|u_int16_t
 modifier|*
@@ -1601,10 +1591,6 @@ name|DKMAXUNIT
 value|0x1ff
 end_define
 
-begin_comment
-comment|/* Highest disk unit number */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1782,18 +1768,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|buf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|buf_queue_head
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|bio_queue_head
 struct_decl|;
 end_struct_decl
@@ -1843,26 +1817,6 @@ expr|struct
 name|disklabel
 operator|*
 name|lp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|disksort
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-name|ap
-operator|,
-expr|struct
-name|buf
-operator|*
-name|bp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1953,6 +1907,12 @@ ifdef|#
 directive|ifdef
 name|__alpha__
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|void
