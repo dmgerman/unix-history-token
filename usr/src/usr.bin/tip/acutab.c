@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acutab.c	5.4 (Berkeley) %G%"
+literal|"@(#)acutab.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,15 @@ name|cour_disconnect
 argument_list|()
 decl_stmt|,
 name|cour_abort
+argument_list|()
+decl_stmt|,
+name|t3000_dialer
+argument_list|()
+decl_stmt|,
+name|t3000_disconnect
+argument_list|()
+decl_stmt|,
+name|t3000_abort
 argument_list|()
 decl_stmt|,
 name|v3451_dialer
@@ -252,6 +261,19 @@ block|,
 name|cour_disconnect
 block|,
 name|cour_abort
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|T3000
+literal|"t3000"
+block|,
+name|t3000_dialer
+block|,
+name|t3000_disconnect
+block|,
+name|t3000_abort
 block|,
 endif|#
 directive|endif
