@@ -7093,6 +7093,36 @@ value|int
 end_define
 
 begin_comment
+comment|/*  * In FreeBSD>= 2.0, dev_t has type `unsigned long', so promoting it  * doesn't cause any problems in prototypes.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>=
+literal|200
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|Dev_t
+end_undef
+
+begin_define
+define|#
+directive|define
+name|Dev_t
+value|dev_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* in FreeBSD> 102 arguments for timeout()/untimeout() are a special type */
 end_comment
 
@@ -7374,6 +7404,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * In FreeBSD> 2.0.6, driver console functions are declared in i386/cons.h  * and some return void, so don't declare them here.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|<=
+literal|205
+end_if
+
 begin_function_decl
 name|int
 name|pccnprobe
@@ -7400,6 +7442,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pccngetc
+parameter_list|(
+name|Dev_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pccncheckc
+parameter_list|(
+name|Dev_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pccnputc
 parameter_list|(
 name|Dev_t
@@ -7411,15 +7473,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|pccngetc
-parameter_list|(
-name|Dev_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
