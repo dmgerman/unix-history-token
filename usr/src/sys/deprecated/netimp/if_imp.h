@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.h	4.1	82/02/03	*/
+comment|/*	if_imp.h	4.2	82/02/03	*/
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|IMP_DROPCNT
-value|3
+value|2
 end_define
 
 begin_comment
