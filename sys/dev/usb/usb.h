@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.68 2002/08/22 10:15:12 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.69 2002/09/22 23:20:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2346,7 +2346,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESET_SETTLE
+name|USB_PORT_RESET_RECOVERY
 value|10
 end_define
 
@@ -2455,7 +2455,7 @@ begin_define
 define|#
 directive|define
 name|USB_PORT_RESET_RECOVERY
-value|50
+value|250
 end_define
 
 begin_comment
