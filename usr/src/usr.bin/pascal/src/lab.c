@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.15 %G%"
+literal|"@(#)lab.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,9 +600,10 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
+comment|/* 		     *	this is a jmp because it's a jump to a label that 		     *	has been declared global. Although this branch is 		     *	within this module the assembler will complain that 		     *	the destination is a global symbol. The complaint 		     *	arises because the assembler doesn't change jbr's 		     *	into jmp's and consequently may cause a branch  		     *	displacement overflow when the module is subsequently 		     *	linked into the rest of the program. 		     */
 name|putprintf
 argument_list|(
-literal|"	jbr	%s"
+literal|"	jmp	%s"
 argument_list|,
 literal|0
 argument_list|,
