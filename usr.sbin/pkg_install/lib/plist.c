@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.26 1998/09/01 06:58:11 jkh Exp $"
+literal|"$Id: plist.c,v 1.28 1999/08/11 20:55:42 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2265,6 +2265,7 @@ operator|&&
 operator|!
 name|ign_err
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -2284,6 +2285,7 @@ else|else
 return|return
 literal|1
 return|;
+block|}
 comment|/* back up the pathname one component */
 if|if
 condition|(

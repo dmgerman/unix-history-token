@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.26 1998/02/16 17:16:47 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.28 1999/08/11 20:55:41 billf Exp $ */
 end_comment
 
 begin_comment
@@ -1083,6 +1083,24 @@ parameter_list|,
 name|Boolean
 parameter_list|,
 name|Package
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
+name|make_preserve_name
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

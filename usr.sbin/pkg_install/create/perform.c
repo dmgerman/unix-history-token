@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.46 1998/12/05 06:28:58 asami Exp $"
+literal|"$Id: perform.c,v 1.48 1999/08/11 20:55:38 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,8 @@ name|suf
 decl_stmt|;
 name|int
 name|compress
+init|=
+literal|0
 decl_stmt|;
 comment|/* Preliminary setup */
 name|sanity_check
@@ -248,6 +250,7 @@ name|len
 operator|>
 literal|4
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -317,6 +320,7 @@ name|compress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|compress

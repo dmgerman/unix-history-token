@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.53 1998/09/11 07:26:54 jkh Exp $"
+literal|"$Id: perform.c,v 1.55 1999/08/11 20:55:37 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -552,7 +552,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to make playpen for %d bytes"
+literal|"unable to make playpen for %qd bytes"
 argument_list|,
 name|sb
 operator|.
@@ -789,7 +789,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"projected size of %d exceeds available free space.\n"
+literal|"projected size of %qd exceeds available free space.\n"
 literal|"Please set your PKG_TMPDIR variable to point to a location with more\n"
 literal|"free space and try again"
 argument_list|,
@@ -1498,19 +1498,19 @@ argument_list|,
 name|POST_INSTALL_FNAME
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|pre_arg
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|post_arg
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 else|else
