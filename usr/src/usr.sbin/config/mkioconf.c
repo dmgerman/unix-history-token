@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	8.1 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6324,6 +6324,14 @@ name|dp
 operator|->
 name|d_unit
 argument_list|,
+name|dp
+operator|->
+name|d_pri
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
 name|dp
 operator|->
 name|d_pri
