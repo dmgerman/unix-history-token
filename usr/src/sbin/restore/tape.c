@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.3 (Berkeley) %G%"
+literal|"@(#)tape.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,7 +1252,7 @@ literal|" file(s) are on you should start\n"
 argument_list|,
 literal|"with the last volume and work"
 argument_list|,
-literal|" towards towards the first.\n"
+literal|" towards the first.\n"
 argument_list|)
 expr_stmt|;
 block|}
