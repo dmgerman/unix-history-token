@@ -113,12 +113,6 @@ comment|/* slice name */
 endif|#
 directive|endif
 name|struct
-name|dkbad_intern
-modifier|*
-name|ds_bad
-decl_stmt|;
-comment|/* bad sector table, if any */
-name|struct
 name|disklabel
 modifier|*
 name|ds_label
@@ -261,25 +255,6 @@ define|#
 directive|define
 name|DSO_ONESLICE
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSO_BAD144
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|dsgetbad
-parameter_list|(
-name|dev
-parameter_list|,
-name|ssp
-parameter_list|)
-value|(ssp->dss_slices[dkslice(dev)].ds_bad)
 end_define
 
 begin_define

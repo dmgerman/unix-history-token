@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright
 end_comment
 
 begin_comment
-comment|/*  * ARC disk device handling.  *   * Ideas and algorithms from:  *  * - NetBSD libi386/biosdisk.c  * - FreeBSD biosboot/disk.c  *  * XXX Todo: add bad144 support.  */
+comment|/*  * ARC disk device handling.  *   * Ideas and algorithms from:  *  * - NetBSD libi386/biosdisk.c  * - FreeBSD biosboot/disk.c  *  */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* TODO:  *	o Bump error count after timeout.  *	o Satisfy ATA timing in all cases.  *	o Finish merging berry/sos timeout code (bump error count...).  *	o Merge/fix TIH/NetBSD bad144 code.  *	o Don't use polling except for initialization.  Need to  *	  reorganize the state machine.  Then "extra" interrupts  *	  shouldn't happen (except maybe one for initialization).  *	o Fix disklabel, boot and driver inconsistencies with  *	  bad144 in standard versions.  *	o Support extended DOS partitions.  *	o Support swapping to DOS partitions.  *	o Handle bad sectors, clustering, disklabelling, DOS  *	  partitions and swapping driver-independently.  Use  *	  i386/dkbad.c for bad sectors.  Swapping will need new  *	  driver entries for polled reinit and polled write).  */
+comment|/* TODO:  *	o Bump error count after timeout.  *	o Satisfy ATA timing in all cases.  *	o Finish merging berry/sos timeout code (bump error count...).  *	o Don't use polling except for initialization.  Need to  *	  reorganize the state machine.  Then "extra" interrupts  *	  shouldn't happen (except maybe one for initialization).  *	o Support extended DOS partitions.  *	o Support swapping to DOS partitions.  *	o Handle bad sectors, clustering, disklabelling, DOS  *	  partitions and swapping driver-independently.  Use  *	  i386/dkbad.c for bad sectors.  Swapping will need new  *	  driver entries for polled reinit and polled write).  */
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dkbad.h>
 end_include
 
 begin_include
@@ -3083,131 +3077,6 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 	 * Check for *any* block on this transfer being on the bad block list 	 * if it is, then flag the block as a transfer that requires 	 * bad block handling.  Also, used as a hint for low level disksort 	 * clustering code to keep from coalescing a bad transfer into 	 * a normal transfer.  Single block transfers for a large number of 	 * blocks associated with a cluster I/O are undesirable. 	 * 	 * XXX the old disksort() doesn't look at B_BAD.  Coalescing _is_ 	 * desirable.  We should split the results at bad blocks just 	 * like we should split them at MAXTRANSFER boundaries. 	 */
-if|if
-condition|(
-name|dsgetbad
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|,
-name|du
-operator|->
-name|dk_slices
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|long
-modifier|*
-name|badsect
-init|=
-name|dsgetbad
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|,
-name|du
-operator|->
-name|dk_slices
-argument_list|)
-operator|->
-name|bi_bad
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|int
-name|nsecs
-init|=
-name|howmany
-argument_list|(
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|DEV_BSIZE
-argument_list|)
-decl_stmt|;
-comment|/* XXX pblkno is too physical. */
-name|daddr_t
-name|nspblkno
-init|=
-name|bp
-operator|->
-name|b_pblkno
-operator|-
-name|du
-operator|->
-name|dk_slices
-operator|->
-name|dss_slices
-index|[
-name|dkslice
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
-operator|.
-name|ds_offset
-decl_stmt|;
-name|int
-name|blkend
-init|=
-name|nspblkno
-operator|+
-name|nsecs
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|badsect
-index|[
-name|i
-index|]
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|badsect
-index|[
-name|i
-index|]
-operator|<
-name|blkend
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|badsect
-index|[
-name|i
-index|]
-operator|>=
-name|nspblkno
-condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_BAD
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
 comment|/* queue transfer on drive, activate drive and controller if idle */
 name|s
 operator|=
@@ -3741,9 +3610,7 @@ argument|lp =&du->dk_dd; 	secpertrk = lp->d_nsectors; 	secpercyl = lp->d_secperc
 literal|0
 argument|) { 		du->dk_bc = bp->b_bcount;  		if (bp->b_flags& B_BAD
 comment|/* 		     * XXX handle large transfers inefficiently instead 		     * of crashing on them. 		     */
-argument||| howmany(du->dk_bc, DEV_BSIZE)> MAXTRANSFER) 			du->dk_flags |= DKFL_SINGLE; 	}  	if (du->dk_flags& DKFL_SINGLE&& dsgetbad(bp->b_dev, du->dk_slices) != NULL) {
-comment|/* XXX */
-argument|u_long ds_offset = 		    du->dk_slices->dss_slices[dkslice(bp->b_dev)].ds_offset;  		blknum = transbad144(dsgetbad(bp->b_dev, du->dk_slices), 				     blknum - ds_offset) + ds_offset; 	}  	wdtab[ctrlr].b_active =
+argument||| howmany(du->dk_bc, DEV_BSIZE)> MAXTRANSFER) 			du->dk_flags |= DKFL_SINGLE; 	}  	wdtab[ctrlr].b_active =
 literal|1
 argument|;
 comment|/* mark controller active */
@@ -3920,7 +3787,7 @@ endif|#
 directive|endif
 argument|if ((du->dk_flags& DKFL_SINGLE) ==
 literal|0
-argument|) { 			du->dk_flags |= DKFL_ERROR; 			goto outt; 		}  		if (du->dk_flags& DKFL_BADSCAN) { 			bp->b_error = EIO; 			bp->b_flags |= B_ERROR; 		} else if (du->dk_status& WDCS_ERR) { 			if (++wdtab[unit].b_errcnt< RETRIES) { 				wdtab[unit].b_active =
+argument|) { 			du->dk_flags |= DKFL_ERROR; 			goto outt; 		}  		if (du->dk_status& WDCS_ERR) { 			if (++wdtab[unit].b_errcnt< RETRIES) { 				wdtab[unit].b_active =
 literal|0
 argument|; 			} else { 				wderror(bp, du,
 literal|"hard error"
@@ -4059,7 +3926,7 @@ argument|); 		}
 comment|/* 		 * Read label using RAW_PART partition. 		 * 		 * If the drive has an MBR, then the current geometry (from 		 * wdgetctlr()) is used to read it; then the BIOS/DOS 		 * geometry is inferred and used to read the label off the 		 * 'c' partition.  Otherwise the label is read using the 		 * current geometry.  The label gives the final geometry. 		 * If bad sector handling is enabled, then this geometry 		 * is used to read the bad sector table.  The geometry 		 * changes occur inside readdisklabel() and are propagated 		 * to the driver by resetting the state machine. 		 * 		 * XXX can now handle changes directly since dsinit() doesn't 		 * do too much. 		 */
 argument|msg = correct_readdisklabel(dkmodpart(dev, RAW_PART),&du->dk_dd);
 comment|/* XXX check value returned by wdwsetctlr(). */
-argument|wdwsetctlr(du); 		if (msg == NULL&& du->dk_dd.d_flags& D_BADSECT) 			msg = readbad144(dkmodpart(dev, RAW_PART),&du->dk_dd,&du->dk_bad); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
+argument|wdwsetctlr(du); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
 literal|"wd%d: cannot find label (%s)\n"
 argument|, 			    lunit, msg); 			if (part != RAW_PART) 				return (EINVAL);
 comment|/* XXX needs translation */
@@ -4646,9 +4513,7 @@ literal|2
 argument|);
 endif|#
 directive|endif
-argument|switch (cmd) { 	case DIOCSBADSCAN: 		if (*(int *)addr) 			du->dk_flags |= DKFL_BADSCAN; 		else 			du->dk_flags&= ~DKFL_BADSCAN; 		return (
-literal|0
-argument|);  	default: 		return (ENOTTY); 	} }  int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
+argument|return (ENOTTY); }  int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
 literal|0
 argument|) 		return (-
 literal|1
@@ -4758,27 +4623,7 @@ argument|if ((blknum + blkcnt -
 literal|1
 argument|) / secpercyl != blknum / secpercyl) 			blkcnt = secpercyl - (blknum % secpercyl); 		blknext = blknum + blkcnt;
 comment|/* 		 * See if one of the sectors is in the bad sector list 		 * (if we have one).  If the first sector is bad, then 		 * reduce the transfer to this one bad sector; if another 		 * sector is bad, then reduce reduce the transfer to 		 * avoid any bad sectors. 		 */
-argument|if (du->dk_flags& DKFL_SINGLE&& dsgetbad(dev, du->dk_slices) != NULL) { 		  for (blkchk = blknum; blkchk< blknum + blkcnt; blkchk++) { 			daddr_t blknew; 			blknew = transbad144(dsgetbad(dev, du->dk_slices), 					     blkchk - ds_offset) + ds_offset; 			if (blknew != blkchk) {
-comment|/* Found bad block. */
-argument|blkcnt = blkchk - blknum; 				if (blkcnt>
-literal|0
-argument|) { 					blknext = blknum + blkcnt; 					goto out; 				} 				blkcnt =
-literal|1
-argument|; 				blknext = blknum + blkcnt;
-if|#
-directive|if
-literal|1
-operator|||
-name|defined
-argument_list|(
-name|WDDEBUG
-argument_list|)
-argument|printf(
-literal|"bad block %ld -> %ld\n"
-argument|, 				   (long)blknum, (long)blknew);
-endif|#
-directive|endif
-argument|break; 			} 		    } 		} out:
+argument|out:
 comment|/* Compute disk address. */
 argument|cylin = blknum / secpercyl; 		head = (blknum % secpercyl) / secpertrk; 		sector = blknum % secpertrk;
 if|#

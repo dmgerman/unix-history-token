@@ -1227,7 +1227,7 @@ name|bi_bios_dev
 operator|=
 name|dosdev
 expr_stmt|;
-comment|/* 	 * Load the kernel config file (if any).  Its name is given by 	 * appending ".config" to the kernel name.  Build the name inline 	 * because no str*() functions are available.  The file has to be 	 * copied to&disklabel for userconfig.  It can't be loaded there 	 * directly because the label is used late in readfile() in some 	 * unusual cases, e.g., for bad144 handling. 	 */
+comment|/* 	 * Load the kernel config file (if any).  Its name is given by 	 * appending ".config" to the kernel name.  Build the name inline 	 * because no str*() functions are available.  The file has to be 	 * copied to&disklabel for userconfig.  It can't be loaded there 	 * directly because the label is used late in readfile() in some 	 * unusual cases. 	 */
 name|s
 operator|=
 name|name

@@ -1439,28 +1439,6 @@ begin_comment
 comment|/* write en/disable label */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DIOCSBAD
-value|_IOW('d', 110, struct dkbad)
-end_define
-
-begin_comment
-comment|/* set kernel dkbad */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCSBADSCAN
-value|_IOW('d', 111, int)
-end_define
-
-begin_comment
-comment|/* set badscan mode */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
