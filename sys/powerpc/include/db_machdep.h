@@ -10,13 +10,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PPC_DB_MACHDEP_H_
+name|_POWERPC_DB_MACHDEP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PPC_DB_MACHDEP_H_
+name|_POWERPC_DB_MACHDEP_H_
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_MPC6XX
 end_define
 
 begin_include
@@ -76,6 +82,27 @@ name|iar
 decl_stmt|;
 name|u_int32_t
 name|msr
+decl_stmt|;
+name|u_int32_t
+name|lr
+decl_stmt|;
+name|u_int32_t
+name|ctr
+decl_stmt|;
+name|u_int32_t
+name|cr
+decl_stmt|;
+name|u_int32_t
+name|xer
+decl_stmt|;
+name|u_int32_t
+name|dear
+decl_stmt|;
+name|u_int32_t
+name|esr
+decl_stmt|;
+name|u_int32_t
+name|pid
 decl_stmt|;
 block|}
 struct|;
@@ -153,10 +180,7 @@ begin_define
 define|#
 directive|define
 name|FIXUP_PC_AFTER_BREAK
-parameter_list|(
-name|regs
-parameter_list|)
-value|((regs)->iar -= 4)
+value|(DDB_REGS)->iar -= 4;
 end_define
 
 begin_define
@@ -358,6 +382,20 @@ parameter_list|)
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|DB_SMALL_VALUE_MAX
+value|(0x7fffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_SMALL_VALUE_MIN
+value|(-0x40001)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -401,7 +439,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _PPC_DB_MACHDEP_H_ */
+comment|/* _POWERPC_DB_MACHDEP_H_ */
 end_comment
 
 end_unit

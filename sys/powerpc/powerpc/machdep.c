@@ -1495,6 +1495,14 @@ literal|"powerpc_init: no loader metadata.\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB
+name|kdb_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * XXX: Initialize the interrupt tables. 	 */
 name|bcopy
 argument_list|(
