@@ -1,23 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.2 (Berkeley) %G%  *  * from: $Header: device.h,v 1.3 92/01/15 18:25:53 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.3 (Berkeley) %G%  *  * from: $Header: device.h,v 1.6 92/06/11 17:56:45 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
-comment|/*  * Minimal device structures.  */
+comment|/*  * Minimal device structures.  * Note that all ``system'' device types are listed here.  */
 end_comment
 
 begin_enum
 enum|enum
-name|devtype
+name|devclass
 block|{
 name|DV_DULL
 block|,
+comment|/* generic, no special info */
+name|DV_CPU
+block|,
+comment|/* CPU (carries resource utilization) */
 name|DV_DISK
 block|,
+comment|/* disk drive (label, etc) */
+name|DV_IFNET
+block|,
+comment|/* network interface */
 name|DV_TAPE
 block|,
+comment|/* tape device */
 name|DV_TTY
+comment|/* serial line interface (???) */
 block|}
 enum|;
 end_enum
@@ -26,7 +36,23 @@ begin_struct
 struct|struct
 name|device
 block|{
-comment|/*	enum	devclass dv_class;	/* class */
+name|enum
+name|devclass
+name|dv_class
+decl_stmt|;
+comment|/* this device's classification */
+name|struct
+name|device
+modifier|*
+name|dv_next
+decl_stmt|;
+comment|/* next in list of all */
+name|struct
+name|cfdata
+modifier|*
+name|dv_cfdata
+decl_stmt|;
+comment|/* config data that found us */
 name|char
 modifier|*
 name|dv_name
@@ -36,10 +62,6 @@ name|int
 name|dv_unit
 decl_stmt|;
 comment|/* device unit number */
-name|int
-name|dv_flags
-decl_stmt|;
-comment|/* flags (copied from config) */
 name|char
 modifier|*
 name|dv_xname
@@ -134,7 +156,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* duplicable leaf (unimplemented) */
+comment|/* duplicable */
 end_comment
 
 begin_typedef
@@ -204,6 +226,11 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|enum
+name|devclass
+name|cd_class
+decl_stmt|;
+comment|/* device classification */
 name|size_t
 name|cd_devsize
 decl_stmt|;
@@ -275,6 +302,18 @@ end_define
 
 begin_comment
 comment|/* print " not supported\n" */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|device
+modifier|*
+name|alldevs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head of list of all devices */
 end_comment
 
 begin_decl_stmt
