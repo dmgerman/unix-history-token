@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -1902,9 +1908,22 @@ name|void
 name|pmap_init2
 parameter_list|()
 block|{
+name|int
+name|shpgperproc
+init|=
+name|PMAP_SHPGPERPROC
+decl_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.pmap.shpgperproc"
+argument_list|,
+operator|&
+name|shpgperproc
+argument_list|)
+expr_stmt|;
 name|pv_entry_max
 operator|=
-name|PMAP_SHPGPERPROC
+name|shpgperproc
 operator|*
 name|maxproc
 operator|+
