@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.10.4.5 1995/10/14 19:11:44 jkh Exp $"
+literal|"$Id: file.c,v 1.10.4.6 1995/10/15 14:08:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1552,7 +1552,7 @@ argument_list|)
 operator|&&
 name|isfile
 argument_list|(
-name|fname
+name|tmp
 argument_list|)
 condition|)
 return|return
