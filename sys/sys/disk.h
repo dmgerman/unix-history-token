@@ -84,6 +84,12 @@ name|struct
 name|disklabel
 name|d_label
 decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|disk
+argument_list|)
+name|d_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
