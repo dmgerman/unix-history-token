@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -86,6 +86,25 @@ name|ufs_vfsops
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|UFS_VFSOPS
+value|&ufs_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UFS_VFSOPS
+value|NULL
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -104,6 +123,25 @@ name|vfsops
 name|lfs_vfsops
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|LFS_VFSOPS
+value|&lfs_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LFS_VFSOPS
+value|NULL
+end_define
 
 begin_endif
 endif|#
@@ -124,6 +162,25 @@ name|mfs_vfsops
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MFS_VFSOPS
+value|&mfs_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MFS_VFSOPS
+value|NULL
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -142,6 +199,25 @@ name|vfsops
 name|nfs_vfsops
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NFS_VFSOPS
+value|&nfs_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NFS_VFSOPS
+value|NULL
+end_define
 
 begin_endif
 endif|#
@@ -159,61 +235,21 @@ block|{
 name|NULL
 block|,
 comment|/* 0 = MOUNT_NONE */
-ifdef|#
-directive|ifdef
-name|FFS
-operator|&
-name|ufs_vfsops
+name|UFS_VFSOPS
 block|,
 comment|/* 1 = MOUNT_UFS */
-else|#
-directive|else
-name|NULL
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|NFS
-operator|&
-name|nfs_vfsops
+name|NFS_VFSOPS
 block|,
 comment|/* 2 = MOUNT_NFS */
-else|#
-directive|else
-name|NULL
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MFS
-operator|&
-name|mfs_vfsops
+name|MFS_VFSOPS
 block|,
 comment|/* 3 = MOUNT_MFS */
-else|#
-directive|else
-name|NULL
-block|,
-endif|#
-directive|endif
 name|NULL
 block|,
 comment|/* 4 = MOUNT_PC */
-ifdef|#
-directive|ifdef
-name|LFS
-operator|&
-name|lfs_vfsops
+name|LFS_VFSOPS
 block|,
 comment|/* 5 = MOUNT_LFS */
-else|#
-directive|else
-name|NULL
-block|,
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
