@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	4.5 (Berkeley) %G%"
+literal|"@(#)sem.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1869,20 +1869,9 @@ else|else
 operator|(
 name|void
 operator|)
-name|ioctl
-argument_list|(
 name|dup
 argument_list|(
 name|OLDSTD
-argument_list|)
-argument_list|,
-name|FIONCLEX
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2024,20 +2013,9 @@ else|else
 operator|(
 name|void
 operator|)
-name|ioctl
-argument_list|(
 name|dup
 argument_list|(
 name|SHOUT
-argument_list|)
-argument_list|,
-name|FIONCLEX
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2066,20 +2044,9 @@ else|else
 operator|(
 name|void
 operator|)
-name|ioctl
-argument_list|(
 name|dup
 argument_list|(
 name|SHDIAG
-argument_list|)
-argument_list|,
-name|FIONCLEX
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|didfds
