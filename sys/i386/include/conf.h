@@ -42,13 +42,9 @@ begin_comment
 comment|/*  * The following was copied from the bogusly non-machine-generated  * file<i386/i386/conf.c>.  Eventually the routines should be static.  */
 end_comment
 
-begin_decl_stmt
-name|d_rdwr_t
-name|rawread
-decl_stmt|,
-name|rawwrite
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* bdevs. */
+end_comment
 
 begin_decl_stmt
 name|d_open_t
@@ -489,6 +485,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|d_strategy_t
+name|chstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX not used */
+end_comment
+
+begin_decl_stmt
 name|d_ioctl_t
 name|chioctl
 decl_stmt|;
@@ -633,6 +639,10 @@ decl_stmt|,
 name|swwrite
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* cdevs. */
+end_comment
 
 begin_decl_stmt
 name|d_open_t
@@ -881,12 +891,6 @@ end_decl_stmt
 begin_decl_stmt
 name|d_select_t
 name|twselect
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_ttycv_t
-name|twdevtotty
 decl_stmt|;
 end_decl_stmt
 
@@ -1157,6 +1161,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|d_strategy_t
+name|ukstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX not used */
+end_comment
+
+begin_decl_stmt
 name|d_ioctl_t
 name|ukioctl
 decl_stmt|;
@@ -1179,6 +1193,16 @@ name|d_ioctl_t
 name|lkmcioctl
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|d_open_t
+name|lkmenodev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX bogus; used for non-opens */
+end_comment
 
 begin_decl_stmt
 name|d_open_t
@@ -1243,26 +1267,6 @@ end_decl_stmt
 begin_decl_stmt
 name|d_ioctl_t
 name|sscioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|sscread
-decl_stmt|,
-name|sscwrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_select_t
-name|sscselect
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_strategy_t
-name|sscstrategy
 decl_stmt|;
 end_decl_stmt
 
@@ -1667,6 +1671,12 @@ end_decl_stmt
 begin_decl_stmt
 name|d_ioctl_t
 name|ityioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_stop_t
+name|itystop
 decl_stmt|;
 end_decl_stmt
 
