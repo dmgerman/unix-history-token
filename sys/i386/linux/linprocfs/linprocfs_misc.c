@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/swap_pager.h>
 end_include
 
@@ -203,6 +209,9 @@ name|long
 name|swapfree
 decl_stmt|;
 comment|/* free swap space in bytes */
+name|vm_object_t
+name|object
+decl_stmt|;
 if|if
 condition|(
 name|uio
@@ -268,7 +277,47 @@ name|memshared
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX what's this supposed to be? */
+for|for
+control|(
+name|object
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|vm_object_list
+argument_list|)
+init|;
+name|object
+operator|!=
+name|NULL
+condition|;
+name|object
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|object
+argument_list|,
+name|object_list
+argument_list|)
+control|)
+if|if
+condition|(
+name|object
+operator|->
+name|shadow_count
+operator|>
+literal|1
+condition|)
+name|memshared
+operator|+=
+name|object
+operator|->
+name|resident_page_count
+expr_stmt|;
+name|memshared
+operator|*=
+name|PAGE_SIZE
+expr_stmt|;
 comment|/* 	 * We'd love to be able to write: 	 * 	buffers = bufspace; 	 * 	 * but bufspace is internal to vfs_bio.c and we don't feel 	 * like unstaticizing it just for linprocfs's sake. 	 */
 name|buffers
 operator|=

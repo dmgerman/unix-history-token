@@ -309,22 +309,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|linprocfs_findtextvp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|linprocfs_sstep
 name|__P
