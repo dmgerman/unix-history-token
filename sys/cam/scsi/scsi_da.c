@@ -768,6 +768,24 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
+comment|/* 		 * LaCie USB drive, among others 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"Maxtor*"
+block|,
+literal|"D080H4*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
 block|{
 name|T_OPTICAL
 block|,
