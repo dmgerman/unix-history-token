@@ -2313,7 +2313,22 @@ name|MenuMousePort
 block|}
 block|,
 block|{
-literal|"5 Disable"
+literal|"5 Flags"
+block|,
+literal|"Set additional flags"
+block|,
+name|dmenuVarCheck
+block|,
+name|setMouseFlags
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_FLAGS
+literal|"="
+block|}
+block|,
+block|{
+literal|"6 Disable"
 block|,
 literal|"Disable the mouse daemon"
 block|,
