@@ -4,6 +4,10 @@ comment|/* Definitions for Intel 386 running FreeBSD with either a.out or ELF fo
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* A lie, I guess, but the general idea behind FreeBSD/ELF is that we are    supposed to be outputting something that will assemble under SVr4.    This gets us pretty close.  */
 end_comment
 
@@ -1048,7 +1052,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__=3 -D__FreeBSD_cc_version=320001 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Di386 -D__FreeBSD__=3 -D__FreeBSD_cc_version=330001 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
 begin_undef
