@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)coredump.c 1.3 %G%"
+literal|"@(#)coredump.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,7 +660,7 @@ name|false
 expr_stmt|;
 name|fclose
 argument_list|(
-name|coredump
+name|corefile
 argument_list|)
 expr_stmt|;
 name|fclose
