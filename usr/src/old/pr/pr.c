@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.4 (Berkeley) %G%"
+literal|"@(#)pr.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,8 +96,12 @@ begin_define
 define|#
 directive|define
 name|BUFS
-value|6720
+value|9000
 end_define
+
+begin_comment
+comment|/* at least 66 * 132 */
+end_comment
 
 begin_decl_stmt
 name|char
