@@ -681,72 +681,108 @@ name|classes
 index|[]
 init|=
 block|{
+undef|#
+directive|undef
+name|isalnum
 block|{
 literal|"alnum"
 block|,
 name|isalnum
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isalpha
 block|{
 literal|"alpha"
 block|,
 name|isalpha
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isblank
 block|{
 literal|"blank"
 block|,
 name|isblank
 block|,  }
 block|,
+undef|#
+directive|undef
+name|iscntrl
 block|{
 literal|"cntrl"
 block|,
 name|iscntrl
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isdigit
 block|{
 literal|"digit"
 block|,
 name|isdigit
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isgraph
 block|{
 literal|"graph"
 block|,
 name|isgraph
 block|,  }
 block|,
+undef|#
+directive|undef
+name|islower
 block|{
 literal|"lower"
 block|,
 name|islower
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isprint
 block|{
 literal|"print"
 block|,
 name|isprint
 block|,  }
 block|,
+undef|#
+directive|undef
+name|ispunct
 block|{
 literal|"punct"
 block|,
 name|ispunct
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isspace
 block|{
 literal|"space"
 block|,
 name|isspace
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isupper
 block|{
 literal|"upper"
 block|,
 name|isupper
 block|,  }
 block|,
+undef|#
+directive|undef
+name|isxdigit
 block|{
 literal|"xdigit"
 block|,
@@ -1400,16 +1436,6 @@ name|INFINITE
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* Use the #defines isXXX() here, DON'T use them above. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_comment
 comment|/*  * Translate \??? into a character.  Up to 3 octal digits, if no digits either  * an escape code or a literal character.  */
