@@ -1406,7 +1406,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"sync_p '%s'"
+literal|"gv_sync '%s'"
 argument_list|,
 name|p
 operator|->
@@ -1626,7 +1626,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"init_sd %s"
+literal|"gv_init %s"
 argument_list|,
 name|s
 operator|->
