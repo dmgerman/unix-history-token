@@ -91,9 +91,7 @@ name|ioasic_intr_establish
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
 name|void
 operator|*
@@ -122,9 +120,7 @@ name|ioasic_intr_disestablish
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
 name|void
 operator|*

@@ -575,8 +575,7 @@ begin_struct
 struct|struct
 name|esp_softc
 block|{
-name|struct
-name|device
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* us as a device */
@@ -1380,14 +1379,14 @@ define|#
 directive|define
 name|SAME_ESP
 parameter_list|(
-name|sc
+name|unit
 parameter_list|,
 name|bp
 parameter_list|,
 name|ca
 parameter_list|)
 define|\
-value|((bp->val[0] == ca->ca_slot&& bp->val[1] == ca->ca_offset) || \ 	 (bp->val[0] == -1&& bp->val[1] == sc->sc_dev.dv_unit))
+value|((bp->val[0] == ca->ca_slot&& bp->val[1] == ca->ca_offset) || \ 	 (bp->val[0] == -1&& bp->val[1] == unit))
 end_define
 
 begin_ifndef

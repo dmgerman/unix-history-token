@@ -205,8 +205,7 @@ begin_struct
 struct|struct
 name|asc_softc
 block|{
-name|struct
-name|device
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* us as a device */

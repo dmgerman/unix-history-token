@@ -1376,9 +1376,7 @@ name|func
 parameter_list|,
 name|arg
 parameter_list|)
-name|struct
-name|device
-modifier|*
+name|device_t
 name|tcds
 decl_stmt|;
 name|void
@@ -1517,9 +1515,7 @@ name|tcds
 parameter_list|,
 name|cookie
 parameter_list|)
-name|struct
-name|device
-modifier|*
+name|device_t
 name|tcds
 decl_stmt|;
 name|void

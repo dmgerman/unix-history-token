@@ -44,19 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
 end_include
 
 begin_include

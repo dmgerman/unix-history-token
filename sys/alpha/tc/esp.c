@@ -48,24 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
 begin_comment
 comment|/*#include<sys/ioctl.h>*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
 
 begin_include
 include|#
@@ -177,13 +165,9 @@ name|espattach
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
 name|void
 operator|*
@@ -202,9 +186,7 @@ name|espmatch
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
 name|void
 operator|*
@@ -1355,11 +1337,12 @@ name|printf
 argument_list|(
 literal|"%s: unknown revision code, assuming ESP100\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ESP_WRITE_REG
@@ -3294,11 +3277,12 @@ name|panic
 argument_list|(
 literal|"%s: esp_sched: floating ecb %p"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ecb
 argument_list|)
@@ -3524,11 +3508,12 @@ name|panic
 argument_list|(
 literal|"%s: floating ecb"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3615,11 +3600,12 @@ name|panic
 argument_list|(
 literal|"%s: dequeue: busy ecb on free list"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3628,11 +3614,12 @@ name|panic
 argument_list|(
 literal|"%s: dequeue: unknown queue %d"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ecb
 operator|->
@@ -3776,11 +3763,12 @@ name|printf
 argument_list|(
 literal|"%s: msgin: no msg byte available\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4156,11 +4144,12 @@ name|printf
 argument_list|(
 literal|"%s: our msg rejected by target\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -4344,11 +4333,12 @@ name|printf
 argument_list|(
 literal|"%s: no DATAPOINTERs to restore\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4377,11 +4367,12 @@ name|printf
 argument_list|(
 literal|"%s:target%d: MSG_PARITY_ERROR\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ecb
 operator|->
@@ -4835,11 +4826,12 @@ name|printf
 argument_list|(
 literal|"%s: unimplemented message: %d\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -5153,11 +5145,12 @@ name|printf
 argument_list|(
 literal|"%s: bogus reselect (no IDENTIFY) %0x2x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -5178,11 +5171,12 @@ name|printf
 argument_list|(
 literal|"%s: unexpected message in; will send DEV_RESET\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_sched_msgout
@@ -5894,11 +5888,12 @@ name|printf
 argument_list|(
 literal|"%s: SCSI bus reset\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_init
@@ -5930,11 +5925,12 @@ name|panic
 argument_list|(
 literal|"%s: nexus in reset state"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -6059,11 +6055,12 @@ name|printf
 argument_list|(
 literal|"%s: illegal command: 0x%x (state %d, phase %x, prevphase %x)\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -6174,11 +6171,12 @@ argument_list|(
 literal|"%s: !TC [intr %x, stat %x, step %d]"
 literal|" prevphase %x, resid %x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -6211,7 +6209,7 @@ if|#
 directive|if
 literal|0
 comment|/* Unreliable on some ESP revisions? */
-block|if ((sc->sc_espstat& ESPSTAT_INT) == 0) { 			printf("%s: spurious interrupt\n", sc->sc_dev.dv_xname); 			return 1; 		}
+block|if ((sc->sc_espstat& ESPSTAT_INT) == 0) { 			printf("%s: spurious interrupt\n", device_get_nameunit(sc->sc_dev)); 			return 1; 		}
 endif|#
 directive|endif
 comment|/* 		 * check for less serious errors 		 */
@@ -6228,11 +6226,12 @@ name|printf
 argument_list|(
 literal|"%s: SCSI bus parity error\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6530,11 +6529,12 @@ name|printf
 argument_list|(
 literal|"%s: silly disconnect (ecb %p [stat %x])\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ecb
 argument_list|,
@@ -6568,11 +6568,12 @@ name|printf
 argument_list|(
 literal|"%s: DISCONNECT in IDLE state!\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6685,11 +6686,12 @@ name|printf
 argument_list|(
 literal|"%s: waiting for SCSI Bus Reset to happen\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6712,11 +6714,12 @@ name|printf
 argument_list|(
 literal|"%s: target didn't identify\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_init
@@ -6757,11 +6760,12 @@ name|printf
 argument_list|(
 literal|"%s: identify failed\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_init
@@ -6910,11 +6914,12 @@ name|printf
 argument_list|(
 literal|"%s: target didn't identify\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_init
@@ -6948,11 +6953,12 @@ name|printf
 argument_list|(
 literal|"%s: RESELECT: %d bytes in FIFO!\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ESP_READ_REG
 argument_list|(
@@ -7030,11 +7036,12 @@ name|printf
 argument_list|(
 literal|"%s: identify failed\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_init
@@ -7118,11 +7125,12 @@ name|printf
 argument_list|(
 literal|"%s: select timeout/no disconnect\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_abort
@@ -7155,11 +7163,12 @@ name|printf
 argument_list|(
 literal|"%s: step 1& !NEG\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_abort
@@ -7186,11 +7195,12 @@ name|printf
 argument_list|(
 literal|"%s: !MSGOUT\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esp_abort
@@ -7261,11 +7271,12 @@ literal|"(%s:%d:%d): selection failed;"
 literal|" %d left in FIFO "
 literal|"[intr %x, stat %x, step %d]\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc_link
 operator|->
@@ -7399,11 +7410,12 @@ argument_list|(
 literal|"%s: unexpected status after select"
 literal|": [intr %x, stat %x, step %x]\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -7451,11 +7463,12 @@ name|printf
 argument_list|(
 literal|"%s: stray interrupt\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7503,11 +7516,12 @@ argument_list|(
 literal|"%s: ICCS: "
 literal|": [intr %x, stat %x, step %x]\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -7544,11 +7558,12 @@ argument_list|(
 literal|"%s: ICCS: expected 2, got %d "
 literal|": [intr %x, stat %x, step %x]\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ESP_READ_REG
 argument_list|(
@@ -7656,11 +7671,12 @@ name|printf
 argument_list|(
 literal|"%s: STATUS_PHASE: msg %d\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|msg
 argument_list|)
@@ -7681,11 +7697,12 @@ name|panic
 argument_list|(
 literal|"%s: invalid state: %d"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -7810,11 +7827,12 @@ argument_list|(
 literal|"%s: MSGIN: unexpected FC bit: "
 literal|"[intr %x, stat %x, step %x]\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -7850,11 +7868,12 @@ argument_list|(
 literal|"%s: MSGIN: weird bits: "
 literal|"[intr %x, stat %x, step %x]\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -8401,11 +8420,12 @@ argument_list|(
 literal|"%s: timed out [ecb %p (flags 0x%x, dleft %x, stat %x)], "
 literal|"<state %d, nexus %p, phase(c %x, p %x), resid %x, msg(q %x,o %x) %s>"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ecb
 argument_list|,

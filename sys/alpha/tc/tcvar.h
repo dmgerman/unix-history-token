@@ -328,7 +328,7 @@ modifier|*
 name|tba_builtins
 decl_stmt|;
 comment|/* TC bus resource management; XXX will move elsewhere eventually. */
-comment|/*         void    (*tba_intr_establish) __P((struct device *, void *,                     tc_intrlevel_t, int (*)(void *), void *));         void    (*tba_intr_disestablish) __P((struct device *, void *)); */
+comment|/*         void    (*tba_intr_establish) __P((device_t, void *,                     tc_intrlevel_t, int (*)(void *), void *));         void    (*tba_intr_disestablish) __P((device_t, void *)); */
 block|}
 struct|;
 end_struct
@@ -381,9 +381,7 @@ name|tc_intr_establish
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
 name|void
 operator|*
@@ -412,9 +410,7 @@ name|tc_intr_disestablish
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|device
-operator|*
+name|device_t
 operator|,
 name|void
 operator|*
