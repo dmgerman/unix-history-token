@@ -4,12 +4,22 @@ comment|/* public key routines */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* functions: 	genkeys(char *public, char *secret) 	common_key(char *secret, char *public, desData *deskey)         pk_encode(char *in, *out, DesData *deskey);         pk_decode(char *in, *out, DesData *deskey);       where 	char public[HEXKEYBYTES + 1]; 	char secret[HEXKEYBYTES + 1];  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
