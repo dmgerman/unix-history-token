@@ -160,6 +160,20 @@ name|BEFORE_DEPEND
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|NEED_COUNT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDUP
+value|32
+end_define
+
 begin_struct
 struct|struct
 name|device
@@ -623,17 +637,6 @@ name|int
 name|maxusers
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|old_config_present
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Old config/build directory still there */
-end_comment
 
 begin_decl_stmt
 specifier|extern

@@ -218,12 +218,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|old_config_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|debugging
 decl_stmt|;
 end_decl_stmt
@@ -661,11 +655,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|old_config_present
-operator|=
-literal|1
-expr_stmt|;
 name|dtab
 operator|=
 name|NULL
