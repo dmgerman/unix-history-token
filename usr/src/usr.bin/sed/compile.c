@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compile.c	5.5 (Berkeley) %G%"
+literal|"@(#)compile.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1766,6 +1766,29 @@ condition|(
 operator|*
 name|p
 operator|==
+literal|'\\'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'\\'
+condition|)
+operator|*
+name|d
+operator|++
+operator|=
+operator|*
+name|p
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
 name|c
 condition|)
 block|{
@@ -2146,6 +2169,11 @@ operator|*
 name|p
 operator|==
 literal|'&'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\\'
 condition|)
 operator|*
 name|sp
