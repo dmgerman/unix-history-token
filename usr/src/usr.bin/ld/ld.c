@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.8 (Berkeley) %G%"
+literal|"@(#)ld.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8360,29 +8360,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* If necessary, pad text section to full page in the file.      Include the padding in the text segment size.  */
-ifdef|#
-directive|ifdef
-name|NMAGIC
-if|if
-condition|(
-name|magic
-operator|==
-name|ZMAGIC
-operator|||
-name|magic
-operator|==
-name|NMAGIC
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|magic
 operator|==
 name|ZMAGIC
 condition|)
-endif|#
-directive|endif
 block|{
 name|int
 name|text_end
@@ -16576,7 +16559,9 @@ name|nl
 operator|.
 name|n_type
 operator|=
-name|N_TEXT
+name|N_FN
+operator||
+name|N_EXT
 expr_stmt|;
 name|nl
 operator|.
