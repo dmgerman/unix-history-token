@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)user.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -127,10 +127,6 @@ modifier|*
 name|u_ap
 decl_stmt|;
 comment|/* pointer to arglist */
-name|label_t
-name|u_qsave
-decl_stmt|;
-comment|/* for non-local gotos on interrupts */
 union|union
 block|{
 comment|/* syscall return values */
@@ -162,25 +158,11 @@ decl_stmt|;
 block|}
 name|u_r
 union|;
-name|char
+name|int
 name|u_error
 decl_stmt|;
 comment|/* return error code */
-name|char
-name|u_eosys
-decl_stmt|;
-comment|/* special action on end of syscall */
 comment|/* 1.1 - processes and protection */
-define|#
-directive|define
-name|u_ruid
-value|u_procp->p_ruid
-comment|/* real user id - XXX */
-define|#
-directive|define
-name|u_rgid
-value|u_procp->p_rgid
-comment|/* real group id - XXX */
 define|#
 directive|define
 name|u_cred
@@ -195,16 +177,6 @@ directive|define
 name|u_gid
 value|u_cred->cr_gid
 comment|/* effective group id */
-define|#
-directive|define
-name|u_ngroups
-value|u_cred->cr_ngroups
-comment|/* number of group id's */
-define|#
-directive|define
-name|u_groups
-value|u_cred->cr_groups
-comment|/* list of effective grp id's */
 comment|/* 1.2 - memory management */
 name|size_t
 name|u_tsize
@@ -252,6 +224,12 @@ name|time_t
 name|u_outime
 decl_stmt|;
 comment|/* user time at last sample */
+name|struct
+name|mapmem
+modifier|*
+name|u_mmap
+decl_stmt|;
+comment|/* list of mapped memory regions */
 comment|/* 1.3 - signal management */
 name|sig_t
 name|u_signal
@@ -404,16 +382,6 @@ index|[
 name|RLIM_NLIMITS
 index|]
 decl_stmt|;
-name|struct
-name|quota
-modifier|*
-name|u_quota
-decl_stmt|;
-comment|/* user's quota structure */
-name|int
-name|u_qflags
-decl_stmt|;
-comment|/* per process quota flags */
 comment|/* namei& co. */
 name|struct
 name|nameidata
