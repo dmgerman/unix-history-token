@@ -49,10 +49,6 @@ begin_comment
 comment|/*  * A K6-2 MTRR is defined as the highest 15 bits having the address, the next  * 15 having the mask, the 1st bit being "write-combining" and the 0th bit  * being "uncacheable".  *  *	Address		    Mask	WC  UC  * | XXXXXXXXXXXXXXX | XXXXXXXXXXXXXXX | X | X |  *  * There are two of these in the 64-bit UWCCR.  */
 end_comment
 
-begin_comment
-comment|/*  * NOTE: I do _not_ comment my code unless it's truly necessary. Don't  * 	 expect anything frivolous here, and do NOT touch my bit-shifts  *	 unless you want to break this.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -63,7 +59,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|k6_reg_get
+name|K6_REG_GET
 parameter_list|(
 name|reg
 parameter_list|,
@@ -81,7 +77,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|k6_reg_make
+name|K6_REG_MAKE
 parameter_list|(
 name|addr
 parameter_list|,
@@ -305,7 +301,7 @@ expr_stmt|;
 operator|*
 name|mtrr
 operator|=
-name|k6_reg_make
+name|K6_REG_MAKE
 argument_list|(
 name|desc
 operator|->
@@ -460,7 +456,7 @@ operator|*
 name|d
 operator|)
 decl_stmt|;
-name|k6_reg_get
+name|K6_REG_GET
 argument_list|(
 name|one
 argument_list|,
