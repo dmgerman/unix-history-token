@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass4.c	3.1 (Berkeley) %G%"
+literal|"@(#)pass4.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +131,9 @@ block|{
 case|case
 name|FSTATE
 case|:
+case|case
+name|DFOUND
+case|:
 name|n
 operator|=
 name|lncntp
@@ -205,7 +208,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CLEAR
+name|DCLEAR
+case|:
+case|case
+name|FCLEAR
 case|:
 name|clri
 argument_list|(
@@ -220,73 +226,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|imax
-operator|-
-name|ROOTINO
-operator|-
-name|n_files
-operator|!=
-name|sblock
-operator|.
-name|fs_cstotal
-operator|.
-name|cs_nifree
-condition|)
-block|{
-name|pwarn
-argument_list|(
-literal|"FREE INODE COUNT WRONG IN SUPERBLK"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|preen
-condition|)
-name|printf
-argument_list|(
-literal|" (FIXED)\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|preen
-operator|||
-name|reply
-argument_list|(
-literal|"FIX"
-argument_list|)
-operator|==
-literal|1
-condition|)
-block|{
-name|sblock
-operator|.
-name|fs_cstotal
-operator|.
-name|cs_nifree
-operator|=
-name|imax
-operator|-
-name|ROOTINO
-operator|-
-name|n_files
-expr_stmt|;
-name|sbdirty
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-name|flush
-argument_list|(
-operator|&
-name|dfile
-argument_list|,
-operator|&
-name|fileblk
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)setup.c	3.2 (Berkeley) %G%"
+literal|"@(#)setup.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,39 +312,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fixcg
-operator|=
-literal|0
-expr_stmt|;
-name|inosumbad
-operator|=
-literal|0
-expr_stmt|;
-name|offsumbad
-operator|=
-literal|0
-expr_stmt|;
-name|frsumbad
-operator|=
-literal|0
-expr_stmt|;
-name|sbsumbad
-operator|=
-literal|0
-expr_stmt|;
 name|dfile
 operator|.
 name|mod
-operator|=
-literal|0
-expr_stmt|;
-name|n_files
-operator|=
-name|n_blks
-operator|=
-name|n_ffree
-operator|=
-name|n_bfree
 operator|=
 literal|0
 expr_stmt|;
@@ -818,17 +788,6 @@ name|sblock
 operator|.
 name|fs_ipg
 expr_stmt|;
-name|n_bad
-operator|=
-name|cgsblock
-argument_list|(
-operator|&
-name|sblock
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* boot block plus dedicated sblock */
 comment|/* 	 * read in the summary info. 	 */
 for|for
 control|(
@@ -988,39 +947,6 @@ block|{
 name|printf
 argument_list|(
 literal|"cannot alloc %d bytes for blockmap\n"
-argument_list|,
-name|bmapsz
-argument_list|)
-expr_stmt|;
-goto|goto
-name|badsb
-goto|;
-block|}
-name|freemap
-operator|=
-name|calloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|bmapsz
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|freemap
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cannot alloc %d bytes for freemap\n"
 argument_list|,
 name|bmapsz
 argument_list|)

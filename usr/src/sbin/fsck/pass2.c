@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass2.c	3.2 (Berkeley) %G%"
+literal|"@(#)pass2.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,9 @@ expr_stmt|;
 case|case
 name|FSTATE
 case|:
+case|case
+name|FCLEAR
+case|:
 name|pfatal
 argument_list|(
 literal|"ROOT INODE NOT DIRECTORY"
@@ -182,9 +185,6 @@ expr_stmt|;
 name|inodirty
 argument_list|()
 expr_stmt|;
-name|inosumbad
-operator|++
-expr_stmt|;
 name|statemap
 index|[
 name|ROOTINO
@@ -206,7 +206,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CLEAR
+name|DCLEAR
 case|:
 name|pfatal
 argument_list|(
@@ -245,6 +245,17 @@ operator|&
 name|rootdesc
 argument_list|,
 name|ROOTINO
+argument_list|)
+expr_stmt|;
+default|default:
+name|errexit
+argument_list|(
+literal|"BAD STATE %d FOR ROOT INODE"
+argument_list|,
+name|statemap
+index|[
+name|ROOTINO
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1186,7 +1197,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CLEAR
+name|DCLEAR
+case|:
+case|case
+name|FCLEAR
 case|:
 name|direrr
 argument_list|(
@@ -1247,6 +1261,27 @@ goto|goto
 name|again
 goto|;
 case|case
+name|DFOUND
+case|:
+if|if
+condition|(
+name|idesc
+operator|->
+name|id_entryno
+operator|>
+literal|2
+condition|)
+name|pwarn
+argument_list|(
+literal|"WARNING: %s IS %s\n"
+argument_list|,
+name|pathname
+argument_list|,
+literal|"AN EXTRANEOUS HARD LINK TO A DIRECTORY"
+argument_list|)
+expr_stmt|;
+comment|/* fall through */
+case|case
 name|FSTATE
 case|:
 name|lncntp
@@ -1278,8 +1313,8 @@ name|dirp
 operator|->
 name|d_ino
 index|]
-operator|!=
-name|CLEAR
+operator|==
+name|DFOUND
 condition|)
 block|{
 name|lncntp
@@ -1291,7 +1326,18 @@ index|]
 operator|--
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|statemap
+index|[
+name|dirp
+operator|->
+name|d_ino
+index|]
+operator|==
+name|DCLEAR
+condition|)
 block|{
 name|dirp
 operator|->
@@ -1304,6 +1350,19 @@ operator||=
 name|ALTERED
 expr_stmt|;
 block|}
+else|else
+name|errexit
+argument_list|(
+literal|"BAD RETURN STATE %d FROM DESCEND"
+argument_list|,
+name|statemap
+index|[
+name|dirp
+operator|->
+name|d_ino
+index|]
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}

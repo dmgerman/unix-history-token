@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	3.2 (Berkeley) %G%"
+literal|"@(#)main.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,6 +603,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|daddr_t
+name|n_ffree
+decl_stmt|,
+name|n_bfree
+decl_stmt|;
 name|devname
 operator|=
 name|filesys
@@ -628,7 +633,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 1: scan inodes tallying blocks used */
+comment|/* 	 * 1: scan inodes tallying blocks used 	 */
 if|if
 condition|(
 name|preen
@@ -663,7 +668,7 @@ block|}
 name|pass1
 argument_list|()
 expr_stmt|;
-comment|/* 1b: locate first references to duplicates, if any */
+comment|/* 	 * 1b: locate first references to duplicates, if any 	 */
 if|if
 condition|(
 name|enddup
@@ -693,7 +698,7 @@ name|pass1b
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 2: traverse directories from root to mark all connected directories */
+comment|/* 	 * 2: traverse directories from root to mark all connected directories 	 */
 if|if
 condition|(
 name|preen
@@ -708,7 +713,7 @@ expr_stmt|;
 name|pass2
 argument_list|()
 expr_stmt|;
-comment|/* 3: scan inodes looking for disconnected directories */
+comment|/* 	 * 3: scan inodes looking for disconnected directories 	 */
 if|if
 condition|(
 name|preen
@@ -723,7 +728,7 @@ expr_stmt|;
 name|pass3
 argument_list|()
 expr_stmt|;
-comment|/* 4: scan inodes looking for disconnected files; check reference counts */
+comment|/* 	 * 4: scan inodes looking for disconnected files; check reference counts 	 */
 if|if
 condition|(
 name|preen
@@ -738,7 +743,7 @@ expr_stmt|;
 name|pass4
 argument_list|()
 expr_stmt|;
-comment|/* 5: check resource counts in cylinder groups */
+comment|/* 	 * 5: check and repair resource counts in cylinder groups 	 */
 if|if
 condition|(
 name|preen
@@ -753,25 +758,7 @@ expr_stmt|;
 name|pass5
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|fixcg
-condition|)
-block|{
-if|if
-condition|(
-name|preen
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"** Phase 6 - Salvage Cylinder Groups\n"
-argument_list|)
-expr_stmt|;
-name|makecg
-argument_list|()
-expr_stmt|;
+comment|/* 	 * print out summary statistics 	 */
 name|n_ffree
 operator|=
 name|sblock
@@ -788,7 +775,6 @@ name|fs_cstotal
 operator|.
 name|cs_nbfree
 expr_stmt|;
-block|}
 name|pwarn
 argument_list|(
 literal|"%d files, %d used, %d free (%d frags, %d blocks)\n"
@@ -796,17 +782,6 @@ argument_list|,
 name|n_files
 argument_list|,
 name|n_blks
-operator|-
-name|howmany
-argument_list|(
-name|sblock
-operator|.
-name|fs_cssize
-argument_list|,
-name|sblock
-operator|.
-name|fs_fsize
-argument_list|)
 argument_list|,
 name|n_ffree
 operator|+
@@ -821,6 +796,115 @@ argument_list|,
 name|n_bfree
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|&&
+operator|(
+name|n_files
+operator|-=
+name|imax
+operator|-
+name|ROOTINO
+operator|-
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nifree
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"%d files missing\n"
+argument_list|,
+name|n_files
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|n_blks
+operator|+=
+name|sblock
+operator|.
+name|fs_ncg
+operator|*
+operator|(
+name|cgdmin
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|0
+argument_list|)
+operator|-
+name|cgsblock
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+expr_stmt|;
+name|n_blks
+operator|+=
+name|cgsblock
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|0
+argument_list|)
+operator|-
+name|cgbase
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|n_blks
+operator|+=
+name|howmany
+argument_list|(
+name|sblock
+operator|.
+name|fs_cssize
+argument_list|,
+name|sblock
+operator|.
+name|fs_fsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n_blks
+operator|-=
+name|fmax
+operator|-
+operator|(
+name|n_ffree
+operator|+
+name|sblock
+operator|.
+name|fs_frag
+operator|*
+name|n_bfree
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"%d blocks missing\n"
+argument_list|,
+name|n_blks
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dfile
@@ -849,11 +933,6 @@ expr_stmt|;
 name|free
 argument_list|(
 name|blockmap
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|freemap
 argument_list|)
 expr_stmt|;
 name|free

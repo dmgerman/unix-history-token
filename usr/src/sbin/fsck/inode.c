@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)inode.c	3.2 (Berkeley) %G%"
+literal|"@(#)inode.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1150,9 +1150,6 @@ expr_stmt|;
 name|inodirty
 argument_list|()
 expr_stmt|;
-name|inosumbad
-operator|++
-expr_stmt|;
 block|}
 block|}
 end_block
@@ -1469,13 +1466,56 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|statemap
+index|[
+name|ino
+index|]
+condition|)
+block|{
+case|case
+name|FSTATE
+case|:
 name|statemap
 index|[
 name|ino
 index|]
 operator|=
-name|CLEAR
+name|FCLEAR
 expr_stmt|;
+return|return;
+case|case
+name|DSTATE
+case|:
+name|statemap
+index|[
+name|ino
+index|]
+operator|=
+name|DCLEAR
+expr_stmt|;
+return|return;
+case|case
+name|FCLEAR
+case|:
+case|case
+name|DCLEAR
+case|:
+return|return;
+default|default:
+name|errexit
+argument_list|(
+literal|"BAD STATE %d TO BLKERR"
+argument_list|,
+name|statemap
+index|[
+name|ino
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 block|}
 end_block
 

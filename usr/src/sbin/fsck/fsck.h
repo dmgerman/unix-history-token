@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fsck.h	3.2 (Berkeley) %G% */
-end_comment
-
-begin_comment
-comment|/* RECONSTRUCT ONLY BAD CG IN PASS 6 */
+comment|/* @(#)fsck.h	3.3 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -84,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|USTATE
-value|0
+value|01
 end_define
 
 begin_comment
@@ -95,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|FSTATE
-value|01
+value|02
 end_define
 
 begin_comment
@@ -106,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|DSTATE
-value|02
+value|03
 end_define
 
 begin_comment
@@ -116,12 +112,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLEAR
-value|03
+name|DFOUND
+value|04
 end_define
 
 begin_comment
-comment|/* inode is to be cleared */
+comment|/* directory found during descent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DCLEAR
+value|05
+end_define
+
+begin_comment
+comment|/* directory is to be cleared */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FCLEAR
+value|06
+end_define
+
+begin_comment
+comment|/* file is to be cleared */
 end_comment
 
 begin_typedef
@@ -622,16 +640,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|fixcg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* corrupted free list bit maps */
-end_comment
-
-begin_decl_stmt
-name|char
 modifier|*
 name|blockmap
 decl_stmt|;
@@ -639,17 +647,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* ptr to primary blk allocation map */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|freemap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to secondary blk allocation map */
 end_comment
 
 begin_decl_stmt
@@ -778,26 +775,6 @@ end_comment
 
 begin_decl_stmt
 name|daddr_t
-name|n_ffree
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of small free blocks */
-end_comment
-
-begin_decl_stmt
-name|daddr_t
-name|n_bfree
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of large free blocks */
-end_comment
-
-begin_decl_stmt
-name|daddr_t
 name|n_blks
 decl_stmt|;
 end_decl_stmt
@@ -815,54 +792,6 @@ end_decl_stmt
 begin_comment
 comment|/* number of files seen */
 end_comment
-
-begin_decl_stmt
-name|daddr_t
-name|n_index
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|n_bad
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|badblk
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|dupblk
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|inosumbad
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|offsumbad
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|frsumbad
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sbsumbad
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -909,36 +838,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|clrbit(blockmap, x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|setfmap
-parameter_list|(
-name|x
-parameter_list|)
-value|setbit(freemap, x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|getfmap
-parameter_list|(
-name|x
-parameter_list|)
-value|isset(freemap, x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|clrfmap
-parameter_list|(
-name|x
-parameter_list|)
-value|clrbit(freemap, x)
 end_define
 
 begin_define

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)dir.c	3.2 (Berkeley) %G%"
+literal|"@(#)dir.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,12 +151,31 @@ name|inodesc
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|statemap
+index|[
+name|inumber
+index|]
+operator|!=
+name|DSTATE
+condition|)
+name|errexit
+argument_list|(
+literal|"BAD INODE %d TO DESCEND"
+argument_list|,
+name|statemap
+index|[
+name|inumber
+index|]
+argument_list|)
+expr_stmt|;
 name|statemap
 index|[
 name|inumber
 index|]
 operator|=
-name|FSTATE
+name|DFOUND
 expr_stmt|;
 if|if
 condition|(
@@ -202,7 +221,7 @@ index|[
 name|inumber
 index|]
 operator|=
-name|CLEAR
+name|DCLEAR
 expr_stmt|;
 return|return;
 block|}
@@ -1842,7 +1861,7 @@ index|[
 name|lfdir
 index|]
 operator|!=
-name|FSTATE
+name|DFOUND
 condition|)
 block|{
 name|pfatal
