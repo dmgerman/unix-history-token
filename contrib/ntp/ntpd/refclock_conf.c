@@ -1366,6 +1366,68 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_RIPENCC
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_ripencc
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_ripencc
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_NEOCLOCK4X
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_neoclock4x
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_neoclock4x
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Order is clock_start(), clock_shutdown(), clock_poll(),  * clock_control(), clock_init(), clock_buginfo, clock_flags;  *  * Types are defined in ntp.h.  The index must match this.  */
 end_comment
@@ -1548,7 +1610,15 @@ block|,
 comment|/* 41 REFCLK_TT560 */
 operator|&
 name|refclock_zyfer
+block|,
 comment|/* 42 REFCLK_ZYFER */
+operator|&
+name|refclock_ripencc
+block|,
+comment|/* 43 REFCLK_RIPENCC */
+operator|&
+name|refclock_neoclock4x
+comment|/* 44 REFCLK_NEOCLOCK4X */
 block|}
 decl_stmt|;
 end_decl_stmt

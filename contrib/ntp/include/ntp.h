@@ -2247,8 +2247,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REFCLK_ZYFER
+name|REFCLK_TT560
 value|41
+end_define
+
+begin_comment
+comment|/* TrueTime 560 IRIG-B decoder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_ZYFER
+value|42
 end_define
 
 begin_comment
@@ -2258,8 +2269,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|REFCLK_RIPENCC
+value|43
+end_define
+
+begin_comment
+comment|/* RIPE NCC Trimble driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_NEOCLOCK4X
+value|44
+end_define
+
+begin_comment
+comment|/* NeoClock4X DCF77 or TDF receiver */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REFCLK_MAX
-value|41
+value|44
 end_define
 
 begin_comment

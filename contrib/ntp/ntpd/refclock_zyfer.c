@@ -771,7 +771,7 @@ name|rbufp
 operator|->
 name|recv_space
 expr_stmt|;
-comment|/* 	 * If lencode is 0: 	 * - if *rbufp->recv_space is ! 	 * - - call refclock_gtlin to get things going 	 * - else flush 	 * else stuff it on the end of lastcode 	 * If we don't have LENZYFER bytes 	 * - wait for more data 	 * Crack the beast, and if it's OK, process it. 	 * 	 * We use refclock_getlin() because we might use LDISC_CLK. 	 * 	 * Under FreeBSD, we get the ! followed by two 14-byte packets. 	 */
+comment|/* 	 * If lencode is 0: 	 * - if *rbufp->recv_space is ! 	 * - - call refclock_gtlin to get things going 	 * - else flush 	 * else stuff it on the end of lastcode 	 * If we don't have LENZYFER bytes 	 * - wait for more data 	 * Crack the beast, and if it's OK, process it. 	 * 	 * We use refclock_gtlin() because we might use LDISC_CLK. 	 * 	 * Under FreeBSD, we get the ! followed by two 14-byte packets. 	 */
 if|if
 condition|(
 name|pp

@@ -713,6 +713,14 @@ block|}
 endif|#
 directive|endif
 comment|/* KERNEL_PLL STA_CLK */
+name|pp
+operator|->
+name|lastref
+operator|=
+name|pp
+operator|->
+name|lastrec
+expr_stmt|;
 name|refclock_receive
 argument_list|(
 name|peer

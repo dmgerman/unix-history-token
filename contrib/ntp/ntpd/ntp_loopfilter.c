@@ -1208,7 +1208,7 @@ name|peer
 operator|->
 name|epoch
 argument_list|,
-name|fp_offset
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

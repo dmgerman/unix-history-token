@@ -2163,6 +2163,12 @@ comment|/* REFCLK_TT560 (41) */
 name|CTL_SST_TS_UHF
 block|,
 comment|/* REFCLK_ZYFER (42) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_RIPENCC (43) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_NEOCLOCK4X (44) */
 block|}
 decl_stmt|;
 end_decl_stmt

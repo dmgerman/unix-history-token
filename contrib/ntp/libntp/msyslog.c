@@ -561,9 +561,14 @@ name|n
 operator|=
 literal|'\0'
 expr_stmt|;
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|nfmt
 argument_list|,
