@@ -157,7 +157,7 @@ name|u_long
 name|pm_fatsize
 decl_stmt|;
 comment|/* size of fat in bytes */
-name|u_long
+name|u_int32_t
 name|pm_fatmask
 decl_stmt|;
 comment|/* mask to use for fat numbers */
