@@ -1138,7 +1138,6 @@ specifier|const
 name|char
 operator|*
 operator|,
-expr|struct
 name|fhandle_t
 operator|*
 operator|)
@@ -1154,7 +1153,6 @@ argument_list|(
 operator|(
 expr|struct
 name|statfs
-operator|*
 operator|*
 operator|,
 name|long
@@ -1196,7 +1194,8 @@ operator|*
 operator|,
 name|int
 operator|,
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
