@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	telnet.h	4.7	85/03/24	*/
+comment|/*	telnet.h	4.8	85/03/27	*/
 end_comment
 
 begin_comment
@@ -181,6 +181,17 @@ end_define
 
 begin_comment
 comment|/* end sub negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EOR
+value|239
+end_define
+
+begin_comment
+comment|/* end of record (transparent mode) */
 end_comment
 
 begin_define
