@@ -4225,6 +4225,12 @@ condition|(
 name|mac
 operator|->
 name|m_buflen
+operator|<
+literal|0
+operator|||
+name|mac
+operator|->
+name|m_buflen
 operator|>
 name|MAC_MAX_LABEL_BUF_LEN
 condition|)
