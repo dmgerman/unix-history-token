@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.13.4.6 1995/10/23 12:33:43 jkh Exp $"
+literal|"$Id: pen.c,v 1.19 1995/10/25 15:38:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,6 +597,13 @@ name|Current
 index|[
 literal|0
 index|]
+operator|&&
+name|strcmp
+argument_list|(
+name|Current
+argument_list|,
+name|Previous
+argument_list|)
 condition|)
 block|{
 if|if
