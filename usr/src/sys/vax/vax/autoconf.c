@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.11	81/02/23	*/
+comment|/*	autoconf.c	4.12	81/02/25	*/
 end_comment
 
 begin_comment
@@ -339,9 +339,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|VAX
-operator|==
-name|ANY
+name|VAXANY
 name|setconf
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.14	%G%	*/
+comment|/*	uba.c	4.15	%G%	*/
 end_comment
 
 begin_define
@@ -1481,9 +1481,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 case|case
 name|VAX_780
 case|:
@@ -1506,9 +1504,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX
-operator|==
-literal|750
+name|VAX750
 case|case
 name|VAX_750
 case|:

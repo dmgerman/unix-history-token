@@ -1,14 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	4.2	%G%	*/
+comment|/*	flp.c	4.3	%G%	*/
 end_comment
 
 begin_if
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 end_if
 
 begin_include
@@ -129,6 +127,26 @@ modifier|*
 name|geteblk
 parameter_list|()
 function_decl|;
+if|#
+directive|if
+name|VAX750
+if|if
+condition|(
+name|cpu
+operator|!=
+name|VAX_780
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|fltab
