@@ -489,7 +489,7 @@ comment|/* display console ... */
 comment|/* XXX */
 if|#
 directive|if
-name|NPCKBD
+name|NSC
 operator|>
 literal|0
 name|sccnattach
@@ -503,6 +503,8 @@ literal|"not configured to use display&& keyboard console"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|printf
 argument_list|(
@@ -526,14 +528,15 @@ name|panic
 argument_list|(
 literal|"consinit: unknown console type %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ctb
 operator|->
 name|ctb_term_type
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
