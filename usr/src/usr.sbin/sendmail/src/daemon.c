@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.41 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.42 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.41 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.42 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,6 +222,14 @@ decl_stmt|;
 name|int
 name|socksize
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|bool
+name|j_has_dot
+decl_stmt|;
+endif|#
+directive|endif
 specifier|extern
 name|void
 name|reapchild
@@ -660,6 +668,39 @@ name|pidf
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|XDEBUG
+block|{
+name|char
+modifier|*
+name|j
+init|=
+name|macvalue
+argument_list|(
+literal|'j'
+argument_list|,
+name|CurEnv
+argument_list|)
+decl_stmt|;
+name|j_has_dot
+operator|=
+name|j
+operator|!=
+name|NULL
+operator|&&
+name|strchr
+argument_list|(
+name|j
+argument_list|,
+literal|'.'
+argument_list|)
+operator|!=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|tTd

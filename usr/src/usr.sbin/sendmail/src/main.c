@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.54 (Berkeley) %G%"
+literal|"@(#)main.c	8.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +550,7 @@ end_decl_stmt
 begin_function_decl
 specifier|extern
 name|void
-name|dumpstate
+name|sigusr1
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -627,7 +627,7 @@ name|setsignal
 argument_list|(
 name|SIGUSR1
 argument_list|,
-name|dumpstate
+name|sigusr1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6099,13 +6099,19 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DUMPSTATE -- dump state on user signal ** **	For debugging. */
+comment|/* **  DUMPSTATE -- dump state ** **	For debugging. */
 end_comment
 
 begin_function
 name|void
 name|dumpstate
-parameter_list|()
+parameter_list|(
+name|when
+parameter_list|)
+name|char
+modifier|*
+name|when
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -6131,11 +6137,26 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"--- dumping state on user signal: $j = %s ---"
+literal|"--- dumping state on %s: $j = %s ---"
 argument_list|,
+name|when
+argument_list|,
+name|j
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
 name|j
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|!=
+name|NULL
+condition|)
+block|{
 name|s
 operator|=
 name|stab
@@ -6170,6 +6191,7 @@ argument_list|,
 literal|"*** $j not in $=w ***"
 argument_list|)
 expr_stmt|;
+block|}
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -6285,6 +6307,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|sigusr1
+parameter_list|()
+block|{
+name|dumpstate
+argument_list|(
+literal|"user signal"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
