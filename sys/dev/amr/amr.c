@@ -6253,12 +6253,16 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"virtaddr %p  length %d\n"
+literal|"virtaddr %p  length %lu\n"
 argument_list|,
 name|ac
 operator|->
 name|ac_data
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ac
 operator|->
 name|ac_length
