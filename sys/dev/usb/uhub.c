@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.57 2001/11/20 16:08:37 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.59 2002/09/23 05:51:20 simonb Exp $	*/
 end_comment
 
 begin_comment
@@ -2353,7 +2353,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:

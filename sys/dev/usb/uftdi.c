@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uftdi.c,v 1.12 2002/07/18 14:44:10 scw Exp $	*/
+comment|/*	$NetBSD: uftdi.c,v 1.13 2002/09/23 05:51:23 simonb Exp $	*/
 end_comment
 
 begin_comment
@@ -1123,7 +1123,7 @@ literal|0
 end_if
 
 begin_endif
-unit|int uftdi_activate(device_ptr_t self, enum devact act) { 	struct uftdi_softc *sc = (struct uftdi_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP); 		break;  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_ucom.sc_dying = 1; 		break; 	} 	return (rv); }
+unit|int uftdi_activate(device_ptr_t self, enum devact act) { 	struct uftdi_softc *sc = (struct uftdi_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP);  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_ucom.sc_dying = 1; 		break; 	} 	return (rv); }
 endif|#
 directive|endif
 end_endif
