@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_vis.h	4.2 %G%  */
+comment|/* sccs id:	@(#)ex_vis.h	4.3 %G%  */
 end_comment
 
 begin_comment
@@ -390,7 +390,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VC_ONECHANCE
+name|VC_ONECHANGE
 value|2
 end_define
 
