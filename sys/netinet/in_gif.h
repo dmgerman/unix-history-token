@@ -31,13 +31,6 @@ value|30
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|ip_gif_ttl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|in_gif_input
 name|__P

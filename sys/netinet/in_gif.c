@@ -194,6 +194,7 @@ file|<net/net_osdep.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ip_gif_ttl
 init|=
