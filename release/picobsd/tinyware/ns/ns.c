@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Andrzej Bialecki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ns.c,v 1.2 1998/09/02 11:48:07 abial Exp $  */
+comment|/*-  * Copyright (c) 1998 Andrzej Bialecki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ns.c,v 1.3 1998/09/02 13:11:23 abial Exp $  */
 end_comment
 
 begin_comment
@@ -160,48 +160,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_types.h>
 end_include
 
 begin_comment
 comment|/* IFT_ETHER */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
 
 begin_include
 include|#
@@ -254,6 +218,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|wflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* repeat every wait seconds */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -277,7 +253,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s [-r | -i | -s [-p proto] ]\n"
+literal|"\n%s [-rsi] [-p proto] [-w wait]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -1614,7 +1590,7 @@ name|sdl_nlen
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%02x.%02x.%02x.%02x.%02x.%02x   "
+literal|"%02x:%02x:%02x:%02x:%02x:%02x   "
 argument_list|,
 name|p
 index|[
@@ -1699,11 +1675,33 @@ condition|(
 operator|!
 name|rflag
 condition|)
+block|{
+name|free
+argument_list|(
+name|rt_buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|if_buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|if_table
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ifm_table
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Now dump the routing table */
 name|printf
 argument_list|(
@@ -2100,6 +2098,26 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|rt_buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|if_buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|if_table
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ifm_table
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3930,7 +3948,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"irsp:"
+literal|"irsp:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -3943,6 +3961,17 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'w'
+case|:
+name|wflag
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'r'
 case|:
@@ -4036,6 +4065,48 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|wflag
+condition|)
+name|printf
+argument_list|(
+literal|"\033[H\033[J"
+argument_list|)
+expr_stmt|;
+name|again
+label|:
+if|if
+condition|(
+name|wflag
+condition|)
+block|{
+name|struct
+name|timeval
+name|t
+decl_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|t
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\033[H%s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|t
+operator|.
+name|tv_sec
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|print_routing
 argument_list|(
 name|proto
@@ -4046,6 +4117,20 @@ argument_list|(
 name|proto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wflag
+condition|)
+block|{
+name|sleep
+argument_list|(
+name|wflag
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -4151,7 +4236,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Name__  ___in___ ___out__ ___fwd__ __drop__ __bcast_ __mcast_ __local_ ___unk__\n"
+literal|"Name          In      Out  Forward     Drop    Bcast    Mcast    Local  Unknown\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4168,9 +4253,23 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|s
+operator|.
+name|s
+index|[
+name|i
+index|]
+operator|.
+name|name
+index|[
+literal|0
+index|]
+condition|)
 name|printf
 argument_list|(
-literal|"%-6s %8d%8d%8d%8d%8d%8d%8d%8d\n"
+literal|"%-6s %9d%9d%9d%9d%9d%9d%9d%9d\n"
 argument_list|,
 name|s
 operator|.
