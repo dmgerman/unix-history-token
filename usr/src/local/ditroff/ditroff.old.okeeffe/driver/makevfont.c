@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Font description file producer for versatec fonts:  David Slattengren  * Taken from vfontinfo by Andy Hertzfeld  4/79  *  *	Use:  makevfont [ -nNAME ]  [ -s -a -o -l -c -p# -r# -f# -ddir ]  *		[ "-xs1,s2[;s1,s2...]" ]  [ "-ys1,s2[;s1,s2...]" ]  font  *  *	Makefont takes the font named "font" and produces a ditroff description  *	file from it.  The -n option takes the 1 or 2 letter troff name to put  *	the description (default = XX).  The -f option takes an integer per-  *	centage factor to multiply widths by.  The -s, -o and -a options select  *	a different character mapping than for a "roman" font.  s = special;  *	o = otimespecal; a = ascii.  The -l option indicates it has ligatures.  *	The -c option tells makevfont that the font is constant width and  *	will set parameters appropriately.  *  *	Both -x and -y options allow character name mapping.  A colon separated  *	list of comma-separated character-name pairs follows the x or y.  *	Notice that there are no spaces in the -x or -y command.  A -x pair  *	REPLACES the definition for s1 by s2.  A -y pair creates a synonym for  *	s1 and calls it s2.  -x and -y MUST be sent after -s, -m, -i, or -a  *	if one of them is used.  Some synonyms are defaulted.  To remove a  *	synonym or character, leave out s2.  *  *	The -p# option tells what point size the DESC file has as it's  *	"unitwidth" argument (default: 36).  The -r# option is the resolution  *	of the device (default: 200, in units/inch).  The -d option tells  *	where to find fonts (default: /usr/lib/vfont).  */
+comment|/*	makevfont.c	(Berkeley)	85/02/04	1.4  *  * Font description file producer for versatec fonts:  David Slattengren  * Taken from vfontinfo by Andy Hertzfeld  4/79  *  *	Use:  makevfont [ -nNAME ]  [ -s -a -o -l -c -p# -r# -f# -ddir ]  *		[ "-xs1,s2[;s1,s2...]" ]  [ "-ys1,s2[;s1,s2...]" ]  font  *  *	Makefont takes the font named "font" and produces a ditroff description  *	file from it.  The -n option takes the 1 or 2 letter troff name to put  *	the description (default = XX).  The -f option takes an integer per-  *	centage factor to multiply widths by.  The -s, -o and -a options select  *	a different character mapping than for a "roman" font.  s = special;  *	o = otimespecal; a = ascii.  The -l option indicates it has ligatures.  *	The -c option tells makevfont that the font is constant width and  *	will set parameters appropriately.  *  *	Both -x and -y options allow character name mapping.  A colon separated  *	list of comma-separated character-name pairs follows the x or y.  *	Notice that there are no spaces in the -x or -y command.  A -x pair  *	REPLACES the definition for s1 by s2.  A -y pair creates a synonym for  *	s1 and calls it s2.  -x and -y MUST be sent after -s, -m, -i, or -a  *	if one of them is used.  Some synonyms are defaulted.  To remove a  *	synonym or character, leave out s2.  *  *	The -p# option tells what point size the DESC file has as it's  *	"unitwidth" argument (default: 36).  The -r# option is the resolution  *	of the device (default: 200, in units/inch).  The -d option tells  *	where to find fonts (default: /usr/lib/vfont).  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makevfont.c	1.3	(Berkeley)	%G%"
+literal|"@(#)makevfont.c	1.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2839,6 +2839,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* for j */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
