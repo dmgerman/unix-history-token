@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * QDSS IOCTL definitions  *	@(#)qdioctl.h	1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qdioctl.h	1.3  Berkeley  %G%  *  *	derived from: qdioctl.h	1.1	(ULTRIX)	8/22/85  */
 end_comment
 
 begin_comment
-comment|/* static	char	*sccsid = "@(#)qdioctl.h	1.1	(ULTRIX)	8/22/85"; */
+comment|/*  * QDSS IOCTL definitions  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*************************************************************************** *	revision history: **************************************************************************** * * 22 oct 85  longo  fixed QD_PRGTABRES cmd number to be 22 instead of 12 * 14 oct 85  longo  added QD_KERN_LOOP and QD_KERN_UNLOOP * 02 oct 85  longo  added QD_MAPCOLOR and QD_UNMAPCOLOR * 17 sep 85  longo  made QD_MAPIOBUF a read/write command type * ***************************************************************************/
+comment|/*************************************************************************** *	revision history: (belongs in sccs) **************************************************************************** * * 22 oct 85  longo  fixed QD_PRGTABRES cmd number to be 22 instead of 12 * 14 oct 85  longo  added QD_KERN_LOOP and QD_KERN_UNLOOP * 02 oct 85  longo  added QD_MAPCOLOR and QD_UNMAPCOLOR * 17 sep 85  longo  made QD_MAPIOBUF a read/write command type * ***************************************************************************/
 end_comment
 
 begin_ifdef
@@ -24,7 +24,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_else

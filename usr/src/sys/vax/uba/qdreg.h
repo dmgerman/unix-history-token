@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		@(#)qdreg.h	1.2  Berkeley  %G%  *	@(#)qdreg.h	1.5	(ULTRIX)	5/21/86  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qdreg.h	1.3  Berkeley  %G%  *  *	derived from: qdreg.h	1.5	(ULTRIX)	5/21/86  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * qdreg.h  *  * Modification history  *  * QDSS registers/data structures and definitions  *  *  4-Feb-85 - longo  *  *	Created file.  *  * 18-Mar-85 - longo  *  *	Added DGA CSR bit definitions.  *  * 20-Mar-85 - longo  *  *	Revised register naming conventions.  *  * 28-Mar-85 - longo  *  *	Added DUART register struct.  *  * 19-Apr-85 - longo  *  *	Removed "base" entry from 'struct qdmap'.  *  *  1-May-85 - longo  *  *	Changed layout of DUART device map data structure and  *	added command/intrpt/status bit definitions.  *  *  4-Jun-85 - longo  *  *	Added bit definitions for ADDER registers.  *  * 10-Sep-85 - longo  *  *	Changed dga struct DMA address entry names.  *  * 25-Sep-85 - longo  *  *	Changed ADDER status bit constant.  *  * 20-May-86 - ricky palmer  *  *	Added new DEVIOCGET ioctl request code. V2.0  *  */
+comment|/*  * qdreg.h  *  * Modification history (belongs in sccs)  *  * QDSS registers/data structures and definitions  *  *  4-Feb-85 - longo  *  *	Created file.  *  * 18-Mar-85 - longo  *  *	Added DGA CSR bit definitions.  *  * 20-Mar-85 - longo  *  *	Revised register naming conventions.  *  * 28-Mar-85 - longo  *  *	Added DUART register struct.  *  * 19-Apr-85 - longo  *  *	Removed "base" entry from 'struct qdmap'.  *  *  1-May-85 - longo  *  *	Changed layout of DUART device map data structure and  *	added command/intrpt/status bit definitions.  *  *  4-Jun-85 - longo  *  *	Added bit definitions for ADDER registers.  *  * 10-Sep-85 - longo  *  *	Changed dga struct DMA address entry names.  *  * 25-Sep-85 - longo  *  *	Changed ADDER status bit constant.  *  * 20-May-86 - ricky palmer  *  *	Added new DEVIOCGET ioctl request code. V2.0  *  */
 end_comment
 
 begin_comment
