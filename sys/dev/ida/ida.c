@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus_memio.h>
 end_include
 
@@ -1405,6 +1411,8 @@ name|hdr
 operator|.
 name|size
 operator|=
+name|htole16
+argument_list|(
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -1422,6 +1430,7 @@ name|IDA_NSEG
 operator|)
 operator|>>
 literal|2
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1446,12 +1455,15 @@ index|]
 operator|.
 name|addr
 operator|=
+name|htole32
+argument_list|(
 name|segs
 index|[
 name|i
 index|]
 operator|.
 name|ds_addr
+argument_list|)
 expr_stmt|;
 name|hwqcb
 operator|->
@@ -1462,12 +1474,15 @@ index|]
 operator|.
 name|length
 operator|=
+name|htole32
+argument_list|(
 name|segs
 index|[
 name|i
 index|]
 operator|.
 name|ds_len
+argument_list|)
 expr_stmt|;
 block|}
 name|hwqcb
@@ -1650,7 +1665,10 @@ name|req
 operator|.
 name|blkno
 operator|=
+name|htole32
+argument_list|(
 name|pblkno
+argument_list|)
 expr_stmt|;
 name|hwqcb
 operator|->
@@ -1658,11 +1676,14 @@ name|req
 operator|.
 name|bcount
 operator|=
+name|htole16
+argument_list|(
 name|howmany
 argument_list|(
 name|datasize
 argument_list|,
 name|DEV_BSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hwqcb
