@@ -225,8 +225,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-operator|*
-name|cp
+name|ch
 condition|)
 block|{
 case|case
