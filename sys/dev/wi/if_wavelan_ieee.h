@@ -1330,6 +1330,10 @@ begin_comment
 comment|/* memory size info (XXX Lucent) */
 end_comment
 
+begin_comment
+comment|/* Looks like on lucnet pri firm too */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1693,6 +1697,17 @@ end_define
 
 begin_comment
 comment|/* WEP privacy option available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_DBM_COMMS_QUAL
+value|0xFD51
+end_define
+
+begin_comment
+comment|/* CommQuality normalized to dBm */
 end_comment
 
 begin_define
