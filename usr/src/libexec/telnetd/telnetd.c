@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.40 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2831,15 +2831,25 @@ operator|!
 name|uselinemode
 condition|)
 block|{
+name|unpcc
+operator|=
+name|pcc
+expr_stmt|;
+name|unptyip
+operator|=
+name|ptyibuf
+expr_stmt|;
 name|pcc
 operator|=
 name|term_output
 argument_list|(
-name|ptyibuf
+operator|&
+name|unptyip
 argument_list|,
 name|ptyibuf2
 argument_list|,
-name|pcc
+operator|&
+name|unpcc
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -2997,6 +3007,34 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|CRAY2
+comment|/* 		 * If chars were left over from the terminal driver, 		 * note their existence. 		 */
+if|if
+condition|(
+operator|!
+name|uselinemode
+operator|&&
+name|unpcc
+condition|)
+block|{
+name|pcc
+operator|=
+name|unpcc
+expr_stmt|;
+name|unpcc
+operator|=
+literal|0
+expr_stmt|;
+name|ptyip
+operator|=
+name|unptyip
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CRAY2 */
 if|if
 condition|(
 name|FD_ISSET
