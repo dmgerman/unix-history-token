@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  * from: hp300/hp300/clock.c	7.19 (Berkeley) 2/18/93  *  *	@(#)clock.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  * from: hp300/hp300/clock.c	7.19 (Berkeley) 2/18/93  *  *	@(#)clock.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -505,6 +505,12 @@ condition|)
 block|{
 name|bbc2
 operator|->
+name|cal_ctl_b
+operator||=
+name|BBC2_B_SET
+expr_stmt|;
+name|bbc2
+operator|->
 name|cal_sec
 operator|=
 name|tmptr
@@ -550,6 +556,13 @@ operator|=
 name|tmptr
 operator|->
 name|tm_year
+expr_stmt|;
+name|bbc2
+operator|->
+name|cal_ctl_b
+operator|&=
+operator|~
+name|BBC2_B_SET
 expr_stmt|;
 block|}
 else|else
@@ -884,6 +897,22 @@ operator|==
 name|LUNA_II
 condition|)
 block|{
+while|while
+condition|(
+name|bbc2
+operator|->
+name|cal_ctl_a
+operator|&
+name|BBC2_A_UIP
+condition|)
+block|{}
+comment|/* wait (max 224 us) */
+name|bbc2
+operator|->
+name|cal_ctl_b
+operator||=
+name|BBC2_B_SET
+expr_stmt|;
 name|sec
 operator|=
 name|bbc2
@@ -921,6 +950,13 @@ operator|->
 name|cal_year
 operator|+
 literal|1900
+expr_stmt|;
+name|bbc2
+operator|->
+name|cal_ctl_b
+operator|&=
+operator|~
+name|BBC2_B_SET
 expr_stmt|;
 block|}
 else|else
@@ -1029,21 +1065,6 @@ argument_list|,
 literal|12
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* limitted 2000 now ... */
-name|range_test
-argument_list|(
-name|year
-argument_list|,
-name|STARTOFTIME
-argument_list|,
-literal|2000
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|year
@@ -1056,8 +1077,6 @@ operator|+=
 literal|100
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|tmp
 operator|=
 literal|0
