@@ -10,12 +10,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ENTROPYBIN
-value|256
+name|HARVEST_RING_SIZE
+value|1024
 end_define
 
 begin_comment
-comment|/* buckets to harvest entropy events  */
+comment|/* harvest ring buffer size */
 end_comment
 
 begin_define
