@@ -310,6 +310,14 @@ decl_stmt|;
 name|u_long
 name|ccr_mask
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|ccr_res
+decl_stmt|;
+name|int
+name|ccr_rid
+decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -490,16 +498,10 @@ begin_struct
 struct|struct
 name|pccard_softc
 block|{
-comment|/* this stuff is for the socket */
-name|pccard_chipset_tag_t
-name|pct
-decl_stmt|;
-name|pccard_chipset_handle_t
-name|pch
-decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
+comment|/* this stuff is for the socket */
 comment|/* this stuff is for the card */
 name|struct
 name|pccard_card
@@ -513,15 +515,6 @@ name|int
 name|sc_enabled_count
 decl_stmt|;
 comment|/* num functions enabled */
-comment|/* 	 * These are passed down from the PCCARD chip, and exist only 	 * so that cards with Very Special address allocation needs 	 * know what range they should be dealing with. 	 */
-name|bus_addr_t
-name|iobase
-decl_stmt|;
-comment|/* start i/o space allocation here */
-name|bus_size_t
-name|iosize
-decl_stmt|;
-comment|/* size of the i/o space range */
 block|}
 struct|;
 end_struct
@@ -956,46 +949,6 @@ parameter_list|)
 define|\
 value|(pccard_chip_mem_unmap((pf)->sc->pct, (pf)->sc->pch, (window)))
 end_define
-
-begin_function_decl
-name|void
-modifier|*
-name|pccard_intr_establish
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pccard_intr_disestablish
-parameter_list|(
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

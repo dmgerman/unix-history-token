@@ -23,50 +23,28 @@ directive|define
 name|_PCCARD_PCCARDCHIP_H_
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
 file|<machine/bus.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|pccard_function
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|pccard_mem_handle
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|pccard_io_handle
-struct_decl|;
-end_struct_decl
-
 begin_comment
+unit|struct pccard_function; struct pccard_mem_handle; struct pccard_io_handle;
 comment|/* interfaces for pccard to call the chipset */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|pccard_chip_functions
-modifier|*
-name|pccard_chipset_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|pccard_chipset_handle_t
-typedef|;
-end_typedef
+begin_endif
+unit|typedef struct pccard_chip_functions *pccard_chipset_tag_t; typedef void *pccard_chipset_handle_t;
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -110,218 +88,49 @@ name|PCCARD_WIDTH_IO16
 value|2
 end_define
 
-begin_struct
-struct|struct
-name|pccard_chip_functions
-block|{
-comment|/* memory space allocation */
-name|int
-function_decl|(
-modifier|*
-name|mem_alloc
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|pccard_mem_handle
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|mem_free
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|struct
-name|pccard_mem_handle
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* memory space window mapping */
-name|int
-function_decl|(
-modifier|*
-name|mem_map
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_addr_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|pccard_mem_handle
-modifier|*
-parameter_list|,
-name|bus_addr_t
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|mem_unmap
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-comment|/* I/O space allocation */
-name|int
-function_decl|(
-modifier|*
-name|io_alloc
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|bus_addr_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|pccard_io_handle
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|io_free
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|struct
-name|pccard_io_handle
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* I/O space window mapping */
-name|int
-function_decl|(
-modifier|*
-name|io_map
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_addr_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|struct
-name|pccard_io_handle
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|io_unmap
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-comment|/* interrupt glue */
-name|void
-modifier|*
-function_decl|(
-modifier|*
-name|intr_establish
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|intr_disestablish
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* card enable/disable */
-name|void
-function_decl|(
-modifier|*
-name|socket_enable
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|socket_disable
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|)
-function_decl|;
-comment|/* card detection */
-name|int
-function_decl|(
-modifier|*
-name|card_detect
-function_decl|)
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
+unit|struct pccard_chip_functions {
+comment|/* memory space allocation */
+end_comment
+
+begin_comment
+unit|int	(*mem_alloc)(pccard_chipset_handle_t, bus_size_t, 		    struct pccard_mem_handle *); 	void	(*mem_free)(pccard_chipset_handle_t, 		    struct pccard_mem_handle *);
+comment|/* memory space window mapping */
+end_comment
+
+begin_comment
+unit|int	(*mem_map)(pccard_chipset_handle_t, int, bus_addr_t, 		    bus_size_t, struct pccard_mem_handle *, 		    bus_addr_t *, int *); 	void	(*mem_unmap)(pccard_chipset_handle_t, int);
+comment|/* I/O space allocation */
+end_comment
+
+begin_comment
+unit|int	(*io_alloc) (pccard_chipset_handle_t, bus_addr_t, 		    bus_size_t, bus_size_t, struct pccard_io_handle *); 	void	(*io_free) (pccard_chipset_handle_t, 		    struct pccard_io_handle *);
+comment|/* I/O space window mapping */
+end_comment
+
+begin_comment
+unit|int	(*io_map) (pccard_chipset_handle_t, int, bus_addr_t, 		    bus_size_t, struct pccard_io_handle *, int *); 	void	(*io_unmap) (pccard_chipset_handle_t, int);
+comment|/* interrupt glue */
+end_comment
+
+begin_comment
+unit|void	*(*intr_establish) (pccard_chipset_handle_t, 		    struct pccard_function *, int, int (*)(void *), void *); 	void	(*intr_disestablish) (pccard_chipset_handle_t, void *);
+comment|/* card enable/disable */
+end_comment
+
+begin_comment
+unit|void	(*socket_enable) (pccard_chipset_handle_t); 	void	(*socket_disable) (pccard_chipset_handle_t);
+comment|/* card detection */
+end_comment
+
+begin_comment
+unit|int (*card_detect)(pccard_chipset_handle_t);   };
 comment|/* Memory space functions. */
 end_comment
 
@@ -515,12 +324,6 @@ define|\
 value|((*(tag)->intr_disestablish)((handle), (ih)))
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/* Socket functions. */
 end_comment
@@ -551,7 +354,23 @@ define|\
 value|((*(tag)->socket_disable)((handle)))
 end_define
 
+begin_comment
+unit|struct pccardbus_attach_args { 	char *paa_busname;
+comment|/* Bus name */
+end_comment
+
+begin_comment
+unit|pccard_chipset_tag_t pct; 	pccard_chipset_handle_t pch; 	bus_addr_t iobase;
+comment|/* start i/o space allocation here */
+end_comment
+
+begin_comment
+unit|bus_size_t iosize;
+comment|/* size of the i/o space range */
+end_comment
+
 begin_endif
+unit|};
 endif|#
 directive|endif
 end_endif
@@ -559,33 +378,6 @@ end_endif
 begin_comment
 comment|/* 0 */
 end_comment
-
-begin_struct
-struct|struct
-name|pccardbus_attach_args
-block|{
-name|char
-modifier|*
-name|paa_busname
-decl_stmt|;
-comment|/* Bus name */
-name|pccard_chipset_tag_t
-name|pct
-decl_stmt|;
-name|pccard_chipset_handle_t
-name|pch
-decl_stmt|;
-name|bus_addr_t
-name|iobase
-decl_stmt|;
-comment|/* start i/o space allocation here */
-name|bus_size_t
-name|iosize
-decl_stmt|;
-comment|/* size of the i/o space range */
-block|}
-struct|;
-end_struct
 
 begin_endif
 endif|#
