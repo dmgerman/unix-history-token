@@ -199,12 +199,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<dev/tdfx/tdfx_linux.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/tdfx/tdfx_io.h>
 end_include
 
