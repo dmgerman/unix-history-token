@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ed.c	4.1	82/05/07	*/
+comment|/*	ed.c	4.2	82/12/24	*/
 end_comment
 
 begin_comment
