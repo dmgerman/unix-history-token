@@ -472,7 +472,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|u_char
 name|maxhops
 init|=
 literal|4
@@ -1145,7 +1145,7 @@ block|}
 name|maxhops
 operator|=
 operator|(
-name|u_int
+name|u_char
 operator|)
 name|n
 expr_stmt|;
@@ -2116,7 +2116,8 @@ name|pktbuf
 decl_stmt|;
 name|u_short
 name|secs
-decl_stmt|,
+decl_stmt|;
+name|u_char
 name|hops
 decl_stmt|;
 comment|/* XXX - SLIP init: Set bp_ciaddr = recv_addr here? */
@@ -2160,12 +2161,9 @@ return|return;
 comment|/* Has this packet hopped too many times? */
 name|hops
 operator|=
-name|ntohs
-argument_list|(
 name|bp
 operator|->
 name|bp_hops
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2195,10 +2193,7 @@ name|bp
 operator|->
 name|bp_hops
 operator|=
-name|htons
-argument_list|(
 name|hops
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Here one might discard a request from the same subnet as the 	 * real server, but we can assume that the real server will send 	 * a reply to the client before it waits for minwait seconds. 	 */
 comment|/* If gateway address is not set, put in local interface addr. */
