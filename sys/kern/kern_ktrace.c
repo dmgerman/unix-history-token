@@ -2177,6 +2177,7 @@ name|p_traceflag
 operator||=
 name|facs
 expr_stmt|;
+comment|/* XXX: Not safe */
 if|if
 condition|(
 name|curp
