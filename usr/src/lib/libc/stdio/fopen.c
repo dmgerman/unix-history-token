@@ -71,11 +71,10 @@ operator||
 name|_IORW
 operator|)
 condition|;
-name|iop
-operator|++
 control|)
 if|if
 condition|(
+operator|++
 name|iop
 operator|>=
 name|_lastbuf
