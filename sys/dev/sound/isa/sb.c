@@ -5420,6 +5420,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* reset mixer */
+if|if
+condition|(
+operator|!
+operator|(
+name|sb
+operator|->
+name|bd_flags
+operator|&
+name|BD_F_ESS
+operator|)
+condition|)
 name|sb_setmixer
 argument_list|(
 name|sb
