@@ -1639,6 +1639,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|network_layer
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|AF_APPLETALK
