@@ -283,12 +283,32 @@ specifier|static
 name|struct
 name|passwd
 name|_pw_passwd
+init|=
+block|{
+literal|""
+block|,
+literal|""
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|0
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* password structure */
-end_comment
 
 begin_decl_stmt
 specifier|static
