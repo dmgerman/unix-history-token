@@ -755,9 +755,11 @@ default|default:
 comment|/* other ones, only internal with force */
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
 name|setstate_force
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1630,9 +1632,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|vps
 operator|&
 name|volplex_otherup
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1711,12 +1715,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|statemap
 operator|&
 operator|(
 name|sd_upstate
 operator||
 name|sd_rebornstate
+operator|)
 operator|)
 operator|==
 name|statemap
