@@ -758,7 +758,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: preposterous time in file system"
+literal|"WARNING: preposterous time in filesystem"
 argument_list|)
 expr_stmt|;
 comment|/* read the system clock anyway */
@@ -852,7 +852,7 @@ operator|>
 literal|59
 condition|)
 block|{
-comment|/* 		 * Believe the time in the file system for lack of 		 * anything better, resetting the TODR. 		 */
+comment|/* 		 * Believe the time in the filesystem for lack of 		 * anything better, resetting the TODR. 		 */
 name|s
 operator|=
 name|splclock

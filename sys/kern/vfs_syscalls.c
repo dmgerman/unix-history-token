@@ -5201,7 +5201,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Unmount a file system.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
+comment|/*  * Unmount a filesystem.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
 end_comment
 
 begin_ifndef
@@ -5375,7 +5375,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Don't allow unmounting the root file system. 	 */
+comment|/* 	 * Don't allow unmounting the root filesystem. 	 */
 if|if
 condition|(
 name|mp
@@ -5447,7 +5447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do the actual file system unmount.  */
+comment|/*  * Do the actual filesystem unmount.  */
 end_comment
 
 begin_function
@@ -19829,7 +19829,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * Read a block of directory entries in a file system independent format.  */
+comment|/*  * Read a block of directory entries in a filesystem independent format.  */
 end_comment
 
 begin_ifndef
@@ -20629,7 +20629,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * Read a block of directory entries in a file system independent format.  */
+comment|/*  * Read a block of directory entries in a filesystem independent format.  */
 end_comment
 
 begin_ifndef

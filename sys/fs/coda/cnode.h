@@ -8,7 +8,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1990 Carnegie-Mellon Unive
 end_comment
 
 begin_comment
-comment|/*  * This code was written for the Coda file system at Carnegie Mellon University.  * Contributers include David Steere, James Kistler, and M. Satyanarayanan.  */
+comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon University.  * Contributers include David Steere, James Kistler, and M. Satyanarayanan.  */
 end_comment
 
 begin_ifndef
@@ -463,7 +463,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * CODA structure to hold mount/file system information  */
+comment|/*  * CODA structure to hold mount/filesystem information  */
 end_comment
 
 begin_struct

@@ -764,14 +764,14 @@ name|bpu
 operator|*
 name|bsize
 expr_stmt|;
-comment|/* fundamental file system block size */
+comment|/* fundamental filesystem block size */
 name|sbp
 operator|->
 name|f_blocks
 operator|=
 name|units
 expr_stmt|;
-comment|/* total data blocks in file system */
+comment|/* total data blocks in filesystem */
 name|sbp
 operator|->
 name|f_bfree
@@ -792,7 +792,7 @@ name|f_files
 operator|=
 literal|0xffff
 expr_stmt|;
-comment|/* total file nodes in file system */
+comment|/* total file nodes in filesystem */
 name|sbp
 operator|->
 name|f_ffree
@@ -970,14 +970,14 @@ name|bpu
 operator|*
 name|bsize
 expr_stmt|;
-comment|/* fundamental file system block size */
+comment|/* fundamental filesystem block size */
 name|sbp
 operator|->
 name|f_blocks
 operator|=
 name|units
 expr_stmt|;
-comment|/* total data blocks in file system */
+comment|/* total data blocks in filesystem */
 name|sbp
 operator|->
 name|f_bfree
@@ -998,7 +998,7 @@ name|f_files
 operator|=
 literal|0xffff
 expr_stmt|;
-comment|/* total file nodes in file system */
+comment|/* total file nodes in filesystem */
 name|sbp
 operator|->
 name|f_ffree

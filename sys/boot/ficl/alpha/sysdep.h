@@ -549,7 +549,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** FICL_WANT_FILE ** Includes the FILE and FILE-EXT wordset and associated code. Turn this off if you do not ** have a file system! ** Contributed by Larry Hastings */
+comment|/* ** FICL_WANT_FILE ** Includes the FILE and FILE-EXT wordset and associated code. Turn this off if you do not ** have a filesystem! ** Contributed by Larry Hastings */
 end_comment
 
 begin_if

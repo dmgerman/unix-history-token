@@ -76,7 +76,7 @@ file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Balloc defines the structure of file system storage  * by allocating the physical blocks on a device given  * the inode and the logical block number in a file.  */
+comment|/*  * Balloc defines the structure of filesystem storage  * by allocating the physical blocks on a device given  * the inode and the logical block number in a file.  */
 end_comment
 
 begin_function

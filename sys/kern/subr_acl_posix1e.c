@@ -1456,7 +1456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For the purposes of file systems maintaining the _OBJ entries in an  * inode with a mode_t field, this routine converts a mode_t entry  * to an acl_perm_t.  */
+comment|/*  * For the purposes of filesystems maintaining the _OBJ entries in an  * inode with a mode_t field, this routine converts a mode_t entry  * to an acl_perm_t.  */
 end_comment
 
 begin_function
@@ -1860,7 +1860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform a syntactic check of the ACL, sufficient to allow an  * implementing file system to determine if it should accept this and  * rely on the POSIX.1e ACL properties.  */
+comment|/*  * Perform a syntactic check of the ACL, sufficient to allow an  * implementing filesystem to determine if it should accept this and  * rely on the POSIX.1e ACL properties.  */
 end_comment
 
 begin_function

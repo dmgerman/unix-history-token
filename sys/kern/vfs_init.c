@@ -1624,7 +1624,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initialize the vnode structures and initialize each file system type.  */
+comment|/*  * Initialize the vnode structures and initialize each filesystem type.  */
 end_comment
 
 begin_comment
@@ -1666,7 +1666,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Register a new file system type in the global table */
+comment|/* Register a new filesystem type in the global table */
 end_comment
 
 begin_function
@@ -1825,7 +1825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remove registration of a file system type */
+comment|/* Remove registration of a filesystem type */
 end_comment
 
 begin_function
@@ -2017,7 +2017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Standard kernel module handling code for file system modules.  * Referenced from VFS_SET().  */
+comment|/*  * Standard kernel module handling code for filesystem modules.  * Referenced from VFS_SET().  */
 end_comment
 
 begin_function

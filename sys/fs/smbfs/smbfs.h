@@ -94,7 +94,7 @@ comment|/* maximum number of path components */
 end_comment
 
 begin_comment
-comment|/* Layout of the mount control block for a netware file system. */
+comment|/* Layout of the mount control block for a netware filesystem. */
 end_comment
 
 begin_struct

@@ -178,7 +178,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"Netware file system"
+literal|"Netware filesystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2533,7 +2533,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* placeholder */
-comment|/* fundamental file system block size */
+comment|/* fundamental filesystem block size */
 name|sbp
 operator|->
 name|f_bsize
@@ -2556,7 +2556,7 @@ argument_list|)
 operator|->
 name|buffer_size
 expr_stmt|;
-comment|/* total data blocks in file system */
+comment|/* total data blocks in filesystem */
 name|sbp
 operator|->
 name|f_blocks
@@ -2591,7 +2591,7 @@ name|vi
 operator|.
 name|purgeable_blocks
 expr_stmt|;
-comment|/* total file nodes in file system */
+comment|/* total file nodes in filesystem */
 name|sbp
 operator|->
 name|f_files
@@ -2636,7 +2636,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-comment|/* file system id */
+comment|/* filesystem id */
 name|sbp
 operator|->
 name|f_owner

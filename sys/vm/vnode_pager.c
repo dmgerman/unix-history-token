@@ -1379,7 +1379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * small block file system vnode pager input  */
+comment|/*  * small block filesystem vnode pager input  */
 end_comment
 
 begin_function

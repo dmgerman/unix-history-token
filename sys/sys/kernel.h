@@ -370,7 +370,7 @@ name|SI_SUB_VFS
 init|=
 literal|0x4000000
 block|,
-comment|/* virtual file system*/
+comment|/* virtual filesystem*/
 name|SI_SUB_CLOCKS
 init|=
 literal|0x4800000

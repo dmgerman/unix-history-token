@@ -361,7 +361,7 @@ decl_stmt|;
 name|mode_t
 name|accessmode
 decl_stmt|;
-comment|/* 	 * Use NULL path to indicate we are mounting the root file system. 	 */
+comment|/* 	 * Use NULL path to indicate we are mounting the root filesystem. 	 */
 if|if
 condition|(
 name|path
@@ -440,7 +440,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Mounting non-root file system or updating a file system 	 */
+comment|/* 	 * Mounting non-root filesystem or updating a filesystem 	 */
 if|if
 condition|(
 operator|(
@@ -3904,7 +3904,7 @@ name|UFS_EXTATTR
 ifdef|#
 directive|ifdef
 name|UFS_EXTATTR_AUTOSTART
-comment|/* 	 * 	 * Auto-starting does the following: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the file system was busy/not 	 * available, so would effectively be "atomic". 	 */
+comment|/* 	 * 	 * Auto-starting does the following: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the filesystem was busy/not 	 * available, so would effectively be "atomic". 	 */
 operator|(
 name|void
 operator|)
@@ -4029,7 +4029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sanity checks for old file systems.  *  * XXX - goes away some day.  */
+comment|/*  * Sanity checks for old filesystems.  *  * XXX - goes away some day.  */
 end_comment
 
 begin_function
@@ -4823,7 +4823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file system statistics.  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function
@@ -5449,7 +5449,7 @@ operator|&
 name|mntvnode_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Force stale file system control information to be flushed. 	 */
+comment|/* 	 * Force stale filesystem control information to be flushed. 	 */
 if|if
 condition|(
 name|waitfor
@@ -6835,7 +6835,7 @@ operator|->
 name|fs_sbsize
 argument_list|)
 expr_stmt|;
-comment|/* Restore compatibility to old file systems.		   XXX */
+comment|/* Restore compatibility to old filesystems.		   XXX */
 name|dfs
 operator|=
 operator|(

@@ -2995,7 +2995,7 @@ name|swap_nblks
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
-comment|/* 		 * Since the swap file is not the root dir of a file system, 		 * hack it to a regular file. 		 */
+comment|/* 		 * Since the swap file is not the root dir of a filesystem, 		 * hack it to a regular file. 		 */
 name|vp
 operator|->
 name|v_type
@@ -5138,7 +5138,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Goes something like this.. 	 * - Call vflush() to clear out vnodes for this file system 	 * - Close the socket 	 * - Free up the data structures 	 */
+comment|/* 	 * Goes something like this.. 	 * - Call vflush() to clear out vnodes for this filesystem 	 * - Close the socket 	 * - Free up the data structures 	 */
 comment|/* In the forced case, cancel any outstanding requests. */
 if|if
 condition|(

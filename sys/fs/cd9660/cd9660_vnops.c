@@ -497,7 +497,7 @@ name|ap
 operator|->
 name|a_mode
 decl_stmt|;
-comment|/* 	 * Disallow write attempts unless the file is a socket, 	 * fifo, or a block or character device resident on the 	 * file system. 	 */
+comment|/* 	 * Disallow write attempts unless the file is a socket, 	 * fifo, or a block or character device resident on the 	 * filesystem. 	 */
 if|if
 condition|(
 name|mode

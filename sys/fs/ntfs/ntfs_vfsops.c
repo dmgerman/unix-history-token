@@ -487,7 +487,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 *** 		 * Mounting root file system 		 *** 		 */
+comment|/* 		 *** 		 * Mounting root filesystem 		 *** 		 */
 comment|/* Get vnode for root device*/
 if|if
 condition|(
@@ -544,7 +544,7 @@ name|dostatfs
 goto|;
 comment|/* success*/
 block|}
-comment|/* 	 *** 	 * Mounting non-root file system or updating a file system 	 *** 	 */
+comment|/* 	 *** 	 * Mounting non-root filesystem or updating a filesystem 	 *** 	 */
 comment|/* copy in user arguments*/
 name|err
 operator|=

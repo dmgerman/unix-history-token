@@ -378,7 +378,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Simple file system protocol
+comment|// Simple filesystem protocol
 end_comment
 
 begin_comment

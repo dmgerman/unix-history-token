@@ -453,7 +453,7 @@ literal|"hpfs_mount():\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *** 	 * Mounting non-root file system or updating a file system 	 *** 	 */
+comment|/* 	 *** 	 * Mounting non-root filesystem or updating a filesystem 	 *** 	 */
 comment|/* copy in user arguments*/
 name|err
 operator|=

@@ -602,7 +602,7 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
-comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * _np calls are local extensions that reflect an environment capable of  * opening file descriptors of directories, and allowing additional  * ACL type for different file systems (i.e., AFS).  */
+comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * _np calls are local extensions that reflect an environment capable of  * opening file descriptors of directories, and allowing additional  * ACL type for different filesystems (i.e., AFS).  */
 name|__BEGIN_DECLS
 name|int
 name|acl_add_perm

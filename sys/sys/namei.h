@@ -466,7 +466,7 @@ value|0x200000
 end_define
 
 begin_comment
-comment|/* file system lookup() unlocked parent dir */
+comment|/* filesystem lookup() unlocked parent dir */
 end_comment
 
 begin_define

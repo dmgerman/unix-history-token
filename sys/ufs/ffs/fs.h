@@ -16,7 +16,7 @@ name|_UFS_FFS_FS_H_
 end_define
 
 begin_comment
-comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at `newfs' time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The size and offset of the super-block in sector-size neutral bytes.  */
+comment|/*  * Each disk drive contains some number of filesystems.  * A filesystem consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A filesystem is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at `newfs' time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For filesystem fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The size and offset of the super-block in sector-size neutral bytes.  */
 end_comment
 
 begin_define
@@ -52,7 +52,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * Addresses stored in inodes are capable of addressing fragments  * of `blocks'. File system blocks of at most size MAXBSIZE can  * be optionally broken into 2, 4, or 8 pieces, each of which is  * addressable; these pieces may be DEV_BSIZE, or some multiple of  * a DEV_BSIZE unit.  *  * Large files consist of exclusively large data blocks.  To avoid  * undue wasted disk space, the last data block of a small file may be  * allocated as only as many fragments of a large block as are  * necessary.  The file system format retains only a single pointer  * to such a fragment, which is a piece of a single large block that  * has been divided.  The size of such a fragment is determinable from  * information in the inode, using the ``blksize(fs, ip, lbn)'' macro.  *  * The file system records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  */
+comment|/*  * Addresses stored in inodes are capable of addressing fragments  * of `blocks'. File system blocks of at most size MAXBSIZE can  * be optionally broken into 2, 4, or 8 pieces, each of which is  * addressable; these pieces may be DEV_BSIZE, or some multiple of  * a DEV_BSIZE unit.  *  * Large files consist of exclusively large data blocks.  To avoid  * undue wasted disk space, the last data block of a small file may be  * allocated as only as many fragments of a large block as are  * necessary.  The filesystem format retains only a single pointer  * to such a fragment, which is a piece of a single large block that  * has been divided.  The size of such a fragment is determinable from  * information in the inode, using the ``blksize(fs, ip, lbn)'' macro.  *  * The filesystem records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  */
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
+comment|/*  * The path name on which the filesystem is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 95% and 100% full; thus the minimum default  * value of fs_minfree is 5%. However, to get good clustering  * performance, 10% is a better choice. hence we use 10% as our  * default value. With 10% free space, fragmentation is not a  * problem, so we choose to optimize for time.  */
+comment|/*  * MINFREE gives the minimum acceptable percentage of filesystem  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the filesystem  * is run at between 95% and 100% full; thus the minimum default  * value of fs_minfree is 5%. However, to get good clustering  * performance, 10% is a better choice. hence we use 10% as our  * default value. With 10% free space, fragmentation is not a  * problem, so we choose to optimize for time.  */
 end_comment
 
 begin_define
@@ -321,7 +321,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Super block for an FFS file system.  */
+comment|/*  * Super block for an FFS filesystem.  */
 end_comment
 
 begin_struct
@@ -331,7 +331,7 @@ block|{
 name|int32_t
 name|fs_firstfield
 decl_stmt|;
-comment|/* historic file system linked list, */
+comment|/* historic filesystem linked list, */
 name|int32_t
 name|fs_unused_1
 decl_stmt|;
@@ -516,7 +516,7 @@ comment|/* this comes from the disk driver partitioning */
 name|int32_t
 name|fs_ncyl
 decl_stmt|;
-comment|/* cylinders in file system */
+comment|/* cylinders in filesystem */
 comment|/* these fields can be computed from the others */
 name|int32_t
 name|fs_cpg
@@ -544,7 +544,7 @@ comment|/* super block modified flag */
 name|int8_t
 name|fs_clean
 decl_stmt|;
-comment|/* file system is clean flag */
+comment|/* filesystem is clean flag */
 name|int8_t
 name|fs_ronly
 decl_stmt|;
@@ -936,7 +936,7 @@ value|fs_csp[indx]
 end_define
 
 begin_comment
-comment|/*  * Cylinder group block for a file system.  */
+comment|/*  * Cylinder group block for a filesystem.  */
 end_comment
 
 begin_define
@@ -1139,7 +1139,7 @@ value|((int32_t *)((u_int8_t *)(cgp) + (cgp)->cg_clustersumoff))
 end_define
 
 begin_comment
-comment|/*  * The following structure is defined  * for compatibility with old file systems.  */
+comment|/*  * The following structure is defined  * for compatibility with old filesystems.  */
 end_comment
 
 begin_struct
@@ -1239,7 +1239,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Turn file system block numbers into disk block addresses.  * This maps file system blocks to device size blocks.  */
+comment|/*  * Turn filesystem block numbers into disk block addresses.  * This maps filesystem blocks to device size blocks.  */
 end_comment
 
 begin_define
@@ -1267,7 +1267,7 @@ value|((b)>> (fs)->fs_fsbtodb)
 end_define
 
 begin_comment
-comment|/*  * Cylinder group macros to locate things in cylinder groups.  * They calc file system addresses of cylinder group data structures.  */
+comment|/*  * Cylinder group macros to locate things in cylinder groups.  * They calc filesystem addresses of cylinder group data structures.  */
 end_comment
 
 begin_define
@@ -1360,7 +1360,7 @@ value|(cgbase(fs, c) + (fs)->fs_cgoffset * ((c)& ~((fs)->fs_cgmask)))
 end_define
 
 begin_comment
-comment|/*  * Macros for handling inode numbers:  *     inode number to file system block offset.  *     inode number to cylinder group number.  *     inode number to file system block address.  */
+comment|/*  * Macros for handling inode numbers:  *     inode number to filesystem block offset.  *     inode number to cylinder group number.  *     inode number to filesystem block address.  */
 end_comment
 
 begin_define
@@ -1401,7 +1401,7 @@ value|((x) % INOPB(fs))
 end_define
 
 begin_comment
-comment|/*  * Give cylinder group number for a file system block.  * Give cylinder group block number for a file system block.  */
+comment|/*  * Give cylinder group number for a filesystem block.  * Give cylinder group block number for a filesystem block.  */
 end_comment
 
 begin_define
@@ -1667,7 +1667,7 @@ value|(blkstofrags((fs), (fs)->fs_cstotal.cs_nbfree) + \ 	(fs)->fs_cstotal.cs_nf
 end_define
 
 begin_comment
-comment|/*  * Determining the size of a file block in the file system.  */
+comment|/*  * Determining the size of a file block in the filesystem.  */
 end_comment
 
 begin_define
@@ -1764,7 +1764,7 @@ value|((fs)->fs_inopb>> (fs)->fs_fragshift)
 end_define
 
 begin_comment
-comment|/*  * Number of indirects in a file system block.  */
+comment|/*  * Number of indirects in a filesystem block.  */
 end_comment
 
 begin_define

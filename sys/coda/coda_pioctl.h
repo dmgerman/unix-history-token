@@ -8,7 +8,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon Unive
 end_comment
 
 begin_comment
-comment|/*  * ITC Remote file system - vice ioctl interface module  */
+comment|/*  * ITC Remote filesystem - vice ioctl interface module  */
 end_comment
 
 begin_comment

@@ -1214,7 +1214,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Mount a file system.  */
+comment|/*  * Mount a filesystem.  */
 end_comment
 
 begin_ifndef
@@ -1435,7 +1435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unmount a file system.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
+comment|/*  * Unmount a filesystem.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
 end_comment
 
 begin_ifndef
@@ -1621,7 +1621,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Don't allow unmounting the root file system. 	 */
+comment|/* 	 * Don't allow unmounting the root filesystem. 	 */
 if|if
 condition|(
 name|mp

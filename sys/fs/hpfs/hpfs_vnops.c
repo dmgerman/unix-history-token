@@ -3579,7 +3579,7 @@ name|h_no
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disallow write attempts on read-only file systems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the file system. 	 */
+comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
 name|mode

@@ -1303,7 +1303,7 @@ name|errnum
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/*      Returns the error message for the last error which occurred on the    given compressed file. errnum is set to zlib error number. If an    error occurred in the file system and not in the compression library,    errnum is set to Z_ERRNO and the application may consult errno    to get the exact error code. */
+comment|/*      Returns the error message for the last error which occurred on the    given compressed file. errnum is set to zlib error number. If an    error occurred in the filesystem and not in the compression library,    errnum is set to Z_ERRNO and the application may consult errno    to get the exact error code. */
 comment|/* checksum functions */
 comment|/*      These functions are not related to compression but are exported    anyway because they might be useful in applications using the    compression library. */
 specifier|extern

@@ -95,7 +95,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* file system id type */
+comment|/* filesystem id type */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * file system statistics  */
+comment|/*  * filesystem statistics  */
 end_comment
 
 begin_define
@@ -223,7 +223,7 @@ comment|/* placeholder */
 name|long
 name|f_bsize
 decl_stmt|;
-comment|/* fundamental file system block size */
+comment|/* fundamental filesystem block size */
 name|long
 name|f_iosize
 decl_stmt|;
@@ -231,7 +231,7 @@ comment|/* optimal transfer block size */
 name|long
 name|f_blocks
 decl_stmt|;
-comment|/* total data blocks in file system */
+comment|/* total data blocks in filesystem */
 name|long
 name|f_bfree
 decl_stmt|;
@@ -243,7 +243,7 @@ comment|/* free blocks avail to non-superuser */
 name|long
 name|f_files
 decl_stmt|;
-comment|/* total file nodes in file system */
+comment|/* total file nodes in filesystem */
 name|long
 name|f_ffree
 decl_stmt|;
@@ -251,7 +251,7 @@ comment|/* free file nodes in fs */
 name|fsid_t
 name|f_fsid
 decl_stmt|;
-comment|/* file system id */
+comment|/* filesystem id */
 name|uid_t
 name|f_owner
 decl_stmt|;
@@ -327,7 +327,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Structure per mounted file system.  Each mounted file system has an  * array of operations and an instance record.  The file systems are  * put on a doubly linked list.  *  * NOTE: mnt_nvnodelist and mnt_reservedvnlist.  At the moment vnodes  * are linked into mnt_nvnodelist.  At some point in the near future the  * vnode list will be split into a 'dirty' and 'clean' list. mnt_nvnodelist  * will become the dirty list and mnt_reservedvnlist will become the 'clean'  * list.  Filesystem kld's syncing code should remain compatible since  * they only need to scan the dirty vnode list (nvnodelist -> dirtyvnodelist).  */
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * NOTE: mnt_nvnodelist and mnt_reservedvnlist.  At the moment vnodes  * are linked into mnt_nvnodelist.  At some point in the near future the  * vnode list will be split into a 'dirty' and 'clean' list. mnt_nvnodelist  * will become the dirty list and mnt_reservedvnlist will become the 'clean'  * list.  Filesystem kld's syncing code should remain compatible since  * they only need to scan the dirty vnode list (nvnodelist -> dirtyvnodelist).  */
 end_comment
 
 begin_expr_stmt
@@ -517,7 +517,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* file system written synchronously */
+comment|/* filesystem written synchronously */
 end_comment
 
 begin_define
@@ -572,7 +572,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* file system written asynchronously */
+comment|/* filesystem written asynchronously */
 end_comment
 
 begin_define
@@ -686,7 +686,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* file system is exported */
+comment|/* filesystem is exported */
 end_comment
 
 begin_define
@@ -1361,7 +1361,7 @@ comment|/* head of list of filesystem types */
 end_comment
 
 begin_comment
-comment|/*  * Operations supported on mounted file system.  */
+comment|/*  * Operations supported on mounted filesystem.  */
 end_comment
 
 begin_ifdef

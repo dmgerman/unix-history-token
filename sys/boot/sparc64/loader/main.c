@@ -1882,7 +1882,7 @@ operator|=
 operator|&
 name|ofwdisk
 expr_stmt|;
-comment|/* 		 * Sun compatible bootable CD-ROMs have a disk label placed 		 * before the cd9660 data, with the actual file system being 		 * in the first partition, while the other partitions contain 		 * pseudo disk labels with embedded boot blocks for different 		 * architectures, which may be followed by UFS file systems. 		 * The firmware will set the boot path to the partition it 		 * boots from ('f' in the sun4u case), but we want the kernel 		 * to be loaded from the cd9660 fs ('a'), so the boot path 		 * needs to be altered. 		 */
+comment|/* 		 * Sun compatible bootable CD-ROMs have a disk label placed 		 * before the cd9660 data, with the actual filesystem being 		 * in the first partition, while the other partitions contain 		 * pseudo disk labels with embedded boot blocks for different 		 * architectures, which may be followed by UFS filesystems. 		 * The firmware will set the boot path to the partition it 		 * boots from ('f' in the sun4u case), but we want the kernel 		 * to be loaded from the cd9660 fs ('a'), so the boot path 		 * needs to be altered. 		 */
 if|if
 condition|(
 name|strstr

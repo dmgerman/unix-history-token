@@ -3717,14 +3717,14 @@ name|b_rcred
 operator|=
 name|FSCRED
 expr_stmt|;
-comment|/* we have the file system credentials */
+comment|/* we have the filesystem credentials */
 name|bp
 operator|->
 name|b_wcred
 operator|=
 name|FSCRED
 expr_stmt|;
-comment|/* we have the file system credentials */
+comment|/* we have the filesystem credentials */
 if|if
 condition|(
 name|rqe

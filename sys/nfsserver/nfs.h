@@ -184,7 +184,7 @@ value|B_NOCACHE
 end_define
 
 begin_comment
-comment|/*  * The IO_METASYNC flag should be implemented for local file systems.  * (Until then, it is nothin at all.)  */
+comment|/*  * The IO_METASYNC flag should be implemented for local filesystems.  * (Until then, it is nothin at all.)  */
 end_comment
 
 begin_ifndef

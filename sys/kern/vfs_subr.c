@@ -2913,7 +2913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to recycle vnodes in a context that is always safe to block.  * Calling vlrurecycle() from the bowels of file system code has some  * interesting deadlock problems.  */
+comment|/*  * Attempt to recycle vnodes in a context that is always safe to block.  * Calling vlrurecycle() from the bowels of filesystem code has some  * interesting deadlock problems.  */
 end_comment
 
 begin_decl_stmt
@@ -6817,7 +6817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a vnode for a device.  * Used for mounting the root file system.  */
+comment|/*  * Create a vnode for a device.  * Used for mounting the root filesystem.  */
 end_comment
 
 begin_function
@@ -7279,7 +7279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grab a particular vnode from the free list, increment its  * reference count and lock it. The vnode lock bit is set if the  * vnode is being eliminated in vgone. The process is awakened  * when the transition is completed, and an error returned to  * indicate that the vnode is no longer usable (possibly having  * been changed to a new file system type).  */
+comment|/*  * Grab a particular vnode from the free list, increment its  * reference count and lock it. The vnode lock bit is set if the  * vnode is being eliminated in vgone. The process is awakened  * when the transition is completed, and an error returned to  * indicate that the vnode is no longer usable (possibly having  * been changed to a new filesystem type).  */
 end_comment
 
 begin_function
@@ -8588,7 +8588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Disassociate the underlying file system from a vnode.  */
+comment|/*  * Disassociate the underlying filesystem from a vnode.  */
 end_comment
 
 begin_function
@@ -13127,7 +13127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common file system object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request.  Returns 0 on success, or an errno on failure.  */
+comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request.  Returns 0 on success, or an errno on failure.  */
 end_comment
 
 begin_function

@@ -2768,7 +2768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file system statistics.  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function

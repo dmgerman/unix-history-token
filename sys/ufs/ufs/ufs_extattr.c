@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999, 2000, 2001, 2002 Robert N. M. Watson  * Copyr
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * Support for file system extended attribute: UFS-specific support functions.  */
+comment|/*  * Developed by the TrustedBSD Project.  * Support for filesystem extended attribute: UFS-specific support functions.  */
 end_comment
 
 begin_include
@@ -1284,7 +1284,7 @@ comment|/* !UFS_EXTATTR_AUTOSTART */
 end_comment
 
 begin_comment
-comment|/*  * Enable an EA using the passed file system, backing vnode, attribute name,  * namespace, and proc.  Will perform a VOP_OPEN() on the vp, so expects vp  * to be locked when passed in.  The vnode will be returned unlocked,  * regardless of success/failure of the function.  As a result, the caller  * will always need to vrele(), but not vput().  */
+comment|/*  * Enable an EA using the passed filesystem, backing vnode, attribute name,  * namespace, and proc.  Will perform a VOP_OPEN() on the vp, so expects vp  * to be locked when passed in.  The vnode will be returned unlocked,  * regardless of success/failure of the function.  As a result, the caller  * will always need to vrele(), but not vput().  */
 end_comment
 
 begin_function
@@ -1978,7 +1978,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Does UFS_EXTATTR_FSROOTSUBDIR exist off the file system root? 	 * If so, automatically start EA's. 	 */
+comment|/* 	 * Does UFS_EXTATTR_FSROOTSUBDIR exist off the filesystem root? 	 * If so, automatically start EA's. 	 */
 name|error
 operator|=
 name|VFS_ROOT
@@ -2409,7 +2409,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enable a named attribute on the specified file system; provide an  * unlocked backing vnode to hold the attribute data.  */
+comment|/*  * Enable a named attribute on the specified filesystem; provide an  * unlocked backing vnode to hold the attribute data.  */
 end_comment
 
 begin_function

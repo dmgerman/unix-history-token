@@ -8,7 +8,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1990 Carnegie-Mellon Unive
 end_comment
 
 begin_comment
-comment|/*  * This code was written for the Coda file system at Carnegie Mellon  * University.  Contributers include David Steere, James Kistler, and  * M. Satyanarayanan.    */
+comment|/*  * This code was written for the Coda filesystem at Carnegie Mellon  * University.  Contributers include David Steere, James Kistler, and  * M. Satyanarayanan.    */
 end_comment
 
 begin_include
@@ -4076,7 +4076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remote file system operations having to do with directory manipulation.  */
+comment|/*  * Remote filesystem operations having to do with directory manipulation.  */
 end_comment
 
 begin_comment
@@ -7404,7 +7404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert from file system blocks to device blocks  */
+comment|/*  * Convert from filesystem blocks to device blocks  */
 end_comment
 
 begin_function

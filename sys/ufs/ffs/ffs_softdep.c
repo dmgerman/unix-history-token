@@ -5374,7 +5374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Executed during filesystem system initialization before  * mounting any file systems.  */
+comment|/*  * Executed during filesystem system initialization before  * mounting any filesystems.  */
 end_comment
 
 begin_function
@@ -5785,7 +5785,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Protecting the freemaps (or bitmaps).  *   * To eliminate the need to execute fsck before mounting a file system  * after a power failure, one must (conservatively) guarantee that the  * on-disk copy of the bitmaps never indicate that a live inode or block is  * free.  So, when a block or inode is allocated, the bitmap should be  * updated (on disk) before any new pointers.  When a block or inode is  * freed, the bitmap should not be updated until all pointers have been  * reset.  The latter dependency is handled by the delayed de-allocation  * approach described below for block and inode de-allocation.  The former  * dependency is handled by calling the following procedure when a block or  * inode is allocated. When an inode is allocated an "inodedep" is created  * with its DEPCOMPLETE flag cleared until its bitmap is written to disk.  * Each "inodedep" is also inserted into the hash indexing structure so  * that any additional link additions can be made dependent on the inode  * allocation.  *   * The ufs file system maintains a number of free block counts (e.g., per  * cylinder group, per cylinder and per<cylinder, rotational position> pair)  * in addition to the bitmaps.  These counts are used to improve efficiency  * during allocation and therefore must be consistent with the bitmaps.  * There is no convenient way to guarantee post-crash consistency of these  * counts with simple update ordering, for two main reasons: (1) The counts  * and bitmaps for a single cylinder group block are not in the same disk  * sector.  If a disk write is interrupted (e.g., by power failure), one may  * be written and the other not.  (2) Some of the counts are located in the  * superblock rather than the cylinder group block. So, we focus our soft  * updates implementation on protecting the bitmaps. When mounting a  * filesystem, we recompute the auxiliary counts from the bitmaps.  */
+comment|/*  * Protecting the freemaps (or bitmaps).  *   * To eliminate the need to execute fsck before mounting a filesystem  * after a power failure, one must (conservatively) guarantee that the  * on-disk copy of the bitmaps never indicate that a live inode or block is  * free.  So, when a block or inode is allocated, the bitmap should be  * updated (on disk) before any new pointers.  When a block or inode is  * freed, the bitmap should not be updated until all pointers have been  * reset.  The latter dependency is handled by the delayed de-allocation  * approach described below for block and inode de-allocation.  The former  * dependency is handled by calling the following procedure when a block or  * inode is allocated. When an inode is allocated an "inodedep" is created  * with its DEPCOMPLETE flag cleared until its bitmap is written to disk.  * Each "inodedep" is also inserted into the hash indexing structure so  * that any additional link additions can be made dependent on the inode  * allocation.  *   * The ufs filesystem maintains a number of free block counts (e.g., per  * cylinder group, per cylinder and per<cylinder, rotational position> pair)  * in addition to the bitmaps.  These counts are used to improve efficiency  * during allocation and therefore must be consistent with the bitmaps.  * There is no convenient way to guarantee post-crash consistency of these  * counts with simple update ordering, for two main reasons: (1) The counts  * and bitmaps for a single cylinder group block are not in the same disk  * sector.  If a disk write is interrupted (e.g., by power failure), one may  * be written and the other not.  (2) Some of the counts are located in the  * superblock rather than the cylinder group block. So, we focus our soft  * updates implementation on protecting the bitmaps. When mounting a  * filesystem, we recompute the auxiliary counts from the bitmaps.  */
 end_comment
 
 begin_comment
@@ -11247,7 +11247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Directory entry addition dependencies.  *   * When adding a new directory entry, the inode (with its incremented link  * count) must be written to disk before the directory entry's pointer to it.  * Also, if the inode is newly allocated, the corresponding freemap must be  * updated (on disk) before the directory entry's pointer. These requirements  * are met via undo/redo on the directory entry's pointer, which consists  * simply of the inode number.  *   * As directory entries are added and deleted, the free space within a  * directory block can become fragmented.  The ufs file system will compact  * a fragmented directory block to make space for a new entry. When this  * occurs, the offsets of previously added entries change. Any "diradd"  * dependency structures corresponding to these entries must be updated with  * the new offsets.  */
+comment|/*  * Directory entry addition dependencies.  *   * When adding a new directory entry, the inode (with its incremented link  * count) must be written to disk before the directory entry's pointer to it.  * Also, if the inode is newly allocated, the corresponding freemap must be  * updated (on disk) before the directory entry's pointer. These requirements  * are met via undo/redo on the directory entry's pointer, which consists  * simply of the inode number.  *   * As directory entries are added and deleted, the free space within a  * directory block can become fragmented.  The ufs filesystem will compact  * a fragmented directory block to make space for a new entry. When this  * occurs, the offsets of previously added entries change. Any "diradd"  * dependency structures corresponding to these entries must be updated with  * the new offsets.  */
 end_comment
 
 begin_comment
@@ -15601,7 +15601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called during the completion interrupt  * service routine for a disk write (from the procedure called  * by the device driver to inform the file system caches of  * a request completion).  It should be called early in this  * procedure, before the block is made available to other  * processes or other routines are called.  */
+comment|/*  * This routine is called during the completion interrupt  * service routine for a disk write (from the procedure called  * by the device driver to inform the filesystem caches of  * a request completion).  It should be called early in this  * procedure, before the block is made available to other  * processes or other routines are called.  */
 end_comment
 
 begin_function
@@ -17940,7 +17940,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Writing back in-core inode structures.  *   * The file system only accesses an inode's contents when it occupies an  * "in-core" inode structure.  These "in-core" structures are separate from  * the page frames used to cache inode blocks.  Only the latter are  * transferred to/from the disk.  So, when the updated contents of the  * "in-core" inode structure are copied to the corresponding in-memory inode  * block, the dependencies are also transferred.  The following procedure is  * called when copying a dirty "in-core" inode to a cached inode block.  */
+comment|/*  * Writing back in-core inode structures.  *   * The filesystem only accesses an inode's contents when it occupies an  * "in-core" inode structure.  These "in-core" structures are separate from  * the page frames used to cache inode blocks.  Only the latter are  * transferred to/from the disk.  So, when the updated contents of the  * "in-core" inode structure are copied to the corresponding in-memory inode  * block, the dependencies are also transferred.  The following procedure is  * called when copying a dirty "in-core" inode to a cached inode block.  */
 end_comment
 
 begin_comment

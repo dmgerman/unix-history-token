@@ -1179,7 +1179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  Beware the case where the vnode  * has been vgone()'d out from underneath us, e.g. when the file  * system containing the accounting file has been forcibly unmounted.  */
+comment|/*  * Periodically check the filesystem to see if accounting  * should be turned on or off.  Beware the case where the vnode  * has been vgone()'d out from underneath us, e.g. when the file  * system containing the accounting file has been forcibly unmounted.  */
 end_comment
 
 begin_comment

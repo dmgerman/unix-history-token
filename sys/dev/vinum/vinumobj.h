@@ -65,7 +65,7 @@ name|VF_RAW
 init|=
 literal|0x100
 block|,
-comment|/* raw volume (no file system) */
+comment|/* raw volume (no filesystem) */
 name|VF_LOADED
 init|=
 literal|0x200

@@ -1592,7 +1592,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    or at absolute root directory 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other file system. 	 * 3. If the vnode is the top directory of 	 *    the jail or chroot, don't let them out. 	 */
+comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    or at absolute root directory 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other filesystem. 	 * 3. If the vnode is the top directory of 	 *    the jail or chroot, don't let them out. 	 */
 if|if
 condition|(
 name|cnp
@@ -2029,7 +2029,7 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
-comment|/* 	 * Check to see if the vnode has been mounted on; 	 * if so find the root of the mounted file system. 	 */
+comment|/* 	 * Check to see if the vnode has been mounted on; 	 * if so find the root of the mounted filesystem. 	 */
 while|while
 condition|(
 name|dp
@@ -2296,7 +2296,7 @@ goto|goto
 name|dirloop
 goto|;
 block|}
-comment|/* 	 * Disallow directory write attempts on read-only file systems. 	 */
+comment|/* 	 * Disallow directory write attempts on read-only filesystems. 	 */
 if|if
 condition|(
 name|rdonly
@@ -2876,7 +2876,7 @@ literal|"relookup: symlink found.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disallow directory write attempts on read-only file systems. 	 */
+comment|/* 	 * Disallow directory write attempts on read-only filesystems. 	 */
 if|if
 condition|(
 name|rdonly

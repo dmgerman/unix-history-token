@@ -124,7 +124,7 @@ return|return
 name|EBUSY
 return|;
 comment|/* don't do it again */
-comment|/*      * Yes, Bruce, I know this is horrible, but we      * don't have a root file system when we first      * try to do this.  If you can come up with a      * better solution, I'd really like it.  I'm      * just putting it in now to add ammuntion to      * moving the system to devfs.      */
+comment|/*      * Yes, Bruce, I know this is horrible, but we      * don't have a root filesystem when we first      * try to do this.  If you can come up with a      * better solution, I'd really like it.  I'm      * just putting it in now to add ammuntion to      * moving the system to devfs.      */
 name|dname
 operator|=
 operator|&

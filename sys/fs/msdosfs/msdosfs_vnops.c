@@ -918,7 +918,7 @@ name|pmp
 operator|->
 name|pm_mask
 expr_stmt|;
-comment|/* 	 * Disallow write attempts on read-only file systems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the file system. 	 */
+comment|/* 	 * Disallow write attempts on read-only filesystems; 	 * unless the file is a socket, fifo, or a block or 	 * character device resident on the filesystem. 	 */
 if|if
 condition|(
 name|mode
@@ -1707,7 +1707,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * We are very inconsistent about handling unsupported 		 * attributes.  We ignored the access time and the 		 * read and execute bits.  We were strict for the other 		 * attributes. 		 * 		 * Here we are strict, stricter than ufs in not allowing 		 * users to attempt to set SF_SETTABLE bits or anyone to 		 * set unsupported bits.  However, we ignore attempts to 		 * set ATTR_ARCHIVE for directories `cp -pr' from a more 		 * sensible file system attempts it a lot. 		 */
+comment|/* 		 * We are very inconsistent about handling unsupported 		 * attributes.  We ignored the access time and the 		 * read and execute bits.  We were strict for the other 		 * attributes. 		 * 		 * Here we are strict, stricter than ufs in not allowing 		 * users to attempt to set SF_SETTABLE bits or anyone to 		 * set unsupported bits.  However, we ignore attempts to 		 * set ATTR_ARCHIVE for directories `cp -pr' from a more 		 * sensible filesystem attempts it a lot. 		 */
 if|if
 condition|(
 name|suser_cred
@@ -1941,7 +1941,7 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
-comment|/* 		 * Disallow write attempts on read-only file systems; 		 * unless the file is a socket, fifo, or a block or 		 * character device resident on the file system. 		 */
+comment|/* 		 * Disallow write attempts on read-only filesystems; 		 * unless the file is a socket, fifo, or a block or 		 * character device resident on the filesystem. 		 */
 switch|switch
 condition|(
 name|vp

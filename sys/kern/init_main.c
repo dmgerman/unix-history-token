@@ -1746,7 +1746,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * Now we can look at the time, having had a chance to verify the 	 * time from the file system.  Pretend that proc0 started now. 	 */
+comment|/* 	 * Now we can look at the time, having had a chance to verify the 	 * time from the filesystem.  Pretend that proc0 started now. 	 */
 name|sx_slock
 argument_list|(
 operator|&

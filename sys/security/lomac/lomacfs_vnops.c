@@ -1441,7 +1441,7 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-comment|/* 		 * Check to see if the vnode has been mounted on; 		 * if so find the root of the mounted file system. 		 */
+comment|/* 		 * Check to see if the vnode has been mounted on; 		 * if so find the root of the mounted filesystem. 		 */
 if|if
 condition|(
 name|lvp

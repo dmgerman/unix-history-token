@@ -994,7 +994,7 @@ value|((a)> (b) ? (a) : (b))
 end_define
 
 begin_comment
-comment|/*  * Sanity checks for old file systems.  *  * XXX - goes away some day.  */
+comment|/*  * Sanity checks for old filesystems.  *  * XXX - goes away some day.  */
 end_comment
 
 begin_function

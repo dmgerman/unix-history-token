@@ -496,7 +496,7 @@ value|((struct ufsmount *)((mp)->mnt_data))
 end_define
 
 begin_comment
-comment|/*  * Macros to access file system parameters in the ufsmount structure.  * Used by ufs_bmap.  */
+comment|/*  * Macros to access filesystem parameters in the ufsmount structure.  * Used by ufs_bmap.  */
 end_comment
 
 begin_define

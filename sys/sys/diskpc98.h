@@ -864,7 +864,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* 4.2BSD fast file system */
+comment|/* 4.2BSD fast filesystem */
 end_comment
 
 begin_define
@@ -875,7 +875,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* MSDOS file system */
+comment|/* MSDOS filesystem */
 end_comment
 
 begin_define
@@ -886,7 +886,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* 4.4BSD log-structured file system */
+comment|/* 4.4BSD log-structured filesystem */
 end_comment
 
 begin_define
@@ -908,7 +908,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* OS/2 high-performance file system */
+comment|/* OS/2 high-performance filesystem */
 end_comment
 
 begin_define

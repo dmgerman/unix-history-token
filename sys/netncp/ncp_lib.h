@@ -1335,7 +1335,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * file system and volume calls   */
+comment|/*  * filesystem and volume calls   */
 end_comment
 
 begin_function_decl

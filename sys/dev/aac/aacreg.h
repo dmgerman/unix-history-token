@@ -2053,7 +2053,7 @@ name|struct
 name|aac_AifContainers
 name|container
 decl_stmt|;
-comment|/* For Container and 							 * file system progress 							 * ops; */
+comment|/* For Container and 							 * filesystem progress 							 * ops; */
 name|int32_t
 name|scsi_dh
 decl_stmt|;

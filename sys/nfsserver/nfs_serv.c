@@ -1922,7 +1922,7 @@ name|nfsmout
 goto|;
 block|}
 block|}
-comment|/* 	 * If the size is being changed write acces is required, otherwise 	 * just check for a read only file system. 	 */
+comment|/* 	 * If the size is being changed write acces is required, otherwise 	 * just check for a read only filesystem. 	 */
 if|if
 condition|(
 name|vap
@@ -20715,7 +20715,7 @@ argument_list|,
 name|NFSX_V3FSINFO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * There should be file system VFS OP(s) to get this information. 	 * For now, assume ufs. 	 */
+comment|/* 	 * XXX 	 * There should be filesystem VFS OP(s) to get this information. 	 * For now, assume ufs. 	 */
 if|if
 condition|(
 name|slp
@@ -21522,7 +21522,7 @@ name|VWRITE
 condition|)
 block|{
 comment|/* Just vn_writechk() changed to check rdonly */
-comment|/* 		 * Disallow write attempts on read-only file systems; 		 * unless the file is a socket or a block or character 		 * device resident on the file system. 		 */
+comment|/* 		 * Disallow write attempts on read-only filesystems; 		 * unless the file is a socket or a block or character 		 * device resident on the filesystem. 		 */
 if|if
 condition|(
 name|rdonly

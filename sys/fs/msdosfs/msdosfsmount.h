@@ -53,7 +53,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Layout of the mount control block for a msdos file system.  */
+comment|/*  * Layout of the mount control block for a msdos filesystem.  */
 end_comment
 
 begin_struct

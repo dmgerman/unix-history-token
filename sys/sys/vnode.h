@@ -519,7 +519,7 @@ value|0x00001
 end_define
 
 begin_comment
-comment|/* root of its file system */
+comment|/* root of its filesystem */
 end_comment
 
 begin_define
@@ -749,7 +749,7 @@ comment|/* owner group id */
 name|udev_t
 name|va_fsid
 decl_stmt|;
-comment|/* file system id */
+comment|/* filesystem id */
 name|long
 name|va_fileid
 decl_stmt|;

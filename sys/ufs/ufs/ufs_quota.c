@@ -1882,7 +1882,7 @@ comment|/*  * Code to process quotactl commands.  */
 end_comment
 
 begin_comment
-comment|/*  * Q_QUOTAON - set up a quota file for a particular file system.  */
+comment|/*  * Q_QUOTAON - set up a quota file for a particular filesystem.  */
 end_comment
 
 begin_function

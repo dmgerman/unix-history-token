@@ -407,7 +407,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* Read-only file system */
+comment|/* Read-only filesystem */
 end_comment
 
 begin_define

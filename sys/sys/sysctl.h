@@ -1208,7 +1208,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* file system, mount type is next */
+comment|/* filesystem, mount type is next */
 end_comment
 
 begin_define

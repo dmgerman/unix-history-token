@@ -742,7 +742,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX: If ufs_getacl() should work on file systems without 		 * the EA configured, add case EOPNOTSUPP here. */
+comment|/* XXX: If ufs_getacl() should work on filesystems without 		 * the EA configured, add case EOPNOTSUPP here. */
 case|case
 name|ENOATTR
 case|:
@@ -986,7 +986,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX: If ufs_getacl() should work on file systems without 		 * the EA configured, add case EOPNOTSUPP here. */
+comment|/* XXX: If ufs_getacl() should work on filesystems without 		 * the EA configured, add case EOPNOTSUPP here. */
 case|case
 name|ENOATTR
 case|:
@@ -1380,7 +1380,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-comment|/* 	 * Map lack of attribute definition in UFS_EXTATTR into lack of 	 * support for ACLs on the file system. 	 */
+comment|/* 	 * Map lack of attribute definition in UFS_EXTATTR into lack of 	 * support for ACLs on the filesystem. 	 */
 if|if
 condition|(
 name|error

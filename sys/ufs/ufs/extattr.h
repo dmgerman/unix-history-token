@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2001 Robert N. M. Watson  * All rights reserve
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * Support for extended file system attributes.  */
+comment|/*  * Developed by the TrustedBSD Project.  * Support for extended filesystem attributes.  */
 end_comment
 
 begin_ifndef
