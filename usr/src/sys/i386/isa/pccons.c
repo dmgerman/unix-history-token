@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)pccons.c	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Added support for ibmpc term type and improved keyboard support. -Don Ahn  *  * %sccs.include.redist.c%  *  *	@(#)pccons.c	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * code to work keyboard& display for console  */
+comment|/*  * code to work keyboard& display for PC-style console  */
 end_comment
 
 begin_include
@@ -85,16 +85,22 @@ directive|include
 file|"i386/isa/icu.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"i386/i386/cons.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|tty
-name|cons
+name|pccons
 decl_stmt|;
 end_decl_stmt
 
 begin_struct
 struct|struct
-name|consoftc
+name|pcconsoftc
 block|{
 name|char
 name|cs_flags
@@ -122,16 +128,16 @@ name|cs_wedgecnt
 decl_stmt|;
 comment|/* times restarted */
 block|}
-name|consoftc
+name|pcconsoftc
 struct|;
 end_struct
 
 begin_decl_stmt
 name|int
-name|cnprobe
+name|pcprobe
 argument_list|()
 decl_stmt|,
-name|cnattach
+name|pcattach
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -139,14 +145,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|isa_driver
-name|cndriver
+name|pcdriver
 init|=
 block|{
-name|cnprobe
+name|pcprobe
 block|,
-name|cnattach
+name|pcattach
 block|,
-literal|"cn"
+literal|"pc"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -244,16 +250,42 @@ name|openf
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * We check the console periodically to make sure  * that it hasn't wedged.  Unfortunately, if an XOFF  * is typed on the console, that can't be distinguished  * from more catastrophic failure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CN_TIMERVAL
+value|(hz)
+end_define
+
+begin_comment
+comment|/* frequency at which to check cons */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CN_TIMO
+value|(2*60)
+end_define
+
+begin_comment
+comment|/* intervals to allow for output char */
+end_comment
+
 begin_function_decl
 name|int
-name|cnstart
+name|pcstart
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|cnparam
+name|pcparam
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -272,6 +304,20 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Wait for CP to accept last CP command sent  * before setting up next command.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|waitforlast
+parameter_list|(
+name|timo
+parameter_list|)
+value|{ \ 	if (pclast) { \ 		(timo) = 10000; \ 		do \ 			uncache((char *)&pclast->cp_unit); \ 		while ((pclast->cp_unit&CPTAKE) == 0&& --(timo)); \ 	} \ }
+end_define
+
 begin_function_decl
 name|u_char
 name|inb
@@ -280,7 +326,7 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|cnprobe
+name|pcprobe
 argument_list|(
 argument|dev
 argument_list|)
@@ -445,7 +491,7 @@ block|}
 end_block
 
 begin_macro
-name|cnattach
+name|pcattach
 argument_list|(
 argument|dev
 argument_list|)
@@ -535,7 +581,7 @@ name|__STDC__
 end_ifdef
 
 begin_macro
-name|cnopen
+name|pcopen
 argument_list|(
 argument|dev_t dev
 argument_list|,
@@ -553,7 +599,7 @@ directive|else
 end_else
 
 begin_macro
-name|cnopen
+name|pcopen
 argument_list|(
 argument|dev
 argument_list|,
@@ -603,19 +649,19 @@ decl_stmt|;
 name|tp
 operator|=
 operator|&
-name|cons
+name|pccons
 expr_stmt|;
 name|tp
 operator|->
 name|t_oproc
 operator|=
-name|cnstart
+name|pcstart
 expr_stmt|;
 name|tp
 operator|->
 name|t_param
 operator|=
-name|cnparam
+name|pcparam
 expr_stmt|;
 name|tp
 operator|->
@@ -684,7 +730,7 @@ name|t_ospeed
 operator|=
 name|TTYDEF_SPEED
 expr_stmt|;
-name|cnparam
+name|pcparam
 argument_list|(
 name|tp
 argument_list|,
@@ -752,7 +798,7 @@ block|}
 end_block
 
 begin_macro
-name|cnclose
+name|pcclose
 argument_list|(
 argument|dev
 argument_list|,
@@ -772,7 +818,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|cons
+name|pccons
 operator|.
 name|t_line
 index|]
@@ -781,13 +827,13 @@ name|l_close
 operator|)
 operator|(
 operator|&
-name|cons
+name|pccons
 operator|)
 expr_stmt|;
 name|ttyclose
 argument_list|(
 operator|&
-name|cons
+name|pccons
 argument_list|)
 expr_stmt|;
 return|return
@@ -803,7 +849,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|cnread
+name|pcread
 argument_list|(
 argument|dev
 argument_list|,
@@ -835,7 +881,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|cons
+name|pccons
 operator|.
 name|t_line
 index|]
@@ -844,7 +890,7 @@ name|l_read
 operator|)
 operator|(
 operator|&
-name|cons
+name|pccons
 operator|,
 name|uio
 operator|,
@@ -860,7 +906,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|cnwrite
+name|pcwrite
 argument_list|(
 argument|dev
 argument_list|,
@@ -892,7 +938,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|cons
+name|pccons
 operator|.
 name|t_line
 index|]
@@ -901,7 +947,7 @@ name|l_write
 operator|)
 operator|(
 operator|&
-name|cons
+name|pccons
 operator|,
 name|uio
 operator|,
@@ -917,7 +963,7 @@ comment|/*  * Got a console receive interrupt -  * the console processor wants t
 end_comment
 
 begin_macro
-name|cnrint
+name|pcrint
 argument_list|(
 argument|dev
 argument_list|,
@@ -954,7 +1000,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|consoftc
+name|pcconsoftc
 operator|.
 name|cs_flags
 operator|&
@@ -971,7 +1017,7 @@ argument_list|(
 name|c
 argument_list|,
 operator|&
-name|cons
+name|pccons
 argument_list|)
 condition|)
 return|return;
@@ -981,7 +1027,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|cons
+name|pccons
 operator|.
 name|t_line
 index|]
@@ -994,14 +1040,14 @@ operator|&
 literal|0xff
 operator|,
 operator|&
-name|cons
+name|pccons
 operator|)
 expr_stmt|;
 block|}
 end_block
 
 begin_macro
-name|cnioctl
+name|pcioctl
 argument_list|(
 argument|dev
 argument_list|,
@@ -1034,7 +1080,7 @@ modifier|*
 name|tp
 init|=
 operator|&
-name|cons
+name|pccons
 decl_stmt|;
 specifier|register
 name|error
@@ -1106,9 +1152,10 @@ block|}
 end_block
 
 begin_decl_stmt
-specifier|extern
 name|int
-name|consintr
+name|pcconsintr
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1117,7 +1164,7 @@ comment|/*  * Got a console transmission interrupt -  * the console processor wa
 end_comment
 
 begin_macro
-name|cnxint
+name|pcxint
 argument_list|(
 argument|dev
 argument_list|)
@@ -1144,17 +1191,17 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|consintr
+name|pcconsintr
 condition|)
 return|return;
-name|cons
+name|pccons
 operator|.
 name|t_state
 operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
-name|consoftc
+name|pcconsoftc
 operator|.
 name|cs_timo
 operator|=
@@ -1162,7 +1209,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|cons
+name|pccons
 operator|.
 name|t_line
 condition|)
@@ -1170,7 +1217,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|cons
+name|pccons
 operator|.
 name|t_line
 index|]
@@ -1179,21 +1226,21 @@ name|l_start
 operator|)
 operator|(
 operator|&
-name|cons
+name|pccons
 operator|)
 expr_stmt|;
 else|else
-name|cnstart
+name|pcstart
 argument_list|(
 operator|&
-name|cons
+name|pccons
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_expr_stmt
-name|cnstart
+name|pcstart
 argument_list|(
 name|tp
 argument_list|)
@@ -1368,18 +1415,135 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|pccnprobe
+argument_list|(
+argument|cp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|consdev
+modifier|*
+name|cp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|maj
+decl_stmt|;
+specifier|extern
+name|int
+name|pcopen
+parameter_list|()
+function_decl|;
+comment|/* locate the major number */
+for|for
+control|(
+name|maj
+operator|=
+literal|0
+init|;
+name|maj
+operator|<
+name|nchrdev
+condition|;
+name|maj
+operator|++
+control|)
+if|if
+condition|(
+name|cdevsw
+index|[
+name|maj
+index|]
+operator|.
+name|d_open
+operator|==
+name|pcopen
+condition|)
+break|break;
+comment|/* initialize required fields */
+name|cp
+operator|->
+name|cn_dev
+operator|=
+name|makedev
+argument_list|(
+name|maj
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|cn_tp
+operator|=
+operator|&
+name|pccons
+expr_stmt|;
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_INTERNAL
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_macro
+name|pccninit
+argument_list|(
+argument|cp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|consdev
+modifier|*
+name|cp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* 	 * For now, don't screw with it. 	 */
+comment|/* crtat = 0; */
+block|}
+end_block
+
 begin_expr_stmt
 specifier|static
 name|__color
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
-name|cnputc
+name|pccnputc
 argument_list|(
+argument|dev
+argument_list|,
 argument|c
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1391,11 +1555,9 @@ begin_block
 block|{
 name|int
 name|clr
-decl_stmt|;
-name|clr
-operator|=
+init|=
 name|__color
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|clr
@@ -1439,7 +1601,7 @@ comment|/*  * Print a character on console.  */
 end_comment
 
 begin_macro
-name|cnputchar
+name|pcputchar
 argument_list|(
 argument|c
 argument_list|,
@@ -1483,10 +1645,22 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
-name|cngetc
-argument_list|()
+name|pccngetc
+argument_list|(
+argument|dev
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1501,7 +1675,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-comment|/* block cnrint while we poll */
+comment|/* block pcrint while we poll */
 name|c
 operator|=
 name|sgetc
@@ -1533,7 +1707,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|cngetchar
+name|pcgetchar
 argument_list|(
 name|tp
 argument_list|)
@@ -1572,7 +1746,7 @@ comment|/*  * Set line parameters  */
 end_comment
 
 begin_expr_stmt
-name|cnparam
+name|pcparam
 argument_list|(
 name|tp
 argument_list|,
@@ -1647,7 +1821,7 @@ comment|/*  * Turn input polling on/off (used by debugger).  */
 end_comment
 
 begin_macro
-name|cnpoll
+name|pcpoll
 argument_list|(
 argument|onoff
 argument_list|)
@@ -2850,6 +3024,14 @@ init|=
 literal|0xffe
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*0xffe */
+end_comment
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 name|u_short
@@ -4613,7 +4795,7 @@ expr_stmt|;
 name|int
 name|x
 decl_stmt|;
-name|consoftc
+name|pcconsoftc
 operator|.
 name|cs_flags
 operator||=
@@ -4642,7 +4824,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|consoftc
+name|pcconsoftc
 operator|.
 name|cs_flags
 operator|&=
