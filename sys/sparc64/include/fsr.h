@@ -71,7 +71,17 @@ name|FSR_CEXC
 parameter_list|(
 name|b
 parameter_list|)
-value|((u_long)(b)<< FSR_CEXC_SHIFT)
+value|((unsigned long)(b)<< FSR_CEXC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSR_GET_CEXC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& FSR_CEXC_MASK)>> FSR_CEXC_SHIFT)
 end_define
 
 begin_define
@@ -95,7 +105,17 @@ name|FSR_AEXC
 parameter_list|(
 name|b
 parameter_list|)
-value|((u_long)(b)<< FSR_AEXC_SHIFT)
+value|((unsigned long)(b)<< FSR_AEXC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSR_GET_AEXC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& FSR_AEXC_MASK)>> FSR_AEXC_SHIFT)
 end_define
 
 begin_define
@@ -133,7 +153,17 @@ name|FSR_TEM
 parameter_list|(
 name|b
 parameter_list|)
-value|((u_long)(b)<< FSR_TEM_SHIFT)
+value|((unsigned long)(b)<< FSR_TEM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSR_GET_TEM
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& FSR_TEM_MASK)>> FSR_TEM_SHIFT)
 end_define
 
 begin_define
@@ -164,7 +194,7 @@ name|FSR_FCC0
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_long)(x)<< FSR_FCC0_SHIFT)
+value|((unsigned long)(x)<< FSR_FCC0_SHIFT)
 end_define
 
 begin_define
@@ -174,7 +204,7 @@ name|FSR_GET_FCC0
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> FSR_FCC0_SHIFT)& 3)
+value|(((x)& FSR_FCC0_MASK)>> FSR_FCC0_SHIFT)
 end_define
 
 begin_define
@@ -205,7 +235,7 @@ name|FSR_FTT
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_long)(x)<< FSR_FTT_SHIFT)
+value|((unsigned long)(x)<< FSR_FTT_SHIFT)
 end_define
 
 begin_define
@@ -263,7 +293,7 @@ name|FSR_RD
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_long)(x)<< FSR_RD_SHIFT)
+value|((unsigned long)(x)<< FSR_RD_SHIFT)
 end_define
 
 begin_define
@@ -273,7 +303,7 @@ name|FSR_GET_RD
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> FSR_RD_SHIFT)& 3)
+value|(((x)& FSR_RD_MASK)>> FSR_RD_SHIFT)
 end_define
 
 begin_define
@@ -304,7 +334,7 @@ name|FSR_FCC1
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_long)(x)<< FSR_FCC1_SHIFT)
+value|((unsigned long)(x)<< FSR_FCC1_SHIFT)
 end_define
 
 begin_define
@@ -314,7 +344,7 @@ name|FSR_GET_FCC1
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> FSR_FCC1_SHIFT)& 3)
+value|(((x)& FSR_FCC1_MASK)>> FSR_FCC1_SHIFT)
 end_define
 
 begin_define
@@ -345,7 +375,7 @@ name|FSR_FCC2
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_long)(x)<< FSR_FCC2_SHIFT)
+value|((unsigned long)(x)<< FSR_FCC2_SHIFT)
 end_define
 
 begin_define
@@ -355,7 +385,7 @@ name|FSR_GET_FCC2
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> FSR_FCC2_SHIFT)& 3)
+value|(((x)& FSR_FCC2_MASK)>> FSR_FCC2_SHIFT)
 end_define
 
 begin_define
@@ -386,7 +416,7 @@ name|FSR_FCC3
 parameter_list|(
 name|x
 parameter_list|)
-value|((u_long)(x)<< FSR_FCC3_SHIFT)
+value|((unsigned long)(x)<< FSR_FCC3_SHIFT)
 end_define
 
 begin_define
@@ -396,7 +426,7 @@ name|FSR_GET_FCC3
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> FSR_FCC3_SHIFT)& 3)
+value|(((x)& FSR_FCC3_MASK)>> FSR_FCC3_SHIFT)
 end_define
 
 begin_comment
