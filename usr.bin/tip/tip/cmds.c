@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.5 1997/08/25 05:02:09 imp Exp $"
+literal|"$Id: cmds.c,v 1.6 1997/08/26 10:25:16 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,9 +905,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"cat %s ; echo \"\" ; echo ___tip_end_of_file_marker___"
 argument_list|,
@@ -2879,9 +2884,14 @@ name|ECHOCHECK
 argument_list|)
 argument_list|)
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"cat>%s\r"
 argument_list|,
@@ -2892,9 +2902,14 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"stty -echo;cat>%s;stty echo\r"
 argument_list|,
@@ -5156,9 +5171,14 @@ name|name
 operator|)
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmdbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
 argument_list|,
 literal|"echo %s"
 argument_list|,

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cu.c,v 1.2 1997/08/18 07:16:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -402,9 +402,14 @@ comment|/* 	 * The "cu" host name is used to define the 	 * attributes of the ge
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sbuf
+argument_list|)
 argument_list|,
 literal|"cu%d"
 argument_list|,

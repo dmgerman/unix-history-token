@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tip.c,v 1.6 1997/08/26 10:25:19 eivind Exp $"
+literal|"$Id: tip.c,v 1.7 1997/09/18 14:07:17 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,9 +660,11 @@ name|system
 argument_list|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|PNbuf
 operator|-
 literal|1
+argument_list|)
 condition|)
 name|errx
 argument_list|(
@@ -683,9 +685,11 @@ argument_list|,
 name|system
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|PNbuf
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -712,9 +716,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sbuf
+argument_list|)
 argument_list|,
 literal|"tip%ld"
 argument_list|,
@@ -1451,6 +1460,11 @@ name|void
 name|shell_uid
 parameter_list|()
 block|{
+name|setegid
+argument_list|(
+name|gid
+argument_list|)
+expr_stmt|;
 name|seteuid
 argument_list|(
 name|uid
