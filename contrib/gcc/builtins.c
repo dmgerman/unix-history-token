@@ -9345,19 +9345,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Give up for non-constant lengths.  They are broken on at least 	 i386's.  */
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|len_rtx
-argument_list|)
-operator|!=
-name|CONST_INT
-condition|)
-return|return
-literal|0
-return|;
 name|dest_mem
 operator|=
 name|get_memory_rtx
