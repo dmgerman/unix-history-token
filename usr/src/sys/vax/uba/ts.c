@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.9	81/04/03	*/
+comment|/*	ts.c	4.10	81/04/14	*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ts.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_if
@@ -408,6 +414,27 @@ begin_comment
 comment|/* sending a drive rewind */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NTM
+operator|>
+literal|0
+end_if
+
+begin_comment
+comment|/* kludge... see tm.c */
+end_comment
+
+begin_extern
+extern|extern	havetm;
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Determine if there is a controller for  * a ts at address reg.  Our goal is to make the  * device interrupt.  */
 end_comment
@@ -456,6 +483,22 @@ comment|/*		*/
 comment|/*  K L U D G E */
 comment|/*		*/
 comment|/****************/
+if|#
+directive|if
+name|NTM
+operator|>
+literal|0
+if|if
+condition|(
+name|havetm
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* IT'S TOO HARD TO MAKE THIS THING INTERRUPT 	   JUST TO FIND ITS VECTOR */
 name|cvec
 operator|=

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.34	81/04/09	*/
+comment|/*	tm.c	4.35	81/04/14	*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"te.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ts.h"
 end_include
 
 begin_if
@@ -436,6 +442,31 @@ begin_comment
 comment|/* sending a drive rewind */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NTS
+operator|>
+literal|0
+end_if
+
+begin_comment
+comment|/*  * Kludge to get around fact that we don't really  * check if a ts is there... if there are both tm's and ts's  * declared in the system, then this driver sets havetm to 1  * if it finds a tm, and ts just pretends there isn't a ts.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|havetm
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Determine if there is a controller for  * a tm at address reg.  Our goal is to make the  * device interrupt.  */
 end_comment
@@ -594,6 +625,17 @@ end_decl_stmt
 
 begin_block
 block|{
+if|#
+directive|if
+name|NTS
+operator|>
+literal|0
+name|havetm
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Tetotm is used in TMUNIT to index the ctmbuf and rtmbuf 	 * arrays given a te unit number. 	 */
 name|tetotm
 index|[
