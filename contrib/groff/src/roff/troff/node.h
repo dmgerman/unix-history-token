@@ -520,6 +520,11 @@ name|next
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|last
+argument_list|(
+literal|0
+argument_list|)
 block|{ }
 specifier|inline
 name|node
@@ -533,7 +538,12 @@ argument_list|)
 operator|:
 name|next
 argument_list|(
-argument|n
+name|n
+argument_list|)
+operator|,
+name|last
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
 specifier|inline
