@@ -526,16 +526,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|gem_rint_timeout
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void	gem_rint_timeout(void *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -6969,30 +6970,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|gem_rint_timeout
-parameter_list|(
-name|arg
-parameter_list|)
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|gem_rint
-argument_list|(
-operator|(
-expr|struct
-name|gem_softc
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void gem_rint_timeout(arg) 	void *arg; {  	gem_rint((struct gem_softc *)arg); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Receive interrupt.  */
