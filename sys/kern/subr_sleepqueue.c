@@ -806,7 +806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Places the current thread on the sleepqueue for the specified wait  * channel.  If INVARIANTS is enabled, then it associates the passed in  * lock with the sleepq to make sure it is held when that sleep queue is  * woken up.  */
+comment|/*  * Places the current thread on the sleep queue for the specified wait  * channel.  If INVARIANTS is enabled, then it associates the passed in  * lock with the sleepq to make sure it is held when that sleep queue is  * woken up.  */
 end_comment
 
 begin_function
@@ -845,9 +845,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|,
-modifier|*
-name|td1
 decl_stmt|;
 name|td
 operator|=
@@ -1024,18 +1021,6 @@ name|flags
 operator|&
 name|SLEEPQ_TYPE
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|sq
-operator|->
-name|sq_blocked
-argument_list|,
-name|td
-argument_list|,
-name|td_slpq
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1057,53 +1042,6 @@ operator|->
 name|sq_lock
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|td1
-argument_list|,
-argument|&sq->sq_blocked
-argument_list|,
-argument|td_slpq
-argument_list|)
-if|if
-condition|(
-name|td1
-operator|->
-name|td_priority
-operator|>
-name|td
-operator|->
-name|td_priority
-condition|)
-break|break;
-if|if
-condition|(
-name|td1
-operator|!=
-name|NULL
-condition|)
-name|TAILQ_INSERT_BEFORE
-argument_list|(
-name|td1
-argument_list|,
-name|td
-argument_list|,
-name|td_slpq
-argument_list|)
-expr_stmt|;
-else|else
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|sq
-operator|->
-name|sq_blocked
-argument_list|,
-name|td
-argument_list|,
-name|td_slpq
-argument_list|)
-expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1119,6 +1057,18 @@ name|sq_hash
 argument_list|)
 expr_stmt|;
 block|}
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sq
+operator|->
+name|sq_blocked
+argument_list|,
+name|td
+argument_list|,
+name|td_slpq
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_sleepqueue
@@ -1529,7 +1479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Switches to another thread if we are still asleep on a sleep queue and  * drop the lock on the sleepqueue chain.  Returns with sched_lock held.  */
+comment|/*  * Switches to another thread if we are still asleep on a sleep queue and  * drop the lock on the sleep queue chain.  Returns with sched_lock held.  */
 end_comment
 
 begin_function
@@ -2503,6 +2453,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+decl_stmt|,
+modifier|*
+name|besttd
 decl_stmt|;
 name|CTR2
 argument_list|(
@@ -2584,22 +2537,51 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* Remove first thread from queue and awaken it. */
-name|td
+comment|/* 	 * Find the highest priority thread on the queue.  If there is a 	 * tie, use the thread that first appears in the queue as it has 	 * been sleeping the longest since threads are always added to 	 * the tail of sleep queues. 	 */
+name|besttd
 operator|=
-name|TAILQ_FIRST
+name|NULL
+expr_stmt|;
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|sq
+argument|td
+argument_list|,
+argument|&sq->sq_blocked
+argument_list|,
+argument|td_slpq
+argument_list|)
+block|{
+if|if
+condition|(
+name|besttd
+operator|==
+name|NULL
+operator|||
+name|td
 operator|->
-name|sq_blocked
+name|td_priority
+operator|<
+name|besttd
+operator|->
+name|td_priority
+condition|)
+name|besttd
+operator|=
+name|td
+expr_stmt|;
+block|}
+name|MPASS
+argument_list|(
+name|besttd
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sleepq_remove_thread
 argument_list|(
 name|sq
 argument_list|,
-name|td
+name|besttd
 argument_list|)
 expr_stmt|;
 name|sleepq_release
@@ -2609,7 +2591,7 @@ argument_list|)
 expr_stmt|;
 name|sleepq_resume_thread
 argument_list|(
-name|td
+name|besttd
 argument_list|,
 name|pri
 argument_list|)
