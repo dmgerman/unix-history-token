@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.37 92/12/20$  *  *	@(#)trap.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.37 92/12/20$  *  *	@(#)trap.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -705,12 +705,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|unsigned
-name|ucode
+specifier|extern
+name|char
+name|fswintr
+index|[]
 decl_stmt|;
 specifier|register
 name|struct
@@ -718,16 +716,15 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|u_int
+name|ucode
+decl_stmt|;
 name|u_quad_t
 name|sticks
-decl_stmt|;
-name|unsigned
-name|ncode
-decl_stmt|;
-specifier|extern
-name|char
-name|fswintr
-index|[]
 decl_stmt|;
 name|cnt
 operator|.
@@ -4010,8 +4007,6 @@ decl_stmt|,
 name|opc
 decl_stmt|,
 name|numsys
-decl_stmt|,
-name|s
 decl_stmt|;
 name|u_int
 name|argsize
