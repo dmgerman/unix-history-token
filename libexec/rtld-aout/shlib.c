@@ -140,6 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|standard_search_dirs
@@ -155,12 +156,11 @@ begin_function
 name|void
 name|add_search_dir
 parameter_list|(
-name|name
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -784,7 +784,7 @@ name|int
 name|do_dot_a
 decl_stmt|;
 block|{
-name|int
+name|size_t
 name|namelen
 decl_stmt|;
 name|DIR
