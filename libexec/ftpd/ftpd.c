@@ -2123,23 +2123,28 @@ name|errno
 operator|==
 name|EAGAIN
 condition|)
-name|errx
+name|syslog
 argument_list|(
-literal|1
+name|LOG_ERR
 argument_list|,
-literal|"%s: file locked"
+literal|"%s: already locked"
 argument_list|,
 name|pid_file
 argument_list|)
 expr_stmt|;
 else|else
-name|err
+name|syslog
 argument_list|(
-literal|1
+name|LOG_ERR
 argument_list|,
-literal|"%s"
+literal|"%s: %m"
 argument_list|,
 name|pid_file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2178,15 +2183,22 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+name|syslog
 argument_list|(
-literal|1
+name|LOG_ERR
 argument_list|,
-literal|"%s: write"
+literal|"%s: write: %m"
 argument_list|,
 name|pid_file
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Leave the pid file open and locked */
 block|}
 comment|/* 		 * Loop forever accepting connection requests and forking off 		 * children to handle them. 		 */
