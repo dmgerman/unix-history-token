@@ -2935,7 +2935,7 @@ name|j
 operator|++
 control|)
 block|{
-name|vm_page_unwire
+name|vm_page_unhold
 argument_list|(
 name|wpipe
 operator|->
@@ -2945,8 +2945,6 @@ name|ms
 index|[
 name|j
 index|]
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
@@ -2977,7 +2975,7 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_wire
+name|vm_page_hold
 argument_list|(
 name|m
 argument_list|)
@@ -3300,7 +3298,7 @@ name|i
 operator|++
 control|)
 block|{
-name|vm_page_unwire
+name|vm_page_unhold
 argument_list|(
 name|wpipe
 operator|->
@@ -3310,8 +3308,6 @@ name|ms
 index|[
 name|i
 index|]
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
