@@ -2605,7 +2605,7 @@ condition|(
 operator|(
 name|f
 operator|->
-name|fd
+name|id
 operator|=
 name|poll_register
 argument_list|(
