@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.20
+literal|3.21
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.20
+literal|3.21
 operator|%
 name|G
 operator|%
@@ -1710,7 +1710,7 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-comment|/* 		**  CHILD 		**	Change the name of the control file to avoid 		**	duplicate deliveries.   Then run the file as 		**	though we had just read it. 		*/
+comment|/* 		**  CHILD 		**	Change the name of the control file to avoid 		**		duplicate deliveries.   Then run the file 		**		as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
 name|FatalErrors
 operator|=
 name|FALSE
@@ -1783,6 +1783,13 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
+name|ControlFile
+operator|=
+name|newstr
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1853,6 +1860,10 @@ name|w
 argument_list|)
 expr_stmt|;
 comment|/* get rid of the temporary file -- a new cf will be made */
+name|ControlFile
+operator|=
+name|NULL
+expr_stmt|;
 operator|(
 name|void
 operator|)

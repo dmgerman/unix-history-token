@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.83
+literal|3.84
 operator|%
 name|G
 operator|%
@@ -2448,7 +2448,7 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* send back return receipts as requested */
+comment|/* 	**  Send back return receipts as requested. 	*/
 if|if
 condition|(
 name|CurEnv
@@ -2474,13 +2474,25 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* do error handling */
+comment|/* 	**  Arrange to return errors or queue up as appropriate. 	**	If we are running a queue file and exiting abnormally, 	**		be sure we save the queue file. 	**	This clause will arrange to return error messages. 	*/
+if|if
+condition|(
+name|ControlFile
+operator|!=
+name|NULL
+condition|)
+name|CurEnv
+operator|->
+name|e_queueup
+operator|=
+name|TRUE
+expr_stmt|;
 name|checkerrors
 argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
-comment|/* now clean up bookeeping information */
+comment|/* 	**  Now clean up temp files and exit. 	*/
 if|if
 condition|(
 name|Transcript
@@ -2510,6 +2522,20 @@ argument_list|(
 name|CurEnv
 operator|->
 name|e_df
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ControlFile
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|ControlFile
 argument_list|)
 expr_stmt|;
 name|exit

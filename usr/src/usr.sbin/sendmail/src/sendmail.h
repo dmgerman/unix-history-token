@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.73		%G%"
+literal|"@(#)sendmail.h	3.74		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2077,6 +2077,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of queue directory */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|ControlFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when queued, name of control file temp */
 end_comment
 
 begin_decl_stmt
