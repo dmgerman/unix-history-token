@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.21 1995/09/14 13:13:33 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.22 1995/09/14 17:26:24 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -372,7 +372,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUE
+name|M_TR
 value|2
 end_define
 
@@ -396,7 +396,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\tClock "
 block|}
@@ -444,7 +444,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"MHz, L1 Cache "
 block|}
@@ -492,7 +492,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\tL2 Cache "
 block|}
@@ -732,7 +732,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\tDRAM: "
 block|}
@@ -804,7 +804,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"Timing: RAS: "
 block|}
@@ -876,7 +876,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|" Clocks, CAS Read: "
 block|}
@@ -936,7 +936,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", CAS Write: "
 block|}
@@ -972,7 +972,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n"
 block|}
@@ -1109,7 +1109,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\tCPU: "
 block|}
@@ -1169,7 +1169,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", bus="
 block|}
@@ -1205,7 +1205,7 @@ literal|0x01
 block|,
 literal|0x01
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", CPU->Memory posting "
 block|}
@@ -1289,7 +1289,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tCache: "
 block|}
@@ -1421,7 +1421,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tDRAM:"
 block|}
@@ -1541,7 +1541,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|" memory clocks="
 block|}
@@ -1577,7 +1577,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tCPU->PCI: posting "
 block|}
@@ -1613,7 +1613,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", burst mode "
 block|}
@@ -1649,7 +1649,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tPCI->Memory: posting "
 block|}
@@ -1685,7 +1685,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n"
 block|}
@@ -1714,7 +1714,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\tCPU: "
 block|}
@@ -1798,7 +1798,7 @@ literal|0x01
 block|,
 literal|0x01
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", CPU->Memory posting "
 block|}
@@ -1882,7 +1882,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tCache: "
 block|}
@@ -2050,7 +2050,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tDRAM:"
 block|}
@@ -2074,7 +2074,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|" memory clocks="
 block|}
@@ -2158,7 +2158,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tCPU->PCI: posting "
 block|}
@@ -2194,7 +2194,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", burst mode "
 block|}
@@ -2230,7 +2230,7 @@ literal|0x04
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|", PCI clocks="
 block|}
@@ -2266,7 +2266,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n\tPCI->Memory: posting "
 block|}
@@ -2350,7 +2350,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n"
 block|}
@@ -2379,7 +2379,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\tBus Modes:"
 block|}
@@ -2667,7 +2667,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-name|TRUE
+name|M_TR
 block|,
 literal|"\n"
 block|}
@@ -2767,7 +2767,7 @@ name|tbl
 operator|->
 name|flags
 operator|==
-name|TRUE
+name|M_TR
 condition|)
 block|{
 name|cond
