@@ -141,6 +141,7 @@ end_define
 begin_function_decl
 specifier|static
 name|unsigned
+name|int
 name|counter_get_timecount
 parameter_list|(
 name|struct
