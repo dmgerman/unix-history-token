@@ -4,7 +4,7 @@ comment|/*  * main.c -- Expression tree constructors and main program for gawk. 
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1997 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1965,14 +1965,14 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\nReport bugs to bug-gnu-utils@prep.ai.mit.edu,\n"
+literal|"\nReport bugs to bug-gnu-utils@gnu.org,\n"
 argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"with a Cc: to arnold@gnu.ai.mit.edu\n"
+literal|"with a Cc: to arnold@gnu.org\n"
 argument_list|,
 name|fp
 argument_list|)
@@ -2000,7 +2000,7 @@ name|char
 name|blurb_part1
 index|[]
 init|=
-literal|"Copyright (C) 1989, 1991-1997 Free Software Foundation.\n\ \n\ This program is free software; you can redistribute it and/or modify\n\ it under the terms of the GNU General Public License as published by\n\ the Free Software Foundation; either version 2 of the License, or\n\ (at your option) any later version.\n\ \n"
+literal|"Copyright (C) 1989, 1991-1999 Free Software Foundation.\n\ \n\ This program is free software; you can redistribute it and/or modify\n\ it under the terms of the GNU General Public License as published by\n\ the Free Software Foundation; either version 2 of the License, or\n\ (at your option) any later version.\n\ \n"
 decl_stmt|;
 specifier|static
 name|char

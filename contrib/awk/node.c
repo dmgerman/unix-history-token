@@ -4,7 +4,7 @@ comment|/*  * node.c -- routines for node management  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1997 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -50,6 +50,11 @@ name|unsigned
 name|int
 name|newflags
 decl_stmt|;
+specifier|extern
+name|double
+name|strtod
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -484,9 +489,7 @@ operator|>
 name|LONG_MAX
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|GFMT_WORKAROUND
+comment|/* 		 * Once upon a time, if GFMT_WORKAROUND wasn't defined, 		 * we just blindly did this: 		 *	sprintf(sp, format, s->numbr); 		 *	s->stlen = strlen(sp); 		 *	s->stfmt = (char) index; 		 * but that's no good if, e.g., OFMT is %s. So we punt, 		 * and just always format the value ourselves. 		 */
 name|NODE
 modifier|*
 name|dummy
@@ -616,41 +619,6 @@ comment|/* to keep s->stptr == r->stpr.  */
 goto|goto
 name|no_malloc
 goto|;
-else|#
-directive|else
-comment|/* 		 * no need for a "replacement" formatting by gawk, 		 * just use sprintf 		 */
-name|sprintf
-argument_list|(
-name|sp
-argument_list|,
-name|format
-argument_list|,
-name|s
-operator|->
-name|numbr
-argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|stlen
-operator|=
-name|strlen
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|stfmt
-operator|=
-operator|(
-name|char
-operator|)
-name|index
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* GFMT_WORKAROUND */
 block|}
 else|else
 block|{
@@ -741,7 +709,7 @@ name|stlen
 operator|+
 literal|2
 argument_list|,
-literal|"force_string"
+literal|"format_val"
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -759,14 +727,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GFMT_WORKAROUND
 name|no_malloc
 label|:
-endif|#
-directive|endif
-comment|/* GFMT_WORKAROUND */
 name|s
 operator|->
 name|stref
@@ -2087,11 +2049,7 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-name|ISXDIGIT
-argument_list|(
-operator|(
+comment|/* do outside test to avoid multiple side effects */
 name|c
 operator|=
 operator|*
@@ -2100,7 +2058,12 @@ operator|*
 name|string_ptr
 operator|)
 operator|++
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ISXDIGIT
+argument_list|(
+name|c
 argument_list|)
 condition|)
 block|{

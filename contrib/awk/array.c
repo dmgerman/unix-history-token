@@ -4,7 +4,7 @@ comment|/*  * array.c - routines for associative arrays.  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991 - 97 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_comment
@@ -1045,12 +1045,29 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|symbol
+operator|->
+name|type
+operator|!=
+name|Node_var_array
+condition|)
+block|{
+name|unref
+argument_list|(
+name|symbol
+operator|->
+name|var_value
+argument_list|)
+expr_stmt|;
 name|symbol
 operator|->
 name|type
 operator|=
 name|Node_var_array
 expr_stmt|;
+block|}
 name|symbol
 operator|->
 name|array_size
@@ -1533,11 +1550,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|free_temp
-argument_list|(
-name|subs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bucket
@@ -1562,8 +1574,18 @@ operator|->
 name|vname
 argument_list|)
 expr_stmt|;
+name|free_temp
+argument_list|(
+name|subs
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|free_temp
+argument_list|(
+name|subs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|last
