@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -148,6 +148,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_valloc\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the head of the freelist. */
 name|fs
 operator|=
@@ -400,7 +410,7 @@ name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ALLOCPRINT
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"lfs_vcreate: ino %d\n"
@@ -609,10 +619,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ALLOCPRINT
+name|VERBOSE
 name|printf
 argument_list|(
-literal|"lfs_ifree: free %d\n"
+literal|"lfs_vfree: free %d\n"
 argument_list|,
 name|ip
 operator|->
