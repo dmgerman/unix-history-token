@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: boot.c,v 1.3 1998/09/28 22:03:01 peter Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: boot.c,v 1.4 1998/10/02 16:22:26 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -48,6 +48,13 @@ modifier|*
 name|default_bootfiles
 init|=
 literal|"kernel,kernel.old"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|autoboot_tried
 decl_stmt|;
 end_decl_stmt
 
@@ -371,10 +378,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * XXX note the 'prompt' argument is not really useful until quoting is implemented  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -495,6 +498,61 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Called before we go interactive.  If we think we can autoboot, and  * we haven't tried already, try now.  */
+end_comment
+
+begin_function
+name|void
+name|autoboot_maybe
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"autoboot_delay"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|autoboot_tried
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|cp
+operator|==
+name|NULL
+operator|)
+operator|||
+name|strcasecmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"NO"
+argument_list|)
+operator|)
+condition|)
+name|autoboot
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* try to boot automatically */
+block|}
+end_function
+
 begin_function
 name|int
 name|autoboot
@@ -525,7 +583,17 @@ name|argv
 index|[
 literal|2
 index|]
+decl_stmt|,
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
+name|autoboot_tried
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|delay
@@ -533,11 +601,57 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* try to get a delay from the environment */
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"autoboot_delay"
+argument_list|)
+operator|)
+condition|)
+block|{
 name|delay
 operator|=
-literal|5
+name|strtol
+argument_list|(
+name|cp
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* env var?  compile-time define? */
+if|if
+condition|(
+name|cp
+operator|==
+name|ep
+condition|)
+name|delay
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|delay
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* all else fails */
+name|delay
+operator|=
+literal|10
+expr_stmt|;
 name|otime
 operator|=
 name|time
@@ -661,11 +775,6 @@ name|ntime
 expr_stmt|;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|yes

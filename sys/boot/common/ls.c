@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: ls.c,v 1.2 1998/09/03 02:10:07 msmith Exp $  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
+comment|/*  * $Id: ls.c,v 1.3 1998/09/26 01:29:13 msmith Exp $  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
 end_comment
 
 begin_comment
@@ -109,9 +109,6 @@ name|result
 decl_stmt|,
 name|ch
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE_LS
 name|int
 name|verbose
 decl_stmt|;
@@ -183,8 +180,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
@@ -326,9 +321,6 @@ goto|goto
 name|out
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|VERBOSE_LS
 comment|/* fixup path for stat()ing files */
 if|if
 condition|(
@@ -344,8 +336,6 @@ name|path
 operator|=
 literal|""
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 operator|(
@@ -471,10 +461,6 @@ literal|".."
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|VERBOSE_LS
-comment|/* too much UFS activity blows the heap out */
 if|if
 condition|(
 name|verbose
@@ -500,7 +486,7 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-comment|/* ignore return */
+comment|/* ignore return, could be symlink, etc. */
 if|if
 condition|(
 name|stat
@@ -511,27 +497,12 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"stat(%s) failed: %s\n"
-argument_list|,
-name|buf
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sb
 operator|.
 name|st_size
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
-block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -557,8 +528,6 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|sprintf
