@@ -2663,6 +2663,13 @@ name|SNDCTL_DSP_SETSYNCRO
 value|_IO  ('P', 21)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETODELAY
+value|_IOR ('P', 23, int)
+end_define
+
 begin_comment
 comment|/*  * I guess these are the readonly version of the same  * functions that exist above as SNDCTL_DSP_...  */
 end_comment
