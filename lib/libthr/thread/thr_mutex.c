@@ -1223,9 +1223,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|_thread_sigblock
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization marking the mutex private (delete safe): 	 */
 if|if
 condition|(
@@ -1259,15 +1256,6 @@ literal|1
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-name|_thread_sigunblock
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2134,9 +2122,6 @@ condition|)
 name|_thread_init
 argument_list|()
 expr_stmt|;
-name|_thread_sigblock
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If the mutex is statically initialized, perform the dynamic 	 * initialization marking it private (delete safe): 	 */
 if|if
 condition|(
@@ -2172,15 +2157,6 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-name|_thread_sigunblock
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2310,14 +2286,8 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-if|if
-condition|(
+return|return
 operator|(
-name|error
-operator|=
 name|mutex_unlock_common
 argument_list|(
 name|mutex
@@ -2325,16 +2295,6 @@ argument_list|,
 comment|/* add reference */
 literal|0
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|_thread_sigunblock
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
