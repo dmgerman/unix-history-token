@@ -7338,6 +7338,22 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mc
+operator|==
+name|NULL
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"no memory for mcast filter entry\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|bcopy
 argument_list|(
 name|LLADDR
