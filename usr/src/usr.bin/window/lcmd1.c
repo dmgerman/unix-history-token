@@ -714,6 +714,13 @@ operator|=
 name|vtowin
 argument_list|(
 name|a
+argument_list|,
+operator|(
+expr|struct
+name|ww
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -974,6 +981,8 @@ operator|=
 name|vtowin
 argument_list|(
 name|a
+argument_list|,
+name|selwin
 argument_list|)
 operator|)
 operator|==
@@ -1077,6 +1086,8 @@ operator|=
 name|vtowin
 argument_list|(
 name|a
+argument_list|,
+name|selwin
 argument_list|)
 operator|)
 operator|==
@@ -1105,7 +1116,9 @@ argument_list|(
 operator|++
 name|a
 argument_list|,
-literal|1
+name|v
+operator|->
+name|v_num
 argument_list|,
 name|v
 operator|->
@@ -1197,7 +1210,7 @@ name|vtobool
 argument_list|(
 name|a
 argument_list|,
-literal|1
+name|terse
 argument_list|,
 name|terse
 argument_list|)
@@ -1379,6 +1392,8 @@ name|vtowin
 argument_list|(
 name|a
 operator|++
+argument_list|,
+name|selwin
 argument_list|)
 operator|)
 operator|==
@@ -1561,7 +1576,7 @@ name|v_str
 argument_list|,
 literal|"all"
 argument_list|,
-literal|1
+literal|3
 argument_list|)
 condition|)
 name|c_close
@@ -1595,6 +1610,13 @@ operator|=
 name|vtowin
 argument_list|(
 name|a
+argument_list|,
+operator|(
+expr|struct
+name|ww
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1806,6 +1828,8 @@ modifier|*
 name|vtowin
 parameter_list|(
 name|v
+parameter_list|,
+name|w
 parameter_list|)
 specifier|register
 name|struct
@@ -1813,12 +1837,12 @@ name|value
 modifier|*
 name|v
 decl_stmt|;
-block|{
 name|struct
 name|ww
 modifier|*
 name|w
 decl_stmt|;
+block|{
 switch|switch
 condition|(
 name|v
@@ -1829,6 +1853,15 @@ block|{
 case|case
 name|V_ERR
 case|:
+if|if
+condition|(
+name|w
+operator|!=
+literal|0
+condition|)
+return|return
+name|w
+return|;
 name|error
 argument_list|(
 literal|"No window specified."
