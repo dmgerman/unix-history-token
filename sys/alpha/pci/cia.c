@@ -319,9 +319,12 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|splhigh
+name|save_intr
 argument_list|()
 decl_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|cia_hae_mem
 operator|=
 operator|(
@@ -350,7 +353,7 @@ argument_list|(
 name|CIA_CSR_HAE_MEM
 argument_list|)
 expr_stmt|;
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -656,7 +659,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Put the Pyxis into PCI loopback mode. 	 */
@@ -737,7 +743,7 @@ expr_stmt|;
 name|alpha_mb
 argument_list|()
 expr_stmt|;
-name|splx
+name|restore_intr
 argument_list|(
 name|s
 argument_list|)
@@ -1291,9 +1297,6 @@ expr_stmt|;
 name|isa_init_intr
 argument_list|()
 expr_stmt|;
-name|cia_init_sgmap
-argument_list|()
-expr_stmt|;
 name|cia_rev
 operator|=
 name|REGVAL
@@ -1338,6 +1341,9 @@ else|else
 name|cia_ispyxis
 operator|=
 name|FALSE
+expr_stmt|;
+name|cia_init_sgmap
+argument_list|()
 expr_stmt|;
 comment|/* 	 * ALCOR/ALCOR2 Revisions>= 2 and Pyxis have the CNFG register. 	 */
 if|if
