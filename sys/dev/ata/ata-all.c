@@ -442,6 +442,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* sysctl vars */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ata
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATA driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* local vars */
 end_comment
 

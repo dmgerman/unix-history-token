@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -178,6 +184,58 @@ argument_list|,
 literal|"ATAPI generic"
 argument_list|,
 literal|"ATAPI driver generic layer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|atapi_dma
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"hw.ata.atapi_dma"
+argument_list|,
+literal|0
+argument_list|,
+name|atapi_dma
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* systcl vars */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_ata
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ata
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|atapi_dma
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|atapi_dma
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATAPI device DMA mode control"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -296,11 +354,10 @@ operator|->
 name|dmaflag
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_ENABLE_ATAPI_DMA
 if|if
 condition|(
+name|atapi_dma
+operator|&&
 operator|!
 operator|(
 name|ATP_PARAM
@@ -377,8 +434,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 comment|/* set PIO mode */
 name|ata_dmainit
 argument_list|(
