@@ -236,34 +236,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FBTYPE_RESERVED3
+name|FBTYPE_SUNGP3
 value|17
 end_define
 
-begin_comment
-comment|/* reserved, do not use */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|FBTYPE_RESERVED2
+name|FBTYPE_SUNGT
 value|18
 end_define
 
-begin_comment
-comment|/* reserved, do not use */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|FBTYPE_RESERVED1
+name|FBTYPE_SUNLEO
 value|19
 end_define
 
 begin_comment
-comment|/* reserved, do not use */
+comment|/* zx Leo */
 end_comment
 
 begin_define
@@ -325,8 +317,37 @@ end_define
 begin_define
 define|#
 directive|define
-name|FBTYPE_LASTPLUSONE
+name|FBTYPE_MDICOLOR
 value|28
+end_define
+
+begin_comment
+comment|/* cg14 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBTYPE_TCXCOLOR
+value|29
+end_define
+
+begin_comment
+comment|/* SUNW,tcx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBTYPE_CREATOR
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBTYPE_LASTPLUSONE
+value|31
 end_define
 
 begin_comment
