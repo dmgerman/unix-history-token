@@ -15,11 +15,11 @@ directive|if
 literal|0
 end_if
 
-begin_else
+begin_endif
 unit|static char sccsid[] = "@(#)util.c	8.3 (Berkeley) 4/28/95";
-else|#
-directive|else
-end_else
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -31,11 +31,6 @@ init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -61,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -79,37 +74,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -127,13 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<utmp.h>
 end_include
 
 begin_include
@@ -659,7 +648,7 @@ name|doit
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * and if it's not any of the current logins 		 * can't use time comparison because there may be a small 		 * discrepency since login calls time() twice 		 */
+comment|/* 		 * and if it's not any of the current logins 		 * can't use time comparison because there may be a small 		 * discrepancy since login calls time() twice 		 */
 for|for
 control|(
 name|w
