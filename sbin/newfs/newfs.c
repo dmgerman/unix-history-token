@@ -1037,6 +1037,20 @@ expr_stmt|;
 name|Nflag
 operator|++
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: MFS is being phased out in preference for md devices\n"
+literal|"WARNING: Please see mdconfig(8) for details\n"
+literal|"WARNING: Continuing in 15 seconds\n"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|15
+argument_list|)
+expr_stmt|;
 block|}
 name|opstring
 operator|=
