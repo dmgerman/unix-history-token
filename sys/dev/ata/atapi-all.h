@@ -1100,22 +1100,25 @@ define|#
 directive|define
 name|ATPR_F_DMA_USED
 value|0x0002
+define|#
+directive|define
+name|ATPR_F_AT_HEAD
+value|0x0004
 name|int8_t
 modifier|*
 name|data
 decl_stmt|;
 comment|/* pointer to data buf */
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-comment|/* associated buf ptr */
 name|atapi_callback_t
 modifier|*
 name|callback
 decl_stmt|;
 comment|/* ptr to callback func */
+name|void
+modifier|*
+name|driver
+decl_stmt|;
+comment|/* driver specific */
 name|TAILQ_ENTRY
 argument_list|(
 argument|atapi_request
@@ -1206,8 +1209,7 @@ name|int32_t
 parameter_list|,
 name|atapi_callback_t
 parameter_list|,
-name|struct
-name|buf
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

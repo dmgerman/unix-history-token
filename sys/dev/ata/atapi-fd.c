@@ -2123,7 +2123,7 @@ name|bp
 init|=
 name|request
 operator|->
-name|bp
+name|driver
 decl_stmt|;
 if|if
 condition|(
@@ -2179,7 +2179,7 @@ name|bp
 init|=
 name|request
 operator|->
-name|bp
+name|driver
 decl_stmt|;
 name|struct
 name|afd_softc
