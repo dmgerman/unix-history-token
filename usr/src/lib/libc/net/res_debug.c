@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.33 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.34 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.33 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,19 +87,11 @@ name|p_cdname
 argument_list|()
 decl_stmt|,
 modifier|*
-name|p_class
-argument_list|()
-decl_stmt|,
-modifier|*
 name|p_rr
 argument_list|()
 decl_stmt|,
 modifier|*
 name|p_time
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_type
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -204,12 +196,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
 name|void
-name|fp_query
+name|__fp_query
 parameter_list|()
 function_decl|;
-name|fp_query
+name|__fp_query
 argument_list|(
 name|msg
 argument_list|,
@@ -224,9 +215,8 @@ comment|/*  * Print the contents of a query.  * This is intended to be primarily
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|fp_query
+name|__fp_query
 parameter_list|(
 name|msg
 parameter_list|,
@@ -522,7 +512,7 @@ name|file
 argument_list|,
 literal|", type = %s"
 argument_list|,
-name|p_type
+name|__p_type
 argument_list|(
 name|_getshort
 argument_list|(
@@ -544,7 +534,7 @@ name|file
 argument_list|,
 literal|", class = %s\n\n"
 argument_list|,
-name|p_class
+name|__p_class
 argument_list|(
 name|_getshort
 argument_list|(
@@ -943,7 +933,7 @@ name|file
 argument_list|,
 literal|"\n\ttype = %s"
 argument_list|,
-name|p_type
+name|__p_type
 argument_list|(
 name|type
 operator|=
@@ -967,7 +957,7 @@ name|file
 argument_list|,
 literal|", class = %s"
 argument_list|,
-name|p_class
+name|__p_class
 argument_list|(
 name|class
 operator|=
@@ -1916,10 +1906,9 @@ comment|/*  * Return a string for the type  */
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
-name|p_type
+name|__p_type
 parameter_list|(
 name|type
 parameter_list|)
@@ -2158,10 +2147,9 @@ comment|/*  * Return a mnemonic for class  */
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
-name|p_class
+name|__p_class
 parameter_list|(
 name|class
 parameter_list|)
