@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fb_start.c,v 4.300 91/06/27 20:42:40 root Rel41 $ SONY  *  *	@(#)fb_start.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fb_start.c,v 4.300 91/06/27 20:42:40 root Rel41 $ SONY  *  *	@(#)fb_start.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -9,17 +9,23 @@ directive|include
 file|"../include/fix_machine_type.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPC_MRX
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"param.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPC_MRX
+end_ifdef
 
 begin_include
 include|#
@@ -43,12 +49,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|"param.h"
-end_include
 
 begin_include
 include|#
@@ -5819,7 +5819,7 @@ name|MODE_NtoN
 case|:
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|sbp
 operator|->
@@ -6389,7 +6389,7 @@ name|MODE_NtoN
 case|:
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|dbp
 operator|->
@@ -9925,7 +9925,7 @@ name|MODE_NtoN
 case|:
 name|j
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|sbp
 operator|->
@@ -10909,7 +10909,7 @@ name|offy
 expr_stmt|;
 name|ylen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|ylen
 argument_list|,
@@ -10947,7 +10947,7 @@ else|else
 block|{
 name|ylen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|prect
 operator|.
@@ -11138,7 +11138,7 @@ condition|)
 block|{
 name|xlen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|dx
 argument_list|,
@@ -11653,7 +11653,7 @@ name|offy
 expr_stmt|;
 name|ylen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|ylen
 argument_list|,
@@ -11691,7 +11691,7 @@ else|else
 block|{
 name|ylen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|prect
 operator|.
@@ -11882,7 +11882,7 @@ condition|)
 block|{
 name|xlen
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|dx
 argument_list|,
@@ -12542,7 +12542,7 @@ name|extent
 operator|.
 name|x
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|plen
 argument_list|,
@@ -13042,7 +13042,7 @@ name|origin
 operator|.
 name|x
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|ls
 operator|->
@@ -13060,7 +13060,7 @@ name|extent
 operator|.
 name|x
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|ls
 operator|->
@@ -13217,7 +13217,7 @@ name|dp
 operator|.
 name|x
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|ls
 operator|->
@@ -13231,7 +13231,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|ls
 operator|->

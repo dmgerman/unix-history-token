@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100esc.c,v 4.300 91/06/09 06:14:59 root Rel41 $ SONY  *  *	@(#)vt100esc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100esc.c,v 4.300 91/06/09 06:14:59 root Rel41 $ SONY  *  *	@(#)vt100esc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../../h/systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../../iop/framebuf.h"
 end_include
 
@@ -40,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -1216,13 +1228,13 @@ name|spc
 operator|->
 name|csr_y
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|spc
 operator|->
 name|csr_y
 operator|-
-name|MAX
+name|max
 argument_list|(
 operator|*
 name|cp
@@ -1240,13 +1252,13 @@ name|spc
 operator|->
 name|csr_y
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|spc
 operator|->
 name|csr_y
 operator|-
-name|MAX
+name|max
 argument_list|(
 operator|*
 name|cp
@@ -1309,13 +1321,13 @@ name|spc
 operator|->
 name|csr_y
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|spc
 operator|->
 name|csr_y
 operator|+
-name|MAX
+name|max
 argument_list|(
 operator|*
 name|cp
@@ -1333,13 +1345,13 @@ name|spc
 operator|->
 name|csr_y
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|spc
 operator|->
 name|csr_y
 operator|+
-name|MAX
+name|max
 argument_list|(
 operator|*
 name|cp
@@ -1389,13 +1401,13 @@ name|spc
 operator|->
 name|csr_x
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|spc
 operator|->
 name|csr_x
 operator|+
-name|MAX
+name|max
 argument_list|(
 operator|*
 name|cp
@@ -1440,13 +1452,13 @@ name|spc
 operator|->
 name|csr_x
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|spc
 operator|->
 name|csr_x
 operator|-
-name|MAX
+name|max
 argument_list|(
 operator|*
 name|cp
@@ -1674,7 +1686,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|cp
 index|[
@@ -1698,7 +1710,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|cp
 index|[
@@ -2346,7 +2358,7 @@ name|s_csr
 operator|.
 name|csr_y
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|sp
 operator|->
@@ -2354,7 +2366,7 @@ name|s_region
 operator|.
 name|top_margin
 operator|+
-name|MAX
+name|max
 argument_list|(
 name|y
 argument_list|,
@@ -2379,11 +2391,11 @@ name|s_csr
 operator|.
 name|csr_y
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|TOP_M
 operator|+
-name|MAX
+name|max
 argument_list|(
 name|y
 argument_list|,
@@ -2402,9 +2414,9 @@ name|s_csr
 operator|.
 name|csr_x
 operator|=
-name|MAX
+name|max
 argument_list|(
-name|MIN
+name|min
 argument_list|(
 name|x
 argument_list|,
@@ -2517,7 +2529,7 @@ argument_list|)
 expr_stmt|;
 name|clear_lines
 argument_list|(
-name|MIN
+name|min
 argument_list|(
 name|spc
 operator|->
@@ -2822,7 +2834,7 @@ name|s_region
 decl_stmt|;
 name|pn
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|pn
 argument_list|,
@@ -2893,7 +2905,7 @@ name|spc
 operator|->
 name|csr_y
 argument_list|,
-name|MIN
+name|min
 argument_list|(
 name|spc
 operator|->
@@ -3001,7 +3013,7 @@ name|aux
 decl_stmt|;
 name|pn
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|pn
 argument_list|,
@@ -3068,7 +3080,7 @@ expr_stmt|;
 block|}
 name|aux
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|spr
 operator|->
@@ -3171,7 +3183,7 @@ name|aux
 decl_stmt|;
 name|pn
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|pn
 argument_list|,
@@ -3221,7 +3233,7 @@ expr_stmt|;
 block|}
 name|aux
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|rit_m
 operator|-

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100.h,v 4.300 91/06/09 06:14:58 root Rel41 $ SONY  *  *	@(#)vt100.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100.h,v 4.300 91/06/09 06:14:58 root Rel41 $ SONY  *  *	@(#)vt100.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -869,66 +869,6 @@ define|#
 directive|define
 name|C_MESS_SIZ
 value|32
-end_define
-
-begin_comment
-comment|/* MIN and MAX are imported from ../h/param.h */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)<(b))?(a):(b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)>(b))?(a):(b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|ABS
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)< 0 ? -(a) : (a))
 end_define
 
 begin_decl_stmt
