@@ -28,6 +28,7 @@ comment|/* XXX - sigcontext compat. */
 name|int
 name|mc_gs
 decl_stmt|;
+comment|/* machine state (trapframe) */
 name|int
 name|mc_fs
 decl_stmt|;
@@ -79,7 +80,6 @@ decl_stmt|;
 name|int
 name|mc_esp
 decl_stmt|;
-comment|/* machine state */
 name|int
 name|mc_ss
 decl_stmt|;
@@ -146,17 +146,19 @@ name|mcontext_t
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|COMPAT_FREEBSD4
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/* For 4.x binaries */
@@ -244,50 +246,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|void
-name|get_mcontext
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|mcontext_t
-modifier|*
-name|mcp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|set_mcontext
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-specifier|const
-name|mcontext_t
-modifier|*
-name|mcp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

@@ -260,25 +260,15 @@ comment|/* FP software control word */
 name|long
 name|sc_ownedfp
 decl_stmt|;
-comment|/* fp has been used */
+comment|/* fp has been used; see mcontext_t */
 name|long
-name|sc_xxx1
-index|[
-literal|2
-index|]
+name|sc_format
 decl_stmt|;
-comment|/* sc_ssize, sc_sbase on DUX */
+comment|/* see mcontext_t */
 name|long
-name|sc_xxx2
+name|sc_spare
 index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* sc_fp_trap_pc, sc_fp_trigger_sum, sc_fp_trigger_inst */
-name|long
-name|sc_reserved
-index|[
-literal|2
+literal|6
 index|]
 decl_stmt|;
 comment|/* XXX */

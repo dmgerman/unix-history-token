@@ -255,7 +255,7 @@ decl_stmt|;
 name|int
 name|sc_len
 decl_stmt|;
-comment|/* sizeof(struct mcontext_t) */
+comment|/* sizeof(mcontext_t) */
 comment|/* 	 * XXX - See<machine/ucontext.h> and<machine/npx.h> for 	 *       the following fields. 	 */
 name|int
 name|sc_fpformat
@@ -270,7 +270,7 @@ literal|1
 index|]
 decl_stmt|;
 name|int
-name|sc_fpregs
+name|sc_fpstate
 index|[
 literal|128
 index|]

@@ -47,24 +47,39 @@ name|unsigned
 name|long
 name|mc_fp_control
 decl_stmt|;
+define|#
+directive|define
+name|_MC_FPOWNED_NONE
+value|0
+comment|/* FP state not used */
+define|#
+directive|define
+name|_MC_FPOWNED_FPU
+value|1
+comment|/* FP state came from FPU */
+define|#
+directive|define
+name|_MC_FPOWNED_PCB
+value|2
+comment|/* FP state came from PCB */
 name|long
 name|mc_ownedfp
 decl_stmt|;
 define|#
 directive|define
-name|__UC_REV0_SIGFRAME
+name|_MC_REV0_SIGFRAME
 value|1
 comment|/* context is a signal frame */
 define|#
 directive|define
-name|__UC_REV0_TRAPFRAME
+name|_MC_REV0_TRAPFRAME
 value|2
 comment|/* context is a trap frame */
 name|long
 name|mc_format
 decl_stmt|;
 name|long
-name|__spare__
+name|mc_spare
 index|[
 literal|6
 index|]
