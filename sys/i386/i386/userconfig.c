@@ -1726,7 +1726,7 @@ block|,
 block|{
 literal|"si"
 block|,
-literal|"Specialix SI/XIO async adapter"
+literal|"Specialix SI/XIO/SX async adapter"
 block|,
 literal|0
 block|,
