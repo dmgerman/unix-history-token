@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_v.c	7.3 %G%"
+literal|"@(#)ex_v.c	7.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,6 +1232,10 @@ specifier|extern
 name|jmp_buf
 name|readbuf
 decl_stmt|;
+specifier|extern
+name|int
+name|doingread
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -1254,6 +1258,15 @@ expr_stmt|;
 name|draino
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|doingread
+condition|)
+block|{
+name|doingread
+operator|=
+literal|0
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|readbuf
@@ -1261,6 +1274,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

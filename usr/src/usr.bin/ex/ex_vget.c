@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vget.c	6.4 %G%"
+literal|"@(#)ex_vget.c	6.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,6 +154,14 @@ end_decl_stmt
 begin_decl_stmt
 name|jmp_buf
 name|readbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|doingread
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -336,9 +344,10 @@ condition|)
 goto|goto
 name|getATTN
 goto|;
-if|if
-condition|(
-operator|(
+name|doingread
+operator|=
+literal|1
+expr_stmt|;
 name|c
 operator|=
 name|read
@@ -356,7 +365,14 @@ name|ch
 argument_list|,
 literal|1
 argument_list|)
-operator|)
+expr_stmt|;
+name|doingread
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|c
 operator|!=
 literal|1
 condition|)
