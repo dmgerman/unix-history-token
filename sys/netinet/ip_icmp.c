@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_icmp.c	8.2 (Berkeley) 1/4/94  * $Id: ip_icmp.c,v 1.19 1996/04/02 12:26:10 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_icmp.c	8.2 (Berkeley) 1/4/94  * $Id: ip_icmp.c,v 1.20 1996/04/03 18:52:22 wollman Exp $  */
 end_comment
 
 begin_include
@@ -74,6 +74,12 @@ include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_IP_VHL
+end_define
 
 begin_include
 include|#
@@ -316,9 +322,12 @@ specifier|register
 name|unsigned
 name|oiplen
 init|=
+name|IP_VHL_HL
+argument_list|(
 name|oip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 decl_stmt|;
@@ -762,15 +771,9 @@ name|m_len
 expr_stmt|;
 name|nip
 operator|->
-name|ip_hl
+name|ip_vhl
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-operator|>>
-literal|2
+name|IP_VHL_BORING
 expr_stmt|;
 name|nip
 operator|->
@@ -1302,11 +1305,14 @@ argument_list|(
 name|icp
 argument_list|)
 operator|||
+name|IP_VHL_HL
+argument_list|(
 name|icp
 operator|->
 name|icmp_ip
 operator|.
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<
 operator|(
 sizeof|sizeof
@@ -1887,11 +1893,14 @@ argument_list|(
 name|icp
 argument_list|)
 operator|||
+name|IP_VHL_HL
+argument_list|(
 name|icp
 operator|->
 name|icmp_ip
 operator|.
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<
 operator|(
 sizeof|sizeof
@@ -2140,9 +2149,12 @@ name|int
 name|optlen
 init|=
 operator|(
+name|IP_VHL_HL
+argument_list|(
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 operator|)
@@ -2644,15 +2656,9 @@ name|optlen
 expr_stmt|;
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-operator|>>
-literal|2
+name|IP_VHL_BORING
 expr_stmt|;
 name|m
 operator|->
@@ -2810,9 +2816,12 @@ name|ro
 decl_stmt|;
 name|hlen
 operator|=
+name|IP_VHL_HL
+argument_list|(
 name|ip
 operator|->
-name|ip_hl
+name|ip_vhl
+argument_list|)
 operator|<<
 literal|2
 expr_stmt|;
