@@ -334,6 +334,13 @@ name|GAMAGIC
 value|0x55FF44FD
 end_define
 
+begin_define
+define|#
+directive|define
+name|GAFREE
+value|0x5F54F4DF
+end_define
+
 begin_include
 include|#
 directive|include

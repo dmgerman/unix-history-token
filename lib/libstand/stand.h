@@ -2579,21 +2579,101 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+modifier|*
+name|Malloc
+parameter_list|(
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|Calloc
+parameter_list|(
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|Realloc
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
-literal|0
+literal|1
 end_if
 
 begin_define
-unit|static inline void * malloc_debug(size_t size, const char *file, int line) {     void *p;     printf("%s:%d malloc(%ld)", file, line, size);     p = malloc(size);     printf("=%p\n", p);     return p; }  static inline void free_debug(void *p, const char *file, int line) {     printf("%s:%d free(%p)\n", file, line, p);     free(p); }
 define|#
 directive|define
 name|malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc_debug(x, __FILE__, __LINE__)
+value|Malloc(x, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|calloc
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|Calloc(x, y, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -2603,7 +2683,68 @@ name|free
 parameter_list|(
 name|x
 parameter_list|)
-value|free_debug(x, __FILE__, __LINE__)
+value|Free(x, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|realloc
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|Realloc(x, y, __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|malloc
+parameter_list|(
+name|x
+parameter_list|)
+value|Malloc(x, NULL 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|calloc
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|Calloc(x, y, NULL, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|free
+parameter_list|(
+name|x
+parameter_list|)
+value|Free(x, NULL, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|realloc
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|Realloc(x, y, NULL, 0)
 end_define
 
 begin_endif
