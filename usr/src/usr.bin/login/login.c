@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.48 (Berkeley) %G%"
+literal|"@(#)login.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2556,18 +2556,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setlogname
+name|setlogin
 argument_list|(
 name|pwd
 operator|->
 name|pw_name
-argument_list|,
-name|strlen
-argument_list|(
-name|pwd
-operator|->
-name|pw_name
-argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -2576,7 +2569,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"setlogname() failure: %m"
+literal|"setlogin() failure: %m"
 argument_list|)
 expr_stmt|;
 comment|/* discard permissions last so can't get killed and drop core */
