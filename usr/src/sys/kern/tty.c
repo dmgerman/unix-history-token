@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.14	%G%	*/
+comment|/*	tty.c	3.15	%G%	*/
 end_comment
 
 begin_comment
@@ -1162,6 +1162,9 @@ specifier|extern
 name|int
 name|nldisp
 decl_stmt|;
+specifier|register
+name|c
+expr_stmt|;
 name|int
 name|temp
 decl_stmt|;
@@ -2210,6 +2213,57 @@ operator|.
 name|u_error
 operator|=
 name|EFAULT
+expr_stmt|;
+break|break;
+case|case
+name|TIOCSTI
+case|:
+name|c
+operator|=
+name|fubyte
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_uid
+operator|&&
+name|u
+operator|.
+name|u_ttyp
+operator|!=
+name|tp
+operator|||
+name|c
+operator|<
+literal|0
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|EFAULT
+expr_stmt|;
+else|else
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+name|c
+operator|,
+name|tp
+operator|)
 expr_stmt|;
 break|break;
 comment|/* end of locals */
