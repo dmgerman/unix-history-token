@@ -1430,6 +1430,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1458,9 +1463,13 @@ expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
-comment|/* XXXKSE need proc lock? */
 comment|/* NOTREACHED */
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

@@ -6551,7 +6551,12 @@ name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
-comment|/* 	 * First check that we shouldn't just abort. 	 * But check if we are the single thread first! 	 * XXX p_singlethread not locked, but should be safe. 	 */
+comment|/* 	 * First check that we shouldn't just abort. 	 * But check if we are the single thread first! 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6571,11 +6576,6 @@ name|td
 operator|)
 condition|)
 block|{
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -6592,6 +6592,11 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we are doing a syscall in a KSE environment, 	 * note where our mailbox is. There is always the 	 * possibility that we could do this lazily (in kse_reassign()), 	 * but for now do it every time. 	 */
 name|kg
 operator|=

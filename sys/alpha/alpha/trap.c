@@ -1331,6 +1331,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1350,11 +1355,6 @@ name|td
 operator|)
 condition|)
 block|{
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1366,6 +1366,11 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
