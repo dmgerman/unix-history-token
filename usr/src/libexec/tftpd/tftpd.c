@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	4.12 (Berkeley) %G%"
+literal|"@(#)tftpd.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,19 +253,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|do_it_right_and_use_a_new_port
-if|if
-condition|(
-name|fork
-argument_list|()
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 literal|0
@@ -337,15 +324,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* 	 * The current 4.2 tftp client neglects to switch its destination 	 * port after the first ACK. 	 */
-name|peer
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|connect
