@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.5 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1650,6 +1650,10 @@ argument_list|,
 name|obuf
 argument_list|,
 name|doign
+condition|?
+name|ignore
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

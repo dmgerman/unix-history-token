@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.7 (Berkeley) %G%"
+literal|"@(#)aux.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2782,6 +2782,8 @@ begin_macro
 name|isign
 argument_list|(
 argument|field
+argument_list|,
+argument|ignore
 argument_list|)
 end_macro
 
@@ -2789,6 +2791,16 @@ begin_decl_stmt
 name|char
 modifier|*
 name|field
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ignoretab
+name|ignore
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2810,7 +2822,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nretained
+name|ignore
+index|[
+literal|1
+index|]
+operator|.
+name|i_count
 operator|>
 literal|0
 condition|)
@@ -2821,7 +2838,9 @@ name|member
 argument_list|(
 name|realfld
 argument_list|,
-name|retain
+name|ignore
+operator|+
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -2855,8 +2874,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|ignore
-modifier|*
+name|ignoretab
 modifier|*
 name|table
 decl_stmt|;
@@ -2875,6 +2893,8 @@ control|(
 name|igp
 operator|=
 name|table
+operator|->
+name|i_head
 index|[
 name|hash
 argument_list|(

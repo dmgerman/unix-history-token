@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -512,42 +512,30 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|ignore
-modifier|*
+name|ignoretab
 name|ignore
 index|[
-name|HSHSIZE
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to ignored fields */
+comment|/* ignored and retained fields 					   0 is ignore, 1 is retain */
 end_comment
 
 begin_decl_stmt
 name|struct
-name|ignore
-modifier|*
-name|retain
+name|ignoretab
+name|saveignore
 index|[
-name|HSHSIZE
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to retained fields */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nretained
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of retained fields */
+comment|/* ignored and retained fields 					   on save to folder */
 end_comment
 
 begin_decl_stmt

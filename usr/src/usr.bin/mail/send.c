@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.5 (Berkeley) %G%"
+literal|"@(#)send.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ comment|/*  * Mail -- a mail program  *  * Mail to others.  */
 end_comment
 
 begin_comment
-comment|/*  * Send message described by the passed pointer to the  * passed output buffer.  Return -1 on error, but normally  * the number of lines written.  Adjust the status: field  * if need be.  If doign is set, suppress ignored header fields.  */
+comment|/*  * Send message described by the passed pointer to the  * passed output buffer.  Return -1 on error, but normally  * the number of lines written.  Adjust the status: field  * if need be.  If doign is given, suppress ignored header fields.  */
 end_comment
 
 begin_expr_stmt
@@ -75,6 +75,14 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|obuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ignoretab
+modifier|*
+name|doign
 decl_stmt|;
 end_decl_stmt
 
@@ -139,13 +147,16 @@ literal|1
 expr_stmt|;
 name|dostat
 operator|=
-operator|!
 name|doign
+operator|==
+literal|0
 operator|||
 operator|!
 name|isign
 argument_list|(
 literal|"status"
+argument_list|,
+name|doign
 argument_list|)
 expr_stmt|;
 name|infld
@@ -376,6 +387,8 @@ operator|&&
 name|isign
 argument_list|(
 name|line
+argument_list|,
+name|doign
 argument_list|)
 condition|)
 name|ignoring
