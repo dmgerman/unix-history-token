@@ -851,6 +851,31 @@ case|case
 name|CMDMAIL
 case|:
 comment|/* mail -- designate sender */
+comment|/* force a sending host even if no HELO given */
+if|if
+condition|(
+name|RealHostName
+operator|!=
+name|NULL
+operator|&&
+name|macvalue
+argument_list|(
+literal|'s'
+argument_list|,
+name|CurEnv
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|RealHostName
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
 comment|/* check for validity of this command */
 if|if
 condition|(
