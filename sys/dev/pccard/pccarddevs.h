@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.19 2001/11/16 06:58:47 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.20 2001/11/19 05:02:55 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.144 2001/10/27 08:05:21 ichiro Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.145 2001/11/08 17:05:42 christos Exp $ */
 end_comment
 
 begin_comment
@@ -3337,6 +3337,27 @@ define|#
 directive|define
 name|PCMCIA_STR_XIRCOM_CE2
 value|"Xircom CreditCard Ethernet II"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_XIRCOM_XE2000
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_XIRCOM_XE2000
+value|0x0153
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_XIRCOM_XE2000
+value|"Xircom XE2000 10/100 Ethernet"
 end_define
 
 begin_define
