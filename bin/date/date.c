@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: date.c,v 1.27 1999/03/09 09:38:54 brian Exp $"
+literal|"$Id: date.c,v 1.28 1999/05/14 00:28:41 jmg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,15 +836,9 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|lt
-operator|=
-name|localtime
-argument_list|(
-operator|&
-name|tval
-argument_list|)
+name|badformat
+argument_list|()
 expr_stmt|;
-return|return;
 block|}
 elseif|else
 if|if
