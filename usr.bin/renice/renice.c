@@ -658,7 +658,7 @@ argument_list|,
 operator|&
 name|ep
 argument_list|,
-name|NULL
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
