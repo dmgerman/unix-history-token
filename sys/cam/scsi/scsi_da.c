@@ -12,6 +12,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"opt_da.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hw_wdog.h"
 end_include
 
@@ -645,6 +651,9 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|DA_OLD_QUIRKS
 comment|/* Below a list of quirks for USB devices supported by umass. */
 block|{
 comment|/* 		 * This USB floppy drive uses the UFI command set. This 		 * command set is a derivative of the ATAPI command set and 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
@@ -1306,6 +1315,9 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+endif|#
+directive|endif
+comment|/* DA_OLD_QUIRKS */
 block|}
 decl_stmt|;
 end_decl_stmt
