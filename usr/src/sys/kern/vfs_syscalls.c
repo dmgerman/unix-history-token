@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.58 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.59 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7508,6 +7508,25 @@ block|{
 name|error
 operator|=
 name|EISDIR
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|fvp
+operator|->
+name|v_mount
+operator|!=
+name|tvp
+operator|->
+name|v_mount
+condition|)
+block|{
+name|error
+operator|=
+name|EXDEV
 expr_stmt|;
 goto|goto
 name|out
