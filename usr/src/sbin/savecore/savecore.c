@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.6 (Berkeley) 81/05/20"
+literal|"@(#)savecore.c	4.7 (Berkeley) 81/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,13 @@ block|{
 literal|0
 block|}
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|system
 decl_stmt|;
 end_decl_stmt
 
@@ -331,13 +338,17 @@ condition|(
 name|argc
 operator|!=
 literal|2
+operator|&&
+name|argc
+operator|!=
+literal|3
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore dirname\n"
+literal|"usage: savecore dirname [ system ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -351,6 +362,19 @@ operator|=
 name|argv
 index|[
 literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|3
+condition|)
+name|system
+operator|=
+name|argv
+index|[
+literal|2
 index|]
 expr_stmt|;
 if|if
@@ -944,6 +968,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|system
+condition|)
+return|return;
 name|fseek
 argument_list|(
 name|fp
@@ -1179,6 +1208,15 @@ name|time_t
 operator|)
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|system
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|dumpfd
 operator|=
 name|Open
@@ -1672,6 +1710,10 @@ name|ifd
 operator|=
 name|Open
 argument_list|(
+name|system
+condition|?
+name|system
+else|:
 literal|"/vmunix"
 argument_list|,
 literal|0
