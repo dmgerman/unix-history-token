@@ -2587,6 +2587,17 @@ name|kapi
 decl_stmt|;
 endif|#
 directive|endif
+name|KASSERT
+argument_list|(
+name|pps
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL pps pointer in pps_ioctl"
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -2924,6 +2935,17 @@ name|timehands
 modifier|*
 name|th
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|pps
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL pps pointer in pps_capture"
+operator|)
+argument_list|)
+expr_stmt|;
 name|th
 operator|=
 name|timehands
@@ -3018,6 +3040,17 @@ name|pps_seq_t
 modifier|*
 name|pseq
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|pps
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL pps pointer in pps_event"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* If the timecounter was wound up underneath us, bail out. */
 if|if
 condition|(
