@@ -61,6 +61,11 @@ decl_stmt|;
 comment|/* special make rule if present */
 name|char
 modifier|*
+name|f_depends
+decl_stmt|;
+comment|/* additional dependancies */
+name|char
+modifier|*
 name|f_needs
 decl_stmt|;
 comment|/* 	 * Random values: 	 *	swap space parameters for swap areas 	 *	root device, etc. for system specifications 	 */
@@ -209,6 +214,20 @@ define|#
 directive|define
 name|CONFIGDEP
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_IMPLCT_RULE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_OBJ
+value|4
 end_define
 
 begin_struct
