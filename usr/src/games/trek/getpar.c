@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpar.c	4.2	(Berkeley)	%G%"
+literal|"@(#)getpar.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|r
 operator|->
 name|value
