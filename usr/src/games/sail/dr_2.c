@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_2.c	1.4 83/10/10"
+literal|"@(#)dr_2.c	1.5 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,7 +1144,7 @@ name|ship
 operator|->
 name|file
 decl_stmt|;
-name|int
+name|char
 name|drift
 init|=
 name|fp
@@ -2160,6 +2160,55 @@ name|temp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|rmend
+argument_list|(
+argument|str
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|str
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|str
+condition|)
+operator|*
+operator|--
+name|p
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 

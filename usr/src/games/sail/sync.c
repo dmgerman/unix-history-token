@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	1.3 83/10/14"
+literal|"@(#)sync.c	1.4 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +374,9 @@ name|sync_seek
 operator|==
 literal|0
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

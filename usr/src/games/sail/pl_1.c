@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	1.12 83/10/14"
+literal|"@(#)pl_1.c	1.13 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,14 +45,6 @@ argument_list|()
 decl_stmt|,
 name|child
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|isplayer
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +112,10 @@ name|stdout
 argument_list|,
 name|_sobuf
 argument_list|)
+expr_stmt|;
+name|isplayer
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	1.6 83/10/14"
+literal|"@(#)pl_2.c	1.7 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|prompt

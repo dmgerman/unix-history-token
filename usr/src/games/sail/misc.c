@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	1.3 83/10/10"
+literal|"@(#)misc.c	1.4 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,55 +888,6 @@ name|ang
 operator|<
 literal|5
 return|;
-block|}
-end_block
-
-begin_macro
-name|rmend
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|str
-init|;
-operator|*
-name|p
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|str
-condition|)
-operator|*
-operator|--
-name|p
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_block
 
