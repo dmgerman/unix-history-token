@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -152,7 +158,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* 	 * Flags for pwd are a bit strange.  The POSIX 1003.2B/D9 document 	 * has an optional -P flag for physical, which is what this program 	 * will produce by default.  The logical flag, -L, should fail, as 	 * there's no way to display a logical path after forking. 	 */
