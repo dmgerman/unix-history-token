@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 1.7.2.3 1999/02/11 05:53:52 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.10 1999/01/17 06:19:23 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -144,8 +144,10 @@ operator|!=
 literal|'\0'
 condition|)
 comment|/* we have a name, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: drive %s is %s\n"
 argument_list|,
 name|drive
@@ -393,6 +395,8 @@ block|{
 case|case
 name|sd_down
 case|:
+comment|/* take it down? */
+comment|/* 	     * If we're attached to a plex, and we're 	     * not reborn, we won't go down without 	     * use of force. 	     */
 if|if
 condition|(
 operator|(
@@ -401,7 +405,6 @@ name|flags
 operator|&
 name|setstate_force
 operator|)
-comment|/* but gently */
 operator|&&
 operator|(
 name|sd
@@ -410,8 +413,15 @@ name|plexno
 operator|>=
 literal|0
 operator|)
+operator|&&
+operator|(
+name|sd
+operator|->
+name|state
+operator|!=
+name|sd_reborn
+operator|)
 condition|)
-comment|/* and we're attached to a plex, */
 return|return
 literal|0
 return|;
@@ -452,6 +462,7 @@ case|case
 name|sd_down
 case|:
 comment|/* been down, no data lost */
+comment|/* 		 * If we're associated with a plex, and 		 * the plex isn't up, or we're the only 		 * subdisk in the plex, we can do it 		 */
 if|if
 condition|(
 operator|(
@@ -461,7 +472,6 @@ name|plexno
 operator|>=
 literal|0
 operator|)
-comment|/* we're associated with a plex */
 operator|&&
 operator|(
 operator|(
@@ -477,7 +487,6 @@ name|state
 operator|<
 name|plex_firstup
 operator|)
-comment|/* and it's not up */
 operator|||
 operator|(
 name|PLEX
@@ -494,7 +503,6 @@ operator|)
 operator|)
 operator|)
 condition|)
-comment|/* or it's the only one */
 break|break;
 comment|/* do it */
 comment|/* 		 * XXX Get this right: make sure that other plexes in 		 * the volume cover this address space, otherwise 		 * we make this one sd_up. 		 * 		 * Do we even want this any more? 		 */
@@ -505,8 +513,10 @@ operator|=
 name|sd_reborn
 expr_stmt|;
 comment|/* here it is again */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: subdisk %s is %s, not %s\n"
 argument_list|,
 name|sd
@@ -549,6 +559,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|sd_empty
 case|:
+comment|/* 		 * If we're associated with a plex which 		 * is down, or which is the only one in the 		 * volume, we can come up without being 		 * inconsistent. 		 */
 if|if
 condition|(
 operator|(
@@ -558,7 +569,6 @@ name|plexno
 operator|>=
 literal|0
 operator|)
-comment|/* we're associated with a plex */
 operator|&&
 operator|(
 operator|(
@@ -574,7 +584,6 @@ name|state
 operator|<
 name|plex_firstup
 operator|)
-comment|/* and it's not up */
 operator|||
 operator|(
 name|PLEX
@@ -591,7 +600,6 @@ operator|)
 operator|)
 operator|)
 condition|)
-comment|/* or it's the only one */
 break|break;
 comment|/* Otherwise it's just out of date */
 comment|/* FALLTHROUGH */
@@ -648,6 +656,7 @@ name|vol
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 		 * We can't do it if: 		 * 		 * 1: we don't have a volume 		 * 2: we're the only plex in the volume 		 * 3: we're a RAID-5 plex, and more than one subdisk is down. 		 */
 if|if
 condition|(
 operator|(
@@ -656,7 +665,6 @@ name|vol
 operator|==
 name|NULL
 operator|)
-comment|/* no volume */
 operator|||
 operator|(
 name|vol
@@ -666,7 +674,6 @@ operator|==
 literal|1
 operator|)
 operator|)
-comment|/* or only one plex in volume */
 operator|&&
 operator|(
 operator|(
@@ -676,7 +683,6 @@ name|organization
 operator|!=
 name|plex_raid5
 operator|)
-comment|/* or it's a RAID-5 plex */
 operator|||
 operator|(
 name|plex
@@ -687,7 +693,6 @@ literal|1
 operator|)
 operator|)
 condition|)
-comment|/* with more than one subdisk down, */
 return|return
 literal|0
 return|;
@@ -784,8 +789,10 @@ name|state
 operator|=
 name|newstate
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|sd
@@ -803,8 +810,10 @@ expr_stmt|;
 block|}
 else|else
 comment|/* we don't get here with status 0 */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s, not %s\n"
 argument_list|,
 name|sd
@@ -911,6 +920,7 @@ name|plex
 operator|->
 name|state
 expr_stmt|;
+comment|/*      * If the plex isn't allocated,      * or it's already in the the state we want,      * and it's not up, just return.  If it's up,      * we still need to do some housekeeping.      */
 if|if
 condition|(
 operator|(
@@ -920,7 +930,6 @@ name|state
 operator|==
 name|plex_unallocated
 operator|)
-comment|/* or no plex to do anything with, */
 operator|||
 operator|(
 operator|(
@@ -928,7 +937,6 @@ name|state
 operator|==
 name|oldstate
 operator|)
-comment|/* or we're already there */
 operator|&&
 operator|(
 name|state
@@ -937,7 +945,6 @@ name|plex_up
 operator|)
 operator|)
 condition|)
-comment|/* and it's not up */
 return|return
 literal|0
 return|;
@@ -972,6 +979,7 @@ case|case
 name|plex_down
 case|:
 comment|/* want to take it down */
+comment|/* 	 * If we're the only one, or the only one 	 * which is up, we need force to do it. 	 */
 if|if
 condition|(
 operator|(
@@ -980,7 +988,6 @@ name|vps
 operator|==
 name|volplex_onlyus
 operator|)
-comment|/* we're the only one up */
 operator|||
 operator|(
 name|vps
@@ -988,7 +995,6 @@ operator|==
 name|volplex_onlyusup
 operator|)
 operator|)
-comment|/* we're the only one up */
 operator|&&
 operator|(
 operator|!
@@ -999,7 +1005,6 @@ name|setstate_force
 operator|)
 operator|)
 condition|)
-comment|/* and we don't want to use force */
 return|return
 literal|0
 return|;
@@ -1080,8 +1085,11 @@ operator|!=
 name|oldstate
 condition|)
 comment|/* we've changed, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|plex
@@ -1096,7 +1104,6 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* tell them about it */
 comment|/*      * Now see what we have left, and whether      * we're taking the volume down       */
 if|if
 condition|(
@@ -1241,8 +1248,10 @@ name|state
 operator|=
 name|volume_down
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: volume %s is %s\n"
 argument_list|,
 name|vol
@@ -1408,8 +1417,11 @@ operator|!=
 name|oldstate
 condition|)
 comment|/* state has changed, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* say so */
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|sd
@@ -1424,7 +1436,6 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* say so */
 if|if
 condition|(
 name|sd
@@ -1552,6 +1563,7 @@ name|plex_striped
 operator|)
 condition|)
 block|{
+comment|/* 	     * If we're associated with a volume, none of whose 	     * plexes are up, and we're new and untested, and 	     * the volume has the setupstate bit set, we can 	     * pretend to be in a consistent state. 	     */
 if|if
 condition|(
 operator|(
@@ -1567,7 +1579,6 @@ operator|)
 operator|==
 literal|0
 operator|)
-comment|/* nothing is up */
 operator|&&
 operator|(
 name|plex
@@ -1576,7 +1587,6 @@ name|state
 operator|==
 name|plex_init
 operator|)
-comment|/* we're brand spanking new */
 operator|&&
 operator|(
 name|plex
@@ -1585,7 +1595,6 @@ name|volno
 operator|>=
 literal|0
 operator|)
-comment|/* and we have a volume */
 operator|&&
 operator|(
 name|VOL
@@ -1601,7 +1610,6 @@ name|VF_CONFIG_SETUPSTATE
 operator|)
 condition|)
 block|{
-comment|/* and we consider that up */
 comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the remaining 		 * plexes in the volume.  		 */
 name|struct
 name|volume
@@ -1703,8 +1711,11 @@ name|state
 operator|=
 name|sd_up
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
 literal|"vinum: %s is up\n"
 argument_list|,
 name|SD
@@ -1720,7 +1731,6 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* tell them about it */
 block|}
 block|}
 else|else
@@ -1814,8 +1824,11 @@ operator|!=
 name|oldstate
 condition|)
 comment|/* state has changed, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|plex
@@ -1830,7 +1843,6 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* tell them about it */
 if|if
 condition|(
 name|plex
@@ -1968,8 +1980,10 @@ name|oldstate
 condition|)
 block|{
 comment|/* state changed */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|vol
@@ -2546,33 +2560,6 @@ name|plex
 condition|)
 block|{
 comment|/* us */
-if|#
-directive|if
-name|RAID5
-if|if
-condition|(
-name|PLEX
-index|[
-name|vol
-operator|->
-name|plex
-index|[
-name|plexno
-index|]
-index|]
-operator|.
-name|state
-operator|>=
-name|plex_degraded
-condition|)
-comment|/* are we up? */
-name|state
-operator||=
-name|volplex_onlyus
-expr_stmt|;
-comment|/* yes */
-else|#
-directive|else
 if|if
 condition|(
 name|PLEX
@@ -2595,44 +2582,9 @@ operator||=
 name|volplex_onlyus
 expr_stmt|;
 comment|/* yes */
-endif|#
-directive|endif
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|RAID5
-if|if
-condition|(
-name|PLEX
-index|[
-name|vol
-operator|->
-name|plex
-index|[
-name|plexno
-index|]
-index|]
-operator|.
-name|state
-operator|>=
-name|plex_degraded
-condition|)
-comment|/* not us */
-name|state
-operator||=
-name|volplex_otherup
-expr_stmt|;
-comment|/* and when they were up, they were up */
-else|else
-name|state
-operator||=
-name|volplex_alldown
-expr_stmt|;
-comment|/* and when they were down, they were down */
-else|#
-directive|else
 if|if
 condition|(
 name|PLEX
@@ -2661,8 +2613,6 @@ operator||=
 name|volplex_alldown
 expr_stmt|;
 comment|/* and when they were down, they were down */
-endif|#
-directive|endif
 block|}
 block|}
 return|return
