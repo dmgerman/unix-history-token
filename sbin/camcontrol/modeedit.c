@@ -2535,7 +2535,7 @@ operator|!
 name|editlist_changed
 condition|)
 return|return;
-comment|/*          * Preload the CDB buffer with the current mode page data. 	 * XXX If buff_encode_visit would return the number of bytes encoded 	 *     we *should* use that to build a header from scratch. As it is 	 *     now, we need mode_sense to find out the page length. 	 */
+comment|/* 	 * Preload the CDB buffer with the current mode page data. 	 * XXX If buff_encode_visit would return the number of bytes encoded 	 *     we *should* use that to build a header from scratch. As it is 	 *     now, we need mode_sense to find out the page length. 	 */
 name|mode_sense
 argument_list|(
 name|device
@@ -2592,13 +2592,20 @@ operator|->
 name|data_length
 argument_list|,
 name|format
-argument_list|,
-name|editentry_save
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|editentry_save
+operator|,
+literal|0
+block|)
+function|;
+end_function
+
+begin_comment
 comment|/* Eliminate block descriptors. */
+end_comment
+
+begin_expr_stmt
 name|bcopy
 argument_list|(
 name|mph
@@ -2628,21 +2635,39 @@ operator|->
 name|page_length
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Recalculate headers& offsets. */
+end_comment
+
+begin_expr_stmt
 name|mh
 operator|->
 name|blk_desc_len
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* No block descriptors. */
+end_comment
+
+begin_expr_stmt
 name|mh
 operator|->
 name|dev_spec
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Clear device-specific parameters. */
+end_comment
+
+begin_expr_stmt
 name|mph
 operator|=
 name|MODE_PAGE_HEADER
@@ -2650,6 +2675,9 @@ argument_list|(
 name|mh
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mode_pars
 operator|=
 name|MODE_PAGE_DATA
@@ -2657,21 +2685,39 @@ argument_list|(
 name|mph
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mph
 operator|->
 name|page_code
 operator|&=
 name|SMS_PAGE_CODE
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Isolate just the page code. */
+end_comment
+
+begin_expr_stmt
 name|mh
 operator|->
 name|data_length
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Reserved for MODE SELECT command. */
+end_comment
+
+begin_comment
 comment|/* 	 * Write the changes back to the device. If the user editted control 	 * page 3 (saved values) then request the changes be permanently 	 * recorded. 	 */
+end_comment
+
+begin_expr_stmt
 name|mode_select
 argument_list|(
 name|device
@@ -2713,11 +2759,10 @@ operator|->
 name|page_length
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|modepage_write
 parameter_list|(
