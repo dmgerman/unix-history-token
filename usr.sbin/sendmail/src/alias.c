@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.52.1.3 (Berkeley) 9/16/96"
+literal|"@(#)alias.c	8.66 (Berkeley) 9/20/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,25 +467,6 @@ operator|->
 name|q_user
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitnset
-argument_list|(
-name|M_USR_UPPER
-argument_list|,
-name|a
-operator|->
-name|q_mailer
-operator|->
-name|m_flags
-argument_list|)
-condition|)
-name|makelower
-argument_list|(
-name|obuf
-argument_list|)
-expr_stmt|;
 name|owner
 operator|=
 name|aliaslookup
@@ -659,6 +640,22 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* special case POstMastER -- always use lower case */
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|name
+argument_list|,
+literal|"postmaster"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+literal|"postmaster"
+expr_stmt|;
 return|return
 call|(
 modifier|*
@@ -997,18 +994,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|tTd
+name|syserr
 argument_list|(
-literal|27
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"Unknown alias class %s\n"
+literal|"setalias: unknown alias class %s"
 argument_list|,
 name|class
 argument_list|)
@@ -1837,7 +1825,7 @@ block|{
 comment|/* yes, they are -- wait until done */
 name|message
 argument_list|(
-literal|"Alias file %s is already being rebuilt"
+literal|"Alias file %s is locked (maybe being rebuilt)"
 argument_list|,
 name|map
 operator|->
@@ -2633,20 +2621,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		**  Insert alias into symbol table or DBM file 		*/
+comment|/* 		**  Insert alias into symbol table or database file. 		** 		**	Special case pOStmaStER -- always make it lower case. 		*/
 if|if
 condition|(
-operator|!
-name|bitnset
+name|strcasecmp
 argument_list|(
-name|M_USR_UPPER
-argument_list|,
 name|al
 operator|.
-name|q_mailer
-operator|->
-name|m_flags
+name|q_user
+argument_list|,
+literal|"postmaster"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|makelower
 argument_list|(
@@ -2862,6 +2849,9 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
+name|bool
+name|got_transient
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -2922,7 +2912,7 @@ name|user
 operator|->
 name|q_home
 operator|=
-literal|"/nosuchdirectory"
+literal|"/no/such/directory"
 expr_stmt|;
 block|}
 comment|/* good address -- look for .forward file in home */
@@ -2972,6 +2962,10 @@ argument_list|(
 literal|"\201z/.forward"
 argument_list|)
 expr_stmt|;
+name|got_transient
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|pp
@@ -2998,11 +2992,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|include
-parameter_list|()
-function_decl|;
 name|ep
 operator|=
 name|strchr
@@ -3047,6 +3036,16 @@ operator|++
 operator|=
 literal|':'
 expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|tTd
@@ -3096,7 +3095,11 @@ name|err
 argument_list|)
 condition|)
 block|{
-comment|/* we have to suspend this message */
+comment|/* we may have to suspend this message */
+name|got_transient
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -3150,16 +3153,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+block|}
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+operator|&&
+name|got_transient
+condition|)
+block|{
+comment|/* 		**  There was no successful .forward open and at least one 		**  transient open.  We have to defer this address for 		**  further delivery. 		*/
 name|message
 argument_list|(
-literal|"%s: %s: message queued"
-argument_list|,
-name|buf
-argument_list|,
-name|errstring
-argument_list|(
-name|err
-argument_list|)
+literal|"transient .forward open error: message queued"
 argument_list|)
 expr_stmt|;
 name|user
@@ -3169,7 +3177,6 @@ operator||=
 name|QQUEUEUP
 expr_stmt|;
 return|return;
-block|}
 block|}
 block|}
 end_function
