@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.26 (Berkeley) %G%"
+literal|"@(#)glob.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2273,9 +2273,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|gflg
 operator|&
 name|G_CSH
+operator|)
+operator|&&
+name|vl
+operator|!=
+name|vo
 condition|)
 name|blkfree
 argument_list|(
@@ -2496,9 +2502,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|gflg
 operator|&
 name|G_CSH
+operator|)
+operator|&&
+name|vl
+operator|!=
+name|vo
 condition|)
 name|blkfree
 argument_list|(
