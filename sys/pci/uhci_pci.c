@@ -626,9 +626,6 @@ name|int
 name|rid
 decl_stmt|;
 name|int
-name|intr
-decl_stmt|;
-name|int
 name|err
 decl_stmt|;
 name|rid

@@ -525,9 +525,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-name|int
-name|intr
-decl_stmt|;
 comment|/* XXX where does it say so in the spec? */
 name|sc
 operator|->
