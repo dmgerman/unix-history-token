@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.15 (Berkeley) %G%"
+literal|"@(#)fio.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,6 +1985,7 @@ name|union
 name|wait
 name|wait_status
 decl_stmt|;
+comment|/* 	 * The order of evaluation is "%" and "#" expand into constants. 	 * "&" can expand into "+".  "+" can expand into shell meta characters. 	 * Shell meta characters expand into constants. 	 * This way, we make no recursive expansion. 	 */
 switch|switch
 condition|(
 operator|*
@@ -2077,24 +2078,10 @@ operator|)
 operator|==
 name|NOSTR
 condition|)
-block|{
-name|sprintf
-argument_list|(
-name|xname
-argument_list|,
-literal|"%s/mbox"
-argument_list|,
-name|homedir
-argument_list|)
-expr_stmt|;
 name|name
 operator|=
-name|savestr
-argument_list|(
-name|xname
-argument_list|)
+literal|"~/mbox"
 expr_stmt|;
-block|}
 comment|/* fall through */
 block|}
 if|if
@@ -2121,6 +2108,54 @@ argument_list|,
 literal|"%s/%s"
 argument_list|,
 name|cmdbuf
+argument_list|,
+name|name
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|savestr
+argument_list|(
+name|xname
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* catch the most common shell meta character */
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'~'
+operator|&&
+operator|(
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+operator|||
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|xname
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|homedir
 argument_list|,
 name|name
 operator|+
@@ -2293,7 +2328,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\"Echo\" failed\n"
+literal|"\"%s\": Expansion failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2327,7 +2362,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\"%s\": No match\n"
+literal|"\"%s\": No match.\n"
 argument_list|,
 name|name
 argument_list|)
@@ -2347,7 +2382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Buffer overflow expanding \"%s\"\n"
+literal|"\"%s\": Expansion buffer overflow.\n"
 argument_list|,
 name|name
 argument_list|)
@@ -2419,7 +2454,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\"%s\": Ambiguous\n"
+literal|"\"%s\": Ambiguous.\n"
 argument_list|,
 name|name
 argument_list|)
