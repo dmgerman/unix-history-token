@@ -2614,7 +2614,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	$ MTX_UNOWNED,lck+MTX_LOCK;
+value|pushl	lck+MTX_SAVEFL;						\ 	movl	$ MTX_UNOWNED,lck+MTX_LOCK;				\ 	popf
 end_define
 
 begin_else
@@ -2636,7 +2636,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	jnz	9b
+value|pushf								\ 	cli								\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEFL;
 end_define
 
 begin_comment
@@ -2653,7 +2653,20 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\  #define MTX_ENTER_WITH_RECURSION(reg, lck)				\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	PCPU_CURPROC,%eax;					\ 	jne	9f;							\ 	incw	lck+MTX_RECURSECNT;					\ 	jmp	8f;							\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	9b;							\ 8:
+value|pushl	lck+MTX_SAVEFL;						\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTX_ENTER_WITH_RECURSION
+parameter_list|(
+name|reg
+parameter_list|,
+name|lck
+parameter_list|)
+define|\
+value|pushf								\ 	cli								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	9f;							\ 	incw	lck+MTX_RECURS;						\ 	jmp	8f;							\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEFL;						\ 	jmp	10f;							\ 8:	add	$4,%esp;						\ 10:
 end_define
 
 begin_define
@@ -2666,7 +2679,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	lck+MTX_RECURSECNT,%eax;				\ 	decl	%eax;							\ 	js	9f;							\ 	movl	%eax,lck+MTX_RECURSECNT;				\ 	jmp	8f;							\ 9:	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 8:
+value|movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	9f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	8f;							\ 	pushl	lck+MTX_SAVEFL;						\ 9:	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf								\ 8:
 end_define
 
 begin_endif
