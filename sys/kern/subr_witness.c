@@ -2315,7 +2315,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: recursed on non-recursive lock (%s) %s @ %s:%d"
+literal|"%s: recursed on non-recursive lock (%s) %s @ %s:%d first aquired @ %s:%d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2330,6 +2330,14 @@ argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|,
+name|lock
+operator|->
+name|lo_file
+argument_list|,
+name|lock
+operator|->
+name|lo_line
 argument_list|)
 expr_stmt|;
 return|return;
