@@ -30,8 +30,8 @@ block|{
 name|mtx
 operator|->
 name|mtx_savecrit
-operator||=
-name|PSTATE_IE
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
