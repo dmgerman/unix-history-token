@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.10 1996/04/22 19:48:15 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.11 1996/04/23 16:08:53 nate Exp $  */
 end_comment
 
 begin_include
@@ -2672,6 +2672,49 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|APM_DSVALUE_BUG
+name|caddr_t
+name|apm_bios_work
+decl_stmt|;
+name|apm_bioswork
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|malloc
+argument_list|(
+name|apm_ds_limit
+argument_list|,
+name|M_DEVBUG
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
+operator|(
+name|apm_ds_base
+operator|<<
+literal|4
+operator|)
+operator|+
+name|APM_KERNBASE
+argument_list|)
+argument_list|,
+name|apm_bios_work
+argument_list|,
+name|apm_ds_limit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* APM_DSVALUE_BUG */
 name|sc
 operator|->
 name|initialized
@@ -2740,6 +2783,21 @@ name|cs_entry
 operator|=
 name|apm_cs_entry
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APM_DSVALUE_BUG
+name|sc
+operator|->
+name|ds_base
+operator|=
+operator|(
+name|u_int
+operator|)
+name|apm_bios_work
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* APM_DSVALUE_BUG */
 comment|/* Always call HLT in idle loop */
 name|sc
 operator|->
@@ -2857,19 +2915,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* APM_DEBUG */
+if|#
+directive|if
+literal|0
 comment|/* Workaround for some buggy APM BIOS implementations */
-name|sc
-operator|->
-name|cs_limit
-operator|=
-literal|0xffff
-expr_stmt|;
-name|sc
-operator|->
-name|ds_limit
-operator|=
-literal|0xffff
-expr_stmt|;
+block|sc->cs_limit = 0xffff; 	sc->ds_limit = 0xffff;
+endif|#
+directive|endif
 comment|/* setup GDT */
 name|setup_apm_gdt
 argument_list|(
@@ -2914,6 +2966,53 @@ name|sc
 operator|->
 name|cs_entry
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FORCE_APM10
+name|apm_version
+operator|=
+literal|0x100
+expr_stmt|;
+name|sc
+operator|->
+name|majorversion
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|minorversion
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|intversion
+operator|=
+name|INTVERSION
+argument_list|(
+name|sc
+operator|->
+name|majorversion
+argument_list|,
+name|sc
+operator|->
+name|minorversion
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"apm: running in APM 1.0 compatible mode\n"
+argument_list|)
+expr_stmt|;
+name|kcd_apm
+operator|.
+name|kdc_description
+operator|=
+literal|"Advanced Power Management BIOS (1.0 compatability mode)"
+operator|,
+else|#
+directive|else
 comment|/* Try to kick bios into 1.1 or greater mode */
 name|apm_driver_version
 argument_list|()
@@ -3031,6 +3130,9 @@ operator|->
 name|minorversion
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FORCE_APM10 */
 ifdef|#
 directive|ifdef
 name|APM_DEBUG
