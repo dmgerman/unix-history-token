@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4059,24 +4059,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXDUMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXDUMP
-value|(10*2048)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Configure swap space and related parameters.  */
 end_comment
@@ -4126,6 +4108,7 @@ index|]
 operator|.
 name|d_psize
 condition|)
+block|{
 name|nblks
 operator|=
 operator|(
@@ -4169,6 +4152,7 @@ operator|=
 name|nblks
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 operator|!
@@ -4210,7 +4194,7 @@ operator|(
 name|dumpdev
 operator|)
 operator|-
-name|MAXDUMP
+name|physmem
 expr_stmt|;
 if|if
 condition|(
