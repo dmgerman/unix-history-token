@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: displayq.c,v 1.13 1997/12/02 20:45:19 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2240,6 +2240,10 @@ name|printf
 argument_list|(
 literal|" %qd bytes"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|lbuf
 operator|.
 name|st_size
