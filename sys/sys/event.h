@@ -651,26 +651,6 @@ parameter_list|)
 value|knote(list, hint, 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|KNOTE_STATUS_BEGIN
-parameter_list|(
-name|kn
-parameter_list|)
-value|knote_status(kn, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KNOTE_STATUS_END
-parameter_list|(
-name|kn
-parameter_list|)
-value|knote_status(kn, 0)
-end_define
-
 begin_comment
 comment|/*  * Flag indicating hint is a signal.  Used by EVFILT_SIGNAL, and also  * shared by EVFILT_PROC  (all knotes attached to p->p_klist)  */
 end_comment
@@ -916,22 +896,6 @@ name|hint
 parameter_list|,
 name|int
 name|islocked
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|knote_status
-parameter_list|(
-name|struct
-name|knote
-modifier|*
-name|kn
-parameter_list|,
-name|int
-name|begin
 parameter_list|)
 function_decl|;
 end_function_decl
