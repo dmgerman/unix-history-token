@@ -1783,13 +1783,6 @@ name|pages
 operator|!=
 literal|0
 condition|)
-block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|vm_thread_new_altkstack
 argument_list|(
 name|td2
@@ -1797,13 +1790,6 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
