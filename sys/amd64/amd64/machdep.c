@@ -3893,9 +3893,7 @@ argument_list|(
 literal|"Overlapping or non-montonic memory region, ignoring second region\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next_run
-goto|;
+continue|continue;
 block|}
 block|}
 if|if
@@ -3923,8 +3921,6 @@ name|smap
 operator|->
 name|length
 expr_stmt|;
-name|next_run
-label|:
 continue|continue;
 block|}
 name|physmap_idx
