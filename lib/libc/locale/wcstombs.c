@@ -49,9 +49,17 @@ name|n
 parameter_list|)
 block|{
 specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
 name|mbstate_t
 name|mbs
 decl_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 return|return
 operator|(
 name|wcsrtombs
