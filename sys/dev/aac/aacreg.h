@@ -8,7 +8,7 @@ comment|/*  * Data structures defining the interface between the driver and the 
 end_comment
 
 begin_comment
-comment|/******************************************************************************  * Misc. magic numbers.  */
+comment|/*  * Misc. magic numbers.  */
 end_comment
 
 begin_define
@@ -26,7 +26,7 @@ value|512
 end_define
 
 begin_comment
-comment|/******************************************************************************  * Communications interface.  *  * Where datastructure layouts are closely parallel to the Adaptec sample code,  * retain their naming conventions (for now) to aid in cross-referencing.  */
+comment|/*  * Communications interface.  *  * Where datastructure layouts are closely parallel to the Adaptec sample code,  * retain their naming conventions (for now) to aid in cross-referencing.  */
 end_comment
 
 begin_comment
@@ -994,7 +994,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Shared data types  */
+comment|/*  * Shared data types  */
 end_comment
 
 begin_comment
@@ -1080,13 +1080,13 @@ block|,
 comment|/* ADAPTEC's "FSA"(tm) filesystem */
 name|FT_DRIVE
 block|,
-comment|/* physical disk - addressable in scsi by bus/target/lun */
+comment|/* physical disk - addressable in scsi by b/t/l */
 name|FT_SLICE
 block|,
 comment|/* virtual disk - raw volume - slice */
 name|FT_PARTITION
 block|,
-comment|/* FSA partition - carved out of a slice - building block 		     * for containers */
+comment|/* FSA partition - carved out of a slice - building 			 * block for containers */
 name|FT_VOLUME
 block|,
 comment|/* Container - Volume Set */
@@ -1252,7 +1252,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Revision number handling  */
+comment|/*  * Revision number handling  */
 end_comment
 
 begin_typedef
@@ -1326,7 +1326,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Adapter Information  */
+comment|/*  * Adapter Information  */
 end_comment
 
 begin_typedef
@@ -1567,7 +1567,7 @@ comment|/* adapter CPU clockspeed */
 name|u_int32_t
 name|ExecutionMem
 decl_stmt|;
-comment|/* adapter Execution Memory size */
+comment|/* adapter Execution Memory 						  * size */
 name|u_int32_t
 name|BufferMem
 decl_stmt|;
@@ -1580,12 +1580,12 @@ name|struct
 name|FsaRevision
 name|KernelRevision
 decl_stmt|;
-comment|/* adapter Kernel Software Revision */
+comment|/* adapter Kernel Software 						  * Revision */
 name|struct
 name|FsaRevision
 name|MonitorRevision
 decl_stmt|;
-comment|/* adapter Monitor/Diagnostic 					  * Software Revision */
+comment|/* adapter Monitor/Diagnostic 						  * Software Revision */
 name|struct
 name|FsaRevision
 name|HardwareRevision
@@ -1611,7 +1611,7 @@ decl_stmt|;
 name|u_int32_t
 name|SupportedOptions
 decl_stmt|;
-comment|/* supported features of this 					   * controller */
+comment|/* supported features of this 						   * controller */
 name|AAC_OemFlavor
 name|OemVariant
 decl_stmt|;
@@ -1626,7 +1626,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Monitor/Kernel interface.  */
+comment|/*  * Monitor/Kernel interface.  */
 end_comment
 
 begin_comment
@@ -1673,7 +1673,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/******************************************************************************  * Data types relating to control and monitoring of the NVRAM/WriteCache   * subsystem.  */
+comment|/*  * Data types relating to control and monitoring of the NVRAM/WriteCache   * subsystem.  */
 end_comment
 
 begin_define
@@ -1706,12 +1706,11 @@ comment|/* present, possibly dirty, ready for use */
 name|NVSTATUS_ERROR
 block|,
 comment|/* present, dirty, contains dirty data */
-comment|/* for bad/missing device */
 name|NVSTATUS_BATTERY
 block|,
-comment|/* present, bad or low battery, may contain dirty data */
-comment|/* for bad/missing device */
+comment|/* present, bad or low battery, may contain 				 * dirty data */
 name|NVSTATUS_UNKNOWN
+comment|/* for bad/missing device */
 block|}
 name|AAC_NVSTATUS
 typedef|;
@@ -1735,9 +1734,9 @@ block|,
 comment|/* battery is low on power */
 name|NVBATTSTATUS_OK
 block|,
-comment|/* battery is okay - normal operation possible only in this state */
+comment|/* battery is okay - normal operation possible 				 * only in this state */
 name|NVBATTSTATUS_RECONDITIONING
-comment|/* no battery present - reconditioning in process */
+comment|/* no battery present - reconditioning 					 * in process */
 block|}
 name|AAC_NVBATTSTATUS
 typedef|;
@@ -1755,12 +1754,12 @@ name|NVBATT_TRANSITION_NONE
 init|=
 literal|0
 block|,
-comment|/* battery now has no power or is not present */
+comment|/* battery now has no power or is not 					 * present */
 name|NVBATT_TRANSITION_LOW
 block|,
 comment|/* battery is now low on power */
 name|NVBATT_TRANSITION_OK
-comment|/* battery is now okay - normal operation possible only in this state */
+comment|/* battery is now okay - normal 					 * operation possible only in this 					 * state */
 block|}
 name|AAC_NVBATT_TRANSITION
 typedef|;
@@ -1789,7 +1788,7 @@ comment|/* count of dirty NVRAM buffers */
 name|u_int32_t
 name|NV_NActive
 decl_stmt|;
-comment|/* count of NVRAM buffers being written */
+comment|/* count of NVRAM buffers being 					 * written */
 block|}
 name|__attribute__
 argument_list|(
@@ -1867,7 +1866,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Data types relating to adapter-initiated FIBs  *  * Based on types and structures in<aifstruc.h>  */
+comment|/*  * Data types relating to adapter-initiated FIBs  *  * Based on types and structures in<aifstruc.h>  */
 end_comment
 
 begin_comment
@@ -1892,7 +1891,7 @@ name|AifJobStsLastReportMarker
 init|=
 literal|100
 block|,
-comment|/* All before mean last report */
+comment|/* All prior mean last report */
 name|AifJobStsSuspended
 block|,
 name|AifJobStsRunning
@@ -2044,11 +2043,11 @@ name|struct
 name|aac_AifContainers
 name|container
 decl_stmt|;
-comment|/* For Container and file 						 * system progress ops; */
+comment|/* For Container and 							 * file system progress 							 * ops; */
 name|int32_t
 name|scsi_dh
 decl_stmt|;
-comment|/* For SCSI progress ops */
+comment|/* For SCSI progress 							 * ops */
 block|}
 union|;
 end_union
@@ -2194,7 +2193,7 @@ name|AifDenMorphComplete
 block|,
 comment|/* A morph operation completed */
 name|AifDenVolumeExtendComplete
-comment|/* A volume expand operation completed */
+comment|/* Volume expand operation completed */
 block|}
 name|AAC_AifEventNotifyType
 typedef|;
@@ -2461,7 +2460,7 @@ name|struct
 name|aac_AifEnsDiskSetEvent
 name|EDS
 decl_stmt|;
-comment|/*	struct aac_AifEnsSMARTEvent		ES;*/
+comment|/*		struct aac_AifEnsSMARTEvent		ES;*/
 name|struct
 name|aac_AifEnsClusterEvent
 name|ECLE
@@ -2554,11 +2553,11 @@ block|{
 name|AAC_AifCommand
 name|command
 decl_stmt|;
-comment|/* Tell host what type of 						 * notify this is */
+comment|/* Tell host what type of 					 * notify this is */
 name|u_int32_t
 name|seqNumber
 decl_stmt|;
-comment|/* To allow ordering of 						 * reports (if necessary) */
+comment|/* To allow ordering of 					 * reports (if necessary) */
 union|union
 block|{
 name|struct
@@ -2594,7 +2593,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Filesystem commands/data  *  * The adapter has a very complex filesystem interface, most of which we ignore.  * (And which seems not to be implemented, anyway.)  */
+comment|/*  * Filesystem commands/data  *  * The adapter has a very complex filesystem interface, most of which we ignore.  * (And which seems not to be implemented, anyway.)  */
 end_comment
 
 begin_comment
@@ -2864,7 +2863,7 @@ name|VM_CtBlockWrite
 block|,
 name|VM_SliceBlockRead
 block|,
-comment|/* raw access to configured "storage objects" */
+comment|/* raw access to configured storage objects */
 name|VM_SliceBlockWrite
 block|,
 name|VM_DriveBlockRead
@@ -3207,7 +3206,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/******************************************************************************  * Register definitions for the Adaptec AAC-364 'Jalapeno I/II' adapters, based  * on the SA110 'StrongArm'.  */
+comment|/*  * Register definitions for the Adaptec AAC-364 'Jalapeno I/II' adapters, based  * on the SA110 'StrongArm'.  */
 end_comment
 
 begin_define
@@ -3300,7 +3299,7 @@ value|0xc4
 end_define
 
 begin_comment
-comment|/******************************************************************************  * Register definitions for the Adaptec 'Pablano' adapters, based on the i960Rx,  * and other related adapters.  */
+comment|/*  * Register definitions for the Adaptec 'Pablano' adapters, based on the i960Rx,  * and other related adapters.  */
 end_comment
 
 begin_define
@@ -3388,7 +3387,7 @@ value|0x6c
 end_define
 
 begin_comment
-comment|/******************************************************************************  * Common bit definitions for the doorbell registers.  */
+comment|/*  * Common bit definitions for the doorbell registers.  */
 end_comment
 
 begin_comment
@@ -3473,7 +3472,7 @@ begin_define
 define|#
 directive|define
 name|AAC_DB_INTERRUPTS
-value|(AAC_DB_COMMAND_READY | AAC_DB_RESPONSE_READY | AAC_DB_PRINTF)
+value|(AAC_DB_COMMAND_READY  |	\ 				 AAC_DB_RESPONSE_READY |	\ 				 AAC_DB_PRINTF)
 end_define
 
 end_unit

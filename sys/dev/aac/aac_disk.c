@@ -421,7 +421,7 @@ value|65536
 end_define
 
 begin_comment
-comment|/******************************************************************************  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the   * basic device geometry paramters.  */
+comment|/*  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the   * basic device geometry paramters.  */
 end_comment
 
 begin_function
@@ -448,15 +448,6 @@ name|struct
 name|aac_disk
 modifier|*
 name|sc
-init|=
-operator|(
-expr|struct
-name|aac_disk
-operator|*
-operator|)
-name|dev
-operator|->
-name|si_drv1
 decl_stmt|;
 name|struct
 name|disklabel
@@ -467,6 +458,17 @@ name|debug_called
 argument_list|(
 literal|4
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|aac_disk
+operator|*
+operator|)
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 if|if
 condition|(
@@ -587,7 +589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Handle last close of the disk device.  */
+comment|/*  * Handle last close of the disk device.  */
 end_comment
 
 begin_function
@@ -614,7 +616,14 @@ name|struct
 name|aac_disk
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_disk
@@ -623,11 +632,6 @@ operator|)
 name|dev
 operator|->
 name|si_drv1
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|4
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -656,7 +660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Handle an I/O request.  */
+comment|/*  * Handle an I/O request.  */
 end_comment
 
 begin_function
@@ -674,7 +678,14 @@ name|struct
 name|aac_disk
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_disk
@@ -685,11 +696,6 @@ operator|->
 name|bio_dev
 operator|->
 name|si_drv1
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|4
-argument_list|)
 expr_stmt|;
 comment|/* bogus disk? */
 if|if
@@ -763,7 +769,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Dump memory out to an array  *  * This queues blocks of memory of size AAC_MAXIO to the controller and waits  * for the controller to complete the requests.  */
+comment|/*  * Dump memory out to an array  *  * This queues blocks of memory of size AAC_MAXIO to the controller and waits  * for the controller to complete the requests.  */
 end_comment
 
 begin_function
@@ -779,10 +785,6 @@ name|struct
 name|aac_disk
 modifier|*
 name|ad
-init|=
-name|dev
-operator|->
-name|si_drv1
 decl_stmt|;
 name|struct
 name|aac_softc
@@ -791,8 +793,6 @@ name|sc
 decl_stmt|;
 name|vm_offset_t
 name|addr
-init|=
-literal|0
 decl_stmt|;
 name|long
 name|blkcnt
@@ -807,16 +807,28 @@ name|secsize
 decl_stmt|;
 name|int
 name|dumppages
-init|=
-name|AAC_MAXIO
-operator|/
-name|PAGE_SIZE
 decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|error
 decl_stmt|;
+name|ad
+operator|=
+name|dev
+operator|->
+name|si_drv1
+expr_stmt|;
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+name|dumppages
+operator|=
+name|AAC_MAXIO
+operator|/
+name|PAGE_SIZE
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -960,7 +972,7 @@ block|}
 block|}
 name|retry
 label|:
-comment|/* 	 * Queue the block to the controller.  If the queue is full, EBUSY 	 * will be returned. 	 */
+comment|/* 		 * Queue the block to the controller.  If the queue is full, 		 * EBUSY will be returned. 		 */
 name|error
 operator|=
 name|aac_dump_enqueue
@@ -1044,7 +1056,7 @@ literal|0
 condition|)
 continue|continue;
 block|}
-comment|/* 	 * Either the queue was full on the last attemp, or we have no more 	 * data to dump.  Let the queue drain out and retry the block if 	 * the queue was full. 	 */
+comment|/* 		 * Either the queue was full on the last attemp, or we have no 		 * more data to dump.  Let the queue drain out and retry the 		 * block if the queue was full. 		 */
 name|aac_dump_complete
 argument_list|(
 name|sc
@@ -1069,7 +1081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Handle completion of an I/O request.  */
+comment|/*  * Handle completion of an I/O request.  */
 end_comment
 
 begin_function
@@ -1086,7 +1098,17 @@ name|struct
 name|aac_disk
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|int
+name|blkno
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_disk
@@ -1097,11 +1119,6 @@ operator|->
 name|bio_dev
 operator|->
 name|si_drv1
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|4
-argument_list|)
 expr_stmt|;
 name|devstat_end_transaction_bio
 argument_list|(
@@ -1122,10 +1139,8 @@ operator|&
 name|BIO_ERROR
 condition|)
 block|{
-comment|/* 	 * XXX For some reason, the disklabel seems to get zero'd out.  This 	 * will cause diskerr to panic unless we pass in -1 as the blkno. 	 */
-name|int
 name|blkno
-init|=
+operator|=
 operator|(
 name|sc
 operator|->
@@ -1138,7 +1153,7 @@ literal|0
 else|:
 operator|-
 literal|1
-decl_stmt|;
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -1200,7 +1215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Stub only.  */
+comment|/*  * Stub only.  */
 end_comment
 
 begin_function
@@ -1226,7 +1241,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Attach a unit to the controller.  */
+comment|/*  * Attach a unit to the controller.  */
 end_comment
 
 begin_function
@@ -1242,7 +1257,14 @@ name|struct
 name|aac_disk
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_disk
@@ -1251,11 +1273,6 @@ operator|)
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* initialise our softc */
@@ -1291,7 +1308,7 @@ name|ad_dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/*      * require that extended translation be enabled - other drivers read the      * disk!      */
+comment|/* 	 * require that extended translation be enabled - other drivers read the 	 * disk! 	 */
 name|sc
 operator|->
 name|ad_size
@@ -1516,7 +1533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Disconnect ourselves from the system.  */
+comment|/*  * Disconnect ourselves from the system.  */
 end_comment
 
 begin_function
@@ -1532,7 +1549,14 @@ name|struct
 name|aac_disk
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_disk
@@ -1541,11 +1565,6 @@ operator|)
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|2
 argument_list|)
 expr_stmt|;
 if|if

@@ -110,7 +110,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/******************************************************************************  * Dump the command queue indices  */
+comment|/*  * Dump the command queue indices  */
 end_comment
 
 begin_function
@@ -574,7 +574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Print the command queue states for controller 0 (callable from DDB)  */
+comment|/*  * Print the command queue states for controller 0 (callable from DDB)  */
 end_comment
 
 begin_function
@@ -588,14 +588,16 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|devclass_get_softc
 argument_list|(
 name|aac_devclass
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|aac_print_queues
 argument_list|(
 name|sc
@@ -617,7 +619,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"IDBR 0x%08x  IIMR 0x%08x  IISR 0x%08x\n"
+literal|"IDBR 0x%08x  IIMR 0x%08x  "
+literal|"IISR 0x%08x\n"
 argument_list|,
 name|AAC_GETREG4
 argument_list|(
@@ -647,7 +650,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"ODBR 0x%08x  OIMR 0x%08x  OISR 0x%08x\n"
+literal|"ODBR 0x%08x  OIMR 0x%08x  "
+literal|"OISR 0x%08x\n"
 argument_list|,
 name|AAC_GETREG4
 argument_list|(
@@ -678,7 +682,7 @@ argument_list|,
 name|AAC_RX_OIMR
 argument_list|,
 literal|0
-comment|/*~(AAC_DB_COMMAND_READY | 		AAC_DB_RESPONSE_READY | AAC_DB_PRINTF)*/
+comment|/*~(AAC_DB_COMMAND_READY | 			    AAC_DB_RESPONSE_READY | AAC_DB_PRINTF)*/
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -687,7 +691,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"ODBR 0x%08x  OIMR 0x%08x  OISR 0x%08x\n"
+literal|"ODBR 0x%08x  OIMR 0x%08x  "
+literal|"OISR 0x%08x\n"
 argument_list|,
 name|AAC_GETREG4
 argument_list|(
@@ -721,7 +726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * simulate an interrupt for controller 0  */
+comment|/*  * simulate an interrupt for controller 0  */
 end_comment
 
 begin_function
@@ -735,14 +740,16 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 name|devclass_get_softc
 argument_list|(
 name|aac_devclass
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|aac_intr
 argument_list|(
 name|sc
@@ -752,7 +759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Panic in a slightly informative fashion  */
+comment|/*  * Panic in a slightly informative fashion  */
 end_comment
 
 begin_function
@@ -783,7 +790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Print a FIB  */
+comment|/*  * Print a FIB  */
 end_comment
 
 begin_function
@@ -862,7 +869,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  Command         %d\n"
+literal|"  Command       %d\n"
 argument_list|,
 name|fib
 operator|->
@@ -877,7 +884,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  StructType      %d\n"
+literal|"  StructType    %d\n"
 argument_list|,
 name|fib
 operator|->
@@ -892,7 +899,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  Flags           0x%x\n"
+literal|"  Flags         0x%x\n"
 argument_list|,
 name|fib
 operator|->
@@ -907,7 +914,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  Size            %d\n"
+literal|"  Size          %d\n"
 argument_list|,
 name|fib
 operator|->
@@ -918,26 +925,20 @@ argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|aac_dev
+argument|sc->aac_dev
 argument_list|,
-literal|"  SenderSize      %d\n"
+literal|"  SenderSize    %d\n"
 argument_list|,
-name|fib
-operator|->
-name|Header
-operator|.
-name|SenderSize
+argument|xi 		      fib->Header.SenderSize
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  SenderAddress   0x%x\n"
+literal|"  SenderAddress 0x%x\n"
 argument_list|,
 name|fib
 operator|->
@@ -952,7 +953,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  ReceiverAddress 0x%x\n"
+literal|"  RcvrAddress   0x%x\n"
 argument_list|,
 name|fib
 operator|->
@@ -967,7 +968,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"  SenderData      0x%x\n"
+literal|"  SenderData    0x%x\n"
 argument_list|,
 name|fib
 operator|->
@@ -993,7 +994,22 @@ name|struct
 name|aac_blockread
 modifier|*
 name|br
-init|=
+decl_stmt|;
+name|struct
+name|aac_blockwrite
+modifier|*
+name|br
+decl_stmt|;
+name|struct
+name|aac_sg_table
+modifier|*
+name|sg
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|br
+operator|=
 operator|(
 expr|struct
 name|aac_blockread
@@ -1002,12 +1018,9 @@ operator|)
 name|fib
 operator|->
 name|data
-decl_stmt|;
-name|struct
-name|aac_blockwrite
-modifier|*
+expr_stmt|;
 name|bw
-init|=
+operator|=
 operator|(
 expr|struct
 name|aac_blockwrite
@@ -1016,17 +1029,11 @@ operator|)
 name|fib
 operator|->
 name|data
-decl_stmt|;
-name|struct
-name|aac_sg_table
-modifier|*
+expr_stmt|;
 name|sg
-init|=
+operator|=
 name|NULL
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|br
@@ -1218,7 +1225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Describe an AIF we have received.  */
+comment|/*  * Describe an AIF we have received.  */
 end_comment
 
 begin_function
@@ -1252,7 +1259,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"EventNotify (%d)\n"
+literal|"EventNotify(%d)\n"
 argument_list|,
 name|aif
 operator|->
@@ -1350,7 +1357,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ContainerChange) container %d,%d\n"
+literal|"(ContainerChange) "
+literal|"container %d,%d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1394,7 +1402,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(DeviceFailure) handle %d\n"
+literal|"(DeviceFailure) "
+literal|"handle %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1409,7 +1418,6 @@ operator|.
 name|deviceHandle
 argument_list|)
 expr_stmt|;
-comment|/* XXX 								 * interpret */
 break|break;
 case|case
 name|AifEnMirrorFailover
@@ -1421,7 +1429,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(MirrorFailover) container %d failed, "
+literal|"(MirrorFailover) "
+literal|"container %d failed, "
 literal|"migrating from slice %d to %d\n"
 argument_list|,
 name|aif
@@ -1472,7 +1481,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ContainerEvent) container %d event "
+literal|"(ContainerEvent) "
+literal|"container %d event "
 literal|"%d\n"
 argument_list|,
 name|aif
@@ -1500,7 +1510,6 @@ operator|.
 name|eventType
 argument_list|)
 expr_stmt|;
-comment|/* XXX 								 * interpret? */
 break|break;
 case|case
 name|AifEnFileSystemChange
@@ -1582,7 +1591,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(EnclosureManagement) EMPID %d unit %d "
+literal|"(EnclosureManagement) "
+literal|"EMPID %d unit %d "
 literal|"event %d\n"
 argument_list|,
 name|aif
@@ -1633,8 +1643,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(BatteryEvent) %d (state was %d, "
-literal|"is %d\n"
+literal|"(BatteryEvent) %d "
+literal|"(state was %d, is %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -1660,7 +1670,6 @@ name|EBE
 operator|.
 name|current_state
 argument_list|,
-comment|/* XXX */
 name|aif
 operator|->
 name|data
@@ -1674,7 +1683,6 @@ operator|.
 name|prior_state
 argument_list|)
 expr_stmt|;
-comment|/* interpret? */
 break|break;
 case|case
 name|AifEnAddContainer
@@ -1754,8 +1762,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(DiskSetEvent) event %d diskset %lld "
-literal|"creator %lld\n"
+literal|"(DiskSetEvent) event %d "
+literal|"diskset %lld creator %lld\n"
 argument_list|,
 name|aif
 operator|->
@@ -1812,7 +1820,7 @@ break|break;
 case|case
 name|AifDenVolumeExtendComplete
 case|:
-comment|/* A volume expand operation 						 * completed */
+comment|/* A volume expand operation 						  * completed */
 name|device_printf
 argument_list|(
 name|sc
@@ -2179,8 +2187,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerCreateMirror) container "
-literal|"%d\n"
+literal|"(ConatainerCreateMirror) container %d\n"
 argument_list|,
 name|aif
 operator|->
@@ -2275,8 +2282,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"(ConatainerRebuildRaid5) container "
-literal|"%d\n"
+literal|"(ConatainerRebuildRaid5) container %d\n"
 argument_list|,
 name|aif
 operator|->
