@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Takanori Watanabe<takawata@jp.freebsd.org>  * Copyright (c) 2000 Mitsuru IWASAKI<iwasaki@jp.freebsd.org>  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Takanori Watanabe<takawata@jp.freebsd.org>  * Copyright (c) 2000 Mitsuru IWASAKI<iwasaki@jp.freebsd.org>  * Copyright (c) 2000, 2001 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_include
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_BUS_MANAGER
+value|ACPI_BUS
 end_define
 
 begin_macro
@@ -245,6 +245,13 @@ name|int
 name|acpi_off_state
 init|=
 name|ACPI_STATE_S5
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|acpi_mutex
 decl_stmt|;
 end_decl_stmt
 
@@ -929,6 +936,17 @@ name|NULL
 condition|)
 name|return_VOID
 expr_stmt|;
+comment|/* initialise the ACPI mutex */
+name|mtx_init
+argument_list|(
+operator|&
+name|acpi_mutex
+argument_list|,
+literal|"ACPI global lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/*      * Start up the ACPI CA subsystem.      */
 ifdef|#
 directive|ifdef
@@ -1094,6 +1112,9 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1102,10 +1123,12 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_LOCK
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|error
+name|status
 operator|=
 name|AcpiGetTableHeader
 argument_list|(
@@ -1129,16 +1152,17 @@ literal|"couldn't get XSDT header: %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
-name|error
+name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
-argument_list|(
+name|error
+operator|=
 name|ENXIO
-argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|sprintf
 argument_list|(
 name|buf
@@ -1161,9 +1185,16 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|ACPI_UNLOCK
+expr_stmt|;
 name|return_VALUE
 argument_list|(
-literal|0
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -1182,6 +1213,9 @@ name|struct
 name|acpi_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|ACPI_STATUS
+name|status
 decl_stmt|;
 name|int
 name|error
@@ -1204,6 +1238,8 @@ name|FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
+expr_stmt|;
+name|ACPI_LOCK
 expr_stmt|;
 name|sc
 operator|=
@@ -1250,10 +1286,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * Install the default address space handlers.      */
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|error
+name|status
 operator|=
 name|AcpiInstallAddressSpaceHandler
 argument_list|(
@@ -1280,20 +1320,18 @@ literal|"could not initialise SystemMemory handler: %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
-name|error
+name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
 operator|(
-name|error
+name|status
 operator|=
 name|AcpiInstallAddressSpaceHandler
 argument_list|(
@@ -1320,20 +1358,18 @@ literal|"could not initialise SystemIO handler: %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
-name|error
+name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
 operator|(
-name|error
+name|status
 operator|=
 name|AcpiInstallAddressSpaceHandler
 argument_list|(
@@ -1360,15 +1396,13 @@ literal|"could not initialise PciConfig handler: %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
-name|error
+name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/*      * Bring ACPI fully online.      *      * Note that we request that device _STA and _INI methods not be run (ACPI_NO_DEVICE_INIT)      * and the final object initialisation pass be skipped (ACPI_NO_OBJECT_INIT).       *      * XXX We need to arrange for the object init pass after we have attached all our       *     child devices.      */
 ifdef|#
@@ -1394,7 +1428,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|error
+name|status
 operator|=
 name|AcpiEnableSubsystem
 argument_list|(
@@ -1415,15 +1449,13 @@ literal|"could not enable ACPI: %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
-name|error
+name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/*      * Setup our sysctl tree.      *      * XXX: This doesn't check to make sure that none of these fail.      */
 name|sysctl_ctx_init
@@ -1738,9 +1770,17 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|out
+label|:
+name|ACPI_UNLOCK
+expr_stmt|;
 name|return_VALUE
 argument_list|(
-literal|0
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -2728,6 +2768,8 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/*      * Create any static children by calling device identify methods.      */
 name|DEBUG_PRINT
 argument_list|(
@@ -2996,6 +3038,8 @@ name|int
 name|howto
 parameter_list|)
 block|{
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/*      * Disable all ACPI events before soft off, otherwise the system      * will be turned on again on some laptops.      *      * XXX this should probably be restricted to masking some events just      *     before powering down, since we may still need ACPI during the      *     shutdown process.      */
 name|acpi_Disable
 argument_list|(
@@ -3026,6 +3070,8 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 if|if
 condition|(
 name|howto
@@ -3101,18 +3147,24 @@ define|#
 directive|define
 name|MSGFORMAT
 value|"%s button is handled as a fixed feature programming model.\n"
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/* Enable and clear fixed events and install handlers. */
 if|if
 condition|(
+operator|(
 name|AcpiGbl_FADT
 operator|!=
 name|NULL
+operator|)
 operator|&&
+operator|(
 name|AcpiGbl_FADT
 operator|->
 name|PwrButton
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|AcpiEnableEvent
@@ -3158,15 +3210,19 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|AcpiGbl_FADT
 operator|!=
 name|NULL
+operator|)
 operator|&&
+operator|(
 name|AcpiGbl_FADT
 operator|->
 name|SleepButton
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|AcpiEnableEvent
@@ -3238,6 +3294,8 @@ decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3333,6 +3391,8 @@ decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 if|if
 condition|(
 name|hid
@@ -3442,6 +3502,8 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/* walk back up the tree to the root */
 for|for
 control|(
@@ -3619,6 +3681,8 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 name|buf
 operator|->
 name|Length
@@ -3712,6 +3776,8 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 name|buf
 operator|->
 name|Length
@@ -3816,6 +3882,8 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|param
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 if|if
 condition|(
 name|handle
@@ -4041,6 +4109,8 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/* wait for the WAK_STS bit */
 name|Count
 operator|=
@@ -4066,7 +4136,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Some BIOSes don't set WAK_STS at all, 		 * give up waiting for wakeup if we time out. 		 */
+comment|/* 	 * Some BIOSes don't set WAK_STS at all, 	 * give up waiting for wakeup if we time out. 	 */
 if|if
 condition|(
 name|Count
@@ -4074,6 +4144,11 @@ operator|>
 literal|1000
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"ACPI: timed out waiting for WAK_STS, continuing\n"
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/* giving up */
 block|}
@@ -4081,13 +4156,11 @@ name|Count
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Evaluate the _WAK method 	 */
-name|MEMSET
+comment|/*      * Evaluate the _WAK method      */
+name|bzero
 argument_list|(
 operator|&
 name|Arg_list
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4108,12 +4181,10 @@ operator|=
 operator|&
 name|Arg
 expr_stmt|;
-name|MEMSET
+name|bzero
 argument_list|(
 operator|&
 name|Arg
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4135,12 +4206,10 @@ name|Value
 operator|=
 name|state
 expr_stmt|;
-comment|/* Set up _WAK result code buffer */
-name|MEMSET
+comment|/*       * Set up _WAK result code buffer.      *      * XXX should use acpi_EvaluateIntoBuffer      */
+name|bzero
 argument_list|(
 name|Objects
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4211,7 +4280,7 @@ operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-comment|/* 		 * In many BIOSes, _WAK doesn't return a result code. 		 * We don't need to worry about it too much :-). 		 */
+comment|/* 	 * In many BIOSes, _WAK doesn't return a result code. 	 * We don't need to worry about it too much :-). 	 */
 name|DEBUG_PRINT
 argument_list|(
 name|ACPI_INFO
@@ -4343,6 +4412,8 @@ name|__func__
 argument_list|,
 name|state
 argument_list|)
+expr_stmt|;
+name|ACPI_ASSERTLOCK
 expr_stmt|;
 switch|switch
 condition|(
@@ -4534,6 +4605,8 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 name|flags
 operator|=
 name|ACPI_NO_ADDRESS_SPACE_INIT
@@ -4605,6 +4678,8 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4673,6 +4748,8 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+name|ACPI_LOCK
+expr_stmt|;
 if|if
 condition|(
 name|state
@@ -4694,6 +4771,8 @@ name|arg
 argument_list|,
 name|state
 argument_list|)
+expr_stmt|;
+name|ACPI_UNLOCK
 expr_stmt|;
 name|return_VOID
 expr_stmt|;
@@ -4721,6 +4800,10 @@ name|state
 argument_list|)
 expr_stmt|;
 comment|/* Well, what to do? :-) */
+name|ACPI_LOCK
+expr_stmt|;
+name|ACPI_UNLOCK
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
@@ -5004,6 +5087,8 @@ name|struct
 name|acpi_staticbuf
 name|buf
 decl_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 name|buf
 operator|.
 name|buffer
@@ -5738,6 +5823,8 @@ name|xerror
 decl_stmt|,
 name|state
 decl_stmt|;
+name|ACPI_LOCK
+expr_stmt|;
 name|error
 operator|=
 name|state
@@ -5915,6 +6002,8 @@ break|break;
 block|}
 name|out
 label|:
+name|ACPI_UNLOCK
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5962,6 +6051,7 @@ name|old_state
 operator|>
 name|ACPI_S_STATES_MAX
 condition|)
+block|{
 name|strcpy
 argument_list|(
 name|sleep_state
@@ -5969,7 +6059,9 @@ argument_list|,
 literal|"unknown"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|strncpy
 argument_list|(
 name|sleep_state
@@ -5988,6 +6080,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|sysctl_handle_string
@@ -6030,6 +6123,7 @@ condition|;
 name|new_state
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|strncmp
@@ -6050,16 +6144,22 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
 if|if
 condition|(
+operator|(
 name|new_state
 operator|!=
 name|old_state
+operator|)
 operator|&&
+operator|(
 name|new_state
 operator|<=
 name|ACPI_S_STATES_MAX
+operator|)
 condition|)
+block|{
 operator|*
 operator|(
 name|u_int
@@ -6071,11 +6171,14 @@ name|oid_arg1
 operator|=
 name|new_state
 expr_stmt|;
+block|}
 else|else
+block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -6173,9 +6276,15 @@ name|ACPI_RESOURCES
 block|}
 block|,
 block|{
-literal|"ACPI_DEVICES"
+literal|"ACPI_POWER"
 block|,
-name|ACPI_DEVICES
+name|ACPI_POWER
+block|}
+block|,
+block|{
+literal|"ACPI_BUS"
+block|,
+name|ACPI_BUS
 block|}
 block|,
 block|{
@@ -6185,27 +6294,15 @@ name|ACPI_POWER
 block|}
 block|,
 block|{
-literal|"ACPI_BUS_MANAGER"
+literal|"ACPI_EC"
 block|,
-name|ACPI_BUS_MANAGER
+name|ACPI_EC
 block|}
 block|,
 block|{
-literal|"ACPI_POWER_CONTROL"
+literal|"ACPI_PROCESSOR"
 block|,
-name|ACPI_POWER_CONTROL
-block|}
-block|,
-block|{
-literal|"ACPI_EMBEDDED_CONTROLLER"
-block|,
-name|ACPI_EMBEDDED_CONTROLLER
-block|}
-block|,
-block|{
-literal|"ACPI_PROCESSOR_CONTROL"
-block|,
-name|ACPI_PROCESSOR_CONTROL
+name|ACPI_PROCESSOR
 block|}
 block|,
 block|{
@@ -6233,9 +6330,9 @@ name|ACPI_SYSTEM
 block|}
 block|,
 block|{
-literal|"ACPI_THERMAL_ZONE"
+literal|"ACPI_THERMAL"
 block|,
-name|ACPI_THERMAL_ZONE
+name|ACPI_THERMAL
 block|}
 block|,
 block|{
