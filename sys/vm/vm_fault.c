@@ -3801,6 +3801,11 @@ name|start
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|dst_object
+argument_list|)
+expr_stmt|;
 name|dst_entry
 operator|->
 name|object
@@ -3873,7 +3878,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|dst_object
+argument_list|)
+expr_stmt|;
 name|VM_WAIT
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|dst_object
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3904,11 +3919,6 @@ name|src_offset
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|src_object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|src_m
@@ -3927,11 +3937,21 @@ argument_list|,
 name|dst_m
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|src_object
+argument_list|)
+expr_stmt|;
 name|dst_m
 operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|dst_object
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Enter it in the pmap... 		 */
 name|pmap_enter
@@ -3947,6 +3967,11 @@ argument_list|,
 name|prot
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|dst_object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -3974,6 +3999,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|dst_object
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
