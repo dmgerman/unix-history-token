@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	8.4 (Berkeley) %G%"
+literal|"@(#)traverse.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,12 +84,6 @@ end_else
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/dir.h>
 end_include
 
@@ -97,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_endif
@@ -370,30 +370,6 @@ begin_comment
 comment|/* Auxiliary macro to pick up files changed since previous dump. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FS_44INODEFMT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CHANGEDSINCE
-parameter_list|(
-name|dp
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|((dp)->di_mtime.ts_sec>= (t) || (dp)->di_ctime.ts_sec>= (t))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -406,11 +382,6 @@ parameter_list|)
 define|\
 value|((dp)->di_mtime>= (t) || (dp)->di_ctime>= (t))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The WANTTODUMP macro decides whether a file should be dumped. */
