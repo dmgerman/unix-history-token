@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -232,6 +232,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|u_long
+name|clock_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|short
 name|dev_t
 typedef|;
@@ -255,6 +262,13 @@ begin_typedef
 typedef|typedef
 name|u_short
 name|gid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|pid_t
 typedef|;
 end_typedef
 
