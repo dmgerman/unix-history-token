@@ -1196,7 +1196,7 @@ name|driver_t
 name|mx_driver
 init|=
 block|{
-literal|"mx"
+literal|"if_mx"
 block|,
 name|mx_methods
 block|,

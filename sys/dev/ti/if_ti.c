@@ -1153,7 +1153,7 @@ name|driver_t
 name|ti_driver
 init|=
 block|{
-literal|"ti"
+literal|"if_ti"
 block|,
 name|ti_methods
 block|,

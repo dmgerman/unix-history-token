@@ -962,7 +962,7 @@ name|driver_t
 name|ste_driver
 init|=
 block|{
-literal|"ste"
+literal|"if_ste"
 block|,
 name|ste_methods
 block|,

@@ -1338,7 +1338,7 @@ name|driver_t
 name|tl_driver
 init|=
 block|{
-literal|"tl"
+literal|"if_tl"
 block|,
 name|tl_methods
 block|,

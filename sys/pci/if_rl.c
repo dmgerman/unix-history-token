@@ -921,7 +921,7 @@ name|driver_t
 name|rl_driver
 init|=
 block|{
-literal|"rl"
+literal|"if_rl"
 block|,
 name|rl_methods
 block|,
