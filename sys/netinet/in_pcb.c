@@ -2809,7 +2809,7 @@ name|M_SONAME
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|ECONNRESET
 return|;
 block|}
 name|sin
@@ -2903,9 +2903,6 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sin
 argument_list|,
 sizeof|sizeof
@@ -2962,7 +2959,7 @@ name|M_SONAME
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|ECONNRESET
 return|;
 block|}
 name|sin
