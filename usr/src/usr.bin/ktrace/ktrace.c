@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ktrace.c	1.4 (Berkeley) %G%"
+literal|"@(#)ktrace.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrace [-acid] [-f trfile] [-t trops] [-p pid] [-g pgid]\n\ 	trops: c = syscalls, n = namei, g = generic-i/o, a = everything\n\ 	ktrace -C (clear everthing)\n"
+value|"usage: ktrace [-acid] [-f trfile] [-t trpoints] [-p pid] [-g pgid]\n\ 	trops: c = syscalls, n = namei, g = generic-i/o, a = everything\n\ 	ktrace -C (clear everthing)\n"
 end_define
 
 begin_decl_stmt
@@ -110,9 +110,9 @@ modifier|*
 name|optarg
 decl_stmt|;
 name|int
-name|facs
+name|trpoints
 init|=
-name|ALL_FACS
+name|ALL_POINTS
 decl_stmt|;
 name|int
 name|ops
@@ -179,16 +179,16 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|facs
+name|trpoints
 operator|=
-name|getfacs
+name|getpoints
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|facs
+name|trpoints
 operator|<
 literal|0
 condition|)
@@ -284,7 +284,7 @@ if|if
 condition|(
 name|inherit
 condition|)
-name|facs
+name|trpoints
 operator||=
 name|KTRFAC_INHERIT
 expr_stmt|;
@@ -332,7 +332,7 @@ name|tracefile
 argument_list|,
 name|ops
 argument_list|,
-name|facs
+name|trpoints
 argument_list|,
 name|pid
 argument_list|)
@@ -428,7 +428,7 @@ name|tracefile
 argument_list|,
 name|ops
 argument_list|,
-name|facs
+name|trpoints
 argument_list|,
 name|pid
 argument_list|)
@@ -463,7 +463,7 @@ name|tracefile
 argument_list|,
 name|ops
 argument_list|,
-name|facs
+name|trpoints
 argument_list|,
 name|pid
 argument_list|)
