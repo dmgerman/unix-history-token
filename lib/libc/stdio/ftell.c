@@ -171,6 +171,15 @@ specifier|register
 name|off_t
 name|rv
 decl_stmt|;
+comment|/* make sure stdio is set up */
+if|if
+condition|(
+operator|!
+name|__sdidinit
+condition|)
+name|__sinit
+argument_list|()
+expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
