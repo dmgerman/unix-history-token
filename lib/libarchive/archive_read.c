@@ -277,7 +277,7 @@ name|void
 modifier|*
 name|buffer
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|bytes_read
 decl_stmt|;
 name|int
@@ -394,6 +394,41 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
+comment|/* client_reader should have already set error information. */
+if|if
+condition|(
+name|bytes_read
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+comment|/* An empty archive is a serious error. */
+if|if
+condition|(
+name|bytes_read
+operator|==
+literal|0
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_ERRNO_FILE_FORMAT
+argument_list|,
+literal|"Empty input file"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+block|}
 comment|/* Select a decompression routine. */
 name|high_bidder
 operator|=
