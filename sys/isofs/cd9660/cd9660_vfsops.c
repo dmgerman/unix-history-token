@@ -3552,9 +3552,6 @@ block|{
 case|case
 name|VFIFO
 case|:
-ifdef|#
-directive|ifdef
-name|FIFO
 name|vp
 operator|->
 name|v_op
@@ -3562,21 +3559,6 @@ operator|=
 name|cd9660_fifoop_p
 expr_stmt|;
 break|break;
-else|#
-directive|else
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* FIFO */
 case|case
 name|VCHR
 case|:
