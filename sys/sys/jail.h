@@ -200,6 +200,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|getcredhostname
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|prison_check
 name|__P

@@ -1115,5 +1115,42 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return the correct hostname for the passed credential.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|getcredhostname
+parameter_list|(
+name|cred
+parameter_list|)
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|jailed
+argument_list|(
+name|cred
+argument_list|)
+condition|?
+name|cred
+operator|->
+name|cr_prison
+operator|->
+name|pr_host
+else|:
+name|hostname
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
