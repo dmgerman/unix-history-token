@@ -15,6 +15,12 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -60,7 +66,12 @@ if|if
 condition|(
 name|str
 operator|==
-literal|0
+name|NULL
+operator|||
+operator|*
+name|str
+operator|==
+literal|'\0'
 condition|)
 block|{
 return|return
@@ -87,14 +98,13 @@ name|str
 init|;
 operator|*
 name|src
+operator|!=
+literal|'\0'
 condition|;
 name|src
 operator|++
 control|)
 block|{
-name|char
-name|cur
-decl_stmt|;
 comment|/* input string examples: "3;3", "3;2;-1" */
 if|if
 condition|(
