@@ -20,7 +20,7 @@ literal|"  /*  * Here I send a datagram to a receiver whose name I get from the 
 name|opening
 name|datagram
 name|socket
-literal|"); 		exit(1); 	} 	/* 	 * Construct name, with no wildcards, of the socket to send to. 	 * Getnostbyname() returns a structure including the network address 	 * of the specified host.  The port number is taken from the command 	 * line. 	 */ 	hp = gethostbyname(argv[1]); 	if (hp == 0) { 		fprintf(stderr, "
+literal|"); 		exit(1); 	} 	/* 	 * Construct name, with no wildcards, of the socket to send to. 	 * Gethostbyname() returns a structure including the network address 	 * of the specified host.  The port number is taken from the command 	 * line. 	 */ 	hp = gethostbyname(argv[1]); 	if (hp == 0) { 		fprintf(stderr, "
 operator|%
 name|s
 operator|:
