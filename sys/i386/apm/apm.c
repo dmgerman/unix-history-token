@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.4 1996/03/12 21:53:57 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.5 1996/03/13 00:42:47 nate Exp $  */
 end_comment
 
 begin_include
@@ -102,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -110,6 +122,55 @@ include|#
 directive|include
 file|"apm_setup.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|apm_display_off
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|apm_int
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|*
+name|eax
+operator|,
+name|u_long
+operator|*
+name|ebx
+operator|,
+name|u_long
+operator|*
+name|ecx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|apm_resume
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* static data */
@@ -378,6 +439,7 @@ comment|/* 48bit far pointer */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|addr48
 block|{
@@ -393,6 +455,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|apm_errno
 decl_stmt|;
@@ -588,8 +651,6 @@ decl_stmt|,
 name|ebx
 decl_stmt|,
 name|ecx
-decl_stmt|,
-name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -957,6 +1018,7 @@ comment|/*  * Experimental implementation: My laptop machine can't handle this f
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|apm_display_off
 parameter_list|(
@@ -1433,6 +1495,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_comment
 comment|/* disestablish an apm hook */
 end_comment
@@ -1475,6 +1543,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1496,10 +1573,9 @@ specifier|static
 name|int
 name|apm_default_resume
 parameter_list|(
-name|struct
-name|apm_softc
+name|void
 modifier|*
-name|sc
+name|arg
 parameter_list|)
 block|{
 name|int
@@ -1614,6 +1690,8 @@ name|int
 name|apm_default_suspend
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|int
@@ -2204,6 +2282,7 @@ comment|/* device driver definitions */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|apmprobe
 parameter_list|(
@@ -2215,6 +2294,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|apmattach
 parameter_list|(
@@ -2245,6 +2325,7 @@ comment|/*  * probe APM (dummy):  *  * APM probing routine is placed on locore.s
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|apmprobe
 parameter_list|(
@@ -2493,6 +2574,7 @@ comment|/*  * Attach APM:  *  * Initialize APM driver (APM BIOS itself has been 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|apmattach
 parameter_list|(
