@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tprintf.h"
 end_include
 
 begin_include
@@ -319,9 +325,9 @@ name|short
 name|sc_dens
 decl_stmt|;
 name|caddr_t
-name|sc_ctty
+name|sc_tpr
 decl_stmt|;
-comment|/* record user's tty for errors */
+comment|/* tprintf handle for errors to user */
 name|int
 name|sc_blks
 decl_stmt|;
@@ -833,30 +839,10 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 operator|=
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SCTTY
-condition|?
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_session
-operator|->
-name|s_ttyp
-else|:
-literal|0
-argument_list|)
+name|tprintf_open
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1011,6 +997,13 @@ argument_list|,
 name|sc
 operator|->
 name|sc_blks
+argument_list|)
+expr_stmt|;
+name|tprintf_close
+argument_list|(
+name|sc
+operator|->
+name|sc_tpr
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2229,7 +2222,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 argument_list|,
 literal|"tu%d: hard error bn%d mbsr=%b er=%b ds=%b\n"
 argument_list|,
@@ -2650,7 +2643,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ctty
+name|sc_tpr
 argument_list|,
 literal|"tu%d: hard error bn%d er=%b ds=%b\n"
 argument_list|,
@@ -2906,10 +2899,6 @@ name|callcount
 expr_stmt|;
 name|int
 name|fcount
-decl_stmt|,
-name|error
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|mtop
@@ -3127,26 +3116,22 @@ name|b_flags
 operator|&
 name|B_ERROR
 condition|)
-if|if
-condition|(
+return|return
 operator|(
-name|error
-operator|=
 name|bp
 operator|->
 name|b_error
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
+condition|?
+name|bp
+operator|->
+name|b_error
+else|:
 name|EIO
 operator|)
 return|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 case|case
