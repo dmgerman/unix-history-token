@@ -953,7 +953,7 @@ argument_list|)
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3699,7 +3699,7 @@ argument_list|)
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6610,7 +6610,7 @@ argument_list|)
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6849,7 +6849,7 @@ argument_list|)
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7172,7 +7172,7 @@ argument_list|)
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7467,7 +7467,7 @@ argument_list|)
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -8749,7 +8749,7 @@ name|size
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
