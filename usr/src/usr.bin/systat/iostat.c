@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.3 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_function
@@ -305,7 +311,7 @@ condition|)
 block|{
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nlst
 argument_list|)
@@ -806,7 +812,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*          * Deduct -regions for blank line after each scrolling region.          */
+comment|/* 	 * Deduct -regions for blank line after each scrolling region. 	 */
 end_comment
 
 begin_expr_stmt
@@ -827,7 +833,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*          * Minimum region contains space for two          * label lines and one line of statistics.          */
+comment|/* 	 * Minimum region contains space for two 	 * label lines and one line of statistics. 	 */
 end_comment
 
 begin_if

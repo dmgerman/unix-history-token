@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.3 (Berkeley) %G%"
+literal|"@(#)disks.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -161,7 +167,7 @@ operator|)
 return|;
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nlst
 argument_list|)
@@ -210,9 +216,11 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"dk_ndrive=%d according to /vmunix"
+literal|"dk_ndrive=%d according to %s"
 argument_list|,
 name|dk_ndrive
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 return|return

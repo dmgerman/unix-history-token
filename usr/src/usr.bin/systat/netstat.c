@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netstat.c	5.2 (Berkeley) %G%"
+literal|"@(#)netstat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/udp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_define
@@ -486,7 +492,7 @@ begin_block
 block|{
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nlst
 argument_list|)

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -322,7 +328,7 @@ expr_stmt|;
 block|}
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nlst
 argument_list|)
@@ -343,7 +349,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't namelist /vmunix.\n"
+literal|"Couldn't namelist %s.\n"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|exit
@@ -354,7 +362,7 @@ expr_stmt|;
 block|}
 name|kmemf
 operator|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 expr_stmt|;
 name|kmem
 operator|=
@@ -385,7 +393,7 @@ expr_stmt|;
 block|}
 name|memf
 operator|=
-literal|"/dev/mem"
+name|_PATH_MEM
 expr_stmt|;
 name|mem
 operator|=
@@ -416,7 +424,7 @@ expr_stmt|;
 block|}
 name|swapf
 operator|=
-literal|"/dev/drum"
+name|_PATH_DRUM
 expr_stmt|;
 name|swap
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.4 (Berkeley) %G%"
+literal|"@(#)swap.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_function
@@ -1095,7 +1101,7 @@ condition|)
 block|{
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nlst
 argument_list|)
@@ -1114,7 +1120,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"namelist on /vmunix failed"
+literal|"namelist on %s failed"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 return|return
