@@ -3255,6 +3255,25 @@ block|}
 end_function
 
 begin_function
+name|int
+name|ptrace_clear_single_step
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+comment|/* TODO; */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|exec_setregs
 parameter_list|(

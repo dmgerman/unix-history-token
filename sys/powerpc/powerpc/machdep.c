@@ -3681,6 +3681,25 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|ptrace_clear_single_step
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+comment|/* XXX: coming soon... */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Initialise a struct pcpu.  */
 end_comment
