@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.14	85/02/08	*/
+comment|/*	tty.c	6.15	85/04/17	*/
 end_comment
 
 begin_include
@@ -1870,21 +1870,11 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 condition|)
 block|{
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -1927,6 +1917,11 @@ operator|->
 name|t_line
 operator|=
 name|t
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
