@@ -371,9 +371,7 @@ name|struct
 name|ACPIrsdp
 name|rsdp
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
+comment|/* Read in the table signature and check it. */
 name|pread
 argument_list|(
 name|acpi_mem_fd
@@ -405,13 +403,6 @@ name|NULL
 operator|)
 return|;
 comment|/* Read the entire table. */
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|rsdp
-argument_list|)
-expr_stmt|;
 name|pread
 argument_list|(
 name|acpi_mem_fd
@@ -419,11 +410,15 @@ argument_list|,
 operator|&
 name|rsdp
 argument_list|,
-name|len
+sizeof|sizeof
+argument_list|(
+name|rsdp
+argument_list|)
 argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/* Run the checksum only over the version 1 header. */
 if|if
 condition|(
 name|acpi_checksum
@@ -431,7 +426,7 @@ argument_list|(
 operator|&
 name|rsdp
 argument_list|,
-name|len
+literal|20
 argument_list|)
 condition|)
 return|return
@@ -444,22 +439,24 @@ condition|(
 name|rsdp
 operator|.
 name|revision
-operator|>
+operator|==
 literal|0
 condition|)
-name|len
-operator|=
-name|rsdp
-operator|.
-name|length
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* XXX Should handle ACPI 2.0 RSDP extended checksum here. */
 return|return
 operator|(
 name|acpi_map_physical
 argument_list|(
 name|addr
 argument_list|,
-name|len
+name|rsdp
+operator|.
+name|length
 argument_list|)
 operator|)
 return|;
