@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.2 1995/01/25 19:57:27 ache Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.3 1995/08/02 23:08:14 pst Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_destroy.c,v 1.2 1995/01/25 19:57:27 ache Exp $"
+literal|"$Id: kdb_destroy.c,v 1.3 1995/08/02 23:08:14 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|DB
 name|file
 operator|=
 name|strcat
