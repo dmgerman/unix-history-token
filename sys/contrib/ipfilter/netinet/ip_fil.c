@@ -1581,16 +1581,6 @@ name|cdevsw
 name|ipl_cdevsw
 init|=
 block|{
-operator|.
-name|d_version
-operator|=
-name|D_VERSION
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
 name|iplopen
 block|,
 name|iplclose
@@ -1730,10 +1720,18 @@ operator|>=
 literal|199701
 operator|)
 operator|||
+expr|\
+operator|(
 operator|(
 name|__FreeBSD_version
 operator|>=
 literal|500011
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 operator|)
 end_if
 
