@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.5	82/08/01	*/
+comment|/*	dmf.c	4.6	82/08/13	*/
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"../h/file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_comment
@@ -1789,12 +1795,22 @@ begin_macro
 name|dmfread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -1817,6 +1833,8 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -1830,8 +1848,11 @@ name|l_read
 operator|)
 operator|(
 name|tp
+operator|,
+name|uio
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

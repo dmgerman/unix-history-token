@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.15	82/08/01	*/
+comment|/*	ut.c	4.16	82/08/13	*/
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_include
@@ -3275,6 +3281,8 @@ begin_macro
 name|utread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
@@ -3284,11 +3292,25 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+name|u
+operator|.
+name|u_error
+operator|=
 name|utphys
 argument_list|(
 name|dev
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 if|if
@@ -3316,6 +3338,8 @@ argument_list|,
 name|B_READ
 argument_list|,
 name|minphys
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
@@ -3332,11 +3356,19 @@ argument|dev
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|utphys
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3364,6 +3396,8 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minphys
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3377,12 +3411,22 @@ begin_macro
 name|utphys
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -3449,6 +3493,24 @@ index|[
 name|tjunit
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|uio
+condition|)
+name|sc
+operator|->
+name|sc_blkno
+operator|=
+name|bdbtofsb
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>>
+literal|9
+argument_list|)
+expr_stmt|;
+else|else
 name|sc
 operator|->
 name|sc_blkno
