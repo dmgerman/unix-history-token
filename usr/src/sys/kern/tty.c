@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.15	82/01/14	*/
+comment|/*	tty.c	4.16	82/01/15	*/
 end_comment
 
 begin_comment
@@ -2535,11 +2535,6 @@ condition|)
 goto|goto
 name|win
 goto|;
-name|printf
-argument_list|(
-literal|"wsel block\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tp
