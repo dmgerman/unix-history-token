@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_include
@@ -4095,10 +4101,29 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_fd
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|vnode
 modifier|*
 name|dp
+decl_stmt|,
+modifier|*
+name|savedcdir
+decl_stmt|,
+modifier|*
+name|savedrdir
 decl_stmt|;
 name|int
 name|flag
@@ -4488,15 +4513,27 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Must set current directory here to avoid confusion in namei() 	 * called from rename() 	 */
-name|ndp
+name|savedcdir
+operator|=
+name|fdp
 operator|->
-name|ni_cdir
+name|fd_cdir
+expr_stmt|;
+name|savedrdir
+operator|=
+name|fdp
+operator|->
+name|fd_rdir
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_cdir
 operator|=
 name|dp
 expr_stmt|;
-name|ndp
+name|fdp
 operator|->
-name|ni_rdir
+name|fd_rdir
 operator|=
 name|NULLVP
 expr_stmt|;
@@ -4507,6 +4544,18 @@ name|namei
 argument_list|(
 name|ndp
 argument_list|)
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_cdir
+operator|=
+name|savedcdir
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_rdir
+operator|=
+name|savedrdir
 expr_stmt|;
 name|vrele
 argument_list|(
