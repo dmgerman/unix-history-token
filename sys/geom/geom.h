@@ -51,27 +51,6 @@ directive|include
 file|<sys/sbuf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNELSIM
-end_ifdef
-
-begin_comment
-comment|/*  * The GEOM subsystem makes a few concessions in order to be able to run as a  * user-land simulation as well as a kernel component.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<geom_sim.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct_decl
 struct_decl|struct
 name|g_class
