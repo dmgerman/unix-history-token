@@ -1420,6 +1420,13 @@ operator|->
 name|w_class
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|w
 operator|->
 name|w_file
@@ -1454,6 +1461,13 @@ operator|->
 name|w_class
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w1
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|w1
 operator|->
 name|w_file
