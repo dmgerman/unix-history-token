@@ -1266,27 +1266,6 @@ name|P_MAGIC
 value|0xbeefface
 end_define
 
-begin_define
-define|#
-directive|define
-name|P_CAN_SEE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|P_CAN_SCHED
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|P_CAN_DEBUG
-value|4
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
