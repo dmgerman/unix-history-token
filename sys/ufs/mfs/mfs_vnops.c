@@ -480,17 +480,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_copyonwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_eopnotsupp
-block|}
-block|,
-block|{
-operator|&
 name|vop_unlock_desc
 block|,
 operator|(

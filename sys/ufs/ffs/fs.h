@@ -1498,7 +1498,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(((lbn)>= NDADDR || (dip)->di_size>= smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
+value|(((lbn)>= NDADDR || \ 	  (dip)->di_size>= (u_int64_t)smalllblktosize(fs, (lbn) + 1)) \ 	    ? (fs)->fs_bsize \ 	    : (fragroundup(fs, blkoff(fs, (dip)->di_size))))
 end_define
 
 begin_define

@@ -70,6 +70,13 @@ argument_list|)
 name|i_hash
 expr_stmt|;
 comment|/* Hash chain. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|inode
+argument_list|)
+name|i_nextsnap
+expr_stmt|;
+comment|/* snapshot file list */
 name|struct
 name|vnode
 modifier|*
@@ -143,12 +150,6 @@ modifier|*
 name|i_lockf
 decl_stmt|;
 comment|/* Head of byte-level lock list. */
-name|struct
-name|inode
-modifier|*
-name|i_copyonwrite
-decl_stmt|;
-comment|/* copy-on-write list */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|int32_t
 name|i_count

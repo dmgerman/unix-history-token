@@ -424,17 +424,6 @@ operator|)
 name|ffs_fsync
 block|}
 block|,
-block|{
-operator|&
-name|vop_copyonwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|ffs_copyonwrite
-block|}
-block|,
 ifdef|#
 directive|ifdef
 name|FFS_EXTATTR

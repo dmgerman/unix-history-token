@@ -295,21 +295,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ffs_copyonwrite
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_copyonwrite_args
-operator|*
-name|ap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ffs_fhtovp
 name|__P
 argument_list|(
