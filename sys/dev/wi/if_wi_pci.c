@@ -345,6 +345,16 @@ literal|"Siemens SpeedStream"
 block|}
 block|,
 block|{
+literal|0x10b5
+block|,
+literal|0x9050
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"SMC 2602W"
+block|}
+block|,
+block|{
 literal|0x16ec
 block|,
 literal|0x3685
