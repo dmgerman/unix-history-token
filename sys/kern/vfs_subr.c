@@ -3136,10 +3136,6 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_usecount
-operator|||
-name|vp
-operator|->
 name|v_holdcnt
 condition|)
 name|error
@@ -7833,6 +7829,12 @@ name|v_usecount
 operator|+=
 name|delta
 expr_stmt|;
+name|vp
+operator|->
+name|v_holdcnt
+operator|+=
+name|delta
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -8700,7 +8702,11 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vdrop: holdcnt"
+literal|"vdrop: holdcnt %d"
+argument_list|,
+name|vp
+operator|->
+name|v_holdcnt
 argument_list|)
 expr_stmt|;
 name|vp
@@ -9870,12 +9876,6 @@ expr_stmt|;
 comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. The test of the 	 * VDOOMED flag and the reference count of zero is because 	 * it will be removed from the free list by getnewvnode, 	 * but will not have its reference count incremented until 	 * after calling vgone. If the reference count were 	 * incremented first, vgone would (incorrectly) try to 	 * close the previous instance of the underlying object. 	 */
 if|if
 condition|(
-name|vp
-operator|->
-name|v_usecount
-operator|==
-literal|0
-operator|&&
 name|vp
 operator|->
 name|v_holdcnt

@@ -326,7 +326,7 @@ directive|endif
 name|int
 name|v_holdcnt
 decl_stmt|;
-comment|/* i page& buffer references */
+comment|/* i prevents recycling. */
 name|int
 name|v_usecount
 decl_stmt|;
@@ -1546,7 +1546,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(((vp)->v_iflag& VI_FREE)&&					\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
+value|(((vp)->v_iflag& VI_FREE)&& !(vp)->v_holdcnt)
 end_define
 
 begin_comment
@@ -1561,7 +1561,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_iflag& VI_FREE)&&					\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&&			\ 	 (!(vp)->v_object ||						\ 	  !(vp)->v_object->resident_page_count))
+value|(!((vp)->v_iflag& VI_FREE)&& !(vp)->v_holdcnt&&		\ 	 (!(vp)->v_object || !(vp)->v_object->resident_page_count))
 end_define
 
 begin_comment
@@ -1576,7 +1576,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(((vp)->v_iflag& VI_FREE)&&					\ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
+value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
 end_define
 
 begin_define
