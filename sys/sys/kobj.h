@@ -343,14 +343,14 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|kobj_lookup_hits
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|kobj_lookup_misses
 decl_stmt|;
 end_decl_stmt

@@ -105,19 +105,19 @@ file|<sys/sysctl.h>
 end_include
 
 begin_decl_stmt
-name|int
+name|u_int
 name|kobj_lookup_hits
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|kobj_lookup_misses
 decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 argument|_kern
 argument_list|,
@@ -136,7 +136,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 argument|_kern
 argument_list|,
