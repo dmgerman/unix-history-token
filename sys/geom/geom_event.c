@@ -1023,6 +1023,9 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
+name|int
+name|wuflag
+parameter_list|,
 name|struct
 name|g_event
 modifier|*
@@ -1049,13 +1052,32 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_post_event_x(%p, %p, %d)"
+literal|"g_post_event_x(%p, %p, %d, %d)"
 argument_list|,
 name|func
 argument_list|,
 name|arg
 argument_list|,
 name|flag
+argument_list|,
+name|wakeup
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|wuflag
+operator|==
+literal|0
+operator|||
+name|wuflag
+operator|==
+name|EV_WAKEUP
+argument_list|,
+operator|(
+literal|"Wrong wuflag in g_post_event_x(0x%x)"
+operator|,
+name|wuflag
+operator|)
 argument_list|)
 expr_stmt|;
 name|ep
@@ -1086,7 +1108,7 @@ name|ep
 operator|->
 name|flag
 operator|=
-name|flag
+name|wuflag
 expr_stmt|;
 for|for
 control|(
@@ -1267,6 +1289,8 @@ name|arg
 argument_list|,
 name|flag
 argument_list|,
+literal|0
+argument_list|,
 name|NULL
 argument_list|,
 name|ap
@@ -1350,7 +1374,7 @@ argument_list|,
 name|arg
 argument_list|,
 name|flag
-operator||
+argument_list|,
 name|EV_WAKEUP
 argument_list|,
 operator|&
