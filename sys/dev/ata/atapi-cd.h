@@ -1165,7 +1165,7 @@ literal|1
 decl_stmt|;
 comment|/* test write enable */
 name|u_int8_t
-name|reserved2_5
+name|link_size_valid
 range|:
 literal|1
 decl_stmt|;
@@ -1252,7 +1252,7 @@ range|:
 literal|4
 decl_stmt|;
 name|u_int8_t
-name|reserved5
+name|link_size
 decl_stmt|;
 name|u_int8_t
 name|reserved6
