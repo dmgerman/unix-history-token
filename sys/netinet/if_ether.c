@@ -1763,7 +1763,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Resolve an IP address into an ethernet address.  If success,  * desten is filled in.  If there is no entry in arptab,  * set one up and broadcast a request for the IP address.  * Hold onto this mbuf and resend it once the address  * is finally resolved.  A return value of 1 indicates  * that desten has been filled in and the packet should be sent  * normally; a 0 return indicates that the packet has been  * taken over here, either now or for later transmission.  */
+comment|/*  * Resolve an IP address into an ethernet address.  If success,  * desten is filled in.  If there is no entry in arptab,  * set one up and broadcast a request for the IP address.  * Hold onto this mbuf and resend it once the address  * is finally resolved.  A return value of 1 indicates  * that desten has been filled in and the packet should be sent  * normally; a 0 return indicates that the packet has been  * taken over here, either now or for later transmission.  *  * NEW COMMENT  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    dst is the next hop,  *    rt0 is the route to the final destination (possibly useless)  *    m is the mbuf  *    desten is where we want the address.  *  * On success, desten is filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  */
 end_comment
 
 begin_function
@@ -1778,7 +1778,7 @@ parameter_list|,
 name|struct
 name|rtentry
 modifier|*
-name|rt
+name|rt0
 parameter_list|,
 name|struct
 name|mbuf
@@ -1807,6 +1807,41 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|rt
+decl_stmt|;
+name|error
+operator|=
+name|rt_check
+argument_list|(
+operator|&
+name|rt
+argument_list|,
+operator|&
+name|rt0
+argument_list|,
+name|dst
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
 if|if
 condition|(
 name|m
@@ -1835,7 +1870,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -1870,7 +1905,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -1972,9 +2007,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EINVAL
 operator|)
 return|;
+comment|/* XXX */
 block|}
 name|sdl
 operator|=
@@ -2090,7 +2126,9 @@ name|sdl_alen
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * If ARP is disabled or static on this interface, stop. 	 * XXX 	 * Probably should not allocate empty llinfo struct if we are 	 * not going to be sending out an arp request. 	 */
@@ -2114,7 +2152,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -2255,7 +2293,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|EWOULDBLOCK
 operator|)
 return|;
 block|}

@@ -950,6 +950,8 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+comment|/* Calculate routing info length based on arp table entry */
+comment|/* XXX any better way to do this ? */
 name|error
 operator|=
 name|rt_check
@@ -970,7 +972,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* Calculate routing info length based on arp table entry */
 if|if
 condition|(
 name|rt
@@ -1120,14 +1121,13 @@ name|INET
 case|case
 name|AF_INET
 case|:
-if|if
-condition|(
-operator|!
+name|error
+operator|=
 name|arpresolve
 argument_list|(
 name|ifp
 argument_list|,
-name|rt
+name|rt0
 argument_list|,
 name|m
 argument_list|,
@@ -1135,13 +1135,22 @@ name|dst
 argument_list|,
 name|edst
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
+name|error
+operator|==
+name|EWOULDBLOCK
+condition|?
 literal|0
+else|:
+name|error
 operator|)
 return|;
-comment|/* if not yet resolved */
 name|snap_type
 operator|=
 name|ETHERTYPE_IP
@@ -1259,14 +1268,13 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-if|if
-condition|(
-operator|!
+name|error
+operator|=
 name|nd6_storelladdr
 argument_list|(
 name|ifp
 argument_list|,
-name|rt
+name|rt0
 argument_list|,
 name|m
 argument_list|,
@@ -1278,15 +1286,16 @@ operator|*
 operator|)
 name|edst
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-block|{
-comment|/* Something bad happened */
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
-block|}
 name|snap_type
 operator|=
 name|ETHERTYPE_IPV6

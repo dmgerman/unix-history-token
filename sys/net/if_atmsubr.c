@@ -516,11 +516,6 @@ init|=
 name|m0
 decl_stmt|;
 name|struct
-name|rtentry
-modifier|*
-name|rt
-decl_stmt|;
-name|struct
 name|atmllc
 modifier|*
 name|atmllc
@@ -583,27 +578,6 @@ argument_list|(
 name|ENETDOWN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * check route 	 */
-name|error
-operator|=
-name|rt_check
-argument_list|(
-operator|&
-name|rt
-argument_list|,
-operator|&
-name|rt0
-argument_list|,
-name|dst
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|bad
-goto|;
 comment|/* 	 * check for non-native ATM traffic   (dst != NULL) 	 */
 if|if
 condition|(
@@ -634,6 +608,33 @@ case|:
 case|case
 name|AF_INET6
 case|:
+block|{
+name|struct
+name|rtentry
+modifier|*
+name|rt
+decl_stmt|;
+comment|/*   			 * check route 			 */
+name|error
+operator|=
+name|rt_check
+argument_list|(
+operator|&
+name|rt
+argument_list|,
+operator|&
+name|rt0
+argument_list|,
+name|dst
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 name|dst
@@ -679,6 +680,7 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX: put ATMARP stuff here */
 comment|/* XXX: watch who frees m on failure */
+block|}
 block|}
 break|break;
 endif|#

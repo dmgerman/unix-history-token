@@ -34,7 +34,7 @@ name|int
 name|aarpresolve
 parameter_list|(
 name|struct
-name|arpcom
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
