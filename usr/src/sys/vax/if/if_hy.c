@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_hy.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_hy.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -115,6 +115,29 @@ directive|include
 file|"../net/route.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BBNNET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INET
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -130,14 +153,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"../netinet/in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip_var.h"
+file|"../netinet/ip.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -5782,6 +5810,11 @@ argument_list|,
 name|len
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|is
+operator|->
+name|hy_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -5858,7 +5891,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|m0
 operator|==
 literal|0
 condition|)
@@ -7162,9 +7195,11 @@ name|SIOCSIFADDR
 case|:
 if|if
 condition|(
-name|sin
+name|ifa
 operator|->
-name|sin_family
+name|ifa_addr
+operator|.
+name|sa_family
 operator|!=
 name|AF_INET
 condition|)
