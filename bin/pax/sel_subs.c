@@ -871,9 +871,6 @@ return|;
 block|}
 name|gid
 operator|=
-operator|(
-name|gid_t
-operator|)
 name|gr
 operator|->
 name|gr_gid
