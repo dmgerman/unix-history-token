@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: fflush.c,v 1.15 1994/01/27 06:08:00 proven Exp $"
+literal|"$Id: fflush.c,v 1.1 1994/01/30 04:24:37 proven Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,7 @@ condition|)
 return|return
 operator|(
 name|__swalk_sflush
+argument_list|()
 operator|)
 return|;
 name|flockfile
