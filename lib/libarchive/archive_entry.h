@@ -28,7 +28,7 @@ file|<wchar.h>
 end_include
 
 begin_comment
-comment|/*  * Description of an archive entry.  *  * Basically, a "struct stat" with a few text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  *  * TODO: Design a good API for handling sparse files.  */
+comment|/*  * Description of an archive entry.  *  * Basically, a "struct stat" with a few text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  */
 end_comment
 
 begin_struct_decl
@@ -109,19 +109,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|archive_entry_fflags_text
-parameter_list|(
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|archive_entry_fflags
 parameter_list|(
@@ -138,6 +125,30 @@ name|unsigned
 name|long
 modifier|*
 name|clear
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|archive_entry_fflags_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|gid_t
+name|archive_entry_gid
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -301,6 +312,17 @@ specifier|const
 name|char
 modifier|*
 name|archive_entry_symlink
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uid_t
+name|archive_entry_uid
 parameter_list|(
 name|struct
 name|archive_entry
