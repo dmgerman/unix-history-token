@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.8 (Berkeley) %G%"
+literal|"@(#)df.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,12 +110,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|lflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|iflag
 decl_stmt|;
 end_decl_stmt
@@ -199,7 +193,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [ -i ] [ -l ] [ filsys... ]\n"
+literal|"usage: df [ -i ] [ filsys... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
