@@ -1,9 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -11,14 +20,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strrchr.c	5.1 (berkeley) 85/08/04"
+literal|"@(#)strrchr.c	5.2 (berkeley) 86/03/09"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
+endif|LIBC_SCCS and not lint
 end_endif
 
 begin_comment

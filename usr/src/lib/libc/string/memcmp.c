@@ -7,11 +7,20 @@ begin_comment
 comment|/*  * Sys5 compat routine  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -19,7 +28,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memcmp.c	5.1 (Berkeley) 85/08/05"
+literal|"@(#)memcmp.c	5.2 (Berkeley) 86/03/09"
 decl_stmt|;
 end_decl_stmt
 

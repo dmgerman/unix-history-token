@@ -1,9 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBC_SCCS
+end_ifdef
 
 begin_expr_stmt
 operator|.
@@ -12,12 +12,12 @@ name|_sccsid
 operator|:
 operator|.
 name|asciz
-literal|"@(#)doprnt.c	5.3 (Berkeley) %G%"
+literal|"@(#)doprnt.c	5.4 (Berkeley) %G%"
 operator|.
 name|text
 endif|#
 directive|endif
-endif|not lint
+endif|LIBC_SCCS
 empty|# C library -- conversions
 include|#
 directive|include
