@@ -1,4 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1980, 1991 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusend.c	5.3 (Berkeley) %G%"
+literal|"@(#)uusend.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +47,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * uusend: primitive operation to allow uucp like copy of binary files  * but handle indirection over systems.  *  * usage: uusend [-r] [-m ooo] localfile sysname1!sysname2!...!destfile  *        uusend [-r] [-m ooo]     -     sysname1!sysname2!...!destfile  *  * Author: Mark Horton, May 1980.  *  * "-r" switch added.  Has same effect as "-r" in uux. 11/82  CCW  *  * Error recovery (a la uucp) added& ifdefs for ruusend (as in rmail).  * Checks for illegal access to /usr/lib/uucp.  *				February 1983  Christopher Woodbury  * Fixed mode set[ug]id loophole. 4/8/83  CCW  *  * Add '-f' to make uusend syntax more similar to UUCP.  "destname"  * can now be a directory.	June 1983  CCW  */
