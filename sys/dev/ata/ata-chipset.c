@@ -18556,7 +18556,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|ATA_MASTERDEV
+name|ata_legacy
 argument_list|(
 name|dev
 argument_list|)

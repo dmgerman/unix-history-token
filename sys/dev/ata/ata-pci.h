@@ -174,16 +174,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|ATA_MASTERDEV
-parameter_list|(
-name|dev
-parameter_list|)
-value|((pci_get_progif(dev)& 0x80)&& \ 				 (pci_get_progif(dev)& 0x05) != 0x05)
-end_define
-
 begin_comment
 comment|/* defines for known chipset PCI id's */
 end_comment
@@ -1616,6 +1606,15 @@ end_define
 begin_comment
 comment|/* global prototypes */
 end_comment
+
+begin_function_decl
+name|int
+name|ata_legacy
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
