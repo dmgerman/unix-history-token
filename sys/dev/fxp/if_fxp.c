@@ -2614,7 +2614,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"*** DISABLING DYNAMIC STANDBY MODE IN EEPROM ***\n"
+literal|"Disabling dynamic standby mode in EEPROM\n"
 argument_list|)
 expr_stmt|;
 name|data
@@ -2739,28 +2739,6 @@ argument_list|,
 name|data
 argument_list|,
 name|cksum
-argument_list|)
-expr_stmt|;
-comment|/* 			 * We need to do a full PCI reset here.  A software  			 * reset to the port doesn't cut it, but let's try 			 * anyway. 			 */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|FXP_CSR_PORT
-argument_list|,
-name|FXP_PORT_SOFTWARE_RESET
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|50
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"*** PLEASE REBOOT THE SYSTEM NOW FOR CORRECT OPERATION ***\n"
 argument_list|)
 expr_stmt|;
 if|#
