@@ -1053,11 +1053,14 @@ condition|(
 operator|!
 name|exclusive
 operator|&&
+name|VOP_GETVOBJECT
+argument_list|(
 name|vp
-operator|->
-name|v_object
-operator|==
+argument_list|,
 name|NULL
+argument_list|)
+operator|!=
+literal|0
 condition|)
 name|VOP_LOCK
 argument_list|(
