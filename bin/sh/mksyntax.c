@@ -1659,7 +1659,7 @@ name|macro
 index|[]
 init|=
 block|{
-literal|"#define is_digit(c)\t((c>= 0&& is_type+SYNBASE)[c]& ISDIGIT)"
+literal|"#define is_digit(c)\t((is_type+SYNBASE)[c]& ISDIGIT)"
 block|,
 literal|"#define is_alpha(c)\t((c) != PEOF&& ((c)< CTLESC || (c)> CTLQUOTEMARK)&& isalpha((unsigned char) (c)))"
 block|,
