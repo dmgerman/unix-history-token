@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: shlib.c,v 1.5 1993/12/04 00:53:02 jkh Exp $  */
+comment|/*  * $Id: shlib.c,v 1.6 1993/12/11 11:58:29 jkh Exp $  */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_SEARCH_DIRS
-value|"/usr/lib", "/usr/X386/lib", "/usr/local/lib"
+value|"/usr/lib"
 end_define
 
 begin_endif
