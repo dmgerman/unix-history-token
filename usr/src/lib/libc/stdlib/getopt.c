@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.9 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,6 +236,21 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means EOF. 		 */
+if|if
+condition|(
+name|optopt
+operator|==
+operator|(
+name|int
+operator|)
+literal|'-'
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
 if|if
 condition|(
 operator|!
