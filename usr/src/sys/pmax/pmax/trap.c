@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -571,7 +571,9 @@ index|]
 else|:
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|RA
 index|]
@@ -1277,7 +1279,9 @@ index|]
 else|:
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|RA
 index|]
@@ -1298,14 +1302,18 @@ name|p_comm
 argument_list|,
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PC
 index|]
 argument_list|,
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|RA
 index|]
@@ -1517,7 +1525,9 @@ index|]
 operator|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|SP
 index|]
@@ -1583,7 +1593,9 @@ name|locr0
 init|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 decl_stmt|;
 specifier|register
 name|struct
@@ -2205,7 +2217,9 @@ name|locr0
 operator|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2666,7 +2680,9 @@ name|machFPCurProcPtr
 argument_list|,
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 argument_list|)
 expr_stmt|;
 name|machFPCurProcPtr
@@ -2675,7 +2691,9 @@ name|p
 expr_stmt|;
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PS
 index|]
@@ -3268,7 +3286,9 @@ name|pc
 argument_list|,
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|RA
 index|]
@@ -5462,7 +5482,9 @@ name|locr0
 init|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 decl_stmt|;
 name|int
 name|i
