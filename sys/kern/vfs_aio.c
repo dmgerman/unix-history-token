@@ -1847,6 +1847,10 @@ name|jobrefid
 operator|=
 literal|1
 expr_stmt|;
+name|async_io_version
+operator|=
+name|_POSIX_VERSION
+expr_stmt|;
 block|}
 end_function
 
@@ -1873,6 +1877,10 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+name|async_io_version
+operator|=
+literal|0
+expr_stmt|;
 name|aio_swake
 operator|=
 name|NULL

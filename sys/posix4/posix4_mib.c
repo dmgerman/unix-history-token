@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<posix4/posix4.h>
 end_include
 
@@ -126,11 +132,22 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|P1B_SYSCTL
+name|SYSCTL_INT
 argument_list|(
-name|CTL_P1003_1B_ASYNCHRONOUS_IO
+name|_p1003_1b
 argument_list|,
+name|CTL_P1003_1B_ASYNCHRONOUS_IO
+argument_list|, \
 name|asynchronous_io
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|async_io_version
+argument_list|,
+literal|0
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
