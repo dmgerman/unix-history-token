@@ -430,6 +430,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|do_coredump
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|coredump
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|do_coredump
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable/Disable coredumps"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Signal properties and actions.  * The array below categorizes the signals and their default actions  * according to the following properties:  */
 end_comment
@@ -7099,6 +7129,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|sugid_coredump
 operator|==
 literal|0
@@ -7109,6 +7140,11 @@ operator|->
 name|p_flag
 operator|&
 name|P_SUGID
+operator|)
+operator|||
+name|do_coredump
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
