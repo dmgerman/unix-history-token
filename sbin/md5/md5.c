@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.6 1995/07/12 09:14:46 phk Exp $  *  * Derived from:  */
+comment|/*  * $Id: md5.c,v 1.7 1996/10/25 06:48:29 bde Exp $  *  * Derived from:  */
 end_comment
 
 begin_comment
@@ -406,9 +406,9 @@ name|printf
 argument_list|(
 literal|"MD5 time trial. Digesting %d %d-byte blocks ..."
 argument_list|,
-name|TEST_BLOCK_LEN
-argument_list|,
 name|TEST_BLOCK_COUNT
+argument_list|,
+name|TEST_BLOCK_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Initialize block */
