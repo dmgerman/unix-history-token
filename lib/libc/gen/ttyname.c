@@ -542,18 +542,14 @@ expr_stmt|;
 comment|/* Must have thread specific data field to put data */
 if|if
 condition|(
+operator|(
+name|buf
+operator|=
 name|pthread_getspecific
 argument_list|(
 name|ttyname_key
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|buf
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
