@@ -317,9 +317,9 @@ literal|"\n\t[-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
-literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-c] [-d] [-e char] [-l user]"
+literal|"[-4] [-6] [-8] [-E] [-L] [-N] [-S tos] [-c] [-d]"
 argument_list|,
-literal|"\n\t[-n tracefile] "
+literal|"\n\t[-e char] [-l user] [-n tracefile] "
 argument_list|,
 endif|#
 directive|endif
@@ -343,13 +343,13 @@ argument_list|,
 else|#
 directive|else
 literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r]\n\t"
-literal|"[-s src_addr] [-t transcom]"
+literal|"[-s src_addr] [-t transcom] "
 argument_list|,
 endif|#
 directive|endif
 else|#
 directive|else
-literal|"[-r] [-s src_addr] "
+literal|"[-r] [-s src_addr] [-u] "
 argument_list|,
 endif|#
 directive|endif
@@ -364,7 +364,7 @@ name|defined
 argument_list|(
 name|IPSEC_POLICY_IPSEC
 argument_list|)
-literal|"[-P policy]"
+literal|"[-P policy] "
 endif|#
 directive|endif
 ifdef|#
@@ -592,14 +592,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'u'
-case|:
-name|family
-operator|=
-name|AF_UNIX
-expr_stmt|;
-break|break;
 case|case
 literal|'4'
 case|:
@@ -1124,6 +1116,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+literal|'u'
+case|:
+name|family
+operator|=
+name|AF_UNIX
+expr_stmt|;
 break|break;
 case|case
 literal|'x'
