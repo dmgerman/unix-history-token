@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.10 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -898,6 +892,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Send a single file.  */
+end_comment
 
 begin_macro
 name|put
@@ -4523,6 +4521,10 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|connected
+condition|)
 name|disconnect
 argument_list|()
 expr_stmt|;

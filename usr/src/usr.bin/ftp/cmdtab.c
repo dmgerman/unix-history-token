@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.7 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,6 +1114,7 @@ begin_decl_stmt
 name|int
 name|NCMDS
 init|=
+operator|(
 sizeof|sizeof
 argument_list|(
 name|cmdtab
@@ -1126,6 +1127,9 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 

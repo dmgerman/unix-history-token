@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.15 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,8 +338,6 @@ operator|->
 name|h_addrtype
 argument_list|,
 name|SOCK_STREAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -2789,8 +2787,6 @@ argument_list|(
 name|AF_INET
 argument_list|,
 name|SOCK_STREAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
