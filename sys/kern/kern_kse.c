@@ -2319,22 +2319,15 @@ name|ncpus
 operator|=
 name|virtual_cpu
 expr_stmt|;
+comment|/* 	 * If the new UTS mailbox says that this 	 * will be a BOUND lwp, then it had better 	 * have its thread mailbox already there. 	 * In addition, this ksegrp will be limited to 	 * a concurrency of 1. There is more on this later. 	 */
 if|if
 condition|(
-operator|!
-operator|(
 name|mbx
 operator|.
 name|km_flags
 operator|&
 name|KMF_BOUND
-operator|)
 condition|)
-name|sa
-operator|=
-name|TDP_SA
-expr_stmt|;
-else|else
 block|{
 if|if
 condition|(
@@ -2352,6 +2345,13 @@ return|;
 name|ncpus
 operator|=
 literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sa
+operator|=
+name|TDP_SA
 expr_stmt|;
 block|}
 name|PROC_LOCK
@@ -2387,18 +2387,20 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Now pay attention! 	 * If we are going to be bound, then we need to be either 	 * a new group, or the first call ever. In either 	 * case we will be creating (or be) the only thread in a group. 	 * and the concurrency will be set to 1. 	 * This is not quite right, as we may still make ourself  	 * bound after making other ksegrps but it will do for now. 	 * The library will only try do this much. 	 */
 if|if
 condition|(
 operator|!
 name|sa
 operator|&&
 operator|!
+operator|(
 name|uap
 operator|->
 name|newgroup
-operator|&&
-operator|!
+operator|||
 name|first
+operator|)
 condition|)
 return|return
 operator|(
@@ -2418,21 +2420,6 @@ operator|->
 name|newgroup
 condition|)
 block|{
-comment|/* Have race condition but it is cheap */
-if|if
-condition|(
-name|p
-operator|->
-name|p_numksegrps
-operator|>=
-name|max_groups_per_proc
-condition|)
-return|return
-operator|(
-name|EPROCLIM
-operator|)
-return|;
-comment|/* 		 * If we want a new KSEGRP it doesn't matter whether 		 * we have already fired up KSE mode before or not. 		 * We put the process in KSE mode and create a new KSEGRP. 		 */
 name|newkg
 operator|=
 name|ksegrp_alloc
@@ -2549,6 +2536,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * We want to make a thread in our own ksegrp. 		 * If we are just the first call, either kind 		 * is ok, but if not then either we must be  		 * already an upcallable thread to make another, 		 * or a bound thread to make one of those. 		 * Once again, not quite right but good enough for now.. XXXKSE 		 */
 if|if
 condition|(
 operator|!
@@ -2562,11 +2550,9 @@ name|td_pflags
 operator|&
 name|TDP_SA
 operator|)
-operator|^
+operator|!=
 name|sa
 operator|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
@@ -2578,20 +2564,7 @@ operator|=
 name|kg
 expr_stmt|;
 block|}
-comment|/* 	 * Creating upcalls more than number of physical cpu does 	 * not help performance. 	 */
-if|if
-condition|(
-name|newkg
-operator|->
-name|kg_numupcalls
-operator|>=
-name|ncpus
-condition|)
-return|return
-operator|(
-name|EPROCLIM
-operator|)
-return|;
+comment|/*  	 * This test is a bit "indirect". 	 * It might simplify things if we made a direct way of testing 	 * if a ksegrp has been worked on before. 	 * In the case of a bound request and the concurrency being set to  	 * one, the concurrency will already be 1 so it's just inefficient 	 * but not dangerous to call this again. XXX 	 */
 if|if
 condition|(
 name|newkg
@@ -2601,7 +2574,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Initialize KSE group 		 * 		 * For multiplxed group, create KSEs as many as physical 		 * cpus. This increases concurrent even if userland 		 * is not MP safe and can only run on single CPU. 		 * In ideal world, every physical cpu should execute a thread. 		 * If there is enough KSEs, threads in kernel can be 		 * executed parallel on different cpus with full speed, 		 * Concurrent in kernel shouldn't be restricted by number of 		 * upcalls userland provides. Adding more upcall structures 		 * only increases concurrent in userland. 		 * 		 * For bound thread group, because there is only thread in the 		 * group, we only create one KSE for the group. Thread in this 		 * kind of group will never schedule an upcall when blocked, 		 * this intends to simulate pthread system scope thread. 		 */
+comment|/* 		 * Initialize KSE group with the appropriate 		 * concurrency. 		 * 		 * For a multiplexed group, create as as much concurrency 		 * as the number of physical cpus. 		 * This increases concurrency in the kernel even if the 		 * userland is not MP safe and can only run on a single CPU. 		 * In an ideal world, every physical cpu should execute a 		 * thread.  If there is enough concurrency, threads in the 		 * kernel can be executed parallel on different cpus at 		 * full speed without being restricted by the number of 		 * upcalls the userland provides. 		 * Adding more upcall structures only increases concurrency 		 * in userland. 		 * 		 * For a bound thread group, because there is only one thread 		 * in the group, we only set the concurrency for the group  		 * to 1.  A thread in this kind of group will never schedule 		 * an upcall when blocked.  This simulates pthread system 		 * scope thread behaviour. 		 */
 while|while
 condition|(
 name|newkg
@@ -2634,12 +2607,6 @@ name|ke_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|mtx_lock_spin(&sched_lock); 			bcopy(&ke->ke_startcopy,&newke->ke_startcopy, 			      RANGEOF(struct kse, ke_startcopy, ke_endcopy)); 			mtx_unlock_spin(&sched_lock);
-endif|#
-directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2674,6 +2641,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*  	 * Even bound LWPs get a mailbox and an upcall to hold it. 	 */
 name|newku
 operator|=
 name|upcall_alloc
@@ -2713,7 +2681,7 @@ name|stack_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* For the first call this may not have been set */
+comment|/* 	 * For the first call this may not have been set. 	 * Of course nor may it actually be needed. 	 */
 if|if
 condition|(
 name|td
@@ -2729,6 +2697,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Creating upcalls more than number of physical cpu does 	 * not help performance. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2759,46 +2728,7 @@ name|EPROCLIM
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|first
-operator|&&
-name|sa
-condition|)
-block|{
-name|SIGSETOR
-argument_list|(
-name|p
-operator|->
-name|p_siglist
-argument_list|,
-name|td
-operator|->
-name|td_siglist
-argument_list|)
-expr_stmt|;
-name|SIGEMPTYSET
-argument_list|(
-name|td
-operator|->
-name|td_siglist
-argument_list|)
-expr_stmt|;
-name|SIGFILLSET
-argument_list|(
-name|td
-operator|->
-name|td_sigmask
-argument_list|)
-expr_stmt|;
-name|SIG_CANTMASK
-argument_list|(
-name|td
-operator|->
-name|td_sigmask
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	 * If we are the first time, and a normal thread, 	 * then trnasfer all the signals back to the 'process'. 	 * SA threading will make a special thread to handle them. 	if (first&& sa) { 		SIGSETOR(p->p_siglist, td->td_siglist); 		SIGEMPTYSET(td->td_siglist); 		SIGFILLSET(td->td_sigmask); 		SIG_CANTMASK(td->td_sigmask); 	}  	/* 	 * Make the new upcall available to the ksegrp,. 	 *  It may or may not use it, but its available. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2846,7 +2776,7 @@ operator|->
 name|newgroup
 condition|)
 block|{
-comment|/* 		 * Because new ksegrp hasn't thread, 		 * create an initial upcall thread to own it. 		 */
+comment|/* 		 * Because the new ksegrp hasn't a thread, 		 * create an initial upcall thread to own it. 		 */
 name|newtd
 operator|=
 name|thread_schedule_upcall
@@ -2859,7 +2789,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If current thread hasn't an upcall structure, 		 * just assign the upcall to it. 		 */
+comment|/* 		 * If the current thread hasn't an upcall structure, 		 * just assign the upcall to it. 		 * It'll just return. 		 */
 if|if
 condition|(
 name|td
@@ -2906,6 +2836,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Let the UTS instance know its LWPID. 	 * It doesn't really care. But the debugger will. 	 */
 name|suword32
 argument_list|(
 operator|&
@@ -2920,6 +2851,7 @@ operator|->
 name|td_tid
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In the same manner, if the UTS has a current user thread,  	 * then it is also running on this LWP so set it as well. 	 * The library could do that of course.. but why not.. 	 */
 if|if
 condition|(
 name|mbx
@@ -2942,10 +2874,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sa
 condition|)
 block|{
+name|newtd
+operator|->
+name|td_pflags
+operator||=
+name|TDP_SA
+expr_stmt|;
+block|}
+else|else
+block|{
+name|newtd
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_SA
+expr_stmt|;
+comment|/* 		 * Since a library will use the mailbox pointer to  		 * identify even a bound thread, and the mailbox pointer 		 * will never be allowed to change after this syscall 		 * for a bound thread, set it here so the library can 		 * find the thread after the syscall returns. 		 */
 name|newtd
 operator|->
 name|td_mailbox
@@ -2954,13 +2902,6 @@ name|mbx
 operator|.
 name|km_curthread
 expr_stmt|;
-name|newtd
-operator|->
-name|td_pflags
-operator|&=
-operator|~
-name|TDP_SA
-expr_stmt|;
 if|if
 condition|(
 name|newtd
@@ -2968,6 +2909,7 @@ operator|!=
 name|td
 condition|)
 block|{
+comment|/* 			 * If we did create a new thread then 			 * make sure it goes to the right place 			 * when it starts up, and make sure that it runs  			 * at full speed when it gets there.  			 * thread_schedule_upcall() copies all cpu state 			 * to the new thread, so we should clear single step 			 * flag here. 			 */
 name|cpu_set_upcall_kse
 argument_list|(
 name|newtd
@@ -2990,15 +2932,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|newtd
-operator|->
-name|td_pflags
-operator||=
-name|TDP_SA
-expr_stmt|;
-block|}
+comment|/*  	 * If we are starting a new thread, kick it off. 	 */
 if|if
 condition|(
 name|newtd
