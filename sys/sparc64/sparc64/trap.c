@@ -150,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/emul.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
@@ -732,7 +726,7 @@ condition|(
 operator|(
 name|sig
 operator|=
-name|fp_exception
+name|fp_exception_other
 argument_list|(
 name|td
 argument_list|,
