@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	5.9 (Berkeley) %G%"
+literal|"@(#)sysctl.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,16 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|ctlname
+name|username
+index|[]
+init|=
+name|CTL_USER_NAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctlname
 name|debugname
 index|[
 name|CTL_DEBUG_MAXID
@@ -321,6 +331,13 @@ literal|0
 block|}
 block|,
 comment|/* CTL_MACHDEP */
+block|{
+name|username
+block|,
+name|USER_MAXID
+block|}
+block|,
+comment|/* CTL_USER_NAMES */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1279,6 +1296,9 @@ name|CTL_FS
 case|:
 case|case
 name|CTL_MACHDEP
+case|:
+case|case
+name|CTL_USER
 case|:
 break|break;
 default|default:
