@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/aio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2228,6 +2234,14 @@ operator|->
 name|vmspace_destroyed
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 	 * Prevent a pending AIO from modifying the new address space. 	 */
+name|aio_proc_rundown
+argument_list|(
+name|imgp
+operator|->
+name|proc
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Blow away entire process VM, if address space not shared, 	 * otherwise, create a new VM space so that other threads are 	 * not disrupted 	 */
 if|if
