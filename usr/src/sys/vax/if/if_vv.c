@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.17	83/05/10	*/
+comment|/*	if_vv.c	4.18	83/05/10	*/
 end_comment
 
 begin_include
@@ -933,6 +933,36 @@ name|UBA_NEEDBDP
 operator||
 name|UBA_NEED16
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+comment|/* don't chew up 750 bdp's */
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_750
+operator|&&
+name|ui
+operator|->
+name|ui_unit
+operator|>
+literal|0
+condition|)
+name|vs
+operator|->
+name|vs_ifuba
+operator|.
+name|ifu_flags
+operator|&=
+operator|~
+name|UBA_NEEDBDP
+expr_stmt|;
+endif|#
+directive|endif
 name|if_attach
 argument_list|(
 operator|&
