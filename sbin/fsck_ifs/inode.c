@@ -2065,7 +2065,7 @@ name|inphead
 index|[
 name|inumber
 operator|%
-name|numdirs
+name|dirhash
 index|]
 expr_stmt|;
 name|inp
@@ -2250,7 +2250,7 @@ name|inphead
 index|[
 name|inumber
 operator|%
-name|numdirs
+name|dirhash
 index|]
 init|;
 name|inp

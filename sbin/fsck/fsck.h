@@ -610,6 +610,8 @@ begin_decl_stmt
 name|long
 name|numdirs
 decl_stmt|,
+name|dirhash
+decl_stmt|,
 name|listmax
 decl_stmt|,
 name|inplast

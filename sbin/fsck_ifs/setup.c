@@ -1543,6 +1543,10 @@ name|fs_cstotal
 operator|.
 name|cs_ndir
 expr_stmt|;
+name|dirhash
+operator|=
+name|numdirs
+expr_stmt|;
 if|if
 condition|(
 name|numdirs
