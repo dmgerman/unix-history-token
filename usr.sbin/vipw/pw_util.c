@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_util.c,v 1.12 1998/12/13 01:36:45 dillon Exp $"
+literal|"$Id: pw_util.c,v 1.13 1998/12/13 01:39:32 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,24 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lockfd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mppath
+init|=
+name|_PATH_PWD
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|masterpasswd
+init|=
+name|_PATH_MASTERPASSWD
 decl_stmt|;
 end_decl_stmt
 
@@ -393,7 +411,7 @@ name|lockfd
 operator|=
 name|open
 argument_list|(
-name|_PATH_MASTERPASSWD
+name|masterpasswd
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -424,7 +442,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|_PATH_MASTERPASSWD
+name|masterpasswd
 argument_list|)
 expr_stmt|;
 if|if
@@ -504,8 +522,6 @@ name|path
 index|[
 name|MAXPATHLEN
 index|]
-init|=
-name|_PATH_MASTERPASSWD
 decl_stmt|;
 name|int
 name|fd
@@ -514,6 +530,24 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|strncpy
+argument_list|(
+name|path
+argument_list|,
+name|masterpasswd
+argument_list|,
+name|MAXPATHLEN
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|path
+index|[
+name|MAXPATHLEN
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -632,6 +666,10 @@ literal|"pwd_mkdb"
 argument_list|,
 literal|"-p"
 argument_list|,
+literal|"-d"
+argument_list|,
+name|mppath
+argument_list|,
 name|tempname
 argument_list|,
 name|NULL
@@ -652,6 +690,10 @@ argument_list|,
 literal|"pwd_mkdb"
 argument_list|,
 literal|"-p"
+argument_list|,
+literal|"-d"
+argument_list|,
+name|mppath
 argument_list|,
 literal|"-u"
 argument_list|,
@@ -1054,7 +1096,7 @@ name|warnx
 argument_list|(
 literal|"%s: unchanged"
 argument_list|,
-name|_PATH_MASTERPASSWD
+name|masterpasswd
 argument_list|)
 expr_stmt|;
 operator|(
