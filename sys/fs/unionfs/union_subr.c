@@ -4625,7 +4625,7 @@ comment|/* 	 * Do not set the uppervp to NULLVP.  If lowervp is NULLVP, 	 * unio
 end_comment
 
 begin_endif
-unit|union_newupper(un, NULLVP); 	if (un->un_dircache != 0) { 		for (vpp = un->un_dircache; *vpp != NULLVP; vpp++) 			vrele(*vpp); 		free(un->un_dircache, M_TEMP); 		un->un_dircache = 0; 	}  	if (un->un_flags& UN_CACHED) { 		un->un_flags&= ~UN_CACHED; 		LIST_REMOVE(un, un_cache); 	} }
+unit|union_newupper(un, NULLVP); 	if (un->un_dircache != NULL) 		union_dircache_free(un);  	if (un->un_flags& UN_CACHED) { 		un->un_flags&= ~UN_CACHED; 		LIST_REMOVE(un, un_cache); 	} }
 endif|#
 directive|endif
 end_endif
@@ -4802,8 +4802,9 @@ operator|)
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
+else|else
+block|{
 name|un
 operator|=
 name|VTOUNION
@@ -4850,13 +4851,14 @@ name|cntp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
 name|struct
 name|vnode
 modifier|*
-name|union_dircache
+name|union_dircache_get
 parameter_list|(
 name|vp
 parameter_list|,
@@ -5205,6 +5207,62 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|union_dircache_free
+parameter_list|(
+name|struct
+name|union_node
+modifier|*
+name|un
+parameter_list|)
+block|{
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+for|for
+control|(
+name|vpp
+operator|=
+name|un
+operator|->
+name|un_dircache
+init|;
+operator|*
+name|vpp
+operator|!=
+name|NULLVP
+condition|;
+name|vpp
+operator|++
+control|)
+name|vrele
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|un
+operator|->
+name|un_dircache
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|un
+operator|->
+name|un_dircache
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Module glue to remove #ifdef UNION from vfs_syscalls.c  */
 end_comment
@@ -5255,7 +5313,7 @@ name|lvp
 decl_stmt|;
 name|lvp
 operator|=
-name|union_dircache
+name|union_dircache_get
 argument_list|(
 operator|*
 name|vp

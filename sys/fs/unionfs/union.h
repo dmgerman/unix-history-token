@@ -311,7 +311,7 @@ specifier|extern
 name|struct
 name|vnode
 modifier|*
-name|union_dircache
+name|union_dircache_get
 parameter_list|(
 name|struct
 name|vnode
@@ -319,6 +319,18 @@ modifier|*
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|union_dircache_free
+parameter_list|(
+name|struct
+name|union_node
 modifier|*
 parameter_list|)
 function_decl|;
