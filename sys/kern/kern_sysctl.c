@@ -2243,6 +2243,15 @@ name|oidp
 expr_stmt|;
 if|if
 condition|(
+name|oidp
+operator|->
+name|oid_kind
+operator|&
+name|CTLFLAG_SKIP
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|!
 name|namelen
 condition|)

@@ -263,6 +263,17 @@ begin_comment
 comment|/* Dynamic oid - can be freed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CTLFLAG_SKIP
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Skip this sysctl when listing */
+end_comment
+
 begin_comment
 comment|/*  * USE THIS instead of a hardwired number from the categories below  * to get dynamically assigned sysctl entries using the linker-set  * technology. This is the way nearly all new sysctl variables should  * be implemented.  * e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW,&variable, 0, "");  */
 end_comment
