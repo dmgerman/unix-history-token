@@ -1627,7 +1627,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"bwrite: no bufobj bp=%p"
+literal|"bstrategy: no bufobj bp=%p"
 operator|,
 name|bp
 operator|)
@@ -1644,7 +1644,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"bwrite: no bo_ops bp=%p"
+literal|"bstrategy: no bo_ops bp=%p"
 operator|,
 name|bp
 operator|)
@@ -1663,7 +1663,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"bwrite: no bop_strategy bp=%p"
+literal|"bstrategy: no bop_strategy bp=%p"
 operator|,
 name|bp
 operator|)
