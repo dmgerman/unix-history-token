@@ -620,8 +620,6 @@ name|big
 condition|)
 block|{
 comment|/* here i = 0 */
-name|LINEAR
-label|:
 while|while
 condition|(
 operator|(
@@ -762,8 +760,6 @@ name|b
 operator|=
 name|p
 expr_stmt|;
-name|SLOWCASE
-label|:
 while|while
 condition|(
 name|t
