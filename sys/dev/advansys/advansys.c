@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the Advanced Systems Inc. SCSI controllers  * Product specific probe and attach routines can be found in:  *   * i386/isa/adv_isa.c	ABP5140, ABP542, ABP5150, ABP842, ABP852  * i386/eisa/adv_eisa.c	ABP742, ABP752  * pci/adv_pci.c	ABP920, ABP930, ABP930U, ABP930UA, ABP940, ABP940U,  *			ABP940UA, ABP950, ABP960, ABP960U, ABP960UA,  *			ABP970, ABP970U  *  * Copyright (c) 1996-1998 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: advansys.c,v 1.2 1998/09/20 05:04:05 gibbs Exp $  */
+comment|/*  * Generic driver for the Advanced Systems Inc. SCSI controllers  * Product specific probe and attach routines can be found in:  *   * i386/isa/adv_isa.c	ABP5140, ABP542, ABP5150, ABP842, ABP852  * i386/eisa/adv_eisa.c	ABP742, ABP752  * pci/adv_pci.c	ABP920, ABP930, ABP930U, ABP930UA, ABP940, ABP940U,  *			ABP940UA, ABP950, ABP960, ABP960U, ABP960UA,  *			ABP970, ABP970U  *  * Copyright (c) 1996-1998 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: advansys.c,v 1.3 1998/10/07 03:32:56 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -132,19 +132,6 @@ name|u_long
 name|adv_unit
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|advminphys
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -906,9 +893,6 @@ name|struct
 name|ccb_trans_settings
 modifier|*
 name|cts
-decl_stmt|;
-name|u_int
-name|offset
 decl_stmt|;
 name|target_bit_vector
 name|targ_mask
@@ -2750,50 +2734,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|advminphys
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{
-if|if
-condition|(
-name|bp
-operator|->
-name|b_bcount
-operator|>
-operator|(
-operator|(
-name|ADV_MAX_SG_LIST
-operator|-
-literal|1
-operator|)
-operator|*
-name|PAGE_SIZE
-operator|)
-condition|)
-name|bp
-operator|->
-name|b_bcount
-operator|=
-operator|(
-operator|(
-name|ADV_MAX_SG_LIST
-operator|-
-literal|1
-operator|)
-operator|*
-name|PAGE_SIZE
-operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|void
 name|adv_timeout
 parameter_list|(
@@ -3135,9 +3075,6 @@ name|adv_softc
 modifier|*
 name|adv
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|unit
@@ -3321,7 +3258,7 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
-name|adv_free_ccb_info
+name|adv_destroy_ccb_info
 argument_list|(
 name|adv
 argument_list|,
@@ -4245,9 +4182,6 @@ name|ctrl_reg
 decl_stmt|;
 name|u_int8_t
 name|saved_ctrl_reg
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 name|u_int8_t
 name|host_flag
@@ -5295,17 +5229,9 @@ condition|)
 block|{
 comment|/* 		 * We now traverse our list of pending CCBs and reinstate 		 * their timeouts. 		 */
 name|struct
-name|cam_path
-modifier|*
-name|path
-decl_stmt|;
-name|struct
 name|ccb_hdr
 modifier|*
 name|ccb_h
-decl_stmt|;
-name|cam_status
-name|error
 decl_stmt|;
 name|ccb_h
 operator|=
