@@ -39,7 +39,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lstInt.h"
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lst.h"
 end_include
 
 begin_comment

@@ -39,7 +39,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lstInt.h"
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lst.h"
 end_include
 
 begin_comment
@@ -64,12 +70,7 @@ condition|)
 block|{
 return|return
 operator|(
-operator|(
-operator|(
-name|ListNode
-operator|)
 name|ln
-operator|)
 operator|->
 name|datum
 operator|)
@@ -79,10 +80,6 @@ else|else
 block|{
 return|return
 operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;

@@ -39,11 +39,17 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lstInt.h"
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *	If LST_CONCLINK is specified, the second list is destroyed since  *	its pointers have been corrupted and the list is no longer useable.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	l1	The list to which l2 is to be appended  *	l2	The list to append to l1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *	If LST_CONCLINK is specified, the second list is destroyed since  *	its pointers have been corrupted and the list is no longer useable.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -51,55 +57,39 @@ name|ReturnStatus
 name|Lst_Concat
 parameter_list|(
 name|Lst
-name|l1
+name|list1
 parameter_list|,
 name|Lst
-name|l2
+name|list2
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
-name|ListNode
+name|LstNode
 name|ln
 decl_stmt|;
 comment|/* original LstNode */
-name|ListNode
+name|LstNode
 name|nln
 decl_stmt|;
 comment|/* new LstNode */
-name|ListNode
+name|LstNode
 name|last
 decl_stmt|;
-comment|/* the last element in the list. Keeps 				 * bookkeeping until the end */
-name|List
-name|list1
-init|=
-operator|(
-name|List
-operator|)
-name|l1
-decl_stmt|;
-name|List
-name|list2
-init|=
-operator|(
-name|List
-operator|)
-name|l2
-decl_stmt|;
+comment|/* the last element in the list. Keeps 			 * bookkeeping until the end */
 if|if
 condition|(
 operator|!
-name|LstValid
+name|Lst_Valid
 argument_list|(
-name|l1
+name|list1
 argument_list|)
 operator|||
 operator|!
-name|LstValid
+name|Lst_Valid
 argument_list|(
-name|l2
+name|list2
 argument_list|)
 condition|)
 block|{
@@ -222,7 +212,7 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|l2
+name|list2
 argument_list|)
 expr_stmt|;
 block|}
@@ -236,7 +226,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * We set the nextPtr of the last element of list 2 to be NULL to make 	 * the loop less difficult. The loop simply goes through the entire 	 * second list creating new LstNodes and filling in the nextPtr, and 	 * prevPtr to fit into l1 and its datum field from the 	 * datum field of the corresponding element in l2. The 'last' node 	 * follows the last of the new nodes along until the entire l2 has 	 * been appended. Only then does the bookkeeping catch up with the 	 * changes. During the first iteration of the loop, if 'last' is NULL, 	 * the first list must have been empty so the newly-created node is 	 * made the first node of the list. 	 */
+comment|/* 	 * We set the nextPtr of the last element of list 2 to be NULL to make 	 * the loop less difficult. The loop simply goes through the entire 	 * second list creating new LstNodes and filling in the nextPtr, and 	 * prevPtr to fit into list1 and its datum field from the 	 * datum field of the corresponding element in list2. The 'last' node 	 * follows the last of the new nodes along until the entire list2 has 	 * been appended. Only then does the bookkeeping catch up with the 	 * changes. During the first iteration of the loop, if 'last' is NULL, 	 * the first list must have been empty so the newly-created node is 	 * made the first node of the list. 	 */
 name|list2
 operator|->
 name|lastPtr
@@ -270,11 +260,15 @@ operator|->
 name|nextPtr
 control|)
 block|{
-name|PAlloc
-argument_list|(
 name|nln
-argument_list|,
-name|ListNode
+operator|=
+name|emalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|nln
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nln

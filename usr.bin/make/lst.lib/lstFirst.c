@@ -39,7 +39,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lstInt.h"
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lst.h"
 end_include
 
 begin_comment
@@ -57,12 +63,12 @@ block|{
 if|if
 condition|(
 operator|!
-name|LstValid
+name|Lst_Valid
 argument_list|(
 name|l
 argument_list|)
 operator|||
-name|LstIsEmpty
+name|Lst_IsEmpty
 argument_list|(
 name|l
 argument_list|)
@@ -78,15 +84,7 @@ else|else
 block|{
 return|return
 operator|(
-call|(
-name|LstNode
-call|)
-argument_list|(
-operator|(
-name|List
-operator|)
 name|l
-argument_list|)
 operator|->
 name|firstPtr
 operator|)

@@ -39,7 +39,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lstInt.h"
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lst.h"
 end_include
 
 begin_comment
@@ -74,7 +80,7 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-name|ListNode
+name|LstNode
 name|tln
 decl_stmt|;
 name|Boolean
@@ -85,18 +91,18 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|LstValid
+name|Lst_Valid
 argument_list|(
 name|l
 argument_list|)
 operator|||
-name|LstIsEmpty
+name|Lst_IsEmpty
 argument_list|(
 name|l
 argument_list|)
 operator|||
 operator|!
-name|LstNodeValid
+name|Lst_NodeValid
 argument_list|(
 name|ln
 argument_list|,
@@ -112,9 +118,6 @@ return|;
 block|}
 name|tln
 operator|=
-operator|(
-name|ListNode
-operator|)
 name|ln
 expr_stmt|;
 do|do
@@ -156,9 +159,6 @@ do|while
 condition|(
 name|tln
 operator|!=
-operator|(
-name|ListNode
-operator|)
 name|ln
 operator|&&
 name|tln
@@ -173,9 +173,6 @@ condition|)
 block|{
 return|return
 operator|(
-operator|(
-name|LstNode
-operator|)
 name|tln
 operator|)
 return|;

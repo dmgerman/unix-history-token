@@ -39,7 +39,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lstInt.h"
+file|"make.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lst.h"
 end_include
 
 begin_comment
@@ -51,7 +57,7 @@ name|void
 name|Lst_Destroy
 parameter_list|(
 name|Lst
-name|l
+name|list
 parameter_list|,
 name|void
 function_decl|(
@@ -64,30 +70,22 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-name|ListNode
+name|LstNode
 name|ln
 decl_stmt|;
-name|ListNode
+name|LstNode
 name|tln
 init|=
 name|NULL
 decl_stmt|;
-name|List
-name|list
-init|=
-operator|(
-name|List
-operator|)
-name|l
-decl_stmt|;
 if|if
 condition|(
-name|l
+name|list
 operator|==
 name|NULL
 operator|||
 operator|!
-name|l
+name|list
 condition|)
 block|{
 comment|/* 	 * Note the check for l == (Lst)0 to catch uninitialized static Lst's. 	 * Gross, but useful. 	 */
@@ -114,7 +112,7 @@ else|else
 block|{
 name|free
 argument_list|(
-name|l
+name|list
 argument_list|)
 expr_stmt|;
 return|return;
@@ -198,7 +196,7 @@ block|}
 block|}
 name|free
 argument_list|(
-name|l
+name|list
 argument_list|)
 expr_stmt|;
 block|}

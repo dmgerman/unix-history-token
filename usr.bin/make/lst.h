@@ -38,24 +38,133 @@ file|"sprite.h"
 end_include
 
 begin_comment
-comment|/*  * basic typedef. This is what the Lst_ functions handle  */
+comment|/*  * Structure of a list node.  */
+end_comment
+
+begin_struct
+struct|struct
+name|LstNode
+block|{
+name|struct
+name|LstNode
+modifier|*
+name|prevPtr
+decl_stmt|;
+comment|/* previous element in list */
+name|struct
+name|LstNode
+modifier|*
+name|nextPtr
+decl_stmt|;
+comment|/* next in list */
+name|int
+name|useCount
+range|:
+literal|8
+decl_stmt|;
+comment|/* Count of functions using the node. Node may not 			     * be deleted until count goes to 0 */
+name|int
+name|flags
+range|:
+literal|8
+decl_stmt|;
+comment|/* Node status flags */
+name|void
+modifier|*
+name|datum
+decl_stmt|;
+comment|/* datum associated with this element */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|LstNode
+modifier|*
+name|LstNode
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Flags required for synchronization  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LN_DELETED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* List node should be removed when done */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|struct
-name|Lst
-modifier|*
-name|Lst
+enum|enum
+block|{
+name|LstHead
+block|,
+name|LstMiddle
+block|,
+name|LstTail
+block|,
+name|LstUnknown
+block|}
+name|LstWhere
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * The list itself  */
+end_comment
+
+begin_struct
+struct|struct
+name|Lst
+block|{
+name|LstNode
+name|firstPtr
+decl_stmt|;
+comment|/* first node in list */
+name|LstNode
+name|lastPtr
+decl_stmt|;
+comment|/* last node in list */
+name|Boolean
+name|isCirc
+decl_stmt|;
+comment|/* true if the list should be considered 				   * circular */
+comment|/* 	 * fields for sequential access 	 */
+name|LstWhere
+name|atEnd
+decl_stmt|;
+comment|/* Where in the list the last access was */
+name|Boolean
+name|isOpen
+decl_stmt|;
+comment|/* true if list has been Lst_Open'ed */
+name|LstNode
+name|curPtr
+decl_stmt|;
+comment|/* current node, if open. NULL if 				   * *just* opened */
+name|LstNode
+name|prevPtr
+decl_stmt|;
+comment|/* Previous node, if open. Used by 				   * Lst_Remove */
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
 name|struct
-name|LstNode
+name|Lst
 modifier|*
-name|LstNode
+name|Lst
 typedef|;
 end_typedef
 
@@ -157,19 +266,6 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* True if list is empty */
-end_comment
-
-begin_function_decl
-name|Boolean
-name|Lst_IsEmpty
-parameter_list|(
-name|Lst
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -577,6 +673,50 @@ name|Lst
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * LstValid (L) --  *	Return TRUE if the list L is valid  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Lst_Valid
+parameter_list|(
+name|L
+parameter_list|)
+value|(((L) == NULL) ? FALSE : TRUE)
+end_define
+
+begin_comment
+comment|/*  * LstNodeValid (LN, L) --  *	Return TRUE if the LstNode LN is valid with respect to L  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Lst_NodeValid
+parameter_list|(
+name|LN
+parameter_list|,
+name|L
+parameter_list|)
+value|(((LN) == NULL) ? FALSE : TRUE)
+end_define
+
+begin_comment
+comment|/*  * Lst_IsEmpty(L) --  *	TRUE if the list L is empty.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Lst_IsEmpty
+parameter_list|(
+name|L
+parameter_list|)
+value|(!Lst_Valid(L) || (L)->firstPtr == NULL)
+end_define
 
 begin_endif
 endif|#
