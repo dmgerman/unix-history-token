@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.7 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,8 @@ block|{
 name|ino_t
 name|ino
 decl_stmt|;
-name|time_t
+name|struct
+name|timeval
 name|timep
 index|[
 literal|2
@@ -2449,7 +2450,7 @@ operator|.
 name|mode
 argument_list|)
 expr_stmt|;
-name|utime
+name|utimes
 argument_list|(
 name|cp
 argument_list|,
@@ -2943,6 +2944,8 @@ name|timep
 index|[
 literal|0
 index|]
+operator|.
+name|tv_sec
 operator|=
 name|dip
 operator|->
@@ -2952,12 +2955,36 @@ name|node
 operator|.
 name|timep
 index|[
+literal|0
+index|]
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|node
+operator|.
+name|timep
+index|[
 literal|1
 index|]
+operator|.
+name|tv_sec
 operator|=
 name|dip
 operator|->
 name|di_mtime
+expr_stmt|;
+name|node
+operator|.
+name|timep
+index|[
+literal|1
+index|]
+operator|.
+name|tv_usec
+operator|=
+literal|0
 expr_stmt|;
 name|node
 operator|.
