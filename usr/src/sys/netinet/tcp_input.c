@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2286,6 +2286,31 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
+comment|/* 			 * Don't toss RST in response to 4.2-style keepalive. 			 */
+if|if
+condition|(
+name|ti
+operator|->
+name|ti_seq
+operator|==
+name|tp
+operator|->
+name|rcv_nxt
+operator|-
+literal|1
+operator|&&
+name|tiflags
+operator|&
+name|TH_RST
+condition|)
+goto|goto
+name|do_rst
+goto|;
+endif|#
+directive|endif
 name|tcpstat
 operator|.
 name|tcps_rcvduppack
@@ -2654,6 +2679,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
+name|do_rst
+label|:
+endif|#
+directive|endif
 comment|/* 	 * If the RST bit is set examine the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK, TIME_WAIT STATES 	 *	Close the tcb. 	 */
 if|if
 condition|(
