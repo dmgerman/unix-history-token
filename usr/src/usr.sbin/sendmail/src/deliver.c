@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.117
+literal|3.118
 operator|%
 name|G
 operator|%
@@ -5381,6 +5381,15 @@ condition|(
 name|qq
 operator|==
 name|NULL
+operator|&&
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 name|sendto
 argument_list|(
