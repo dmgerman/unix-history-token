@@ -216,6 +216,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arpa/nameser.h>
 end_include
 
@@ -559,6 +565,18 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+operator||
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* Are we w(1) or uptime(1)? */
 name|p
 operator|=
