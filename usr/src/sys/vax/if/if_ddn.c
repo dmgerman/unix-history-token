@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	7.2 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	7.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"machine/pte.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	prf.c	1.4	88/03/03	*/
+comment|/*	prf.c	1.5	89/04/25	*/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"machine/mtpr.h"
 end_include
 
 begin_include
