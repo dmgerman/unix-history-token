@@ -105,7 +105,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.33 %G%"
+literal|"@(#)sccs.c	1.34 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,17 @@ end_define
 
 begin_comment
 comment|/* unedit a file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHELL
+value|5
+end_define
+
+begin_comment
+comment|/* call a shell file (like PROG) */
 end_comment
 
 begin_comment
@@ -457,6 +468,19 @@ block|,
 name|PROGPATH
 argument_list|(
 name|what
+argument_list|)
+block|,
+literal|"sccsdiff"
+block|,
+name|SHELL
+block|,
+name|REALUSER
+block|,
+literal|""
+block|,
+name|PROGPATH
+argument_list|(
+name|sccsdiff
 argument_list|)
 block|,
 literal|"edit"
@@ -941,11 +965,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|q
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -971,6 +990,7 @@ modifier|*
 modifier|*
 name|np
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
 modifier|*
@@ -979,6 +999,11 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|q
 decl_stmt|;
 specifier|extern
 name|bool
@@ -1045,7 +1070,13 @@ directive|endif
 comment|/* 	**  Copy arguments. 	**	Phase one -- from arg0& if necessary argv[0]. 	*/
 name|np
 operator|=
+name|ap
+operator|=
+operator|&
 name|nav
+index|[
+literal|1
+index|]
 expr_stmt|;
 for|for
 control|(
@@ -1124,10 +1155,8 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|nav
-index|[
-literal|0
-index|]
+operator|*
+name|ap
 operator|==
 name|NULL
 condition|)
@@ -1139,15 +1168,13 @@ operator|*
 name|argv
 operator|++
 expr_stmt|;
-comment|/* 	**  Look up command. 	**	At this point, nav[0] is the command name. 	*/
+comment|/* 	**  Look up command. 	**	At this point, *ap is the command name. 	*/
 name|cmd
 operator|=
 name|lookup
 argument_list|(
-name|nav
-index|[
-literal|0
-index|]
+operator|*
+name|ap
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,10 +1188,8 @@ name|usrerr
 argument_list|(
 literal|"Unknown command \"%s\""
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+operator|*
+name|ap
 argument_list|)
 expr_stmt|;
 return|return
@@ -1287,6 +1312,39 @@ name|sccsoper
 condition|)
 block|{
 case|case
+name|SHELL
+case|:
+comment|/* call a shell file */
+operator|*
+name|ap
+operator|=
+name|cmd
+operator|->
+name|sccspath
+expr_stmt|;
+operator|*
+operator|--
+name|ap
+operator|=
+literal|"sh"
+expr_stmt|;
+name|rval
+operator|=
+name|callprog
+argument_list|(
+literal|"/bin/sh"
+argument_list|,
+name|cmd
+operator|->
+name|sccsflags
+argument_list|,
+name|ap
+argument_list|,
+name|forkflag
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PROG
 case|:
 comment|/* call an sccs prog */
@@ -1302,7 +1360,7 @@ name|cmd
 operator|->
 name|sccsflags
 argument_list|,
-name|nav
+name|ap
 argument_list|,
 name|forkflag
 argument_list|)
@@ -1353,7 +1411,7 @@ operator|=
 name|command
 argument_list|(
 operator|&
-name|nav
+name|ap
 index|[
 literal|1
 index|]
@@ -1385,7 +1443,7 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|nav
+name|ap
 index|[
 literal|1
 index|]
@@ -1414,7 +1472,7 @@ operator|=
 name|command
 argument_list|(
 operator|&
-name|nav
+name|ap
 index|[
 literal|1
 index|]
@@ -1437,7 +1495,7 @@ operator|=
 name|command
 argument_list|(
 operator|&
-name|nav
+name|ap
 index|[
 literal|1
 index|]
@@ -1460,7 +1518,7 @@ operator|=
 name|command
 argument_list|(
 operator|&
-name|nav
+name|ap
 index|[
 literal|2
 index|]
@@ -1499,7 +1557,7 @@ operator|=
 name|np
 operator|=
 operator|&
-name|nav
+name|ap
 index|[
 literal|1
 index|]
@@ -1545,7 +1603,7 @@ operator|=
 name|command
 argument_list|(
 operator|&
-name|nav
+name|ap
 index|[
 literal|1
 index|]
