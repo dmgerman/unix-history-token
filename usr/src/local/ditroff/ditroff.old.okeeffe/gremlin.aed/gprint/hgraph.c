@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.3	83/03/30  *  * Copyright -C- 1982 Barry S. Roitblat  *  *     This file contains the graphics routines for hard copy (gprint)   * production of gremlin files.  *  */
+comment|/*	hgraph.c	1.4	83/05/05  *  * Copyright -C- 1982 Barry S. Roitblat  *  *     This file contains the graphics routines for hard copy (gprint)   * production of gremlin files.  *  */
 end_comment
 
 begin_include
@@ -4432,11 +4432,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't get font file"
+literal|"Can't get font file\n"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the header and check magic number */
@@ -4470,11 +4472,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Bad read in font file"
+literal|"Bad read in font file\n"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4490,11 +4494,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Bad magic numer in font file"
+literal|"Bad magic numer in font file\n"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get dispatches */
@@ -4527,11 +4533,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Bad read in font file"
+literal|"Bad read in font file\n"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Allocate space for bit map and read in bits */
@@ -4586,11 +4594,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't read bit map in font file"
+literal|"Can't read bit map in font file\n"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Close font file */
@@ -4613,14 +4623,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't close font file"
+literal|"Can't close font file\n"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-name|abort
-argument_list|()
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}
