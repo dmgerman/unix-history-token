@@ -620,6 +620,12 @@ begin_comment
 comment|/* doing high speed ... */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -641,6 +647,11 @@ end_define
 begin_comment
 comment|/* jazz16 type 2 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -719,6 +730,12 @@ begin_comment
 comment|/* this is a vibra16X or clone */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -729,6 +746,11 @@ end_define
 begin_comment
 comment|/* midi busy */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -745,6 +767,12 @@ begin_comment
 comment|/*  * on some SB16 cards, at times I swap DMA channels. Remember this  * so that they can be restored later.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -755,6 +783,11 @@ end_define
 begin_comment
 comment|/* have swapped DMA channels */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -768,13 +801,6 @@ define|#
 directive|define
 name|BD_F_DMARUN2
 value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BD_F_DUPLEX
-value|0x8000
 end_define
 
 begin_comment
