@@ -673,7 +673,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fedisableexcpt
+name|fedisableexcept
 parameter_list|(
 name|int
 name|__mask
