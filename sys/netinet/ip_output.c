@@ -2628,6 +2628,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|PFIL_OUT
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if

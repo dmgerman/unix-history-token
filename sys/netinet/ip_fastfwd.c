@@ -1206,6 +1206,8 @@ operator|.
 name|rcvif
 argument_list|,
 name|PFIL_IN
+argument_list|,
+name|NULL
 argument_list|)
 operator|||
 name|m
@@ -1445,6 +1447,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|PFIL_OUT
+argument_list|,
+name|NULL
 argument_list|)
 operator|||
 name|m

@@ -161,6 +161,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void
@@ -468,6 +472,11 @@ name|ifp
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 block|{
 name|struct
@@ -564,6 +573,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|dir
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
@@ -971,6 +982,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void
@@ -1326,6 +1341,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void
@@ -1575,6 +1594,10 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void
