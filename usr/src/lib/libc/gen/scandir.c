@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	5.7 (Berkeley) %G%"
+literal|"@(#)scandir.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,11 +104,9 @@ begin_decl_stmt
 name|struct
 name|dirent
 modifier|*
-argument_list|(
-operator|*
+modifier|*
+modifier|*
 name|namelist
-index|[]
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
