@@ -208,20 +208,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Store each hook's link number in the private field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINK_NUM
-parameter_list|(
-name|hook
-parameter_list|)
-value|(*(int16_t *)(&(hook)->private))
-end_define
-
-begin_comment
 comment|/****************************************************************** 		    NETGRAPH PARSE TYPES ******************************************************************/
 end_comment
 
