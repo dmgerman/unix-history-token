@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -145,6 +145,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* fd describing socket */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|NetName
+init|=
+literal|"ARPA"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of home (local?) network */
 end_comment
 
 begin_macro

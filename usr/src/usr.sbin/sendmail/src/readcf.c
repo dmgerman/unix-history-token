@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -2155,6 +2155,18 @@ begin_comment
 comment|/* the stored wizard password */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|NetName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of home (local) network */
+end_comment
+
 begin_macro
 name|setoption
 argument_list|(
@@ -2613,6 +2625,24 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DAEMON
+case|case
+literal|'N'
+case|:
+comment|/* home (local?) network name */
+name|NetName
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|DAEMON
 case|case
 literal|'o'
 case|:
