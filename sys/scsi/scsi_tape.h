@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.13 1995/05/30 08:13:43 rgrimes Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.14 1995/11/30 07:43:46 pst Exp $  */
 end_comment
 
 begin_ifndef
@@ -52,7 +52,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|rw_tape
 struct|;
 end_struct
 
@@ -80,7 +79,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|space
 struct|;
 end_struct
 
@@ -132,7 +130,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|write_filemarks
 struct|;
 end_struct
 
@@ -160,7 +157,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|rewind
 struct|;
 end_struct
 
@@ -197,7 +193,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|erase
 struct|;
 end_struct
 
@@ -228,7 +223,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|load
 struct|;
 end_struct
 
@@ -273,7 +267,6 @@ name|u_char
 name|control
 decl_stmt|;
 block|}
-name|blk_limits
 struct|;
 end_struct
 
