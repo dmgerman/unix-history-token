@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.54 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.53		%G%"
+literal|"@(#)sendmail.h	8.54		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,6 +795,17 @@ begin_comment
 comment|/* make addresses canonical "u@dom" */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_NOBRACKET
+value|'d'
+end_define
+
+begin_comment
+comment|/* never angle bracket envelope route-addrs */
+end_comment
+
 begin_comment
 comment|/*	'D'	/* CF: include Date: */
 end_comment
@@ -883,23 +894,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LOCALMAILER
-value|'l'
-end_define
-
-begin_comment
-comment|/* delivery is to this host */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_NOLOOPCHECK
 value|'k'
 end_define
 
 begin_comment
 comment|/* don't check for loops in HELO command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LOCALMAILER
+value|'l'
+end_define
+
+begin_comment
+comment|/* delivery is to this host */
 end_comment
 
 begin_define

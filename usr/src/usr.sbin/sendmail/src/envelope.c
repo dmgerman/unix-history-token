@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.36 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3203,6 +3203,20 @@ operator|*
 name|bp
 operator|==
 literal|'@'
+operator|&&
+operator|!
+name|bitnset
+argument_list|(
+name|M_NOBRACKET
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 block|{
 comment|/* heuristic: route-addr: add angle brackets */
