@@ -122,7 +122,7 @@ name|dev
 argument_list|)
 operator|==
 operator|(
-name|ushort
+name|uint16_t
 operator|)
 literal|0xb008
 condition|)
