@@ -30,7 +30,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<rune.h>
+file|<runetype.h>
 end_include
 
 begin_include
@@ -724,13 +724,13 @@ name|rl
 operator|->
 name|__sputrune
 operator|=
-name|__emulated_sputrune
+name|NULL
 expr_stmt|;
 name|rl
 operator|->
 name|__sgetrune
 operator|=
-name|__emulated_sgetrune
+name|NULL
 expr_stmt|;
 if|if
 condition|(

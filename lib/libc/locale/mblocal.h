@@ -15,16 +15,6 @@ directive|define
 name|_MBLOCAL_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_comment
-comment|/* XXX for rune_t */
-end_comment
-
 begin_comment
 comment|/*  * Conversion function pointers for current encoding.  */
 end_comment
@@ -306,48 +296,6 @@ parameter_list|,
 name|mbstate_t
 modifier|*
 name|__restrict
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Rune emulation functions.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|rune_t
-name|__emulated_sgetrune
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__emulated_sputrune
-parameter_list|(
-name|rune_t
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|char
-modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -84,9 +84,9 @@ name|_RUNE_MAGIC_1
 block|,
 literal|"NONE"
 block|,
-name|__emulated_sgetrune
+name|NULL
 block|,
-name|__emulated_sputrune
+name|NULL
 block|,
 literal|0xFFFD
 block|,
