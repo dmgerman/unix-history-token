@@ -1211,6 +1211,11 @@ name|features
 argument_list|,
 literal|"\020"
 literal|"\001LB"
+comment|/* long branch (brl) instruction. */
+literal|"\002SD"
+comment|/* Spontaneous deferral. */
+literal|"\003AO"
+comment|/* 16-byte atomic operations (ld, st, cmpxchg). */
 argument_list|)
 expr_stmt|;
 block|}
