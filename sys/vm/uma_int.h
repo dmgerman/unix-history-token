@@ -654,6 +654,17 @@ begin_comment
 comment|/* Don't free data from this zone */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZFLAG_FULL
+value|0x0020
+end_define
+
+begin_comment
+comment|/* This zone reached uz_maxpages */
+end_comment
+
 begin_comment
 comment|/* This lives in uflags */
 end_comment
