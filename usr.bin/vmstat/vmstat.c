@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.15.2.2 1997/08/29 05:30:11 imp Exp $"
+literal|"$Id: vmstat.c,v 1.15.2.3 1997/10/07 05:39:54 dima Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2017,7 +2017,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6ld%6ld "
+literal|"%8ld%6ld "
 argument_list|,
 operator|(
 name|long
@@ -2305,7 +2305,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" procs   memory     page%*s"
+literal|" procs      memory     page%*s"
 argument_list|,
 literal|20
 argument_list|,
@@ -2354,7 +2354,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" r b w   avm   fre  flt  re  pi  po  fr  sr "
+literal|" r b w     avm   fre  flt  re  pi  po  fr  sr "
 argument_list|)
 expr_stmt|;
 for|for
