@@ -194,6 +194,17 @@ name|bswlist
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|simplelock
+name|buftimelock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Interlock on setting prio and timo */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void

@@ -1031,6 +1031,7 @@ comment|/*  * Buffer locking  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|simplelock
 name|buftimelock
