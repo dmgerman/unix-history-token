@@ -1280,6 +1280,13 @@ block|}
 block|,
 comment|/* CTL0045 */
 block|{
+literal|0x46008c0e
+block|,
+literal|"Creative SB AWE64"
+block|}
+block|,
+comment|/* CTL0046 */
+block|{
 literal|0x01000000
 block|,
 literal|"Avance Logic ALS100+"
