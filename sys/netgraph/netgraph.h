@@ -843,6 +843,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|hook_p
+name|ng_findhook
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|node_p
 name|ng_findname
 parameter_list|(
