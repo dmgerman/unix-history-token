@@ -1680,7 +1680,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"mtree -U -f %s -d -e -p %s\n"
+literal|"mtree -U -f %s -d -e -p %s>/dev/null\n"
 argument_list|,
 name|MTREE_FNAME
 argument_list|,
@@ -1703,7 +1703,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"/usr/sbin/mtree -U -f %s -d -e -p %s"
+literal|"/usr/sbin/mtree -U -f %s -d -e -p %s>/dev/null"
 argument_list|,
 name|MTREE_FNAME
 argument_list|,
