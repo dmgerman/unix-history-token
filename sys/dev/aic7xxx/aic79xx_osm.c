@@ -940,6 +940,7 @@ operator|!=
 name|CAM_DIR_NONE
 condition|)
 block|{
+comment|/*XXX bus_dmasync_op_t*/
 name|int
 name|op
 decl_stmt|;
@@ -5346,6 +5347,7 @@ name|void
 modifier|*
 name|sg
 decl_stmt|;
+comment|/*bus_dmasync_op_t*/
 name|int
 name|op
 decl_stmt|;

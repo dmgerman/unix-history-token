@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#85 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#89 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -575,7 +575,7 @@ value|AHD_SCB_MAX
 end_define
 
 begin_comment
-comment|/*  * Define the size of our QIN and QOUT FIFOs.  They must be a power of 2  * in size and accomodate as many transactions as can be queued concurrently.  */
+comment|/*  * Define the size of our QIN and QOUT FIFOs.  They must be a power of 2  * in size and accommodate as many transactions as can be queued concurrently.  */
 end_comment
 
 begin_define
@@ -884,6 +884,11 @@ comment|/* 	 * The GEM318 violates the SCSI spec by not waiting 	 * the mandated
 name|AHD_EARLY_REQ_BUG
 init|=
 literal|0x400000
+block|,
+comment|/* 	 * The LED does not stay on long enough in packetized modes. 	 */
+name|AHD_FAINT_LED_BUG
+init|=
+literal|0x800000
 block|}
 name|ahd_bug
 typedef|;
@@ -901,11 +906,11 @@ name|AHD_FNONE
 init|=
 literal|0x00000
 block|,
-name|AHD_PRIMARY_CHANNEL
+name|AHD_BOOT_CHANNEL
 init|=
-literal|0x00003
+literal|0x00001
 block|,
-comment|/* 					 * The channel that should 					 * be probed first. 					 */
+comment|/* We were set as the boot channel. */
 name|AHD_USEDEFAULTS
 init|=
 literal|0x00004
@@ -1011,7 +1016,7 @@ comment|/************************* Hardware  SCB Definition ********************
 end_comment
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  The SCB  * consists of a "hardware SCB" mirroring the fields availible on the card  * and additional information the kernel stores for each transaction.  *  * To minimize space utilization, a portion of the hardware scb stores  * different data during different portions of a SCSI transaction.  * As initialized by the host driver for the initiator role, this area  * contains the SCSI cdb (or a pointer to the  cdb) to be executed.  After  * the cdb has been presented to the target, this area serves to store  * residual transfer information and the SCSI status byte.  * For the target role, the contents of this area do not change, but  * still serve a different purpose than for the initiator role.  See  * struct target_data for details.  */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  The SCB  * consists of a "hardware SCB" mirroring the fields available on the card  * and additional information the kernel stores for each transaction.  *  * To minimize space utilization, a portion of the hardware scb stores  * different data during different portions of a SCSI transaction.  * As initialized by the host driver for the initiator role, this area  * contains the SCSI cdb (or a pointer to the  cdb) to be executed.  After  * the cdb has been presented to the target, this area serves to store  * residual transfer information and the SCSI status byte.  * For the target role, the contents of this area do not change, but  * still serve a different purpose than for the initiator role.  See  * struct target_data for details.  */
 end_comment
 
 begin_comment
@@ -1200,33 +1205,25 @@ directive|define
 name|SG_PTR_MASK
 value|0xFFFFFFF8
 comment|/*16*/
-name|uint16_t
-name|tag
-decl_stmt|;
-comment|/*18*/
-name|uint8_t
-name|cdb_len
-decl_stmt|;
-comment|/*19*/
-name|uint8_t
-name|task_management
-decl_stmt|;
-comment|/*20*/
-name|uint32_t
-name|next_hscb_busaddr
-decl_stmt|;
-comment|/*24*/
 name|uint64_t
 name|dataptr
 decl_stmt|;
-comment|/*32*/
+comment|/*24*/
 name|uint32_t
 name|datacnt
 decl_stmt|;
 comment|/* Byte 3 is spare. */
-comment|/*36*/
+comment|/*28*/
 name|uint32_t
 name|sgptr
+decl_stmt|;
+comment|/*32*/
+name|uint32_t
+name|hscb_busaddr
+decl_stmt|;
+comment|/*36*/
+name|uint32_t
+name|next_hscb_busaddr
 decl_stmt|;
 comment|/*40*/
 name|uint8_t
@@ -1247,10 +1244,19 @@ name|uint8_t
 name|task_attribute
 decl_stmt|;
 comment|/*44*/
-name|uint32_t
-name|hscb_busaddr
+name|uint8_t
+name|cdb_len
 decl_stmt|;
-comment|/******* Long lun field only downloaded for full 8 byte lun support *******/
+comment|/*45*/
+name|uint8_t
+name|task_management
+decl_stmt|;
+comment|/*46*/
+name|uint16_t
+name|tag
+decl_stmt|;
+comment|/* Reused by Sequencer. */
+comment|/********** Long lun field only downloaded for full 8 byte lun support ********/
 comment|/*48*/
 name|uint8_t
 name|pkt_long_lun
@@ -2402,6 +2408,122 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Vital Product Data used during POST and by the BIOS.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vpd_config
+block|{
+name|uint8_t
+name|bios_flags
+decl_stmt|;
+define|#
+directive|define
+name|VPDMASTERBIOS
+value|0x0001
+define|#
+directive|define
+name|VPDBOOTHOST
+value|0x0002
+name|uint8_t
+name|reserved_1
+index|[
+literal|21
+index|]
+decl_stmt|;
+name|uint8_t
+name|resource_type
+decl_stmt|;
+name|uint8_t
+name|resource_len
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|resource_data
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint8_t
+name|vpd_tag
+decl_stmt|;
+name|uint16_t
+name|vpd_len
+decl_stmt|;
+name|uint8_t
+name|vpd_keyword
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|revision
+decl_stmt|;
+name|uint8_t
+name|device_flags
+decl_stmt|;
+name|uint8_t
+name|termnation_menus
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|fifo_threshold
+decl_stmt|;
+name|uint8_t
+name|end_tag
+decl_stmt|;
+name|uint8_t
+name|vpd_checksum
+decl_stmt|;
+name|uint16_t
+name|default_target_flags
+decl_stmt|;
+name|uint16_t
+name|default_bios_flags
+decl_stmt|;
+name|uint16_t
+name|default_ctrl_flags
+decl_stmt|;
+name|uint8_t
+name|default_irq
+decl_stmt|;
+name|uint8_t
+name|pci_lattime
+decl_stmt|;
+name|uint8_t
+name|max_target
+decl_stmt|;
+name|uint8_t
+name|boot_lun
+decl_stmt|;
+name|uint16_t
+name|signature
+decl_stmt|;
+name|uint8_t
+name|reserved_2
+decl_stmt|;
+name|uint8_t
+name|checksum
+decl_stmt|;
+name|uint8_t
+name|reserved_3
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/****************************** Flexport Logic ********************************/
 end_comment
 
@@ -2626,6 +2748,9 @@ name|start_addr
 parameter_list|,
 name|u_int
 name|count
+parameter_list|,
+name|int
+name|bstream
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2660,6 +2785,18 @@ name|struct
 name|ahd_softc
 modifier|*
 name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahd_verify_vpd_cksum
+parameter_list|(
+name|struct
+name|vpd_config
+modifier|*
+name|vpd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3874,6 +4011,23 @@ name|struct
 name|ahd_softc
 modifier|*
 name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahd_parse_vpddata
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|struct
+name|vpd_config
+modifier|*
+name|vpd
 parameter_list|)
 function_decl|;
 end_function_decl
