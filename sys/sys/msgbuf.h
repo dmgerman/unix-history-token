@@ -104,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|MSGBUF_SIZE
-value|8192
+value|32768
 end_define
 
 begin_endif
