@@ -648,6 +648,16 @@ name|flags
 operator|&
 name|F_MODE
 operator|&&
+operator|!
+name|S_ISLNK
+argument_list|(
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+operator|&&
 name|s
 operator|->
 name|st_mode
