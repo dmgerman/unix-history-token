@@ -195,7 +195,7 @@ end_define
 
 begin_function_decl
 name|void
-name|ssh_fatal
+name|fatal
 parameter_list|(
 specifier|const
 name|char
@@ -221,7 +221,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|ssh_error
+name|error
 parameter_list|(
 specifier|const
 name|char
@@ -247,7 +247,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|ssh_log
+name|log
 parameter_list|(
 specifier|const
 name|char
@@ -273,7 +273,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|ssh_verbose
+name|verbose
 parameter_list|(
 specifier|const
 name|char
@@ -299,7 +299,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|ssh_debug
+name|debug
 parameter_list|(
 specifier|const
 name|char
@@ -325,7 +325,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|ssh_debug2
+name|debug2
 parameter_list|(
 specifier|const
 name|char
@@ -351,7 +351,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|ssh_debug3
+name|debug3
 parameter_list|(
 specifier|const
 name|char
