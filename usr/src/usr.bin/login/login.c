@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.27 (Berkeley) %G%"
+literal|"@(#)login.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,7 +598,7 @@ literal|'.'
 argument_list|)
 operator|)
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|p
 argument_list|,
