@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.78 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.79 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.78 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.79 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,6 +559,36 @@ argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|11
+condition|)
+block|{
+comment|/* log connection information */
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"SMTP connect from %s (%s)"
+argument_list|,
+name|CurSmtpClient
+argument_list|,
+name|anynet_ntoa
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* output the first line, inserting "ESMTP" as second word */
 name|expand
 argument_list|(
 literal|"\201e"
@@ -571,7 +601,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* output the first line, inserting "ESMTP" as second word */
 name|p
 operator|=
 name|strchr
