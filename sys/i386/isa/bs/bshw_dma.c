@@ -681,7 +681,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int8_t
+name|bus_addr_t
 name|dmapageport
 index|[
 literal|4
