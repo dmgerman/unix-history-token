@@ -136,14 +136,14 @@ value|((x)& 0xff)
 end_define
 
 begin_comment
-comment|/* for get/set sysinfo */
+comment|/* for get sysinfo */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|OSF_SET_IEEE_FP_CONTROL
-value|14
+name|OSF_GET_MAX_UPROCS
+value|2
 end_define
 
 begin_define
@@ -165,6 +165,17 @@ define|#
 directive|define
 name|OSF_GET_HWRPB
 value|101
+end_define
+
+begin_comment
+comment|/* for set sysinfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSF_SET_IEEE_FP_CONTROL
+value|14
 end_define
 
 begin_comment
