@@ -268,7 +268,23 @@ name|va_end
 parameter_list|(
 name|AP
 parameter_list|)
-value|((void *)0)
+value|((void) 0)
+end_define
+
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
 end_define
 
 begin_endif

@@ -47,6 +47,59 @@ directive|define
 name|__GNUC_VA_LIST
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_eabi
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_soft_float
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_single_float
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Pointer to FP regs.  */
+name|char
+modifier|*
+name|__fp_regs
+decl_stmt|;
+comment|/* Number of FP regs remaining.  */
+name|int
+name|__fp_left
+decl_stmt|;
+comment|/* Pointer to GP regs followed by stack parameters.  */
+name|char
+modifier|*
+name|__gp_regs
+decl_stmt|;
+block|}
+name|__gnuc_va_list
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (defined (__mips_eabi)&& ! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|char
@@ -54,6 +107,15 @@ modifier|*
 name|__gnuc_va_list
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (defined (__mips_eabi)&& ! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
 
 begin_endif
 endif|#
@@ -81,6 +143,72 @@ argument_list|(
 name|_VARARGS_H
 argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VA_MIPS_H_ENUM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VA_MIPS_H_ENUM
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|__no_type_class
+init|=
+operator|-
+literal|1
+block|,
+name|__void_type_class
+block|,
+name|__integer_type_class
+block|,
+name|__char_type_class
+block|,
+name|__enumeral_type_class
+block|,
+name|__boolean_type_class
+block|,
+name|__pointer_type_class
+block|,
+name|__reference_type_class
+block|,
+name|__offset_type_class
+block|,
+name|__real_type_class
+block|,
+name|__complex_type_class
+block|,
+name|__function_type_class
+block|,
+name|__method_type_class
+block|,
+name|__record_type_class
+block|,
+name|__union_type_class
+block|,
+name|__array_type_class
+block|,
+name|__string_type_class
+block|,
+name|__set_type_class
+block|,
+name|__file_type_class
+block|,
+name|__lang_type_class
+block|}
+enum|;
+end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* In GCC version 2, we want an ellipsis at the end of the declaration    of the argument list.  GCC version 1 can't parse it.  */
@@ -155,6 +283,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__va_reg_size
+value|8
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__va_reg_size
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Get definitions for _MIPS_SIM_ABI64 etc.  */
 end_comment
@@ -182,6 +340,121 @@ directive|ifdef
 name|_STDARG_H
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_eabi
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_soft_float
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_single_float
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__LASTARG
+parameter_list|)
+define|\
+value|(__AP.__gp_regs = ((char *) __builtin_next_arg (__LASTARG)		\ 		     - (__builtin_args_info (2)< 8			\ 			? (8 - __builtin_args_info (2)) * __va_reg_size	\ 			: 0)),						\    __AP.__fp_left = 8 - __builtin_args_info (3),			\    __AP.__fp_regs = __AP.__gp_regs - __AP.__fp_left * __va_reg_size)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! defined (__mips64) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__LASTARG
+parameter_list|)
+define|\
+value|(__AP.__gp_regs = ((char *) __builtin_next_arg (__LASTARG)		\ 		     - (__builtin_args_info (2)< 8			\ 			? (8 - __builtin_args_info (2)) * __va_reg_size	\ 			: 0)),						\    __AP.__fp_left = (8 - __builtin_args_info (3)) / 2,			\    __AP.__fp_regs = __AP.__gp_regs - __AP.__fp_left * 8,		\    __AP.__fp_regs = (char *) ((int) __AP.__fp_regs& -8))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (__mips64) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (! defined (__mips_soft_float)&& ! defined (__mips_single_float) ) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__LASTARG
+parameter_list|)
+define|\
+value|(__AP = ((__gnuc_va_list) __builtin_next_arg (__LASTARG)		\ 	   - (__builtin_args_info (2)>= 8 ? 0				\ 	      : (8 - __builtin_args_info (2)) * __va_reg_size)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (! defined (__mips_soft_float)&& ! defined (__mips_single_float) ) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! defined (__mips_eabi) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -195,10 +468,23 @@ define|\
 value|(__AP = (__gnuc_va_list) __builtin_next_arg (__LASTARG))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (defined (__mips_eabi)&& ! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* ! _STDARG_H */
+end_comment
 
 begin_define
 define|#
@@ -241,13 +527,113 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Need alternate code for _MIPS_SIM_ABI64.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_eabi
+argument_list|)
+end_if
 
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_soft_float
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_single_float
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|__AP
+parameter_list|)
+define|\
+value|(__AP.__gp_regs = ((char *) __builtin_next_arg ()			\ 		     - (__builtin_args_info (2)< 8			\ 			? (8 - __builtin_args_info (2)) * __va_reg_size	\ 			: __va_reg_size)),				\    __AP.__fp_left = 8 - __builtin_args_info (3),			\    __AP.__fp_regs = __AP.__gp_regs - __AP.__fp_left * __va_reg_size)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! defined (__mips64) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|__AP
+parameter_list|)
+define|\
+value|(__AP.__gp_regs = ((char *) __builtin_next_arg ()			\ 		     - (__builtin_args_info (2)< 8			\ 			? (8 - __builtin_args_info (2)) * __va_reg_size	\ 			: __va_reg_size)),				\    __AP.__fp_left = (8 - __builtin_args_info (3)) / 2,			\    __AP.__fp_regs = __AP.__gp_regs - __AP.__fp_left * 8,		\    __AP.__fp_regs = (char *) ((int) __AP.__fp_regs& -8))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (__mips64) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|__AP
+parameter_list|)
+define|\
+value|(__AP = ((__gnuc_va_list) __builtin_next_arg ()			\ 	   - (__builtin_args_info (2)>= 8 ? __va_reg_size		\ 	      : (8 - __builtin_args_info (2)) * __va_reg_size)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
+
+begin_comment
+comment|/* Need alternate code for _MIPS_SIM_ABI64.  */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|_MIPS_SIM
@@ -257,8 +643,12 @@ operator|(
 name|_MIPS_SIM
 operator|==
 name|_MIPS_SIM_ABI64
+operator|||
+name|_MIPS_SIM
+operator|==
+name|_MIPS_SIM_NABI32
 operator|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -296,6 +686,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! _STDARG_H */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -330,6 +724,184 @@ parameter_list|)
 value|((void)0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_eabi
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_soft_float
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_single_float
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__va_next_addr
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__type
+parameter_list|)
+define|\
+value|((__builtin_classify_type (*(__type *) 0) == __real_type_class	\&& __AP.__fp_left> 0)						\    ? (--__AP.__fp_left, (__AP.__fp_regs += 8) - 8)			\    : (__AP.__gp_regs += __va_reg_size) - __va_reg_size)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__va_next_addr
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__type
+parameter_list|)
+define|\
+value|((__builtin_classify_type (*(__type *) 0) == __real_type_class	\&& __AP.__fp_left> 0)						\    ? (--__AP.__fp_left, (__AP.__fp_regs += 8) - 8)			\    : (((__builtin_classify_type (* (__type *) 0)< __record_type_class	\&& __alignof__ (__type)> 4)					\        ? __AP.__gp_regs = (char *) (((int) __AP.__gp_regs + 8 - 1)& -8) \        : (char *) 0),							\       (__builtin_classify_type (* (__type *) 0)>= __record_type_class	\        ? (__AP.__gp_regs += __va_reg_size) - __va_reg_size		\        : ((__AP.__gp_regs += __va_rounded_size (__type))		\ 	  - __va_rounded_size (__type)))))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__va_next_addr
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__type
+parameter_list|)
+define|\
+value|((__AP += __va_reg_size) - __va_reg_size)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__va_next_addr
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__type
+parameter_list|)
+define|\
+value|(((__builtin_classify_type (* (__type *) 0)< __record_type_class	\&& __alignof__ (__type)> 4)					\     ? __AP = (char *) (((__PTRDIFF_TYPE__) __AP + 8 - 1)& -8)		\     : (char *) 0),							\    (__builtin_classify_type (* (__type *) 0)>= __record_type_class	\     ? (__AP += __va_reg_size) - __va_reg_size				\     : ((__AP += __va_rounded_size (__type))				\        - __va_rounded_size (__type))))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! (! defined (__mips_soft_float)&& ! defined (__mips_single_float)) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MIPSEB__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_arg
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__type
+parameter_list|)
+define|\
+value|((__va_rounded_size (__type)<= __va_reg_size)			\    ? *(__type *) (void *) (__va_next_addr (__AP, __type)		\ 			   + __va_reg_size				\ 			   - sizeof (__type))				\    : (__builtin_classify_type (*(__type *) 0)>= __record_type_class	\       ? **(__type **) (void *) (__va_next_addr (__AP, __type)		\ 				+ __va_reg_size				\ 				- sizeof (char *))			\       : *(__type *) (void *) __va_next_addr (__AP, __type)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|va_arg
+parameter_list|(
+name|__AP
+parameter_list|,
+name|__type
+parameter_list|)
+define|\
+value|((__va_rounded_size (__type)<= __va_reg_size)			\    ? *(__type *) (void *) __va_next_addr (__AP, __type)		\    : (__builtin_classify_type (* (__type *) 0)>= __record_type_class	\       ? **(__type **) (void *) __va_next_addr (__AP, __type)		\       : *(__type *) (void *) __va_next_addr (__AP, __type)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! defined (__mips_eabi) */
+end_comment
+
 begin_comment
 comment|/* We cast to void * and then to TYPE * because this avoids    a warning about increasing the alignment requirement.  */
 end_comment
@@ -360,7 +932,7 @@ parameter_list|,
 name|__type
 parameter_list|)
 define|\
-value|((__type *) (void *) (__AP = (char *) ((((__PTRDIFF_TYPE__)__AP + 8 - 1)& -8) \ 					 + __va_rounded_size (__type))))[-1]
+value|((__type *) (void *) (__AP = (char *)                         \                        ((((__PTRDIFF_TYPE__)__AP + 8 - 1)& -8) \ 			   + __va_rounded_size (__type))))[-1]
 end_define
 
 begin_else
@@ -415,7 +987,7 @@ parameter_list|,
 name|__type
 parameter_list|)
 define|\
-value|((__AP = (char *) ((__alignof__ (__type)> 4			\ 		      ? ((int)__AP + 8 - 1)& -8		\ 		      : ((int)__AP + 4 - 1)& -4)		\ 		     + __va_rounded_size (__type))),		\    *(__type *) (void *) (__AP - __va_rounded_size (__type)))
+value|((__AP = (char *) ((__alignof__ (__type)> 4			\ 		      ? ((__PTRDIFF_TYPE__)__AP + 8 - 1)& -8	\ 		      : ((__PTRDIFF_TYPE__)__AP + 4 - 1)& -4)	\ 		     + __va_rounded_size (__type))),		\    *(__type *) (void *) (__AP - __va_rounded_size (__type)))
 end_define
 
 begin_else
@@ -437,7 +1009,7 @@ parameter_list|,
 name|__type
 parameter_list|)
 define|\
-value|((__type *) (void *) (__AP = (char *) ((__alignof__(__type)> 4	    \ 					  ? ((int)__AP + 8 - 1)& -8	    \ 					  : ((int)__AP + 4 - 1)& -4)	    \ 					 + __va_rounded_size(__type))))[-1]
+value|((__type *) (void *) (__AP = (char *) ((__alignof__(__type)> 4	    \ 				? ((__PTRDIFF_TYPE__)__AP + 8 - 1)& -8	    \ 				: ((__PTRDIFF_TYPE__)__AP + 4 - 1)& -4)    \ 					 + __va_rounded_size(__type))))[-1]
 end_define
 
 begin_endif
@@ -449,6 +1021,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (__mips_eabi)  */
+end_comment
+
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
+end_define
 
 begin_endif
 endif|#

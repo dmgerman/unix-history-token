@@ -526,6 +526,22 @@ comment|/* Fall through to fetch from memory.  */
 value|\     case __record_type_class:						\     case __union_type_class:						\       __align = (__alignof__ (__type)< sizeof (long)			\ 		 ? sizeof (long)					\ 		 : __alignof__ (__type));				\       (__va).__mem_ptr							\ 	= (long *)							\ 	  ((((unsigned) (__va).__mem_ptr) + (__align-1))& ~(__align-1)); \       __rv = (__va).__mem_ptr;						\       (__va).__mem_ptr							\ 	+= ((sizeof (__type) + sizeof (long) - 1) / sizeof (long));	\       break;								\     case __complex_type_class:						\     case __function_type_class:						\     case __method_type_class:						\     case __array_type_class:						\     case __string_type_class:						\     case __set_type_class:						\     case __file_type_class:						\     case __lang_type_class:						\     case __no_type_class:						\     default:								\ 	abort ();							\     }									\   __rv;									\ }))
 end_define
 
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
+end_define
+
 begin_endif
 endif|#
 directive|endif

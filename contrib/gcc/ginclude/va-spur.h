@@ -151,5 +151,21 @@ define|\
 value|__extension__ \     (*({  type *__va_result; \         if ((pvar).__pnt>= 20) { \            __va_result = ( (type *) ((pvar).__stack + (pvar).__pnt - 20)); \ 	   (pvar).__pnt += (sizeof(type) + 7)& ~7; \ 	} \ 	else if ((pvar).__pnt + sizeof(type)> 20) { \ 	   __va_result = (type *) (pvar).__stack; \ 	   (pvar).__pnt = 20 + ( (sizeof(type) + 7)& ~7); \ 	} \ 	else if (sizeof(type) == 8) { \ 	   union {double d; int i[2];} __u; \ 	   __u.i[0] = *(int *) ((pvar).__regs + (pvar).__pnt); \ 	   __u.i[1] = *(int *) ((pvar).__regs + (pvar).__pnt + 4); \ 	   __va_result = (type *)&__u; \ 	   (pvar).__pnt += 8; \ 	} \ 	else { \ 	   __va_result = (type *) ((pvar).__regs + (pvar).__pnt); \ 	   (pvar).__pnt += (sizeof(type) + 3)& ~3; \ 	} \ 	__va_result; }))
 end_define
 
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
+end_define
+
 end_unit
 

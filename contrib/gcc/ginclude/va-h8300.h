@@ -198,7 +198,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|(AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (TYPE)),	\   *((TYPE *) (void *) ((char *) (AP) - ((sizeof (TYPE)< 4		\ 					 ? sizeof (TYPE)		\ 					 : __va_rounded_size (TYPE))))))
+value|(AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (TYPE)),	\   *((TYPE *) (void *) ((char *) (AP)					\ 		       - ((sizeof (TYPE)< __va_rounded_size (int)	\ 			  ? sizeof (TYPE) : __va_rounded_size (TYPE))))))
 end_define
 
 begin_define
@@ -209,6 +209,22 @@ parameter_list|(
 name|AP
 parameter_list|)
 value|((void) 0)
+end_define
+
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
 end_define
 
 begin_endif
