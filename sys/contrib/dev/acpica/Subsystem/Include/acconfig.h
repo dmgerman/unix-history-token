@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 53 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20010125
+value|0x20010208
 end_define
 
 begin_comment
@@ -353,17 +353,6 @@ begin_define
 define|#
 directive|define
 name|RSDP_SCAN_STEP
-value|16
-end_define
-
-begin_comment
-comment|/* Maximum nesting of package objects */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_PACKAGE_DEPTH
 value|16
 end_define
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 4 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 5 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -19,13 +19,6 @@ directive|define
 name|__ACGCC_H__
 end_define
 
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_UINT64
-value|unsigned long long
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -36,6 +29,13 @@ begin_define
 define|#
 directive|define
 name|_IA64
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPILER_DEPENDENT_UINT64
+value|unsigned long
 end_define
 
 begin_comment
@@ -179,6 +179,13 @@ end_else
 begin_comment
 comment|/* DO IA32 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPILER_DEPENDENT_UINT64
+value|unsigned long long
+end_define
 
 begin_define
 define|#
