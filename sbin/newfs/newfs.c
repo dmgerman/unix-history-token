@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs.c,v 1.24 1998/09/29 23:20:04 grog Exp $"
+literal|"$Id: newfs.c,v 1.25 1998/09/30 07:53:52 grog Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2955,33 +2955,13 @@ name|DEV_BSIZE
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|Nflag
-operator|&&
-name|bcmp
-argument_list|(
-name|pp
-argument_list|,
-operator|&
-name|oldpartition
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|oldpartition
-argument_list|)
-argument_list|)
-condition|)
-name|rewritelabel
-argument_list|(
-name|special
-argument_list|,
-name|fso
-argument_list|,
-name|lp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX this shouldn't fail, but it returns ENXDEV right now - pure workaround, this */
+block|if (!Nflag&& bcmp(pp,&oldpartition, sizeof(oldpartition))) 		rewritelabel(special, fso, lp);
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
