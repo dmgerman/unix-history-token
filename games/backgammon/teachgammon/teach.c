@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -204,17 +210,6 @@ name|lastch
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ospeed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tty output speed for termlib */
-end_comment
 
 begin_decl_stmt
 specifier|const
