@@ -1990,17 +1990,6 @@ argument_list|(
 literal|"ffs_reload: dirty1"
 argument_list|)
 expr_stmt|;
-name|VOP_CREATEVOBJECT
-argument_list|(
-name|devvp
-argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
@@ -2761,17 +2750,6 @@ operator|->
 name|td_ucred
 else|:
 name|NOCRED
-expr_stmt|;
-name|VOP_CREATEVOBJECT
-argument_list|(
-name|devvp
-argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 name|ronly
 operator|=
