@@ -65,13 +65,11 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_function_decl
 specifier|static
