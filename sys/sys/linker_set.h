@@ -29,11 +29,19 @@ begin_comment
 comment|/*  * Alpha GAS needs an align before the section change.  It seems to assume  * that after the .previous, it is aligned, so the following .align 3 is  * ignored.  Since the previous instructions often contain strings, this is  * a problem.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -45,7 +53,7 @@ parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|static void const * const __set_##set##_sym_##sym =&sym;	\ 	__asm(".align 3");						\ 	__asm(".section .set." #set ",\"aw\"");				\ 	__asm(".quad " #sym);						\ 	__asm(".previous")
+value|static void const * const __set_##set##_sym_##sym =&sym;	\ 	__asm(".p2align 3");						\ 	__asm(".section .set." #set ",\"aw\"");				\ 	__asm(".quad " #sym);						\ 	__asm(".previous")
 end_define
 
 begin_else
