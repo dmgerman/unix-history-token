@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	6.2	83/09/08	*/
+comment|/*	tm.c	6.3	83/09/25	*/
 end_comment
 
 begin_include
@@ -2847,41 +2847,21 @@ operator|->
 name|av_forw
 expr_stmt|;
 comment|/* 	 * Check resid; watch out for resid>32767 (tmbc not negative). 	 */
-if|if
-condition|(
-name|addr
-operator|->
-name|tmbc
-operator|<=
-literal|0
-condition|)
 name|bp
 operator|->
 name|b_resid
 operator|=
+operator|(
+operator|(
+name|int
+operator|)
 operator|-
 name|addr
 operator|->
 name|tmbc
-expr_stmt|;
-else|else
-name|bp
-operator|->
-name|b_resid
-operator|=
-literal|0x10000
-operator|-
-operator|(
-operator|(
-name|long
 operator|)
-operator|(
-name|u_short
-operator|)
-name|addr
-operator|->
-name|tmbc
-operator|)
+operator|&
+literal|0xffff
 expr_stmt|;
 name|ubadone
 argument_list|(
