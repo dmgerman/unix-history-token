@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.14 (Berkeley) %G%"
+literal|"@(#)init.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -97,6 +97,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -116,24 +134,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_ifdef
@@ -555,7 +555,7 @@ end_decl_stmt
 begin_typedef
 typedef|typedef
 struct|struct
-name|session
+name|init_session
 block|{
 name|int
 name|se_index
@@ -606,12 +606,12 @@ name|se_window_argv
 decl_stmt|;
 comment|/* pre-parsed argument array */
 name|struct
-name|session
+name|init_session
 modifier|*
 name|se_prev
 decl_stmt|;
 name|struct
-name|session
+name|init_session
 modifier|*
 name|se_next
 decl_stmt|;
