@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.14 1995/03/01 22:24:40 dufault Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.15 1995/03/04 20:50:45 dufault Exp $  */
 end_comment
 
 begin_include
@@ -589,7 +589,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"offline\n"
+literal|"offline"
 argument_list|)
 expr_stmt|;
 block|}
@@ -597,7 +597,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%d slot(s) %d drive(s) %d arm(s) %d i/e-slot(s)\n"
+literal|"%d slot(s) %d drive(s) %d arm(s) %d i/e-slot(s)"
 argument_list|,
 name|ch
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.20 1995/02/15 07:44:07 davidg Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.21 1995/03/04 20:50:49 dufault Exp $  */
 end_comment
 
 begin_define
@@ -2567,6 +2567,11 @@ decl_stmt|;
 name|errval
 name|errcode
 decl_stmt|;
+name|int
+name|asc
+decl_stmt|,
+name|ascq
+decl_stmt|;
 comment|/* This sense key text now matches what is in the SCSI spec 	 * (Yes, even the capitals) 	 * so that it is easier to look through the spec to find the 	 * appropriate place. 	 */
 specifier|static
 name|char
@@ -2736,7 +2741,7 @@ case|:
 comment|/* BLANK CHECK */
 name|printf
 argument_list|(
-literal|" requested size: %ld (decimal)"
+literal|" req sz: %ld (decimal)"
 argument_list|,
 name|info
 argument_list|)
@@ -2749,7 +2754,7 @@ name|info
 condition|)
 name|printf
 argument_list|(
-literal|" info:%08lx"
+literal|" info:%lx"
 argument_list|,
 name|info
 argument_list|)
@@ -2763,7 +2768,7 @@ name|info
 condition|)
 name|printf
 argument_list|(
-literal|" info(inval):%08lx"
+literal|" info?:%lx"
 argument_list|,
 name|info
 argument_list|)
@@ -2793,7 +2798,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" csi:%02x,%02x,%02x,%02x"
+literal|" csi:%x,%x,%x,%x"
 argument_list|,
 name|ext
 operator|->
@@ -2826,52 +2831,60 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
+name|asc
+operator|=
+operator|(
 name|ext
 operator|->
 name|extra_len
 operator|>=
 literal|5
-operator|&&
+operator|)
+condition|?
 name|ext
 operator|->
 name|add_sense_code
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" asc:%02x"
-argument_list|,
-name|ext
-operator|->
-name|add_sense_code
-argument_list|)
+else|:
+literal|0
 expr_stmt|;
-block|}
-if|if
-condition|(
+name|ascq
+operator|=
+operator|(
 name|ext
 operator|->
 name|extra_len
 operator|>=
 literal|6
-operator|&&
+operator|)
+condition|?
 name|ext
 operator|->
 name|add_sense_code_qual
+else|:
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|asc
+operator|||
+name|ascq
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|" ascq:%02x"
+literal|" asc:%x,%x %s"
 argument_list|,
-name|ext
-operator|->
-name|add_sense_code_qual
+name|asc
+argument_list|,
+name|ascq
+argument_list|,
+name|scsi_sense_desc
+argument_list|(
+name|asc
+argument_list|,
+name|ascq
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ext
@@ -2887,7 +2900,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" fru:%02x"
+literal|" fru:%x"
 argument_list|,
 name|ext
 operator|->
@@ -2914,7 +2927,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" sks:%02x,%04x"
+literal|" sks:%x,%x"
 argument_list|,
 name|ext
 operator|->

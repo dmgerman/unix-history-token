@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.21 1995/03/04 20:50:58 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.22 1995/03/06 15:02:13 dufault Exp $  */
 end_comment
 
 begin_include
@@ -3167,6 +3167,46 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|rm_spaces
+parameter_list|(
+name|char
+modifier|*
+name|text
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+while|while
+condition|(
+name|n
+operator|&&
+name|text
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+condition|)
+name|n
+operator|--
+expr_stmt|;
+name|text
+index|[
+name|n
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Zap */
+block|}
+end_function
+
 begin_comment
 comment|/*  * given a target and lu, ask the device what  * it is, and find the correct driver table  * entry.  */
 end_comment
@@ -3789,26 +3829,26 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+name|rm_spaces
+argument_list|(
 name|manu
-index|[
+argument_list|,
 literal|8
-index|]
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
+name|rm_spaces
+argument_list|(
 name|model
-index|[
+argument_list|,
 literal|16
-index|]
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
+name|rm_spaces
+argument_list|(
 name|version
-index|[
+argument_list|,
 literal|4
-index|]
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|sc_print_addr
 argument_list|(
@@ -3817,39 +3857,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"type %ld(%s) %s SCSI%d\n"
+literal|"\"%s %s %s\" is a "
+argument_list|,
+name|manu
+argument_list|,
+name|model
+argument_list|,
+name|version
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"type %ld %sSCSI %d"
 argument_list|,
 name|type
 argument_list|,
-name|dtype
-argument_list|,
 name|remov
 condition|?
-literal|"removable"
+literal|"removable "
 else|:
-literal|"fixed"
+literal|"fixed "
 argument_list|,
 name|inqbuf
 operator|->
 name|version
 operator|&
 name|SID_ANSII
-argument_list|)
-expr_stmt|;
-name|sc_print_addr
-argument_list|(
-name|sc_link
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"<%s%s%s>\n"
-argument_list|,
-name|manu
-argument_list|,
-name|model
-argument_list|,
-name|version
 argument_list|)
 expr_stmt|;
 if|if
@@ -3860,14 +3893,9 @@ literal|0
 index|]
 condition|)
 block|{
-name|sc_print_addr
-argument_list|(
-name|sc_link
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"qualifier %ld(%s)\n"
+literal|" qualifier %ld(%s)"
 argument_list|,
 name|qualifier
 argument_list|,
@@ -3875,6 +3903,11 @@ name|qtype
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Try make as good a match as possible with 	 * available sub drivers        	 */
 name|bestmatch
 operator|=
