@@ -561,7 +561,7 @@ name|char
 name|tmpfil
 index|[]
 init|=
-name|_PATH_TMP
+name|PATH_TMPFILE
 decl_stmt|;
 end_decl_stmt
 
