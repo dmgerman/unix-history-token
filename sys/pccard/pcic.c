@@ -352,7 +352,51 @@ name|pcic_boot_deactivated
 argument_list|,
 literal|0
 argument_list|,
-literal|"Override the automatic powering up of pccards at boot."
+literal|"Override the automatic powering up of pccards at boot.  This works\n\ around what turns out to be an old bug in the code that has since been\n\ corrected.  It is now deprecated and will be removed completely before\n\ FreeBSD 4.8."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * CL-PD6722's VSENSE method  *     0: NO VSENSE (assume a 5.0V card)  *     1: 6710's method (default)  *     2: 6729's method  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pcic_pd6722_vsense
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pcic.pd6722_vsense"
+argument_list|,
+operator|&
+name|pcic_pd6722_vsense
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pcic
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pd6722_vsense
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pcic_pd6722_vsense
+argument_list|,
+literal|1
+argument_list|,
+literal|"Select CL-PD6722's VSENSE method.  VSENSE is used to determine the\n\ volatage of inserted cards.  The CL-PD6722 has two methods to determine the\n\ voltage of the card.  0 means assume a 5.0V card and do not check.  1 means\n\ use the same method that the CL-PD6710 uses (default).  2 means use the\n\ same method as the CL-PD6729.  2 is documented in the datasheet as being\n\ the correct way, but 1 seems to give better results on more laptops."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1863,6 +1907,11 @@ name|state
 operator|=
 name|empty
 expr_stmt|;
+if|if
+condition|(
+name|pcic_boot_deactivated
+condition|)
+block|{
 name|sp
 operator|->
 name|putb
@@ -1874,11 +1923,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pcic_boot_deactivated
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -2812,6 +2856,9 @@ name|dodefault
 init|=
 literal|0
 decl_stmt|;
+name|char
+name|controller
+decl_stmt|;
 comment|/* 	 * Cardbus power registers are completely different. 	 */
 if|if
 condition|(
@@ -2927,19 +2974,50 @@ operator|&
 name|PCIC_PD_POWER
 condition|)
 block|{
-comment|/* 			 * The 6710 does it one way, and the '22 and '29 do it 			 * another.  And it appears that the '32 and '33 yet 			 * another way (which I don't know).  The '22 can also 			 * do it the same way as a '10 does it, despite what 			 * the datasheets say.  Some laptops with '22 don't 			 * seem to have the signals wired right for the '29 			 * method to work, so we always use the '10 method for 			 * the '22.  The laptops that don't work hang solid 			 * when the pccard memory is accessed.  The '32 and 			 * '33 cases are taken care of in cardbus code, so 			 * it doesn't matter that I have no clue. 			 */
-switch|switch
-condition|(
+comment|/* 			 * The 6710 does it one way, and the '22 and '29 do it 			 * another.  The '22 can also do it the same way as a 			 * '10 does it, despite what the datasheets say.  Some 			 * laptops with '22 don't seem to have the signals 			 * wired right for the '29 method to work.  The 			 * laptops that don't work hang solid when the pccard 			 * memory is accessed. 			 * 			 * To allow for both types of laptops, 			 * hw.pcic.pd6722_vsense will select which one to use. 			 * 0 - none, 1 - the '10 way and 2 - the '29 way. 			 */
+name|controller
+operator|=
 name|sp
 operator|->
+name|controller
+expr_stmt|;
+if|if
+condition|(
+name|controller
+operator|==
+name|PCIC_PD6722
+condition|)
+block|{
+switch|switch
+condition|(
+name|pcic_pd6722_vsense
+condition|)
+block|{
+case|case
+literal|1
+case|:
+name|controller
+operator|=
+name|PCIC_PD6710
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|controller
+operator|=
+name|PCIC_PD6729
+expr_stmt|;
+break|break;
+block|}
+block|}
+switch|switch
+condition|(
 name|controller
 condition|)
 block|{
 case|case
 name|PCIC_PD6710
-case|:
-case|case
-name|PCIC_PD6722
 case|:
 name|c
 operator|=
@@ -2980,6 +3058,12 @@ operator|=
 literal|50
 expr_stmt|;
 break|break;
+case|case
+name|PCIC_PD6722
+case|:
+comment|/* see above for why we do */
+break|break;
+comment|/* none here */
 case|case
 name|PCIC_PD6729
 case|:
