@@ -409,10 +409,7 @@ name|env
 operator|=
 name|getenv
 argument_list|(
-name|categories
-index|[
-name|category
-index|]
+literal|"LC_ALL"
 argument_list|)
 expr_stmt|;
 if|if
@@ -436,7 +433,7 @@ name|getenv
 argument_list|(
 name|categories
 index|[
-name|LC_ALL
+name|category
 index|]
 argument_list|)
 expr_stmt|;
