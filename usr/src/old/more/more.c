@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.17 (Berkeley) %G%"
+literal|"@(#)more.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,15 +1146,38 @@ operator|==
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|rindex
+parameter_list|()
+function_decl|;
+name|p
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
 name|fputs
 argument_list|(
-literal|"Usage: "
+literal|"usage: "
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
+name|p
+condition|?
+name|p
+operator|+
+literal|1
+else|:
 name|argv
 index|[
 literal|0
