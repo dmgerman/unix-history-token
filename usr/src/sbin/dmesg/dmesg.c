@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dmesg.c	4.1 (Berkeley) 82/03/01"
+literal|"@(#)dmesg.c	4.2 (Berkeley) 83/01/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ literal|"_msgbuf"
 block|}
 block|,
 block|{
-literal|0
+literal|""
 block|}
 block|}
 decl_stmt|;
