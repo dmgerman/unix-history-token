@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.93 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.94 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4628,7 +4628,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * Dump vnode list (via kinfo).  * Copyout address of vnode followed by vnode.  */
+comment|/*  * Dump vnode list (via sysctl).  * Copyout address of vnode followed by vnode.  */
 end_comment
 
 begin_comment
@@ -4636,25 +4636,13 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|kinfo_vnode
+name|sysctl_vnode
 argument_list|(
-argument|op
-argument_list|,
 argument|where
 argument_list|,
-argument|acopysize
-argument_list|,
-argument|arg
-argument_list|,
-argument|aneeded
+argument|sizep
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|op
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -4666,12 +4654,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 modifier|*
-name|acopysize
-decl_stmt|,
-name|arg
-decl_stmt|,
-modifier|*
-name|aneeded
+name|sizep
 decl_stmt|;
 end_decl_stmt
 
@@ -4728,7 +4711,7 @@ name|NULL
 condition|)
 block|{
 operator|*
-name|aneeded
+name|sizep
 operator|=
 operator|(
 name|numvnodes
@@ -4753,7 +4736,7 @@ operator|=
 name|where
 operator|+
 operator|*
-name|acopysize
+name|sizep
 expr_stmt|;
 do|do
 block|{
@@ -4825,17 +4808,30 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
 name|bp
 operator|+
 name|VPTRSZ
 operator|+
 name|VNODESZ
-operator|<=
+operator|>
 name|ewhere
-operator|)
-operator|&&
+condition|)
+block|{
+operator|*
+name|sizep
+operator|=
+name|bp
+operator|-
+name|where
+expr_stmt|;
+return|return
 operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -4869,7 +4865,6 @@ name|VPTRSZ
 argument_list|,
 name|VNODESZ
 argument_list|)
-operator|)
 operator|)
 condition|)
 return|return
@@ -4906,28 +4901,7 @@ name|rootfs
 condition|)
 do|;
 operator|*
-name|aneeded
-operator|=
-name|bp
-operator|-
-name|where
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|>
-name|ewhere
-condition|)
-operator|*
-name|acopysize
-operator|=
-name|ewhere
-operator|-
-name|where
-expr_stmt|;
-else|else
-operator|*
-name|acopysize
+name|sizep
 operator|=
 name|bp
 operator|-
