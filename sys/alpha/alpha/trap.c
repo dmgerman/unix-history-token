@@ -434,6 +434,118 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|arith_exceptions
+index|[]
+init|=
+block|{
+literal|"software completion"
+block|,
+literal|"invalid operation"
+block|,
+literal|"division by zero"
+block|,
+literal|"overflow"
+block|,
+literal|"underflow"
+block|,
+literal|"inexact result"
+block|,
+literal|"integer overflow"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|instruction_faults
+index|[]
+init|=
+block|{
+literal|"bpt"
+block|,
+literal|"bugchk"
+block|,
+literal|"gentrap"
+block|,
+literal|"FEN"
+block|,
+literal|"opDec"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|interrupt_types
+index|[]
+init|=
+block|{
+literal|"interprocessor"
+block|,
+literal|"clock"
+block|,
+literal|"correctable error"
+block|,
+literal|"machine check"
+block|,
+literal|"I/O device"
+block|,
+literal|"performance counter"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mmfault_types
+index|[]
+init|=
+block|{
+literal|"translation not valid"
+block|,
+literal|"access violation"
+block|,
+literal|"fault on read"
+block|,
+literal|"fault on execute"
+block|,
+literal|"fault on write"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mmfault_causes
+index|[]
+init|=
+block|{
+literal|"instruction fetch"
+block|,
+literal|"load instructon"
+block|,
+literal|"store instruction"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Define the code needed before returning to user mode, for  * trap and syscall.  */
 end_comment
@@ -681,6 +793,10 @@ name|char
 modifier|*
 name|entryname
 decl_stmt|;
+name|unsigned
+name|long
+name|i
+decl_stmt|;
 switch|switch
 condition|(
 name|entry
@@ -789,37 +905,332 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    trap entry = 0x%lx (%s)\n"
+literal|"    trap entry     = 0x%lx (%s)\n"
 argument_list|,
 name|entry
 argument_list|,
 name|entryname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|printf
 argument_list|(
-literal|"    a0         = 0x%lx\n"
+literal|"    cpuid          = %d\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+switch|switch
+condition|(
+name|entry
+condition|)
+block|{
+case|case
+name|ALPHA_KENTRY_INT
+case|:
+name|printf
+argument_list|(
+literal|"    interrupt type = "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a0
+operator|<
+literal|5
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|interrupt_types
+index|[
+name|a0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a0
+operator|>
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"    vector         = 0x%lx\n"
+argument_list|,
+name|a1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a0
+operator|<
+literal|3
+condition|)
+name|printf
+argument_list|(
+literal|"    logout area    = 0x%lx\n"
+argument_list|,
+name|a2
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"0x%lx (unknown)\n"
+argument_list|,
+name|a0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ALPHA_KENTRY_ARITH
+case|:
+name|printf
+argument_list|(
+literal|"    exception type = "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|7
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|a0
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|arith_exceptions
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a0
+operator|&
+operator|(
+operator|~
+literal|0
+operator|-
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|", "
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    register mask  = 0x%lx"
+argument_list|,
+name|a1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ALPHA_KENTRY_MM
+case|:
+name|printf
+argument_list|(
+literal|"    faulting va    = 0x%lx\n"
 argument_list|,
 name|a0
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    a1         = 0x%lx\n"
+literal|"    type           = "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a1
+operator|<
+literal|5
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|mmfault_types
+index|[
+name|a1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"0x%lx (unknown)\n"
 argument_list|,
 name|a1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    a2         = 0x%lx\n"
+literal|"    cause          = "
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|a2
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|3
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|mmfault_causes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"0x%lx (unknown)\n"
 argument_list|,
 name|a2
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ALPHA_KENTRY_IF
+case|:
 name|printf
 argument_list|(
-literal|"    pc         = 0x%lx\n"
+literal|"    fault type     = "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a0
+operator|<
+literal|5
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|instruction_faults
+index|[
+name|a0
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"0x%lx (unknown)\n"
+argument_list|,
+name|a0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ALPHA_KENTRY_UNA
+case|:
+name|printf
+argument_list|(
+literal|"    faulting va    = 0x%lx\n"
+argument_list|,
+name|a0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    opcode         = 0x%lx\n"
+argument_list|,
+name|a1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    register       = 0x%lx\n"
+argument_list|,
+name|a2
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"    a0             = 0x%lx\n"
+argument_list|,
+name|a0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    a1             = 0x%lx\n"
+argument_list|,
+name|a1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    a2             = 0x%lx\n"
+argument_list|,
+name|a2
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|printf
+argument_list|(
+literal|"    pc             = 0x%lx\n"
 argument_list|,
 name|framep
 operator|->
@@ -831,7 +1242,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    ra         = 0x%lx\n"
+literal|"    ra             = 0x%lx\n"
 argument_list|,
 name|framep
 operator|->
@@ -843,7 +1254,43 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    curproc    = %p\n"
+literal|"    sp             = 0x%lx\n"
+argument_list|,
+name|framep
+operator|->
+name|tf_regs
+index|[
+name|FRAME_SP
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|curproc
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|curproc
+operator|->
+name|p_flag
+operator|&
+name|P_KTHREAD
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"    usp            = 0x%lx\n"
+argument_list|,
+name|alpha_pal_rdusp
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    curproc        = %p\n"
 argument_list|,
 name|curproc
 argument_list|)
