@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.49 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1094,7 +1094,7 @@ name|bsize
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 call|(
 name|unsigned
@@ -1187,7 +1187,7 @@ name|bn
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|n
 argument_list|,
@@ -1603,7 +1603,7 @@ name|bsize
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 call|(
 name|unsigned
@@ -1655,7 +1655,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|n
 argument_list|,
