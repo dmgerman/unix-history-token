@@ -2009,7 +2009,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the parameters that will survive stop/init and 	 * reset a few things on the card. 	 * 	 * Do not update these in ray_init_download's parameter setup 	 * 	 * XXX see the ray_init_download section for stuff to move 	 */
+comment|/* 	 * Set the parameters that will survive stop/init and 	 * reset a few things on the card. 	 * 	 * Do not update these in ray_init_download's parameter setup 	 * 	 */
 name|RAY_MAP_CM
 argument_list|(
 name|sc
@@ -3499,7 +3499,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reset instance variables 	 * 	 * The first set are network parameters that are read back when 	 * the card starts or joins the network. 	 * 	 * The second set are network parameters that are downloaded to 	 * the card. 	 * 	 * The third set are driver parameters. 	 * 	 * All of the variables in these sets can be updated by the 	 * card or ioctls. 	 * 	 * XXX see the ray_attach section for stuff to move 	 */
+comment|/* 	 * Reset instance variables 	 * 	 * The first set are network parameters that are read back when 	 * the card starts or joins the network. 	 * 	 * The second set are network parameters that are downloaded to 	 * the card. 	 * 	 * The third set are driver parameters. 	 * 	 * All of the variables in these sets can be updated by the 	 * card or ioctls. 	 * 	 */
 name|sc
 operator|->
 name|sc_d
@@ -5407,7 +5407,7 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Don't do anything if we are not in a managed network 	 * 	 * XXX V4 adhoc does not need this, V5 adhoc unknown 	 */
+comment|/* 	 * Don't do anything if we are not in a managed network 	 * 	 * XXX V4 adhoc does not need this, V5 adhoc unknown 	 */
 if|if
 condition|(
 name|sc
@@ -11463,7 +11463,6 @@ name|np_havenet
 operator|=
 literal|1
 expr_stmt|;
-comment|/* XXX Should not be here but in function */
 break|break;
 case|case
 name|RAY_ECMD_ROAM_START
@@ -11485,7 +11484,6 @@ name|np_havenet
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX Should not be here but in function */
 break|break;
 case|case
 name|RAY_ECMD_JAPAN_CALL_SIGNAL
@@ -13427,7 +13425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Runq entry to update a parameter  *  * The card and driver are happy for parameters to be updated  * whenever the card is plugged in  *  * XXX the above is a little bit of a lie until _download is sorted out and we  * XXX keep local copies of things  */
+comment|/*  * Runq entry to update a parameter  *  * The card and driver are basically happy for parameters to be updated  * whenever the card is plugged in. However, there may be a couple of  * network hangs whilst the update is performed. Reading parameters back  * straight away may give the wrong answer and some parameters cannot be  * read at all. Local copies should be kept.  */
 end_comment
 
 begin_function
