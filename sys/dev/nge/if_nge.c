@@ -6843,7 +6843,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|NGE_IMR_PHY_INTR
+name|NGE_ISR_PHY_INTR
 condition|)
 block|{
 name|sc
