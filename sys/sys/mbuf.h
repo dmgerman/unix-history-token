@@ -2743,17 +2743,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PACKET_TAG_PF_GENERATED
-value|(20 | MTAG_PERSISTENT)
-end_define
-
-begin_comment
-comment|/* PF, pass always */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PACKET_TAG_PF_ROUTED
 value|21
 end_define
