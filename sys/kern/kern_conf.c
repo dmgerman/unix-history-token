@@ -1123,7 +1123,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: run /dev/MAKEDEV to get rid of block devices before 2000-06-01\n"
+literal|"WARNING: run /dev/MAKEDEV before 2000-06-01 to get rid of block devices\n"
 argument_list|)
 expr_stmt|;
 name|whine
