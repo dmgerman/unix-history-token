@@ -308,7 +308,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.data ; \ 	_ALIGN_DATA ; \ 	.globl	name ; \ 	.type	name, @object ; \ name ## :
+value|.data ; \ 	_ALIGN_DATA ; \ 	.globl	name ; \ 	.type	name, @object ; \ name:
 end_define
 
 begin_define
@@ -325,7 +325,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text ; \ 	_ALIGN_TEXT ; \ 	.globl	name ; \ 	.type	name, @function ; \ name ## :
+value|.text ; \ 	_ALIGN_TEXT ; \ 	.globl	name ; \ 	.type	name, @function ; \ name:
 end_define
 
 begin_define
