@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -485,13 +491,12 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"g_error %d Mediasize is %lld bytes\n"
+literal|"g_error %d Mediasize is %jd bytes\n"
 argument_list|,
 name|error
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|mediasize
 argument_list|)

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -602,6 +608,20 @@ argument_list|,
 name|pp
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t<mediasize>%jd</mediasize>\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|pp
+operator|->
+name|mediasize
 argument_list|)
 expr_stmt|;
 if|if

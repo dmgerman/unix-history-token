@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2367,11 +2373,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bio_length %lld len %d -> EFAULT\n"
+literal|"bio_length %jd len %d -> EFAULT\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->

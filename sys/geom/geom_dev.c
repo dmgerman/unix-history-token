@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -1657,7 +1663,7 @@ name|g_trace
 argument_list|(
 name|G_T_BIO
 argument_list|,
-literal|"g_dev_done(%p/%p) resid %ld completed %lld"
+literal|"g_dev_done(%p/%p) resid %ld completed %jd"
 argument_list|,
 name|bp2
 argument_list|,
@@ -1667,6 +1673,9 @@ name|bp
 operator|->
 name|bio_resid
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp2
 operator|->
 name|bio_completed
@@ -1798,16 +1807,22 @@ name|g_trace
 argument_list|(
 name|G_T_BIO
 argument_list|,
-literal|"g_dev_strategy(%p/%p) offset %lld length %lld data %p cmd %d"
+literal|"g_dev_strategy(%p/%p) offset %jd length %jd data %p cmd %d"
 argument_list|,
 name|bp
 argument_list|,
 name|bp2
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp2
 operator|->
 name|bio_length
