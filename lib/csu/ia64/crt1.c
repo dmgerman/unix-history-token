@@ -203,7 +203,8 @@ modifier|*
 modifier|*
 name|env
 decl_stmt|;
-asm|__asm __volatile("movl gp=_GLOBAL_OFFSET_TABLE_");
+comment|/* Calculate gp */
+asm|__asm __volatile(" \ 		movl gp=@gprel(1f) ; \ 		;; ; \ 	     1: mov r14=ip ; \ 		;; ; \ 		sub gp=r14,gp ; \ 		;; ");
 name|argc
 operator|=
 operator|*
