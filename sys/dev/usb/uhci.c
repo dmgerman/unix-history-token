@@ -4628,28 +4628,12 @@ name|status
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* The interrupt was not for us. */
-name|printf
-argument_list|(
-literal|"%s: interrupt, but not for us\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|#
 directive|if
 name|defined
