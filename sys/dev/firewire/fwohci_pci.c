@@ -710,7 +710,7 @@ operator|==
 operator|(
 name|FW_VENDORID_SONY
 operator||
-name|FW_DEVICE_CX3022
+name|FW_DEVICE_CXD1947
 operator|)
 condition|)
 block|{
@@ -718,7 +718,29 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Sony CX3022"
+literal|"Sony i.LINK (CXD1947)"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|id
+operator|==
+operator|(
+name|FW_VENDORID_SONY
+operator||
+name|FW_DEVICE_CXD3222
+operator|)
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Sony i.LINK (CXD3222)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -740,7 +762,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"VIA VT6306"
+literal|"VIA Fire II (VT6306)"
 argument_list|)
 expr_stmt|;
 return|return

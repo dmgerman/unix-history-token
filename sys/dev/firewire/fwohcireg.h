@@ -209,7 +209,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_DEVICE_CX3022
+name|FW_DEVICE_CXD1947
+value|(0x8009<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_CXD3222
 value|(0x8039<< 16)
 end_define
 
