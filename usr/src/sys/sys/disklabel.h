@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)disklabel.h	7.1 (Berkeley) %G%  */
+comment|/*  *	@(#)disklabel.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ value|"/etc/disktab"
 end_define
 
 begin_comment
-comment|/*  * Each disk has a label which includes information about the hardware  * disk geometry, filesystem partitions, and drive specific information.  * The label is in block 0 or 1, possibly offset from the beginning  * to leave room for a bootstrap, etc.  */
+comment|/*  * Each disk has a label which includes information about the hardware  * disk geometry, filesystem partitions, and drive specific information.  * The label is in block 0 or 1, possibly offset from the beginning  * to leave room for a bootstrap, etc.  * All fields are stored in "standard" (network) byte order.  */
 end_comment
 
 begin_define
@@ -69,125 +69,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|DTYPE_SMD
-value|1
-end_define
-
-begin_comment
-comment|/* SMD, XSMD; VAX hp/up */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_MSCP
-value|2
-end_define
-
-begin_comment
-comment|/* MSCP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_DEC
-value|3
-end_define
-
-begin_comment
-comment|/* other DEC (rk, rl) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_SCSI
-value|4
-end_define
-
-begin_comment
-comment|/* SCSI/ST506 etc. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_ESDI
-value|5
-end_define
-
-begin_comment
-comment|/* ESDI interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_FLOPPY
-value|10
-end_define
-
-begin_comment
-comment|/* floppy */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DKTYPENAMES
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|dktypenames
-index|[]
-init|=
-block|{
-literal|"unknown"
-block|,
-literal|"SMD"
-block|,
-literal|"MSCP"
-block|,
-literal|"old DEC"
-block|,
-literal|"SCSI"
-block|,
-literal|"ESDI"
-block|,
-literal|"type 6"
-block|,
-literal|"type 7"
-block|,
-literal|"type 8"
-block|,
-literal|"type 9"
-block|,
-literal|"floppy"
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DKMAXTYPES
-value|(sizeof(dktypenames) / sizeof(dktypenames[0]) - 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -210,72 +91,6 @@ name|short
 name|d_subtype
 decl_stmt|;
 comment|/* controller/d_type specific */
-comment|/* disk geometry: */
-name|u_long
-name|d_secsize
-decl_stmt|;
-comment|/* # of bytes per sector */
-name|u_long
-name|d_nsectors
-decl_stmt|;
-comment|/* # of sectors per track */
-name|u_long
-name|d_ntracks
-decl_stmt|;
-comment|/* # of tracks per cylinder */
-name|u_long
-name|d_ncylinders
-decl_stmt|;
-comment|/* # of cylinders per unit */
-name|u_long
-name|d_acylinders
-decl_stmt|;
-comment|/* # of alt. cylinders per unit */
-name|u_long
-name|d_secpercyl
-decl_stmt|;
-comment|/* # of sectors per cylinder */
-name|u_long
-name|d_secperunit
-decl_stmt|;
-comment|/* # of sectors per unit */
-comment|/* hardware characteristics: */
-name|u_long
-name|d_rpm
-decl_stmt|;
-comment|/* rotational speed */
-name|u_short
-name|d_interleave
-decl_stmt|;
-comment|/* hardware sector interleave */
-name|u_short
-name|d_sectorskew
-decl_stmt|;
-comment|/* sector 0 skew, per track */
-name|u_short
-name|d_headswitch
-decl_stmt|;
-comment|/* head switch time, usec */
-name|u_short
-name|d_trkseek
-decl_stmt|;
-comment|/* track-to-track seek, usec */
-name|u_long
-name|d_flags
-decl_stmt|;
-comment|/* generic flags */
-define|#
-directive|define
-name|NDDATA
-value|10
-name|u_long
-name|d_drivedata
-index|[
-name|NDDATA
-index|]
-decl_stmt|;
-comment|/* drive-type specific information */
-comment|/* other identification: */
 name|char
 name|d_typename
 index|[
@@ -290,16 +105,111 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* pack identifier */
+define|#
+directive|define
+name|d_swabfirst
+value|d_secsize
+comment|/* disk geometry: */
+name|u_long
+name|d_secsize
+decl_stmt|;
+comment|/* # of bytes per sector */
+name|u_long
+name|d_nsectors
+decl_stmt|;
+comment|/* # of data sectors per track */
+name|u_long
+name|d_ntracks
+decl_stmt|;
+comment|/* # of tracks per cylinder */
+name|u_long
+name|d_ncylinders
+decl_stmt|;
+comment|/* # of data cylinders per unit */
+name|u_long
+name|d_secpercyl
+decl_stmt|;
+comment|/* # of data sectors per cylinder */
+name|u_long
+name|d_secperunit
+decl_stmt|;
+comment|/* # of data sectors per unit */
+comment|/* 	 * Spares (bad sector replacements) below 	 * are not counted in d_nsectors or d_secpercyl. 	 * Spare sectors are assumed to be physical sectors 	 * which occupy space at the end of each track and/or cylinder. 	 */
+name|u_long
+name|d_sparespertrack
+decl_stmt|;
+comment|/* # of spare sectors per track */
+name|u_long
+name|d_sparespercyl
+decl_stmt|;
+comment|/* # of spare sectors per cylinder */
+comment|/* 	 * Alternate cylinders include maintenance, replacement, 	 * configuration description areas, etc. 	 */
+name|u_long
+name|d_acylinders
+decl_stmt|;
+comment|/* # of alt. cylinders per unit */
+comment|/* hardware characteristics: */
+name|u_long
+name|d_rpm
+decl_stmt|;
+comment|/* rotational speed */
+comment|/* 	 * d_interleave, d_trackskew and d_cylskew describe perturbations 	 * in the media format used to compensate for a slow controller. 	 * Interleave is physical sector interleave, set up by the formatter 	 * or controller when formatting.  When interleaving is in use, 	 * logically adjacent sectors are not physically contiguous, 	 * but instead are separated by some number of sectors. 	 * It is specified as the ratio of physical sectors traversed 	 * per logical sector.  Thus an interleave of 1:1 implies contiguous 	 * layout, while 2:1 implies that logical sector 0 is separated 	 * by one sector from logical sector 1. 	 * d_trackskew is the offset of sector 0 on track N 	 * relative to sector 0 on track N-1 on the same cylinder. 	 * Finally, d_cylskew is the offset of sector 0 on cylinder N 	 * relative to sector 0 on cylinder N-1. 	 */
+name|u_long
+name|d_interleave
+decl_stmt|;
+comment|/* hardware sector interleave */
+name|u_long
+name|d_trackskew
+decl_stmt|;
+comment|/* sector 0 skew, per track */
+name|u_long
+name|d_cylskew
+decl_stmt|;
+comment|/* sector 0 skew, per cylinder */
+name|u_long
+name|d_headswitch
+decl_stmt|;
+comment|/* head switch time, usec */
+name|u_long
+name|d_trkseek
+decl_stmt|;
+comment|/* track-to-track seek, usec */
+name|u_long
+name|d_flags
+decl_stmt|;
+comment|/* generic flags */
+define|#
+directive|define
+name|NDDATA
+value|5
+name|u_long
+name|d_drivedata
+index|[
+name|NDDATA
+index|]
+decl_stmt|;
+comment|/* drive-type specific information */
+define|#
+directive|define
+name|NSPARE
+value|5
+name|u_long
+name|d_spare
+index|[
+name|NSPARE
+index|]
+decl_stmt|;
+comment|/* reserved for future use */
 name|u_long
 name|d_magic2
 decl_stmt|;
 comment|/* the magic number (again) */
-name|u_short
+name|u_long
 name|d_checksum
 decl_stmt|;
 comment|/* xor of data incl. partitions */
 comment|/* filesystem and partition information: */
-name|u_short
+name|u_long
 name|d_npartitions
 decl_stmt|;
 comment|/* number of partitions in following */
@@ -311,6 +221,10 @@ name|u_long
 name|d_sbsize
 decl_stmt|;
 comment|/* max size of fs superblock, bytes */
+define|#
+directive|define
+name|d_swablast
+value|d_sbsize
 struct|struct
 name|partition
 block|{
@@ -350,10 +264,139 @@ block|}
 struct|;
 end_struct
 
-begin_endif
+begin_else
+else|#
+directive|else
+else|LOCORE
+end_else
+
+begin_comment
+comment|/* 	 * offsets for asm boot files. 	 * Warning: all fields in big-endian byte order! 	 */
+end_comment
+
+begin_expr_stmt
+operator|.
+name|set
+name|d_secsize
+operator|,
+literal|40
+operator|.
+name|set
+name|d_nsectors
+operator|,
+literal|44
+operator|.
+name|set
+name|d_ntracks
+operator|,
+literal|48
+operator|.
+name|set
+name|d_ncylinders
+operator|,
+literal|52
+operator|.
+name|set
+name|d_secpercyl
+operator|,
+literal|56
+operator|.
+name|set
+name|d_secperunit
+operator|,
+literal|60
+operator|.
+name|set
+name|d_end_
+operator|,
+literal|292
+comment|/* size of disk label */
 endif|#
 directive|endif
 endif|LOCORE
+comment|/* d_type values: */
+define|#
+directive|define
+name|DTYPE_SMD
+value|1
+comment|/* SMD, XSMD; VAX hp/up */
+define|#
+directive|define
+name|DTYPE_MSCP
+value|2
+comment|/* MSCP */
+define|#
+directive|define
+name|DTYPE_DEC
+value|3
+comment|/* other DEC (rk, rl) */
+define|#
+directive|define
+name|DTYPE_SCSI
+value|4
+comment|/* SCSI */
+define|#
+directive|define
+name|DTYPE_ESDI
+value|5
+comment|/* ESDI interface */
+define|#
+directive|define
+name|DTYPE_ST506
+value|6
+comment|/* ST506 etc. */
+define|#
+directive|define
+name|DTYPE_FLOPPY
+value|10
+comment|/* floppy */
+ifdef|#
+directive|ifdef
+name|DKTYPENAMES
+specifier|static
+name|char
+operator|*
+name|dktypenames
+index|[]
+operator|=
+block|{
+literal|"unknown"
+block|,
+literal|"SMD"
+block|,
+literal|"MSCP"
+block|,
+literal|"old DEC"
+block|,
+literal|"SCSI"
+block|,
+literal|"ESDI"
+block|,
+literal|"type 6"
+block|,
+literal|"type 7"
+block|,
+literal|"type 8"
+block|,
+literal|"type 9"
+block|,
+literal|"floppy"
+block|,
+literal|0
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|DKMAXTYPES
+value|(sizeof(dktypenames) / sizeof(dktypenames[0]) - 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_comment
