@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ddb/ddb.h>
 end_include
 
@@ -32,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
+file|<machine/setjmp.h>
 end_include
 
 begin_decl_stmt

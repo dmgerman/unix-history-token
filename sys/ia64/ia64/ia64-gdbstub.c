@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
+file|<machine/setjmp.h>
 end_include
 
 begin_include

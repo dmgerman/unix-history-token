@@ -40,13 +40,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<machine/ansi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/libkern.h>
 end_include
 
 begin_comment
