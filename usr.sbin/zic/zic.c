@@ -3037,6 +3037,8 @@ literal|"invalid file mode"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mflag
+operator|=
 name|getmode
 argument_list|(
 name|set
