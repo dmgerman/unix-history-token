@@ -2505,6 +2505,11 @@ operator|&
 name|nfds
 argument_list|)
 expr_stmt|;
+name|bundle_CleanDatalinks
+argument_list|(
+name|bundle
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bundle_IsDead
