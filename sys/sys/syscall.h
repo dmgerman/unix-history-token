@@ -1655,7 +1655,7 @@ begin_define
 define|#
 directive|define
 name|SYS_MAXSYSCALL
-value|339
+value|340
 end_define
 
 end_unit

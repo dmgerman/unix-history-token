@@ -1732,5 +1732,12 @@ argument|jail
 argument_list|)
 end_macro
 
+begin_macro
+name|HIDE_BSD
+argument_list|(
+argument|pioctl
+argument_list|)
+end_macro
+
 end_unit
 
