@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|15
+value|16
 end_define
 
 begin_comment
@@ -1309,27 +1309,32 @@ comment|/* config options */
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int32_t
-operator|:
-literal|9
-operator|,
+name|isp_mboxbsy
+range|:
+literal|8
+decl_stmt|,
+comment|/* mailbox command active */
+range|:
+literal|1
+decl_stmt|,
 name|isp_state
-operator|:
+range|:
 literal|3
-operator|,
+decl_stmt|,
 name|isp_sendmarker
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 comment|/* send a marker entry */
 name|isp_update
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 comment|/* update parameters */
 name|isp_nactive
-operator|:
+range|:
 literal|16
-expr_stmt|;
+decl_stmt|;
 comment|/* how many commands active */
 specifier|volatile
 name|u_int16_t
@@ -1351,6 +1356,13 @@ name|u_int16_t
 name|isp_lasthdls
 decl_stmt|;
 comment|/* last handle seed */
+specifier|volatile
+name|u_int16_t
+name|isp_mboxtmp
+index|[
+name|MAX_MAILBOX
+index|]
+decl_stmt|;
 comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
 name|ISP_SCSI_XFER_T
 modifier|*
