@@ -1718,6 +1718,14 @@ name|vp
 operator|->
 name|v_type
 argument_list|,
+name|ip
+operator|->
+name|i_uid
+argument_list|,
+name|ip
+operator|->
+name|i_gid
+argument_list|,
 name|acl
 argument_list|,
 name|ap

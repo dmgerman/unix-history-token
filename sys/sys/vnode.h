@@ -2339,6 +2339,12 @@ expr|enum
 name|vtype
 name|type
 operator|,
+name|uid_t
+name|file_uid
+operator|,
+name|gid_t
+name|file_gid
+operator|,
 expr|struct
 name|acl
 operator|*
