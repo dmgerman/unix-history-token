@@ -514,6 +514,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* default serial gdb speed if not set with sysctl or probed from boot */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GDBSPEED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GDBSPEED
+value|CONSPEED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
