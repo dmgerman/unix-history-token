@@ -314,6 +314,12 @@ begin_comment
 comment|/* whence values for lseek(2) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEEK_SET
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -346,6 +352,11 @@ end_define
 begin_comment
 comment|/* set file offset to EOF plus offset */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
