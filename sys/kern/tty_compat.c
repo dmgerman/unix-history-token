@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty_compat.c	8.1 (Berkeley) 6/10/93  * $Id: tty_compat.c,v 1.8 1995/03/29 19:50:58 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty_compat.c	8.1 (Berkeley) 6/10/93  * $Id: tty_compat.c,v 1.9 1995/04/02 03:51:53 ache Exp $  */
 end_comment
 
 begin_comment
@@ -82,7 +82,6 @@ file|<sys/syslog.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ttcompatgetflags
 name|__P
@@ -98,7 +97,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|ttcompatsetflags
 name|__P
@@ -119,7 +117,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|ttcompatsetlflags
 name|__P
@@ -355,6 +352,10 @@ name|int
 name|flag
 decl_stmt|;
 block|{
+name|struct
+name|termios
+name|term
+decl_stmt|;
 switch|switch
 condition|(
 name|com
@@ -512,10 +513,6 @@ name|sgttyb
 operator|*
 operator|)
 name|data
-decl_stmt|;
-name|struct
-name|termios
-name|term
 decl_stmt|;
 name|int
 name|speed
@@ -761,11 +758,19 @@ specifier|register
 name|cc_t
 modifier|*
 name|cc
-init|=
+decl_stmt|;
+name|term
+operator|=
 name|tp
 operator|->
-name|t_cc
-decl_stmt|;
+name|t_termios
+expr_stmt|;
+name|cc
+operator|=
+name|term
+operator|.
+name|c_cc
+expr_stmt|;
 name|cc
 index|[
 name|VINTR
@@ -836,7 +841,21 @@ index|]
 operator|=
 name|_POSIX_VDISABLE
 expr_stmt|;
-break|break;
+return|return
+operator|(
+name|ttioctl
+argument_list|(
+name|tp
+argument_list|,
+name|TIOCSETA
+argument_list|,
+operator|&
+name|term
+argument_list|,
+name|flag
+argument_list|)
+operator|)
+return|;
 block|}
 case|case
 name|TIOCSLTC
@@ -858,11 +877,19 @@ specifier|register
 name|cc_t
 modifier|*
 name|cc
-init|=
+decl_stmt|;
+name|term
+operator|=
 name|tp
 operator|->
-name|t_cc
-decl_stmt|;
+name|t_termios
+expr_stmt|;
+name|cc
+operator|=
+name|term
+operator|.
+name|c_cc
+expr_stmt|;
 name|cc
 index|[
 name|VSUSP
@@ -917,7 +944,21 @@ name|ltc
 operator|->
 name|t_lnextc
 expr_stmt|;
-break|break;
+return|return
+operator|(
+name|ttioctl
+argument_list|(
+name|tp
+argument_list|,
+name|TIOCSETA
+argument_list|,
+operator|&
+name|term
+argument_list|,
+name|flag
+argument_list|)
+operator|)
+return|;
 block|}
 case|case
 name|TIOCGLTC
@@ -1009,11 +1050,6 @@ case|:
 case|case
 name|TIOCLSET
 case|:
-block|{
-name|struct
-name|termios
-name|term
-decl_stmt|;
 name|term
 operator|=
 name|tp
@@ -1130,7 +1166,6 @@ name|flag
 argument_list|)
 operator|)
 return|;
-block|}
 case|case
 name|TIOCLGET
 case|:
@@ -1288,7 +1323,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ttcompatgetflags
 parameter_list|(
@@ -1637,7 +1671,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ttcompatsetflags
 parameter_list|(
@@ -2057,7 +2090,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ttcompatsetlflags
 parameter_list|(
