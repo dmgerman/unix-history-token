@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.3 1998/02/20 13:11:44 bde Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.4 1998/04/17 22:36:20 des Exp $"
 end_empty
 
 begin_include
@@ -4114,6 +4114,10 @@ operator|!
 name|dpt_devsw_installed
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"DPT:  RAID Manager driver, Version %d.%d.%d\n"

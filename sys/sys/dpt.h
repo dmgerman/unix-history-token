@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.1 1998/01/26 06:11:15 julian Exp $"
+empty|#ident "$Id: dpt.h,v 1.2 1998/04/15 17:47:28 bde Exp $"
 end_empty
 
 begin_ifndef
@@ -111,21 +111,21 @@ begin_define
 define|#
 directive|define
 name|DPT_PATCH
-value|2
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPT_MONTH
-value|1
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPT_DAY
-value|20
+value|1
 end_define
 
 begin_define
@@ -136,7 +136,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* 1997 - 1980 */
+comment|/* 1998 - 1980 */
 end_comment
 
 begin_define
