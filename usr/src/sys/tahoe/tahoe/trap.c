@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -933,12 +933,19 @@ name|error
 decl_stmt|,
 name|opc
 decl_stmt|;
-name|int
+struct|struct
 name|args
+block|{
+name|int
+name|i
 index|[
 literal|8
 index|]
-decl_stmt|,
+decl_stmt|;
+block|}
+name|args
+struct|;
+name|int
 name|rval
 index|[
 literal|2
@@ -1121,6 +1128,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|args
 argument_list|,
 operator|(
@@ -1173,6 +1181,8 @@ operator|->
 name|sy_narg
 argument_list|,
 name|args
+operator|.
+name|i
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1206,6 +1216,8 @@ operator|->
 name|sy_narg
 argument_list|,
 name|args
+operator|.
+name|i
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1240,6 +1252,7 @@ name|u
 operator|.
 name|u_procp
 argument_list|,
+operator|&
 name|args
 argument_list|,
 name|rval
