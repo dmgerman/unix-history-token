@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)make.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)make.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -308,39 +308,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OP_EXPORT
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* UNUSED: The creation of the target 				     * should be sent somewhere else, if 				     * possible. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_NOEXPORT
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* The creation should not be sent 				     * elsewhere */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_EXPORTSAME
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* Export only to machine with same 				     * architecture */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|OP_INVISIBLE
 value|0x00004000
 end_define
@@ -358,21 +325,6 @@ end_define
 
 begin_comment
 comment|/* The node is exempt from normal 'main 				     * target' processing in parse.c */
-end_comment
-
-begin_comment
-comment|/*XXX*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OP_M68020
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Command must be run on a 68020 */
 end_comment
 
 begin_comment
@@ -878,17 +830,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|noExport
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TRUE if should not export any jobs */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|Boolean
 name|checkEnvFirst
 decl_stmt|;
 end_decl_stmt
@@ -1158,51 +1099,6 @@ include|#
 directive|include
 file|"nonints.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|Sprite
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|Str_FindSubstring
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|strstr(s1, s2)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Sprite */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern

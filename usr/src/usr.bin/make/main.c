@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -V flag */
+comment|/* variable substitution style */
 end_comment
 
 begin_decl_stmt
@@ -382,42 +382,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -e flag */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Boolean
-name|XFlag
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -X flag given */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Boolean
-name|xFlag
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -x flag given */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|noExport
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Set TRUE if shouldn't export */
 end_comment
 
 begin_decl_stmt
@@ -450,36 +414,6 @@ name|initOptInd
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CAN_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OPTSTR
-value|"BCD:I:J:L:MPSVWXd:ef:iknp:qrstvxh"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|OPTSTR
-value|"BCD:I:J:L:MPSVWd:ef:iknp:qrstvh"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -506,22 +440,8 @@ literal|"-P		Don't use pipes to catch the output of jobs, use files."
 block|,
 literal|"-S	    	Turn off the -k flag (see below)."
 block|,
-ifndef|#
-directive|ifndef
-name|POSIX
-literal|"-V		Use old-style variable substitution."
-block|,
-endif|#
-directive|endif
 literal|"-W		Don't print warning messages."
 block|,
-ifdef|#
-directive|ifdef
-name|CAN_EXPORT
-literal|"-X		Turn off exporting of commands."
-block|,
-endif|#
-directive|endif
 literal|"-d<flags>  	Turn on debugging output."
 block|,
 literal|"-e		Give environment variables precedence over those in the\n\ 		makefile(s)."
@@ -544,16 +464,8 @@ literal|"-s	    	Don't print commands as they are executed."
 block|,
 literal|"-t	    	Update targets by \"touching\" them (see touch(1))."
 block|,
-literal|"-v	    	Be compatible with System V make. Implies -B, -V."
-block|,
-ifdef|#
-directive|ifdef
-name|CAN_EXPORT
-literal|"-x	    	Allow exportation of commands."
-block|,
-endif|#
-directive|endif
-block|}
+literal|"-v	    	Be compatible with System V make. Implies -B."
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -617,7 +529,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|OPTSTR
+literal|"BCD:I:J:L:MPSWd:ef:iknp:qrstvh"
 argument_list|)
 operator|)
 operator|!=
@@ -635,8 +547,6 @@ literal|'B'
 case|:
 name|backwards
 operator|=
-name|oldVars
-operator|=
 name|TRUE
 expr_stmt|;
 name|Var_Append
@@ -652,8 +562,6 @@ break|break;
 case|case
 literal|'C'
 case|:
-name|oldVars
-operator|=
 name|backwards
 operator|=
 name|sysVmake
@@ -840,23 +748,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'V'
-case|:
-name|oldVars
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-V"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'W'
 case|:
 name|noWarnings
@@ -868,23 +759,6 @@ argument_list|(
 name|MAKEFLAGS
 argument_list|,
 literal|"-W"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'X'
-case|:
-name|XFlag
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-X"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
@@ -1196,8 +1070,6 @@ literal|'v'
 case|:
 name|sysVmake
 operator|=
-name|oldVars
-operator|=
 name|backwards
 operator|=
 name|TRUE
@@ -1284,16 +1156,10 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|backwards
-condition|)
-block|{
 name|oldVars
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 comment|/*      * See if the rest of the arguments are variable assignments and perform      * them if so. Else take them to be targets and stuff them on the end      * of the "create" list.      */
 for|for
 control|(
@@ -1641,11 +1507,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* Do things the old-fashioned way */
-name|oldVars
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* Same with variables */
 block|}
 elseif|else
 if|if
@@ -1671,8 +1532,6 @@ condition|)
 block|{
 name|sysVmake
 operator|=
-name|oldVars
-operator|=
 name|backwards
 operator|=
 name|TRUE
@@ -1689,10 +1548,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* Do things MY way, not MAKE's */
-name|oldVars
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 comment|/*      * Initialize the parsing, directory and variable modules to prepare      * for the reading of inclusion paths and variable settings on the      * command line       */
 name|Dir_Init
@@ -2002,30 +1857,6 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/*      * Figure "noExport" out based on the current mode. Since exporting each      * command in make mode is rather inefficient, we only export if the -x      * flag was given. In regular mode though, we only refuse to export if      * -X was given. In case the operative flag was given in the environment,      * however, the opposite one may be given on the command line and cancel      * the action.      */
-if|if
-condition|(
-name|amMake
-condition|)
-block|{
-name|noExport
-operator|=
-operator|!
-name|xFlag
-operator|||
-name|XFlag
-expr_stmt|;
-block|}
-else|else
-block|{
-name|noExport
-operator|=
-name|XFlag
-operator|&&
-operator|!
-name|xFlag
-expr_stmt|;
-block|}
 name|Var_Append
 argument_list|(
 literal|"MFLAGS"
@@ -2211,9 +2042,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|Rmt_Init
-argument_list|()
-expr_stmt|;
 comment|/*      * Have now read the entire graph and need to make a list of targets to      * create. If none was given on the command line, we consult the parsing      * module to find the main target(s) to create.      */
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	5.2 (Berkeley) %G%"
+literal|"@(#)compat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,42 +647,10 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * If the job has not been marked unexportable, tell the Rmt module we've      * got something for it...local is set TRUE if the job should be run      * locally.      */
-if|if
-condition|(
-operator|!
-operator|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_NOEXPORT
-operator|)
-condition|)
-block|{
-name|local
-operator|=
-operator|!
-name|Rmt_Begin
-argument_list|(
-name|av
-index|[
-literal|0
-index|]
-argument_list|,
-name|av
-argument_list|,
-name|gn
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|local
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 comment|/*      * Fork and execute the single command. If the fork fails, we abort.      */
 name|cpid
 operator|=
@@ -761,7 +729,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|Rmt_Exec
+operator|(
+name|void
+operator|)
+name|execv
 argument_list|(
 name|av
 index|[
@@ -769,8 +740,6 @@ literal|0
 index|]
 argument_list|,
 name|av
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -818,10 +787,7 @@ condition|)
 block|{
 name|id
 operator|=
-name|Rmt_LastID
-argument_list|(
-name|cpid
-argument_list|)
+literal|0
 expr_stmt|;
 block|}
 while|while
@@ -853,18 +819,6 @@ condition|)
 block|{
 break|break;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|local
-condition|)
-block|{
-name|Rmt_Done
-argument_list|(
-name|id
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

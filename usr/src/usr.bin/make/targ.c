@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)targ.c	5.3 (Berkeley) %G%"
+literal|"@(#)targ.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,21 +1151,6 @@ argument_list|)
 expr_stmt|;
 name|PRINTBIT
 argument_list|(
-name|EXPORT
-argument_list|)
-expr_stmt|;
-name|PRINTBIT
-argument_list|(
-name|NOEXPORT
-argument_list|)
-expr_stmt|;
-name|PRINTBIT
-argument_list|(
-name|EXPORTSAME
-argument_list|)
-expr_stmt|;
-name|PRINTBIT
-argument_list|(
 name|INVISIBLE
 argument_list|)
 expr_stmt|;
@@ -1177,11 +1162,6 @@ expr_stmt|;
 name|PRINTDBIT
 argument_list|(
 name|LIB
-argument_list|)
-expr_stmt|;
-name|PRINTBIT
-argument_list|(
-name|M68020
 argument_list|)
 expr_stmt|;
 comment|/*XXX: MEMBER is defined, so CONCAT(OP_,MEMBER) gives OP_"%" */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.6 (Berkeley) %G%"
+literal|"@(#)job.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,9 +624,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to a job if the job is remote or if USE_PGRP  *	is defined.  *  * Results:  *	=== 0  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -862,9 +859,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobCmpPid  --  *	Compare the pid of the job with the given pid and return 0 if they  *	are equal. This function is called from Job_CatchChildren via  *	Lst_Find to find the job descriptor of the finished job.  *  * Results:  *	0 if the pid's match  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -899,9 +893,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobPrintCommand  --  *	Put out another command for the given job. If the command starts  *	with an @ or a - we process it specially. In the former case,  *	so long as the -s and -n flags weren't given to make, we stick  *	a shell-specific echoOff command in the script. In the latter,  *	we ignore errors for the entire job, unless the shell has error  *	control.  *	If the command is just "..." we take all future commands for this  *	job to be commands to be executed once the entire graph has been  *	made and return non-zero to signal that the end of the commands  *	was reached. These commands are later attached to the postCommands  *	node and executed by Job_End when all things are done.  *	This function is called from JobStart via Lst_ForEach.  *  * Results:  *	Always 0, unless the command was "..."  *  * Side Effects:  *	If the command begins with a '-' and the shell has no error control,  *	the JOB_IGNERR flag is set in the job descriptor.  *	If the command is "..." and we're not ignoring such things,  *	tailCmds is set to the successor node of the cmd.  *	numCommands is incremented if the command is actually printed.  *-----------------------------------------------------------------------  */
@@ -1426,9 +1417,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobSaveCommand --  *	Save a command to be executed when everything else is done.  *	Callback function for JobFinish...  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The command is tacked onto the end of postCommands's commands list.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1484,9 +1472,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobFinish  --  *	Do final processing for the given job including updating  *	parents and starting new jobs as available/necessary. Note  *	that we pay no attention to the JOB_IGNERR flag here.  *	This is because when we're called because of a noexecute flag  *	or something, jstat.w_status is 0 and when called from  *	Job_CatchChildren, the status is zeroed if it s/b ignored.  *  * Results:  *	None  *  * Side Effects:  *	Some nodes may be put on the toBeMade queue.  *	Final commands for the job are placed on postCommands.  *  *	If we got an error and are aborting (aborting == ABORT_ERROR) and  *	the job list is now empty, we are done for the day.  *	If we recognized an error (errors !=0), we set the aborting flag  *	to ABORT_ERROR so no more jobs will be started.  *-----------------------------------------------------------------------  */
@@ -2479,9 +2464,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_Touch --  *	Touch the given target. Called by JobStart when the -t flag was  *	given  *  * Results:  *	None  *  * Side Effects:  *	The data modification of the file is changed. In addition, if the  *	file did not exist, it is created.  *-----------------------------------------------------------------------  */
 end_comment
@@ -2751,9 +2733,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_CheckCommands --  *	Make sure the given node has all the commands it needs.   *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  *-----------------------------------------------------------------------  */
 end_comment
@@ -2993,9 +2972,6 @@ end_endif
 begin_comment
 comment|/* RMT_WILL_WATCH */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobExec --  *	Execute the shell for the given job. Called from JobStart and  *	JobRestart.  *  * Results:  *	None.  *  * Side Effects:  *	A shell is executed, outputs is altered and the Job structure added  *	to the job table.  *  *-----------------------------------------------------------------------  */
@@ -3300,27 +3276,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|USE_PGRP
-if|if
-condition|(
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMOTE
-condition|)
-block|{
-name|Rmt_Exec
-argument_list|(
-name|shellPath
-argument_list|,
-name|argv
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 operator|(
 name|void
 operator|)
@@ -3331,7 +3286,6 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -3428,12 +3382,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Rmt_LastID
-argument_list|(
-name|job
-operator|->
-name|pid
-argument_list|)
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -3502,9 +3451,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobMakeArgv --  *	Create the argv needed to execute the shell for a given job.  *	  *  * Results:  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
@@ -3738,11 +3684,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobRestart --  *	Restart a job that stopped for some reason. If the job stopped  *	because it migrated home again, we tell the Rmt module to  *	find a new home for it and make it runnable if Rmt_ReExport  *	succeeded (if it didn't and the job may be run locally, we  *	simply resume it). If the job didn't run and can now, we run it.  *  * Results:  *	None.  *  * Side Effects:  *	jobFull will be set if the job couldn't be run.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobRestart --  *	Restart a job that stopped for some reason.   *  * Results:  *	None.  *  * Side Effects:  *	jobFull will be set if the job couldn't be run.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3782,31 +3725,6 @@ argument_list|,
 name|job
 operator|->
 name|pid
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|Rmt_ReExport
-argument_list|(
-name|job
-operator|->
-name|pid
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|DEBUG
-argument_list|(
-name|JOB
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Couldn't migrate..."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3907,22 +3825,6 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-block|}
-else|else
-block|{
-comment|/* 	     * Clear out the remigrate and resume flags. If MIGRATE was set, 	     * leave that around for JobFinish to see so it doesn't print out 	     * that the job was continued. 	     */
-name|job
-operator|->
-name|flags
-operator|&=
-operator|~
-operator|(
-name|JOB_REMIGRATE
-operator||
-name|JOB_RESUME
-operator|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -4012,47 +3914,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|job
-operator|->
-name|node
-operator|->
-name|type
-operator|&
-name|OP_NOEXPORT
-operator|)
-operator|||
-ifdef|#
-directive|ifdef
-name|RMT_NO_EXEC
-operator|!
-name|Rmt_Export
-argument_list|(
-name|shellPath
-argument_list|,
-name|argv
-argument_list|,
-name|job
-argument_list|)
-else|#
-directive|else
-operator|!
-name|Rmt_Begin
-argument_list|(
-name|shellPath
-argument_list|,
-name|argv
-argument_list|,
-name|job
-operator|->
-name|node
-argument_list|)
-endif|#
-directive|endif
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -4146,31 +4007,6 @@ operator|~
 name|JOB_REMOTE
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-comment|/* 	     * Can be exported. Hooray! 	     */
-if|if
-condition|(
-name|DEBUG
-argument_list|(
-name|JOB
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"exporting\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|job
-operator|->
-name|flags
-operator||=
-name|JOB_REMOTE
-expr_stmt|;
-block|}
 name|JobExec
 argument_list|(
 name|job
@@ -4227,16 +4063,6 @@ operator|->
 name|flags
 operator|&
 name|JOB_SPECIAL
-operator|)
-operator|||
-operator|(
-name|job
-operator|->
-name|node
-operator|->
-name|type
-operator|&
-name|OP_NOEXPORT
 operator|)
 operator|)
 operator|&&
@@ -4458,9 +4284,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobStart  --  *	Start a target-creation process going for the target described  *	by the graph node gn.   *  * Results:  *	JOB_ERROR if there was an error in the commands, JOB_FINISHED  *	if there isn't actually anything left to do for the job and  *	JOB_RUNNING if the job has been started.  *  * Side Effects:  *	A new Job node is created and added to the list of running  *	jobs. PMake is forked and a child shell created.  *-----------------------------------------------------------------------  */
@@ -5384,71 +5207,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_NOEXPORT
-operator|)
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|RMT_NO_EXEC
-name|local
-operator|=
-operator|!
-name|Rmt_Export
-argument_list|(
-name|shellPath
-argument_list|,
-name|argv
-argument_list|,
-name|job
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|local
-operator|=
-operator|!
-name|Rmt_Begin
-argument_list|(
-name|shellPath
-argument_list|,
-name|argv
-argument_list|,
-name|gn
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMT_NO_EXEC */
-if|if
-condition|(
-operator|!
-name|local
-condition|)
-block|{
-name|job
-operator|->
-name|flags
-operator||=
-name|JOB_REMOTE
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
 name|local
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|local
@@ -5471,26 +5233,15 @@ name|JOB_SPECIAL
 operator|)
 operator|&&
 operator|(
-operator|!
-operator|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_NOEXPORT
-operator|)
-operator|||
-operator|(
 name|maxLocal
 operator|!=
 literal|0
 operator|)
 operator|)
 operator|)
-operator|)
 condition|)
 block|{
-comment|/* 	 * The job can only be run locally, but we've hit the limit of 	 * local concurrency, so put the job on hold until some other job 	 * finishes. Note that the special jobs (.BEGIN, .INTERRUPT and .END) 	 * may be run locally even when the local limit has been reached 	 * (e.g. when maxLocal == 0), though they will be exported if at 	 * all possible. In addition, any target marked with .NOEXPORT will 	 * be run locally if maxLocal is 0. 	 */
+comment|/* 	 * The job can only be run locally, but we've hit the limit of 	 * local concurrency, so put the job on hold until some other job 	 * finishes. Note that the special jobs (.BEGIN, .INTERRUPT and .END) 	 * may be run locally even when the local limit has been reached 	 * (e.g. when maxLocal == 0), though they will be exported if at 	 * all possible.  	 */
 name|jobFull
 operator|=
 name|TRUE
@@ -5577,9 +5328,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobDoOutput  --  *	This function is called at different times depending on  *	whether the user has specified that output is to be collected  *	via pipes or temporary files. In the former case, we are called  *	whenever there is something to read on the pipe. We collect more  *	output from the given job and store it in the job's outBuf. If  *	this makes up a line, we print it tagged by the job's identifier,  *	as necessary.  *	If output has been collected in a temporary file, we open the  *	file and read it line by line, transfering it to our own  *	output channel until the file is empty. At which point we  *	remove the temporary file.  *	In both cases, however, we keep our figurative eye out for the  *	'noPrint' line for the shell from which the output came. If  *	we recognize a line, we don't print it. If the command is not  *	alone on the line (the character after it is not \0 or \n), we  *	do print whatever follows it.  *  * Results:  *	None  *  * Side Effects:  *	curPos may be shifted as may the contents of outBuf.  *-----------------------------------------------------------------------  */
@@ -6419,9 +6167,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_CatchChildren --  *	Handle the exit of a child. Called from Make_Make.  *  * Results:  *	none.  *  * Side Effects:  *	The job descriptor is removed from the list of children.  *  * Notes:  *	We do waits, blocking or not, according to the wisdom of our  *	caller, until there are no more children to report. For each  *	job, call JobFinish to finish things off. This will take care of  *	putting jobs on the stoppedJobs queue.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -6660,30 +6405,10 @@ name|jobFull
 operator|=
 name|FALSE
 expr_stmt|;
-if|if
-condition|(
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMOTE
-condition|)
-block|{
-name|Rmt_Done
-argument_list|(
-name|job
-operator|->
-name|rmtID
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|nLocal
 operator|-=
 literal|1
 expr_stmt|;
-block|}
 block|}
 name|JobFinish
 argument_list|(
@@ -6695,9 +6420,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_CatchOutput --  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal (most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.   *  * Results:  *	None   *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
@@ -6900,9 +6622,6 @@ comment|/* RMT_WILL_WATCH */
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_Make --  *	Start the creation of a target. Basically a front-end for  *	JobStart used by the Make module.  *  * Results:  *	None.  *  * Side Effects:  *	Another job is started.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -6936,9 +6655,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_Init --  *	Initialize the process module  *  * Results:  *	none  *  * Side Effects:  *	lists and counters are initialized  *-----------------------------------------------------------------------  */
@@ -7350,9 +7066,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_Full --  *	See if the job table is full. It is considered full if it is OR  *	if we are in the process of aborting OR if we have  *	reached/exceeded our local quota. This prevents any more jobs  *	from starting up.  *  * Results:  *	TRUE if the job table is full, FALSE otherwise  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
 end_comment
@@ -7371,9 +7084,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_Empty --  *	See if the job table is empty.  Because the local concurrency may  *	be set to 0, it is possible for the job table to become empty,  *	while the list of stoppedJobs remains non-empty. In such a case,  *	we want to restart as many jobs as we can.  *  * Results:  *	TRUE if it is. FALSE if it ain't.  *  * Side Effects:  *	None.  *  * -----------------------------------------------------------------------  */
@@ -7458,9 +7168,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobMatchShell --  *	Find a matching shell in 'shells' given its final component.  *  * Results:  *	A pointer to the Shell structure.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -7635,9 +7342,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_ParseShell --  *	Parse a shell specification and set up commandShell, shellPath  *	and shellName appropriately.  *  * Results:  *	FAILURE if the specification was incorrect.  *  * Side Effects:  *	commandShell points to a Shell structure (either predefined or  *	created from the shell spec), shellPath is the full path of the  *	shell described by commandShell, while shellName is just the  *	final component of shellPath.  *  * Notes:  *	A shell specification consists of a .SHELL target, with dependency  *	operator, followed by a series of blank-separated words. Double  *	quotes can be used to use blanks in words. A backslash escapes  *	anything (most notably a double-quote and a space) and  *	provides the functionality it does in C. Each word consists of  *	keyword and value separated by an equal sign. There should be no  *	unnecessary spaces in the word. The keywords are as follows:  *	    name  	    Name of shell.  *	    path  	    Location of shell. Overrides "name" if given  *	    quiet 	    Command to turn off echoing.  *	    echo  	    Command to turn echoing on  *	    filter	    Result of turning off echoing that shouldn't be  *	    	  	    printed.  *	    echoFlag	    Flag to turn echoing on at the start  *	    errFlag	    Flag to turn error checking on at the start  *	    hasErrCtl	    True if shell has error checking control  *	    check 	    Command to turn on error checking if hasErrCtl  *	    	  	    is TRUE or template of command to echo a command  *	    	  	    for which error checking is off if hasErrCtl is  *	    	  	    FALSE.  *	    ignore	    Command to turn off error checking if hasErrCtl  *	    	  	    is TRUE or template of command to execute a  *	    	  	    command so as to ignore any errors it returns if  *	    	  	    hasErrCtl is FALSE.  *  *-----------------------------------------------------------------------  */
@@ -8375,9 +8079,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobInterrupt --  *	Handle the receipt of an interrupt.  *  * Results:  *	None  *  * Side Effects:  *	All children are killed. Another job will be started if the  *	.INTERRUPT target was given.  *-----------------------------------------------------------------------  */
 end_comment
@@ -8681,9 +8382,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*  *-----------------------------------------------------------------------  * Job_End --  *	Do final processing such as the running of the commands  *	attached to the .END target.   *  * Results:  *	Number of errors reported.  *  * Side Effects:  *	The process' temporary file (tfile) is removed if it still  *	existed.  *-----------------------------------------------------------------------  */
 end_comment
@@ -8775,9 +8473,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_Wait --  *	Waits for all running jobs to finish and returns. Sets 'aborting'  *	to ABORT_WAIT to prevent other jobs from starting.  *  * Results:  *	None.  *  * Side Effects:  *	Currently running jobs finish.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -8820,9 +8515,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_AbortAll --  *	Abort all currently running jobs without handling output or anything.  *	This function is to be called only in the event of a major  *	error. Most definitely NOT to be called from JobInterrupt.  *  * Results:  *	None  *  * Side Effects:  *	All children are killed, not just the firstborn  *-----------------------------------------------------------------------  */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.4 (Berkeley) %G%"
+literal|"@(#)parse.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,19 +220,6 @@ comment|/* list of directories for<...> includes */
 end_comment
 
 begin_comment
-comment|/*-  * anyExport is used to trace if any target will need exportation. If none  * does, then any .EXPORT target can be ignored and the process needn't  * be slowed down by trying to connect to some load-balancing system.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Boolean
-name|anyExport
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*-  * specType contains the SPECial TYPE of the current target. It is  * Not if the target is unspecial. If it *is* special, however, the children  * are linked as children of the parent but not vice versa. This variable is  * set in ParseDoDependency  */
 end_comment
 
@@ -249,9 +236,6 @@ comment|/* .DEFAULT */
 name|End
 block|,
 comment|/* .END */
-name|Export
-block|,
-comment|/* .EXPORT */
 name|Ignore
 block|,
 comment|/* .IGNORE */
@@ -270,9 +254,6 @@ comment|/* .MFLAGS or .MAKEFLAGS */
 name|Main
 block|,
 comment|/* .MAIN and we don't have anything user-specified to 		     * make */
-name|NoExport
-block|,
-comment|/* .NOEXPORT */
 name|Not
 block|,
 comment|/* Not special */
@@ -396,22 +377,6 @@ name|OP_EXEC
 block|}
 block|,
 block|{
-literal|".EXPORT"
-block|,
-name|Export
-block|,
-name|OP_EXPORT
-block|}
-block|,
-block|{
-literal|".EXPORTSAME"
-block|,
-name|Attribute
-block|,
-name|OP_EXPORTSAME
-block|}
-block|,
-block|{
 literal|".IGNORE"
 block|,
 name|Ignore
@@ -460,14 +425,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|".M68020"
-block|,
-name|Attribute
-block|,
-name|OP_M68020
-block|}
-block|,
-block|{
 literal|".MAIN"
 block|,
 name|Main
@@ -497,14 +454,6 @@ block|,
 name|MFlags
 block|,
 literal|0
-block|}
-block|,
-block|{
-literal|".NOEXPORT"
-block|,
-name|NoExport
-block|,
-name|OP_NOEXPORT
 block|}
 block|,
 block|{
@@ -849,23 +798,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Parse_AnyExport --  *	Return TRUE if any target was labeled for exportation.  *  * Results:  *	TRUE or FALSE...  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|Boolean
-name|Parse_AnyExport
-parameter_list|()
-block|{
-return|return
-operator|(
-name|anyExport
-operator|)
-return|;
 block|}
 end_function
 
@@ -1254,18 +1186,6 @@ operator|)
 name|op
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|op
-operator|==
-name|OP_EXPORT
-condition|)
-block|{
-name|anyExport
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1940,7 +1860,7 @@ index|]
 operator|.
 name|op
 expr_stmt|;
-comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.EXPORT		Doesn't really apply the 		 *			.EXPORT operator to its 		 *			sources, so we reset tOp. 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.BEGIN 		 *	.END 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NIL 		 */
+comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.BEGIN 		 *	.END 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NIL 		 */
 switch|switch
 condition|(
 name|specType
@@ -1976,14 +1896,6 @@ name|ClientData
 operator|)
 name|dirSearchPath
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|Export
-case|:
-name|tOp
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2636,7 +2548,7 @@ name|line
 operator|=
 name|cp
 expr_stmt|;
-comment|/*      * Several special targets take different actions if present with no      * sources:      *	a .SUFFIXES line with no sources clears out all old suffixes      *	a .PRECIOUS line makes all targets precious      *	a .IGNORE line ignores errors for all targets      *	a .SILENT line creates silence when making all targets      *	a .PATH removes all directories from the search path(s).      *	a .NOEXPORT turns off exportation for all jobs.      */
+comment|/*      * Several special targets take different actions if present with no      * sources:      *	a .SUFFIXES line with no sources clears out all old suffixes      *	a .PRECIOUS line makes all targets precious      *	a .IGNORE line ignores errors for all targets      *	a .SILENT line creates silence when making all targets      *	a .PATH removes all directories from the search path(s).      */
 if|if
 condition|(
 operator|!
@@ -2694,14 +2606,6 @@ name|ClientData
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|NoExport
-case|:
-name|noExport
-operator|=
-name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -2811,12 +2715,6 @@ operator|||
 operator|(
 name|specType
 operator|==
-name|Export
-operator|)
-operator|||
-operator|(
-name|specType
-operator|==
 name|Null
 operator|)
 condition|)
@@ -2827,7 +2725,7 @@ operator|*
 name|line
 condition|)
 block|{
-comment|/* 	     * If the target was one that doesn't take files as its sources 	     * but takes something like suffixes, we take each 	     * space-separated word on the line as a something and deal 	     * with it accordingly. 	     * 	     * If the target was .SUFFIXES, we take each source as a 	     * suffix and add it to the list of suffixes maintained by the 	     * Suff module. 	     * 	     * If the target was a .PATH, we add the source as a directory 	     * to search on the search path. 	     * 	     * If it was .INCLUDES, the source is taken to be the suffix of 	     * files which will be #included and whose search path should 	     * be present in the .INCLUDES variable. 	     * 	     * If it was .LIBS, the source is taken to be the suffix of 	     * files which are considered libraries and whose search path 	     * should be present in the .LIBS variable. 	     * 	     * If it was .EXPORT, the source is the location of the export 	     * server and is passed to the Rmt module as such. 	     * 	     * If it was .NULL, the source is the suffix to use when a file 	     * has no valid suffix. 	     */
+comment|/* 	     * If the target was one that doesn't take files as its sources 	     * but takes something like suffixes, we take each 	     * space-separated word on the line as a something and deal 	     * with it accordingly. 	     * 	     * If the target was .SUFFIXES, we take each source as a 	     * suffix and add it to the list of suffixes maintained by the 	     * Suff module. 	     * 	     * If the target was a .PATH, we add the source as a directory 	     * to search on the search path. 	     * 	     * If it was .INCLUDES, the source is taken to be the suffix of 	     * files which will be #included and whose search path should 	     * be present in the .INCLUDES variable. 	     * 	     * If it was .LIBS, the source is taken to be the suffix of 	     * files which are considered libraries and whose search path 	     * should be present in the .LIBS variable. 	     * 	     * If it was .NULL, the source is the suffix to use when a file 	     * has no valid suffix. 	     */
 name|char
 name|savec
 decl_stmt|;
@@ -2901,15 +2799,6 @@ case|case
 name|Libs
 case|:
 name|Suff_AddLib
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|Export
-case|:
-name|Rmt_AddServer
 argument_list|(
 name|line
 argument_list|)
