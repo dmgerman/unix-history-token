@@ -1272,7 +1272,11 @@ modifier|*
 name|context
 parameter_list|,
 name|u_int32_t
+modifier|*
 name|irq
+parameter_list|,
+name|int
+name|cout
 parameter_list|)
 function_decl|;
 name|void
@@ -1289,7 +1293,11 @@ modifier|*
 name|context
 parameter_list|,
 name|u_int32_t
+modifier|*
 name|drq
+parameter_list|,
+name|int
+name|count
 parameter_list|)
 function_decl|;
 name|void
