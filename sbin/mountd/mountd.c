@@ -1157,31 +1157,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* C library */
-end_comment
-
-begin_function_decl
-name|int
-name|getnetgrent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|endnetgrent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|setnetgrent
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|exportlist

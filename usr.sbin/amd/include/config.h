@@ -6053,9 +6053,11 @@ begin_comment
 comment|/* does extern definition for innetgr() exist? */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_EXTERN_INNETGR */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_EXTERN_INNETGR
+end_define
 
 begin_comment
 comment|/* does extern definition for mkstemp() exist? */
