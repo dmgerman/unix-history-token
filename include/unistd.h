@@ -1862,14 +1862,11 @@ operator|*
 operator|,
 name|int
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|__P
 argument_list|(
-operator|(
 name|void
 operator|*
-operator|)
 argument_list|)
 operator|,
 name|void
