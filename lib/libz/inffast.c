@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.c -- process literals and length/distance pairs fast  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inffast.c -- process literals and length/distance pairs fast  * Copyright (C) 1995-2002 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_include
@@ -429,96 +429,66 @@ name|m
 operator|-=
 name|c
 expr_stmt|;
+name|r
+operator|=
+name|q
+operator|-
+name|d
+expr_stmt|;
 if|if
 condition|(
-call|(
-name|uInt
-call|)
-argument_list|(
-name|q
-operator|-
+name|r
+operator|<
 name|s
 operator|->
 name|window
-argument_list|)
-operator|>=
-name|d
 condition|)
-comment|/* offset before dest */
+comment|/* wrap if needed */
 block|{
-comment|/*  just copy */
-name|r
-operator|=
-name|q
-operator|-
-name|d
-expr_stmt|;
-operator|*
-name|q
-operator|++
-operator|=
-operator|*
-name|r
-operator|++
-expr_stmt|;
-name|c
-operator|--
-expr_stmt|;
-comment|/* minimum count is three, */
-operator|*
-name|q
-operator|++
-operator|=
-operator|*
-name|r
-operator|++
-expr_stmt|;
-name|c
-operator|--
-expr_stmt|;
-comment|/*  so unroll loop a little */
-block|}
-else|else
-comment|/* else offset after destination */
+do|do
 block|{
-name|e
-operator|=
-name|d
-operator|-
-call|(
-name|uInt
-call|)
-argument_list|(
-name|q
+name|r
+operator|+=
+name|s
+operator|->
+name|end
 operator|-
 name|s
 operator|->
 name|window
-argument_list|)
 expr_stmt|;
-comment|/* bytes from offset to end */
+comment|/* force pointer in window */
+block|}
+do|while
+condition|(
 name|r
+operator|<
+name|s
+operator|->
+name|window
+condition|)
+do|;
+comment|/* covers invalid distances */
+name|e
 operator|=
 name|s
 operator|->
 name|end
 operator|-
-name|e
+name|r
 expr_stmt|;
-comment|/* pointer to offset */
 if|if
 condition|(
 name|c
 operator|>
 name|e
 condition|)
-comment|/* if source crosses, */
 block|{
 name|c
 operator|-=
 name|e
 expr_stmt|;
-comment|/* copy to end of window */
+comment|/* wrapped copy */
 do|do
 block|{
 operator|*
@@ -542,12 +512,8 @@ name|s
 operator|->
 name|window
 expr_stmt|;
-comment|/* copy rest from start of window */
-block|}
-block|}
 do|do
 block|{
-comment|/* copy all or what's left */
 operator|*
 name|q
 operator|++
@@ -563,6 +529,94 @@ operator|--
 name|c
 condition|)
 do|;
+block|}
+else|else
+comment|/* normal copy */
+block|{
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|r
+operator|++
+expr_stmt|;
+name|c
+operator|--
+expr_stmt|;
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|r
+operator|++
+expr_stmt|;
+name|c
+operator|--
+expr_stmt|;
+do|do
+block|{
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|r
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|c
+condition|)
+do|;
+block|}
+block|}
+else|else
+comment|/* normal copy */
+block|{
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|r
+operator|++
+expr_stmt|;
+name|c
+operator|--
+expr_stmt|;
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|r
+operator|++
+expr_stmt|;
+name|c
+operator|--
+expr_stmt|;
+do|do
+block|{
+operator|*
+name|q
+operator|++
+operator|=
+operator|*
+name|r
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|c
+condition|)
+do|;
+block|}
 break|break;
 block|}
 elseif|else

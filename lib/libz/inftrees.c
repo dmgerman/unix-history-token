@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2002 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.1.3 Copyright 1995-1998 Mark Adler "
+literal|" inflate 1.1.4 Copyright 1995-2002 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -557,7 +557,7 @@ modifier|*
 name|v
 decl_stmt|;
 comment|/* working area: values in order of bit length */
-comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return Z_OK on success, Z_BUF_ERROR    if the given code set is incomplete (the tables are still built in this    case), Z_DATA_ERROR if the input is invalid (an over-subscribed set of    lengths), or Z_MEM_ERROR if not enough memory. */
+comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return Z_OK on success, Z_BUF_ERROR    if the given code set is incomplete (the tables are still built in this    case), or Z_DATA_ERROR if the input is invalid. */
 block|{
 name|uInt
 name|a
@@ -1182,9 +1182,9 @@ name|MANY
 condition|)
 comment|/* (note: doesn't matter for fixed) */
 return|return
-name|Z_MEM_ERROR
+name|Z_DATA_ERROR
 return|;
-comment|/* not enough memory */
+comment|/* overflow of MANY */
 name|u
 index|[
 name|h

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.c -- compress data using the deflation algorithm  * Copyright (C) 1995-1998 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* deflate.c -- compress data using the deflation algorithm  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|deflate_copyright
 index|[]
 init|=
-literal|" deflate 1.1.3 Copyright 1995-1998 Jean-loup Gailly "
+literal|" deflate 1.1.4 Copyright 1995-2002 Jean-loup Gailly "
 decl_stmt|;
 end_decl_stmt
 
@@ -927,7 +927,7 @@ name|Z_DEFLATED
 operator|||
 name|windowBits
 operator|<
-literal|8
+literal|9
 operator|||
 name|windowBits
 operator|>
