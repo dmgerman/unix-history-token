@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -611,7 +617,11 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"%s"
+argument_list|,
+name|args
+operator|.
+name|fspec
 argument_list|)
 expr_stmt|;
 name|exit
