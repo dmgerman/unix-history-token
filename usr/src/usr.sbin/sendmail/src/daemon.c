@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.87 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.88 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.87 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.88 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3014,7 +3014,7 @@ name|s
 operator|->
 name|s_namecanon
 operator|.
-name|nc_name
+name|nc_cname
 argument_list|)
 expr_stmt|;
 name|errno
