@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	8.2 (Berkeley) %G%"
+literal|"@(#)lprint.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,7 +314,7 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|tmp

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.3 (Berkeley) %G%"
+literal|"@(#)finger.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -617,7 +617,7 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|tmp
@@ -1130,7 +1130,7 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|memcpy
+name|memmove
 argument_list|(
 operator|&
 name|tmp
