@@ -999,7 +999,7 @@ value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|(access),	    \ 	ptr, 
 end_define
 
 begin_comment
-comment|/* Oid for a long.  The pointer must be non NULL. */
+comment|/* Oid for an unsigned long.  The pointer must be non NULL. */
 end_comment
 
 begin_define
