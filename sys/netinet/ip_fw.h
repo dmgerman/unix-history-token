@@ -98,6 +98,9 @@ comment|/* arg1 = id			*/
 name|O_IPTOS
 block|,
 comment|/* arg1 = id			*/
+name|O_IPPRECEDENCE
+block|,
+comment|/* arg1 = precedence<< 5	*/
 name|O_IPTTL
 block|,
 comment|/* arg1 = TTL			*/

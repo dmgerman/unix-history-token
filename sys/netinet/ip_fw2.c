@@ -264,6 +264,16 @@ begin_comment
 comment|/* XXX for ETHERTYPE_IP */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
+begin_comment
+comment|/* XXX for in_cksum */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1509,10 +1519,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXX done  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1551,7 +1557,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* XXX by name */
+comment|/* match by name */
 comment|/* Check unit number (-1 is wildcard) */
 if|if
 condition|(
@@ -1915,19 +1921,47 @@ break|break;
 case|case
 name|O_REJECT
 case|:
-name|action
-operator|=
-operator|(
+if|if
+condition|(
 name|cmd
 operator|->
 name|arg1
 operator|==
 name|ICMP_REJECT_RST
-operator|)
-condition|?
+condition|)
+name|action
+operator|=
 literal|"Reset"
-else|:
-literal|"Unreach"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cmd
+operator|->
+name|arg1
+operator|==
+name|ICMP_UNREACH_HOST
+condition|)
+name|action
+operator|=
+literal|"Reject"
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|SNPARGS
+argument_list|(
+name|action2
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|"Unreach %d"
+argument_list|,
+name|cmd
+operator|->
+name|arg1
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2805,7 +2839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IMPORTANT: the hash function for dynamic rules must be commutative  * in * source and destination (ip,port), because rules are bidirectional  * and we want to find both in the same bucket.  */
+comment|/*  * IMPORTANT: the hash function for dynamic rules must be commutative  * in source and destination (ip,port), because rules are bidirectional  * and we want to find both in the same bucket.  */
 end_comment
 
 begin_function
@@ -4481,6 +4515,61 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static void send_pkt(struct ip_fw_args *args, u_int32_t seq, u_int32_t ack, int flags) { 	struct mbuf *m; 	struct ip *ip = mtod(args->m, struct ip *); 	struct tcphdr *tcp; 	struct route sro;
+comment|/* fake route */
+end_comment
+
+begin_comment
+unit|MGETHDR(m, M_DONTWAIT, MT_HEADER); 	if (m == 0)   		return; 	m->m_pkthdr.rcvif = (struct ifnet *)0; 	m->m_pkthdr.len = m->m_len = sizeof(struct ip) + sizeof(struct tcphdr); 	m->m_data += max_linkhdr;  	ip->ip_v = 4; 	ip->ip_hl = 5; 	ip->ip_tos = 0; 	ip->ip_len = 0;
+comment|/* set later */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+end_ifdef
+
+begin_else
+unit|ip->ip_id = ip_randomid();
+else|#
+directive|else
+end_else
+
+begin_endif
+unit|ip->ip_id = htons(ip_id++);
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+unit|ip->ip_off = 0; 	ip->ip_ttl = 0;
+comment|/* set later */
+end_comment
+
+begin_comment
+unit|ip->ip_p = IPPROTO_TCP; 	ip->ip_sum = 0; 	ip->ip_src.s_addr = args->f_id.dst_ip; 	ip->ip_dst.s_addr = args->f_id.src_ip;  	tcp = L3HDR(struct tcphdr, ip); 	tcp->th_sport = htons(args->f_id.dst_port);
+comment|/* swap ports */
+end_comment
+
+begin_comment
+unit|tcp->th_dport = htons(args->f_id.src_port); 	tcp->th_off = 4; 	tcp->th_x2 = 0; 	tcp->th_win = 0; 	tcp->th_sum = 0; 	tcp->th_urp = 0; 	if (flags& TH_ACK) { 		tcp->th_seq = htonl(ack); 		tcp->th_ack = htonl(0); 		tcp->th_flags = TH_RST; 	} else { 		if (flags& TH_SYN) 			seq++; 		tcp->th_seq = htonl(0); 		tcp->th_ack = htonl(seq); 		tcp->th_flags = TH_RST | TH_ACK; 	}
+comment|/* compute TCP checksum... */
+end_comment
+
+begin_endif
+unit|tcp->th_sum = in_cksum(m, m->m_pkthdr.len); 	ip->ip_ttl = ip_defttl; 	ip->ip_len = m->m_pkthdr.len; 	bzero (&sro, sizeof (sro)); 	ip_rtaddr(ip->ip_dst,&sro); 	ip_output(m, NULL,&sro, 0, NULL); 	if (sro.ro_rt) 		RTFREE(sro.ro_rt); }
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * sends a reject message, consuming the mbuf passed as an argument.  */
 end_comment
@@ -4491,9 +4580,9 @@ name|void
 name|send_reject
 parameter_list|(
 name|struct
-name|mbuf
+name|ip_fw_args
 modifier|*
-name|m
+name|args
 parameter_list|,
 name|int
 name|code
@@ -4514,6 +4603,8 @@ condition|)
 comment|/* Send an ICMP unreach */
 name|icmp_error
 argument_list|(
+name|args
+operator|->
 name|m
 argument_list|,
 name|ICMP_UNREACH
@@ -4525,8 +4616,28 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|offset
+operator|==
+literal|0
+operator|&&
+name|args
+operator|->
+name|f_id
+operator|.
+name|proto
+operator|==
+name|IPPROTO_TCP
+condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|struct tcphdr *const tcp = 		    L3HDR(struct tcphdr, mtod(args->m, struct ip *)); 		if ( (tcp->th_flags& TH_RST) == 0) 			send_pkt(args, tcp->th_seq, tcp->th_ack, tcp->th_flags); 		m_freem(args->m);
+else|#
+directive|else
 comment|/* XXX warning, this code writes into the mbuf */
 name|struct
 name|ip
@@ -4535,6 +4646,8 @@ name|ip
 init|=
 name|mtod
 argument_list|(
+name|args
+operator|->
 name|m
 argument_list|,
 expr|struct
@@ -4582,25 +4695,27 @@ literal|2
 decl_stmt|;
 if|if
 condition|(
-name|offset
-operator|!=
-literal|0
-operator|||
-operator|(
 name|tcp
 operator|->
 name|th_flags
 operator|&
 name|TH_RST
-operator|)
 condition|)
 block|{
 name|m_freem
 argument_list|(
+name|args
+operator|->
 name|m
 argument_list|)
 expr_stmt|;
 comment|/* free the mbuf */
+name|args
+operator|->
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 name|ti
@@ -4696,6 +4811,8 @@ name|ip
 argument_list|,
 name|tcp
 argument_list|,
+name|args
+operator|->
 name|m
 argument_list|,
 literal|0
@@ -4735,6 +4852,8 @@ name|ip
 argument_list|,
 name|tcp
 argument_list|,
+name|args
+operator|->
 name|m
 argument_list|,
 name|tip
@@ -4753,7 +4872,23 @@ name|TH_ACK
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
+else|else
+name|m_freem
+argument_list|(
+name|args
+operator|->
+name|m
+argument_list|)
+expr_stmt|;
+name|args
+operator|->
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -6748,6 +6883,35 @@ goto|goto
 name|cmd_match
 goto|;
 case|case
+name|O_IPPRECEDENCE
+case|:
+if|if
+condition|(
+name|hlen
+operator|==
+literal|0
+operator|||
+operator|(
+name|cmd
+operator|->
+name|arg1
+operator|!=
+operator|(
+name|ip
+operator|->
+name|ip_tos
+operator|&
+literal|0xe0
+operator|)
+operator|)
+condition|)
+goto|goto
+name|cmd_fail
+goto|;
+goto|goto
+name|cmd_match
+goto|;
+case|case
 name|O_IPTOS
 case|:
 if|if
@@ -7022,7 +7186,6 @@ goto|;
 case|case
 name|O_PROB
 case|:
-comment|/* XXX check */
 if|if
 condition|(
 name|random
@@ -7352,7 +7515,7 @@ condition|)
 block|{
 name|send_reject
 argument_list|(
-name|m
+name|args
 argument_list|,
 name|cmd
 operator|->
@@ -7363,13 +7526,11 @@ argument_list|,
 name|ip_len
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
 name|args
 operator|->
 name|m
-operator|=
-name|m
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 goto|goto
@@ -7558,26 +7719,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX old instructions not implemented yet XXX */
-end_comment
-
-begin_endif
-unit|bogusfrag:     if (fw_verbose) { 	if (*m != NULL) 	    ipfw_report(NULL, ip, ip_off, ip_len, (*m)->m_pkthdr.rcvif, oif);     }     return(IP_FW_PORT_DENY_FLAG);  		if (f->fw_ipflg& IP_FW_IF_IPPRE&& 		     (f->fw_iptos& 0xe0) != (ip->ip_tos& 0xe0)) 			continue;
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XXX old instructions not implemented yet */
-end_comment
 
 begin_comment
 comment|/*  * When a rule is added/deleted, clear the next_rule pointers in all rules.  * These will be reconstructed on the fly as packets are matched.  * Must be called at splimp().  */
@@ -8804,6 +8945,9 @@ case|case
 name|O_IPTOS
 case|:
 case|case
+name|O_IPPRECEDENCE
+case|:
+case|case
 name|O_IPTTL
 case|:
 case|case
@@ -9115,7 +9259,6 @@ goto|;
 case|case
 name|O_FORWARD_IP
 case|:
-comment|/* XXX no! */
 if|if
 condition|(
 name|cmdlen
@@ -9134,7 +9277,7 @@ goto|;
 case|case
 name|O_FORWARD_MAC
 case|:
-comment|/* XXX no! */
+comment|/* XXX not implemented yet */
 case|case
 name|O_CHECK_STATE
 case|:
