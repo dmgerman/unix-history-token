@@ -794,14 +794,6 @@ name|td
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|struct
 name|vnode
 modifier|*
 name|vp
