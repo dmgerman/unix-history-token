@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.27.1.1	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.28	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,16 +188,15 @@ directive|include
 file|<varargs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_comment
 comment|/*  * File containing login names  * NOT to be used on this machine.  * Commonly used to disallow uucp.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FTPUSERS
-value|"/etc/ftpusers"
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1059,7 +1058,7 @@ name|void
 operator|)
 name|freopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"w"
 argument_list|,
@@ -1556,7 +1555,7 @@ comment|/* had user command, ask for passwd */
 end_comment
 
 begin_comment
-comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists  * and is acceptable; sets askpasswd if a PASS command is  * expected. If logged in previously, need to reset state.  * If name is "ftp" or "anonymous" and ftp account exists,  * set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  * Otherwise, check user requesting login privileges.  * Disallow anyone who does not have a standard  * shell returned by getusershell() (/etc/shells).  * Disallow anyone mentioned in the file FTPUSERS  * to allow people such as root and uucp to be avoided.  */
+comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists  * and is acceptable; sets askpasswd if a PASS command is  * expected. If logged in previously, need to reset state.  * If name is "ftp" or "anonymous" and ftp account exists,  * set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  * Otherwise, check user requesting login privileges.  * Disallow anyone who does not have a standard  * shell as returned by getusershell().  * Disallow anyone mentioned in the file _PATH_FTPUSERS  * to allow people such as root and uucp to be avoided.  */
 end_comment
 
 begin_macro
@@ -1717,7 +1716,7 @@ literal|0
 condition|)
 name|shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 while|while
 condition|(
@@ -1794,7 +1793,7 @@ name|fd
 operator|=
 name|fopen
 argument_list|(
-name|FTPUSERS
+name|_PATH_FTPUSERS
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2898,6 +2897,8 @@ decl_stmt|,
 name|on
 init|=
 literal|1
+decl_stmt|,
+name|tries
 decl_stmt|;
 if|if
 condition|(
@@ -2991,6 +2992,17 @@ name|ctrl_addr
 operator|.
 name|sin_addr
 expr_stmt|;
+for|for
+control|(
+name|tries
+operator|=
+literal|1
+init|;
+condition|;
+name|tries
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|bind
@@ -3010,12 +3022,29 @@ argument_list|(
 name|data_source
 argument_list|)
 argument_list|)
-operator|<
+operator|>=
 literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EADDRINUSE
+operator|||
+name|tries
+operator|>
+literal|10
 condition|)
 goto|goto
 name|bad
 goto|;
+name|sleep
+argument_list|(
+name|tries
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -6378,6 +6407,11 @@ decl_stmt|,
 modifier|*
 name|dirname
 decl_stmt|;
+name|int
+name|simple
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|strpbrk
@@ -6466,6 +6500,10 @@ expr_stmt|;
 name|dirlist
 operator|=
 name|onefile
+expr_stmt|;
+name|simple
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -6596,7 +6634,7 @@ name|dout
 operator|=
 name|dataconn
 argument_list|(
-name|whichfiles
+literal|"file list"
 argument_list|,
 operator|(
 name|off_t
@@ -6747,6 +6785,9 @@ expr_stmt|;
 comment|/* 			 * We have to do a stat to insure it's 			 * not a directory or special file. 			 */
 if|if
 condition|(
+name|simple
+operator|||
+operator|(
 name|stat
 argument_list|(
 name|nbuf
@@ -6766,6 +6807,7 @@ name|S_IFMT
 operator|)
 operator|==
 name|S_IFREG
+operator|)
 condition|)
 block|{
 if|if
@@ -6779,7 +6821,7 @@ name|dout
 operator|=
 name|dataconn
 argument_list|(
-name|whichfiles
+literal|"file list"
 argument_list|,
 operator|(
 name|off_t
