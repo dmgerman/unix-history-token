@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999,2000 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998,1999,2000,2001 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -481,6 +481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ATA
@@ -1277,11 +1278,25 @@ name|dev
 argument_list|,
 literal|0x05861106
 argument_list|,
-literal|0
+literal|0x02
 argument_list|)
 condition|)
 return|return
 literal|"VIA 82C586 ATA33 controller"
+return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x05861106
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+literal|"VIA 82C586 ATA controller"
 return|;
 if|if
 condition|(
@@ -1310,6 +1325,20 @@ argument_list|)
 condition|)
 return|return
 literal|"VIA 82C596 ATA33 controller"
+return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x06861106
+argument_list|,
+literal|0x40
+argument_list|)
+condition|)
+return|return
+literal|"VIA 82C686 ATA100 controller"
 return|;
 if|if
 condition|(
@@ -3390,7 +3419,7 @@ argument_list|)
 decl_stmt|;
 name|device_t
 modifier|*
-name|list
+name|children
 decl_stmt|;
 name|int
 name|count
@@ -3406,7 +3435,7 @@ name|dev
 argument_list|)
 argument_list|,
 operator|&
-name|list
+name|children
 argument_list|,
 operator|&
 name|count
@@ -3428,7 +3457,7 @@ control|)
 block|{
 if|if
 condition|(
-name|list
+name|children
 index|[
 name|i
 index|]
@@ -3442,6 +3471,13 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|children
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|scp
 operator|->
 name|chiptype
@@ -9656,6 +9692,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 condition|)
@@ -9667,17 +9705,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bzero
-argument_list|(
-name|ata_delayed_attach
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|intr_config_hook
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ata_delayed_attach
 operator|->
 name|ich_func
