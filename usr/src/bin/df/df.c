@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.9 (Berkeley) %G%"
+literal|"@(#)df.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,8 @@ decl_stmt|,
 name|optind
 decl_stmt|;
 name|int
+name|err
+decl_stmt|,
 name|ch
 decl_stmt|,
 name|i
@@ -345,6 +347,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|err
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -359,7 +365,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|errno
+operator|=
+name|err
+expr_stmt|;
+name|perror
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 block|}
 elseif|else
 if|if
