@@ -81,6 +81,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_MINIMUM_IFREQ
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_CHROOT
 end_define
 
