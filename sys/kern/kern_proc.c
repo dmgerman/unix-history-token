@@ -2774,7 +2774,7 @@ condition|)
 name|kp
 operator|->
 name|ki_kiflag
-operator|=
+operator||=
 name|KI_CTTY
 expr_stmt|;
 if|if
