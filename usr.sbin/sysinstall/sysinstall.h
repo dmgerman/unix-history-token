@@ -2293,6 +2293,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuSendmail
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Sendmail configuration menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuInstallCustom
 decl_stmt|;
 end_decl_stmt

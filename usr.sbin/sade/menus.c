@@ -8603,13 +8603,14 @@ literal|" Sendmail"
 block|,
 literal|"This machine wants to run the sendmail daemon"
 block|,
-name|dmenuVarCheck
+name|NULL
 block|,
-name|dmenuToggleVariable
+name|dmenuSubmenu
 block|,
 name|NULL
 block|,
-literal|"sendmail_enable=YES"
+operator|&
+name|MenuSendmail
 block|}
 block|,
 block|{
@@ -8638,6 +8639,78 @@ block|,
 name|NULL
 block|,
 literal|"tcp_extensions=YES"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSendmail
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Sendmail Invocation Selection"
+block|,
+literal|"There are three options for invoking sendmail at startup.\n"
+literal|"Please select Yes if you want to use sendmail as your mail transfer\n"
+literal|"agent.  Selecting No disables sendmail's network socket for incoming\n"
+literal|"email, but still enables sendmail for outbound mail.  None disables\n"
+literal|"sendmail completely at startup."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|" Yes"
+block|,
+literal|"Start sendmail"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"sendmail_enable=YES"
+block|}
+block|,
+block|{
+literal|" No"
+block|,
+literal|"Start sendmail, but don't listen from network"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"sendmail_enable=NO"
+block|}
+block|,
+block|{
+literal|" None"
+block|,
+literal|"Don't start any sendmail processes"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"sendmail_enable=NONE"
 block|}
 block|,
 block|{
