@@ -6391,6 +6391,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|m3_enable_ints
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcm_register
@@ -7230,11 +7235,6 @@ argument_list|,
 name|reset_state
 operator||
 name|REGB_ENABLE_RESET
-argument_list|)
-expr_stmt|;
-name|m3_enable_ints
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|m3_amp_enable
