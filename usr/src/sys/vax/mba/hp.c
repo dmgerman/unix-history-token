@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.12	%G%	*/
+comment|/*	hp.c	3.13	%G%	*/
 end_comment
 
 begin_comment
@@ -1802,6 +1802,14 @@ operator|.
 name|b_errcnt
 operator|>=
 literal|16
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_WRITE
+operator|)
 condition|)
 block|{
 name|hpaddr
