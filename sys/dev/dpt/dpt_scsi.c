@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.10 1998/08/10 17:06:28 bde Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.11 1998/08/16 23:37:54 bde Exp $"
 end_empty
 
 begin_define
@@ -3171,9 +3171,6 @@ parameter_list|)
 block|{
 name|int
 name|ospl
-init|=
-name|splsoftcam
-argument_list|()
 decl_stmt|;
 name|eata_ccb_t
 modifier|*
@@ -3186,7 +3183,7 @@ name|ccb
 operator|->
 name|eata_ccb
 expr_stmt|;
-comment|/** 	 * Remove the CCB from the waiting queue. 	 *  We do NOT put it back on the free, etc., queues as it is a special 	 * ccb, owned by the dpt_softc of this unit. 	 */
+comment|/* 	 * Remove the CCB from the waiting queue. 	 *  We do NOT put it back on the free, etc., queues as it is a special 	 * ccb, owned by the dpt_softc of this unit. 	 */
 name|ospl
 operator|=
 name|splsoftcam
