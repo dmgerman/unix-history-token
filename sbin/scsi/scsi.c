@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.1.1.1 1995/01/24 12:07:27 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.2 1995/01/26 23:40:40 dufault Exp $  */
 end_comment
 
 begin_include
@@ -495,6 +495,21 @@ operator|->
 name|got
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|&&
+name|name
+condition|)
+name|printf
+argument_list|(
+literal|"%s: %d\n"
+argument_list|,
+name|name
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
 return|return
 name|arg
 return|;
@@ -572,6 +587,21 @@ name|h
 operator|->
 name|got
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|&&
+name|name
+condition|)
+name|printf
+argument_list|(
+literal|"cget: %s: %s"
+argument_list|,
+name|name
+argument_list|,
+name|arg
+argument_list|)
 expr_stmt|;
 return|return
 name|arg
@@ -756,6 +786,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|arg_get
+parameter_list|(
+name|void
+modifier|*
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|field_name
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"get \"%s\".\n"
+argument_list|,
+name|field_name
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* data_phase: SCSI bus data phase: DATA IN, DATA OUT, or no data transfer.  */
 end_comment
@@ -816,6 +872,12 @@ name|data_phase
 decl_stmt|;
 name|int
 name|output
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|data_out
 init|=
 literal|0
 decl_stmt|;
@@ -1038,7 +1100,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* stdin */
+comment|/* Read data from stdin */
 block|{
 if|if
 condition|(
@@ -1071,19 +1133,35 @@ block|}
 else|else
 comment|/* XXX: Not written yet */
 block|{
-name|fprintf
+if|#
+directive|if
+literal|0
+block|int scsireq_encode_visit(scsireq_t *scsireq, char 					*fmt,  						int (*arg_get)(void *hook, char *field_name), 						void *gethook)
+endif|#
+directive|endif
+name|bzero
 argument_list|(
-name|stderr
+name|scsireq
+operator|->
+name|databuf
 argument_list|,
-literal|"Can't set up output data using %s.\n"
-argument_list|,
-name|data_fmt
+name|count
 argument_list|)
 expr_stmt|;
-name|exit
+name|scsireq_encode_visit
 argument_list|(
-operator|-
-literal|1
+name|scsireq
+argument_list|,
+name|data_fmt
+argument_list|,
+name|iget
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|h
 argument_list|)
 expr_stmt|;
 block|}
@@ -1117,6 +1195,22 @@ name|errno
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|SCSIREQ_ERROR
+argument_list|(
+name|scsireq
+argument_list|)
+condition|)
+name|scsi_debug
+argument_list|(
+name|stderr
+argument_list|,
+literal|0
+argument_list|,
+name|scsireq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|data_phase
