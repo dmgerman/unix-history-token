@@ -225,7 +225,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: kmem.c,v 2.2.2.14 2002/04/17 17:44:44 darrenr Exp $"
+literal|"@(#)$Id: kmem.c,v 2.2.2.15 2002/07/27 15:59:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +267,7 @@ end_decl_stmt
 
 begin_function
 name|kvm_t
+modifier|*
 name|kvm_open
 parameter_list|(
 name|kernel
@@ -338,6 +339,7 @@ operator|)
 condition|?
 operator|(
 name|kvm_t
+operator|*
 operator|)
 operator|&
 name|kvm_fd
@@ -360,6 +362,7 @@ parameter_list|,
 name|size
 parameter_list|)
 name|kvm_t
+modifier|*
 name|kvm
 decl_stmt|;
 name|u_long
@@ -373,14 +376,15 @@ name|size_t
 name|size
 decl_stmt|;
 block|{
-name|int
-name|r
-decl_stmt|,
+name|size_t
 name|left
 decl_stmt|;
 name|char
 modifier|*
 name|bufp
+decl_stmt|;
+name|int
+name|r
 decl_stmt|;
 if|if
 condition|(
@@ -503,6 +507,18 @@ end_function
 
 begin_block
 block|{
+union|union
+block|{
+name|int
+name|ui
+decl_stmt|;
+name|kvm_t
+modifier|*
+name|uk
+decl_stmt|;
+block|}
+name|k
+union|;
 name|kvm_f
 operator|=
 name|kvm_open
@@ -535,11 +551,16 @@ operator|-
 literal|1
 return|;
 block|}
-return|return
-operator|(
-name|int
-operator|)
+name|k
+operator|.
+name|uk
+operator|=
 name|kvm_f
+expr_stmt|;
+return|return
+name|k
+operator|.
+name|ui
 return|;
 block|}
 end_block
@@ -614,6 +635,9 @@ name|pos
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|)
 operator|)
@@ -744,6 +768,9 @@ name|pos
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;

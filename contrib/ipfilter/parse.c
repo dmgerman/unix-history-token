@@ -941,7 +941,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|strncasecmp
+name|strcasecmp
 argument_list|(
 operator|*
 operator|(
@@ -951,8 +951,6 @@ literal|1
 operator|)
 argument_list|,
 literal|"return-rst"
-argument_list|,
-literal|10
 argument_list|)
 condition|)
 block|{
@@ -5242,11 +5240,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
-name|secflag
-init|=
-literal|0
-decl_stmt|;
 name|s
 operator|=
 literal|" opt "
@@ -5339,11 +5332,6 @@ operator|=
 literal|","
 expr_stmt|;
 block|}
-else|else
-name|secflag
-operator|=
-literal|1
-expr_stmt|;
 block|}
 if|if
 condition|(

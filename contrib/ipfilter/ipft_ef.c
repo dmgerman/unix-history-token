@@ -234,7 +234,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_ef.c,v 2.2.2.2 2002/02/22 15:32:53 darrenr Exp $"
+literal|"@(#)$Id: ipft_ef.c,v 2.2.2.3 2002/06/27 14:29:17 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,8 +521,6 @@ init|=
 literal|0
 decl_stmt|,
 name|i
-decl_stmt|,
-name|n
 decl_stmt|;
 if|if
 condition|(
@@ -587,9 +585,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|n
-operator|=
 name|sscanf
 argument_list|(
 name|lbuf
@@ -608,15 +603,11 @@ name|sprt
 argument_list|,
 name|dprt
 argument_list|)
-operator|)
 operator|!=
 literal|6
 condition|)
 if|if
 condition|(
-operator|(
-name|n
-operator|=
 name|sscanf
 argument_list|(
 name|lbuf
@@ -637,7 +628,6 @@ name|sprt
 argument_list|,
 name|dprt
 argument_list|)
-operator|)
 operator|!=
 literal|7
 condition|)

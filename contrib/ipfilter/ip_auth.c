@@ -715,7 +715,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.19 2002/04/23 14:57:27 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.20 2002/06/04 14:40:42 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3250,12 +3250,23 @@ operator|->
 name|fae_next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fae_list
+operator|!=
+name|NULL
+condition|)
 name|ipauth
 operator|=
 operator|&
 name|fae_list
 operator|->
 name|fae_fr
+expr_stmt|;
+else|else
+name|ipauth
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(

@@ -634,7 +634,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fils.c,v 2.21.2.35 2002/04/03 14:18:36 darrenr Exp $"
+literal|"@(#)$Id: fils.c,v 2.21.2.36 2002/06/27 14:29:16 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,8 +1415,6 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|,
-name|fd
-decl_stmt|,
 name|myoptind
 decl_stmt|;
 name|struct
@@ -2043,8 +2041,6 @@ name|ifrst
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fd
-operator|=
 name|ipfstate_live
 argument_list|(
 name|device

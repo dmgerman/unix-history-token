@@ -357,7 +357,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.1.2.8 2002/04/25 16:44:13 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.1.2.10 2002/08/28 12:45:51 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1743,7 +1743,7 @@ argument_list|)
 operator|,
 name|printf
 argument_list|(
-literal|"%s pr %u bkt %d/%d flags %x\n"
+literal|"%s pr %u bkt %d/%d flags %x drop %d/%d\n"
 argument_list|,
 name|getsumd
 argument_list|(
@@ -1766,6 +1766,20 @@ argument_list|,
 name|nat
 operator|->
 name|nat_flags
+argument_list|,
+name|nat
+operator|->
+name|nat_drop
+index|[
+literal|0
+index|]
+argument_list|,
+name|nat
+operator|->
+name|nat_drop
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3034,6 +3048,51 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_TCPUDP
+operator|)
+operator|==
+name|IPN_TCPUDP
+condition|)
+name|printf
+argument_list|(
+literal|" tcp/udp"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_TCP
+condition|)
+name|printf
+argument_list|(
+literal|" tcp"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_UDP
+condition|)
+name|printf
+argument_list|(
+literal|" udp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|np
 operator|->
 name|in_flags
@@ -3082,51 +3141,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_TCPUDP
-operator|)
-operator|==
-name|IPN_TCPUDP
-condition|)
-name|printf
-argument_list|(
-literal|" tcp/udp"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_TCP
-condition|)
-name|printf
-argument_list|(
-literal|" tcp"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|np
-operator|->
-name|in_flags
-operator|&
-name|IPN_UDP
-condition|)
-name|printf
-argument_list|(
-literal|" udp"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|" %d:%d"

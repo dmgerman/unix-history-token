@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 2001, QNX Software Systems Ltd. All Rights Reserved  *   * This source code has been published by QNX Software Systems Ltd. (QSSL).  * However, any use, reproduction, modification, distribution or transfer of  * this software, or any software which includes or is based upon any of this  * code, is only permitted under the terms of the QNX Open Community License  * version 1.0 (see licensing.qnx.com for details) or as otherwise expressly  * authorized by a written license agreement from QSSL. For more information,  * please email licensing@qnx.com.  *  */
+comment|/*  * Copyright 2001, QNX Software Systems Ltd. All Rights Reserved  *   * This source code has been published by QNX Software Systems Ltd. (QSSL).  * However, any use, reproduction, modification, distribution or transfer of  * this software, or any software which includes or is based upon any of this  * code, is only permitted under the terms of the QNX Open Community License  * version 1.0 (see licensing.qnx.com for details) or as otherwise expressly  * authorized by a written license agreement from QSSL. For more information,  * please email licensing@qnx.com.  *  * For more details, see QNX_OCL.txt provided with this distribution.  */
 end_comment
 
 begin_comment
@@ -328,6 +328,8 @@ begin_block
 block|{
 name|u_32_t
 name|addr
+decl_stmt|,
+name|netaddr
 decl_stmt|;
 name|u_char
 modifier|*
@@ -363,6 +365,13 @@ name|u_char
 operator|*
 operator|)
 name|data
+expr_stmt|;
+name|netaddr
+operator|=
+name|ntohl
+argument_list|(
+name|ipaddr
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -419,7 +428,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ipaddr
+name|netaddr
 operator|==
 name|addr
 condition|)

@@ -265,7 +265,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.3.2.6 2002/03/13 03:55:15 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.3.2.7 2002/06/27 14:29:17 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,24 +1015,12 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|ip_t
-modifier|*
-name|ip
-decl_stmt|;
 name|char
 name|line
 index|[
 literal|513
 index|]
 decl_stmt|;
-name|ip
-operator|=
-operator|(
-name|ip_t
-operator|*
-operator|)
-name|buf
-expr_stmt|;
 operator|*
 name|ifn
 operator|=
@@ -1163,7 +1151,7 @@ condition|)
 if|#
 directive|if
 literal|0
-then|return sizeof(*ip) + sizeof(tcphdr_t);
+then|return sizeof(ip_t) + sizeof(tcphdr_t);
 else|#
 directive|else
 return|return

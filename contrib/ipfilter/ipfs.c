@@ -268,7 +268,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfs.c,v 2.6.2.9 2002/04/17 17:42:59 darrenr Exp $"
+literal|"@(#)$Id: ipfs.c,v 2.6.2.11 2002/06/04 14:44:05 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3817,9 +3817,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 name|writestate
@@ -3829,9 +3829,9 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|bad
+goto|;
 name|close
 argument_list|(
 name|devfd
@@ -3851,9 +3851,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 name|writenat
@@ -3863,9 +3863,9 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-return|return
-literal|1
-return|;
+goto|goto
+name|bad
+goto|;
 name|close
 argument_list|(
 name|devfd
@@ -3892,6 +3892,23 @@ return|;
 block|}
 return|return
 literal|0
+return|;
+name|bad
+label|:
+name|setlock
+argument_list|(
+name|fd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
 return|;
 block|}
 end_function
