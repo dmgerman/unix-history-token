@@ -1186,6 +1186,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|usb_kthread_create2
+parameter_list|(
+name|f
+parameter_list|,
+name|s
+parameter_list|,
+name|p
+parameter_list|,
+name|a0
+parameter_list|)
+define|\
+value|kthread_create((f), (s), (p), RFHIGHPID, (a0))
+end_define
+
+begin_define
+define|#
+directive|define
 name|usb_kthread_create
 value|kthread_create
 end_define
