@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.6 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.7 %G%"; */
 end_comment
 
 begin_ifdef
@@ -27,6 +27,9 @@ decl_stmt|;
 name|long
 name|objsize
 decl_stmt|;
+name|long
+name|symtabsize
+decl_stmt|;
 name|short
 name|magicnum
 decl_stmt|;
@@ -38,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|HEADER_BYTES
-value|1024
+value|1536
 end_define
 
 begin_comment
@@ -49,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|PX_HEADER
-value|"/usr/lib/px_header"
+value|"/usr/lib/npx_header"
 end_define
 
 begin_comment
@@ -76,6 +79,17 @@ end_define
 
 begin_comment
 comment|/* the interpreter's name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PX_DEBUG
+value|"/usr/ucb/pdx"
+end_define
+
+begin_comment
+comment|/* the debugger's name */
 end_comment
 
 begin_define

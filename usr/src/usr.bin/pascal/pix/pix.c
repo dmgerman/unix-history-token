@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pix.c 1.2 %G%"
+literal|"@(#)pix.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,8 +424,16 @@ name|ac
 index|]
 operator|=
 name|name
-operator|-
-literal|2
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+name|argv
+index|[
+name|ac
+index|]
+operator|=
+literal|"pix"
 expr_stmt|;
 name|argv
 index|[
@@ -437,7 +445,7 @@ expr_stmt|;
 do|do
 name|execv
 argument_list|(
-name|PX_INTRP
+name|PX_DEBUG
 argument_list|,
 operator|&
 name|argv
