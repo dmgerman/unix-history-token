@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.23 1997/03/23 03:35:32 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.24 1997/03/24 11:24:22 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1001,6 +1001,13 @@ name|cp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|timeout_t
+name|matcd_timeout
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -7283,6 +7290,27 @@ comment|/*seconds*/
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|matcd_timeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|matcd_blockread
+argument_list|(
+operator|(
+name|int
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	matcd_blockread - Performs actual background disc I/O operations  	This routine is handed the block number to read, issues the 	command to the drive, waits for it to complete, reads the 	data or error, retries if needed, and returns the results 	to the host. ---------------------------------------------------------------------------*/
 end_comment
@@ -7828,10 +7856,7 @@ directive|endif
 comment|/*DEBUGIO*/
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|matcd_blockread
+name|matcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
