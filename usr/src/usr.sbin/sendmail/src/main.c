@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.133 (Berkeley) %G%"
+literal|"@(#)main.c	8.134 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4139,6 +4139,14 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|unsetenv
+argument_list|(
+literal|"HOSTALIASES"
+argument_list|)
+expr_stmt|;
 name|runqueue
 argument_list|(
 name|FALSE
