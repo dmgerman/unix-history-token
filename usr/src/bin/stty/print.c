@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.2 (Berkeley) %G%"
+literal|"@(#)print.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -804,6 +804,7 @@ name|p
 operator|=
 name|cchars1
 init|;
+operator|*
 name|p
 operator|->
 name|name
@@ -870,6 +871,7 @@ name|cnt
 operator|=
 literal|0
 init|;
+operator|*
 name|p
 operator|->
 name|name
