@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.59 1995/08/21 18:06:48 davidg Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.60 1995/10/04 07:07:44 julian Exp $  */
 end_comment
 
 begin_comment
@@ -174,6 +174,65 @@ file|"npx.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|void
+name|trap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|trapframe
+name|frame
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|trapwrite
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|syscall
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|trapframe
+name|frame
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|linux_syscall
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|trapframe
+name|frame
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|trap_pfault
 name|__P
@@ -212,27 +271,6 @@ name|syscall
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|inthand_t
-name|IDTVEC
-parameter_list|(
-name|linux_syscall
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -333,6 +371,30 @@ literal|"stack fault"
 block|,
 comment|/* 27 T_STKFLT */
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|userret
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+expr|struct
+name|trapframe
+operator|*
+name|frame
+operator|,
+name|u_quad_t
+name|oticks
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -526,11 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * trap(frame):  *	Exception, fault, and trap interface to the FreeBSD kernel.  * This common code is called from assembly language IDT gate entry  * routines that prepare a suitable stack frame, and restore this  * frame after the exception has been processed.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
+comment|/*  * Exception, fault, and trap interface to the FreeBSD kernel.  * This common code is called from assembly language IDT gate entry  * routines that prepare a suitable stack frame, and restore this  * frame after the exception has been processed.  */
 end_comment
 
 begin_function
@@ -1108,20 +1166,63 @@ expr_stmt|;
 return|return;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|DDB
-case|case
-name|T_BPTFLT
-case|:
-ifndef|#
-directive|ifndef
-name|DDB_NO_LCALLS
 case|case
 name|T_TRCTRAP
 case|:
-endif|#
-directive|endif
+comment|/* trace trap */
+if|if
+condition|(
+name|frame
+operator|.
+name|tf_eip
+operator|==
+operator|(
+name|int
+operator|)
+name|IDTVEC
+argument_list|(
+name|syscall
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * We've just entered system mode via the 				 * syscall lcall.  Continue single stepping 				 * silently until the syscall handler has 				 * saved the flags. 				 */
+return|return;
+block|}
+if|if
+condition|(
+name|frame
+operator|.
+name|tf_eip
+operator|==
+operator|(
+name|int
+operator|)
+name|IDTVEC
+argument_list|(
+name|syscall
+argument_list|)
+operator|+
+literal|1
+condition|)
+block|{
+comment|/* 				 * The syscall handler has now saved the 				 * flags.  Stop single stepping it. 				 */
+name|frame
+operator|.
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_T
+expr_stmt|;
+return|return;
+block|}
+comment|/* 			 * Fall through. 			 */
+case|case
+name|T_BPTFLT
+case|:
+comment|/* 			 * If DDB is enabled, let it handle the debugger trap. 			 * Otherwise, debugger traps "can't happen". 			 */
+ifdef|#
+directive|ifdef
+name|DDB
 if|if
 condition|(
 name|kdb_trap
@@ -1135,80 +1236,9 @@ name|frame
 argument_list|)
 condition|)
 return|return;
+endif|#
+directive|endif
 break|break;
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|DDB
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DDB_NO_LCALLS
-argument_list|)
-case|case
-name|T_TRCTRAP
-case|:
-comment|/* trace trap -- someone single stepping lcall's */
-comment|/* Q: how do we turn it on again? */
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX
-if|if
-condition|(
-name|frame
-operator|.
-name|tf_eip
-operator|!=
-operator|(
-name|int
-operator|)
-name|IDTVEC
-argument_list|(
-name|syscall
-argument_list|)
-operator|&&
-name|frame
-operator|.
-name|tf_eip
-operator|!=
-operator|(
-name|int
-operator|)
-name|IDTVEC
-argument_list|(
-name|linux_syscall
-argument_list|)
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|frame
-operator|.
-name|tf_eip
-operator|!=
-name|IDTVEC
-argument_list|(
-name|syscall
-argument_list|)
-condition|)
-endif|#
-directive|endif
-name|frame
-operator|.
-name|tf_eflags
-operator|&=
-operator|~
-name|PSL_T
-expr_stmt|;
-return|return;
-endif|#
-directive|endif
 if|#
 directive|if
 name|NISA
@@ -2868,11 +2898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * syscall(frame):  *	System call request from POSIX system call gate interface to kernel.  * Like trap(), argument is call by reference.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
+comment|/*  * System call request from POSIX system call gate interface to kernel.  * Like trap(), argument is call by reference.  */
 end_comment
 
 begin_function
@@ -3245,7 +3271,6 @@ operator|&=
 operator|~
 name|PSL_C
 expr_stmt|;
-comment|/* carry bit */
 break|break;
 case|case
 name|ERESTART
@@ -3313,12 +3338,8 @@ name|tf_eflags
 operator||=
 name|PSL_C
 expr_stmt|;
-comment|/* carry bit */
 break|break;
 block|}
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|frame
@@ -3328,7 +3349,7 @@ operator|&
 name|PSL_T
 condition|)
 block|{
-comment|/* traced syscall, raise sig */
+comment|/* Traced syscall. */
 name|frame
 operator|.
 name|tf_eflags
@@ -3336,18 +3357,6 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-if|if
-condition|(
-name|ISPL
-argument_list|(
-name|frame
-operator|.
-name|tf_cs
-argument_list|)
-operator|==
-name|SEL_UPL
-condition|)
-block|{
 name|trapsignal
 argument_list|(
 name|p
@@ -3358,9 +3367,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
 name|userret
 argument_list|(
 name|p
@@ -3409,14 +3415,6 @@ ifdef|#
 directive|ifdef
 name|COMPAT_LINUX
 end_ifdef
-
-begin_comment
-comment|/*  * linux_syscall(frame):  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 name|void
@@ -3699,7 +3697,6 @@ operator|&=
 operator|~
 name|PSL_C
 expr_stmt|;
-comment|/* carry bit */
 break|break;
 case|case
 name|ERESTART
@@ -3766,12 +3763,8 @@ name|tf_eflags
 operator||=
 name|PSL_C
 expr_stmt|;
-comment|/* carry bit */
 break|break;
 block|}
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|frame
@@ -3781,7 +3774,7 @@ operator|&
 name|PSL_T
 condition|)
 block|{
-comment|/* traced syscall, raise sig */
+comment|/* Traced syscall. */
 name|frame
 operator|.
 name|tf_eflags
@@ -3789,18 +3782,6 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-if|if
-condition|(
-name|ISPL
-argument_list|(
-name|frame
-operator|.
-name|tf_cs
-argument_list|)
-operator|==
-name|SEL_UPL
-condition|)
-block|{
 name|trapsignal
 argument_list|(
 name|p
@@ -3811,9 +3792,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
 name|userret
 argument_list|(
 name|p
