@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.12 (Berkeley) %G%"
+literal|"@(#)map.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4609,7 +4609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  STAB_MAP_CLOSE -- close symbol table (???) */
+comment|/* **  STAB_MAP_CLOSE -- close symbol table. ** **	Since this is in memory, there is nothing to do. */
 end_comment
 
 begin_function
