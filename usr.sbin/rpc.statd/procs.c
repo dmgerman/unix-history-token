@@ -1079,7 +1079,7 @@ specifier|static
 name|char
 name|dummy
 decl_stmt|;
-name|status
+name|sm_status
 name|tx_arg
 decl_stmt|;
 comment|/* arg sent to callback procedure	*/
@@ -1293,7 +1293,7 @@ name|lp
 operator|->
 name|notifyProc
 argument_list|,
-name|xdr_status
+name|xdr_sm_status
 argument_list|,
 operator|&
 name|tx_arg
