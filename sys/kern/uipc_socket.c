@@ -174,6 +174,11 @@ condition|(
 name|prp
 operator|==
 literal|0
+operator|||
+operator|!
+name|prp
+operator|->
+name|pr_usrreq
 condition|)
 return|return
 operator|(
