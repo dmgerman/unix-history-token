@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.77 (Berkeley) %G%"
+literal|"@(#)conf.c	8.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3025,18 +3025,6 @@ begin_include
 include|#
 directive|include
 file|<apollo/base.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<apollo/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_comment
