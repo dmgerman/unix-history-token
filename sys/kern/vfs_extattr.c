@@ -3182,11 +3182,6 @@ name|fp
 operator|=
 name|nfp
 expr_stmt|;
-name|FILEDESC_LOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 name|cmode
 operator|=
 operator|(
@@ -3204,11 +3199,6 @@ operator|)
 operator|&
 operator|~
 name|S_ISTXT
-expr_stmt|;
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
-argument_list|)
 expr_stmt|;
 name|NDINIT
 argument_list|(
