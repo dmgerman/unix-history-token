@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwopen.c	1.5 83/07/22"
+literal|"@(#)wwopen.c	1.6 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ operator|->
 name|ww_pty
 argument_list|,
 operator|&
-name|wwoldtty
+name|wwwintty
 argument_list|)
 operator|<
 literal|0

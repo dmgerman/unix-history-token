@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ww.h	1.8 83/07/28		*/
+comment|/*	@(#)ww.h	1.9 83/07/29		*/
 end_comment
 
 begin_include
@@ -272,6 +272,8 @@ name|ww_tty
 name|wwoldtty
 decl_stmt|,
 name|wwnewtty
+decl_stmt|,
+name|wwwintty
 decl_stmt|;
 end_decl_stmt
 

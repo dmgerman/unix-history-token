@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	1.7 83/07/29"
+literal|"@(#)wwinit.c	1.8 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,13 @@ begin_decl_stmt
 name|struct
 name|ww_tty
 name|wwoldtty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ww_tty
+name|wwwintty
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +198,19 @@ return|return
 operator|-
 literal|1
 return|;
+name|wwwintty
+operator|=
+name|wwoldtty
+expr_stmt|;
+name|wwwintty
+operator|.
+name|ww_sgttyb
+operator|.
+name|sg_flags
+operator|&=
+operator|~
+name|XTABS
+expr_stmt|;
 name|wwnewtty
 operator|.
 name|ww_sgttyb
