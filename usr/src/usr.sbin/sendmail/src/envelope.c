@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.19 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.19.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2865,6 +2865,8 @@ operator|!
 name|internal
 condition|)
 block|{
+if|if
+condition|(
 name|buildfname
 argument_list|(
 name|pw
@@ -2878,6 +2880,24 @@ operator|.
 name|q_user
 argument_list|,
 name|buf
+argument_list|)
+operator|&&
+name|hvalue
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+name|e
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|addheader
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+literal|"1.0"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
