@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.19 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,13 +286,6 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|onalrm
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -312,12 +305,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|void
 name|getkmem
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|onalrm
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct
@@ -665,6 +661,11 @@ name|bind
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -756,6 +757,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
@@ -1043,6 +1049,10 @@ name|void
 operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 operator|&
 name|wd
 operator|.
@@ -1213,12 +1223,10 @@ name|alarmcount
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|onalrm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1806,6 +1814,11 @@ name|cc
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|np
 operator|->
 name|n_addr
@@ -1851,14 +1864,12 @@ name|AL_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|getkmem
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|static
 name|ino_t
@@ -2054,7 +2065,7 @@ name|wd_boottime
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Figure out device configuration and select  * networks which deserve status information.  */

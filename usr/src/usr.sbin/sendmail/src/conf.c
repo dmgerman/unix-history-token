@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.26 (Berkeley) %G%"
+literal|"@(#)conf.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,13 +532,6 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
 comment|/* cache the result */
 if|if
 condition|(
@@ -1481,12 +1474,10 @@ directive|endif
 endif|VMUNIX
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|reapchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
@@ -1499,6 +1490,10 @@ while|while
 condition|(
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -1526,6 +1521,10 @@ while|while
 condition|(
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|)
@@ -1537,7 +1536,7 @@ endif|#
 directive|endif
 endif|WNOHANG
 block|}
-end_block
+end_function
 
 end_unit
 

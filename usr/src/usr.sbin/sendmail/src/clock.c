@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	5.8 (Berkeley) %G%"
+literal|"@(#)clock.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,14 @@ end_include
 begin_comment
 comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|tick
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|EVENT
@@ -93,15 +101,6 @@ specifier|auto
 name|time_t
 name|now
 decl_stmt|;
-extern|extern tick(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_if
 if|if
 condition|(
 name|intvl
@@ -122,9 +121,6 @@ name|NULL
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -134,13 +130,7 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* search event queue for correct position */
-end_comment
-
-begin_for
 for|for
 control|(
 name|evp
@@ -177,13 +167,7 @@ name|intvl
 condition|)
 break|break;
 block|}
-end_for
-
-begin_comment
 comment|/* insert new event */
-end_comment
-
-begin_expr_stmt
 name|ev
 operator|=
 operator|(
@@ -197,9 +181,6 @@ expr|*
 name|ev
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ev
 operator|->
 name|ev_time
@@ -208,27 +189,18 @@ name|now
 operator|+
 name|intvl
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ev
 operator|->
 name|ev_func
 operator|=
 name|func
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ev
 operator|->
 name|ev_arg
 operator|=
 name|arg
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ev
 operator|->
 name|ev_pid
@@ -236,9 +208,6 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ev
 operator|->
 name|ev_link
@@ -246,17 +215,11 @@ operator|=
 operator|*
 name|evp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|*
 name|evp
 operator|=
 name|ev
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tTd
@@ -283,24 +246,18 @@ argument_list|,
 name|ev
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|tick
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|ev
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
@@ -308,10 +265,10 @@ comment|/* **  CLREVENT -- remove an event from the event queue. ** **	Parameter
 end_comment
 
 begin_expr_stmt
-unit|clrevent
-operator|(
+name|clrevent
+argument_list|(
 name|ev
-operator|)
+argument_list|)
 specifier|register
 name|EVENT
 operator|*
@@ -433,12 +390,10 @@ begin_comment
 comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This routine runs events as needed. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tick
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|time_t
@@ -739,7 +694,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -771,15 +726,11 @@ end_decl_stmt
 
 begin_block
 block|{
-extern|extern endsleep(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_if
+specifier|static
+name|int
+name|endsleep
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|intvl
@@ -787,16 +738,10 @@ operator|==
 literal|0
 condition|)
 return|return;
-end_if
-
-begin_expr_stmt
 name|SleepDone
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -812,9 +757,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|!
@@ -823,22 +765,19 @@ condition|)
 name|pause
 argument_list|()
 expr_stmt|;
-end_while
+block|}
+end_block
 
-begin_macro
-unit|}  static
+begin_expr_stmt
+specifier|static
 name|endsleep
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|SleepDone
 operator|=
 name|TRUE
-expr_stmt|;
-block|}
-end_block
+block|; }
+end_expr_stmt
 
 end_unit
 

@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.21 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.22 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.21 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.22 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,6 +477,11 @@ name|initialized
 init|=
 name|FALSE
 decl_stmt|;
+specifier|static
+name|int
+name|readaliases
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|initialized

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.19 (Berkeley) %G%"
+literal|"@(#)master.c	2.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +397,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ntp
 operator|->
@@ -648,6 +653,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|saveaddr
 argument_list|,
@@ -2427,6 +2437,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|net
 operator|->

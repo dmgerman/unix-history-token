@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.31 (Berkeley) %G%"
+literal|"@(#)main.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,14 +395,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_extern
-extern|extern intsig(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|intsig
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -3216,37 +3215,51 @@ begin_comment
 comment|/* **  INTSIG -- clean up on interrupt ** **	This just arranges to exit.  It pessimises in that it **	may resend a message. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Unlocks the current job. */
 end_comment
 
-begin_expr_stmt
-unit|intsig
-operator|(
-operator|)
+begin_macro
+unit|void
+name|intsig
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|FileName
 operator|=
 name|NULL
-block|;
+expr_stmt|;
 name|unlockqueue
 argument_list|(
 name|CurEnv
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OK
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  INITMACROS -- initialize the macro system ** **	This just involves defining some macros that are actually **	used internally as metasymbols to be themselves. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		initializes several macros to be themselves. */
-expr|struct
+end_comment
+
+begin_struct
+struct|struct
 name|metamac
 block|{
 name|char
 name|metaname
-block|;
+decl_stmt|;
 name|char
 name|metaval
-block|; }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 name|struct

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.20 (Berkeley) %G%"
+literal|"@(#)timed.c	2.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -835,6 +841,11 @@ name|bind
 argument_list|(
 name|sock
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|server
 argument_list|,
@@ -2635,9 +2646,14 @@ literal|"\t%-16s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
+name|inet_makeaddr
+argument_list|(
 name|ntp
 operator|->
 name|net
+argument_list|,
+literal|0
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

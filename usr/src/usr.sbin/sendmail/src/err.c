@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.10 (Berkeley) %G%"
+literal|"@(#)err.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +90,14 @@ end_decl_stmt
 begin_comment
 comment|/* text of most recent message */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|fmtmsg
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*VARARGS1*/
@@ -739,65 +747,51 @@ begin_comment
 comment|/*VARARGS5*/
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|fmtmsg
-argument_list|(
+parameter_list|(
 name|eb
-argument_list|,
+parameter_list|,
 name|to
-argument_list|,
+parameter_list|,
 name|num
-argument_list|,
+parameter_list|,
 name|eno
-argument_list|,
+parameter_list|,
 name|fmt
-argument_list|,
+parameter_list|,
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|,
+parameter_list|,
 name|c
-argument_list|,
+parameter_list|,
 name|d
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|eb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|to
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|num
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|eno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|del
@@ -1018,7 +1012,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

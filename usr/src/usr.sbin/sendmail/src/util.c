@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.18 (Berkeley) %G%"
+literal|"@(#)util.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1746,16 +1746,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-extern|extern readtimeout(
-block|)
-function|;
-end_function
-
-begin_comment
+specifier|static
+name|int
+name|readtimeout
+parameter_list|()
+function_decl|;
 comment|/* set the timeout */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ReadTimeout
@@ -1828,20 +1824,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* try to read */
-end_comment
-
-begin_expr_stmt
 name|p
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|p
@@ -1888,31 +1875,16 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_while
-
-begin_comment
 comment|/* clear the event if it has not sprung */
-end_comment
-
-begin_expr_stmt
 name|clrevent
 argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* clean up the books and exit */
-end_comment
-
-begin_expr_stmt
 name|LineNumber
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|p
@@ -1933,9 +1905,6 @@ name|NULL
 operator|)
 return|;
 block|}
-end_if
-
-begin_for
 for|for
 control|(
 name|p
@@ -1956,23 +1925,18 @@ operator|&=
 operator|~
 literal|0200
 expr_stmt|;
-end_for
-
-begin_return
 return|return
 operator|(
 name|buf
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  static
+begin_expr_stmt
+specifier|static
 name|readtimeout
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|longjmp
 argument_list|(
@@ -1980,40 +1944,39 @@ name|CtxReadTimeout
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
+block|; }
 comment|/* **  FGETFOLDED -- like fgets, but know about folded lines. ** **	Parameters: **		buf -- place to put result. **		n -- bytes available. **		f -- file to read from. ** **	Returns: **		buf on success, NULL on error or EOF. ** **	Side Effects: **		buf gets lines from f, with continuation lines (lines **		with leading white space) appended.  CRLF's are mapped **		into single newlines.  Any trailing NL is stripped. */
-end_comment
-
-begin_function
 name|char
-modifier|*
+operator|*
 name|fgetfolded
-parameter_list|(
-name|buf
-parameter_list|,
-name|n
-parameter_list|,
-name|f
-parameter_list|)
+argument_list|(
+argument|buf
+argument_list|,
+argument|n
+argument_list|,
+argument|f
+argument_list|)
 name|char
-modifier|*
+operator|*
 name|buf
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|int
 name|n
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -2163,7 +2126,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape

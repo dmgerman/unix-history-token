@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.44 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3259,6 +3259,11 @@ name|l
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|f
 operator|->
@@ -3846,6 +3851,10 @@ while|while
 condition|(
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -3934,6 +3943,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|f
 operator|->

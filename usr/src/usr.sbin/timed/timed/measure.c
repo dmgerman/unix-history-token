@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)measure.c	2.7 (Berkeley) %G%"
+literal|"@(#)measure.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,7 +344,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr
 operator|*
 operator|)
 name|NULL
@@ -554,6 +554,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|addr
 argument_list|,
 sizeof|sizeof
@@ -645,7 +650,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr
 operator|*
 operator|)
 name|NULL

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.38 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1600,6 +1600,11 @@ endif|#
 directive|endif
 comment|/* SMTP */
 block|{
+specifier|static
+name|int
+name|sendoff
+parameter_list|()
+function_decl|;
 name|message
 argument_list|(
 name|Arpa_Info

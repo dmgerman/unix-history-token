@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)candidate.c	2.6 (Berkeley) %G%"
+literal|"@(#)candidate.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,6 +186,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|net
 operator|->

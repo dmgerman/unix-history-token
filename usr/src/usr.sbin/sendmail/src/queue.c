@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.30 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.31 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.30 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.31 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,9 +1317,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-extern|extern reapchild(
-block|)
-empty_stmt|;
+specifier|extern
+name|void
+name|reapchild
+parameter_list|()
+function_decl|;
 comment|/* parent -- pick up intermediate zombie */
 ifndef|#
 directive|ifndef
@@ -1401,9 +1403,6 @@ endif|#
 directive|endif
 endif|SIGCHLD
 block|}
-end_block
-
-begin_expr_stmt
 name|setproctitle
 argument_list|(
 literal|"running queue: %s"
@@ -1411,15 +1410,9 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|LOG
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|LogLevel
@@ -1438,41 +1431,20 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
 endif|LOG
-end_endif
-
-begin_comment
 comment|/* 	**  Release any resources used by the daemon code. 	*/
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DAEMON
-end_ifdef
-
-begin_expr_stmt
 name|clrdaemon
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
 endif|DAEMON
-end_endif
-
-begin_comment
 comment|/* 	**  Make sure the alias database is open. 	*/
-end_comment
-
-begin_expr_stmt
 name|initaliases
 argument_list|(
 name|AliasFile
@@ -1480,17 +1452,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
-end_comment
-
-begin_comment
 comment|/* order the existing work requests */
-end_comment
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1499,13 +1462,7 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* process them once at a time */
-end_comment
-
-begin_while
 while|while
 condition|(
 name|WorkQ
@@ -1547,22 +1504,16 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
-end_while
-
-begin_comment
 comment|/* exit without the usual cleanup */
-end_comment
-
-begin_expr_stmt
 name|exit
 argument_list|(
 name|ExitStat
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
@@ -1624,7 +1575,7 @@ value|((fread(&dbuf, sizeof dbuf, 1, f)> 0) ?&dbuf : 0)
 end_define
 
 begin_decl_stmt
-unit|static
+specifier|static
 name|struct
 name|dir
 name|dbuf

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.22 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.23 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.22 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.23 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +386,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|dn_skipname
+name|__dn_skipname
 argument_list|(
 name|cp
 argument_list|,
@@ -451,7 +451,7 @@ operator|=
 name|dn_expand
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -461,6 +461,10 @@ name|eom
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|buflen
@@ -552,7 +556,7 @@ operator|=
 name|dn_expand
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -562,6 +566,10 @@ name|eom
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|buflen
@@ -1086,7 +1094,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|dn_skipname
+name|__dn_skipname
 argument_list|(
 name|cp
 argument_list|,
@@ -1126,7 +1134,7 @@ operator|=
 name|dn_expand
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -1136,6 +1144,10 @@ name|eom
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|nbuf
 argument_list|,
 sizeof|sizeof
@@ -1226,7 +1238,7 @@ operator|=
 name|dn_expand
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -1236,6 +1248,10 @@ name|eom
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|nbuf
 argument_list|,
 sizeof|sizeof

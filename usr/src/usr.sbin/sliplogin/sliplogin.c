@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sliplogin.c	5.5 (Berkeley) %G%"
+literal|"@(#)sliplogin.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,7 +989,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|hup_handler
 parameter_list|(
 name|s
@@ -1881,7 +1881,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_WRONLY
 argument_list|)

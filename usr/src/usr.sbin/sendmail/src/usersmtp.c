@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.15 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.16 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.15 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.16 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,19 +295,12 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-extern|extern greettimeout(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+specifier|static
+name|int
+name|greettimeout
+parameter_list|()
+function_decl|;
 comment|/* 	**  Open the connection to the mailer. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|SmtpState
@@ -319,25 +312,16 @@ argument_list|(
 literal|"smtpinit: already open"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|SmtpIn
 operator|=
 name|SmtpOut
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpState
 operator|=
 name|SMTP_CLOSED
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpError
 index|[
 literal|0
@@ -345,16 +329,10 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpPhase
 operator|=
 literal|"user open"
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
@@ -371,9 +349,6 @@ argument_list|,
 name|SmtpPhase
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpPid
 operator|=
 name|openmailer
@@ -397,9 +372,6 @@ operator|&
 name|SmtpIn
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|SmtpPid
@@ -534,20 +506,11 @@ name|ExitStat
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|SmtpState
 operator|=
 name|SMTP_OPEN
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously.  Give it five minutes to 	**	happen. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|setjmp
@@ -560,9 +523,6 @@ condition|)
 goto|goto
 name|tempfail
 goto|;
-end_if
-
-begin_expr_stmt
 name|gte
 operator|=
 name|setevent
@@ -577,16 +537,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpPhase
 operator|=
 literal|"greeting wait"
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
@@ -600,9 +554,6 @@ argument_list|,
 name|SmtpPhase
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|r
 operator|=
 name|reply
@@ -610,17 +561,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|clrevent
 argument_list|(
 name|gte
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|r
@@ -637,13 +582,7 @@ condition|)
 goto|goto
 name|tempfail
 goto|;
-end_if
-
-begin_comment
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
-end_comment
-
-begin_expr_stmt
 name|smtpmessage
 argument_list|(
 literal|"HELO %s"
@@ -653,16 +592,10 @@ argument_list|,
 name|MyHostName
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpPhase
 operator|=
 literal|"HELO wait"
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
@@ -676,9 +609,6 @@ argument_list|,
 name|SmtpPhase
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|r
 operator|=
 name|reply
@@ -686,9 +616,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|r
@@ -724,13 +651,7 @@ condition|)
 goto|goto
 name|tempfail
 goto|;
-end_if
-
-begin_comment
 comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|bitnset
@@ -792,17 +713,8 @@ goto|goto
 name|tempfail
 goto|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
-end_comment
-
-begin_comment
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
-end_comment
-
-begin_expr_stmt
 name|expand
 argument_list|(
 literal|"\001g"
@@ -821,9 +733,6 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|CurEnv
@@ -880,16 +789,10 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|SmtpPhase
 operator|=
 literal|"MAIL wait"
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
@@ -903,9 +806,6 @@ argument_list|,
 name|SmtpPhase
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|r
 operator|=
 name|reply
@@ -913,9 +813,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|r
@@ -954,85 +851,50 @@ condition|)
 goto|goto
 name|unavailable
 goto|;
-end_if
-
-begin_comment
 comment|/* protocol error -- close up */
-end_comment
-
-begin_expr_stmt
 name|smtpquit
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|EX_PROTOCOL
 operator|)
 return|;
-end_return
-
-begin_comment
 comment|/* signal a temporary failure */
-end_comment
-
-begin_label
 name|tempfail
 label|:
-end_label
-
-begin_expr_stmt
 name|smtpquit
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-end_return
-
-begin_comment
 comment|/* signal service unavailable */
-end_comment
-
-begin_label
 name|unavailable
 label|:
-end_label
-
-begin_expr_stmt
 name|smtpquit
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
-end_return
+block|}
+end_block
 
-begin_macro
-unit|}   static
+begin_expr_stmt
+specifier|static
 name|greettimeout
 argument_list|()
-end_macro
-
-begin_block
 block|{
 comment|/* timeout reading the greeting message */
 name|longjmp
@@ -1041,32 +903,19 @@ name|CtxGreeting
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
+block|; }
 comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. **		m -- the mailer we are sending to. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
-end_comment
-
-begin_macro
 name|smtprcpt
 argument_list|(
 argument|to
 argument_list|,
 argument|m
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|ADDRESS
-modifier|*
+operator|*
 name|to
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|register

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	4.5 (Berkeley) %G%"
+literal|"@(#)update.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,8 +66,7 @@ modifier|*
 modifier|*
 name|f
 decl_stmt|;
-specifier|extern
-name|int
+name|void
 name|sync
 parameter_list|()
 function_decl|;
