@@ -3272,7 +3272,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" in ino %ju on dev<%d, %d>, %s, start %jd, end %jd"
+literal|" in ino %ju on dev<%s>, %s, start %jd, end %jd"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -3283,16 +3283,7 @@ name|lf_inode
 operator|->
 name|i_number
 argument_list|,
-name|major
-argument_list|(
-name|lock
-operator|->
-name|lf_inode
-operator|->
-name|i_dev
-argument_list|)
-argument_list|,
-name|minor
+name|devtoname
 argument_list|(
 name|lock
 operator|->
