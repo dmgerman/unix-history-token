@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boggle.c	5.4 (Berkeley) %G%"
+literal|"@(#)boggle.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,12 +611,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|timeout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -647,14 +645,12 @@ literal|'\007'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|interrupt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -683,7 +679,7 @@ operator|&
 name|zero
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|goodbye
@@ -3043,7 +3039,11 @@ name|timein
 operator|=
 name|time
 argument_list|(
-literal|0L
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3063,7 +3063,7 @@ name|logfile
 operator|=
 name|open
 argument_list|(
-literal|"/usr/games/boglog"
+name|_PATH_BOGLOG
 argument_list|,
 literal|1
 argument_list|)
