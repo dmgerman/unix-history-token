@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	4.2 (Berkeley) 83/07/07"
+literal|"@(#)subr.c	4.3 (Berkeley) 84/06/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,6 +870,14 @@ condition|)
 name|f
 operator||=
 name|CRTERA
+expr_stmt|;
+if|if
+condition|(
+name|CK
+condition|)
+name|f
+operator||=
+name|CRTKIL
 expr_stmt|;
 if|if
 condition|(
