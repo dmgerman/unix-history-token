@@ -18510,6 +18510,15 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
+name|keywords
+index|[
+name|KEYWORD_LOCALID
+index|]
+operator|.
+name|expandit
+operator|=
+literal|1
+expr_stmt|;
 comment|/* options? */
 while|while
 condition|(
