@@ -7,16 +7,6 @@ begin_comment
 comment|/* SI2_Z280.C Version, Bootstrap and Download Code Arrays... */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|si2_z280_ident
-init|=
-literal|"%W%"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* SI2_Z280 embedded version...   	Copyright (c) Specialix Research Ltd 1988-1998 	Z280 Download Code Version 1.42 	  */
 end_comment

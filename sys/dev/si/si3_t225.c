@@ -7,16 +7,6 @@ begin_comment
 comment|/* SI3_T225.C Version, Bootstrap and Download Code Arrays... */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|si3_t225_ident
-init|=
-literal|"%W%"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* SI3_T225 embedded version...   	Copyright (c) Specialix International Ltd 1996-1998. 	JET.BIN Version 3.0.4 Created Oct  5 1998 @ 10:41:48  */
 end_comment
