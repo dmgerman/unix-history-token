@@ -644,6 +644,8 @@ parameter_list|,
 name|u_int32_t
 parameter_list|,
 name|u_int32_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -660,6 +662,8 @@ parameter_list|,
 name|struct
 name|ata_chip_id
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1068,6 +1072,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -2037,6 +2046,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -2749,6 +2763,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -3628,6 +3647,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -4877,6 +4901,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -5708,6 +5737,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -6098,6 +6132,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -7655,6 +7694,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -8291,6 +8335,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -9980,7 +10029,7 @@ block|,
 literal|"SiS 635"
 block|}
 block|,
-comment|/* unknown */
+comment|/* 1chip */
 block|{
 name|ATA_SIS633
 block|,
@@ -10001,7 +10050,7 @@ name|ATA_SIS630
 block|,
 literal|0x30
 block|,
-name|SIS100NEW
+name|SIS100OLD
 block|,
 literal|0
 block|,
@@ -10115,6 +10164,9 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 operator|)
 condition|)
@@ -10196,6 +10248,11 @@ argument_list|,
 name|ATA_SISSOUTH
 argument_list|,
 literal|0x10
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 condition|)
 name|idx
@@ -10593,6 +10650,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|&
+operator|(
 name|atadev
 operator|->
 name|channel
@@ -10602,6 +10660,7 @@ condition|?
 literal|0x20
 else|:
 literal|0x10
+operator|)
 condition|)
 block|{
 name|ata_prtdev
@@ -11220,6 +11279,11 @@ argument_list|(
 name|dev
 argument_list|,
 name|ids
+argument_list|,
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -12165,6 +12229,9 @@ name|devid
 parameter_list|,
 name|u_int32_t
 name|revid
+parameter_list|,
+name|int
+name|slot
 parameter_list|)
 block|{
 name|device_t
@@ -12175,13 +12242,6 @@ name|int
 name|nchildren
 decl_stmt|,
 name|i
-decl_stmt|,
-name|slot
-init|=
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -12218,6 +12278,12 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+operator|(
+name|slot
+operator|>=
+literal|0
+operator|&&
 name|pci_get_slot
 argument_list|(
 name|children
@@ -12227,6 +12293,12 @@ index|]
 argument_list|)
 operator|==
 name|slot
+operator|)
+operator|||
+name|slot
+operator|<
+literal|0
+operator|)
 operator|&&
 name|pci_get_devid
 argument_list|(
@@ -12288,6 +12360,9 @@ name|struct
 name|ata_chip_id
 modifier|*
 name|index
+parameter_list|,
+name|int
+name|slot
 parameter_list|)
 block|{
 while|while
@@ -12312,6 +12387,8 @@ argument_list|,
 name|index
 operator|->
 name|chiprev
+argument_list|,
+name|slot
 argument_list|)
 condition|)
 return|return
