@@ -63,6 +63,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|force
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force check even the fs is clean */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|preen
 decl_stmt|;
 end_decl_stmt
@@ -81,13 +92,6 @@ end_decl_stmt
 begin_comment
 comment|/* device is opened read only (supersedes above) */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|force
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -129,6 +133,23 @@ begin_empty_stmt
 unit|)))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/*  * Check the dirty flag.  If the file system is clean, then return 1.  * Otherwise, return 0 (this includes the case of FAT12 file systems --  * they have no dirty flag, so they must be assumed to be unclean).  */
+end_comment
+
+begin_function_decl
+name|int
+name|checkdirty
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|bootblock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Check file system given as arg  */
@@ -261,23 +282,6 @@ end_comment
 begin_function_decl
 name|int
 name|writefsinfo
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|bootblock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Check the dirty flag. If clean return 1, otherwise return 0.   * If it is FAT12, return 0 always.  */
-end_comment
-
-begin_function_decl
-name|int
-name|checkdirty
 parameter_list|(
 name|int
 parameter_list|,
