@@ -56,7 +56,7 @@ comment|/*  * ldexp(value, exp): return value * (2 ** exp).  *  * Written by Sea
 end_comment
 
 begin_comment
-comment|/*  * We do the conversion in C to let gcc optimize it away, if possible.  * The "fxch ; fstp" stuff is because value is still on the stack  * (stupid 8087!).  */
+comment|/*  * We do the conversion in C to let gcc optimize it away, if possible.  */
 end_comment
 
 begin_function
@@ -84,11 +84,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__GNUC__
-if|#
-directive|if
-name|__GNUC__
-operator|>=
-literal|2
 asm|__asm ("fscale "
 block|:
 literal|"=u"
@@ -119,25 +114,11 @@ else|#
 directive|else
 end_else
 
-begin_asm
-asm|asm ("fscale ; fxch %%st(1) ; fstp%L1 %1 " 		: "=f" (temp), "=0" (temp2) 		: "0" (texp), "f" (value));
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|error
-name|unknown
-name|asm
-end_expr_stmt
+begin_error
+error|#
+directive|error
+error|unknown asm
+end_error
 
 begin_endif
 endif|#
