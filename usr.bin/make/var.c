@@ -227,35 +227,6 @@ end_define
 
 begin_function_decl
 specifier|static
-name|char
-modifier|*
-name|VarGetPattern
-parameter_list|(
-name|GNode
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|,
-name|VarPattern
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|VarPrintVar
 parameter_list|(
@@ -2015,6 +1986,7 @@ parameter_list|,
 name|int
 name|err
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2036,6 +2008,7 @@ modifier|*
 name|pattern
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -2241,6 +2214,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp2
@@ -2447,13 +2421,17 @@ return|;
 block|}
 else|else
 block|{
+name|char
+modifier|*
+name|result
+decl_stmt|;
 operator|*
 name|tstr
 operator|=
 operator|++
 name|cp
 expr_stmt|;
-name|cp
+name|result
 operator|=
 operator|(
 name|char
@@ -2481,7 +2459,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cp
+name|result
 operator|)
 return|;
 block|}
@@ -3858,6 +3836,7 @@ name|char
 name|input
 index|[]
 parameter_list|,
+specifier|const
 name|char
 name|tstr
 index|[]
@@ -3895,6 +3874,7 @@ name|char
 modifier|*
 name|rw_str
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -5430,23 +5410,12 @@ operator|==
 literal|':'
 condition|)
 block|{
-operator|*
-name|cp
-operator|=
-name|termc
-expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
 block|}
 else|else
-block|{
-operator|*
-name|cp
-operator|=
-name|termc
-expr_stmt|;
-block|}
+block|{ 		    }
 name|tstr
 operator|=
 name|cp
@@ -5689,8 +5658,9 @@ name|char
 modifier|*
 name|VarParseLong
 parameter_list|(
+specifier|const
 name|char
-name|foo
+name|input
 index|[]
 parameter_list|,
 name|GNode
@@ -5709,22 +5679,9 @@ modifier|*
 name|freePtr
 parameter_list|)
 block|{
-specifier|const
-name|char
+name|Buffer
 modifier|*
-name|input
-init|=
-name|foo
-decl_stmt|;
-name|char
-modifier|*
-name|rw_str
-init|=
-name|foo
-decl_stmt|;
-name|char
-modifier|*
-name|ptr
+name|buf
 decl_stmt|;
 name|char
 name|endc
@@ -5737,28 +5694,30 @@ comment|/* Starting character when variable in parens 				 * or braces */
 specifier|const
 name|char
 modifier|*
+name|ptr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|vname
 decl_stmt|;
 name|size_t
 name|vlen
 decl_stmt|;
 comment|/* length of variable name, after embedded 				 * variable expansion */
-comment|/* build up expanded variable name in this buffer */
-name|Buffer
-modifier|*
 name|buf
-init|=
+operator|=
 name|Buf_Init
 argument_list|(
 name|MAKE_BSIZE
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * Skip to the end character or a colon, whichever comes first, 	 * replacing embedded variables as we go. 	 */
 name|startc
 operator|=
 name|input
 index|[
-literal|1
+literal|0
 index|]
 expr_stmt|;
 name|endc
@@ -5775,9 +5734,9 @@ name|CLOSE_BRACE
 expr_stmt|;
 name|ptr
 operator|=
-name|rw_str
+name|input
 operator|+
-literal|2
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -5808,7 +5767,7 @@ name|FALSE
 expr_stmt|;
 operator|*
 name|lengthPtr
-operator|=
+operator|+=
 name|ptr
 operator|-
 name|input
@@ -5926,22 +5885,12 @@ name|Buf_GetAll
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|size_t
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* REPLACE str */
+operator|&
 name|vlen
-operator|=
-name|strlen
-argument_list|(
-name|vname
 argument_list|)
 expr_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 specifier|const
@@ -5954,7 +5903,11 @@ name|consumed
 init|=
 name|tstr
 operator|-
+operator|(
 name|input
+operator|-
+literal|1
+operator|)
 operator|+
 literal|1
 decl_stmt|;
@@ -5971,6 +5924,9 @@ name|Boolean
 name|dynamic
 decl_stmt|;
 comment|/* TRUE if the variable is local and we're 				 * expanding it in a non-local context. This 				 * is done to support dynamic sources. The 				 * result is just the invocation, unaltered */
+name|input
+operator|--
+expr_stmt|;
 name|haveModifier
 operator|=
 operator|(
@@ -6886,7 +6842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2 to skip the '$' and the following letter, or 1 if '$' was the  *	last character in the string).  *	A Boolean in *freePtr telling whether the returned string should  *	be freed by the caller.  *  * Side Effects:  *	None.  *  * Assumption:  *	It is assumed that Var_Parse() is called with str[0] == '$'.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The length of the specification is placed in  *	*lengthPtr (for invalid specifications, this is just 2 to  *	skip the '$' and the following letter, or 1 if '$' was the  *	last character in the string).  A Boolean in *freePtr telling  *	whether the returned string should be freed by the caller.  *  * Side Effects:  *	None.  *  * Assumption:  *	It is assumed that Var_Parse() is called with input[0] == '$'.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -6894,9 +6850,10 @@ name|char
 modifier|*
 name|Var_Parse
 parameter_list|(
+specifier|const
 name|char
-modifier|*
-name|foo
+name|input
+index|[]
 parameter_list|,
 name|GNode
 modifier|*
@@ -6914,13 +6871,6 @@ modifier|*
 name|freePtr
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|input
-init|=
-name|foo
-decl_stmt|;
 comment|/* assert(input[0] == '$'); */
 comment|/* consume '$' */
 name|input
@@ -6981,7 +6931,7 @@ return|return
 operator|(
 name|VarParseLong
 argument_list|(
-name|foo
+name|input
 argument_list|,
 name|ctxt
 argument_list|,
@@ -7031,6 +6981,7 @@ name|char
 modifier|*
 name|var
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

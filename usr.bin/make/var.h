@@ -420,6 +420,7 @@ name|char
 modifier|*
 name|Var_Parse
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -448,6 +449,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
