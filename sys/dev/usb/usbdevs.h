@@ -246,23 +246,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_VENDOR_VISION
-value|0x0553
-end_define
-
-begin_comment
-comment|/* Vision */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_VENDOR_AKS
 value|0x0529
 end_define
 
 begin_comment
 comment|/* Aladdin Knowledge Systems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_VISION
+value|0x0553
+end_define
+
+begin_comment
+comment|/* Vision */
 end_comment
 
 begin_define
@@ -307,6 +307,17 @@ end_define
 
 begin_comment
 comment|/* Agiler */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_ROCKFIRE
+value|0x0583
+end_define
+
+begin_comment
+comment|/* Rockfire */
 end_comment
 
 begin_define
@@ -726,7 +737,7 @@ value|0x3021
 end_define
 
 begin_comment
-comment|/* U.S.Robotics 56000 Voice USB Modem */
+comment|/* U.S.Robotics Voice Faxmodem Pro */
 end_comment
 
 begin_comment
@@ -775,21 +786,6 @@ comment|/* J-6502 speakers */
 end_comment
 
 begin_comment
-comment|/* Vision products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_VISION_CAMERA
-value|0x0002
-end_define
-
-begin_comment
-comment|/* VC6452V002 Camera */
-end_comment
-
-begin_comment
 comment|/* AKS products */
 end_comment
 
@@ -802,6 +798,21 @@ end_define
 
 begin_comment
 comment|/* USB-HASP 0.06 */
+end_comment
+
+begin_comment
+comment|/* Vision products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_VISION_CAMERA
+value|0x0002
+end_define
+
+begin_comment
+comment|/* VC6452V002 Camera */
 end_comment
 
 begin_comment
@@ -876,6 +887,21 @@ comment|/* mouse 29UO */
 end_comment
 
 begin_comment
+comment|/* Rockfire products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ROCKFIRE_GAMEPAD
+value|0x2033
+end_define
+
+begin_comment
+comment|/* gamepad 203USB */
+end_comment
+
+begin_comment
 comment|/* Iomega products */
 end_comment
 
@@ -923,12 +949,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_LOGITECH_M4848
+name|USB_PRODUCT_LOGITECH_MOUSE1
 value|0x0301
 end_define
 
 begin_comment
-comment|/* M4848 mouse */
+comment|/* mouse */
 end_comment
 
 begin_comment
