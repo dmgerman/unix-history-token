@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.29	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.30	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6701,9 +6701,17 @@ name|fprintf
 argument_list|(
 name|dout
 argument_list|,
-literal|"%s\n"
+literal|"%s%s\n"
 argument_list|,
 name|dirname
+argument_list|,
+name|type
+operator|==
+name|TYPE_A
+condition|?
+literal|"\r"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|byte_count
@@ -6904,13 +6912,21 @@ name|fprintf
 argument_list|(
 name|dout
 argument_list|,
-literal|"%s\n"
+literal|"%s%s\n"
 argument_list|,
 operator|&
 name|nbuf
 index|[
 literal|2
 index|]
+argument_list|,
+name|type
+operator|==
+name|TYPE_A
+condition|?
+literal|"\r"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 else|else
@@ -6918,9 +6934,17 @@ name|fprintf
 argument_list|(
 name|dout
 argument_list|,
-literal|"%s\n"
+literal|"%s%s\n"
 argument_list|,
 name|nbuf
+argument_list|,
+name|type
+operator|==
+name|TYPE_A
+condition|?
+literal|"\r"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|byte_count
