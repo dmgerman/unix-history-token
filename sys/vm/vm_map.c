@@ -3808,6 +3808,9 @@ operator|->
 name|next
 control|)
 block|{
+name|vm_offset_t
+name|useStart
+decl_stmt|;
 if|if
 condition|(
 name|current
@@ -3839,6 +3842,12 @@ operator|->
 name|start
 argument_list|)
 expr_stmt|;
+name|useStart
+operator|=
+name|current
+operator|->
+name|start
+expr_stmt|;
 if|if
 condition|(
 name|current
@@ -3869,6 +3878,10 @@ name|current
 operator|->
 name|start
 argument_list|)
+expr_stmt|;
+name|useStart
+operator|=
+name|start
 expr_stmt|;
 block|}
 if|if
@@ -3925,9 +3938,7 @@ name|map
 operator|->
 name|pmap
 argument_list|,
-name|current
-operator|->
-name|start
+name|useStart
 argument_list|,
 name|current
 operator|->
