@@ -2993,6 +2993,10 @@ name|short
 modifier|*
 name|to
 decl_stmt|;
+name|loc
+operator|=
+literal|0
+expr_stmt|;
 name|i
 operator|=
 name|order

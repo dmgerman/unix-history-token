@@ -8877,6 +8877,10 @@ name|k
 operator|=
 literal|1
 expr_stmt|;
+name|spacing
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
