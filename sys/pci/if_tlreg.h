@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tlreg.h,v 1.2 1998/05/21 16:24:05 jkh Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tlreg.h,v 1.20 1998/07/12 14:59:25 wpaul Exp wpaul $  */
 end_comment
 
 begin_struct
@@ -173,10 +173,33 @@ end_struct
 
 begin_struct
 struct|struct
+name|tl_chain_onefrag
+block|{
+name|struct
+name|tl_list_onefrag
+modifier|*
+name|tl_ptr
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|tl_mbuf
+decl_stmt|;
+name|struct
+name|tl_chain_onefrag
+modifier|*
+name|tl_next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|tl_chain_data
 block|{
 name|struct
-name|tl_chain
+name|tl_chain_onefrag
 name|tl_rx_chain
 index|[
 name|TL_RX_LIST_CNT
@@ -190,12 +213,12 @@ name|TL_TX_LIST_CNT
 index|]
 decl_stmt|;
 name|struct
-name|tl_chain
+name|tl_chain_onefrag
 modifier|*
 name|tl_rx_head
 decl_stmt|;
 name|struct
-name|tl_chain
+name|tl_chain_onefrag
 modifier|*
 name|tl_rx_tail
 decl_stmt|;
@@ -238,6 +261,7 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 comment|/* media info */
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -268,6 +292,14 @@ name|u_int8_t
 name|tl_phy_addr
 decl_stmt|;
 comment|/* PHY address */
+name|u_int8_t
+name|tl_tx_pend
+decl_stmt|;
+comment|/* TX pending */
+name|u_int8_t
+name|tl_want_auto
+decl_stmt|;
+comment|/* autoneg scheduled */
 name|u_int8_t
 name|tl_autoneg
 decl_stmt|;
@@ -314,11 +346,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Transmit interrupt threshold.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TX_THR
-value|0x00000007
+value|0x00000001
 end_define
 
 begin_define
@@ -371,6 +407,7 @@ begin_struct
 struct|struct
 name|tl_iflist
 block|{
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -401,6 +438,9 @@ decl_stmt|;
 comment|/* pointers to PHYs */
 name|pcici_t
 name|tl_config_id
+decl_stmt|;
+name|u_int8_t
+name|tl_eeaddr
 decl_stmt|;
 name|struct
 name|tl_iflist
@@ -586,8 +626,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|COMPAQ_DEVICEID_DESKPRO_4000_5233MMX
+name|COMPAQ_DEVICEID_NETEL_10_100_EMBEDDED
 value|0xB011
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPAQ_DEVICEID_NETEL_10_T2_UTP_COAX
+value|0xB012
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPAQ_DEVICEID_NETEL_10_100_TX_UTP
+value|0xB030
 end_define
 
 begin_define
@@ -602,6 +656,34 @@ define|#
 directive|define
 name|COMPAQ_DEVICEID_NETFLEX_3P_BNC
 value|0xF150
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLICOM_VENDORID
+value|0x108D
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLICOM_DEVICEID_OC2183
+value|0x0013
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLICOM_DEVICEID_OC2325
+value|0x0012
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLICOM_DEVICEID_OC2326
+value|0x0014
 end_define
 
 begin_comment
@@ -938,6 +1020,98 @@ name|x
 parameter_list|)
 value|csr->u.tl_dio_data = (u_int32_t)x
 end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_PUT
+parameter_list|(
+name|c
+parameter_list|,
+name|x
+parameter_list|)
+value|c->tl_host_cmd = (u_int32_t)x
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_SET
+parameter_list|(
+name|c
+parameter_list|,
+name|x
+parameter_list|)
+value|c->tl_host_cmd |= (u_int32_t)x
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_CLR
+parameter_list|(
+name|c
+parameter_list|,
+name|x
+parameter_list|)
+value|c->tl_host_cmd&= ~(u_int32_t)x
+end_define
+
+begin_comment
+comment|/*  * ThunderLAN adapters typically have a serial EEPROM containing  * configuration information. The main reason we're interested in  * it is because it also contains the adapters's station address.  *  * Access to the EEPROM is a bit goofy since it is a serial device:  * you have to do reads and writes one bit at a time. The state of  * the DATA bit can only change while the CLOCK line is held low.  * Transactions work basically like this:  *  * 1) Send the EEPROM_START sequence to prepare the EEPROM for  *    accepting commands. This pulls the clock high, sets  *    the data bit to 0, enables transmission to the EEPROM,  *    pulls the data bit up to 1, then pulls the clock low.  *    The idea is to do a 0 to 1 transition of the data bit  *    while the clock pin is held high.  *  * 2) To write a bit to the EEPROM, set the TXENABLE bit, then  *    set the EDATA bit to send a 1 or clear it to send a 0.  *    Finally, set and then clear ECLOK. Strobing the clock  *    transmits the bit. After 8 bits have been written, the  *    EEPROM should respond with an ACK, which should be read.  *  * 3) To read a bit from the EEPROM, clear the TXENABLE bit,  *    then set ECLOK. The bit can then be read by reading EDATA.  *    ECLOCK should then be cleared again. This can be repeated  *    8 times to read a whole byte, after which the   *  * 4) We need to send the address byte to the EEPROM. For this  *    we have to send the write control byte to the EEPROM to  *    tell it to accept data. The byte is 0xA0. The EEPROM should  *    ack this. The address byte can be send after that.  *  * 5) Now we have to tell the EEPROM to send us data. For that we  *    have to transmit the read control byte, which is 0xA1. This  *    byte should also be acked. We can then read the data bits  *    from the EEPROM.  *  * 6) When we're all finished, send the EEPROM_STOP sequence.  *  * Note that we use the ThunderLAN's NetSio register to access the  * EEPROM, however there is an alternate method. There is a PCI NVRAM  * register at PCI offset 0xB4 which can also be used with minor changes.  * The difference is that access to PCI registers via pci_conf_read()  * and pci_conf_write() is done using programmed I/O, which we want to  * avoid.  */
+end_comment
+
+begin_comment
+comment|/*  * Note that EEPROM_START leaves transmission enabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_START
+define|\
+value|DIO_SEL(TL_NETSIO);						\ 	DIO_BYTE1_SET(TL_SIO_ECLOK);
+comment|/* Pull clock pin high */
+value|\ 	DIO_BYTE1_SET(TL_SIO_EDATA);
+comment|/* Set DATA bit to 1 */
+value|\ 	DIO_BYTE1_SET(TL_SIO_ETXEN);
+comment|/* Enable xmit to write bit */
+value|\ 	DIO_BYTE1_CLR(TL_SIO_EDATA);
+comment|/* Pull DATA bit to 0 again */
+value|\ 	DIO_BYTE1_CLR(TL_SIO_ECLOK);
+end_define
+
+begin_comment
+comment|/* Pull clock low again */
+end_comment
+
+begin_comment
+comment|/*  * EEPROM_STOP ends access to the EEPROM and clears the ETXEN bit so  * that no further data can be written to the EEPROM I/O pin.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STOP
+define|\
+value|DIO_SEL(TL_NETSIO);						\ 	DIO_BYTE1_CLR(TL_SIO_ETXEN);
+comment|/* Disable xmit */
+value|\ 	DIO_BYTE1_CLR(TL_SIO_EDATA);
+comment|/* Pull DATA to 0 */
+value|\ 	DIO_BYTE1_SET(TL_SIO_ECLOK);
+comment|/* Pull clock high */
+value|\ 	DIO_BYTE1_SET(TL_SIO_ETXEN);
+comment|/* Enable xmit */
+value|\ 	DIO_BYTE1_SET(TL_SIO_EDATA);
+comment|/* Toggle DATA to 1 */
+value|\ 	DIO_BYTE1_CLR(TL_SIO_ETXEN);
+comment|/* Disable xmit. */
+value|\ 	DIO_BYTE1_CLR(TL_SIO_ECLOK);
+end_define
+
+begin_comment
+comment|/* Pull clock low again */
+end_comment
 
 begin_define
 define|#
@@ -1312,6 +1486,17 @@ directive|define
 name|TL_EEPROM_EADDR3
 value|0xAF
 end_define
+
+begin_define
+define|#
+directive|define
+name|TL_EEPROM_EADDR_OC
+value|0xF8
+end_define
+
+begin_comment
+comment|/* Olicom cards use a different 					   address than Compaqs. */
+end_comment
 
 begin_comment
 comment|/*  * ThunderLAN host command register offsets.  * (Can be accessed either by IO ports or memory map.)  */

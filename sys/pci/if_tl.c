@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.10 1998/06/21 14:53:34 bde Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.1 1998/07/11 00:34:45 wpaul Exp wpaul $  */
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_tl.c,v 1.10 1998/06/21 14:53:34 bde Exp $"
+literal|"$Id: if_tl.c,v 1.1 1998/07/11 00:34:45 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,9 +260,49 @@ block|,
 block|{
 name|COMPAQ_VENDORID
 block|,
-name|COMPAQ_DEVICEID_DESKPRO_4000_5233MMX
+name|COMPAQ_DEVICEID_NETEL_10_100_EMBEDDED
 block|,
-literal|"Compaq Deskpro 4000 5233MMX"
+literal|"Compaq Netelligent 10/100 TX Embedded UTP"
+block|}
+block|,
+block|{
+name|COMPAQ_VENDORID
+block|,
+name|COMPAQ_DEVICEID_NETEL_10_T2_UTP_COAX
+block|,
+literal|"Compaq Netelligent 10 T/2 PCI UTP/Coax"
+block|}
+block|,
+block|{
+name|COMPAQ_VENDORID
+block|,
+name|COMPAQ_DEVICEID_NETEL_10_100_TX_UTP
+block|,
+literal|"Compaq Netelligent 10/100 TX UTP"
+block|}
+block|,
+block|{
+name|OLICOM_VENDORID
+block|,
+name|OLICOM_DEVICEID_OC2183
+block|,
+literal|"Olicom OC-2183/2185"
+block|}
+block|,
+block|{
+name|OLICOM_VENDORID
+block|,
+name|OLICOM_DEVICEID_OC2325
+block|,
+literal|"Olicom OC-2325"
+block|}
+block|,
+block|{
+name|OLICOM_VENDORID
+block|,
+name|OLICOM_DEVICEID_OC2326
+block|,
+literal|"Olicom OC-2326 10/100 TX UTP"
 block|}
 block|,
 block|{
@@ -404,13 +444,14 @@ name|tl_attach_phy
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
 operator|,
 name|int
 operator|,
-name|char
+name|u_char
 operator|*
 operator|,
 name|int
@@ -579,7 +620,7 @@ name|tl_softc
 operator|*
 operator|,
 expr|struct
-name|tl_chain
+name|tl_chain_onefrag
 operator|*
 operator|)
 argument_list|)
@@ -772,6 +813,7 @@ name|tl_eeprom_putbyte
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -789,6 +831,7 @@ name|tl_eeprom_getbyte
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -809,6 +852,7 @@ name|tl_read_eeprom
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -830,6 +874,7 @@ name|tl_mii_sync
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -845,6 +890,7 @@ name|tl_mii_send
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -864,6 +910,7 @@ name|tl_mii_readreg
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -883,6 +930,7 @@ name|tl_mii_writereg
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -1004,6 +1052,7 @@ name|tl_softreset
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -1045,62 +1094,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ThunderLAN adapters typically have a serial EEPROM containing  * configuration information. The main reason we're interested in  * it is because it also contains the adapters's station address.  *  * Access to the EEPROM is a bit goofy since it is a serial device:  * you have to do reads and writes one bit at a time. The state of  * the DATA bit can only change while the CLOCK line is held low.  * Transactions work basically like this:  *  * 1) Send the EEPROM_START sequence to prepare the EEPROM for  *    accepting commands. This pulls the clock high, sets  *    the data bit to 0, enables transmission to the EEPROM,  *    pulls the data bit up to 1, then pulls the clock low.  *    The idea is to do a 0 to 1 transition of the data bit  *    while the clock pin is held high.  *  * 2) To write a bit to the EEPROM, set the TXENABLE bit, then  *    set the EDATA bit to send a 1 or clear it to send a 0.  *    Finally, set and then clear ECLOK. Strobing the clock  *    transmits the bit. After 8 bits have been written, the  *    EEPROM should respond with an ACK, which should be read.  *  * 3) To read a bit from the EEPROM, clear the TXENABLE bit,  *    then set ECLOK. The bit can then be read by reading EDATA.  *    ECLOCK should then be cleared again. This can be repeated  *    8 times to read a whole byte, after which the   *  * 4) We need to send the address byte to the EEPROM. For this  *    we have to send the write control byte to the EEPROM to  *    tell it to accept data. The byte is 0xA0. The EEPROM should  *    ack this. The address byte can be send after that.  *  * 5) Now we have to tell the EEPROM to send us data. For that we  *    have to transmit the read control byte, which is 0xA1. This  *    byte should also be acked. We can then read the data bits  *    from the EEPROM.  *  * 6) When we're all finished, send the EEPROM_STOP sequence.  *  * Note that we use the ThunderLAN's NetSio register to access the  * EEPROM, however there is an alternate method. There is a PCI NVRAM  * register at PCI offset 0xB4 which can also be used with minor changes.  * The difference is that access to PCI registers via pci_conf_read()  * and pci_conf_write() is done using programmed I/O, which we want to  * avoid.  */
-end_comment
-
-begin_comment
-comment|/*  * Note that EEPROM_START leaves transmission enabled.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EEPROM_START
-define|\
-value|DIO_SEL(TL_NETSIO);						\ 	DIO_BYTE1_SET(TL_SIO_ECLOK);
-comment|/* Pull clock pin high */
-value|\ 	DIO_BYTE1_SET(TL_SIO_EDATA);
-comment|/* Set DATA bit to 1 */
-value|\ 	DIO_BYTE1_SET(TL_SIO_ETXEN);
-comment|/* Enable xmit to write bit */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_EDATA);
-comment|/* Pull DATA bit to 0 again */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_ECLOK);
-end_define
-
-begin_comment
-comment|/* Pull clock low again */
-end_comment
-
-begin_comment
-comment|/*  * EEPROM_STOP ends access to the EEPROM and clears the ETXEN bit so  * that no further data can be written to the EEPROM I/O pin.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EEPROM_STOP
-define|\
-value|DIO_SEL(TL_NETSIO);						\ 	DIO_BYTE1_CLR(TL_SIO_ETXEN);
-comment|/* Disable xmit */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_EDATA);
-comment|/* Pull DATA to 0 */
-value|\ 	DIO_BYTE1_SET(TL_SIO_ECLOK);
-comment|/* Pull clock high */
-value|\ 	DIO_BYTE1_SET(TL_SIO_ETXEN);
-comment|/* Enable xmit */
-value|\ 	DIO_BYTE1_SET(TL_SIO_EDATA);
-comment|/* Toggle DATA to 1 */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_ETXEN);
-comment|/* Disable xmit. */
-value|\ 	DIO_BYTE1_CLR(TL_SIO_ECLOK);
-end_define
-
-begin_comment
-comment|/* Pull clock low again */
-end_comment
-
-begin_comment
 comment|/*  * Send an instruction or address to the EEPROM, check for ACK.  */
 end_comment
 
@@ -1113,6 +1106,7 @@ name|csr
 parameter_list|,
 name|byte
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -1239,6 +1233,7 @@ name|addr
 parameter_list|,
 name|dest
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -1391,6 +1386,7 @@ name|tl_mii_sync
 parameter_list|(
 name|csr
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -1451,6 +1447,7 @@ name|bits
 parameter_list|,
 name|cnt
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -1531,6 +1528,7 @@ name|csr
 parameter_list|,
 name|frame
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -1835,6 +1833,7 @@ name|csr
 parameter_list|,
 name|frame
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -2039,6 +2038,7 @@ name|struct
 name|tl_mii_frame
 name|frame
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -2137,6 +2137,7 @@ name|struct
 name|tl_mii_frame
 name|frame
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -2225,6 +2226,7 @@ name|off
 parameter_list|,
 name|cnt
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -2353,6 +2355,7 @@ name|ifmedia
 modifier|*
 name|ifm
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -2457,6 +2460,23 @@ break|break;
 case|case
 name|TL_FLAG_SCHEDDELAY
 case|:
+comment|/* 		 * Wait for the transmitter to go idle before starting 		 * an autoneg session, otherwise tl_start() may clobber 	 	 * our timeout, and we don't want to allow transmission 		 * during an autoneg session since that can screw it up. 	 	 */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|tl_txeoc
+condition|)
+block|{
+name|sc
+operator|->
+name|tl_want_auto
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 name|phy_sts
 operator|=
 name|tl_phy_readreg
@@ -2492,6 +2512,12 @@ operator|->
 name|tl_autoneg
 operator|=
 literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|tl_want_auto
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 case|case
@@ -2772,6 +2798,31 @@ literal|"no carrier\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|tl_tx_pend
+condition|)
+block|{
+name|sc
+operator|->
+name|tl_autoneg
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|tl_tx_pend
+operator|=
+literal|0
+expr_stmt|;
+name|tl_start
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -2805,6 +2856,7 @@ name|anar
 decl_stmt|,
 name|ctl
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -3233,6 +3285,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -3432,6 +3485,7 @@ name|csr
 parameter_list|,
 name|internal
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -3447,18 +3501,20 @@ decl_stmt|,
 name|dummy
 decl_stmt|;
 comment|/* Assert the adapter reset bit. */
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_ADRST
+argument_list|)
 expr_stmt|;
 comment|/* Turn off interrupts */
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_INTSOFF
+argument_list|)
 expr_stmt|;
 comment|/* First, clear the stats registers. */
 name|DIO_SEL
@@ -3618,10 +3674,10 @@ operator||
 name|TL_CMD_CHSEL_MASK
 operator|)
 expr_stmt|;
+name|CMD_PUT
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|cmd
 operator||
 operator|(
@@ -3629,11 +3685,12 @@ name|TL_CMD_LDTHR
 operator||
 name|TX_THR
 operator|)
+argument_list|)
 expr_stmt|;
+name|CMD_PUT
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|cmd
 operator||
 operator|(
@@ -3641,6 +3698,7 @@ name|TL_CMD_LDTMR
 operator||
 literal|0x00000003
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Unreset the MII */
 name|DIO_SEL
@@ -3848,6 +3906,34 @@ name|tl_next
 operator|=
 name|tl_iflist
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|tl_vid
+operator|==
+name|COMPAQ_VENDORID
+condition|)
+name|new
+operator|->
+name|tl_eeaddr
+operator|=
+name|TL_EEPROM_EADDR
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|tl_vid
+operator|==
+name|OLICOM_VENDORID
+condition|)
+name|new
+operator|->
+name|tl_eeaddr
+operator|=
+name|TL_EEPROM_EADDR_OC
+expr_stmt|;
 name|tl_iflist
 operator|=
 name|new
@@ -3895,6 +3981,7 @@ name|tl_phy
 parameter_list|,
 name|ilist
 parameter_list|)
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -3903,7 +3990,7 @@ decl_stmt|;
 name|int
 name|tl_unit
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|eaddr
 decl_stmt|;
@@ -5031,6 +5118,7 @@ name|pbase
 decl_stmt|,
 name|vbase
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -5173,6 +5261,7 @@ block|}
 name|csr
 operator|=
 operator|(
+specifier|volatile
 expr|struct
 name|tl_csr
 operator|*
@@ -5246,7 +5335,9 @@ operator|)
 operator|&
 name|eaddr
 argument_list|,
-name|TL_EEPROM_EADDR
+name|ilist
+operator|->
+name|tl_eeaddr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
@@ -5681,7 +5772,7 @@ name|tl_ptr
 operator|=
 operator|(
 expr|struct
-name|tl_list
+name|tl_list_onefrag
 operator|*
 operator|)
 operator|&
@@ -5833,7 +5924,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|tl_chain
+name|tl_chain_onefrag
 modifier|*
 name|c
 decl_stmt|;
@@ -5956,9 +6047,6 @@ operator|->
 name|tl_ptr
 operator|->
 name|tl_frag
-index|[
-literal|0
-index|]
 operator|.
 name|tlist_dadr
 operator|=
@@ -5977,9 +6065,6 @@ operator|->
 name|tl_ptr
 operator|->
 name|tl_frag
-index|[
-literal|0
-index|]
 operator|.
 name|tlist_dcnt
 operator|=
@@ -6044,7 +6129,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|tl_chain
+name|tl_chain_onefrag
 modifier|*
 name|cur_rx
 decl_stmt|;
@@ -6172,6 +6257,39 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+comment|/* 		 * Note: when the ThunderLAN chip is in 'capture all 		 * frames' mode, it will receive its own transmissions. 		 * We drop don't need to process our own transmissions, 		 * so we drop them here and continue. 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
+operator|&&
+operator|!
+name|bcmp
+argument_list|(
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|#
 directive|if
 name|NBPFILTER
@@ -6343,12 +6461,12 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|CMD_PUT
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|TL_CMD_ACK
 operator||
 name|r
@@ -6361,6 +6479,7 @@ operator|(
 literal|0x00100000
 operator|)
 operator|)
+argument_list|)
 expr_stmt|;
 name|r
 operator|=
@@ -6444,13 +6563,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Re-enable interrupts but don't ack this one. */
+name|CMD_PUT
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|type
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6664,6 +6784,16 @@ name|tl_tx_free
 operator|=
 name|cur_tx
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cur_tx
+operator|->
+name|tl_ptr
+operator|->
+name|tlist_fptr
+condition|)
+break|break;
 block|}
 return|return
 operator|(
@@ -6759,6 +6889,22 @@ name|tl_txeoc
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 		 * If we just drained the TX queue and 		 * there's an autoneg request waiting, set 		 * it in motion. This will block the transmitter 		 * until the autoneg session completes which will 		 * no doubt piss off any processes waiting to 		 * transmit, but that's the way the ball bounces. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|tl_want_auto
+condition|)
+name|tl_autoneg
+argument_list|(
+name|sc
+argument_list|,
+name|TL_FLAG_SCHEDDELAY
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6769,17 +6915,18 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* First we have to ack the EOC interrupt. */
+name|CMD_PUT
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|TL_CMD_ACK
 operator||
 literal|0x00000001
 operator||
 name|type
+argument_list|)
 expr_stmt|;
 comment|/* Then load the address of the next TX list. */
 name|sc
@@ -6819,13 +6966,14 @@ name|TL_CMD_GO
 operator||
 name|TL_CMD_INTSON
 expr_stmt|;
+name|CMD_PUT
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|cmd
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6863,9 +7011,26 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|u_int16_t
+name|bmcr
+decl_stmt|,
+name|ctl
+decl_stmt|;
+specifier|volatile
+name|struct
+name|tl_csr
+modifier|*
+name|csr
+decl_stmt|;
 name|sc
 operator|=
 name|xsc
+expr_stmt|;
+name|csr
+operator|=
+name|sc
+operator|->
+name|csr
 expr_stmt|;
 name|printf
 argument_list|(
@@ -6880,6 +7045,25 @@ operator|->
 name|csr
 operator|->
 name|tl_ch_parm
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Before resetting the adapter, try reading the PHY 	 * settings so we can put them back later. This is 	 * necessary to keep the chip operating at the same 	 * speed and duplex settings after the reset completes. 	 */
+name|bmcr
+operator|=
+name|tl_phy_readreg
+argument_list|(
+name|sc
+argument_list|,
+name|PHY_BMCR
+argument_list|)
+expr_stmt|;
+name|ctl
+operator|=
+name|tl_phy_readreg
+argument_list|(
+name|sc
+argument_list|,
+name|TL_PHY_CTL
 argument_list|)
 expr_stmt|;
 name|tl_softreset
@@ -6899,18 +7083,73 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+name|tl_phy_writereg
+argument_list|(
+name|sc
+argument_list|,
+name|PHY_BMCR
+argument_list|,
+name|bmcr
+argument_list|)
+expr_stmt|;
+name|tl_phy_writereg
+argument_list|(
+name|sc
+argument_list|,
+name|TL_PHY_CTL
+argument_list|,
+name|ctl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bmcr
+operator|&
+name|PHY_BMCR_DUPLEX
+condition|)
+block|{
+name|DIO_SEL
+argument_list|(
+name|TL_NETCMD
+argument_list|)
+expr_stmt|;
+name|DIO_BYTE0_SET
+argument_list|(
+name|TL_CMD_DUPLEX
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DIO_SEL
+argument_list|(
+name|TL_NETCMD
+argument_list|)
+expr_stmt|;
+name|DIO_BYTE0_CLR
+argument_list|(
+name|TL_CMD_DUPLEX
+argument_list|)
+expr_stmt|;
+block|}
+name|tl_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|tl_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_INTSON
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6945,6 +7184,7 @@ decl_stmt|;
 name|u_int16_t
 name|netsts
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -7018,6 +7258,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -7119,11 +7360,12 @@ operator|==
 name|TL_INTR_INVALID
 condition|)
 block|{
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|type
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -7358,15 +7600,33 @@ if|if
 condition|(
 name|r
 condition|)
+block|{
+name|CMD_PUT
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|TL_CMD_ACK
 operator||
 name|r
 operator||
 name|type
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_head
+operator|!=
+name|NULL
+condition|)
+name|tl_start
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -7394,6 +7654,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -8031,6 +8292,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -8073,6 +8335,21 @@ name|sc
 operator|->
 name|csr
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|tl_autoneg
+condition|)
+block|{
+name|sc
+operator|->
+name|tl_tx_pend
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Check for an available queue slot. If there are none, 	 * punt. 	 */
 if|if
 condition|(
@@ -8293,13 +8570,14 @@ name|TL_CMD_GO
 operator||
 name|TL_CMD_INTSON
 expr_stmt|;
+name|CMD_PUT
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator|=
+argument_list|,
 name|cmd
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -8312,31 +8590,6 @@ operator|.
 name|tl_tx_tail
 operator|->
 name|tl_next
-operator|=
-name|start_tx
-expr_stmt|;
-name|sc
-operator|->
-name|tl_cdata
-operator|.
-name|tl_tx_tail
-operator|->
-name|tl_ptr
-operator|->
-name|tlist_fptr
-operator|=
-name|vtophys
-argument_list|(
-name|start_tx
-operator|->
-name|tl_ptr
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|tl_cdata
-operator|.
-name|tl_tx_tail
 operator|=
 name|start_tx
 expr_stmt|;
@@ -8383,6 +8636,7 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -8660,20 +8914,24 @@ name|TL_SIO_MINTEN
 argument_list|)
 expr_stmt|;
 comment|/* Enable PCI interrupts. */
-name|csr
-operator|->
-name|tl_host_cmd
-operator||=
-name|TL_CMD_INTSON
-expr_stmt|;
-comment|/* Load the address of the rx list */
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
+argument_list|,
+name|TL_CMD_INTSON
+argument_list|)
+expr_stmt|;
+comment|/* Load the address of the rx list */
+name|CMD_SET
+argument_list|(
+name|sc
 operator|->
-name|tl_host_cmd
-operator||=
+name|csr
+argument_list|,
 name|TL_CMD_RT
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -8695,17 +8953,18 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Send the RX go command */
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 operator|(
 name|TL_CMD_GO
 operator||
 name|TL_CMD_RT
 operator|)
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -8778,6 +9037,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -8896,6 +9156,7 @@ name|tl_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -9405,6 +9666,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -9442,47 +9704,52 @@ name|tl_stat_ch
 argument_list|)
 expr_stmt|;
 comment|/* Stop the transmitter */
+name|CMD_CLR
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator|&=
+argument_list|,
 name|TL_CMD_RT
+argument_list|)
 expr_stmt|;
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_STOP
+argument_list|)
 expr_stmt|;
 comment|/* Stop the receiver */
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_RT
+argument_list|)
 expr_stmt|;
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_STOP
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable host interrupts. 	 */
+name|CMD_SET
+argument_list|(
 name|sc
 operator|->
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_INTSOFF
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable PHY interrupts. 	 */
 name|bzero
@@ -9778,6 +10045,7 @@ operator|*
 operator|)
 name|xilist
 decl_stmt|;
+specifier|volatile
 name|struct
 name|tl_csr
 modifier|*
@@ -9795,37 +10063,42 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Stop the transmitter */
+name|CMD_CLR
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator|&=
+argument_list|,
 name|TL_CMD_RT
+argument_list|)
 expr_stmt|;
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_STOP
+argument_list|)
 expr_stmt|;
 comment|/* Stop the receiver */
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_RT
+argument_list|)
 expr_stmt|;
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_STOP
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable host interrupts. 	 */
+name|CMD_SET
+argument_list|(
 name|csr
-operator|->
-name|tl_host_cmd
-operator||=
+argument_list|,
 name|TL_CMD_INTSOFF
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable PHY interrupts. 	 */
 name|bzero
