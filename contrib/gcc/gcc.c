@@ -2409,6 +2409,10 @@ literal|"%{traditional|ftraditional|traditional-cpp:trad}cpp0"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* We don't wrap .d files in %W{} since a missing .d file, and    therefore no dependency entry, confuses make into thinking a .o    file that happens to exist is up-to-date.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2416,7 +2420,7 @@ name|char
 modifier|*
 name|cpp_unique_options
 init|=
-literal|"%{C:%{!E:%eGNU C does not support -C without using -E}}\  %{nostdinc*} %{C} %{v} %{I*} %{P} %{$} %I\  %{MD:-MD %W{!o: %b.d}%W{o*:%.d%*}}\  %{MMD:-MMD %W{!o: %b.d}%W{o*:%.d%*}}\  %{M} %{MM} %W{MF*} %{MG} %{MP} %{MQ*} %{MT*}\  %{!E:%{!M:%{!MM:%{MD|MMD:%{o*:-MQ %*}}}}}\  %{!no-gcc:-D__GNUC__=%v1 -D__GNUC_MINOR__=%v2 -D__GNUC_PATCHLEVEL__=%v3 -D__GXX_ABI_VERSION=102}\  %{!undef:%{!ansi:%{!std=*:%p}%{std=gnu*:%p}} %P} %{trigraphs}\  %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\  %{fno-inline|O0|!O*:-D__NO_INLINE__} %{ffast-math:-D__FAST_MATH__}\  %{fshort-wchar:-U__WCHAR_TYPE__ -D__WCHAR_TYPE__=short\\ unsigned\\ int}\  %{ffreestanding:-D__STDC_HOSTED__=0} %{fno-hosted:-D__STDC_HOSTED__=0}\  %{!ffreestanding:%{!fno-hosted:-D__STDC_HOSTED__=1}} %{remap}\  %{g3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i\  %{E|M|MM:%W{o*}}"
+literal|"%{C:%{!E:%eGNU C does not support -C without using -E}}\  %{nostdinc*} %{C} %{v} %{I*} %{P} %{$} %I\  %{MD:-MD %{!o:%b.d}%{o*:%.d%*}}\  %{MMD:-MMD %{!o:%b.d}%{o*:%.d%*}}\  %{M} %{MM} %{MF*} %{MG} %{MP} %{MQ*} %{MT*}\  %{!E:%{!M:%{!MM:%{MD|MMD:%{o*:-MQ %*}}}}}\  %{!no-gcc:-D__GNUC__=%v1 -D__GNUC_MINOR__=%v2 -D__GNUC_PATCHLEVEL__=%v3 -D__GXX_ABI_VERSION=102}\  %{!undef:%{!ansi:%{!std=*:%p}%{std=gnu*:%p}} %P} %{trigraphs}\  %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\  %{fno-inline|O0|!O*:-D__NO_INLINE__} %{ffast-math:-D__FAST_MATH__}\  %{fshort-wchar:-U__WCHAR_TYPE__ -D__WCHAR_TYPE__=short\\ unsigned\\ int}\  %{ffreestanding:-D__STDC_HOSTED__=0} %{fno-hosted:-D__STDC_HOSTED__=0}\  %{!ffreestanding:%{!fno-hosted:-D__STDC_HOSTED__=1}} %{remap}\  %{g3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i\  %{E|M|MM:%W{o*}}"
 decl_stmt|;
 end_decl_stmt
 
