@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dc.c	5.1 (Berkeley) %G%"
+literal|"@(#)dc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -672,7 +672,7 @@ argument_list|)
 expr_stmt|;
 name|arg2
 operator|=
-name|sqrt
+name|dcsqrt
 argument_list|(
 name|arg1
 argument_list|)
@@ -4486,7 +4486,7 @@ begin_function
 name|struct
 name|blk
 modifier|*
-name|sqrt
+name|dcsqrt
 parameter_list|(
 name|p
 parameter_list|)
