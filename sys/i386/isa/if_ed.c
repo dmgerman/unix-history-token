@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.61 1995/01/01 03:54:34 davidg Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.62 1995/01/01 06:38:14 davidg Exp $  */
 end_comment
 
 begin_include
@@ -6120,6 +6120,15 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+goto|goto
+name|outloop
+goto|;
 block|}
 name|sc
 operator|->
@@ -8325,7 +8334,7 @@ decl_stmt|;
 block|{
 name|unsigned
 name|short
-name|len
+name|total_len
 decl_stmt|,
 name|dma_len
 decl_stmt|;
@@ -8343,7 +8352,7 @@ comment|/* about 120us */
 comment|/* First, count up the total number of bytes to copy */
 for|for
 control|(
-name|len
+name|total_len
 operator|=
 literal|0
 operator|,
@@ -8359,7 +8368,7 @@ name|mp
 operator|->
 name|m_next
 control|)
-name|len
+name|total_len
 operator|+=
 name|mp
 operator|->
@@ -8367,7 +8376,7 @@ name|m_len
 expr_stmt|;
 name|dma_len
 operator|=
-name|len
+name|total_len
 expr_stmt|;
 if|if
 condition|(
@@ -8551,15 +8560,6 @@ condition|(
 name|m
 condition|)
 block|{
-name|data
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|m
@@ -8571,6 +8571,15 @@ condition|(
 name|len
 condition|)
 block|{
+name|data
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
+expr_stmt|;
 comment|/* finish the last word */
 if|if
 condition|(
@@ -8595,13 +8604,10 @@ name|ED_NOVELL_DATA
 argument_list|,
 operator|*
 operator|(
-operator|(
-name|unsigned
-name|short
+name|u_short
 operator|*
 operator|)
 name|savebyte
-operator|)
 argument_list|)
 expr_stmt|;
 name|data
@@ -8684,6 +8690,7 @@ if|if
 condition|(
 name|wantbyte
 condition|)
+block|{
 name|outw
 argument_list|(
 name|sc
@@ -8694,15 +8701,13 @@ name|ED_NOVELL_DATA
 argument_list|,
 operator|*
 operator|(
-operator|(
-name|unsigned
-name|short
+name|u_short
 operator|*
 operator|)
 name|savebyte
-operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 * transmit side, data is handled internally by the NIC in bursts and 	 * we can't start another remote DMA until this one completes. Not 	 * waiting causes really bad things to happen - like the NIC 	 * irrecoverably jamming the ISA bus. 	 */
 while|while
@@ -8760,10 +8765,15 @@ operator|.
 name|if_unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 return|return
 operator|(
-name|len
+name|total_len
 operator|)
 return|;
 block|}
