@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.14 1997/03/23 03:37:17 bde Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.15 1997/03/24 11:24:46 bde Exp $ */
 end_comment
 
 begin_comment
@@ -132,12 +132,6 @@ end_ifdef
 begin_comment
 comment|/* fiddle with the spl locking */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/spl.h>
-end_include
 
 begin_include
 include|#
@@ -651,12 +645,12 @@ expr_stmt|;
 comment|/*      * Make sure that the soft net "engine" cannot run while spltty code is      * active.  The if_ppp.c code can walk down into b_to_q etc, and it is      * bad if the tty system was in the middle of another b_to_q...      */
 name|tty_imask
 operator||=
-name|SWI_NET_MASK
+name|softnet_imask
 expr_stmt|;
 comment|/* spltty() block spl[soft]net() */
 name|net_imask
 operator||=
-name|SWI_TTY_MASK
+name|softtty_imask
 expr_stmt|;
 comment|/* splimp() block splsofttty() */
 name|net_imask
