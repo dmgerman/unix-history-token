@@ -4,7 +4,7 @@ comment|/* tmp.c */
 end_comment
 
 begin_comment
-comment|/* Author:  *	Steve Kirkendall  *	14407 SW Teal Blvd. #C  *	Beaverton, OR 97005  *	kirkenda@cs.pdx.edu  */
+comment|/* Author:  *	Steve Kirkendall  *	14407 SW Teal Blvd. #C  *	Beaverton, OR 97005  *	kirkenda@cs.pdx.edu  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00041  * --------------------         -----   ----------------------  *  *  12 Aug 92	Bob Wilcox		Fixed named yank buffer problem  */
 end_comment
 
 begin_comment
@@ -2403,6 +2403,10 @@ expr_stmt|;
 name|initflags
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BROKEN_YANK_BUFFERS
+comment|/* 12 Aug 92*/
 name|close
 argument_list|(
 name|tmpfd
@@ -2418,6 +2422,9 @@ argument_list|(
 name|tmpname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* BROKEN_YANK_BUFFERS*/
 return|return
 name|TRUE
 return|;
