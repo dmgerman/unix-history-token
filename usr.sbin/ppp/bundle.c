@@ -11018,7 +11018,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|mp_StopAutoloadTimer
+name|mp_CheckAutoloadTimer
 argument_list|(
 operator|&
 name|bundle
@@ -11056,7 +11056,7 @@ argument_list|,
 name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
-name|mp_StopAutoloadTimer
+name|mp_CheckAutoloadTimer
 argument_list|(
 operator|&
 name|bundle
