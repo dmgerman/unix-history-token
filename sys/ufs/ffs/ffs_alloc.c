@@ -1284,9 +1284,6 @@ name|b_data
 operator|+
 name|osize
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|nsize
 operator|-
 name|osize
@@ -1636,9 +1633,6 @@ name|b_data
 operator|+
 name|osize
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|nsize
 operator|-
 name|osize
