@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.21 1996/10/07 04:21:00 jkh Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22 1996/10/12 16:20:32 jkh Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -911,7 +911,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ppp [-auto | -direct | -dedicated] [system]\n"
+literal|"Usage: ppp [-auto | -direct | -dedicated | -ddial ] [system]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1012,6 +1012,24 @@ condition|)
 name|mode
 operator||=
 name|MODE_DEDICATED
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"ddial"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|mode
+operator||=
+name|MODE_DDIAL
+operator||
+name|MODE_AUTO
 expr_stmt|;
 else|else
 name|Usage
@@ -1288,7 +1306,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Automatic mode\n"
+literal|"Automatic Dialer mode\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1302,7 +1320,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Destination system must be specified in auto mode.\n"
+literal|"Destination system must be specified in auto or ddial mode.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1480,7 +1498,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Must specify dstaddr with auto mode.\n"
+literal|"Must specify dstaddr with auto or ddial mode.\n"
 argument_list|)
 expr_stmt|;
 name|Cleanup
@@ -1710,6 +1728,9 @@ name|pid
 argument_list|,
 literal|"%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -2749,6 +2770,23 @@ argument_list|(
 operator|&
 name|efds
 argument_list|)
+expr_stmt|;
+comment|/*       * If the link is down and we're in DDIAL mode, bring it back      * up.      */
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_DDIAL
+operator|&&
+name|LcpFsm
+operator|.
+name|state
+operator|<=
+name|ST_CLOSED
+condition|)
+name|dial_up
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/*     * If Ip packet for output is enqueued and require dial up,     * Just do it!     */
 if|if
