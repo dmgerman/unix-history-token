@@ -880,7 +880,7 @@ name|strcat
 argument_list|(
 name|sitepath
 argument_list|,
-literal|"/packages-4-current/Latest/"
+literal|"/packages-4-stable/Latest/"
 argument_list|)
 expr_stmt|;
 return|return
