@@ -5234,6 +5234,10 @@ argument_list|,
 literal|"realloc()"
 argument_list|)
 expr_stmt|;
+name|bufsize
+operator|--
+expr_stmt|;
+comment|/* Leave space for the kern.malloc fixup. */
 if|if
 condition|(
 name|mysysctl
@@ -5245,18 +5249,14 @@ argument_list|,
 operator|&
 name|bufsize
 argument_list|,
-literal|0
-argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
 condition|)
 break|break;
-name|bufsize
-operator|*=
-literal|2
-expr_stmt|;
 block|}
 name|buf
 index|[
@@ -5265,13 +5265,13 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* play it safe */
+comment|/* Fix up kern.malloc not returning a string. */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s\n\n"
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
