@@ -34,13 +34,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)mount_nfs.c	8.3 (Berkeley) 3/27/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.3 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,6 +246,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -2039,7 +2050,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"vfsload(nfs)"
 argument_list|)
@@ -2058,15 +2069,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"nfs filesystem is not loadable"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_NFS
 argument_list|,
 name|name
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992, 1993 Jan-Simon Pendry  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -35,11 +35,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_procfs.c	8.3 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -97,10 +92,23 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mntopts.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts
@@ -117,6 +125,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -125,6 +135,16 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|fsname
 decl_stmt|;
 end_decl_stmt
 
@@ -155,6 +175,42 @@ name|vfsconf
 modifier|*
 name|vfc
 decl_stmt|;
+name|fsname
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'_'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fsname
+operator|||
+name|strcmp
+argument_list|(
+name|fsname
+argument_list|,
+literal|"_std"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"argv[0] must end in _fsname"
+argument_list|)
+expr_stmt|;
+name|fsname
+operator|++
+expr_stmt|;
 name|mntflags
 operator|=
 literal|0
@@ -226,7 +282,7 @@ name|vfc
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"procfs"
+name|fsname
 argument_list|)
 expr_stmt|;
 if|if
@@ -236,7 +292,7 @@ name|vfc
 operator|&&
 name|vfsisloadable
 argument_list|(
-literal|"procfs"
+name|fsname
 argument_list|)
 condition|)
 block|{
@@ -244,39 +300,52 @@ if|if
 condition|(
 name|vfsload
 argument_list|(
-literal|"procfs"
+name|fsname
 argument_list|)
 condition|)
+block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
-literal|"vfsload(procfs)"
+literal|"vfsload(%s)"
+argument_list|,
+name|fsname
 argument_list|)
 expr_stmt|;
+block|}
 name|endvfsent
 argument_list|()
 expr_stmt|;
-comment|/* flush cache */
 name|vfc
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"procfs"
+name|fsname
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"%s filesystem not available"
+argument_list|,
+name|fsname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_PROCFS
 argument_list|,
 name|argv
 index|[
@@ -290,7 +359,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 name|NULL
 argument_list|)
@@ -315,12 +384,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_procfs [-o options] /proc mount_point\n"
+literal|"usage: mount_%s [-o options] what_to_mount mount_point\n"
+argument_list|,
+name|fsname
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

@@ -33,13 +33,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)mount_portal.c	8.4 (Berkeley) 3/27/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_portal.c	8.4 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -172,6 +183,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -180,6 +192,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -452,16 +465,11 @@ name|sun_path
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EX_SOFTWARE
 argument_list|,
-literal|"mount_portal: portal socket name too long\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"portal socket name too long"
 argument_list|)
 expr_stmt|;
 block|}
@@ -510,21 +518,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|EX_OSERR
 argument_list|,
-literal|"mount_portal: socket: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"socket"
 argument_list|)
 expr_stmt|;
 block|}
@@ -636,7 +634,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"vfsload(portal)"
 argument_list|)
@@ -653,6 +651,18 @@ literal|"portal"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"portal filesystem is not available"
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 name|mount
@@ -875,7 +885,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -940,7 +950,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1063,7 +1073,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

@@ -33,13 +33,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)mount_null.c	8.5 (Berkeley) 3/27/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_null.c	8.5 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -98,6 +97,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -141,6 +152,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -149,6 +162,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -272,7 +286,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -303,7 +317,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"%s (%s) and %s are not distinct paths"
 argument_list|,
@@ -353,7 +367,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"vfsload(null)"
 argument_list|)
@@ -372,15 +386,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"null filesystem is not available"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_NULL
 argument_list|,
 name|argv
 index|[
@@ -395,9 +417,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
-name|NULL
+name|target
 argument_list|)
 expr_stmt|;
 name|exit
@@ -493,6 +515,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()

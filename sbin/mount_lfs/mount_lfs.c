@@ -34,13 +34,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)mount_lfs.c	8.3 (Berkeley) 3/27/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_lfs.c	8.3 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -108,6 +119,7 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts
@@ -126,6 +138,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -134,10 +148,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|invoke_cleaner
 name|__P
@@ -145,16 +161,12 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|short_rds
-decl_stmt|,
-name|cleaner_debug
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +210,11 @@ name|vfsconf
 modifier|*
 name|vfc
 decl_stmt|;
+name|int
+name|short_rds
+decl_stmt|,
+name|cleaner_debug
+decl_stmt|;
 name|options
 operator|=
 name|NULL
@@ -205,6 +222,10 @@ expr_stmt|;
 name|mntflags
 operator|=
 name|noclean
+operator|=
+name|short_rds
+operator|=
+name|cleaner_debug
 operator|=
 literal|0
 expr_stmt|;
@@ -375,7 +396,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"vfsload(lfs)"
 argument_list|)
@@ -392,6 +413,18 @@ literal|"lfs"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"lfs filesystem is not available"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mount
@@ -414,9 +447,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
-name|NULL
+name|args
+operator|.
+name|fspec
 argument_list|)
 expr_stmt|;
 if|if
@@ -427,6 +462,10 @@ condition|)
 name|invoke_cleaner
 argument_list|(
 name|fs_name
+argument_list|,
+name|short_rds
+argument_list|,
+name|cleaner_debug
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -439,14 +478,25 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|invoke_cleaner
 parameter_list|(
 name|name
+parameter_list|,
+name|short_rds
+parameter_list|,
+name|cleaner_debug
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+name|short_rds
+decl_stmt|;
+name|int
+name|cleaner_debug
 decl_stmt|;
 block|{
 name|char
@@ -512,7 +562,7 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"exec %s"
 argument_list|,
@@ -523,6 +573,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -539,7 +590,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

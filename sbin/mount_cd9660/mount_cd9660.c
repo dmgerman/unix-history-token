@@ -34,13 +34,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)mount_cd9660.c	8.4 (Berkeley) 3/27/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_cd9660.c	8.4 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -380,7 +391,7 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"vfsload(cd9660)"
 argument_list|)
@@ -400,15 +411,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"cd9660 filesystem not available"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_CD9660
 argument_list|,
 name|dir
 argument_list|,
@@ -422,7 +441,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -454,7 +473,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

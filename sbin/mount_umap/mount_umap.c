@@ -33,13 +33,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)mount_umap.c	8.3 (Berkeley) 3/27/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_umap.c	8.3 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -135,6 +146,7 @@ comment|/*  * This routine provides the user interface to mounting a umap layer.
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts
@@ -151,6 +163,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -159,6 +173,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -381,7 +396,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -409,7 +424,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -444,7 +459,7 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|1
+name|EX_NOPERM
 argument_list|,
 literal|"%s: improper write permissions (%s)%s"
 argument_list|,
@@ -466,7 +481,7 @@ name|ROOTUSER
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_NOPERM
 argument_list|,
 literal|"%s does not belong to root%s"
 argument_list|,
@@ -496,7 +511,7 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"%s: nentries not found%s"
 argument_list|,
@@ -513,7 +528,7 @@ name|MAPFILEENTRIES
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"maximum number of entries is %d%s"
 argument_list|,
@@ -587,7 +602,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -605,7 +620,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"%s: unexpected end-of-file%s"
 argument_list|,
@@ -616,7 +631,7 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"%s: illegal format (line %d)%s"
 argument_list|,
@@ -656,7 +671,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_NOINPUT
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -684,7 +699,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -719,7 +734,7 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|1
+name|EX_NOPERM
 argument_list|,
 literal|"%s: improper write permissions (%s)%s"
 argument_list|,
@@ -741,7 +756,7 @@ name|ROOTUSER
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_NOPERM
 argument_list|,
 literal|"%s does not belong to root%s"
 argument_list|,
@@ -771,7 +786,7 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"nentries not found%s"
 argument_list|,
@@ -788,7 +803,7 @@ name|MAPFILEENTRIES
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"maximum number of entries is %d%s"
 argument_list|,
@@ -861,7 +876,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -879,7 +894,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"%s: unexpected end-of-file%s"
 argument_list|,
@@ -890,7 +905,7 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-literal|1
+name|EX_DATAERR
 argument_list|,
 literal|"%s: illegal format (line %d)%s"
 argument_list|,
@@ -1044,7 +1059,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}

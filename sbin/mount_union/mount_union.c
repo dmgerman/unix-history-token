@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -107,6 +113,7 @@ file|"mntopts.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts
@@ -123,6 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|subdir
 name|__P
@@ -141,6 +149,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -149,6 +159,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -313,7 +324,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -344,7 +355,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"%s (%s) and %s are not distinct paths"
 argument_list|,
@@ -413,15 +424,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"union filesystem is not available"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_UNION
 argument_list|,
 name|argv
 index|[
@@ -436,9 +455,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
-name|NULL
+name|target
 argument_list|)
 expr_stmt|;
 name|exit
@@ -550,7 +569,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
