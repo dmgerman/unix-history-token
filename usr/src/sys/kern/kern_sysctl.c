@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sysctl.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sysctl.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -127,9 +127,6 @@ name|int
 name|bufsize
 decl_stmt|,
 comment|/* max size of users buffer */
-name|copysize
-decl_stmt|,
-comment|/* size copied */
 name|needed
 decl_stmt|,
 name|locked
@@ -170,7 +167,7 @@ argument_list|)
 argument_list|)
 condition|)
 goto|goto
-name|bad
+name|done
 goto|;
 switch|switch
 condition|(
@@ -204,7 +201,49 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|bad
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|uap
+operator|->
+name|where
+operator|==
+name|NULL
+operator|||
+name|uap
+operator|->
+name|size
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+call|(
+modifier|*
+name|server
+call|)
+argument_list|(
+name|uap
+operator|->
+name|op
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|uap
+operator|->
+name|arg
+argument_list|,
+operator|&
+name|needed
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
 goto|;
 block|}
 while|while
@@ -247,63 +286,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|error
-operator|=
-call|(
-modifier|*
-name|server
-call|)
-argument_list|(
-name|uap
-operator|->
-name|op
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|uap
-operator|->
-name|arg
-argument_list|,
-operator|&
-name|needed
-argument_list|)
-condition|)
-goto|goto
-name|release
-goto|;
-if|if
-condition|(
-name|uap
-operator|->
-name|where
-operator|==
-name|NULL
-operator|||
-name|uap
-operator|->
-name|size
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|release
-goto|;
-comment|/* only want estimate of bufsize */
-name|locked
-operator|=
-name|copysize
-operator|=
-name|MIN
-argument_list|(
-name|needed
-argument_list|,
-name|bufsize
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|useracc
 argument_list|(
@@ -311,7 +293,7 @@ name|uap
 operator|->
 name|where
 argument_list|,
-name|copysize
+name|bufsize
 argument_list|,
 name|B_WRITE
 argument_list|)
@@ -324,7 +306,7 @@ expr_stmt|;
 comment|/* 	 * lock down target pages - NEED DEADLOCK AVOIDANCE 	 */
 if|if
 condition|(
-name|copysize
+name|bufsize
 operator|>
 operator|(
 operator|(
@@ -354,8 +336,12 @@ name|uap
 operator|->
 name|where
 argument_list|,
-name|copysize
+name|bufsize
 argument_list|)
+expr_stmt|;
+name|locked
+operator|=
+name|bufsize
 expr_stmt|;
 name|error
 operator|=
@@ -373,7 +359,7 @@ operator|->
 name|where
 argument_list|,
 operator|&
-name|copysize
+name|bufsize
 argument_list|,
 name|uap
 operator|->
@@ -397,10 +383,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-goto|goto
-name|release
-goto|;
 name|error
 operator|=
 name|copyout
@@ -409,7 +394,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|copysize
+name|bufsize
 argument_list|,
 operator|(
 name|caddr_t
@@ -420,7 +405,7 @@ name|size
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|copysize
+name|bufsize
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -443,7 +428,7 @@ operator|&
 name|kinfo_lock
 argument_list|)
 expr_stmt|;
-name|bad
+name|done
 label|:
 if|if
 condition|(
@@ -477,18 +462,6 @@ directive|define
 name|KINFO_PROCSLOP
 value|(5 * sizeof (struct kinfo_proc))
 end_define
-
-begin_decl_stmt
-name|int
-name|kinfo_proc_userfailed
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|kinfo_proc_wefailed
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|kinfo_doproc
@@ -769,6 +742,7 @@ expr|struct
 name|proc
 argument_list|)
 expr_stmt|;
+comment|/* 			 *	XXX NEED ALLIGNMENT 			 */
 name|eproc
 operator|.
 name|e_paddr
