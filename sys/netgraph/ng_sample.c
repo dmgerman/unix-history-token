@@ -589,7 +589,7 @@ name|cp
 operator|=
 name|name
 operator|+
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|NG_XXX_HOOK_DLCI_LEADIN
 argument_list|)
