@@ -93,6 +93,10 @@ begin_comment
 comment|/* Connect [client->server] */
 end_comment
 
+begin_comment
+comment|/* 	 * struct storage_desc 	 * char key[] 	 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -116,7 +120,7 @@ comment|/* Send password [server->client] */
 end_comment
 
 begin_comment
-comment|/* 	 * struct storeage_desc 	 * char prompt[] 	 * struct storeage_desc 	 * char seed[] 	 */
+comment|/* 	 * struct storage_desc 	 * char prompt[] 	 * struct storage_desc 	 * char seed[] 	 */
 end_comment
 
 begin_define
@@ -131,7 +135,7 @@ comment|/* Authorization [client->server] */
 end_comment
 
 begin_comment
-comment|/* 	 * struct storeage_desc 	 * char authenticator[] 	 */
+comment|/* 	 * struct storage_desc 	 * char authenticator[] 	 */
 end_comment
 
 begin_define
@@ -157,7 +161,7 @@ comment|/* Too bad [server->client] */
 end_comment
 
 begin_comment
-comment|/* 	 * struct storeage_desc 	 * char message[] 	 */
+comment|/* 	 * struct storage_desc 	 * char message[] 	 */
 end_comment
 
 begin_define
