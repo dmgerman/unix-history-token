@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.26 (Berkeley) %G%"
+literal|"@(#)wwiomux.c	3.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,11 @@ operator|&
 name|imask
 argument_list|)
 expr_stmt|;
+name|n
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|w
@@ -181,6 +186,21 @@ name|w
 operator|->
 name|ww_obe
 condition|)
+block|{
+if|if
+condition|(
+name|w
+operator|->
+name|ww_pty
+operator|>
+name|n
+condition|)
+name|n
+operator|=
+name|w
+operator|->
+name|ww_pty
+expr_stmt|;
 name|FD_SET
 argument_list|(
 name|w
@@ -191,6 +211,7 @@ operator|&
 name|imask
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|w
@@ -311,7 +332,9 @@ name|n
 operator|=
 name|select
 argument_list|(
-name|wwdtablesize
+name|n
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|imask

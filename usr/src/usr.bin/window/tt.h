@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)tt.h	3.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)tt.h	3.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,6 +16,13 @@ name|int
 function_decl|(
 modifier|*
 name|tt_start
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|tt_reset
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -155,6 +162,30 @@ comment|/* refer to a defined token */
 name|int
 function_decl|(
 modifier|*
+name|tt_compress
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* begin, end compression */
+name|int
+function_decl|(
+modifier|*
+name|tt_checksum
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* compute checksum */
+name|int
+function_decl|(
+modifier|*
+name|tt_checkpoint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* checkpoint protocol */
+name|int
+function_decl|(
+modifier|*
 name|tt_rint
 function_decl|)
 parameter_list|()
@@ -234,12 +265,16 @@ name|int
 name|tt_put_token_cost
 decl_stmt|;
 comment|/* constant cost */
+name|int
+name|tt_ack
+decl_stmt|;
+comment|/* checkpoint ack-nack flag */
 comment|/* the frame characters */
 name|short
 modifier|*
 name|tt_frame
 decl_stmt|;
-comment|/* the output routine */
+comment|/* ttflush() hook */
 name|int
 function_decl|(
 modifier|*
@@ -430,7 +465,7 @@ name|ttputc
 parameter_list|(
 name|c
 parameter_list|)
-value|(tt_obp< tt_obe ? (*tt_obp++ = (c)) \ 				: ((*tt.tt_flush)(), *tt_obp++ = (c)))
+value|(tt_obp< tt_obe ? (*tt_obp++ = (c)) \ 				: (ttflush(), *tt_obp++ = (c)))
 end_define
 
 begin_comment

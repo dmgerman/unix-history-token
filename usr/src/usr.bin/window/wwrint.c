@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwrint.c	3.13 (Berkeley) %G%"
+literal|"@(#)wwrint.c	3.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,13 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
 name|wwibq
 operator|+=
 name|n
@@ -197,9 +204,28 @@ name|wwnreadc
 operator|+=
 name|n
 expr_stmt|;
+comment|/* 			 * Hasten or delay the next checkpoint, 			 * as the case may be. 			 */
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_checkpoint
+operator|&&
+operator|!
+name|wwdocheckpoint
+condition|)
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|wwsetintr
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsuspend.c	3.16 (Berkeley) %G%"
+literal|"@(#)wwsuspend.c	3.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,10 +46,12 @@ directive|include
 file|<sys/signal.h>
 end_include
 
-begin_function
-name|void
+begin_macro
 name|wwsuspend
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|sig_t
 name|oldsig
@@ -98,24 +100,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwsettty
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|wwnewtty
-argument_list|)
-expr_stmt|;
-name|xxstart
+name|wwstart
 argument_list|()
 expr_stmt|;
-name|wwredraw
-argument_list|()
-expr_stmt|;
-comment|/* XXX, clears the screen twice */
 operator|(
 name|void
 operator|)
@@ -127,7 +114,7 @@ name|oldsig
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

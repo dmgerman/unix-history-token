@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwend.c	3.17 (Berkeley) %G%"
+literal|"@(#)wwend.c	3.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,26 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_checkpoint
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|wwdocheckpoint
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|xxend
 argument_list|()
 expr_stmt|;

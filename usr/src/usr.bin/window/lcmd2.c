@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.25 (Berkeley) %G%"
+literal|"@(#)lcmd2.c	3.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,12 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -67,13 +61,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|"alias.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_comment
@@ -334,14 +334,14 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"read\terror\tzero\tchar\terrorc\n"
+literal|"read\terror\tzero\tchar\tack\tnack\tstat\terrorc\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\t%d\n"
+literal|"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n"
 argument_list|,
 name|wwnread
 argument_list|,
@@ -350,6 +350,12 @@ argument_list|,
 name|wwnreadz
 argument_list|,
 name|wwnreadc
+argument_list|,
+name|wwnreadack
+argument_list|,
+name|wwnreadnack
+argument_list|,
+name|wwnreadstat
 argument_list|,
 name|wwnreadec
 argument_list|)

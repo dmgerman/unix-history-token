@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)ww.h	3.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)ww.h	3.67 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -991,6 +991,19 @@ comment|/* the new (desired) screen */
 end_comment
 
 begin_decl_stmt
+name|union
+name|ww_char
+modifier|*
+modifier|*
+name|wwcs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the checkpointed screen */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|wwtouched
@@ -1128,8 +1141,18 @@ decl_stmt|,
 name|wwnreade
 decl_stmt|,
 name|wwnreadz
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|wwnreadc
+decl_stmt|,
+name|wwnreadack
+decl_stmt|,
+name|wwnreadnack
+decl_stmt|,
+name|wwnreadstat
 decl_stmt|,
 name|wwnreadec
 decl_stmt|;
@@ -1395,6 +1418,16 @@ value|(wwintr = 0)
 end_define
 
 begin_comment
+comment|/* checkpointing */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wwdocheckpoint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* the window virtual terminal */
 end_comment
 
@@ -1539,6 +1572,13 @@ end_function_decl
 begin_function_decl
 name|void
 name|wwchild
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wwalarm
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttinit.c	3.27 (Berkeley) %G%"
+literal|"@(#)ttinit.c	3.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,10 +224,6 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
-name|int
-name|ttflush
-parameter_list|()
-function_decl|;
 name|tt_strp
 operator|=
 name|tt_strings
@@ -499,12 +495,6 @@ operator|.
 name|tt_nrow
 operator|-
 literal|1
-expr_stmt|;
-name|tt
-operator|.
-name|tt_flush
-operator|=
-name|ttflush
 expr_stmt|;
 return|return
 literal|0

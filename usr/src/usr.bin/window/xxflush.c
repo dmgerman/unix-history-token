@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xxflush.c	3.6 (Berkeley) %G%"
+literal|"@(#)xxflush.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,12 +383,7 @@ operator|=
 name|xxbuf
 expr_stmt|;
 block|}
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_flush
-call|)
+name|ttflush
 argument_list|()
 expr_stmt|;
 block|}
