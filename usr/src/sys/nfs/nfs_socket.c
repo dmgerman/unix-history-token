@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2090,6 +2090,14 @@ name|sotype
 decl_stmt|,
 name|rcvflg
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 comment|/* 	 * Set up arguments for soreceive() 	 */
 operator|*
 name|mp
@@ -2394,6 +2402,12 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|p
+expr_stmt|;
 do|do
 block|{
 name|rcvflg
@@ -2696,6 +2710,12 @@ operator|=
 literal|100000000
 expr_stmt|;
 comment|/* Anything Big */
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|p
+expr_stmt|;
 do|do
 block|{
 name|rcvflg
@@ -2961,6 +2981,12 @@ operator|=
 name|len
 operator|=
 literal|1000000
+expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|p
 expr_stmt|;
 do|do
 block|{
@@ -8585,6 +8611,12 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|so
