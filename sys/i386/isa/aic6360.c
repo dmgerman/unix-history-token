@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Greipsland  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jarle Greipsland  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Greipsland  * Copyright (c) 1997 Oliver Breuninger (APM modification)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jarle Greipsland  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.37 1998/02/09 06:08:23 eivind Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.38 1998/02/27 05:38:23 msmith Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"apm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -255,6 +261,29 @@ include|#
 directive|include
 file|<machine/clock.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/apm_bios.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NAPM> 0 */
+end_comment
 
 begin_include
 include|#
@@ -3039,6 +3068,11 @@ define|#
 directive|define
 name|AIC_CLEANING
 value|0x06
+define|#
+directive|define
+name|AIC_SUSPEND
+value|0x07
+comment|/* Suspend mode (APM) */
 name|short
 name|flags
 decl_stmt|;
@@ -3168,6 +3202,24 @@ decl_stmt|;
 comment|/* I/O port information */
 endif|#
 directive|endif
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+name|struct
+name|apmhook
+name|s_hook
+decl_stmt|;
+comment|/* reconfiguration support */
+name|struct
+name|apmhook
+name|r_hook
+decl_stmt|;
+comment|/* reconfiguration support */
+endif|#
+directive|endif
+comment|/* NAPM> 0 */
 block|}
 modifier|*
 name|aicdata
@@ -3391,6 +3443,53 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|aic_suspend
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|aic_data
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|aic_resume
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|aic_data
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NAPM> 0 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -4421,6 +4520,103 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+end_if
+
+begin_function
+specifier|static
+name|int
+name|aic_suspend
+parameter_list|(
+name|aic
+parameter_list|)
+name|struct
+name|aic_data
+modifier|*
+name|aic
+decl_stmt|;
+block|{
+name|AIC_TRACE
+argument_list|(
+operator|(
+literal|"Suspend aic:\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"aic: suspend\n"
+argument_list|)
+expr_stmt|;
+name|aic
+operator|->
+name|state
+operator|=
+name|AIC_SUSPEND
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|aic_resume
+parameter_list|(
+name|aic
+parameter_list|)
+name|struct
+name|aic_data
+modifier|*
+name|aic
+decl_stmt|;
+block|{
+name|AIC_TRACE
+argument_list|(
+operator|(
+literal|"Resume aic:\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"aic: resume\n"
+argument_list|)
+expr_stmt|;
+name|aic
+operator|->
+name|state
+operator|=
+literal|0
+expr_stmt|;
+name|aic_init
+argument_list|(
+name|aic
+argument_list|)
+expr_stmt|;
+comment|/* 	aic6360_reset(aic); 	aic_scsi_reset(aic); */
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NAPM> 0 */
+end_comment
+
 begin_comment
 comment|/* Do the real search-for-device.  * Prerequisite: aic->iobase should be set to the proper value  */
 end_comment
@@ -4814,6 +5010,106 @@ operator|=
 operator|&
 name|aic_dev
 expr_stmt|;
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+name|aic
+operator|->
+name|s_hook
+operator|.
+name|ah_fun
+operator|=
+name|aic_suspend
+expr_stmt|;
+name|aic
+operator|->
+name|s_hook
+operator|.
+name|ah_arg
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|aic
+expr_stmt|;
+name|aic
+operator|->
+name|s_hook
+operator|.
+name|ah_name
+operator|=
+literal|"Adaptec AHA1520/AIC6369"
+expr_stmt|;
+name|aic
+operator|->
+name|s_hook
+operator|.
+name|ah_order
+operator|=
+name|APM_MID_ORDER
+expr_stmt|;
+name|apm_hook_establish
+argument_list|(
+name|APM_HOOK_SUSPEND
+argument_list|,
+operator|&
+name|aic
+operator|->
+name|s_hook
+argument_list|)
+expr_stmt|;
+name|aic
+operator|->
+name|r_hook
+operator|.
+name|ah_fun
+operator|=
+name|aic_resume
+expr_stmt|;
+name|aic
+operator|->
+name|r_hook
+operator|.
+name|ah_arg
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|aic
+expr_stmt|;
+name|aic
+operator|->
+name|r_hook
+operator|.
+name|ah_name
+operator|=
+literal|"Adaptec AHA1520/AIC6369"
+expr_stmt|;
+name|aic
+operator|->
+name|r_hook
+operator|.
+name|ah_order
+operator|=
+name|APM_MID_ORDER
+expr_stmt|;
+name|apm_hook_establish
+argument_list|(
+name|APM_HOOK_RESUME
+argument_list|,
+operator|&
+name|aic
+operator|->
+name|r_hook
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NAPM> 0 */
 comment|/* 	 * Prepare the scsibus_data area for the upperlevel 	 * scsi code. 	 */
 name|scbus
 operator|=
@@ -5023,6 +5319,13 @@ name|aic
 operator|->
 name|iobase
 decl_stmt|;
+name|AIC_TRACE
+argument_list|(
+operator|(
+literal|"aic_scsi_reset:\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|SCSISEQ
@@ -5082,6 +5385,13 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|AIC_TRACE
+argument_list|(
+operator|(
+literal|"aic_init:\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Reset the SCSI-bus itself */
 name|aic_scsi_reset
 argument_list|(
