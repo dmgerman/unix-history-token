@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hist.c 4.7 %G%"
+literal|"@(#)hist.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,14 +447,10 @@ argument_list|,
 literal|"-h"
 argument_list|)
 condition|)
-block|{
 name|hflg
 operator|++
 expr_stmt|;
-name|vp
-operator|++
-expr_stmt|;
-block|}
+elseif|else
 if|if
 condition|(
 operator|*
@@ -468,14 +464,12 @@ argument_list|,
 literal|"-r"
 argument_list|)
 condition|)
-block|{
 name|rflg
 operator|++
 expr_stmt|;
 name|vp
 operator|++
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
