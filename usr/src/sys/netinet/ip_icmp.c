@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -102,6 +102,14 @@ end_include
 begin_comment
 comment|/*  * ICMP routines: error generation, receive packet processing, and  * routines to turnaround packets back to the originator, and  * host table maintenance routines.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|icmpmaskrepl
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1417,6 +1425,13 @@ parameter_list|(
 name|sa
 parameter_list|)
 value|((struct sockaddr_in *)(sa))
+if|if
+condition|(
+name|icmpmaskrepl
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* 		 * We are not able to respond with all ones broadcast 		 * unless we receive it over a point-to-point interface. 		 */
 if|if
 condition|(
@@ -2707,6 +2722,120 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|icmp_sysctl
+argument_list|(
+argument|name
+argument_list|,
+argument|namelen
+argument_list|,
+argument|oldp
+argument_list|,
+argument|oldlenp
+argument_list|,
+argument|newp
+argument_list|,
+argument|newlen
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|namelen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|oldp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+modifier|*
+name|oldlenp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|newp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|newlen
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|extern
+name|int
+name|ip_ttl
+decl_stmt|;
+comment|/* all sysctl names at this level are terminal */
+if|if
+condition|(
+name|namelen
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+name|ENOTDIR
+operator|)
+return|;
+switch|switch
+condition|(
+name|name
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+name|ICMPCTL_MASKREPL
+case|:
+return|return
+operator|(
+name|sysctl_int
+argument_list|(
+name|oldp
+argument_list|,
+name|oldlenp
+argument_list|,
+name|newp
+argument_list|,
+name|newlen
+argument_list|,
+operator|&
+name|icmpmaskrepl
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|ENOPROTOOPT
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_block
 
 end_unit
 
