@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -37,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -50,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/pmap_clnt.h>
 end_include
 
 begin_include
@@ -134,6 +147,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -341,7 +355,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot create udp service."
+literal|"cannot create udp service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -371,7 +385,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RSTATPROG, RSTATVERS_TIME, udp)."
+literal|"unable to register (RSTATPROG, RSTATVERS_TIME, udp)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -401,7 +415,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RSTATPROG, RSTATVERS_SWTCH, udp)."
+literal|"unable to register (RSTATPROG, RSTATVERS_SWTCH, udp)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -431,7 +445,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RSTATPROG, RSTATVERS_ORIG, udp)."
+literal|"unable to register (RSTATPROG, RSTATVERS_ORIG, udp)"
 argument_list|)
 expr_stmt|;
 name|exit
