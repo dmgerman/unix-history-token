@@ -2480,7 +2480,7 @@ operator|->
 name|ds_addr
 operator|=
 name|paddr
-operator|+
+operator||
 name|alpha_XXX_dmamap_or
 expr_stmt|;
 name|sg
@@ -2528,7 +2528,7 @@ operator|->
 name|ds_addr
 operator|=
 name|paddr
-operator|+
+operator||
 name|alpha_XXX_dmamap_or
 expr_stmt|;
 name|sg
@@ -2824,7 +2824,7 @@ operator|.
 name|ds_addr
 operator|=
 name|curaddr
-operator|+
+operator||
 name|alpha_XXX_dmamap_or
 expr_stmt|;
 name|segs
@@ -2918,7 +2918,7 @@ operator|.
 name|ds_addr
 operator|=
 name|curaddr
-operator|+
+operator||
 name|alpha_XXX_dmamap_or
 expr_stmt|;
 name|segs
