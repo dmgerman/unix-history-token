@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgetln.c	5.2 (Berkeley) %G%"
+literal|"@(#)fgetln.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Expand the line buffer.  Return -1 on error.  * The `new size' does not account for a terminating '\0',  * so we add 1 here.  */
+comment|/*  * Expand the line buffer.  Return -1 on error. #ifdef notdef  * The `new size' does not account for a terminating '\0',  * so we add 1 here. #endif  */
 end_comment
 
 begin_macro
@@ -93,6 +93,14 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+operator|++
+name|newsize
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fp
@@ -101,7 +109,6 @@ name|_lb
 operator|.
 name|_size
 operator|>=
-operator|++
 name|newsize
 condition|)
 return|return
@@ -159,7 +166,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get an input line.  The returned pointer often (but not always)  * points into a stdio buffer.  Fgetline smashes the newline (if any)  * in the stdio buffer; callers must not use it on streams that  * have `magic' setvbuf() games happening.  */
+comment|/*  * Get an input line.  The returned pointer often (but not always)  * points into a stdio buffer.  Fgetline does not alter the text of  * the returned line (which is thus not a C string because it will  * not necessarily end with '\0'), but does allow callers to modify  * it if they wish.  Thus, we set __SMOD in case the caller does.  */
 end_comment
 
 begin_function
@@ -209,12 +216,6 @@ name|fp
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|lenp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|lenp
 operator|=
@@ -258,7 +259,11 @@ name|char
 modifier|*
 name|ret
 decl_stmt|;
-comment|/* 		 * Found one.  Flag buffer as modified to keep 		 * fseek from `optimising' a backward seek, since 		 * the newline is about to be trashed.  (We should 		 * be able to get away with doing this only if 		 * p is not pointing into an ungetc buffer, since 		 * fseek discards ungetc data, but this is the 		 * usual case anyway.) 		 */
+comment|/* 		 * Found one.  Flag buffer as modified to keep fseek from 		 * `optimising' a backward seek, in case the user stomps on 		 * the text. 		 */
+name|p
+operator|++
+expr_stmt|;
+comment|/* advance over it */
 name|ret
 operator|=
 operator|(
@@ -269,6 +274,9 @@ name|fp
 operator|->
 name|_p
 expr_stmt|;
+operator|*
+name|lenp
+operator|=
 name|len
 operator|=
 name|p
@@ -283,37 +291,17 @@ name|_flags
 operator||=
 name|__SMOD
 expr_stmt|;
-operator|*
-name|p
-operator|=
-literal|0
-expr_stmt|;
 name|fp
 operator|->
 name|_r
 operator|-=
 name|len
-operator|+
-literal|1
 expr_stmt|;
 name|fp
 operator|->
 name|_p
 operator|=
 name|p
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|lenp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|lenp
-operator|=
-name|len
 expr_stmt|;
 return|return
 operator|(
@@ -321,7 +309,7 @@ name|ret
 operator|)
 return|;
 block|}
-comment|/* 	 * We have to copy the current buffered data to the line buffer. 	 * 	 * OPTIMISTIC is length that we (optimistically) 	 * expect will accomodate the `rest' of the string, 	 * on each trip through the loop below. 	 */
+comment|/* 	 * We have to copy the current buffered data to the line buffer. 	 * As a bonus, though, we can leave off the __SMOD. 	 * 	 * OPTIMISTIC is length that we (optimistically) expect will 	 * accomodate the `rest' of the string, on each trip through the 	 * loop below. 	 */
 define|#
 directive|define
 name|OPTIMISTIC
@@ -350,7 +338,7 @@ specifier|register
 name|size_t
 name|diff
 decl_stmt|;
-comment|/* 		 * Make sure there is room for more bytes. 		 * Copy data from file buffer to line buffer, 		 * refill file and look for newline.  The 		 * loop stops only when we find a newline. 		 */
+comment|/* 		 * Make sure there is room for more bytes.  Copy data from 		 * file buffer to line buffer, refill file and look for 		 * newline.  The loop stops only when we find a newline. 		 */
 if|if
 condition|(
 name|__slbexpand
@@ -437,13 +425,9 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* got it: finish up the line (like code above) */
-name|fp
-operator|->
-name|_flags
-operator||=
-name|__SMOD
+name|p
+operator|++
 expr_stmt|;
-comment|/* soon */
 name|diff
 operator|=
 name|p
@@ -503,30 +487,23 @@ operator|->
 name|_r
 operator|-=
 name|diff
-operator|+
-literal|1
 expr_stmt|;
 name|fp
 operator|->
 name|_p
 operator|=
 name|p
-operator|+
-literal|1
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|lenp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|lenp
 operator|=
 name|len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|fp
 operator|->
 name|_lb
@@ -538,6 +515,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|(
@@ -553,12 +532,6 @@ operator|)
 return|;
 name|error
 label|:
-if|if
-condition|(
-name|lenp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|lenp
 operator|=
