@@ -256,6 +256,13 @@ name|PPPOE_OFFER_TIMEOUT
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|PPPOE_INITIAL_TIMEOUT
+value|2
+end_define
+
 begin_comment
 comment|/* Codes to identify message types */
 end_comment
