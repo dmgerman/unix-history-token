@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.7 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,11 +569,11 @@ name|schdir
 block|,
 name|M
 operator||
-name|STRLIST
+name|RAWLIST
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|"cd"
 block|,
@@ -581,11 +581,11 @@ name|schdir
 block|,
 name|M
 operator||
-name|STRLIST
+name|RAWLIST
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|"save"
 block|,
@@ -603,11 +603,11 @@ name|source
 block|,
 name|M
 operator||
-name|STRLIST
+name|RAWLIST
 block|,
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|"set"
 block|,
@@ -713,11 +713,11 @@ name|T
 operator||
 name|M
 operator||
-name|RAWLIST
+name|NOLIST
 block|,
 literal|0
 block|,
-literal|1
+literal|0
 block|,
 literal|"?"
 block|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.14 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -640,45 +640,30 @@ end_comment
 begin_macro
 name|schdir
 argument_list|(
-argument|str
+argument|arglist
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|str
+modifier|*
+name|arglist
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-name|str
-init|;
-operator|*
-name|cp
-operator|==
-literal|' '
-condition|;
-name|cp
-operator|++
-control|)
-empty_stmt|;
 if|if
 condition|(
 operator|*
-name|cp
+name|arglist
 operator|==
-literal|'\0'
+name|NOSTR
 condition|)
 name|cp
 operator|=
@@ -692,7 +677,8 @@ name|cp
 operator|=
 name|expand
 argument_list|(
-name|cp
+operator|*
+name|arglist
 argument_list|)
 operator|)
 operator|==
@@ -725,9 +711,7 @@ operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_block

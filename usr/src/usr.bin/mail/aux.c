@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.12 (Berkeley) %G%"
+literal|"@(#)aux.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1126,25 +1126,24 @@ end_comment
 begin_macro
 name|source
 argument_list|(
-argument|name
+argument|arglist
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
-name|name
-index|[]
+modifier|*
+modifier|*
+name|arglist
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fi
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1156,7 +1155,8 @@ name|cp
 operator|=
 name|expand
 argument_list|(
-name|name
+operator|*
+name|arglist
 argument_list|)
 operator|)
 operator|==
