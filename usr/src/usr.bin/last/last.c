@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)last.c	4.2 (Berkeley) %G%"
+literal|"@(#)last.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,19 @@ name|stb
 decl_stmt|;
 name|int
 name|print
+decl_stmt|;
+name|char
+modifier|*
+name|crmsg
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+name|long
+name|crtime
 decl_stmt|;
 name|time
 argument_list|(
@@ -629,7 +642,9 @@ name|otime
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"- crash"
+literal|"- %s"
+argument_list|,
+name|crmsg
 argument_list|)
 expr_stmt|;
 block|}
@@ -707,16 +722,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|strcmp
+name|lineq
 argument_list|(
 name|bp
 operator|->
-name|ut_name
+name|ut_line
 argument_list|,
-literal|"reboot"
+literal|"~"
 argument_list|)
 condition|)
+block|{
 for|for
 control|(
 name|i
@@ -740,6 +755,27 @@ name|bp
 operator|->
 name|ut_time
 expr_stmt|;
+if|if
+condition|(
+name|nameq
+argument_list|(
+name|bp
+operator|->
+name|ut_name
+argument_list|,
+literal|"shutdown"
+argument_list|)
+condition|)
+name|crmsg
+operator|=
+literal|"down "
+expr_stmt|;
+else|else
+name|crmsg
+operator|=
+literal|"crash"
+expr_stmt|;
+block|}
 block|}
 block|}
 name|ct
@@ -881,6 +917,15 @@ literal|0
 index|]
 operator|==
 literal|'~'
+operator|&&
+name|bp
+operator|->
+name|ut_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 name|strcpy
 argument_list|(
