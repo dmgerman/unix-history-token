@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.9	82/06/23	*/
+comment|/*	if_il.c	4.10	82/06/24	*/
 end_comment
 
 begin_include
@@ -1666,7 +1666,7 @@ operator|->
 name|ui_addr
 decl_stmt|;
 name|short
-name|status
+name|csr
 decl_stmt|;
 if|if
 condition|(
@@ -1696,6 +1696,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|csr
+operator|=
+name|addr
+operator|->
+name|il_csr
+expr_stmt|;
 comment|/* 	 * Hang receive buffer if it couldn't 	 * be done earlier (in ilrint). 	 */
 if|if
 condition|(
@@ -1786,12 +1792,8 @@ operator|&=
 operator|~
 name|ILF_OACTIVE
 expr_stmt|;
-name|status
-operator|=
-name|addr
-operator|->
-name|il_csr
-operator|&
+name|csr
+operator|&=
 name|IL_STATUS
 expr_stmt|;
 switch|switch
@@ -1813,7 +1815,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|status
+name|csr
 operator|>
 name|ILERR_RETRIES
 condition|)
@@ -1830,7 +1832,7 @@ name|ILC_STAT
 case|:
 if|if
 condition|(
-name|status
+name|csr
 operator|==
 name|ILERR_SUCCESS
 condition|)
