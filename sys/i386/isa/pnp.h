@@ -467,6 +467,12 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
 begin_struct
 struct|struct
 name|pnp_device
@@ -519,6 +525,10 @@ name|u_int
 modifier|*
 name|imask
 decl_stmt|;
+name|struct
+name|isa_device
+name|dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -540,28 +550,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|pnp_dlist_node
-block|{
-name|struct
-name|pnp_device
-modifier|*
-name|pnp
-decl_stmt|;
-name|struct
-name|isa_device
-name|dev
-decl_stmt|;
-name|struct
-name|pnp_dlist_node
-modifier|*
-name|next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -569,15 +557,6 @@ name|_pnp_id
 name|pnp_id
 typedef|;
 end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pnp_dlist_node
-modifier|*
-name|pnp_device_list
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
