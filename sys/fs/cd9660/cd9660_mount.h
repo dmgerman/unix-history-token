@@ -29,6 +29,16 @@ name|int
 name|ssector
 decl_stmt|;
 comment|/* starting sector, 0 for 1st session */
+name|char
+modifier|*
+name|cs_disk
+decl_stmt|;
+comment|/* disk charset for Joliet cs conversion */
+name|char
+modifier|*
+name|cs_local
+decl_stmt|;
+comment|/* local charset for Joliet cs conversion */
 block|}
 struct|;
 end_struct
@@ -86,6 +96,17 @@ end_define
 
 begin_comment
 comment|/* allow broken Joliet disks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_KICONV
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Use libiconv to convert chars */
 end_comment
 
 end_unit

@@ -1217,13 +1217,14 @@ operator|->
 name|flag
 expr_stmt|;
 comment|/* Copy in the 8-bit to Unicode conversion table */
+comment|/* Initialize Unicode to 8-bit table from 8toU table */
 if|if
 condition|(
 name|argsp
 operator|->
 name|flag
 operator|&
-name|NTFSMNT_U2WTABLE
+name|NTFS_MFLAG_KICONV
 condition|)
 block|{
 name|ntfs_82u_init
@@ -1232,7 +1233,26 @@ name|ntmp
 argument_list|,
 name|argsp
 operator|->
-name|u2w
+name|cs_local
+argument_list|,
+name|argsp
+operator|->
+name|cs_ntfs
+argument_list|)
+expr_stmt|;
+name|ntfs_u28_init
+argument_list|(
+name|ntmp
+argument_list|,
+name|NULL
+argument_list|,
+name|argsp
+operator|->
+name|cs_local
+argument_list|,
+name|argsp
+operator|->
+name|cs_ntfs
 argument_list|)
 expr_stmt|;
 block|}
@@ -1243,10 +1263,10 @@ argument_list|(
 name|ntmp
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Initialize Unicode to 8-bit table from 8toU table */
 name|ntfs_u28_init
 argument_list|(
 name|ntmp
@@ -1254,8 +1274,13 @@ argument_list|,
 name|ntmp
 operator|->
 name|ntm_82u
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|mp
 operator|->
 name|mnt_data
@@ -3503,6 +3528,16 @@ argument_list|,
 name|ntfs
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ntfs
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -942,6 +942,16 @@ modifier|*
 name|ntm_u28
 decl_stmt|;
 comment|/* Unicode to 8 bit */
+name|void
+modifier|*
+name|ntm_ic_l2u
+decl_stmt|;
+comment|/* Local to Unicode (iconv) */
+name|void
+modifier|*
+name|ntm_ic_u2l
+decl_stmt|;
+comment|/* Unicode to Local (iconv) */
 block|}
 struct|;
 end_struct

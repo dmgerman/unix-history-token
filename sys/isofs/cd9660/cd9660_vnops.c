@@ -2731,6 +2731,14 @@ argument_list|,
 name|imp
 operator|->
 name|joliet_level
+argument_list|,
+name|imp
+operator|->
+name|im_flags
+argument_list|,
+name|imp
+operator|->
+name|im_d2l
 argument_list|)
 expr_stmt|;
 name|idp

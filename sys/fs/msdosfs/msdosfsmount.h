@@ -194,41 +194,26 @@ name|u_int
 name|pm_flags
 decl_stmt|;
 comment|/* see below */
-name|u_int16_t
+name|void
+modifier|*
 name|pm_u2w
-index|[
-literal|128
-index|]
 decl_stmt|;
-comment|/* Local->Unicode table */
-name|u_int8_t
-name|pm_ul
-index|[
-literal|128
-index|]
+comment|/* Local->Unicode iconv handle */
+name|void
+modifier|*
+name|pm_w2u
 decl_stmt|;
-comment|/* Local upper->lower table */
-name|u_int8_t
-name|pm_lu
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* Local lower->upper table */
-name|u_int8_t
-name|pm_d2u
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* DOS->local table */
-name|u_int8_t
+comment|/* Unicode->Local iconv handle */
+name|void
+modifier|*
 name|pm_u2d
-index|[
-literal|128
-index|]
 decl_stmt|;
-comment|/* Local->DOS table */
+comment|/* Unicode->DOS iconv handle */
+name|void
+modifier|*
+name|pm_d2u
+decl_stmt|;
+comment|/* DOS->Local iconv handle */
 block|}
 struct|;
 end_struct
@@ -641,34 +626,21 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* Local->Unicode table */
-name|u_int8_t
-name|ul
-index|[
-literal|128
-index|]
+name|char
+modifier|*
+name|cs_win
 decl_stmt|;
-comment|/* Local upper->lower table */
-name|u_int8_t
-name|lu
-index|[
-literal|128
-index|]
+comment|/* Windows(Unicode) Charset */
+name|char
+modifier|*
+name|cs_dos
 decl_stmt|;
-comment|/* Local lower->upper table */
-name|u_int8_t
-name|d2u
-index|[
-literal|128
-index|]
+comment|/* DOS Charset */
+name|char
+modifier|*
+name|cs_local
 decl_stmt|;
-comment|/* DOS->local table */
-name|u_int8_t
-name|u2d
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* Local->DOS table */
+comment|/* Local Charset */
 block|}
 struct|;
 end_struct
@@ -713,27 +685,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MSDOSFSMNT_U2WTABLE
+name|MSDOSFSMNT_KICONV
 value|0x10
 end_define
 
 begin_comment
-comment|/* Local->Unicode and local<->DOS   */
-end_comment
-
-begin_comment
-comment|/* tables loaded                    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSDOSFSMNT_ULTABLE
-value|0x20
-end_define
-
-begin_comment
-comment|/* Local upper<->lower table loaded */
+comment|/* Use libiconv to convert chars */
 end_comment
 
 begin_comment
@@ -745,7 +702,7 @@ define|#
 directive|define
 name|MSDOSFSMNT_MNTOPT
 define|\
-value|(MSDOSFSMNT_SHORTNAME|MSDOSFSMNT_LONGNAME|MSDOSFSMNT_NOWIN95 \ 	 |MSDOSFSMNT_U2WTABLE|MSDOSFSMNT_ULTABLE)
+value|(MSDOSFSMNT_SHORTNAME|MSDOSFSMNT_LONGNAME|MSDOSFSMNT_NOWIN95 \ 	 |MSDOSFSMNT_KICONV)
 end_define
 
 begin_define

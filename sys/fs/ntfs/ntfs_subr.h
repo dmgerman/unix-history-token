@@ -825,6 +825,14 @@ parameter_list|,
 name|wchar
 modifier|*
 name|u2w
+parameter_list|,
+name|char
+modifier|*
+name|cs_local
+parameter_list|,
+name|char
+modifier|*
+name|cs_ntfs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -850,9 +858,13 @@ name|ntfsmount
 modifier|*
 name|ntmp
 parameter_list|,
-name|u_int16_t
+name|char
 modifier|*
-name|u2w
+name|cs_local
+parameter_list|,
+name|char
+modifier|*
+name|cs_ntfs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -870,7 +882,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
+name|wchar
 name|ntfs_u28
 parameter_list|(
 name|struct
@@ -880,6 +892,25 @@ name|ntmp
 parameter_list|,
 name|wchar
 name|wc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|wchar
+name|ntfs_82u
+parameter_list|(
+name|struct
+name|ntfsmount
+modifier|*
+name|ntmp
+parameter_list|,
+name|wchar
+name|wc
+parameter_list|,
+name|int
+modifier|*
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -900,8 +931,10 @@ directive|define
 name|NTFS_82U
 parameter_list|(
 name|ch
+parameter_list|,
+name|len
 parameter_list|)
-value|(ntmp->ntm_82u[(ch)&0xFF])
+value|ntfs_82u(ntmp, (ch), len)
 end_define
 
 begin_define

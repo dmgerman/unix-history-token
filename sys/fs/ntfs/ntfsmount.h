@@ -24,7 +24,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTFSMNT_U2WTABLE
+name|NTFS_MFLAG_KICONV
 value|0x00000004
 end_define
 
@@ -58,13 +58,16 @@ name|u_long
 name|flag
 decl_stmt|;
 comment|/* additional flags */
-name|u_int16_t
-name|u2w
-index|[
-literal|256
-index|]
+name|char
+modifier|*
+name|cs_ntfs
 decl_stmt|;
-comment|/* Unix to Wchar */
+comment|/* NTFS Charset */
+name|char
+modifier|*
+name|cs_local
+decl_stmt|;
+comment|/* Local Charset */
 block|}
 struct|;
 end_struct
