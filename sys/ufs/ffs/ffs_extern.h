@@ -572,6 +572,21 @@ end_decl_stmt
 
 begin_function_decl
 name|int
+name|ffs_syncvnode
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|int
+name|waitfor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ffs_truncate
 parameter_list|(
 name|struct
@@ -980,7 +995,7 @@ name|int
 name|softdep_sync_metadata
 parameter_list|(
 name|struct
-name|vop_fsync_args
+name|vnode
 modifier|*
 parameter_list|)
 function_decl|;

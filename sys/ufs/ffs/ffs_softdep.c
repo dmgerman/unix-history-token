@@ -21503,7 +21503,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 		 * All MKDIR_PARENT dependencies and all the NEWBLOCK pagedeps 		 * that are contained in direct blocks will be resolved by  		 * doing a UFS_UPDATE. Pagedeps contained in indirect blocks 		 * may require a complete sync'ing of the directory. So, we 		 * try the cheap and fast UFS_UPDATE first, and if that fails, 		 * then we do the slower VOP_FSYNC of the directory. 		 */
+comment|/* 		 * All MKDIR_PARENT dependencies and all the NEWBLOCK pagedeps 		 * that are contained in direct blocks will be resolved by  		 * doing a UFS_UPDATE. Pagedeps contained in indirect blocks 		 * may require a complete sync'ing of the directory. So, we 		 * try the cheap and fast UFS_UPDATE first, and if that fails, 		 * then we do the slower ffs_syncvnode of the directory. 		 */
 if|if
 condition|(
 name|flushparent
@@ -21549,13 +21549,11 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|pvp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -21891,24 +21889,12 @@ begin_function
 name|int
 name|softdep_sync_metadata
 parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
 name|struct
 name|vnode
 modifier|*
 name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
+parameter_list|)
+block|{
 name|struct
 name|pagedep
 modifier|*
@@ -23193,13 +23179,6 @@ name|diraddhdp
 decl_stmt|;
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|inodedep
 modifier|*
 name|inodedep
@@ -23316,7 +23295,7 @@ literal|"flush_pagedep_deps: MKDIR_PARENT"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * A newly allocated directory must have its "." and 		 * ".." entries written out before its name can be 		 * committed in its parent. We do not want or need 		 * the full semantics of a synchronous VOP_FSYNC as 		 * that may end up here again, once for each directory 		 * level in the filesystem. Instead, we push the blocks 		 * and wait for them to clear. We have to fsync twice 		 * because the first call may choose to defer blocks 		 * that still have dependencies, but deferral will 		 * happen at most once. 		 */
+comment|/* 		 * A newly allocated directory must have its "." and 		 * ".." entries written out before its name can be 		 * committed in its parent. We do not want or need 		 * the full semantics of a synchronous ffs_syncvnode as 		 * that may end up here again, once for each directory 		 * level in the filesystem. Instead, we push the blocks 		 * and wait for them to clear. We have to fsync twice 		 * because the first call may choose to defer blocks 		 * that still have dependencies, but deferral will 		 * happen at most once. 		 */
 name|inum
 operator|=
 name|dap
@@ -23362,26 +23341,22 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|||
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -24425,13 +24400,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -24798,13 +24771,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)
@@ -24823,13 +24794,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 condition|)

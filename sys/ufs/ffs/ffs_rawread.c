@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ffs/ffs_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -691,13 +697,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=

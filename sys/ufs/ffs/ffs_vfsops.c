@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -5815,13 +5809,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|ffs_syncvnode
 argument_list|(
 name|vp
 argument_list|,
 name|waitfor
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|!=
