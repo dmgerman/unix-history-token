@@ -1234,6 +1234,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vm_stats_misc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1244,7 +1252,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_machdep
+name|_vm_stats_misc
 argument_list|,
 name|OID_AUTO
 argument_list|,
