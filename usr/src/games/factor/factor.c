@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)factor.c	8.2 (Berkeley) %G%"
+literal|"@(#)factor.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,7 +523,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ld:"
+literal|"%lu:"
 argument_list|,
 name|val
 argument_list|)
@@ -584,7 +584,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %ld"
+literal|" %lu"
 argument_list|,
 name|val
 argument_list|)
@@ -599,7 +599,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %ld"
+literal|" %lu"
 argument_list|,
 operator|*
 name|fact
