@@ -10700,9 +10700,10 @@ name|cmd
 operator|.
 name|value
 argument_list|,
-operator|(
+call|(
 name|ino_t
-operator|)
+call|)
+argument_list|(
 name|cmd
 operator|.
 name|value
@@ -10712,6 +10713,7 @@ operator|.
 name|size
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
