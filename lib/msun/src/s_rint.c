@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_rint.c,v 1.1.1.1 1994/08/19 09:39:52 jkh Exp $"
+literal|"$Id: s_rint.c,v 1.2 1995/05/30 05:50:18 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/*  * TWO23 is long double instead of double to avoid a bug in gcc.  Without  * this, gcc thinks that TWO23[sx]+x and w-TWO23[sx] already have double  * precision and doesn't clip them to double precision when they are  * assigned and returned.  Use long double even in the !__STDC__ case in  * case this is compiled with gcc -traditional.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -53,10 +57,12 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 specifier|const
+name|long
 name|double
 else|#
 directive|else
 specifier|static
+name|long
 name|double
 endif|#
 directive|endif
