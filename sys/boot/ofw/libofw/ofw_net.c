@@ -942,6 +942,10 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|__sparc64__
+name|dmabuf
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|OF_call_method
@@ -954,7 +958,11 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-name|NULL
+operator|(
+literal|64
+operator|*
+literal|1024
+operator|)
 argument_list|,
 operator|&
 name|dmabuf
