@@ -5713,6 +5713,11 @@ directive|ifdef
 name|USE_PAM
 if|if
 condition|(
+name|pamh
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|e
 operator|=
@@ -5802,6 +5807,7 @@ name|pamh
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|logged_in
@@ -6082,12 +6088,6 @@ modifier|*
 name|pass
 parameter_list|)
 block|{
-name|pam_handle_t
-modifier|*
-name|pamh
-init|=
-name|NULL
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -6157,18 +6157,12 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
+comment|/* pamh is NULL, cannot use pam_strerror() */
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pam_start: %s"
-argument_list|,
-name|pam_strerror
-argument_list|(
-name|pamh
-argument_list|,
-name|e
-argument_list|)
+literal|"pam_start failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6207,6 +6201,41 @@ argument_list|,
 name|e
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|e
+operator|=
+name|pam_end
+argument_list|(
+name|pamh
+argument_list|,
+name|e
+argument_list|)
+operator|)
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pam_end: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|pamh
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|-
