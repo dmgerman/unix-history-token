@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#14 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#17 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -383,7 +383,7 @@ comment|/* limited by 24bit counter */
 end_comment
 
 begin_comment
-comment|/*  * The maximum number of concurrent transactions supported per driver instance.  * Sequencer Control Blocks (SCBs) store per-transaction information.  Although  * the space for SCBs on the host adapter varies by model, the driver will  * page the SCBs between host and controller memory as needed.  We are limited  * to 255 because of the 8bit nature of the RISC engine and the need to  * reserve the value of 255 as a "No Transaction" value.  */
+comment|/*  * The maximum amount of SCB storage in hardware on a controller.  * This value represents an upper bound.  Controllers vary in the number  * they actually support.  */
 end_comment
 
 begin_define
@@ -391,6 +391,17 @@ define|#
 directive|define
 name|AHC_SCB_MAX
 value|255
+end_define
+
+begin_comment
+comment|/*  * The maximum number of concurrent transactions supported per driver instance.  * Sequencer Control Blocks (SCBs) store per-transaction information.  Although  * the space for SCBs on the host adapter varies by model, the driver will  * page the SCBs between host and controller memory as needed.  We are limited  * to 253 because:  * 	1) The 8bit nature of the RISC engine holds us to an 8bit value.  * 	2) We reserve one value, 255, to represent the invalid element.  *	3) Our input queue scheme requires one SCB to always be reserved  *	   in advance of queuing any SCBs.  This takes us down to 254.  *	4) To handle our output queue correctly on machines that only  * 	   support 32bit stores, we must clear the array 4 bytes at a  *	   time.  To avoid colliding with a DMA write from the sequencer,  *	   we must be sure that 4 slots are empty when we write to clear  *	   the queue.  This reduces us to 253 SCBs: 1 that just completed  *	   and the known three additional empty slots in the queue that  *	   preceed it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_MAX_QUEUE
+value|253
 end_define
 
 begin_comment
@@ -617,6 +628,11 @@ init|=
 literal|0x40000
 block|,
 comment|/* Space for two roles at a time */
+name|AHC_REMOVABLE
+init|=
+literal|0x80000
+block|,
+comment|/* Hot-Swap supported */
 name|AHC_AIC7770_FE
 init|=
 name|AHC_FENONE
