@@ -80,7 +80,7 @@ operator|=
 name|_thread_sys_fork
 argument_list|()
 operator|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 block|{
@@ -112,7 +112,7 @@ name|sigpend
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * _select:  		 */
+comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * _thread_sys_select:  		 */
 if|if
 condition|(
 name|_thread_sys_pipe
