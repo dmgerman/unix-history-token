@@ -851,7 +851,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ((chipset.sgmap == NULL)&&  	    (pmap_extract(pmap_kernel(), (vm_offset_t)addr)> BUS_SPACE_MAXADDR_24BIT)) {
+block|if ((chipset.sgmap == NULL)&&  	    (pmap_extract(kernel_pmap, (vm_offset_t)addr)> BUS_SPACE_MAXADDR_24BIT)) {
 comment|/* we bounced */
 block|dma_bounced |= (1<< chan);
 comment|/* copy bounce buffer on write */

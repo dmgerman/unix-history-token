@@ -3134,15 +3134,6 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|kernel_pmap
-operator|->
-name|pm_count
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* 	 * Allocate a kernel stack with a guard page for thread0 and map it 	 * into the kernel page map. 	 */
 end_comment
@@ -5058,12 +5049,6 @@ literal|0
 expr_stmt|;
 asm|__asm __volatile("mftb %0" : "=r"(entropy));
 comment|/* 	 * Allocate some segment registers for this pmap. 	 */
-name|pmap
-operator|->
-name|pm_count
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5641,32 +5626,6 @@ name|pmap_kremove
 argument_list|(
 name|va
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Add a reference to the specified pmap.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_reference
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|)
-block|{
-if|if
-condition|(
-name|pm
-operator|!=
-name|NULL
-condition|)
-name|pm
-operator|->
-name|pm_count
-operator|++
 expr_stmt|;
 block|}
 end_function

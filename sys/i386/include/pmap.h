@@ -802,10 +802,6 @@ name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
 name|int
-name|pm_count
-decl_stmt|;
-comment|/* reference count */
-name|int
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -858,10 +854,18 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|pmap_t
-name|kernel_pmap
+name|struct
+name|pmap
+name|kernel_pmap_store
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|kernel_pmap
+value|(&kernel_pmap_store)
+end_define
 
 begin_endif
 endif|#
@@ -1071,15 +1075,6 @@ parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pmap_t
-name|pmap_kernel
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

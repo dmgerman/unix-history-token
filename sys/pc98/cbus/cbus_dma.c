@@ -1175,8 +1175,7 @@ name|phys
 operator|=
 name|pmap_extract
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1916,8 +1915,7 @@ name|trunc_page
 argument_list|(
 name|pmap_extract
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
 name|vm_offset_t

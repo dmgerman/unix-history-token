@@ -37,9 +37,6 @@ decl_stmt|;
 name|u_int
 name|pm_context
 decl_stmt|;
-name|u_int
-name|pm_count
-decl_stmt|;
 name|struct
 name|pmap_statistics
 name|pm_stats

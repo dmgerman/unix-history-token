@@ -441,16 +441,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|pmap
 name|kernel_pmap_store
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|pmap_t
-name|kernel_pmap
 decl_stmt|;
 end_decl_stmt
 
@@ -1226,12 +1219,7 @@ comment|/* 	 * Initialize protection array. 	 */
 name|i386_protection_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The kernel's pmap is statically allocated so we don't have to use 	 * pmap_create, which is unlikely to work correctly at this part of 	 * the boot sequence (XXX and which no longer exists). 	 */
-name|kernel_pmap
-operator|=
-operator|&
-name|kernel_pmap_store
-expr_stmt|;
+comment|/* 	 * Initialize the kernel pmap (which is statically allocated). 	 */
 name|kernel_pmap
 operator|->
 name|pm_pdir
@@ -1248,12 +1236,6 @@ name|u_int
 operator|)
 name|IdlePTD
 operator|)
-expr_stmt|;
-name|kernel_pmap
-operator|->
-name|pm_count
-operator|=
-literal|1
 expr_stmt|;
 name|kernel_pmap
 operator|->
@@ -4828,12 +4810,6 @@ argument_list|)
 expr_stmt|;
 name|pmap
 operator|->
-name|pm_count
-operator|=
-literal|1
-expr_stmt|;
-name|pmap
-operator|->
 name|pm_ptphint
 operator|=
 name|NULL
@@ -5089,12 +5065,6 @@ operator||
 name|PG_A
 operator||
 name|PG_M
-expr_stmt|;
-name|pmap
-operator|->
-name|pm_count
-operator|=
-literal|1
 expr_stmt|;
 name|pmap
 operator|->
@@ -6220,85 +6190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Retire the given physical map from service.  *	Should only be called if the map contains  *	no valid mappings.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_destroy
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-name|int
-name|count
-decl_stmt|;
-if|if
-condition|(
-name|pmap
-operator|==
-name|NULL
-condition|)
-return|return;
-name|count
-operator|=
-operator|--
-name|pmap
-operator|->
-name|pm_count
-expr_stmt|;
-if|if
-condition|(
-name|count
-operator|==
-literal|0
-condition|)
-block|{
-name|pmap_release
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"destroying a pmap is not yet implemented"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Add a reference to the specified pmap.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_reference
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-if|if
-condition|(
-name|pmap
-operator|!=
-name|NULL
-condition|)
-block|{
-name|pmap
-operator|->
-name|pm_count
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*************************************************** * page management routines.  ***************************************************/
+comment|/***************************************************  * page management routines.  ***************************************************/
 end_comment
 
 begin_comment
@@ -10708,23 +10600,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Routine:	pmap_kernel  *	Function:  *		Returns the physical map handle for the kernel.  */
-end_comment
-
-begin_function
-name|pmap_t
-name|pmap_kernel
-parameter_list|()
-block|{
-return|return
-operator|(
-name|kernel_pmap
-operator|)
-return|;
 block|}
 end_function
 

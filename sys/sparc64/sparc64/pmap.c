@@ -1779,12 +1779,6 @@ operator|=
 operator|~
 literal|0
 expr_stmt|;
-name|pm
-operator|->
-name|pm_count
-operator|=
-literal|1
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -4892,12 +4886,6 @@ literal|0
 expr_stmt|;
 name|pm
 operator|->
-name|pm_count
-operator|=
-literal|1
-expr_stmt|;
-name|pm
-operator|->
 name|pm_tsb
 operator|=
 name|NULL
@@ -5127,12 +5115,6 @@ name|pm_active
 operator|=
 literal|0
 expr_stmt|;
-name|pm
-operator|->
-name|pm_count
-operator|=
-literal|1
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -5345,52 +5327,6 @@ name|vm_offset_t
 name|addr
 parameter_list|)
 block|{ }
-end_function
-
-begin_comment
-comment|/*  * Retire the given physical map from service.  Pmaps are always allocated  * as part of a larger structure, so this never happens.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_destroy
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|)
-block|{
-name|panic
-argument_list|(
-literal|"pmap_destroy: unimplemented"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Add a reference to the specified pmap.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_reference
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|)
-block|{
-if|if
-condition|(
-name|pm
-operator|!=
-name|NULL
-condition|)
-name|pm
-operator|->
-name|pm_count
-operator|++
-expr_stmt|;
-block|}
 end_function
 
 begin_comment
