@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.6 (Berkeley) %G%"
+literal|"@(#)var.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,13 @@ end_endif
 begin_decl_stmt
 name|struct
 name|var
+name|vhistsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|var
 name|vifs
 decl_stmt|;
 end_decl_stmt
@@ -256,6 +263,19 @@ block|}
 block|,
 endif|#
 directive|endif
+block|{
+operator|&
+name|vhistsize
+block|,
+name|VSTRFIXED
+operator||
+name|VTEXTFIXED
+operator||
+name|VUNSET
+block|,
+literal|"HISTSIZE="
+block|}
+block|,
 block|{
 operator|&
 name|vifs
@@ -1023,6 +1043,16 @@ name|chkmail
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|==
+operator|&
+name|vhistsize
+condition|)
+name|sethistsize
+argument_list|()
 expr_stmt|;
 name|INTON
 expr_stmt|;
@@ -2160,19 +2190,19 @@ operator|=
 name|ckmalloc
 argument_list|(
 sizeof|sizeof
-name|optval
+name|optlist
 argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|optval
+name|optlist
 argument_list|,
 name|lvp
 operator|->
 name|text
 argument_list|,
 sizeof|sizeof
-name|optval
+name|optlist
 argument_list|)
 expr_stmt|;
 name|vp
@@ -2394,10 +2424,10 @@ name|lvp
 operator|->
 name|text
 argument_list|,
-name|optval
+name|optlist
 argument_list|,
 sizeof|sizeof
-name|optval
+name|optlist
 argument_list|)
 expr_stmt|;
 name|ckfree
