@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.29 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.30 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.29 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.30 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1884,6 +1884,7 @@ name|firstone
 init|=
 name|TRUE
 decl_stmt|;
+comment|/* NOTIFY= parameter */
 name|strcat
 argument_list|(
 name|optbuf
@@ -1895,7 +1896,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|QPINGONFAILURE
+name|QPINGONSUCCESS
 argument_list|,
 name|to
 operator|->
@@ -1907,7 +1908,7 @@ name|strcat
 argument_list|(
 name|optbuf
 argument_list|,
-literal|"FAILURE"
+literal|"SUCCESS"
 argument_list|)
 expr_stmt|;
 name|firstone
@@ -1919,7 +1920,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|QPINGONSUCCESS
+name|QPINGONFAILURE
 argument_list|,
 name|to
 operator|->
@@ -1943,7 +1944,7 @@ name|strcat
 argument_list|(
 name|optbuf
 argument_list|,
-literal|"SUCCESS"
+literal|"FAILURE"
 argument_list|)
 expr_stmt|;
 name|firstone
@@ -1998,6 +1999,7 @@ argument_list|,
 literal|"NEVER"
 argument_list|)
 expr_stmt|;
+comment|/* RET= parameter */
 if|if
 condition|(
 name|bitset
@@ -2041,6 +2043,33 @@ argument_list|(
 name|optbuf
 argument_list|,
 literal|"FULL"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* ORCPT= parameter */
+if|if
+condition|(
+name|to
+operator|->
+name|q_orcpt
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+literal|" ORCPT="
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+name|to
+operator|->
+name|q_orcpt
 argument_list|)
 expr_stmt|;
 block|}

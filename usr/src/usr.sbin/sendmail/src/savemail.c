@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.42 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1545,7 +1545,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Return To Sender: msg=\"%s\", depth=%d, e=%x, returnq="
+literal|"\n*** Return To Sender: msg=\"%s\", depth=%d, e=%x, returnq="
 argument_list|,
 name|msg
 argument_list|,
@@ -1561,6 +1561,31 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|6
+argument_list|,
+literal|20
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Sendq="
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|e
+operator|->
+name|e_sendqueue
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_if
 

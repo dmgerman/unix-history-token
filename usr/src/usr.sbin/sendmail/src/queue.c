@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.57 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.58 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.57 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.58 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1430,6 +1430,25 @@ argument_list|(
 name|q
 argument_list|,
 name|tfp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|q_orcpt
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"Q%s\n"
+argument_list|,
+name|q
+operator|->
+name|q_orcpt
 argument_list|)
 expr_stmt|;
 name|putc
@@ -5095,6 +5114,12 @@ modifier|*
 name|p
 decl_stmt|;
 name|char
+modifier|*
+name|orcpt
+init|=
+name|NULL
+decl_stmt|;
+name|char
 name|qf
 index|[
 literal|20
@@ -5588,6 +5613,22 @@ comment|/* specify controlling user */
 name|ctladdr
 operator|=
 name|setctluser
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+comment|/* original recipient */
+name|orcpt
+operator|=
+name|newstr
 argument_list|(
 operator|&
 name|bp
