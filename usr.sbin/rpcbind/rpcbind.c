@@ -1839,7 +1839,7 @@ condition|(
 name|debugging
 condition|)
 block|{
-comment|/* for debugging print out our universal address */
+comment|/* 				 * for debugging print out our universal 				 * address 				 */
 name|char
 modifier|*
 name|uaddr
