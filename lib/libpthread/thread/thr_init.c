@@ -1187,9 +1187,6 @@ name|k_flags
 operator||=
 name|KF_INITIALIZED
 expr_stmt|;
-name|_thr_rtld_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
