@@ -1013,8 +1013,6 @@ block|,
 block|{
 literal|"="
 block|,
-literal|"eq"
-block|,
 comment|/* 61 */
 block|}
 block|,
@@ -1224,6 +1222,7 @@ block|,
 literal|"a^"
 block|,
 literal|"ha"
+block|,
 comment|/* 94 */
 block|}
 block|,
@@ -1408,9 +1407,8 @@ block|,
 block|{
 literal|"|"
 block|,
-literal|"or"
-block|,
 literal|"ba"
+block|,
 comment|/* 124 */
 block|}
 block|,
@@ -1427,9 +1425,8 @@ literal|"~"
 block|,
 literal|"a~"
 block|,
-literal|"ap"
-block|,
 literal|"ti"
+block|,
 comment|/* 126 */
 block|}
 block|,
@@ -1704,7 +1701,7 @@ comment|/* 171 */
 block|}
 block|,
 block|{
-literal|"no"
+literal|"tno"
 block|,
 comment|/* 172 */
 block|}
@@ -2989,8 +2986,6 @@ block|,
 block|{
 literal|"ba"
 block|,
-literal|"or"
-block|,
 literal|"|"
 block|,
 comment|/* 124 */
@@ -3541,6 +3536,8 @@ block|,
 block|{
 literal|"sr"
 block|,
+literal|"sqrt"
+block|,
 comment|/* 214 */
 block|}
 block|,
@@ -3703,6 +3700,8 @@ literal|"bracerightex"
 block|,
 literal|"braceleftex"
 block|,
+literal|"braceex"
+block|,
 literal|"bv"
 block|,
 comment|/* 239 */
@@ -3722,6 +3721,8 @@ block|}
 block|,
 block|{
 literal|"is"
+block|,
+literal|"integral"
 block|,
 comment|/* 242 */
 block|}

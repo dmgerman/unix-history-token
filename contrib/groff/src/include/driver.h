@@ -90,13 +90,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|printer
-modifier|*
-name|pr
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

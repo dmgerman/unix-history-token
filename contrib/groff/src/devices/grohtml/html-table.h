@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2002 Free Software Foundation, Inc.  *  *  Gaius Mulley (gaius@glam.ac.uk) wrote html-table.cc  *  *  html-table.h  *  *  provides the methods necessary to handle indentation and tab  *  positions using html tables.  */
+comment|/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.  *  *  Gaius Mulley (gaius@glam.ac.uk) wrote html-table.h  *  *  html-table.h  *  *  provides the methods necessary to handle indentation and tab  *  positions using html tables.  */
 end_comment
 
 begin_comment

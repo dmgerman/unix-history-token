@@ -184,652 +184,659 @@ end_define
 begin_define
 define|#
 directive|define
-name|WIDTH
+name|FIGNAME
 value|283
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIAMETER
+name|WIDTH
 value|284
 end_define
 
 begin_define
 define|#
 directive|define
-name|FROM
+name|DIAMETER
 value|285
 end_define
 
 begin_define
 define|#
 directive|define
-name|TO
+name|FROM
 value|286
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT
+name|TO
 value|287
 end_define
 
 begin_define
 define|#
 directive|define
-name|WITH
+name|AT
 value|288
 end_define
 
 begin_define
 define|#
 directive|define
-name|BY
+name|WITH
 value|289
 end_define
 
 begin_define
 define|#
 directive|define
-name|THEN
+name|BY
 value|290
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOLID
+name|THEN
 value|291
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOTTED
+name|SOLID
 value|292
 end_define
 
 begin_define
 define|#
 directive|define
-name|DASHED
+name|DOTTED
 value|293
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHOP
+name|DASHED
 value|294
 end_define
 
 begin_define
 define|#
 directive|define
-name|SAME
+name|CHOP
 value|295
 end_define
 
 begin_define
 define|#
 directive|define
-name|INVISIBLE
+name|SAME
 value|296
 end_define
 
 begin_define
 define|#
 directive|define
-name|LJUST
+name|INVISIBLE
 value|297
 end_define
 
 begin_define
 define|#
 directive|define
-name|RJUST
+name|LJUST
 value|298
 end_define
 
 begin_define
 define|#
 directive|define
-name|ABOVE
+name|RJUST
 value|299
 end_define
 
 begin_define
 define|#
 directive|define
-name|BELOW
+name|ABOVE
 value|300
 end_define
 
 begin_define
 define|#
 directive|define
-name|OF
+name|BELOW
 value|301
 end_define
 
 begin_define
 define|#
 directive|define
-name|THE
+name|OF
 value|302
 end_define
 
 begin_define
 define|#
 directive|define
-name|WAY
+name|THE
 value|303
 end_define
 
 begin_define
 define|#
 directive|define
-name|BETWEEN
+name|WAY
 value|304
 end_define
 
 begin_define
 define|#
 directive|define
-name|AND
+name|BETWEEN
 value|305
 end_define
 
 begin_define
 define|#
 directive|define
-name|HERE
+name|AND
 value|306
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_N
+name|HERE
 value|307
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_E
+name|DOT_N
 value|308
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_W
+name|DOT_E
 value|309
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_S
+name|DOT_W
 value|310
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_NE
+name|DOT_S
 value|311
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_SE
+name|DOT_NE
 value|312
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_NW
+name|DOT_SE
 value|313
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_SW
+name|DOT_NW
 value|314
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_C
+name|DOT_SW
 value|315
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_START
+name|DOT_C
 value|316
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_END
+name|DOT_START
 value|317
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_X
+name|DOT_END
 value|318
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_Y
+name|DOT_X
 value|319
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_HT
+name|DOT_Y
 value|320
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_WID
+name|DOT_HT
 value|321
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOT_RAD
+name|DOT_WID
 value|322
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIN
+name|DOT_RAD
 value|323
 end_define
 
 begin_define
 define|#
 directive|define
-name|COS
+name|SIN
 value|324
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATAN2
+name|COS
 value|325
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOG
+name|ATAN2
 value|326
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXP
+name|LOG
 value|327
 end_define
 
 begin_define
 define|#
 directive|define
-name|SQRT
+name|EXP
 value|328
 end_define
 
 begin_define
 define|#
 directive|define
-name|K_MAX
+name|SQRT
 value|329
 end_define
 
 begin_define
 define|#
 directive|define
-name|K_MIN
+name|K_MAX
 value|330
 end_define
 
 begin_define
 define|#
 directive|define
-name|INT
+name|K_MIN
 value|331
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAND
+name|INT
 value|332
 end_define
 
 begin_define
 define|#
 directive|define
-name|SRAND
+name|RAND
 value|333
 end_define
 
 begin_define
 define|#
 directive|define
-name|COPY
+name|SRAND
 value|334
 end_define
 
 begin_define
 define|#
 directive|define
-name|THRU
+name|COPY
 value|335
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOP
+name|THRU
 value|336
 end_define
 
 begin_define
 define|#
 directive|define
-name|BOTTOM
+name|TOP
 value|337
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPPER
+name|BOTTOM
 value|338
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOWER
+name|UPPER
 value|339
 end_define
 
 begin_define
 define|#
 directive|define
-name|SH
+name|LOWER
 value|340
 end_define
 
 begin_define
 define|#
 directive|define
-name|PRINT
+name|SH
 value|341
 end_define
 
 begin_define
 define|#
 directive|define
-name|CW
+name|PRINT
 value|342
 end_define
 
 begin_define
 define|#
 directive|define
-name|CCW
+name|CW
 value|343
 end_define
 
 begin_define
 define|#
 directive|define
-name|FOR
+name|CCW
 value|344
 end_define
 
 begin_define
 define|#
 directive|define
-name|DO
+name|FOR
 value|345
 end_define
 
 begin_define
 define|#
 directive|define
-name|IF
+name|DO
 value|346
 end_define
 
 begin_define
 define|#
 directive|define
-name|ELSE
+name|IF
 value|347
 end_define
 
 begin_define
 define|#
 directive|define
-name|ANDAND
+name|ELSE
 value|348
 end_define
 
 begin_define
 define|#
 directive|define
-name|OROR
+name|ANDAND
 value|349
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTEQUAL
+name|OROR
 value|350
 end_define
 
 begin_define
 define|#
 directive|define
-name|EQUALEQUAL
+name|NOTEQUAL
 value|351
 end_define
 
 begin_define
 define|#
 directive|define
-name|LESSEQUAL
+name|EQUALEQUAL
 value|352
 end_define
 
 begin_define
 define|#
 directive|define
-name|GREATEREQUAL
+name|LESSEQUAL
 value|353
 end_define
 
 begin_define
 define|#
 directive|define
-name|LEFT_CORNER
+name|GREATEREQUAL
 value|354
 end_define
 
 begin_define
 define|#
 directive|define
-name|RIGHT_CORNER
+name|LEFT_CORNER
 value|355
 end_define
 
 begin_define
 define|#
 directive|define
-name|NORTH
+name|RIGHT_CORNER
 value|356
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOUTH
+name|NORTH
 value|357
 end_define
 
 begin_define
 define|#
 directive|define
-name|EAST
+name|SOUTH
 value|358
 end_define
 
 begin_define
 define|#
 directive|define
-name|WEST
+name|EAST
 value|359
 end_define
 
 begin_define
 define|#
 directive|define
-name|CENTER
+name|WEST
 value|360
 end_define
 
 begin_define
 define|#
 directive|define
-name|END
+name|CENTER
 value|361
 end_define
 
 begin_define
 define|#
 directive|define
-name|START
+name|END
 value|362
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESET
+name|START
 value|363
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNTIL
+name|RESET
 value|364
 end_define
 
 begin_define
 define|#
 directive|define
-name|PLOT
+name|UNTIL
 value|365
 end_define
 
 begin_define
 define|#
 directive|define
-name|THICKNESS
+name|PLOT
 value|366
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILL
+name|THICKNESS
 value|367
 end_define
 
 begin_define
 define|#
 directive|define
-name|COLORED
+name|FILL
 value|368
 end_define
 
 begin_define
 define|#
 directive|define
-name|OUTLINED
+name|COLORED
 value|369
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHADED
+name|OUTLINED
 value|370
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALIGNED
+name|SHADED
 value|371
 end_define
 
 begin_define
 define|#
 directive|define
-name|SPRINTF
+name|ALIGNED
 value|372
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMMAND
+name|SPRINTF
 value|373
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEFINE
+name|COMMAND
 value|374
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNDEF
+name|DEFINE
 value|375
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNDEF
+value|376
 end_define
 
 begin_typedef
