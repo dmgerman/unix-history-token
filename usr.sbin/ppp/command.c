@@ -17843,6 +17843,9 @@ condition|)
 return|return
 literal|1
 return|;
+ifndef|#
+directive|ifndef
+name|NOINET6
 if|if
 condition|(
 name|add
@@ -17870,6 +17873,8 @@ return|return
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|add
