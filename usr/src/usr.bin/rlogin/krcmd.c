@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberosIV/krb.h>
 end_include
 
 begin_define
@@ -84,6 +84,10 @@ directive|define
 name|SERVICE_NAME
 value|"rcmd"
 end_define
+
+begin_comment
+comment|/*  * krcmd: simplified version of Athena's "kcmd"  *	returns a socket attached to the destination, -1 or krb error on error   *	if fd2p is non-NULL, another socket is filled in for it  */
+end_comment
 
 begin_function
 name|int
@@ -141,6 +145,8 @@ operator|-
 literal|1
 decl_stmt|,
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|KTEXT_ST
 name|ticket
@@ -177,18 +183,40 @@ name|SERVICE_NAME
 argument_list|,
 name|realm
 argument_list|,
+operator|(
+name|CREDENTIALS
+operator|*
+operator|)
 name|NULL
 argument_list|,
 comment|/* credentials not used */
+operator|(
+name|bit_64
+operator|*
+operator|)
 name|NULL
 argument_list|,
 comment|/* key schedule not used */
+operator|(
+name|MSG_DAT
+operator|*
+operator|)
 name|NULL
 argument_list|,
 comment|/* MSG_DAT not used */
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 name|NULL
 argument_list|,
 comment|/* local addr not used */
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 name|NULL
 argument_list|,
 comment|/* foreign addr not used */
@@ -225,6 +253,18 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 name|sock
@@ -369,7 +409,7 @@ comment|/* filled in */
 operator|&
 name|msg_dat
 argument_list|,
-comment|/* filled in? */
+comment|/* filled in */
 operator|&
 name|laddr
 argument_list|,
@@ -411,6 +451,18 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 name|sock
