@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,18 +87,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|char
-name|_sobuf
-index|[]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
