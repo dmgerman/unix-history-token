@@ -336,9 +336,14 @@ name|EWOULDBLOCK
 case|case
 name|EWOULDBLOCK
 case|:
+ifndef|#
+directive|ifndef
+name|TRY_AGAIN
 define|#
 directive|define
 name|TRY_AGAIN
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* EWOULDBLOCK */
@@ -366,9 +371,14 @@ name|EAGAIN
 case|case
 name|EAGAIN
 case|:
+ifndef|#
+directive|ifndef
+name|TRY_AGAIN
 define|#
 directive|define
 name|TRY_AGAIN
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* EWOULDBLOCK&& EWOULDBLOCK != EAGAIN */
@@ -1671,6 +1681,20 @@ name|el
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|CC_REDISPLAY
+case|:
+name|re_clear_lines
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
+name|re_clear_display
+argument_list|(
+name|el
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|CC_REFRESH
 case|:

@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$Id: histedit.h,v 1.3 1997/06/25 09:47:31 msmith Exp $ */
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: histedit.h,v 1.5 1997/04/11 17:52:45 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)histedit.h	8.2 (Berkeley) 1/3/94  */
 end_comment
 
@@ -52,17 +60,17 @@ typedef|typedef
 struct|struct
 name|lineinfo
 block|{
-name|__const
+specifier|const
 name|char
 modifier|*
 name|buffer
 decl_stmt|;
-name|__const
+specifier|const
 name|char
 modifier|*
 name|cursor
 decl_stmt|;
-name|__const
+specifier|const
 name|char
 modifier|*
 name|lastchar
@@ -132,6 +140,13 @@ name|CC_FATAL
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|CC_REDISPLAY
+value|8
+end_define
+
 begin_comment
 comment|/*  * Initialization, cleanup, and resetting  */
 end_comment
@@ -188,7 +203,7 @@ comment|/*  * Get a line, a character or push a string back in the input queue  
 end_comment
 
 begin_decl_stmt
-name|__const
+specifier|const
 name|char
 modifier|*
 name|el_gets
@@ -454,7 +469,7 @@ comment|/*  * User-defined function interface.  */
 end_comment
 
 begin_decl_stmt
-name|__const
+specifier|const
 name|LineInfo
 modifier|*
 name|el_line
@@ -519,7 +534,7 @@ block|{
 name|int
 name|num
 decl_stmt|;
-name|__const
+specifier|const
 name|char
 modifier|*
 name|str
@@ -560,7 +575,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__const
+specifier|const
 name|HistEvent
 modifier|*
 name|history
@@ -730,6 +745,39 @@ end_define
 
 begin_comment
 comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_LOAD
+value|14
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_SAVE
+value|15
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_CLEAR
+value|16
+end_define
+
+begin_comment
+comment|/* , void);		*/
 end_comment
 
 begin_endif

@@ -152,6 +152,30 @@ parameter_list|)
 value|HIST_FUN(el, H_EVENT, num)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HIST_LOAD
+parameter_list|(
+name|el
+parameter_list|,
+name|fname
+parameter_list|)
+value|HIST_FUN(el, H_LOAD fname)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIST_SAVE
+parameter_list|(
+name|el
+parameter_list|,
+name|fname
+parameter_list|)
+value|HIST_FUN(el, H_SAVE fname)
+end_define
+
 begin_decl_stmt
 name|protected
 name|int

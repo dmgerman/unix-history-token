@@ -381,7 +381,7 @@ index|[
 name|i
 index|]
 operator|=
-name|BADSIG
+name|SIG_ERR
 expr_stmt|;
 operator|(
 name|void
@@ -649,7 +649,7 @@ index|[
 name|i
 index|]
 operator|!=
-name|BADSIG
+name|SIG_ERR
 condition|)
 operator|(
 name|void
