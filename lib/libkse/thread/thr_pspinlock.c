@@ -40,9 +40,59 @@ name|SPIN_COUNT
 value|10000
 end_define
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_spin_init
+argument_list|,
+name|pthread_spin_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_spin_destroy
+argument_list|,
+name|pthread_spin_destroy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_spin_trylock
+argument_list|,
+name|pthread_spin_trylock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_spin_lock
+argument_list|,
+name|pthread_spin_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_spin_unlock
+argument_list|,
+name|pthread_spin_unlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
-name|pthread_spin_init
+name|_pthread_spin_init
 parameter_list|(
 name|pthread_spinlock_t
 modifier|*
@@ -130,7 +180,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_spin_destroy
+name|_pthread_spin_destroy
 parameter_list|(
 name|pthread_spinlock_t
 modifier|*
@@ -199,7 +249,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_spin_trylock
+name|_pthread_spin_trylock
 parameter_list|(
 name|pthread_spinlock_t
 modifier|*
@@ -323,7 +373,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_spin_lock
+name|_pthread_spin_lock
 parameter_list|(
 name|pthread_spinlock_t
 modifier|*
@@ -467,7 +517,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_spin_unlock
+name|_pthread_spin_unlock
 parameter_list|(
 name|pthread_spinlock_t
 modifier|*
