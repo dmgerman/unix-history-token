@@ -1,309 +1,456 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)chio.h	7.6 (Berkeley) 2/5/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
+comment|/*	$Id: $	*/
 end_comment
 
 begin_comment
-comment|/* This is a "convertet" mtio.h from 386BSD     Stefan Grefen grefen@goofy.zdv.uni-mainz.de   */
-end_comment
-
-begin_comment
-comment|/*  * Structures and definitions for changer io control commands  */
+comment|/*  * Copyright (c) 1996 Jason R. Thorpe<thorpej@and.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgements:  *	This product includes software developed by Jason R. Thorpe  *	for And Communications, http://www.and.com/  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CHIO_H_
+name|_SYS_CHIO_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CHIO_H_
+name|_SYS_CHIO_H_
 end_define
+
+begin_comment
+comment|/*  * Element types.  Used as "to" and "from" type indicators in move  * and exchange operations.  *  * Note that code in sys/scsi/ch.c relies on these values (uses them  * as offsets in an array, and other evil), so don't muck with them  * unless you know what you're doing.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CH_INVERT
-value|0x10000
+name|CHET_MT
+value|0
 end_define
+
+begin_comment
+comment|/* medium transport (picker) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CH_ADDR_MASK
-value|0xffff
+name|CHET_ST
+value|1
 end_define
+
+begin_comment
+comment|/* storage transport (slot) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHET_IE
+value|2
+end_define
+
+begin_comment
+comment|/* import/export (portal) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHET_DT
+value|3
+end_define
+
+begin_comment
+comment|/* data transfer (drive) */
+end_comment
+
+begin_comment
+comment|/*  * Structure used to execute a MOVE MEDIUM command.  */
+end_comment
 
 begin_struct
 struct|struct
-name|chop
-block|{
-name|short
-name|ch_op
-decl_stmt|;
-comment|/* operations defined below */
-name|short
-name|result
-decl_stmt|;
-comment|/* The result		    */
-union|union
-block|{
-struct|struct
+name|changer_move
 block|{
 name|int
-name|chm
+name|cm_fromtype
 decl_stmt|;
-comment|/* Transport element */
+comment|/* element type to move from */
 name|int
-name|from
+name|cm_fromunit
 decl_stmt|;
+comment|/* logical unit of from element */
 name|int
-name|to
+name|cm_totype
 decl_stmt|;
-block|}
-name|move
-struct|;
-struct|struct
-block|{
+comment|/* element type to move to */
 name|int
-name|chm
+name|cm_tounit
 decl_stmt|;
-comment|/* Transport element */
+comment|/* logical unit of to element */
 name|int
-name|to
+name|cm_flags
 decl_stmt|;
-block|}
-name|position
-struct|;
-struct|struct
-block|{
-name|short
-name|chmo
-decl_stmt|;
-comment|/* Offset of first CHM */
-name|short
-name|chms
-decl_stmt|;
-comment|/* No. of CHM */
-name|short
-name|slots
-decl_stmt|;
-comment|/* No. of Storage Elements */
-name|short
-name|sloto
-decl_stmt|;
-comment|/* Offset of first SE */
-name|short
-name|imexs
-decl_stmt|;
-comment|/* No. of Import/Export Slots */
-name|short
-name|imexo
-decl_stmt|;
-comment|/* Offset of first IM/EX */
-name|short
-name|drives
-decl_stmt|;
-comment|/* No. of CTS */
-name|short
-name|driveo
-decl_stmt|;
-comment|/* Offset of first CTS */
-name|short
-name|rot
-decl_stmt|;
-comment|/* CHM can rotate */
-block|}
-name|getparam
-struct|;
-struct|struct
-block|{
-name|int
-name|type
-decl_stmt|;
-define|#
-directive|define
-name|CH_CHM
-value|1
-define|#
-directive|define
-name|CH_STOR
-value|2
-define|#
-directive|define
-name|CH_IMEX
-value|3
-define|#
-directive|define
-name|CH_CTS
-value|4
-name|int
-name|from
-decl_stmt|;
-struct|struct
-block|{
-name|u_char
-name|elema_1
-decl_stmt|;
-name|u_char
-name|elema_0
-decl_stmt|;
-name|u_char
-name|full
-range|:
-literal|1
-decl_stmt|;
-name|u_char
-name|rsvd
-range|:
-literal|1
-decl_stmt|;
-name|u_char
-name|except
-range|:
-literal|1
-decl_stmt|;
-name|u_char
-label|:
-literal|5
-expr_stmt|;
-name|u_char
-name|rsvd2
-decl_stmt|;
-union|union
-block|{
-struct|struct
-block|{
-name|u_char
-name|add_sense_code
-decl_stmt|;
-name|u_char
-name|add_sense_code_qualifier
-decl_stmt|;
-block|}
-name|specs
-struct|;
-name|short
-name|add_sense
-decl_stmt|;
-comment|/* WARINING LSB only */
-define|#
-directive|define
-name|CH_CHOLDER
-value|0x0290
-comment|/* Cartridge holder is missing */
-define|#
-directive|define
-name|CH_STATUSQ
-value|0x0390
-comment|/* Status is questionable */
-define|#
-directive|define
-name|CH_CTS_CLOSED
-value|0x0490
-comment|/* CTS door is closed */
-block|}
-name|ch_add_sense
-union|;
-name|u_char
-name|rsvd3
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|u_char
-label|:
-literal|6
-expr_stmt|;
-name|u_char
-name|invert
-range|:
-literal|1
-decl_stmt|;
-name|u_char
-name|svalid
-range|:
-literal|1
-decl_stmt|;
-name|u_char
-name|source_1
-decl_stmt|;
-name|u_char
-name|source_0
-decl_stmt|;
-name|u_char
-name|rsvd4
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|elem_data
-struct|;
-block|}
-name|get_elem_stat
-struct|;
-block|}
-name|u
-union|;
+comment|/* misc. flags */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* operations */
+comment|/* cm_flags */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CHMOVE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHPOSITION
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHGETPARAM
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHGETELEM
-value|4
+name|CM_INVERT
+value|0x01
 end_define
 
 begin_comment
-comment|/* Changer IO control command */
+comment|/* invert media */
+end_comment
+
+begin_comment
+comment|/*  * Structure used to execute an EXCHANGE MEDIUM command.  In an  * exchange operation, the following steps occur:  *  *	- media from source is moved to first destination.  *  *	- media previously occupying first destination is moved  *	  to the second destination.  *  * The second destination may or may not be the same as the source.  * In the case of a simple exchange, the source and second destination  * are the same.  */
+end_comment
+
+begin_struct
+struct|struct
+name|changer_exchange
+block|{
+name|int
+name|ce_srctype
+decl_stmt|;
+comment|/* element type of source */
+name|int
+name|ce_srcunit
+decl_stmt|;
+comment|/* logical unit of source */
+name|int
+name|ce_fdsttype
+decl_stmt|;
+comment|/* element type of first destination */
+name|int
+name|ce_fdstunit
+decl_stmt|;
+comment|/* logical unit of first destination */
+name|int
+name|ce_sdsttype
+decl_stmt|;
+comment|/* element type of second destination */
+name|int
+name|ce_sdstunit
+decl_stmt|;
+comment|/* logical unit of second destination */
+name|int
+name|ce_flags
+decl_stmt|;
+comment|/* misc. flags */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ce_flags */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CHIOOP
-value|_IOWR('c', 1, struct chop)
+name|CE_INVERT1
+value|0x01
 end_define
 
 begin_comment
-comment|/* do a mag tape op */
+comment|/* invert media 1 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CE_INVERT2
+value|0x02
+end_define
+
+begin_comment
+comment|/* invert media 2 */
+end_comment
+
+begin_comment
+comment|/*  * Structure used to execute a POSITION TO ELEMENT command.  This  * moves the current picker in front of the specified element.  */
+end_comment
+
+begin_struct
+struct|struct
+name|changer_position
+block|{
+name|int
+name|cp_type
+decl_stmt|;
+comment|/* element type */
+name|int
+name|cp_unit
+decl_stmt|;
+comment|/* logical unit of element */
+name|int
+name|cp_flags
+decl_stmt|;
+comment|/* misc. flags */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* cp_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP_INVERT
+value|0x01
+end_define
+
+begin_comment
+comment|/* invert picker */
+end_comment
+
+begin_comment
+comment|/*  * Data returned by CHIOGPARAMS.  */
+end_comment
+
+begin_struct
+struct|struct
+name|changer_params
+block|{
+name|int
+name|cp_curpicker
+decl_stmt|;
+comment|/* current picker */
+name|int
+name|cp_npickers
+decl_stmt|;
+comment|/* number of pickers */
+name|int
+name|cp_nslots
+decl_stmt|;
+comment|/* number of slots */
+name|int
+name|cp_nportals
+decl_stmt|;
+comment|/* number of import/export portals */
+name|int
+name|cp_ndrives
+decl_stmt|;
+comment|/* number of drives */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Command used to get element status.  */
+end_comment
+
+begin_struct
+struct|struct
+name|changer_element_status
+block|{
+name|int
+name|ces_type
+decl_stmt|;
+comment|/* element type */
+name|u_int8_t
+modifier|*
+name|ces_data
+decl_stmt|;
+comment|/* pre-allocated data storage */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Data returned by CHIOGSTATUS is an array of flags bytes.  * Not all flags have meaning for all element types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_FULL
+value|0x01
+end_define
+
+begin_comment
+comment|/* element is full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_IMPEXP
+value|0x02
+end_define
+
+begin_comment
+comment|/* media deposited by operator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_EXCEPT
+value|0x04
+end_define
+
+begin_comment
+comment|/* element in abnormal state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_ACCESS
+value|0x08
+end_define
+
+begin_comment
+comment|/* media accessible by picker */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_EXENAB
+value|0x10
+end_define
+
+begin_comment
+comment|/* element supports exporting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_INENAB
+value|0x20
+end_define
+
+begin_comment
+comment|/* element supports importing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_PICKER_MASK
+value|0x05
+end_define
+
+begin_comment
+comment|/* flags valid for pickers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_SLOT_MASK
+value|0x0c
+end_define
+
+begin_comment
+comment|/* flags valid for slots */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_PORTAL_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* flags valid for portals */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_DRIVE_MASK
+value|0x0c
+end_define
+
+begin_comment
+comment|/* flags valid for drives */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CESTATUS_BITS
+define|\
+value|"\20\6INEAB\5EXENAB\4ACCESS\3EXCEPT\2IMPEXP\1FULL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOMOVE
+value|_IOW('c', 0x01, struct changer_move)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOEXCHANGE
+value|_IOW('c', 0x02, struct changer_exchange)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOPOSITION
+value|_IOW('c', 0x03, struct changer_position)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOGPICKER
+value|_IOR('c', 0x04, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOSPICKER
+value|_IOW('c', 0x05, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOGPARAMS
+value|_IOR('c', 0x06, struct changer_params)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOGSTATUS
+value|_IOW('c', 0x08, struct changer_element_status)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _SYS_CHIO_H_ */
+end_comment
 
 end_unit
 
