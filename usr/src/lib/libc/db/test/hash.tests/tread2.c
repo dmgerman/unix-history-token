@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tread2.c	5.4 (Berkeley) %G%"
+literal|"@(#)tread2.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,13 +209,15 @@ operator|!
 operator|(
 name|dbp
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 literal|"hashtest"
 argument_list|,
 name|O_RDONLY
 argument_list|,
 literal|0400
+argument_list|,
+name|DB_HASH
 argument_list|,
 operator|&
 name|ctl

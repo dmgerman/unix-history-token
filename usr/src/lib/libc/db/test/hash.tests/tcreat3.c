@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcreat3.c	5.3 (Berkeley) %G%"
+literal|"@(#)tcreat3.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,7 @@ operator|!
 operator|(
 name|dbp
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 literal|"hashtest"
 argument_list|,
@@ -214,6 +214,8 @@ operator||
 name|O_RDWR
 argument_list|,
 literal|0600
+argument_list|,
+name|DB_HASH
 argument_list|,
 operator|&
 name|ctl

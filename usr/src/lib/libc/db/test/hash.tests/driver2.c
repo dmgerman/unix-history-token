@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)driver2.c	5.1 (Berkeley) %G%"
+literal|"@(#)driver2.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,7 +204,7 @@ operator|!
 operator|(
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 literal|"bigtest"
 argument_list|,
@@ -213,6 +213,8 @@ operator||
 name|O_CREAT
 argument_list|,
 literal|0644
+argument_list|,
+name|DB_HASH
 argument_list|,
 operator|&
 name|info
@@ -224,7 +226,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"hash_open failed on file bigtest"
+literal|"dbopen: failed on file bigtest"
 argument_list|)
 expr_stmt|;
 name|perror
