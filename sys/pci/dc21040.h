@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.1 1994/10/01 20:16:45 wollman Exp $  *  * $Log: dc21040.h,v $  * Revision 1.1  1994/10/01  20:16:45  wollman  * Add Matt Thomas's DC21040 PCI Ethernet driver.  (This is turning out  * to be quite a popular chip, so expect to see a number of products  * based on it.)  *  * Revision 1.2  1994/08/15  20:42:25  thomas  * misc additions  *  * Revision 1.1  1994/08/12  21:02:46  thomas  * Initial revision  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
+comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.2 1995/04/09 04:46:14 davidg Exp $  *  * $Log: dc21040.h,v $  * Revision 1.2  1995/04/09  04:46:14  davidg  * From Matt Thomas: Added support for 100Mb cards (such as the DEC DE-500-XA  * and SMC 9332).  *  * Revision 1.1  1994/10/01  20:16:45  wollman  * Add Matt Thomas's DC21040 PCI Ethernet driver.  (This is turning out  * to be quite a popular chip, so expect to see a number of products  * based on it.)  *  * Revision 1.2  1994/08/15  20:42:25  thomas  * misc additions  *  * Revision 1.1  1994/08/12  21:02:46  thomas  * Initial revision  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
 end_comment
 
 begin_if
@@ -1189,8 +1189,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TULIP_CMD_MUSTBEONE
+value|0x02000000L
+end_define
+
+begin_comment
+comment|/* (RW)  Must Be One (DC21140) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TULIP_CMD_SCRAMBLER
-value|0x00400000L
+value|0x01000000L
 end_define
 
 begin_comment
@@ -1201,7 +1212,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_CMD_PCSFUNCTION
-value|0x00200000L
+value|0x00800000L
 end_define
 
 begin_comment
@@ -1212,7 +1223,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_CMD_TXTHRSHLDCTL
-value|0x00100000L
+value|0x00400000L
 end_define
 
 begin_comment
@@ -1223,11 +1234,22 @@ begin_define
 define|#
 directive|define
 name|TULIP_CMD_STOREFWD
-value|0x00080000L
+value|0x00200000L
 end_define
 
 begin_comment
 comment|/* (RW)  Store and Foward (DC21140) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_CMD_NOHEARTBEAT
+value|0x00080000L
+end_define
+
+begin_comment
+comment|/* (RW)  No Heartbeat (DC21140) */
 end_comment
 
 begin_define
@@ -1622,10 +1644,36 @@ name|TULIP_BUSMODE_TXPOLL_1600us
 value|0x00060000L
 end_define
 
+begin_comment
+comment|/*  * These are the defintitions used for the DEC DC21140  * evaluation board.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TULIP_GP_FASTMODE
+name|TULIP_GP_EB_PINS
+value|0x0000011F
+end_define
+
+begin_comment
+comment|/* General Purpose Pin directions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_EB_OK10
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* 10 Mb/sec Signal Detect gep<7> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_EB_OK100
 value|0x00000040
 end_define
 
@@ -1636,24 +1684,52 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TULIP_GP_PINS
-value|0x0000013F
-end_define
-
-begin_comment
-comment|/* General Purpose Pin directions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_GP_INIT
+name|TULIP_GP_EB_INIT
 value|0x0000000B
 end_define
 
 begin_comment
 comment|/* No loopback --- point-to-point */
 end_comment
+
+begin_comment
+comment|/*  * There are the definitions used for the DEC DE500-XA  * 10/100 board  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_DE500_PINS
+value|0x0000010FL
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_DE500_NOTOK_10
+value|0x00000080L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_DE500_NOTOK_100
+value|0x00000040L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_DE500_HALFDUPLEX
+value|0x00000008L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_DE500_FORCE_100
+value|0x00000001L
+end_define
 
 begin_comment
 comment|/*  * SROM definitions for the DC21140 and DC21041.  */
