@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)q.c	5.5 (Berkeley) %G%"
+literal|"@(#)q.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,7 @@ endif|#
 directive|endif
 name|exit
 argument_list|(
-literal|0
+name|exit_code
 argument_list|)
 expr_stmt|;
 block|}

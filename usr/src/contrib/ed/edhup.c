@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edhup.c	5.3 (Berkeley) %G%"
+literal|"@(#)edhup.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,9 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|exit_code
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* No need to save buffer contents. */
@@ -190,7 +192,9 @@ operator|)
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|exit_code
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -224,7 +228,9 @@ name|NULL
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|exit_code
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* We tried... */
@@ -279,7 +285,9 @@ endif|#
 directive|endif
 name|exit
 argument_list|(
-literal|1
+name|exit_code
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Hangup */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bang.c	5.4 (Berkeley) %G%"
+literal|"@(#)bang.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,10 +251,19 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 name|l_cnt
 operator|=
 name|l_cnt_last_pos
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|l_shellcmd
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

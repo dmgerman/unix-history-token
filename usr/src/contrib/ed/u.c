@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)u.c	5.3 (Berkeley) %G%"
+literal|"@(#)u.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,23 +124,10 @@ name|errnum
 argument_list|)
 condition|)
 return|return;
-if|if
-condition|(
-name|u_stk
-operator|==
-name|NULL
-condition|)
-block|{
-operator|*
-name|errnum
-operator|=
-literal|1
-expr_stmt|;
-return|return;
-block|}
 name|undo
 argument_list|()
 expr_stmt|;
+comment|/* call even when u_stk==nil */
 operator|*
 name|errnum
 operator|=
@@ -150,7 +137,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function does the "real work" of the undo. */
+comment|/* This function does the "real work" of the undo.  * It is separated out from u() so that the SIGHUP handling  * routine can call it without dealing with rol(), in turn so that  * the buffer is in a "good" state when saved to the 'ed.hup' file.  */
 end_comment
 
 begin_function
@@ -461,6 +448,82 @@ name|u_stk
 operator|=
 name|l_now
 expr_stmt|;
+operator|(
+name|u_stk
+operator|->
+name|cell
+operator|)
+operator|=
+name|in
+expr_stmt|;
+operator|(
+name|u_stk
+operator|->
+name|val
+operator|)
+operator|=
+operator|(
+operator|*
+operator|(
+name|u_stk
+operator|->
+name|cell
+operator|)
+operator|)
+expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* This 'u' function is just for when 's' notices that a series  * of adjacent lines are changing. It reduces the undo stack height  * and lowers the number of (costly) malloc's with reuse. For  * the environmentally aware the third 'R' is with the 'g' code.  */
+end_comment
+
+begin_function
+name|void
+name|u_pop_n_swap
+parameter_list|(
+name|in
+parameter_list|)
+name|LINE
+modifier|*
+modifier|*
+name|in
+decl_stmt|;
+block|{
+name|sigspecial
+operator|++
+expr_stmt|;
+comment|/* put the old value back */
+operator|(
+operator|*
+operator|(
+name|u_stk
+operator|->
+name|cell
+operator|)
+operator|)
+operator|=
+operator|(
+name|u_stk
+operator|->
+name|val
+operator|)
+expr_stmt|;
+comment|/* put the new values */
 operator|(
 name|u_stk
 operator|->

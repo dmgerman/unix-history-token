@@ -10,12 +10,36 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1992 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +174,8 @@ name|int
 name|help_flag
 init|=
 literal|0
+decl_stmt|,
+name|gut_num
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +249,16 @@ begin_decl_stmt
 name|char
 modifier|*
 name|text
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LINE
+modifier|*
+modifier|*
+name|gut
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -385,6 +421,10 @@ decl_stmt|,
 name|printsfx
 init|=
 literal|0
+decl_stmt|,
+name|exit_code
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -543,6 +583,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|line_length
 operator|==
 literal|0
@@ -564,6 +605,7 @@ argument_list|)
 operator|!=
 operator|-
 literal|1
+operator|)
 condition|)
 name|line_length
 operator|=
@@ -833,6 +875,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
 default|default:
 name|l_err
 operator|++
@@ -2042,6 +2085,10 @@ name|EOF
 operator|)
 condition|)
 empty_stmt|;
+name|exit_code
+operator|=
+literal|4
+expr_stmt|;
 if|if
 condition|(
 name|help_flag
@@ -2050,7 +2097,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"%?: %s\n"
+literal|"?: %s\n"
 argument_list|,
 name|help_msg
 argument_list|)
@@ -2061,6 +2108,40 @@ argument_list|(
 literal|"?\n"
 argument_list|)
 expr_stmt|;
+comment|/* for people wanting scripts to carry on after a cmd error, then  * define NOENDONSCRIPT on the compile line.  */
+ifndef|#
+directive|ifndef
+name|NOENDONSCRIPT
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+condition|)
+block|{
+name|ss
+operator|=
+literal|'Q'
+expr_stmt|;
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
+name|q
+argument_list|(
+name|inputt
+argument_list|,
+name|errnum
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|g_flag
@@ -2260,16 +2341,6 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n  SIGHUP \n"
-argument_list|)
-expr_stmt|;
 name|sighup_flag
 operator|=
 literal|1

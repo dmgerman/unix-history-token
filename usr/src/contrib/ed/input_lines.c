@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.8 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,18 +290,23 @@ operator|==
 name|EOF
 condition|)
 block|{
+name|clearerr
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|add_flag
+name|l_nn
 condition|)
 block|{
-name|l_text
-index|[
+name|printf
+argument_list|(
+literal|"<newline> added at end of line\n"
+argument_list|)
+expr_stmt|;
 name|l_nn
 operator|++
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 goto|goto
 name|eof_mk
@@ -309,9 +314,6 @@ goto|;
 block|}
 break|break;
 block|}
-comment|/*if (!l_ss)*/
-comment|/* 8-bit okay, but NULL not */
-comment|/*continue;*/
 name|l_text
 index|[
 name|l_nn
@@ -337,6 +339,8 @@ condition|)
 goto|goto
 name|point
 goto|;
+name|eof_mk
+label|:
 name|l_text
 index|[
 name|l_nn
@@ -366,8 +370,6 @@ operator|&&
 name|add_flag
 condition|)
 break|break;
-name|eof_mk
-label|:
 name|nn_max_end
 operator|=
 operator|(
