@@ -1028,7 +1028,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Probe for a Broadcom 4401 chip.   */
+comment|/*  * Probe for a Broadcom 4401 chip.  */
 end_comment
 
 begin_function
@@ -2976,7 +2976,9 @@ operator|==
 name|ENOBUFS
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|bus_dmamap_sync
@@ -3695,7 +3697,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|BFE_UNLOCK
@@ -3704,7 +3708,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4060,7 +4066,7 @@ name|BFE_LAZY_FC_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We don't want lazy interrupts, so just send them at 	 * the end of a frame, please  	 */
+comment|/* 	 * We don't want lazy interrupts, so just send them at 	 * the end of a frame, please 	 */
 name|BFE_OR
 argument_list|(
 name|sc
@@ -4103,7 +4109,7 @@ argument_list|,
 literal|56
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Initialise DMA channels 	 * - not forgetting dma addresses need to be added to BFE_PCI_DMA  	 */
+comment|/* 	 * Initialise DMA channels 	 * - not forgetting dma addresses need to be added to BFE_PCI_DMA 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -4197,7 +4203,7 @@ operator|&
 name|BFE_RESET
 condition|)
 return|return;
-comment|/*  	 * Set reject, wait for it set, then wait for the core to stop 	 * being busy, then set reset and reject and enable the clocks. 	 */
+comment|/* 	 * Set reject, wait for it set, then wait for the core to stop 	 * being busy, then set reset and reject and enable the clocks. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5345,12 +5351,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5466,7 +5476,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -5574,13 +5586,15 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|status
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*   * XXX - I think this is handled by the PHY driver, but it can't hurt to do it  * twice  */
+comment|/*  * XXX - I think this is handled by the PHY driver, but it can't hurt to do it  * twice  */
 end_comment
 
 begin_function
@@ -5671,7 +5685,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6378,7 +6394,7 @@ argument_list|,
 name|BFE_IMASK
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Defer unsolicited interrupts - This is necessary because setting the 	 * chips interrupt mask register to 0 doesn't actually stop the 	 * interrupts 	 */
+comment|/* 	 * Defer unsolicited interrupts - This is necessary because setting the 	 * chips interrupt mask register to 0 doesn't actually stop the 	 * interrupts 	 */
 name|istat
 operator|&=
 name|imask
@@ -6985,7 +7001,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Not much point trying to send if the link is down 	 * or we have nothing to send. 	 */
+comment|/* 	 * Not much point trying to send if the link is down 	 * or we have nothing to send. 	 */
 if|if
 condition|(
 operator|!
@@ -7056,7 +7072,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/*  		 * Pack the data into the tx ring.  If we dont have 		 * enough room, let the chip drain the ring. 		 */
+comment|/* 		 * Pack the data into the tx ring.  If we dont have 		 * enough room, let the chip drain the ring. 		 */
 if|if
 condition|(
 name|bfe_encap
@@ -7724,7 +7740,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

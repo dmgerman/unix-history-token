@@ -312,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|BFE_ISTAT_ERRORS
-value|(BFE_ISTAT_DSCE | BFE_ISTAT_DATAE | BFE_ISTAT_DPE |\         BFE_ISTAT_RDU | BFE_ISTAT_RFO | BFE_ISTAT_TFU)
+value|(BFE_ISTAT_DSCE | BFE_ISTAT_DATAE | BFE_ISTAT_DPE |\ 	BFE_ISTAT_RDU | BFE_ISTAT_RFO | BFE_ISTAT_TFU)
 end_define
 
 begin_define
@@ -330,7 +330,7 @@ begin_define
 define|#
 directive|define
 name|BFE_IMASK_DEF
-value|(BFE_ISTAT_ERRORS | BFE_ISTAT_TO | BFE_ISTAT_RX | \         BFE_ISTAT_TX)
+value|(BFE_ISTAT_ERRORS | BFE_ISTAT_TO | BFE_ISTAT_RX | \ 	BFE_ISTAT_TX)
 end_define
 
 begin_define
@@ -3329,7 +3329,7 @@ begin_define
 define|#
 directive|define
 name|BFE_RX_FLAG_ERRORS
-value|(BFE_RX_FLAG_ODD | BFE_RX_FLAG_SERR |           \         BFE_RX_FLAG_CRCERR | BFE_RX_FLAG_OFIFO)
+value|(BFE_RX_FLAG_ODD | BFE_RX_FLAG_SERR |           \ 	BFE_RX_FLAG_CRCERR | BFE_RX_FLAG_OFIFO)
 end_define
 
 begin_define
