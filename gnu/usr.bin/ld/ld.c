@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.5 1993/11/09 04:18:56 paul Exp $  */
+comment|/*  *	$Id: ld.c,v 1.6 1993/11/15 20:58:05 paul Exp $  */
 end_comment
 
 begin_comment
@@ -467,6 +467,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|magic
+operator|=
+name|DEFAULT_MAGIC
+expr_stmt|;
+name|oldmagic
 operator|=
 name|DEFAULT_MAGIC
 expr_stmt|;
@@ -1945,18 +1949,20 @@ operator|=
 name|QMAGIC
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
 case|case
 literal|'Z'
 case|:
 name|magic
 operator|=
-name|oldmagic
-operator|=
 name|ZMAGIC
 expr_stmt|;
+name|oldmagic
+operator|=
+literal|0
+expr_stmt|;
 return|return;
-endif|#
-directive|endif
 case|case
 literal|'o'
 case|:
@@ -2131,6 +2137,8 @@ return|return;
 case|case
 literal|'z'
 case|:
+name|oldmagic
+operator|=
 name|magic
 operator|=
 name|ZMAGIC
