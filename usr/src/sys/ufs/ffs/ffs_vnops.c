@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1596,6 +1596,29 @@ name|tv
 operator|=
 name|time
 expr_stmt|;
+return|return
+operator|(
+name|VOP_UPDATE
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+operator|&
+name|tv
+argument_list|,
+operator|&
+name|tv
+argument_list|,
+name|ap
+operator|->
+name|a_waitfor
+operator|==
+name|MNT_WAIT
+argument_list|)
+operator|)
+return|;
+block|}
 end_function
 
 end_unit
