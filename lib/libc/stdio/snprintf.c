@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: snprintf.c,v 1.5 1997/02/22 15:02:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,17 @@ name|f
 decl_stmt|;
 if|if
 condition|(
+name|n
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|int
 operator|)
@@ -158,6 +169,9 @@ operator|(
 name|EOF
 operator|)
 return|;
+name|n
+operator|--
+expr_stmt|;
 if|#
 directive|if
 name|__STDC__
@@ -220,8 +234,6 @@ operator|.
 name|_w
 operator|=
 name|n
-operator|-
-literal|1
 expr_stmt|;
 name|ret
 operator|=
@@ -247,8 +259,28 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|EOF
+condition|)
 return|return
 operator|(
+name|ret
+operator|)
+return|;
+return|return
+operator|(
+name|ret
+operator|>
+operator|(
+name|int
+operator|)
+name|n
+condition|?
+name|n
+else|:
 name|ret
 operator|)
 return|;
