@@ -7578,9 +7578,7 @@ name|pte
 operator|=
 name|pmap_pte_quick
 argument_list|(
-name|pv
-operator|->
-name|pv_pmap
+name|pmap
 argument_list|,
 name|pv
 operator|->
@@ -7642,9 +7640,7 @@ name|tpte
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pv
-operator|->
-name|pv_pmap
+name|pmap
 operator|->
 name|pm_stats
 operator|.
@@ -7687,9 +7683,7 @@ expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|pv
-operator|->
-name|pv_pmap
+name|pmap
 operator|->
 name|pm_pvlist
 argument_list|,
@@ -7721,7 +7715,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|m
@@ -7730,10 +7724,7 @@ name|md
 operator|.
 name|pv_list
 argument_list|)
-operator|==
-name|NULL
 condition|)
-block|{
 name|vm_page_flag_clear
 argument_list|(
 name|m
@@ -7741,12 +7732,9 @@ argument_list|,
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
-block|}
 name|pmap_unuse_pt
 argument_list|(
-name|pv
-operator|->
-name|pv_pmap
+name|pmap
 argument_list|,
 name|pv
 operator|->
