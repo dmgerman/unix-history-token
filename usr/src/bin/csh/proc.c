@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c 4.1 %G%"
+literal|"@(#)proc.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -686,13 +686,6 @@ if|if
 condition|(
 name|jobflags
 operator|&
-name|PFOREGND
-condition|)
-block|{
-if|if
-condition|(
-name|jobflags
-operator|&
 name|PSTOPPED
 condition|)
 block|{
@@ -719,6 +712,13 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|jobflags
+operator|&
+name|PFOREGND
+condition|)
+block|{
 if|if
 condition|(
 name|jobflags
@@ -845,21 +845,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|jobflags
-operator|&
-name|PSTOPPED
-operator|)
-operator|==
-literal|0
-condition|)
-name|pclrcurr
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|fp
 operator|->
 name|p_flags
@@ -2116,11 +2101,19 @@ condition|)
 goto|goto
 name|tryagain
 goto|;
-name|pmaxindex
-operator|=
 name|pp
 operator|->
 name|p_index
+operator|=
+name|i
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|pmaxindex
+condition|)
+name|pmaxindex
 operator|=
 name|i
 expr_stmt|;
@@ -4658,6 +4651,16 @@ operator|!=
 name|pp
 condition|)
 do|;
+if|if
+condition|(
+operator|!
+name|foregnd
+condition|)
+name|pclrcurr
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|pprint
 argument_list|(
 name|pp
@@ -5087,7 +5090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pgetcurr - find a job that is not pp and ``most recent''  */
+comment|/*  * pgetcurr - find most recent job that is not pp, preferably stopped  */
 end_comment
 
 begin_function
@@ -5110,6 +5113,14 @@ name|struct
 name|process
 modifier|*
 name|np
+decl_stmt|;
+specifier|register
+name|struct
+name|process
+modifier|*
+name|xp
+init|=
+name|PNULL
 decl_stmt|;
 for|for
 control|(
@@ -5150,15 +5161,33 @@ operator|->
 name|p_jobid
 condition|)
 block|{
+if|if
+condition|(
+name|np
+operator|->
+name|p_flags
+operator|&
+name|PSTOPPED
+condition|)
 return|return
 operator|(
 name|np
 operator|)
 return|;
+if|if
+condition|(
+name|xp
+operator|==
+name|PNULL
+condition|)
+name|xp
+operator|=
+name|np
+expr_stmt|;
 block|}
 return|return
 operator|(
-name|PNULL
+name|xp
 operator|)
 return|;
 block|}
