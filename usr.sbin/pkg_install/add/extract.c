@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: extract.c,v 1.11 1997/02/22 16:09:16 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|STARTSTRING
-value|"tar cf -"
+value|"tar cf - "
 end_define
 
 begin_define
@@ -51,7 +51,7 @@ name|TOOBIG
 parameter_list|(
 name|str
 parameter_list|)
-value|((strlen(str) + 6 + strlen(home) + where_count> maxargs) \ 		|| (strlen(str) + 6 + strlen(home) + perm_count> maxargs))
+value|((strlen(str) + 22 + strlen(home) + where_count> maxargs) \ 		|| (strlen(str) + 6 + strlen(home) + perm_count> maxargs))
 end_define
 
 begin_define
@@ -63,7 +63,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (strlen(where_args)> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 			barf("can't invoke tar pipeline"); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 			barf("can not invoke %d byte tar pipeline: %s", strlen(where_args), where_args); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
@@ -119,12 +119,10 @@ name|sysconf
 argument_list|(
 name|_SC_ARG_MAX
 argument_list|)
+operator|/
+literal|2
 expr_stmt|;
-name|maxargs
-operator|-=
-literal|64
-expr_stmt|;
-comment|/* some slop for the tar cmd text, 					   and sh -c */
+comment|/* Just use half the argument space */
 name|where_args
 operator|=
 name|alloca
@@ -313,7 +311,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* try to add to list of perms to be changed, 		       and run in bulk. */
+comment|/* try to add to list of perms to be changed and run in bulk. */
 if|if
 condition|(
 name|p
@@ -332,11 +330,13 @@ operator|->
 name|name
 argument_list|)
 condition|)
+block|{
 name|PUSHOUT
 argument_list|(
 name|Directory
 argument_list|)
 expr_stmt|;
+block|}
 name|add_count
 operator|=
 name|snprintf
@@ -381,6 +381,24 @@ block|{
 comment|/* rename failed, try copying with a big tar command */
 if|if
 condition|(
+name|last_chdir
+operator|!=
+name|Directory
+condition|)
+block|{
+name|PUSHOUT
+argument_list|(
+name|last_chdir
+argument_list|)
+expr_stmt|;
+name|last_chdir
+operator|=
+name|Directory
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|p
 operator|->
 name|name
@@ -396,20 +414,12 @@ name|p
 operator|->
 name|name
 argument_list|)
-operator|||
-name|last_chdir
-operator|!=
-name|Directory
 condition|)
 block|{
 name|PUSHOUT
 argument_list|(
-name|last_chdir
-argument_list|)
-expr_stmt|;
-name|last_chdir
-operator|=
 name|Directory
+argument_list|)
 expr_stmt|;
 block|}
 name|add_count
@@ -488,24 +498,6 @@ name|perm_count
 operator|+=
 name|add_count
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
-condition|)
-block|{
-name|PUSHOUT
-argument_list|(
-name|Directory
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 break|break;
