@@ -915,6 +915,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|p
 operator|=
 name|pfind
@@ -937,6 +940,9 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|p_can
 argument_list|(
 name|curproc
@@ -947,10 +953,11 @@ name|P_CAN_SEE
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
-name|EACCES
+name|error
 operator|)
 return|;
 name|kn
