@@ -151,6 +151,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-g ... give control to GDB debugger\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-c ... invoke user configuration routing\n"
 argument_list|)
 expr_stmt|;
