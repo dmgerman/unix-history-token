@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: kcorelow.c,v 1.3 1995/04/26 01:01:09 jkh Exp $ */
+comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: kcorelow.c,v 1.4 1995/05/30 04:57:22 rgrimes Exp $ */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -239,16 +245,35 @@ define|\
 value|(target_read_memory((CORE_ADDR)(addr), (char *)(p), sizeof(*(p))))
 end_define
 
-begin_extern
-extern|extern read_pcb (int
-operator|,
-extern|CORE_ADDR
-end_extern
+begin_function_decl
+name|int
+name|read_pcb
+parameter_list|(
+name|int
+parameter_list|,
+name|CORE_ADDR
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|struct
+name|kinfo_proc
+modifier|*
+name|kvm_getprocs
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|CORE_ADDR
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|CORE_ADDR
@@ -1243,6 +1268,16 @@ block|{
 name|CORE_ADDR
 name|paddr
 decl_stmt|;
+name|struct
+name|kinfo_proc
+modifier|*
+name|kp
+decl_stmt|;
+name|int
+name|cnt
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1273,6 +1308,25 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"paddr %#x kernel_start %#x "
+argument_list|,
+name|paddr
+argument_list|,
+name|kernel_start
+argument_list|)
+expr_stmt|;
+comment|/* assume it's a proc pointer if it's in the kernel */
+if|if
+condition|(
+name|paddr
+operator|>=
+name|kernel_start
+condition|)
+block|{
 if|if
 condition|(
 name|set_proc_context
@@ -1285,6 +1339,62 @@ argument_list|(
 literal|"invalid proc address"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|kp
+operator|=
+name|kvm_getprocs
+argument_list|(
+name|core_kd
+argument_list|,
+name|KERN_PROC_PID
+argument_list|,
+name|paddr
+argument_list|,
+operator|&
+name|cnt
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cnt %d\n"
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cnt
+condition|)
+name|error
+argument_list|(
+literal|"invalid pid"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|set_proc_context
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+name|kp
+operator|->
+name|kp_eproc
+operator|.
+name|e_paddr
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"invalid proc address"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -116,6 +116,18 @@ directive|undef
 name|FRAME_CHAIN
 end_undef
 
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|fbsd_kern_frame_chain
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -124,7 +136,7 @@ parameter_list|(
 name|thisframe
 parameter_list|)
 define|\
-value|(thisframe->signal_handler_caller \    ? thisframe->frame \    : (!inside_entry_file ((thisframe)->pc) \       ? read_memory_integer ((thisframe)->frame, 4) \       : 0))
+value|(kernel_debugging ? fbsd_kern_frame_chain(thisframe) : \   ((thisframe)->signal_handler_caller \    ? (thisframe)->frame \    : (!inside_entry_file ((thisframe)->pc) \       ? read_memory_integer ((thisframe)->frame, 4) \       : 0)))
 end_define
 
 begin_comment
@@ -171,6 +183,18 @@ directive|undef
 name|FRAME_SAVED_PC
 end_undef
 
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|fbsd_kern_frame_saved_pc
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -179,7 +203,7 @@ parameter_list|(
 name|FRAME
 parameter_list|)
 define|\
-value|(((FRAME)->signal_handler_caller \     ? sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    )
+value|(kernel_debugging ? fbsd_kern_frame_saved_pc(FRAME) : \   (((FRAME)->signal_handler_caller \     ? sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    ))
 end_define
 
 begin_undef
