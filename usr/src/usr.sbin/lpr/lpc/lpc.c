@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	5.7 (Berkeley) %G%"
+literal|"@(#)lpc.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -903,14 +903,8 @@ operator|=
 name|cmdtab
 init|;
 name|c
-operator|<
-operator|&
-name|cmdtab
-index|[
-name|NCMDS
-operator|-
-literal|1
-index|]
+operator|->
+name|c_name
 condition|;
 name|c
 operator|++
@@ -1014,6 +1008,12 @@ name|lines
 operator|+
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|c_name
+condition|)
 name|printf
 argument_list|(
 literal|"%s"
