@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -1348,6 +1354,46 @@ name|panic
 argument_list|(
 literal|"mfs_inactive: not inactive"
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reclaim a memory filesystem devvp so that it can be reused.  */
+end_comment
+
+begin_function
+name|int
+name|mfs_reclaim
+parameter_list|(
+name|vp
+parameter_list|)
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+block|{
+name|FREE
+argument_list|(
+name|vp
+operator|->
+name|v_data
+argument_list|,
+name|M_MFSNODE
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_data
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
