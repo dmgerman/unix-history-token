@@ -371,10 +371,6 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|optlist
-value|"b:df:himNRrs:tuvxy"
 while|while
 condition|(
 operator|(
@@ -386,7 +382,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|optlist
+literal|"b:df:himNRrs:tuvxy"
 argument_list|)
 operator|)
 operator|!=
@@ -1087,15 +1083,15 @@ name|stderr
 argument_list|,
 literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"restore -i [-cdhkmNuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -i [-cdhmNuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -r [-cdkNuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -r [-cdNuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -R [-cdkNuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -R [-cdNuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -x [-cdhkmNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -x [-cdhmNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|,
-literal|"restore -t [-cdhkNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -t [-cdhNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|)
 expr_stmt|;
 name|done

@@ -573,10 +573,6 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|optstring
-value|"0123456789aB:b:C:cD:d:f:h:LnSs:T:uWw"
 while|while
 condition|(
 operator|(
@@ -588,16 +584,13 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|optstring
+literal|"0123456789aB:b:C:cD:d:f:h:LnSs:T:uWw"
 argument_list|)
 operator|)
 operator|!=
 operator|-
 literal|1
 condition|)
-undef|#
-directive|undef
-name|optstring
 switch|switch
 condition|(
 name|ch
@@ -2848,8 +2841,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dump [-0123456789ac"
-literal|"LnSu] [-B records] [-b blocksize] [-C cachesize]\n"
+literal|"usage: dump [-0123456789acLnSu] [-B records] [-b blocksize] [-C cachesize]\n"
 literal|"            [-D dumpdates] [-d density] [-f file] [-h level] [-s feet]\n"
 literal|"            [-T date] filesystem\n"
 literal|"       dump -W | -w\n"
