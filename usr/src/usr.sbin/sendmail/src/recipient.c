@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.63 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.44.1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +295,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|bufp
 operator|==
 name|NULL
 condition|)
