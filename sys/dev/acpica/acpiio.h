@@ -28,6 +28,109 @@ name|ACPIIO_SETSLPSTATE
 value|_IOW('P', 3, int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_CMBAT_MAXSTRLEN
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|acpi_bif
+block|{
+name|u_int32_t
+name|unit
+decl_stmt|;
+comment|/* 0 for mWh, 1 for mAh */
+name|u_int32_t
+name|dcap
+decl_stmt|;
+comment|/* Design Capacity */
+name|u_int32_t
+name|btech
+decl_stmt|;
+comment|/* Battery Technorogy */
+name|u_int32_t
+name|lfcap
+decl_stmt|;
+comment|/* Last Full capacity */
+name|u_int32_t
+name|dvol
+decl_stmt|;
+comment|/* Design voltage (mV) */
+name|u_int32_t
+name|wcap
+decl_stmt|;
+comment|/* WARN capacity */
+name|u_int32_t
+name|lcap
+decl_stmt|;
+comment|/* Low capacity */
+name|u_int32_t
+name|gra1
+decl_stmt|;
+comment|/* Granulity 1(Warn to Low) */
+name|u_int32_t
+name|gra2
+decl_stmt|;
+comment|/* Granulity 2(Full to Warn) */
+name|char
+name|model
+index|[
+name|ACPI_CMBAT_MAXSTRLEN
+index|]
+decl_stmt|;
+comment|/* model identifier */
+name|char
+name|serial
+index|[
+name|ACPI_CMBAT_MAXSTRLEN
+index|]
+decl_stmt|;
+comment|/* Serial number */
+name|char
+name|type
+index|[
+name|ACPI_CMBAT_MAXSTRLEN
+index|]
+decl_stmt|;
+comment|/* Type */
+name|char
+name|oeminfo
+index|[
+name|ACPI_CMBAT_MAXSTRLEN
+index|]
+decl_stmt|;
+comment|/* OEM infomation */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|acpi_bst
+block|{
+name|u_int32_t
+name|state
+decl_stmt|;
+comment|/* Battery State */
+name|u_int32_t
+name|rate
+decl_stmt|;
+comment|/* Present Rate */
+name|u_int32_t
+name|cap
+decl_stmt|;
+comment|/* Remaining Capacity */
+name|u_int32_t
+name|volt
+decl_stmt|;
+comment|/* Present Voltage */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
