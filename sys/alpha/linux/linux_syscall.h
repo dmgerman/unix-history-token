@@ -118,7 +118,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_umount
+name|LINUX_SYS_linux_umount2
 value|22
 end_define
 
@@ -211,13 +211,6 @@ define|#
 directive|define
 name|LINUX_SYS_acct
 value|51
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_SYS_linux_umount2
-value|52
 end_define
 
 begin_define
@@ -939,6 +932,13 @@ define|#
 directive|define
 name|LINUX_SYS_linux_idle
 value|320
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SYS_linux_umount
+value|321
 end_define
 
 begin_define

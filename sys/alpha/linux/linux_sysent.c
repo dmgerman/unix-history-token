@@ -343,21 +343,21 @@ operator|)
 name|nosys
 block|}
 block|,
-comment|/* 21 =  */
+comment|/* 21 = osf1_mount */
 block|{
 name|AS
 argument_list|(
-name|linux_umount_args
+name|linux_umount2_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_umount
+name|linux_umount2
 block|}
 block|,
-comment|/* 22 = linux_umount */
+comment|/* 22 = linux_umount2 */
 block|{
 name|AS
 argument_list|(
@@ -702,19 +702,16 @@ block|}
 block|,
 comment|/* 51 = acct */
 block|{
-name|AS
-argument_list|(
-name|linux_umount2_args
-argument_list|)
+literal|0
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_umount2
+name|nosys
 block|}
 block|,
-comment|/* 52 = linux_umount2 */
+comment|/* 52 = sigpending */
 block|{
 literal|0
 block|,
@@ -3925,16 +3922,19 @@ block|}
 block|,
 comment|/* 320 = linux_idle */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_umount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|linux_umount
 block|}
 block|,
-comment|/* 321 = old_umount */
+comment|/* 321 = linux_umount */
 block|{
 name|AS
 argument_list|(
