@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.8 (Berkeley) %G%"
+literal|"@(#)csh.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,11 +67,11 @@ init|=
 block|{
 literal|"."
 block|,
-literal|"/usr/ucb"
+name|_PATH_UCB
 block|,
-literal|"/bin"
+name|_PATH_BIN
 block|,
-literal|"/usr/bin"
+name|_PATH_USRBIN
 block|,
 literal|0
 block|}
