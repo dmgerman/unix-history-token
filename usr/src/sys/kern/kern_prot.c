@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.11	82/11/13	*/
+comment|/*	kern_prot.c	5.12	82/11/22	*/
 end_comment
 
 begin_comment
@@ -666,15 +666,6 @@ argument_list|()
 condition|)
 return|return;
 comment|/* 	 * Everything's okay, do it. 	 */
-if|if
-condition|(
-name|ruid
-operator|!=
-name|u
-operator|.
-name|u_ruid
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -721,7 +712,6 @@ name|u_ruid
 operator|=
 name|ruid
 expr_stmt|;
-block|}
 name|u
 operator|.
 name|u_uid
