@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: gethostbydns.c,v 1.20 1997/02/22 15:00:06 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3530,7 +3530,7 @@ operator||
 name|RES_USEVC
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 block|}
