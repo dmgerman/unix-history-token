@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prints out tree in human readable form - GNU C-compiler    Copyright (C) 1990, 1991, 1993, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Prints out tree in human readable form - GNU C-compiler    Copyright (C) 1990, 91, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,23 +12,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tree.h"
+file|"system.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"tree.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|tree_code_name
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -277,7 +268,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|node
@@ -443,6 +434,13 @@ argument_list|,
 literal|" overflow"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TREE_INT_CST_HIGH
@@ -456,19 +454,8 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
-literal|" %1u"
+name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
-else|#
-directive|else
-literal|" %1lu"
-argument_list|,
-endif|#
-directive|endif
 name|TREE_INT_CST_LOW
 argument_list|(
 name|node
@@ -493,23 +480,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
-literal|" -%1u"
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
 argument_list|,
-else|#
-directive|else
-literal|" -%1lu"
+name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
-endif|#
-directive|endif
 operator|-
 name|TREE_INT_CST_LOW
 argument_list|(
@@ -517,46 +501,14 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-literal|64
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|!=
-name|HOST_BITS_PER_INT
-literal|" 0x%lx%016lx"
+name|HOST_WIDE_INT_PRINT_DOUBLE_HEX
 argument_list|,
-else|#
-directive|else
-literal|" 0x%x%016x"
-argument_list|,
-endif|#
-directive|endif
-else|#
-directive|else
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|!=
-name|HOST_BITS_PER_INT
-literal|" 0x%lx%08lx"
-argument_list|,
-else|#
-directive|else
-literal|" 0x%x%08x"
-argument_list|,
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|TREE_INT_CST_HIGH
 argument_list|(
 name|node
@@ -931,7 +883,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* It is unsafe to look at any other filds of an ERROR_MARK node. */
+comment|/* It is unsafe to look at any other filds of an ERROR_MARK node.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -960,7 +912,7 @@ operator|=
 operator|(
 operator|(
 name|unsigned
-name|HOST_WIDE_INT
+name|long
 operator|)
 name|node
 operator|)
@@ -1082,7 +1034,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|node
@@ -2102,22 +2054,6 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-name|print_node
-argument_list|(
-name|file
-argument_list|,
-literal|"attributes"
-argument_list|,
-name|TYPE_ATTRIBUTES
-argument_list|(
-name|node
-argument_list|)
-argument_list|,
-name|indent
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
 name|indent_to
 argument_list|(
 name|file
@@ -2420,7 +2356,7 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|DECL_SAVED_INSNS
@@ -2709,6 +2645,18 @@ argument_list|,
 literal|" symtab %d"
 argument_list|,
 name|TYPE_SYMTAB_ADDRESS
+argument_list|(
+name|node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|" alias set %d"
+argument_list|,
+name|TYPE_ALIAS_SET
 argument_list|(
 name|node
 argument_list|)
@@ -3244,17 +3192,16 @@ case|:
 case|case
 literal|'s'
 case|:
-switch|switch
+if|if
 condition|(
 name|TREE_CODE
 argument_list|(
 name|node
 argument_list|)
+operator|==
+name|BIND_EXPR
 condition|)
 block|{
-case|case
-name|BIND_EXPR
-case|:
 name|print_node
 argument_list|(
 name|file
@@ -3311,8 +3258,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|first_rtl
-operator|=
 name|len
 operator|=
 name|tree_code_length
@@ -3326,56 +3271,17 @@ name|node
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* These kinds of nodes contain rtx's, not trees, 	 after a certain point.  Print the rtx's as rtx's.  */
-switch|switch
-condition|(
+comment|/* Some nodes contain rtx's, not trees, 	 after a certain point.  Print the rtx's as rtx's.  */
+name|first_rtl
+operator|=
+name|first_rtl_op
+argument_list|(
 name|TREE_CODE
 argument_list|(
 name|node
 argument_list|)
-condition|)
-block|{
-case|case
-name|SAVE_EXPR
-case|:
-name|first_rtl
-operator|=
-literal|2
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|CALL_EXPR
-case|:
-name|first_rtl
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-case|case
-name|METHOD_CALL_EXPR
-case|:
-name|first_rtl
-operator|=
-literal|3
-expr_stmt|;
-break|break;
-case|case
-name|WITH_CLEANUP_EXPR
-case|:
-comment|/* Should be defined to be 2.  */
-name|first_rtl
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|RTL_EXPR
-case|:
-name|first_rtl
-operator|=
-literal|0
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -3494,6 +3400,57 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|node
+argument_list|)
+operator|==
+name|EXPR_WITH_FILE_LOCATION
+condition|)
+block|{
+name|indent_to
+argument_list|(
+name|file
+argument_list|,
+name|indent
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"%s:%d:%d"
+argument_list|,
+operator|(
+name|EXPR_WFL_FILENAME_NODE
+argument_list|(
+name|node
+argument_list|)
+condition|?
+name|EXPR_WFL_FILENAME
+argument_list|(
+name|node
+argument_list|)
+else|:
+literal|"(no file info)"
+operator|)
+argument_list|,
+name|EXPR_WFL_LINENO
+argument_list|(
+name|node
+argument_list|)
+argument_list|,
+name|EXPR_WFL_COLNO
+argument_list|(
+name|node
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'c'
@@ -3526,6 +3483,13 @@ argument_list|,
 literal|" overflow"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TREE_INT_CST_HIGH
@@ -3539,19 +3503,8 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
-literal|" %1u"
+name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
-else|#
-directive|else
-literal|" %1lu"
-argument_list|,
-endif|#
-directive|endif
 name|TREE_INT_CST_LOW
 argument_list|(
 name|node
@@ -3576,23 +3529,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-name|HOST_BITS_PER_INT
-literal|" -%1u"
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
 argument_list|,
-else|#
-directive|else
-literal|" -%1lu"
+name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
-endif|#
-directive|endif
 operator|-
 name|TREE_INT_CST_LOW
 argument_list|(
@@ -3600,46 +3550,14 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|==
-literal|64
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|!=
-name|HOST_BITS_PER_INT
-literal|" 0x%lx%016lx"
+name|HOST_WIDE_INT_PRINT_DOUBLE_HEX
 argument_list|,
-else|#
-directive|else
-literal|" 0x%x%016x"
-argument_list|,
-endif|#
-directive|endif
-else|#
-directive|else
-if|#
-directive|if
-name|HOST_BITS_PER_WIDE_INT
-operator|!=
-name|HOST_BITS_PER_INT
-literal|" 0x%lx%08lx"
-argument_list|,
-else|#
-directive|else
-literal|" 0x%x%08x"
-argument_list|,
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|TREE_INT_CST_HIGH
 argument_list|(
 name|node
@@ -4084,6 +4002,30 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+if|if
+condition|(
+name|TREE_CODE_CLASS
+argument_list|(
+name|TREE_CODE
+argument_list|(
+name|node
+argument_list|)
+argument_list|)
+operator|==
+literal|'x'
+condition|)
+name|lang_print_xnode
+argument_list|(
+name|file
+argument_list|,
+name|node
+argument_list|,
+name|indent
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 block|}
