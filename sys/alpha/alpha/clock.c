@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -546,7 +552,7 @@ name|tc_frequency
 operator|=
 name|freq
 expr_stmt|;
-name|init_timecounter
+name|tc_init
 argument_list|(
 operator|&
 name|alpha_timecounter
@@ -1044,7 +1050,7 @@ name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
-name|set_timecounter
+name|tc_setclock
 argument_list|(
 operator|&
 name|ts
@@ -1183,7 +1189,7 @@ name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
-name|set_timecounter
+name|tc_setclock
 argument_list|(
 operator|&
 name|ts
