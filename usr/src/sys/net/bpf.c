@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	8.2 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
+comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	8.3 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -16,35 +16,6 @@ name|NBPFILTER
 operator|>
 literal|0
 end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|inline
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|inline
-value|__inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -552,7 +523,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|bpf_wakeup
 name|__P
@@ -1762,7 +1733,7 @@ return|;
 block|}
 comment|/*  * If there are processes sleeping on this descriptor, wake them up.  */
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|bpf_wakeup
 parameter_list|(
