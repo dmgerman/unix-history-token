@@ -19,6 +19,21 @@ directive|include
 file|"dir.h"
 end_include
 
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|scv
+operator|.
+name|c
+literal|4.2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* 	Release 3 SCCS File Structures  (2.1  78/06/05 17:31:17) 	See osccsfile(V). */
 end_comment

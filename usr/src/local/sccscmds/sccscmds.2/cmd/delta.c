@@ -19,7 +19,9 @@ operator|(
 operator|#
 operator|)
 name|delta
-literal|2.1
+operator|.
+name|c
+literal|4.1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
