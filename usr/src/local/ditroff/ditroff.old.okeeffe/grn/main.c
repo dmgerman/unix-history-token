@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.4	(Berkeley) 83/08/12  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values may be overridden, as in gprint, on the  * command line and are further overridden by commands in the input.  *  *	command options are:  *  *	-1 #	sets point size 1 to #.  also for -2, -3, -4.  Defaults  *		are 12, 16, 24, 36.  *  *	-r ss	sets gremlin's roman font to troff font ss.  Also for -i,  *		-b and -s for italics, bold, and special fonts.  This does  *		NOT affect font changes imbedded into strings.  A \fI, for  *		instance, will get the italics font regardless of what -i  *		is set to.  *  *	-n #	set narrow line thickness to # pixels.  Also for -m (medium)  *		and -t (thick).  Defaults are 1, 3, and 5 pixels.  *  *	-x #	scale the picture by x (integer or decimal).  *  *	-Tdev	Prepare output for "dev" printer.  Default is for the varian  *		and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *	-p	prompt user for fonts, sizes and thicknesses.  */
+comment|/*	main.c	1.5	(Berkeley) 83/08/12  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values may be overridden, as in gprint, on the  * command line and are further overridden by commands in the input.  *  *	command options are:  *  *	-1 #	sets point size 1 to #.  also for -2, -3, -4.  Defaults  *		are 12, 16, 24, 36.  *  *	-r ss	sets gremlin's roman font to troff font ss.  Also for -i,  *		-b and -s for italics, bold, and special fonts.  This does  *		NOT affect font changes imbedded into strings.  A \fI, for  *		instance, will get the italics font regardless of what -i  *		is set to.  *  *	-n #	set narrow line thickness to # pixels.  Also for -m (medium)  *		and -t (thick).  Defaults are 1, 3, and 5 pixels.  *  *	-x #	scale the picture by x (integer or decimal).  *  *	-Tdev	Prepare output for "dev" printer.  Default is for the varian  *		and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *	-p	prompt user for fonts, sizes and thicknesses.  */
 end_comment
 
 begin_include
@@ -200,7 +200,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"main.c	1.4	83/08/12"
+literal|"main.c	1.5	83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -2447,6 +2447,7 @@ argument_list|(
 operator|*
 name|chr
 argument_list|)
+condition|)
 operator|*
 name|chr
 operator|=
@@ -2455,7 +2456,7 @@ argument_list|(
 operator|*
 name|chr
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 comment|/* lower case */
 switch|switch
 condition|(
