@@ -97,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.28 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.29 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.28 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.29 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.28 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.29 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,16 +1341,12 @@ argument_list|(
 name|af
 argument_list|)
 argument_list|,
-name|F_TEST
+name|F_TLOCK
 argument_list|,
 literal|0
 argument_list|)
 operator|<
 literal|0
-operator|&&
-name|errno
-operator|==
-name|EACCES
 condition|)
 else|#
 directive|else
