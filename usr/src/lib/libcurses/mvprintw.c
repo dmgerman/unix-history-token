@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * implement the mvprintw commands.  Due to the variable number of  * arguments, they cannot be macros.  Sigh....  *  * %G% (Berkeley) @(#)mvprintw.c	1.1  */
+comment|/*  * implement the mvprintw commands.  Due to the variable number of  * arguments, they cannot be macros.  Sigh....  *  * @(#)mvprintw.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_macro

@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  *  * %G% (Berkeley) @(#)mvscanw.c	1.2  */
+comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  *  * @(#)mvscanw.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_macro
