@@ -11,15 +11,11 @@ begin_comment
 comment|/*-  * Copyright (c) 1994-1997 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Id: if_devar.h,v 1.28 1997/07/03 16:55:07 thomas Exp  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_DEVAR_H
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -314,7 +310,7 @@ comment|/* 2104x */
 end_comment
 
 begin_comment
-comment|/*  * While 21x4x allows chaining of its descriptors, this driver  * doesn't take advantage of it.  We keep the descriptors in a  * traditional FIFO ring.    */
+comment|/*  * While 21x4x allows chaining of its descriptors, this driver  * doesn't take advantage of it.  We keep the descriptors in a  * traditional FIFO ring.  */
 end_comment
 
 begin_typedef
@@ -353,7 +349,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The 21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can   * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs (unless it's on an   * architecture which can't handle unaligned accesses) because with  * 100Mb/s cards the copying is just too much of a hit.  */
+comment|/*  * The 21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can  * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs (unless it's on an  * architecture which can't handle unaligned accesses) because with  * 100Mb/s cards the copying is just too much of a hit.  */
 end_comment
 
 begin_if
@@ -446,13 +442,13 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|_tulip_softc_t
+name|tulip_softc
 name|tulip_softc_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The various controllers support.  */
+comment|/*  * Enumeration of the various controllers supported.  */
 end_comment
 
 begin_typedef
@@ -552,7 +548,7 @@ name|TULIP_IS_MEDIA_FD
 parameter_list|(
 name|m
 parameter_list|)
-value|(TULIP_BIT(m)& \ 				 (TULIP_FDBIT(10BASET) \ 				  |TULIP_FDBIT(100BASETX) \ 				  |TULIP_FDBIT(100BASEFX)))
+value|(TULIP_BIT(m)& \ 				 (TULIP_FDBIT(10BASET) | \ 				  TULIP_FDBIT(100BASETX) | \ 				  TULIP_FDBIT(100BASEFX)))
 end_define
 
 begin_define
@@ -562,7 +558,7 @@ name|TULIP_CAN_MEDIA_FD
 parameter_list|(
 name|m
 parameter_list|)
-value|(TULIP_BIT(m)& \ 				 (TULIP_MBIT(10BASET) \ 				  |TULIP_MBIT(100BASETX) \ 				  |TULIP_MBIT(100BASEFX)))
+value|(TULIP_BIT(m)& \ 				 (TULIP_MBIT(10BASET) | \ 				  TULIP_MBIT(100BASETX) | \ 				  TULIP_MBIT(100BASEFX)))
 end_define
 
 begin_define
@@ -602,7 +598,7 @@ name|TULIP_IS_MEDIA_TP
 parameter_list|(
 name|m
 parameter_list|)
-value|((TULIP_BIT(m)& \ 				  (TULIP_MBIT(BNC) \ 				   |TULIP_MBIT(AUI) \ 				   |TULIP_MBIT(AUIBNC) \ 				   |TULIP_MBIT(EXTSIA))) == 0)
+value|((TULIP_BIT(m)& \ 				  (TULIP_MBIT(BNC) | \ 				   TULIP_MBIT(AUI) | \ 				   TULIP_MBIT(AUIBNC) | \ 				   TULIP_MBIT(EXTSIA))) == 0)
 end_define
 
 begin_define
@@ -934,7 +930,8 @@ name|chipid
 parameter_list|,
 name|media
 parameter_list|)
-value|do { \     (mi)->mi_type = TULIP_MEDIAINFO_SIA; \     sc->tulip_mediums[TULIP_MEDIA_ ## media] = (mi); \     (mi)->mi_sia_connectivity = TULIP_ ## chipid ## _SIACONN_ ## media; \     (mi)->mi_sia_tx_rx        = TULIP_ ## chipid ## _SIATXRX_ ## media; \     (mi)->mi_sia_general      = TULIP_ ## chipid ## _SIAGEN_ ## media; \ } while (0)
+define|\
+value|do {									\ 	(mi)->mi_type = TULIP_MEDIAINFO_SIA;				\ 	sc->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);		\ 	(mi)->mi_sia_connectivity = TULIP_ ## chipid ## _SIACONN_ ## media; \ 	(mi)->mi_sia_tx_rx = TULIP_ ## chipid ## _SIATXRX_ ## media;	\ 	(mi)->mi_sia_general = TULIP_ ## chipid ## _SIAGEN_ ## media;	\ } while (0)
 end_define
 
 begin_define
@@ -948,7 +945,8 @@ name|mi
 parameter_list|,
 name|media
 parameter_list|)
-value|do {	\     if ((sc)->tulip_mediums[TULIP_MEDIA_ ## media] == NULL	\&& ((mi)->mi_capabilities& PHYSTS_ ## media)) {	\ 	(sc)->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);	\ 	(mi)->mi_mediamask |= TULIP_BIT(TULIP_MEDIA_ ## media);	\     } \ } while (0)
+define|\
+value|do {	\ 	if ((sc)->tulip_mediums[TULIP_MEDIA_ ## media] == NULL		\&& ((mi)->mi_capabilities& PHYSTS_ ## media)) {		\ 		(sc)->tulip_mediums[TULIP_MEDIA_ ## media] = (mi);	\ 		(mi)->mi_mediamask |= TULIP_BIT(TULIP_MEDIA_ ## media);	\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -980,7 +978,7 @@ block|,
 comment|/* Digital Semicondutor 21143 ISV SROM Format */
 name|TULIP_21140_DEC_EB
 block|,
-comment|/* Digital Semicondutor 21140 Evaluation Board */
+comment|/* Digital Semicondutor 21140 Eval. Board */
 name|TULIP_21140_MII
 block|,
 comment|/* 21140[A] with MII */
@@ -1027,7 +1025,7 @@ block|,
 comment|/* called from interrupt routine */
 name|TULIP_MEDIAPOLL_START
 block|,
-comment|/* start a media probe (called from reset) */
+comment|/* start a media probe (from reset) */
 name|TULIP_MEDIAPOLL_TXPROBE_OK
 block|,
 comment|/* txprobe succeeded */
@@ -1125,7 +1123,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The next few declarations are for MII/PHY based board.  *  *    The first enumeration identifies a superset of various datums  * that can be obtained from various PHY chips.  Not all PHYs will  * support all datums.  *    The modedata structure indicates what register contains  * a datum, what mask is applied the register contents, and what the  * result should be.  *    The attr structure records information about a supported PHY.  *    The phy structure records information about a PHY instance.  */
+comment|/*  * The next few declarations are for MII/PHY based boards.  *  *    The first enumeration identifies a superset of various datums  * that can be obtained from various PHY chips.  Not all PHYs will  * support all datums.  *    The modedata structure indicates what register contains  * a datum, what mask is applied the register contents, and what the  * result should be.  *    The attr structure records information about a supported PHY.  *    The phy structure records information about a PHY instance.  */
 end_comment
 
 begin_typedef
@@ -1174,14 +1172,6 @@ decl_stmt|;
 name|u_int16_t
 name|attr_flags
 decl_stmt|;
-define|#
-directive|define
-name|PHY_NEED_HARD_RESET
-value|0x0001
-define|#
-directive|define
-name|PHY_DUAL_CYCLE_TA
-value|0x0002
 name|tulip_phy_modedata_t
 name|attr_modes
 index|[
@@ -1202,6 +1192,24 @@ block|}
 name|tulip_phy_attr_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Definitions for tulip_phy_attr_t.attr_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_NEED_HARD_RESET
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY_DUAL_CYCLE_TA
+value|0x0002
+end_define
 
 begin_comment
 comment|/*  * Various probe states used when trying to autosense the media.  */
@@ -1231,7 +1239,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-comment|/*      * Transmit Statistics      */
+comment|/* 	 * Transmit Statistics 	 */
 name|u_int32_t
 name|dot3StatsSingleCollisionFrames
 decl_stmt|;
@@ -1256,6 +1264,7 @@ decl_stmt|;
 name|u_int32_t
 name|dot3StatsInternalMacTransmitErrors
 decl_stmt|;
+comment|/* not in rfc1650! */
 name|u_int32_t
 name|dot3StatsInternalTransmitUnderflows
 decl_stmt|;
@@ -1263,8 +1272,7 @@ comment|/* not in rfc1650! */
 name|u_int32_t
 name|dot3StatsInternalTransmitBabbles
 decl_stmt|;
-comment|/* not in rfc1650! */
-comment|/*      * Receive Statistics      */
+comment|/* 	 * Receive Statistics 	 */
 name|u_int32_t
 name|dot3StatsMissedFrames
 decl_stmt|;
@@ -1287,377 +1295,12 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Now to important stuff.  This is softc structure (where does softc  * come from??? No idea) for the tulip device.    */
+comment|/*  * Probe information.  */
 end_comment
 
 begin_struct
 struct|struct
-name|_tulip_softc_t
-block|{
-name|struct
-name|ifmedia
-name|tulip_ifmedia
-decl_stmt|;
-name|int
-name|tulip_unit
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_BUS_DMA
-argument_list|)
-name|bus_dma_tag_t
-name|tulip_dmatag
-decl_stmt|;
-comment|/* bus DMA tag */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TULIP_BUS_DMA_NOTX
-argument_list|)
-name|bus_dmamap_t
-name|tulip_setupmap
-decl_stmt|;
-name|bus_dmamap_t
-name|tulip_txdescmap
-decl_stmt|;
-name|bus_dmamap_t
-name|tulip_txmaps
-index|[
-name|TULIP_TXDESCS
-index|]
-decl_stmt|;
-name|unsigned
-name|tulip_txmaps_free
-decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TULIP_BUS_DMA_NORX
-argument_list|)
-name|bus_dmamap_t
-name|tulip_rxdescmap
-decl_stmt|;
-name|bus_dmamap_t
-name|tulip_rxmaps
-index|[
-name|TULIP_RXDESCS
-index|]
-decl_stmt|;
-name|unsigned
-name|tulip_rxmaps_free
-decl_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-name|struct
-name|arpcom
-name|tulip_ac
-decl_stmt|;
-name|bus_space_tag_t
-name|tulip_csrs_bst
-decl_stmt|;
-name|bus_space_handle_t
-name|tulip_csrs_bsh
-decl_stmt|;
-name|tulip_regfile_t
-name|tulip_csrs
-decl_stmt|;
-name|u_int32_t
-name|tulip_flags
-decl_stmt|;
-define|#
-directive|define
-name|TULIP_WANTSETUP
-value|0x00000001
-define|#
-directive|define
-name|TULIP_WANTHASHPERFECT
-value|0x00000002
-define|#
-directive|define
-name|TULIP_WANTHASHONLY
-value|0x00000004
-define|#
-directive|define
-name|TULIP_DOINGSETUP
-value|0x00000008
-define|#
-directive|define
-name|TULIP_PRINTMEDIA
-value|0x00000010
-define|#
-directive|define
-name|TULIP_TXPROBE_ACTIVE
-value|0x00000020
-define|#
-directive|define
-name|TULIP_ALLMULTI
-value|0x00000040
-define|#
-directive|define
-name|TULIP_WANTRXACT
-value|0x00000080
-define|#
-directive|define
-name|TULIP_RXACT
-value|0x00000100
-define|#
-directive|define
-name|TULIP_INRESET
-value|0x00000200
-define|#
-directive|define
-name|TULIP_NEEDRESET
-value|0x00000400
-define|#
-directive|define
-name|TULIP_SQETEST
-value|0x00000800
-define|#
-directive|define
-name|TULIP_xxxxxx0
-value|0x00001000
-define|#
-directive|define
-name|TULIP_xxxxxx1
-value|0x00002000
-define|#
-directive|define
-name|TULIP_WANTTXSTART
-value|0x00004000
-define|#
-directive|define
-name|TULIP_NEWTXTHRESH
-value|0x00008000
-define|#
-directive|define
-name|TULIP_NOAUTOSENSE
-value|0x00010000
-define|#
-directive|define
-name|TULIP_PRINTLINKUP
-value|0x00020000
-define|#
-directive|define
-name|TULIP_LINKUP
-value|0x00040000
-define|#
-directive|define
-name|TULIP_RXBUFSLOW
-value|0x00080000
-define|#
-directive|define
-name|TULIP_NOMESSAGES
-value|0x00100000
-define|#
-directive|define
-name|TULIP_SYSTEMERROR
-value|0x00200000
-define|#
-directive|define
-name|TULIP_TIMEOUTPENDING
-value|0x00400000
-define|#
-directive|define
-name|TULIP_xxxxxx2
-value|0x00800000
-define|#
-directive|define
-name|TULIP_TRYNWAY
-value|0x01000000
-define|#
-directive|define
-name|TULIP_DIDNWAY
-value|0x02000000
-define|#
-directive|define
-name|TULIP_RXIGNORE
-value|0x04000000
-define|#
-directive|define
-name|TULIP_PROBE1STPASS
-value|0x08000000
-define|#
-directive|define
-name|TULIP_DEVICEPROBE
-value|0x10000000
-define|#
-directive|define
-name|TULIP_PROMISC
-value|0x20000000
-define|#
-directive|define
-name|TULIP_HASHONLY
-value|0x40000000
-define|#
-directive|define
-name|TULIP_xxxxxx3
-value|0x80000000
-comment|/* only 4 bits left! */
-name|u_int32_t
-name|tulip_features
-decl_stmt|;
-comment|/* static bits indicating features of chip */
-define|#
-directive|define
-name|TULIP_HAVE_GPR
-value|0x00000001
-comment|/* have gp register (140[A]) */
-define|#
-directive|define
-name|TULIP_HAVE_RXBADOVRFLW
-value|0x00000002
-comment|/* RX corrupts on overflow */
-define|#
-directive|define
-name|TULIP_HAVE_POWERMGMT
-value|0x00000004
-comment|/* Snooze/sleep modes */
-define|#
-directive|define
-name|TULIP_HAVE_MII
-value|0x00000008
-comment|/* Some medium on MII */
-define|#
-directive|define
-name|TULIP_HAVE_SIANWAY
-value|0x00000010
-comment|/* SIA does NWAY */
-define|#
-directive|define
-name|TULIP_HAVE_DUALSENSE
-value|0x00000020
-comment|/* SIA senses both AUI& TP */
-define|#
-directive|define
-name|TULIP_HAVE_SIAGP
-value|0x00000040
-comment|/* SIA has a GP port */
-define|#
-directive|define
-name|TULIP_HAVE_BROKEN_HASH
-value|0x00000080
-comment|/* Broken Multicast Hash */
-define|#
-directive|define
-name|TULIP_HAVE_ISVSROM
-value|0x00000100
-comment|/* uses ISV SROM Format */
-define|#
-directive|define
-name|TULIP_HAVE_BASEROM
-value|0x00000200
-comment|/* Board ROM can be cloned */
-define|#
-directive|define
-name|TULIP_HAVE_SLAVEDROM
-value|0x00000400
-comment|/* Board ROM cloned */
-define|#
-directive|define
-name|TULIP_HAVE_SLAVEDINTR
-value|0x00000800
-comment|/* Board slaved interrupt */
-define|#
-directive|define
-name|TULIP_HAVE_SHAREDINTR
-value|0x00001000
-comment|/* Board shares interrupts */
-define|#
-directive|define
-name|TULIP_HAVE_OKROM
-value|0x00002000
-comment|/* ROM was recognized */
-define|#
-directive|define
-name|TULIP_HAVE_NOMEDIA
-value|0x00004000
-comment|/* did not detect any media */
-define|#
-directive|define
-name|TULIP_HAVE_STOREFWD
-value|0x00008000
-comment|/* have CMD_STOREFWD */
-define|#
-directive|define
-name|TULIP_HAVE_SIA100
-value|0x00010000
-comment|/* has LS100 in SIA status */
-define|#
-directive|define
-name|TULIP_HAVE_OKSROM
-value|0x00020000
-comment|/* SROM CRC is OK */
-name|u_int32_t
-name|tulip_intrmask
-decl_stmt|;
-comment|/* our copy of csr_intr */
-name|u_int32_t
-name|tulip_cmdmode
-decl_stmt|;
-comment|/* our copy of csr_cmdmode */
-name|u_int32_t
-name|tulip_last_system_error
-range|:
-literal|3
-decl_stmt|;
-comment|/* last system error (only value is TULIP_SYSTEMERROR is also set) */
-name|u_int32_t
-name|tulip_txtimer
-range|:
-literal|2
-decl_stmt|;
-comment|/* transmission timer */
-name|u_int32_t
-name|tulip_system_errors
-decl_stmt|;
-comment|/* number of system errors encountered */
-name|u_int32_t
-name|tulip_statusbits
-decl_stmt|;
-comment|/* status bits from CSR5 that may need to be printed */
-name|tulip_media_info_t
-modifier|*
-name|tulip_mediums
-index|[
-name|TULIP_MEDIA_MAX
-index|]
-decl_stmt|;
-comment|/* indexes into mediainfo */
-name|tulip_media_t
-name|tulip_media
-decl_stmt|;
-comment|/* current media type */
-name|u_int32_t
-name|tulip_abilities
-decl_stmt|;
-comment|/* remote system's abiltities (as defined in IEEE 802.3u) */
-name|u_int8_t
-name|tulip_revinfo
-decl_stmt|;
-comment|/* revision of chip */
-name|u_int8_t
-name|tulip_phyaddr
-decl_stmt|;
-comment|/* 0..31 -- address of current phy */
-name|u_int8_t
-name|tulip_gpinit
-decl_stmt|;
-comment|/* active pins on 21140 */
-name|u_int8_t
-name|tulip_gpdata
-decl_stmt|;
-comment|/* default gpdata for 21140 */
-struct|struct
+name|tulip_probe_info
 block|{
 name|u_int8_t
 name|probe_count
@@ -1666,7 +1309,7 @@ comment|/* count of probe operations */
 name|int32_t
 name|probe_timeout
 decl_stmt|;
-comment|/* time in ms of probe timeout */
+comment|/* time (ms) of probe timeout */
 name|tulip_probe_state_t
 name|probe_state
 decl_stmt|;
@@ -1688,55 +1331,16 @@ name|probe_txprobes
 decl_stmt|;
 comment|/* txprobes attempted */
 block|}
-name|tulip_probe
 struct|;
-define|#
-directive|define
-name|tulip_probe_count
-value|tulip_probe.probe_count
-define|#
-directive|define
-name|tulip_probe_timeout
-value|tulip_probe.probe_timeout
-define|#
-directive|define
-name|tulip_probe_state
-value|tulip_probe.probe_state
-define|#
-directive|define
-name|tulip_probe_media
-value|tulip_probe.probe_media
-define|#
-directive|define
-name|tulip_probe_mediamask
-value|tulip_probe.probe_mediamask
-define|#
-directive|define
-name|tulip_probe_passes
-value|tulip_probe.probe_passes
-name|tulip_chipid_t
-name|tulip_chipid
-decl_stmt|;
-comment|/* type of chip we are using */
-specifier|const
-name|tulip_boardsw_t
-modifier|*
-name|tulip_boardsw
-decl_stmt|;
-comment|/* board/chip characteristics */
-name|tulip_softc_t
-modifier|*
-name|tulip_slaves
-decl_stmt|;
-comment|/* slaved devices (ZX3xx) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_DEBUG
-argument_list|)
-comment|/*      * Debugging/Statistical information      */
+end_struct
+
+begin_comment
+comment|/*  * Debugging/Statistical information.  */
+end_comment
+
+begin_struct
 struct|struct
+name|tulip_dbg_info
 block|{
 name|tulip_media_t
 name|dbg_last_media
@@ -1829,34 +1433,16 @@ name|TULIP_RXDESCS
 index|]
 decl_stmt|;
 block|}
-name|tulip_dbg
 struct|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_PERFSTATS
-argument_list|)
-define|#
-directive|define
-name|TULIP_PERF_CURRENT
-value|0
-define|#
-directive|define
-name|TULIP_PERF_PREVIOUS
-value|1
-define|#
-directive|define
-name|TULIP_PERF_TOTAL
-value|2
-define|#
-directive|define
-name|TULIP_PERF_MAX
-value|3
+end_struct
+
+begin_comment
+comment|/*  * Performance statistics.  */
+end_comment
+
+begin_struct
 struct|struct
-name|tulip_perfstats
+name|tulip_perfstat
 block|{
 name|u_quad_t
 name|perf_intr_cycles
@@ -1889,45 +1475,269 @@ name|u_quad_t
 name|perf_rxget_cycles
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_intr
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_ifstart
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_ifstart_one
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_ifioctl
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_ifwatchdog
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_timeout
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_txput
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_txintr
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_rxintr
 decl_stmt|;
 name|unsigned
+name|int
 name|perf_rxget
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TULIP_PERF_CURRENT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PERF_PREVIOUS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PERF_TOTAL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PERF_MAX
+value|3
+end_define
+
+begin_comment
+comment|/*  * Per-driver-instance state.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tulip_softc
+block|{
+name|struct
+name|ifmedia
+name|tulip_ifmedia
+decl_stmt|;
+name|int
+name|tulip_unit
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TULIP_BUS_DMA
+argument_list|)
+name|bus_dma_tag_t
+name|tulip_dmatag
+decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TULIP_BUS_DMA_NOTX
+argument_list|)
+name|bus_dmamap_t
+name|tulip_setupmap
+decl_stmt|;
+name|bus_dmamap_t
+name|tulip_txdescmap
+decl_stmt|;
+name|bus_dmamap_t
+name|tulip_txmaps
+index|[
+name|TULIP_TXDESCS
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|tulip_txmaps_free
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TULIP_BUS_DMA_NORX
+argument_list|)
+name|bus_dmamap_t
+name|tulip_rxdescmap
+decl_stmt|;
+name|bus_dmamap_t
+name|tulip_rxmaps
+index|[
+name|TULIP_RXDESCS
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|tulip_rxmaps_free
+decl_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+name|struct
+name|arpcom
+name|tulip_ac
+decl_stmt|;
+comment|/* XXX should be at start */
+name|bus_space_tag_t
+name|tulip_csrs_bst
+decl_stmt|;
+name|bus_space_handle_t
+name|tulip_csrs_bsh
+decl_stmt|;
+name|tulip_regfile_t
+name|tulip_csrs
+decl_stmt|;
+name|u_int32_t
+name|tulip_flags
+decl_stmt|;
+name|u_int32_t
+name|tulip_features
+decl_stmt|;
+name|u_int32_t
+name|tulip_intrmask
+decl_stmt|;
+name|u_int32_t
+name|tulip_cmdmode
+decl_stmt|;
+name|u_int32_t
+name|tulip_last_system_error
+range|:
+literal|3
+decl_stmt|;
+name|u_int32_t
+name|tulip_txtimer
+range|:
+literal|2
+decl_stmt|;
+comment|/* transmission timer */
+name|u_int32_t
+name|tulip_system_errors
+decl_stmt|;
+name|u_int32_t
+name|tulip_statusbits
+decl_stmt|;
+comment|/* status bits from 							 * CSR5 that may need 							 * to be printed 							 */
+name|tulip_media_info_t
+modifier|*
+name|tulip_mediums
+index|[
+name|TULIP_MEDIA_MAX
+index|]
+decl_stmt|;
+name|tulip_media_t
+name|tulip_media
+decl_stmt|;
+comment|/* current media type */
+name|u_int32_t
+name|tulip_abilities
+decl_stmt|;
+comment|/* remote system's 							 * abilities (as 							 * defined in IEEE 							 * 802.3u) 							 */
+name|u_int8_t
+name|tulip_revinfo
+decl_stmt|;
+comment|/* chip revision */
+name|u_int8_t
+name|tulip_phyaddr
+decl_stmt|;
+comment|/* current phy */
+name|u_int8_t
+name|tulip_gpinit
+decl_stmt|;
+comment|/* active pins on 							 * 21140 							 */
+name|u_int8_t
+name|tulip_gpdata
+decl_stmt|;
+comment|/* default gpdata for 21140 */
+name|struct
+name|tulip_probe_info
+name|tulip_probe
+decl_stmt|;
+name|tulip_chipid_t
+name|tulip_chipid
+decl_stmt|;
+comment|/* type of chip we are using */
+specifier|const
+name|tulip_boardsw_t
+modifier|*
+name|tulip_boardsw
+decl_stmt|;
+comment|/* board/chip characteristics */
+name|tulip_softc_t
+modifier|*
+name|tulip_slaves
+decl_stmt|;
+comment|/* slaved devices (ZX3xx) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TULIP_DEBUG
+argument_list|)
+name|struct
+name|tulip_dbg_info
+name|tulip_dbg
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TULIP_PERFSTATS
+argument_list|)
+name|struct
+name|tulip_perfstat
 name|tulip_perfstats
 index|[
 name|TULIP_PERF_MAX
 index|]
-struct|;
-define|#
-directive|define
-name|tulip_curperfstats
-value|tulip_perfstats[TULIP_PERF_CURRENT]
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -1953,7 +1763,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/*      * The setup buffers for sending the setup frame to the chip.      * one is the one being sent while the other is the one being      * filled.      */
+comment|/* 	 * The setup buffers for sending the setup frame to the chip. one is 	 * the one being sent while the other is the one being filled. 	 */
 name|u_int32_t
 name|tulip_setupbuf
 index|[
@@ -1982,7 +1792,6 @@ index|[
 literal|24
 index|]
 decl_stmt|;
-comment|/* buffer for board ID */
 name|u_int8_t
 name|tulip_rombuf
 index|[
@@ -1990,14 +1799,13 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* must be aligned */
+comment|/* needed for multiport boards */
 name|u_int8_t
 name|tulip_pci_busno
 decl_stmt|;
-comment|/* needed for multiport boards */
 name|u_int8_t
 name|tulip_pci_devno
 decl_stmt|;
-comment|/* needed for multiport boards */
 name|u_int8_t
 name|tulip_connidx
 decl_stmt|;
@@ -2019,10 +1827,511 @@ end_struct
 begin_define
 define|#
 directive|define
+name|tulip_if
+value|tulip_ac.ac_if
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_xname
+value|tulip_if.if_xname
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_enaddr
+value|tulip_ac.ac_enaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_curperfstats
+value|tulip_perfstats[TULIP_PERF_CURRENT]
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_probe_count
+value|tulip_probe.probe_count
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_probe_timeout
+value|tulip_probe.probe_timeout
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_probe_state
+value|tulip_probe.probe_state
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_probe_media
+value|tulip_probe.probe_media
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_probe_mediamask
+value|tulip_probe.probe_mediamask
+end_define
+
+begin_define
+define|#
+directive|define
+name|tulip_probe_passes
+value|tulip_probe.probe_passes
+end_define
+
+begin_comment
+comment|/* Definitions for tulip_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_WANTSETUP
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_WANTHASHPERFECT
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_WANTHASHONLY
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DOINGSETUP
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PRINTMEDIA
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_TXPROBE_ACTIVE
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_ALLMULTI
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_WANTRXACT
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_RXACT
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_INRESET
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_NEEDRESET
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_SQETEST
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_xxxxxx0
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_xxxxxx1
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_WANTTXSTART
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_NEWTXTHRESH
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_NOAUTOSENSE
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PRINTLINKUP
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_LINKUP
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_RXBUFSLOW
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_NOMESSAGES
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_SYSTEMERROR
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_TIMEOUTPENDING
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_xxxxxx2
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_TRYNWAY
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DIDNWAY
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_RXIGNORE
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PROBE1STPASS
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DEVICEPROBE
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_PROMISC
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_HASHONLY
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_xxxxxx3
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Definitions for tulip_features. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_GPR
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* have gp register (140[A]) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_RXBADOVRFLW
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* RX corrupts on overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_POWERMGMT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Snooze/sleep modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_MII
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Some medium on MII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_SIANWAY
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* SIA does NWAY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_DUALSENSE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* SIA senses both AUI& TP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_SIAGP
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* SIA has a GP port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_BROKEN_HASH
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Broken Multicast Hash */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_ISVSROM
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* uses ISV SROM Format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_BASEROM
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Board ROM can be cloned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_SLAVEDROM
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Board ROM cloned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_SLAVEDINTR
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Board slaved interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_SHAREDINTR
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Board shares interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_OKROM
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* ROM was recognized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_NOMEDIA
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* did not detect any media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_STOREFWD
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* have CMD_STOREFWD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_SIA100
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* has LS100 in SIA status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_HAVE_OKSROM
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* SROM CRC is OK */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TULIP_DO_AUTOSENSE
 parameter_list|(
 name|sc
 parameter_list|)
+define|\
 value|(IFM_SUBTYPE((sc)->tulip_ifmedia.ifm_media) == IFM_AUTO)
 end_define
 
@@ -3124,49 +3433,6 @@ name|loudprintf
 value|if (bootverbose) printf
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tulip_if
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|tulip_if
-value|tulip_ac.ac_if
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|tulip_xname
-value|tulip_if.if_xname
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tulip_enaddr
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|tulip_enaddr
-value|tulip_ac.ac_enaddr
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -3327,9 +3593,11 @@ name|x
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|(".byte 0x0f, 0x31" : "=A" (x));
+asm|(".byte 0x0f, 0x31":"=A" (x));
 return|return
+operator|(
 name|x
+operator|)
 return|;
 block|}
 end_function
@@ -3377,9 +3645,11 @@ name|x
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|("rpcc %0" : "=r" (x));
+asm|("rpcc %0":"=r" (x));
 return|return
+operator|(
 name|x
+operator|)
 return|;
 block|}
 end_function
@@ -3454,7 +3724,7 @@ value|0xEDB88320UL
 end_define
 
 begin_comment
-comment|/* CRC-32 Poly -- Little Endian */
+comment|/* CRC-32 Poly -- Little 						 * Endian */
 end_comment
 
 begin_define
@@ -3494,7 +3764,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(_DEVAR_H) */
+comment|/* _DEVAR_H */
 end_comment
 
 end_unit
