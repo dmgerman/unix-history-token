@@ -123,6 +123,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<i386/include/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/card.h>
 end_include
 
