@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)outbound.c	3.4 (Berkeley) %G%"
+literal|"@(#)outbound.c	4.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
