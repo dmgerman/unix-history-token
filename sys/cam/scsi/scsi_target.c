@@ -1390,6 +1390,14 @@ name|cbfcnp
 operator|=
 name|targdone
 expr_stmt|;
+name|atio
+operator|->
+name|ccb_h
+operator|.
+name|ccb_flags
+operator|=
+name|TARG_CCB_NONE
+expr_stmt|;
 name|xpt_action
 argument_list|(
 operator|(
@@ -3301,6 +3309,11 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Invalid path specified for freeing target instance\n"
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|CAM_PATH_INVALID
@@ -4220,7 +4233,7 @@ name|func_code
 operator|==
 name|XPT_CONT_TARGET_IO
 condition|)
-name|TAILQ_INSERT_TAIL
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|softc
@@ -6301,6 +6314,14 @@ literal|0
 expr_stmt|;
 name|descr
 operator|->
+name|timeout
+operator|=
+literal|5
+operator|*
+literal|1000
+expr_stmt|;
+name|descr
+operator|->
 name|status
 operator|=
 name|SCSI_STATUS_CHECK_COND
@@ -6521,6 +6542,12 @@ name|istate
 operator|->
 name|sense_data
 expr_stmt|;
+name|descr
+operator|->
+name|status
+operator|=
+name|SCSI_STATUS_OK
+expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
 name|periph
@@ -6582,6 +6609,14 @@ operator|->
 name|data_increment
 operator|=
 literal|0
+expr_stmt|;
+name|descr
+operator|->
+name|timeout
+operator|=
+literal|5
+operator|*
+literal|1000
 expr_stmt|;
 name|descr
 operator|->
@@ -6805,12 +6840,6 @@ operator|=
 literal|5
 operator|*
 literal|1000
-expr_stmt|;
-name|descr
-operator|->
-name|status
-operator|=
-name|SCSI_STATUS_OK
 expr_stmt|;
 break|break;
 block|}
@@ -8468,11 +8497,6 @@ block|{
 case|case
 name|CAM_REQ_ABORTED
 case|:
-name|printf
-argument_list|(
-literal|"Request Aborted!\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9378,7 +9402,7 @@ name|initiator_id
 argument_list|,
 name|TARG_TAG_WILDCARD
 argument_list|,
-comment|/* errno */
+comment|/*errno*/
 literal|0
 argument_list|,
 comment|/*to_held_queue*/
@@ -9845,7 +9869,7 @@ argument_list|(
 operator|&
 name|softc
 operator|->
-name|work_queue
+name|pending_queue
 argument_list|,
 operator|&
 name|csio
