@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.82.2.1 1996/11/09 21:15:54 phk Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.82.2.2 1996/12/21 02:22:34 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -2040,10 +2040,10 @@ name|myaddr
 decl_stmt|;
 comment|/* 	**	timing parameters 	*/
 name|u_char
-name|ns_async
+name|ns_sync
 decl_stmt|;
 name|u_char
-name|ns_sync
+name|maxoffs
 decl_stmt|;
 name|u_char
 name|rv_scntl3
@@ -3137,7 +3137,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.82.2.1 1996/11/09 21:15:54 phk Exp $\n"
+literal|"\n$Id: ncr.c,v 1.82.2.2 1996/12/21 02:22:34 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -9002,12 +9002,12 @@ name|ns_sync
 operator|=
 literal|25
 expr_stmt|;
-comment|/* XXX no support for Fast-20, yet */
+comment|/* in units of 4ns */
 name|np
 operator|->
-name|ns_async
+name|maxoffs
 operator|=
-literal|50
+literal|8
 expr_stmt|;
 comment|/* 	**	Get the frequency of the chip's clock. 	**	Find the right value for scntl3. 	*/
 ifdef|#
@@ -9039,6 +9039,41 @@ comment|/* __NetBSD__ */
 case|case
 name|NCR_825_ID
 case|:
+block|{
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+name|u_char
+name|rev
+init|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+operator|&
+literal|0xff
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|rev
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x10
+condition|)
+name|np
+operator|->
+name|maxoffs
+operator|=
+literal|16
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
 name|np
 operator|->
 name|maxwide
@@ -9046,6 +9081,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|NCR_860_ID
 case|:
@@ -9065,6 +9101,12 @@ operator|->
 name|maxwide
 operator|=
 literal|1
+expr_stmt|;
+name|np
+operator|->
+name|maxoffs
+operator|=
+literal|16
 expr_stmt|;
 name|ncr_getclock
 argument_list|(
@@ -13405,7 +13447,9 @@ name|minsync
 operator|<
 literal|255
 condition|?
-literal|8
+name|np
+operator|->
+name|maxoffs
 else|:
 literal|0
 operator|)
@@ -13517,7 +13561,7 @@ name|period
 operator|=
 name|sxfer
 operator|&
-literal|0xf
+literal|0x1f
 condition|?
 operator|(
 operator|(
@@ -13560,9 +13604,45 @@ if|if
 condition|(
 name|sxfer
 operator|&
-literal|0x0f
+literal|0x1f
 condition|)
 block|{
+name|unsigned
+name|f10
+init|=
+literal|10000
+operator|<<
+operator|(
+name|tp
+operator|->
+name|widedone
+condition|?
+name|tp
+operator|->
+name|widedone
+operator|-
+literal|1
+else|:
+literal|0
+operator|)
+decl_stmt|;
+name|unsigned
+name|mb10
+init|=
+operator|(
+name|f10
+operator|+
+name|tp
+operator|->
+name|period
+operator|/
+literal|2
+operator|)
+operator|/
+name|tp
+operator|->
+name|period
+decl_stmt|;
 comment|/* 		**  Disable extended Sreq/Sack filtering 		*/
 if|if
 condition|(
@@ -13581,39 +13661,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%dns (%d Mb/sec) offset %d.\n"
+literal|"%d.%d MB/s (%d ns, offset %d)\n"
 argument_list|,
-name|tp
-operator|->
-name|period
-operator|<
-literal|200
-condition|?
-literal|"FAST SCSI-2 "
-else|:
-literal|""
-argument_list|,
-name|tp
-operator|->
-name|period
-argument_list|,
-operator|(
-literal|1000
-operator|+
-name|tp
-operator|->
-name|period
+name|mb10
 operator|/
-literal|2
-operator|)
-operator|/
+literal|10
+argument_list|,
+name|mb10
+operator|%
+literal|10
+argument_list|,
 name|tp
 operator|->
 name|period
 argument_list|,
 name|sxfer
 operator|&
-literal|0x0f
+literal|0x1f
 argument_list|)
 expr_stmt|;
 block|}
@@ -13824,13 +13888,13 @@ name|EWS
 condition|)
 name|printf
 argument_list|(
-literal|"WIDE SCSI (16 bit) enabled.\n"
+literal|"WIDE SCSI (16 bit) enabled"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"WIDE SCSI disabled.\n"
+literal|"WIDE SCSI disabled"
 argument_list|)
 expr_stmt|;
 comment|/* 	**	set actual value and sync_status 	*/
