@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.1 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1522,22 +1522,15 @@ block|{
 name|char
 name|c
 decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s? "
-argument_list|,
-name|question
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[yn] "
+literal|"%s? [yn] "
+argument_list|,
+name|question
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1575,11 +1568,11 @@ argument_list|(
 name|terminal
 argument_list|)
 condition|)
-name|done
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
 block|}
 do|while
 condition|(
