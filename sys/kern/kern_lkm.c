@@ -3274,6 +3274,17 @@ case|case
 name|LM_MISC
 case|:
 comment|/* ignore content -- no "misc-specific" procedure */
+if|if
+condition|(
+name|lkmexists
+argument_list|(
+name|lkmtp
+argument_list|)
+condition|)
+name|err
+operator|=
+name|EEXIST
+expr_stmt|;
 break|break;
 default|default:
 name|err
