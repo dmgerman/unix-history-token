@@ -126,7 +126,7 @@ block|{
 define|#
 directive|define
 name|szsigcode
-value|(*(curproc->p_sysent->sv_szsigcode), sizeof(char *))
+value|(*(curproc->p_sysent->sv_szsigcode))
 return|return
 call|(
 name|caddr_t
