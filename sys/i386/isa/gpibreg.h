@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 specifier|static
-name|short
+name|int
 name|gpib_port
 init|=
 literal|0x2c0
