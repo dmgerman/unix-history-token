@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.10 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.11 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -791,6 +791,14 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -810,9 +818,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|*
