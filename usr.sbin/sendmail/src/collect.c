@@ -104,6 +104,17 @@ name|FALSE
 else|:
 name|IgnrDot
 decl_stmt|;
+name|time_t
+name|dbto
+init|=
+name|smtpmode
+condition|?
+name|TimeOuts
+operator|.
+name|to_datablock
+else|:
+literal|0
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -227,9 +238,7 @@ expr_stmt|;
 comment|/* set global timer to monitor progress */
 name|sfgetset
 argument_list|(
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to read a UNIX-style From line 	*/
@@ -243,9 +252,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"initial message read"
 argument_list|)
@@ -312,9 +319,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message header read"
 argument_list|)
@@ -451,9 +456,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message header read"
 argument_list|)
@@ -717,9 +720,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message separator read"
 argument_list|)
@@ -879,9 +880,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message body read"
 argument_list|)
