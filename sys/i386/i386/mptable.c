@@ -168,7 +168,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Max number of I/O APIC's */
+comment|/* Max number of APIC's */
 end_comment
 
 begin_ifdef
@@ -3662,8 +3662,8 @@ operator|=
 literal|0
 init|;
 name|id
-operator|<=
-name|MAXCPU
+operator|<
+name|NAPICID
 condition|;
 name|id
 operator|++
