@@ -6367,7 +6367,9 @@ operator|->
 name|sk_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"sk mutex not initialized in sk_detach_xmac"
+operator|)
 argument_list|)
 expr_stmt|;
 name|SK_IF_LOCK
@@ -6514,7 +6516,9 @@ operator|->
 name|sk_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"sk mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|SK_LOCK
