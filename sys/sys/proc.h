@@ -608,7 +608,7 @@ name|int
 name|ke_flags
 decl_stmt|;
 comment|/* (j) KEF_* flags. */
-comment|/*u_int	ke_estcpu; */
+comment|/*u_int		ke_estcpu; */
 comment|/* (j) Time averaged val of cpticks. */
 name|int
 name|ke_cpticks
