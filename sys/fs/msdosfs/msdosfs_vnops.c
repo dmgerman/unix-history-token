@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.1 1994/09/19 15:41:46 dfr Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.2 1994/09/21 03:47:17 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -118,6 +118,18 @@ end_include
 begin_comment
 comment|/* defines dirent structure */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
 
 begin_include
 include|#
@@ -440,18 +452,6 @@ decl_stmt|;
 block|{
 name|int
 name|error
-decl_stmt|;
-name|struct
-name|denode
-modifier|*
-name|pdep
-init|=
-name|VTODE
-argument_list|(
-name|ap
-operator|->
-name|a_dvp
-argument_list|)
 decl_stmt|;
 switch|switch
 condition|(
@@ -1573,8 +1573,6 @@ condition|)
 return|return
 name|EISDIR
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|detrunc
@@ -1593,6 +1591,10 @@ name|ap
 operator|->
 name|a_p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1615,8 +1617,6 @@ name|de_flag
 operator||=
 name|DE_UPDATE
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|deupdat
@@ -1630,6 +1630,10 @@ name|va_mtime
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1687,8 +1691,6 @@ operator|!=
 name|VNOVAL
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -1702,6 +1704,10 @@ name|a_p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1785,9 +1791,6 @@ name|n
 decl_stmt|;
 name|long
 name|on
-decl_stmt|;
-name|daddr_t
-name|bn
 decl_stmt|;
 name|daddr_t
 name|lbn
@@ -2287,6 +2290,19 @@ name|ap
 operator|->
 name|a_cred
 decl_stmt|;
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|time
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -2646,8 +2662,6 @@ condition|(
 name|isadir
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|pcbmap
@@ -2661,6 +2675,10 @@ name|bn
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -2770,8 +2788,6 @@ operator|->
 name|b_lblkno
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|pcbmap
@@ -2789,6 +2805,10 @@ name|b_blkno
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|bp
 operator|->
@@ -2830,8 +2850,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * The block we need to write into exists, so read it in. 			 */
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -2849,6 +2867,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -3091,7 +3113,7 @@ argument_list|(
 name|dep
 argument_list|,
 operator|&
-name|time
+name|ts
 argument_list|,
 literal|1
 argument_list|)
@@ -3196,9 +3218,19 @@ name|a_waitfor
 operator|==
 name|MNT_WAIT
 decl_stmt|;
-name|int
-name|error
+name|struct
+name|timespec
+name|ts
 decl_stmt|;
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|time
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -3215,7 +3247,7 @@ name|vp
 argument_list|)
 argument_list|,
 operator|&
-name|time
+name|ts
 argument_list|,
 name|wait
 argument_list|)
@@ -3761,11 +3793,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3785,8 +3815,6 @@ argument_list|(
 literal|"msdosfs_rename(): lost to startdir"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|relookup
@@ -3802,12 +3830,14 @@ name|ap
 operator|->
 name|a_tcnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|tddep
 operator|=
 name|VTODE
@@ -3905,8 +3935,6 @@ name|tdep
 operator|->
 name|de_diroffset
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|removede
@@ -3915,12 +3943,14 @@ name|tddep
 argument_list|,
 name|tdep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|vput
 argument_list|(
 name|ap
@@ -3963,8 +3993,6 @@ name|a_fvp
 argument_list|)
 expr_stmt|;
 comment|/* ap->a_fdvp is already locked */
-if|if
-condition|(
 name|error
 operator|=
 name|readep
@@ -3987,6 +4015,10 @@ argument_list|,
 operator|&
 name|ep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -4011,14 +4043,16 @@ argument_list|,
 literal|11
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -4152,8 +4186,6 @@ operator|->
 name|a_fdvp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|readep
@@ -4176,6 +4208,10 @@ argument_list|,
 operator|&
 name|ep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -4205,14 +4241,16 @@ index|]
 operator|=
 name|SLOT_DELETED
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -4461,6 +4499,7 @@ block|}
 name|dosdirtemplate
 init|=
 block|{
+block|{
 literal|".       "
 block|,
 literal|"   "
@@ -4469,6 +4508,7 @@ comment|/* the . entry */
 name|ATTR_DIRECTORY
 block|,
 comment|/* file attribute */
+block|{
 literal|0
 block|,
 literal|0
@@ -4488,22 +4528,30 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 comment|/* resevered */
+block|{
 literal|210
 block|,
 literal|4
+block|}
 block|,
+block|{
 literal|210
 block|,
 literal|4
+block|}
 block|,
 comment|/* time and date */
+block|{
 literal|0
 block|,
 literal|0
+block|}
 block|,
 comment|/* startcluster */
+block|{
 literal|0
 block|,
 literal|0
@@ -4511,8 +4559,12 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 comment|/* filesize */
+block|}
+block|,
+block|{
 literal|"..      "
 block|,
 literal|"   "
@@ -4521,6 +4573,7 @@ comment|/* the .. entry */
 name|ATTR_DIRECTORY
 block|,
 comment|/* file attribute */
+block|{
 literal|0
 block|,
 literal|0
@@ -4540,22 +4593,30 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 comment|/* resevered */
+block|{
 literal|210
 block|,
 literal|4
+block|}
 block|,
+block|{
 literal|210
 block|,
 literal|4
+block|}
 block|,
 comment|/* time and date */
+block|{
 literal|0
 block|,
 literal|0
+block|}
 block|,
 comment|/* startcluster */
+block|{
 literal|0
 block|,
 literal|0
@@ -4563,8 +4624,10 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
 comment|/* filesize */
+block|}
 block|}
 struct|;
 end_struct
@@ -4687,8 +4750,6 @@ operator|->
 name|de_pmp
 expr_stmt|;
 comment|/* 	 * Allocate a cluster to hold the about to be created directory. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|clusteralloc
@@ -4706,6 +4767,10 @@ name|newcluster
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|free
@@ -4875,14 +4940,16 @@ argument_list|,
 name|dTime
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|clusterfree
@@ -5165,8 +5232,6 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Delete the entry from the directory.  For dos filesystems this 	 * gets rid of the directory entry on disk, the in memory copy 	 * still exists but the de_refcnt is<= 0.  This prevents it from 	 * being found by deget().  When the vput() on dep is done we give 	 * up access and eventually msdosfs_reclaim() will be called which 	 * will remove it from the denode cache. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|removede
@@ -5175,6 +5240,10 @@ name|ddep
 argument_list|,
 name|dep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -5214,6 +5283,10 @@ operator|)
 literal|0
 argument_list|,
 name|IO_SYNC
+argument_list|,
+name|NOCRED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cache_purge
@@ -5270,18 +5343,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|struct
-name|denode
-modifier|*
-name|pdep
-init|=
-name|VTODE
-argument_list|(
-name|ap
-operator|->
-name|a_dvp
-argument_list|)
-decl_stmt|;
 name|free
 argument_list|(
 name|ap
@@ -5485,11 +5546,6 @@ literal|512
 index|]
 decl_stmt|;
 comment|/* holds converted dos directories */
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|uio
 modifier|*
@@ -6749,15 +6805,6 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
-name|struct
-name|msdosfsmount
-modifier|*
-name|pmp
-init|=
-name|dep
-operator|->
-name|de_pmp
-decl_stmt|;
 if|if
 condition|(
 name|ap
@@ -6877,15 +6924,6 @@ name|b_vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|msdosfsmount
-modifier|*
-name|pmp
-init|=
-name|dep
-operator|->
-name|de_pmp
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -6930,8 +6968,6 @@ operator|->
 name|b_lblkno
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|pcbmap
@@ -6949,6 +6985,10 @@ name|b_blkno
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|bp
 operator|->
@@ -7058,7 +7098,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_MSDOSFS, startcluster %d, dircluster %d, diroffset %d "
+literal|"tag VT_MSDOSFS, startcluster %d, dircluster %ld, diroffset %ld "
 argument_list|,
 name|dep
 operator|->
@@ -7113,6 +7153,9 @@ name|printf
 argument_list|(
 literal|"    owner pid %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dep
 operator|->
 name|de_lockholder
@@ -7128,6 +7171,9 @@ name|printf
 argument_list|(
 literal|" waiting pid %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dep
 operator|->
 name|de_lockwaiter

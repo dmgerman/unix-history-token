@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_fat.c,v 1.1 1994/09/19 15:41:43 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -188,44 +188,6 @@ name|cn
 parameter_list|)
 value|(FAT12(pmp) ? (cn) * 3 / 2 : (cn) * 2)
 end_define
-
-begin_function_decl
-name|void
-name|fc_lookup
-parameter_list|(
-name|struct
-name|denode
-modifier|*
-name|dep
-parameter_list|,
-name|u_long
-name|findcn
-parameter_list|,
-name|u_long
-modifier|*
-name|frcnp
-parameter_list|,
-name|u_long
-modifier|*
-name|fsrcnp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|fc_purge
-parameter_list|(
-name|struct
-name|denode
-modifier|*
-name|dep
-parameter_list|,
-name|u_int
-name|frcn
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -1509,8 +1471,6 @@ operator|&
 name|bo
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -1528,6 +1488,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1841,8 +1805,6 @@ operator|&
 name|bo
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -1860,6 +1822,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -2149,8 +2115,6 @@ operator|>=
 name|count
 condition|)
 break|break;
-if|if
-condition|(
 name|map
 operator|=
 name|pmp
@@ -2159,6 +2123,10 @@ name|pm_inusemap
 index|[
 name|idx
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|map
 condition|)
 block|{
 name|len
@@ -2352,9 +2320,6 @@ modifier|*
 name|got
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|;
 name|u_long
 name|idx
 decl_stmt|;
@@ -2914,8 +2879,6 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -2933,6 +2896,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -3503,8 +3470,6 @@ name|fc_fsrcn
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|clusteralloc
@@ -3523,6 +3488,10 @@ argument_list|,
 operator|&
 name|got
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error

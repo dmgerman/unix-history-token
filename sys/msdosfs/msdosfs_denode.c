@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_denode.c,v 1.1 1994/09/19 15:41:41 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -60,12 +60,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_comment
 comment|/* defines "time" */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
 
 begin_include
 include|#
@@ -338,12 +350,14 @@ name|de_diroffset
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
 name|deq
 operator|=
 operator|*
 name|depp
+expr_stmt|;
+if|if
+condition|(
+name|deq
 condition|)
 name|deq
 operator|->
@@ -431,13 +445,15 @@ name|denode
 modifier|*
 name|deq
 decl_stmt|;
-if|if
-condition|(
 name|deq
 operator|=
 name|dep
 operator|->
 name|de_next
+expr_stmt|;
+if|if
+condition|(
+name|deq
 condition|)
 name|deq
 operator|->
@@ -622,8 +638,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * See if the denode is in the denode cache. Use the location of 	 * the directory entry to compute the hash value. For subdir use 	 * address of "." entry. for root dir use cluster MSDOSFSROOT, 	 * offset MSDOSFSROOT_OFS 	 *  	 * NOTE: The check for de_refcnt> 0 below insures the denode being 	 * examined does not represent an unlinked but still open file. 	 * These files are not to be accessible even when the directory 	 * entry that represented the file happens to be reused while the 	 * deleted file is still open. 	 */
-if|if
-condition|(
 name|ldep
 operator|=
 name|msdosfs_hashget
@@ -634,6 +648,10 @@ name|dirclust
 argument_list|,
 name|diroffset
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ldep
 condition|)
 block|{
 operator|*
@@ -647,8 +665,6 @@ return|;
 block|}
 comment|/* 	 * Directory entry was not in cache, have to create a vnode and 	 * copy it from the passed disk buffer. 	 */
 comment|/* getnewvnode() does a VREF() on the vnode */
-if|if
-condition|(
 name|error
 operator|=
 name|getnewvnode
@@ -662,6 +678,10 @@ argument_list|,
 operator|&
 name|nvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 operator|*
@@ -1044,12 +1064,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|daddr_t
-name|bn
-decl_stmt|;
-name|int
-name|diro
-decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -1059,15 +1073,6 @@ name|struct
 name|direntry
 modifier|*
 name|dirp
-decl_stmt|;
-name|struct
-name|msdosfsmount
-modifier|*
-name|pmp
-init|=
-name|dep
-operator|->
-name|de_pmp
 decl_stmt|;
 name|struct
 name|timespec
@@ -1132,8 +1137,6 @@ return|return
 literal|0
 return|;
 comment|/* 	 * Read in the cluster containing the directory entry we want to 	 * update. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|readde
@@ -1146,6 +1149,10 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1304,6 +1311,10 @@ name|dep
 operator|->
 name|de_pmp
 decl_stmt|;
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -1337,7 +1348,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"detrunc(): can't truncate root directory, clust %d, offset %d\n"
+literal|"detrunc(): can't truncate root directory, clust %ld, offset %ld\n"
 argument_list|,
 name|dep
 operator|->
@@ -1408,8 +1419,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|pcbmap
@@ -1430,6 +1439,10 @@ argument_list|,
 operator|&
 name|eofentry
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 ifdef|#
@@ -1660,6 +1673,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|time
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 name|allerror
 operator|=
 name|deupdat
@@ -1667,7 +1689,7 @@ argument_list|(
 name|dep
 argument_list|,
 operator|&
-name|time
+name|ts
 argument_list|,
 literal|1
 argument_list|)
@@ -1821,6 +1843,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
 comment|/* 	 * The root of a DOS filesystem cannot be extended. 	 */
 if|if
 condition|(
@@ -1846,8 +1872,6 @@ operator|&
 name|ATTR_DIRECTORY
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -1856,6 +1880,10 @@ name|cred
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1911,8 +1939,6 @@ condition|)
 return|return
 name|ENOSPC
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|extendfile
@@ -1927,6 +1953,10 @@ name|NULL
 argument_list|,
 name|DE_CLEAR
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 comment|/* truncate the added clusters away again */
@@ -1965,13 +1995,22 @@ name|de_FileSize
 operator|=
 name|length
 expr_stmt|;
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|time
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 return|return
 name|deupdat
 argument_list|(
 name|dep
 argument_list|,
 operator|&
-name|time
+name|ts
 argument_list|,
 literal|1
 argument_list|)
@@ -1995,11 +2034,6 @@ modifier|*
 name|dep
 decl_stmt|;
 block|{
-name|union
-name|dehead
-modifier|*
-name|deh
-decl_stmt|;
 comment|/* 	 * Fix up the denode cache.  If the denode is for a directory, 	 * there is nothing to do since the hash is based on the starting 	 * cluster of the directory file and that hasn't changed.  If for a 	 * file the hash is based on the location of the directory entry, 	 * so we must remove it from the cache and re-enter it with the 	 * hash based on the new location of the directory entry. 	 */
 if|if
 condition|(
@@ -2062,9 +2096,6 @@ name|VTODE
 argument_list|(
 name|vp
 argument_list|)
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 specifier|extern
 name|int
@@ -2205,6 +2236,10 @@ decl_stmt|;
 specifier|extern
 name|int
 name|prtactive
+decl_stmt|;
+name|struct
+name|timespec
+name|ts
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2361,12 +2396,21 @@ operator|=
 name|SLOT_DELETED
 expr_stmt|;
 block|}
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|time
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 name|DE_UPDAT
 argument_list|(
 name|dep
 argument_list|,
 operator|&
-name|time
+name|ts
 argument_list|,
 literal|0
 argument_list|)

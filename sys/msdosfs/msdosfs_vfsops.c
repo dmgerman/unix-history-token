@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.2 1994/09/19 19:24:44 dfr Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.3 1994/09/21 03:47:16 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -216,8 +216,6 @@ name|vattr
 name|va
 decl_stmt|;
 comment|/* 	 * Copy in the args for the mount request. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -236,6 +234,10 @@ expr|struct
 name|msdosfs_args
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -926,14 +928,16 @@ modifier|*
 name|b50
 decl_stmt|;
 comment|/* 	 * Multiple mounts of the same block special file aren't allowed. 	 * Make sure no one else has the special file open.  And flush any 	 * old buffers from this filesystem.  Presumably this prevents us 	 * from running into buffers that are the wrong blocksize. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|vfs_mountedon
 argument_list|(
 name|devvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -950,8 +954,6 @@ condition|)
 return|return
 name|EBUSY
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|vinvalbuf
@@ -970,13 +972,15 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
 return|;
 comment|/* 	 * Now open the block special file. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_OPEN
@@ -995,6 +999,10 @@ name|FSCRED
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1031,8 +1039,6 @@ block|{ 	}
 endif|#
 directive|endif
 comment|/* 	 * Read the boot sector of the filesystem, and then check the boot 	 * signature.  If not a dos boot sector then error out.  We could 	 * also add some checking on the bsOemName field.  So far I've seen 	 * the following values: "IBM  3.3" "MSDOS3.3" "MSDOS5.0" 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -1048,6 +1054,10 @@ argument_list|,
 operator|&
 name|bp0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|error_exit
@@ -1997,15 +2007,6 @@ name|mp
 operator|->
 name|mnt_data
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|pmp
-operator|->
-name|pm_devvp
-decl_stmt|;
 comment|/* only the mounter, or superuser can unmount */
 if|if
 condition|(
@@ -2065,8 +2066,6 @@ directive|ifdef
 name|QUOTA
 endif|#
 directive|endif
-if|if
-condition|(
 name|error
 operator|=
 name|vflush
@@ -2077,6 +2076,10 @@ name|NULLVP
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -2423,6 +2426,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|QUOTA
+return|return
+name|EOPNOTSUPP
+return|;
 else|#
 directive|else
 return|return
@@ -2783,8 +2789,6 @@ comment|/* not there anymore?	 */
 goto|goto
 name|loop
 goto|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_FSYNC
@@ -2797,6 +2801,10 @@ name|waitfor
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|allerror
 operator|=
@@ -2810,8 +2818,6 @@ expr_stmt|;
 comment|/* done with this one	 */
 block|}
 comment|/* 	 * Flush filesystem control info. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_FSYNC
@@ -2826,6 +2832,10 @@ name|waitfor
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|allerror
 operator|=

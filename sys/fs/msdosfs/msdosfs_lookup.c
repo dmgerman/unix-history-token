@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.1 1994/09/19 15:41:44 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -312,8 +318,6 @@ return|return
 name|ENOTDIR
 return|;
 comment|/* 	 * See if the component of the pathname we are looking for is in 	 * the directory cache.  If so then do a few things and return. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|cache_lookup
@@ -324,6 +328,10 @@ name|vpp
 argument_list|,
 name|cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|int
@@ -511,14 +519,16 @@ name|pdp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -711,8 +721,6 @@ name|frcn
 operator|++
 control|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|pcbmap
@@ -727,6 +735,10 @@ argument_list|,
 operator|&
 name|cluster
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 if|if
@@ -740,8 +752,6 @@ return|return
 name|error
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -761,6 +771,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1612,9 +1626,6 @@ name|depp
 decl_stmt|;
 block|{
 name|int
-name|bn
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|u_long
@@ -1671,8 +1682,6 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|extendfile
@@ -1689,6 +1698,10 @@ name|dirclust
 argument_list|,
 name|DE_CLEAR
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1805,14 +1818,16 @@ return|return
 name|error
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -2290,10 +2305,6 @@ name|daddr_t
 name|scn
 decl_stmt|;
 name|struct
-name|denode
-name|dummy
-decl_stmt|;
-name|struct
 name|msdosfsmount
 modifier|*
 name|pmp
@@ -2673,8 +2684,6 @@ argument_list|,
 name|dirofs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -2693,6 +2702,10 @@ name|NOCRED
 argument_list|,
 name|bpp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 operator|*

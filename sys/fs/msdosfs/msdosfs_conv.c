@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_conv.c,v 1.1 1994/09/19 15:41:40 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -31,6 +31,16 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_comment
+comment|/* defines tz */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_comment
@@ -606,7 +616,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dos2unixtime(): month value out of range (%d)\n"
+literal|"dos2unixtime(): month value out of range (%ld)\n"
 argument_list|,
 name|month
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfsmount.h,v 1.1 1994/09/19 15:41:48 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -595,6 +595,31 @@ name|msdosfs_init
 name|__P
 argument_list|(
 operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mountmsdosfs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|devvp
+operator|,
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
