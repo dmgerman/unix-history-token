@@ -352,7 +352,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OFF_T_MAX
+name|OFF_MAX
 value|LLONG_MAX
 end_define
 
@@ -363,7 +363,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OFF_T_MIN
+name|OFF_MIN
 value|LLONG_MIN
 end_define
 
