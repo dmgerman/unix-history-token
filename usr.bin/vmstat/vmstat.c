@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.21 1997/10/10 18:19:48 phk Exp $"
+literal|"$Id: vmstat.c,v 1.22 1997/12/05 19:28:28 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2917,11 +2917,35 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%9u copy-on-write optimized faults\n"
+argument_list|,
+name|sum
+operator|.
+name|v_cow_optim
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
 literal|"%9u zero fill pages zeroed\n"
 argument_list|,
 name|sum
 operator|.
 name|v_zfod
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u zero fill pages prezeroed\n"
+argument_list|,
+name|sum
+operator|.
+name|v_ozfod
 argument_list|)
 expr_stmt|;
 operator|(
