@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sum1.c	5.1 (Berkeley) %G%"
+literal|"@(#)sum1.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,30 +40,28 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_expr_stmt
+begin_function
+name|int
 name|csum1
-argument_list|(
+parameter_list|(
 name|fd
-argument_list|,
+parameter_list|,
 name|cval
-argument_list|,
+parameter_list|,
 name|clen
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|fd
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|u_long
 modifier|*
 name|cval
 decl_stmt|,
-modifier|*
+decl|*
 name|clen
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
