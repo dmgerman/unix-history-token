@@ -384,11 +384,43 @@ index|[]
 init|=
 block|{
 block|{
+literal|0x41445303
+block|,
+literal|0
+block|,
+literal|"Analog Devices AD1819"
+block|}
+block|,
+block|{
+literal|0x41445340
+block|,
+literal|0
+block|,
+literal|"Analog Devices AD1881"
+block|}
+block|,
+block|{
+literal|0x41445348
+block|,
+literal|0
+block|,
+literal|"Analog Devices AD1881A"
+block|}
+block|,
+block|{
+literal|0x41445360
+block|,
+literal|0
+block|,
+literal|"Analog Devices AD1885"
+block|}
+block|,
+block|{
 literal|0x414b4d00
 block|,
 literal|1
 block|,
-literal|"Asahi Kasei AK4540 rev 0"
+literal|"Asahi Kasei AK4540"
 block|}
 block|,
 block|{
@@ -396,7 +428,23 @@ literal|0x414b4d01
 block|,
 literal|1
 block|,
-literal|"Asahi Kasei AK4540 rev 1"
+literal|"Asahi Kasei AK4542"
+block|}
+block|,
+block|{
+literal|0x414b4d02
+block|,
+literal|1
+block|,
+literal|"Asahi Kasei AK4543"
+block|}
+block|,
+block|{
+literal|0x414c4710
+block|,
+literal|0
+block|,
+literal|"Avance Logic ALC200/200P"
 block|}
 block|,
 block|{
@@ -408,11 +456,123 @@ literal|"Cirrus Logic CS4297"
 block|}
 block|,
 block|{
+literal|0x43525903
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4297"
+block|}
+block|,
+block|{
+literal|0x43525913
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4297A"
+block|}
+block|,
+block|{
+literal|0x43525914
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4297B"
+block|}
+block|,
+block|{
+literal|0x43525923
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4294C"
+block|}
+block|,
+block|{
+literal|0x4352592b
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4298C"
+block|}
+block|,
+block|{
+literal|0x43525931
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4299A"
+block|}
+block|,
+block|{
+literal|0x43525933
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4299C"
+block|}
+block|,
+block|{
+literal|0x43525934
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4299D"
+block|}
+block|,
+block|{
+literal|0x43525941
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4201A"
+block|}
+block|,
+block|{
+literal|0x43525951
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4205A"
+block|}
+block|,
+block|{
+literal|0x43525961
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4291A"
+block|}
+block|,
+block|{
+literal|0x45838308
+block|,
+literal|0
+block|,
+literal|"ESS Technology ES1921"
+block|}
+block|,
+block|{
+literal|0x49434511
+block|,
+literal|0
+block|,
+literal|"ICEnsemble ICE1232"
+block|}
+block|,
+block|{
+literal|0x4e534331
+block|,
+literal|0
+block|,
+literal|"National Semiconductor LM4549"
+block|}
+block|,
+block|{
 literal|0x83847600
 block|,
 literal|0
 block|,
-literal|"SigmaTel STAC????"
+literal|"SigmaTel STAC9700/9783/9784"
 block|}
 block|,
 block|{
@@ -420,7 +580,7 @@ literal|0x83847604
 block|,
 literal|0
 block|,
-literal|"SigmaTel STAC9701/3/4/5"
+literal|"SigmaTel STAC9701/9703/9704/9705"
 block|}
 block|,
 block|{
@@ -436,7 +596,7 @@ literal|0x83847608
 block|,
 literal|0
 block|,
-literal|"SigmaTel STAC9708"
+literal|"SigmaTel STAC9708/9711"
 block|}
 block|,
 block|{
@@ -444,7 +604,95 @@ literal|0x83847609
 block|,
 literal|0
 block|,
-literal|"SigmaTel STAC9721"
+literal|"SigmaTel STAC9721/9723"
+block|}
+block|,
+block|{
+literal|0x83847644
+block|,
+literal|0
+block|,
+literal|"SigmaTel STAC9744"
+block|}
+block|,
+block|{
+literal|0x83847656
+block|,
+literal|0
+block|,
+literal|"SigmaTel STAC9756/9757"
+block|}
+block|,
+block|{
+literal|0x53494c22
+block|,
+literal|0
+block|,
+literal|"Silicon Laboratory Si3036"
+block|}
+block|,
+block|{
+literal|0x53494c23
+block|,
+literal|0
+block|,
+literal|"Silicon Laboratory Si3038"
+block|}
+block|,
+block|{
+literal|0x54524103
+block|,
+literal|0
+block|,
+literal|"TriTech TR?????"
+block|}
+block|,
+block|{
+literal|0x54524106
+block|,
+literal|0
+block|,
+literal|"TriTech TR28026"
+block|}
+block|,
+block|{
+literal|0x54524108
+block|,
+literal|0
+block|,
+literal|"TriTech TR28028"
+block|}
+block|,
+block|{
+literal|0x54524123
+block|,
+literal|0
+block|,
+literal|"TriTech TR28602"
+block|}
+block|,
+block|{
+literal|0x574d4c00
+block|,
+literal|0
+block|,
+literal|"Wolfson WM9701A"
+block|}
+block|,
+block|{
+literal|0x574d4c03
+block|,
+literal|0
+block|,
+literal|"Wolfson WM9703/9704"
+block|}
+block|,
+block|{
+literal|0x574d4c04
+block|,
+literal|0
+block|,
+literal|"Wolfson WM9704 (quad)"
 block|}
 block|,
 block|{
