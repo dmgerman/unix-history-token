@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.70	83/06/01	*/
+comment|/*	conf.c	4.71	83/06/24	*/
 end_comment
 
 begin_include
@@ -1351,9 +1351,6 @@ decl_stmt|,
 name|rlstrategy
 argument_list|()
 decl_stmt|,
-name|rlclose
-argument_list|()
-decl_stmt|,
 name|rlread
 argument_list|()
 decl_stmt|,
@@ -1365,9 +1362,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|rlreset
-argument_list|()
-decl_stmt|,
-name|rlioctl
 argument_list|()
 decl_stmt|,
 name|rldump
@@ -1400,13 +1394,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|rlclose
-value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
 name|rlread
 value|nodev
 end_define
@@ -1423,13 +1410,6 @@ define|#
 directive|define
 name|rlreset
 value|nulldev
-end_define
-
-begin_define
-define|#
-directive|define
-name|rlioctl
-value|nodev
 end_define
 
 begin_define
@@ -1684,7 +1664,7 @@ block|,
 block|{
 name|rlopen
 block|,
-name|rlclose
+name|nodev
 block|,
 name|rlstrategy
 block|,
@@ -3923,14 +3903,14 @@ name|nodev
 block|,
 name|rlopen
 block|,
-name|rlclose
+name|nodev
 block|,
 name|rlread
 block|,
 name|rlwrite
 block|,
 comment|/* 32 */
-name|rlioctl
+name|nodev
 block|,
 name|nodev
 block|,
