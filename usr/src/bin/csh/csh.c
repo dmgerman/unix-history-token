@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.36 (Berkeley) %G%"
+literal|"@(#)csh.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -861,6 +861,7 @@ comment|/*      * Move the descriptors to safe places. The variable didfds is 0 
 name|initdesc
 argument_list|()
 expr_stmt|;
+comment|/*      * XXX: This is to keep programs that use stdio happy.      *	    what we really want is freunopen() ....      *	    Closing cshin cshout and csherr (which are really stdin stdout      *	    and stderr at this point and then reopening them in the same order      *	    gives us again stdin == cshin stdout == cshout and stderr == csherr.      *	    If that was not the case builtins like printf that use stdio      *	    would break. But in any case we could fix that with memcpy and      *	    a bit of pointer manipulation...      *	    Fortunately this is not needed under the current implementation      *	    of stdio.      */
 operator|(
 name|void
 operator|)
@@ -3760,7 +3761,7 @@ block|{
 name|rechist
 argument_list|()
 expr_stmt|;
-name|xexit
+name|_exit
 argument_list|(
 name|sig
 argument_list|)
