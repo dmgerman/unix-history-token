@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.11 (Berkeley) %G%"
+literal|"@(#)ld.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,14 +1316,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* add default search directories */
-name|dirs
-index|[
-name|ndir
-operator|++
-index|]
-operator|=
-name|_PATH_LIB
-expr_stmt|;
 name|dirs
 index|[
 name|ndir
