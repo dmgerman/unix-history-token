@@ -7641,7 +7641,22 @@ name|ic_type
 decl_stmt|,
 name|part_id
 decl_stmt|;
-comment|/* First, reset the floppy controller. */
+comment|/* 	 * A status value of 0xff is very unlikely, but not theoretically 	 * impossible, but it is far more likely to indicate an empty bus. 	 */
+if|if
+condition|(
+name|fdsts_rd
+argument_list|(
+name|fdc
+argument_list|)
+operator|==
+literal|0xff
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* 	 * Assert a reset to the floppy controller and check that the status 	 * register goes to zero. 	 */
 name|fdout_wr
 argument_list|(
 name|fdc
@@ -7649,11 +7664,28 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|fdout_wr
 argument_list|(
-literal|100
+name|fdc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdsts_rd
+argument_list|(
+name|fdc
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* 	 * Clear the reset and see it come ready. 	 */
 name|fdout_wr
 argument_list|(
 name|fdc
@@ -7661,6 +7693,25 @@ argument_list|,
 name|FDO_FRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fdsts_rd
+argument_list|(
+name|fdc
+argument_list|)
+operator|!=
+literal|0x80
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Then, see if it can handle a command. */
 if|if
 condition|(
@@ -7727,8 +7778,10 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"ic_type %02x part_id %02x\n"
 argument_list|,
 name|ic_type
