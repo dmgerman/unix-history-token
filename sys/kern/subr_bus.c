@@ -447,6 +447,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BUS_SC
+argument_list|,
+literal|"bus-sc"
+argument_list|,
+literal|"Bus data structures, softc"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5715,7 +5728,7 @@ name|dev
 operator|->
 name|softc
 argument_list|,
-name|M_BUS
+name|M_BUS_SC
 argument_list|)
 expr_stmt|;
 name|dev
@@ -6260,7 +6273,7 @@ name|dev
 operator|->
 name|softc
 argument_list|,
-name|M_BUS
+name|M_BUS_SC
 argument_list|)
 expr_stmt|;
 name|dev
@@ -6332,7 +6345,7 @@ name|driver
 operator|->
 name|size
 argument_list|,
-name|M_BUS
+name|M_BUS_SC
 argument_list|,
 name|M_NOWAIT
 operator||
