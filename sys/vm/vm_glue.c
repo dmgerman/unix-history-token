@@ -1753,7 +1753,6 @@ block|{
 case|case
 name|SRUN
 case|:
-comment|/* 			if (p->p_pri< PUSER) 				continue; */
 if|if
 condition|(
 operator|(
@@ -1789,7 +1788,15 @@ case|:
 case|case
 name|SSTOP
 case|:
-comment|/* 			if (p->p_pri<= PRIBIO) 				continue; */
+if|if
+condition|(
+name|p
+operator|->
+name|p_pri
+operator|<=
+name|PVM
+condition|)
+continue|continue;
 if|if
 condition|(
 name|p
