@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	6.1	83/07/29	*/
+comment|/*	socket.h	6.2	84/08/29	*/
 end_comment
 
 begin_comment
@@ -125,8 +125,15 @@ begin_comment
 comment|/* just use interface addresses */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_BROADCAST
+value|0x20
+end_define
+
 begin_comment
-comment|/* 0x20 was SO_NEWFDONCONN */
+comment|/* permit sending of broadcast msgs */
 end_comment
 
 begin_define
@@ -151,16 +158,58 @@ begin_comment
 comment|/* linger on close if data present */
 end_comment
 
+begin_comment
+comment|/*  * Pseudo flags for disabling options.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_DONTDEBUG
+value|(~SO_DEBUG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_DONTREUSEADDR
+value|(~SO_REUSEADDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_DONTKEEPALIVE
+value|(~SO_KEEPALIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_ROUTE
+value|(~SO_DONTROUTE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_DONTBROADCAST
+value|(~SO_BROADCAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SO_DONTUSELOOPBACK
+value|(~SO_LOOPBACK)
+end_define
+
 begin_define
 define|#
 directive|define
 name|SO_DONTLINGER
 value|(~SO_LINGER)
 end_define
-
-begin_comment
-comment|/* ~SO_LINGER */
-end_comment
 
 begin_comment
 comment|/*  * Address families.  */
