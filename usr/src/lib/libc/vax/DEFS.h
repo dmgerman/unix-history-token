@@ -1,7 +1,91 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DEFS.h 4.2 83/06/27 */
+comment|/*	DEFS.h	4.3	84/11/01	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R0
+value|0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|R1
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
+name|R2
+value|0x004
+end_define
+
+begin_define
+define|#
+directive|define
+name|R3
+value|0x008
+end_define
+
+begin_define
+define|#
+directive|define
+name|R4
+value|0x010
+end_define
+
+begin_define
+define|#
+directive|define
+name|R5
+value|0x020
+end_define
+
+begin_define
+define|#
+directive|define
+name|R6
+value|0x040
+end_define
+
+begin_define
+define|#
+directive|define
+name|R7
+value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|R9
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|R10
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|R11
+value|0x800
+end_define
 
 begin_ifdef
 ifdef|#
@@ -15,12 +99,15 @@ directive|define
 name|ENTRY
 parameter_list|(
 name|x
+parameter_list|,
+name|regs
 parameter_list|)
+define|\
 value|.globl _
 comment|/**/
 value|x; .align 2; _
 comment|/**/
-value|x: .word 0; \ 			.data; 1:; .long 0; .text; moval 1b,r0; jsb mcount
+value|x: .word regs; \ 	.data; 1:; .long 0; .text; moval 1b,r0; jsb mcount
 end_define
 
 begin_define
@@ -29,8 +116,11 @@ directive|define
 name|ASENTRY
 parameter_list|(
 name|x
+parameter_list|,
+name|regs
 parameter_list|)
-value|.globl x; .align 2; x: .word 0; \ 			.data; 1:; .long 0; .text; moval 1b,r0; jsb mcount
+define|\
+value|.globl x; .align 2; x: .word regs; \ 	.data; 1:; .long 0; .text; moval 1b,r0; jsb mcount
 end_define
 
 begin_else
@@ -44,12 +134,15 @@ directive|define
 name|ENTRY
 parameter_list|(
 name|x
+parameter_list|,
+name|regs
 parameter_list|)
+define|\
 value|.globl _
 comment|/**/
 value|x; .align 2; _
 comment|/**/
-value|x: .word 0
+value|x: .word regs
 end_define
 
 begin_define
@@ -58,8 +151,11 @@ directive|define
 name|ASENTRY
 parameter_list|(
 name|x
+parameter_list|,
+name|regs
 parameter_list|)
-value|.globl x; .align 2; x: .word 0
+define|\
+value|.globl x; .align 2; x: .word regs
 end_define
 
 begin_endif
