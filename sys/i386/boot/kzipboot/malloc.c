@@ -24,19 +24,9 @@ modifier|*
 name|malloc
 parameter_list|(
 name|nbytes
-parameter_list|,
-name|junk1
-parameter_list|,
-name|junk2
 parameter_list|)
-comment|/* junk? not used */
 name|size_t
 name|nbytes
-decl_stmt|;
-name|int
-name|junk1
-decl_stmt|,
-name|junk2
 decl_stmt|;
 block|{
 name|unsigned
@@ -94,16 +84,10 @@ name|void
 name|free
 parameter_list|(
 name|cp
-parameter_list|,
-name|junk
 parameter_list|)
-comment|/* junk not used */
 name|void
 modifier|*
 name|cp
-decl_stmt|;
-name|int
-name|junk
 decl_stmt|;
 block|{ }
 end_function
