@@ -738,15 +738,15 @@ literal|"NEC DOS"
 block|}
 block|,
 block|{
-literal|0x3C
-block|,
-literal|"PartitionMagic recovery"
-block|}
-block|,
-block|{
 literal|0x39
 block|,
 literal|"plan9"
+block|}
+block|,
+block|{
+literal|0x3C
+block|,
+literal|"PartitionMagic recovery"
 block|}
 block|,
 block|{
