@@ -3525,7 +3525,7 @@ end_comment
 
 begin_function
 name|void
-name|thread_siginfo
+name|cpu_thread_siginfo
 parameter_list|(
 name|int
 name|sig
