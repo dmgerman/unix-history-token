@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: trap.c,v 1.2 1998/06/10 20:12:22 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_simos.h"
 end_include
 
 begin_include
@@ -978,6 +984,15 @@ operator|||
 name|a0
 operator|==
 name|ALPHA_IF_CODE_BPT
+ifdef|#
+directive|ifdef
+name|SIMOS
+operator|||
+name|a0
+operator|==
+name|ALPHA_IF_CODE_GENTRAP
+endif|#
+directive|endif
 condition|)
 block|{
 if|if
