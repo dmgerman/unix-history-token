@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	4.4	90/02/21	*/
+comment|/*	config.h	4.5	90/11/16	*/
 end_comment
 
 begin_ifndef
@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|TREESZ
-value|1000
+value|2000
 end_define
 
 begin_comment
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|BCSZ
-value|100
+value|200
 end_define
 
 begin_comment
@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|SYMTSZ
-value|4000
+value|8000
 end_define
 
 begin_comment
@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|DIMTABSZ
-value|5000
+value|10000
 end_define
 
 begin_comment
@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|PARAMSZ
-value|300
+value|600
 end_define
 
 begin_comment
@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|SWITSZ
-value|500
+value|1000
 end_define
 
 begin_comment
@@ -185,11 +185,11 @@ begin_define
 define|#
 directive|define
 name|MAXSCOPES
-value|(SYMTSZ/30)
+value|200
 end_define
 
 begin_comment
-comment|/* maximum active scopes */
+comment|/* maximum active scopes ('{' depth) */
 end_comment
 
 begin_comment
