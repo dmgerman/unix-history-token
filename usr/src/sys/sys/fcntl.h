@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -657,14 +657,6 @@ begin_struct
 struct|struct
 name|flock
 block|{
-name|short
-name|l_type
-decl_stmt|;
-comment|/* lock type: read/write, etc. */
-name|short
-name|l_whence
-decl_stmt|;
-comment|/* type of l_start */
 name|off_t
 name|l_start
 decl_stmt|;
@@ -677,6 +669,14 @@ name|pid_t
 name|l_pid
 decl_stmt|;
 comment|/* lock owner */
+name|short
+name|l_type
+decl_stmt|;
+comment|/* lock type: read/write, etc. */
+name|short
+name|l_whence
+decl_stmt|;
+comment|/* type of l_start */
 block|}
 struct|;
 end_struct
