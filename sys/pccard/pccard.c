@@ -1180,7 +1180,7 @@ name|imask
 operator|)
 argument_list|,
 operator|(
-name|i
+literal|1
 operator|<<
 name|sp
 operator|->
