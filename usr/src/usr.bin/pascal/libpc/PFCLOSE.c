@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PFCLOSE.c	1.2	(Berkeley)	%G%"
+literal|"@(#)PFCLOSE.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,17 @@ modifier|*
 name|PFCLOSE
 parameter_list|(
 name|filep
+parameter_list|,
+name|lastuse
 parameter_list|)
 specifier|register
 name|struct
 name|iorec
 modifier|*
 name|filep
+decl_stmt|;
+name|bool
+name|lastuse
 decl_stmt|;
 block|{
 if|if
@@ -130,6 +135,8 @@ name|TEMP
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|lastuse
 operator|&&
 name|unlink
 argument_list|(

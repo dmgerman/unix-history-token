@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCLOSE.c 1.5 %G%"
+literal|"@(#)PCLOSE.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,8 @@ operator|=
 name|PFCLOSE
 argument_list|(
 name|next
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}

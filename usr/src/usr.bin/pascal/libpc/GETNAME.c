@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.9 %G%"
+literal|"@(#)GETNAME.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,10 @@ comment|/*  		 * Close and immediately reactivate the file. 		 */
 name|PFCLOSE
 argument_list|(
 name|filep
+argument_list|,
+name|name
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_actfile

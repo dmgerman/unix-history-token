@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)DFDISPOSE.c	4.1	(Berkeley)	%G%"
+literal|"@(#)DFDISPOSE.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,8 @@ operator|=
 name|PFCLOSE
 argument_list|(
 name|next
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|prev
