@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.18 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1540,7 +1540,7 @@ name|segp
 operator|->
 name|su_nsums
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Ready to start writing segments.  The first segment is different 	 * because it contains the segment usage table and the ifile inode 	 * as well as a superblock.  For the rest of the segments, set the  	 * time stamp to be 0 so that the first segment is the most recent. 	 * For each segment that is supposed to contain a copy of the super 	 * block, initialize its first few blocks and its segment summary  	 * to indicate this. 	 */
