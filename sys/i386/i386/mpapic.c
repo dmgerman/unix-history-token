@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.25 1997/07/28 03:39:06 smp Exp smp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.26 1997/07/30 22:51:11 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_LOPRIO, PEND_INTS, TEST_TEST1 */
+comment|/** PEND_INTS, TEST_TEST1 */
 end_comment
 
 begin_include
@@ -219,20 +219,11 @@ operator|~
 name|APIC_TPR_PRIO
 expr_stmt|;
 comment|/* clear priority field */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_LOPRIO
-argument_list|)
 name|temp
 operator||=
 name|LOPRIO_LEVEL
 expr_stmt|;
 comment|/* allow INT arbitration */
-endif|#
-directive|endif
-comment|/* TEST_LOPRIO */
 name|lapic
 operator|.
 name|tpr
@@ -452,15 +443,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_LOPRIO
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -476,36 +458,6 @@ name|DEFAULT_ISA_FLAGS
 define|\
 value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELLOPRI))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_FLAGS
-define|\
-value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELFIXED))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ISA_FLAGS
-define|\
-value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELFIXED))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEST_LOPRIO */
-end_comment
 
 begin_comment
 comment|/*  * Setup the IO APIC.  */
@@ -573,27 +525,10 @@ name|pin
 decl_stmt|,
 name|level
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_LOPRIO
-argument_list|)
 name|target
 operator|=
 name|IOART_DEST
 expr_stmt|;
-else|#
-directive|else
-name|target
-operator|=
-name|boot_cpu_id
-operator|<<
-literal|24
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TEST_LOPRIO */
 if|#
 directive|if
 name|defined
@@ -625,7 +560,7 @@ argument_list|(
 name|apic
 argument_list|)
 expr_stmt|;
-comment|/* pins-1 in APIC */
+comment|/* pins in APIC */
 for|for
 control|(
 name|pin
@@ -847,15 +782,6 @@ directive|undef
 name|DEFAULT_FLAGS
 end_undef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_LOPRIO
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -863,28 +789,6 @@ name|DEFAULT_EXTINT_FLAGS
 define|\
 value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELLOPRI))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_EXTINT_FLAGS
-define|\
-value|((u_int32_t)		\ 	 (IOART_INTMSET |	\ 	  IOART_TRGREDG |	\ 	  IOART_INTAHI |	\ 	  IOART_DESTPHY |	\ 	  IOART_DELFIXED))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEST_LOPRIO */
-end_comment
 
 begin_comment
 comment|/*  * Setup the source of External INTerrupts.  */
