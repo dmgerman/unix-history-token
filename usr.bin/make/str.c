@@ -453,15 +453,24 @@ block|{
 if|if
 condition|(
 name|ch
-operator|==
+operator|!=
 name|inquote
 condition|)
+break|break;
 name|inquote
 operator|=
 literal|'\0'
 expr_stmt|;
-else|else
-break|break;
+comment|/* Don't miss "" or '' */
+if|if
+condition|(
+operator|!
+name|start
+condition|)
+name|start
+operator|=
+name|t
+expr_stmt|;
 block|}
 else|else
 name|inquote
