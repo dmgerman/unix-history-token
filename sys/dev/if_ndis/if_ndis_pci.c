@@ -800,7 +800,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
