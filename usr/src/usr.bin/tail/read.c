@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)read.c	5.3 (Berkeley) %G%"
+literal|"@(#)read.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 block|{
@@ -427,7 +427,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 block|{
