@@ -162,10 +162,14 @@ decl_stmt|;
 block|}
 name|interrupt
 index|[
-literal|4
+literal|8
 index|]
 struct|;
 comment|/* SOS max ch# for now XXX */
+name|void
+modifier|*
+name|driver
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -509,6 +513,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_I82801EB_2
+value|0x24df8086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_I6300ESB
+value|0x25a28086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_I6300ESB_1
+value|0x25a38086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_I6300ESB_2
+value|0x25b08086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_NATIONAL_ID
 value|0x100b
 end_define
@@ -728,6 +760,13 @@ define|#
 directive|define
 name|ATA_PDC20621
 value|0x6621105a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_PDC20622
+value|0x6622105a
 end_define
 
 begin_define
@@ -1367,7 +1406,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRSX4K
+name|PRSX4X
 value|0x02
 end_define
 

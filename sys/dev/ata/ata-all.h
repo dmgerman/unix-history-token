@@ -1146,14 +1146,14 @@ name|u_int8_t
 name|feature
 decl_stmt|;
 comment|/* feature reg */
-name|u_int64_t
-name|lba
-decl_stmt|;
-comment|/* lba reg */
 name|u_int16_t
 name|count
 decl_stmt|;
 comment|/* count reg */
+name|u_int64_t
+name|lba
+decl_stmt|;
+comment|/* lba reg */
 block|}
 name|ata
 struct|;
@@ -1562,6 +1562,23 @@ name|bus_addr_t
 name|mdmatab
 decl_stmt|;
 comment|/* bus address of dmatab */
+name|bus_dma_tag_t
+name|wdmatag
+decl_stmt|;
+comment|/* workspace DMA tag */
+name|bus_dmamap_t
+name|wdmamap
+decl_stmt|;
+comment|/* workspace DMA map */
+name|u_int8_t
+modifier|*
+name|workspace
+decl_stmt|;
+comment|/* workspace */
+name|bus_addr_t
+name|wdmatab
+decl_stmt|;
+comment|/* bus address of dmatab */
 name|u_int32_t
 name|alignment
 decl_stmt|;
@@ -1696,6 +1713,17 @@ modifier|*
 name|ch
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|interrupt
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|channel
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -1708,15 +1736,28 @@ modifier|*
 name|request
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
-name|interrupt
+name|command
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ata_device
 modifier|*
-name|channel
+name|atadev
+parameter_list|,
+name|u_int8_t
+name|command
+parameter_list|,
+name|u_int64_t
+name|lba
+parameter_list|,
+name|u_int16_t
+name|count
+parameter_list|,
+name|u_int16_t
+name|feature
 parameter_list|)
 function_decl|;
 block|}
@@ -1920,7 +1961,8 @@ argument_list|)
 name|ata_queue
 expr_stmt|;
 comment|/* head of ATA queue */
-name|void
+name|struct
+name|ata_request
 modifier|*
 name|running
 decl_stmt|;
@@ -2384,6 +2426,30 @@ name|struct
 name|ata_channel
 modifier|*
 name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_generic_command
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+parameter_list|,
+name|u_int8_t
+name|command
+parameter_list|,
+name|u_int64_t
+name|lba
+parameter_list|,
+name|u_int16_t
+name|count
+parameter_list|,
+name|u_int16_t
+name|feature
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -532,17 +532,6 @@ name|version_major
 argument_list|)
 operator|||
 operator|!
-operator|(
-name|atadev
-operator|->
-name|param
-operator|->
-name|atavalid
-operator|&
-name|ATA_FLAG_54_58
-operator|)
-operator|||
-operator|!
 name|lbasize
 condition|)
 name|atadev
@@ -2240,13 +2229,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ata_prtdev
 argument_list|(
 name|adp
 operator|->
 name|device
 argument_list|,
-literal|"%lluMB<%.40s> [%lld/%d/%d] at ata%d-%s %s%s\n"
+literal|"%lluMB<%.40s> [%lld/%d/%d] at ata%d-%s %s"
 argument_list|,
 call|(
 name|unsigned
@@ -2342,6 +2332,39 @@ condition|?
 literal|"tagged "
 else|:
 literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adp
+operator|->
+name|device
+operator|->
+name|param
+operator|->
+name|satacapabilities
+operator|!=
+literal|0x0000
+operator|&&
+name|adp
+operator|->
+name|device
+operator|->
+name|param
+operator|->
+name|satacapabilities
+operator|!=
+literal|0xffff
+condition|)
+name|printf
+argument_list|(
+literal|"SATA150\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 name|ata_mode2str
 argument_list|(
@@ -2353,6 +2376,7 @@ name|mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

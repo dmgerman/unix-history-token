@@ -102,7 +102,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ata_transaction
+name|ata_generic_transaction
 parameter_list|(
 name|struct
 name|ata_request
@@ -114,7 +114,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ata_interrupt
+name|ata_generic_interrupt
 parameter_list|(
 name|void
 modifier|*
@@ -125,7 +125,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ata_reset
+name|ata_generic_reset
 parameter_list|(
 name|struct
 name|ata_channel
@@ -148,25 +148,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|ata_command
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|,
-name|u_int8_t
-parameter_list|,
-name|u_int64_t
-parameter_list|,
-name|u_int16_t
-parameter_list|,
-name|u_int16_t
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*static int ata_command(struct ata_device *, u_int8_t, u_int64_t, u_int16_t, u_int16_t);*/
+end_comment
 
 begin_function_decl
 specifier|static
@@ -229,7 +213,7 @@ name|hw
 operator|.
 name|reset
 operator|=
-name|ata_reset
+name|ata_generic_reset
 expr_stmt|;
 name|ch
 operator|->
@@ -237,7 +221,7 @@ name|hw
 operator|.
 name|transaction
 operator|=
-name|ata_transaction
+name|ata_generic_transaction
 expr_stmt|;
 name|ch
 operator|->
@@ -245,7 +229,15 @@ name|hw
 operator|.
 name|interrupt
 operator|=
-name|ata_interrupt
+name|ata_generic_interrupt
+expr_stmt|;
+name|ch
+operator|->
+name|hw
+operator|.
+name|command
+operator|=
+name|ata_generic_command
 expr_stmt|;
 block|}
 end_function
@@ -257,7 +249,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ata_transaction
+name|ata_generic_transaction
 parameter_list|(
 name|struct
 name|ata_request
@@ -265,6 +257,17 @@ modifier|*
 name|request
 parameter_list|)
 block|{
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+init|=
+name|request
+operator|->
+name|device
+operator|->
+name|channel
+decl_stmt|;
 comment|/* safetybelt for HW that went away */
 if|if
 condition|(
@@ -297,11 +300,7 @@ name|ATA_OP_FINISHED
 return|;
 block|}
 comment|/* record the request as running */
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|running
 operator|=
@@ -318,11 +317,7 @@ comment|/* disable ATAPI DMA writes if HW doesn't support it */
 if|if
 condition|(
 operator|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|flags
 operator|&
@@ -391,7 +386,11 @@ decl_stmt|;
 comment|/* issue command */
 if|if
 condition|(
-name|ata_command
+name|ch
+operator|->
+name|hw
+operator|.
+name|command
 argument_list|(
 name|request
 operator|->
@@ -513,11 +512,7 @@ case|:
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|dma
 operator|->
@@ -563,7 +558,11 @@ block|}
 comment|/* issue command */
 if|if
 condition|(
-name|ata_command
+name|ch
+operator|->
+name|hw
+operator|.
+name|command
 argument_list|(
 name|request
 operator|->
@@ -623,21 +622,13 @@ block|}
 comment|/* start DMA engine */
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|dma
 operator|->
 name|start
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|)
 condition|)
 block|{
@@ -685,11 +676,7 @@ condition|)
 block|{
 name|ATA_IDX_OUTB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_DRIVE
 argument_list|,
@@ -713,11 +700,7 @@ operator|!
 operator|(
 name|ATA_IDX_INB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_ALTSTAT
 argument_list|)
@@ -736,7 +719,11 @@ block|}
 comment|/* start ATAPI operation */
 if|if
 condition|(
-name|ata_command
+name|ch
+operator|->
+name|hw
+operator|.
+name|command
 argument_list|(
 name|request
 operator|->
@@ -812,11 +799,7 @@ name|reason
 init|=
 name|ATA_IDX_INB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_IREASON
 argument_list|)
@@ -826,11 +809,7 @@ name|status
 init|=
 name|ATA_IDX_INB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_STATUS
 argument_list|)
@@ -902,11 +881,7 @@ expr_stmt|;
 comment|/* output actual command block */
 name|ATA_IDX_OUTSW_STRM
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_DATA
 argument_list|,
@@ -969,11 +944,7 @@ condition|)
 block|{
 name|ATA_IDX_OUTB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_DRIVE
 argument_list|,
@@ -997,11 +968,7 @@ operator|!
 operator|(
 name|ATA_IDX_INB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_ALTSTAT
 argument_list|)
@@ -1020,11 +987,7 @@ block|}
 comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|dma
 operator|->
@@ -1070,7 +1033,11 @@ block|}
 comment|/* start ATAPI operation */
 if|if
 condition|(
-name|ata_command
+name|ch
+operator|->
+name|hw
+operator|.
+name|command
 argument_list|(
 name|request
 operator|->
@@ -1122,11 +1089,7 @@ name|reason
 init|=
 name|ATA_IDX_INB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_IREASON
 argument_list|)
@@ -1136,11 +1099,7 @@ name|status
 init|=
 name|ATA_IDX_INB
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_STATUS
 argument_list|)
@@ -1212,11 +1171,7 @@ expr_stmt|;
 comment|/* output actual command block */
 name|ATA_IDX_OUTSW_STRM
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|,
 name|ATA_DATA
 argument_list|,
@@ -1254,21 +1209,13 @@ expr_stmt|;
 comment|/* start DMA engine */
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|dma
 operator|->
 name|start
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|)
 condition|)
 block|{
@@ -1288,11 +1235,7 @@ block|}
 comment|/* request finish here */
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|dma
 operator|->
@@ -1300,28 +1243,16 @@ name|flags
 operator|&
 name|ATA_DMA_ACTIVE
 condition|)
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|dma
 operator|->
 name|unload
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 argument_list|)
 expr_stmt|;
-name|request
-operator|->
-name|device
-operator|->
-name|channel
+name|ch
 operator|->
 name|running
 operator|=
@@ -1336,7 +1267,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ata_interrupt
+name|ata_generic_interrupt
 parameter_list|(
 name|void
 modifier|*
@@ -1516,6 +1447,7 @@ argument_list|,
 name|ATA_STATUS
 argument_list|)
 expr_stmt|;
+comment|/* register interrupt */
 if|if
 condition|(
 operator|!
@@ -1803,6 +1735,14 @@ case|case
 name|ATA_R_DMA
 case|:
 comment|/* stop DMA engine and get status */
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|stop
+condition|)
 name|request
 operator|->
 name|dmastat
@@ -2269,6 +2209,14 @@ operator||
 name|ATA_R_DMA
 case|:
 comment|/* stop the engine and get engine status */
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|stop
+condition|)
 name|request
 operator|->
 name|dmastat
@@ -2393,7 +2341,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ata_reset
+name|ata_generic_reset
 parameter_list|(
 name|struct
 name|ata_channel
@@ -2428,6 +2376,20 @@ literal|0
 decl_stmt|,
 name|timeout
 decl_stmt|;
+comment|/* reset host end of channel (if supported) */
+if|if
+condition|(
+name|ch
+operator|->
+name|reset
+condition|)
+name|ch
+operator|->
+name|reset
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* do we have any signs of ATA/ATAPI HW being present ? */
 name|ATA_IDX_OUTB
 argument_list|(
@@ -2573,20 +2535,6 @@ argument_list|,
 name|ostat0
 argument_list|,
 name|ostat1
-argument_list|)
-expr_stmt|;
-comment|/* reset host end of channel (if supported) */
-if|if
-condition|(
-name|ch
-operator|->
-name|reset
-condition|)
-name|ch
-operator|->
-name|reset
-argument_list|(
-name|ch
 argument_list|)
 expr_stmt|;
 comment|/* reset (both) devices on this channel */
@@ -3386,9 +3334,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|ata_command
+name|ata_generic_command
 parameter_list|(
 name|struct
 name|ata_device

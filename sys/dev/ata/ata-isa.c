@@ -498,6 +498,11 @@ name|setmode
 operator|=
 name|ata_isa_setmode
 expr_stmt|;
+name|ata_generic_hw
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 return|return
 name|ata_probe
 argument_list|(
