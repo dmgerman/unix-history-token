@@ -5522,14 +5522,20 @@ name|n
 operator|=
 name|n
 expr_stmt|;
-comment|/* Start reading from old file again.  */
+comment|/* Start reading from old file again, and clear tokpushback since 	   any pushed back token from the string is no longer relevant.  */
 if|if
 condition|(
 name|oldstyle
 condition|)
+block|{
 name|popfile
 argument_list|()
 expr_stmt|;
+name|tokpushback
+operator|=
+literal|0
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|stackblocksize
