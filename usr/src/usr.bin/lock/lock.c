@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lock.c	5.2 (Berkeley) %G%"
+literal|"@(#)lock.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * Lock a terminal up until the given key is entered,  * or until the root password is entered,  * or the given interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
+comment|/*  * Lock a terminal up until the given key is entered, until the root  * password is entered, or the given interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
 end_comment
 
 begin_include
@@ -99,6 +99,20 @@ name|TIMEOUT
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|YES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO
+value|0
+end_define
+
 begin_decl_stmt
 name|int
 name|quit
@@ -145,6 +159,10 @@ begin_comment
 comment|/* keep the timeout time */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -164,7 +182,10 @@ block|{
 name|struct
 name|passwd
 modifier|*
-name|pwd
+name|root_pwd
+decl_stmt|,
+modifier|*
+name|my_pwd
 decl_stmt|;
 name|struct
 name|timeval
@@ -185,6 +206,8 @@ name|int
 name|sectimeout
 init|=
 name|TIMEOUT
+decl_stmt|,
+name|use_mine
 decl_stmt|;
 name|char
 modifier|*
@@ -223,51 +246,72 @@ modifier|*
 name|ttyname
 argument_list|()
 decl_stmt|;
-comment|/* process argument */
+name|use_mine
+operator|=
+name|NO
+expr_stmt|;
+for|for
+control|(
+operator|++
+name|argv
+init|;
+operator|*
+name|argv
+condition|;
+operator|++
+name|argv
+control|)
+block|{
 if|if
 condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
-operator|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 index|[
 literal|0
 index|]
 operator|!=
 literal|'-'
-operator|||
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'p'
+condition|)
+name|use_mine
+operator|=
+name|YES
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|sectimeout
 operator|=
 name|atoi
 argument_list|(
+operator|*
 name|argv
-index|[
-literal|1
-index|]
 operator|+
 literal|1
 argument_list|)
 operator|)
 operator|<=
 literal|0
-operator|)
 condition|)
-block|{
-name|puts
-argument_list|(
-literal|"Usage: lock [-timeout]"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|timeout
@@ -392,7 +436,6 @@ name|timp
 operator|->
 name|tm_zone
 expr_stmt|;
-comment|/* get key and check again */
 operator|(
 name|void
 operator|)
@@ -437,6 +480,13 @@ operator|&
 name|ntty
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|use_mine
+condition|)
+block|{
+comment|/* get key and check again */
 name|fputs
 argument_list|(
 literal|"Key: "
@@ -467,7 +517,7 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't need EOF test here, if we get EOF, then s1 != s 	 * and the right things will happen. 	 */
+comment|/* 		 * Don't need EOF test here, if we get EOF, then s1 != s 		 * and the right things will happen. 		 */
 operator|(
 name|void
 operator|)
@@ -496,9 +546,9 @@ name|s
 argument_list|)
 condition|)
 block|{
-name|putchar
+name|puts
 argument_list|(
-literal|07
+literal|"\07lock: passwords didn't match."
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -524,7 +574,8 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Set signal handlers */
+block|}
+comment|/* set signal handlers */
 operator|(
 name|void
 operator|)
@@ -588,7 +639,7 @@ operator|&
 name|otimer
 argument_list|)
 expr_stmt|;
-comment|/* Header info */
+comment|/* header info */
 name|printf
 argument_list|(
 literal|"lock: %s on %s. timeout in %d minutes\ntime now is %.20s%s%s"
@@ -609,14 +660,27 @@ literal|19
 argument_list|)
 expr_stmt|;
 comment|/* wait */
-for|for
-control|(
-name|pwd
+name|root_pwd
 operator|=
 name|getpwuid
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|use_mine
+condition|)
+name|my_pwd
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+for|for
+control|(
 init|;
 condition|;
 control|)
@@ -654,27 +718,24 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|use_mine
+condition|)
+block|{
+if|if
+condition|(
 operator|!
-name|strcmp
-argument_list|(
-name|s1
-argument_list|,
-name|s
-argument_list|)
-operator|||
-operator|!
-name|pwd
+name|my_pwd
 operator|||
 operator|!
 operator|*
-name|pwd
+name|my_pwd
 operator|->
 name|pw_passwd
 operator|||
 operator|!
 name|strcmp
 argument_list|(
-name|pwd
+name|my_pwd
 operator|->
 name|pw_passwd
 argument_list|,
@@ -682,7 +743,49 @@ name|crypt
 argument_list|(
 name|s
 argument_list|,
-name|pwd
+name|my_pwd
+operator|->
+name|pw_passwd
+argument_list|)
+argument_list|)
+condition|)
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|s1
+argument_list|,
+name|s
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+operator|!
+name|root_pwd
+operator|||
+operator|!
+operator|*
+name|root_pwd
+operator|->
+name|pw_passwd
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|root_pwd
+operator|->
+name|pw_passwd
+argument_list|,
+name|crypt
+argument_list|(
+name|s
+argument_list|,
+name|root_pwd
 operator|->
 name|pw_passwd
 argument_list|)
@@ -723,10 +826,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *	tell the user we are waiting  */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|hi
@@ -753,7 +852,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"lock: type in the unlock key. timeout in %d minutes\n"
+literal|"lock: type in the unlock key. timeout in %ld:%ld minutes\n"
 argument_list|,
 operator|(
 name|nexttime
@@ -764,14 +863,20 @@ name|tv_sec
 operator|)
 operator|/
 literal|60
+argument_list|,
+operator|(
+name|nexttime
+operator|-
+name|timval
+operator|.
+name|tv_sec
+operator|)
+operator|%
+literal|60
 argument_list|)
 expr_stmt|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/*  *	get out of here  */
-end_comment
 
 begin_expr_stmt
 specifier|static
@@ -816,6 +921,20 @@ block|;
 name|puts
 argument_list|(
 literal|"lock: timeout"
+argument_list|)
+block|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+block|; }
+specifier|static
+name|usage
+argument_list|()
+block|{
+name|puts
+argument_list|(
+literal|"Usage: lock [-p] [-timeout]"
 argument_list|)
 block|;
 name|exit
