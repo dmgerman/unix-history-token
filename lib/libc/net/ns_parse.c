@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 8.8 1998/02/17 17:20:33 vixie Exp $"
+literal|"$Id: ns_parse.c,v 1.1 1998/06/11 09:02:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,7 +882,7 @@ name|NS_GET16
 argument_list|(
 name|rr
 operator|->
-name|class
+name|rr_class
 argument_list|,
 name|handle
 operator|->

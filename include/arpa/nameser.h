@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permissi
 end_comment
 
 begin_comment
-comment|/*  *	From: Id: nameser.h,v 8.16 1998/02/06 00:35:58 halley Exp  *	$Id$  */
+comment|/*  *	From: Id: nameser.h,v 8.16 1998/02/06 00:35:58 halley Exp  *	$Id: nameser.h,v 1.12 1998/06/11 08:55:15 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -435,7 +435,7 @@ name|u_int16_t
 name|type
 decl_stmt|;
 name|u_int16_t
-name|class
+name|rr_class
 decl_stmt|;
 name|u_int32_t
 name|ttl
@@ -484,7 +484,7 @@ name|ns_rr_class
 parameter_list|(
 name|rr
 parameter_list|)
-value|((rr).class + 0)
+value|((rr).rr_class + 0)
 end_define
 
 begin_define
