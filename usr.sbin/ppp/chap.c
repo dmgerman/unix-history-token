@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.52 1999/06/09 08:47:29 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.53 1999/07/15 02:02:51 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -1124,8 +1130,10 @@ index|]
 operator|==
 name|STDIN_FILENO
 condition|)
-block|{
-name|fd
+name|out
+index|[
+literal|1
+index|]
 operator|=
 name|dup
 argument_list|(
@@ -1135,22 +1143,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|out
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|out
-index|[
-literal|1
-index|]
-operator|=
-name|fd
-expr_stmt|;
-block|}
 name|dup2
 argument_list|(
 name|in
@@ -1171,21 +1163,21 @@ argument_list|,
 name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|fd
-operator|=
 name|open
 argument_list|(
 name|_PATH_DEVNULL
 argument_list|,
 name|O_RDWR
 argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
+operator|!=
+name|STDERR_FILENO
 condition|)
 block|{
 name|log_Printf
@@ -1208,23 +1200,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|dup2
-argument_list|(
+for|for
+control|(
 name|fd
-argument_list|,
+operator|=
+name|getdtablesize
+argument_list|()
+init|;
+name|fd
+operator|>
 name|STDERR_FILENO
-argument_list|)
-expr_stmt|;
+condition|;
+name|fd
+operator|--
+control|)
 name|fcntl
 argument_list|(
-literal|3
+name|fd
 argument_list|,
 name|F_SETFD
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Set close-on-exec flag */
 name|setuid
 argument_list|(
 name|geteuid
@@ -1285,10 +1283,8 @@ argument_list|,
 name|nargv
 argument_list|)
 expr_stmt|;
-name|log_Printf
+name|printf
 argument_list|(
-name|LogWARN
-argument_list|,
 literal|"exec() of %s failed: %s\n"
 argument_list|,
 name|nargv
@@ -1302,7 +1298,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|255
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.204 1999/08/02 21:45:35 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.205 1999/08/05 10:32:09 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -759,7 +759,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/08/02 21:45:35 $"
+literal|"$Date: 1999/08/05 10:32:09 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3113,36 +3113,50 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|3
-condition|;
-name|i
-operator|++
-control|)
 name|dup2
 argument_list|(
 name|fd
 argument_list|,
-name|i
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDERR_FILENO
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|getdtablesize
+argument_list|()
+init|;
+name|i
+operator|>
+name|STDERR_FILENO
+condition|;
+name|i
+operator|--
+control|)
 name|fcntl
 argument_list|(
-literal|3
+name|i
 argument_list|,
 name|F_SETFD
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Set close-on-exec flag */
 name|setuid
 argument_list|(
 name|geteuid
@@ -3384,7 +3398,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|255
 argument_list|)
