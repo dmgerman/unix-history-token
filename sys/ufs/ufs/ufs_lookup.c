@@ -1001,11 +1001,6 @@ name|ep
 operator|->
 name|d_reclen
 expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|found
 goto|;
@@ -1417,6 +1412,11 @@ operator||
 name|IN_UPDATE
 expr_stmt|;
 block|}
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Found component in pathname. 	 * If the final component of path name, save information 	 * in the cache as to where the entry was found. 	 */
 if|if
 condition|(
