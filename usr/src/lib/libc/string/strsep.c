@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_if
 if|#
@@ -20,11 +38,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strsep.c	5.2 (Berkeley) %G%"
+literal|"@(#)strsep.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,34 +56,39 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_comment
+comment|/*  * Get next token from string *stringp, where tokens are nonempty  * strings separated by characters from delim.    *  * Writes NULs into the string at *stringp to end tokens.  * delim need not remain constant from call to call.  * On return, *stringp points past the last NUL written (if there might  * be further tokens), or is NULL (if there are definitely no more tokens).  *  * If *stringp is NULL, strtoken returns NULL.  */
+end_comment
 
 begin_function
 name|char
 modifier|*
 name|strsep
 parameter_list|(
-name|s
+name|stringp
 parameter_list|,
 name|delim
 parameter_list|)
 specifier|register
 name|char
 modifier|*
-name|s
-decl_stmt|,
-decl|*
+modifier|*
+name|stringp
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
 name|delim
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
+name|char
+modifier|*
+name|s
+decl_stmt|;
+specifier|register
+specifier|const
 name|char
 modifier|*
 name|spanp
@@ -75,25 +99,17 @@ name|c
 decl_stmt|,
 name|sc
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|last
-decl_stmt|;
 name|char
 modifier|*
 name|tok
 decl_stmt|;
 if|if
 condition|(
-name|s
-operator|==
-name|NULL
-operator|&&
 operator|(
 name|s
 operator|=
-name|last
+operator|*
+name|stringp
 operator|)
 operator|==
 name|NULL
@@ -103,7 +119,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Scan token (scan for delimiters: s += strcspn(s, delim), sort of). 	 * Note that delim must have one NUL; we stop if we see that, too. 	 */
 for|for
 control|(
 name|tok
@@ -111,14 +126,13 @@ operator|=
 name|s
 init|;
 condition|;
-operator|++
-name|s
 control|)
 block|{
 name|c
 operator|=
 operator|*
 name|s
+operator|++
 expr_stmt|;
 name|spanp
 operator|=
@@ -145,24 +159,21 @@ name|c
 operator|==
 literal|0
 condition|)
-block|{
-name|last
+name|s
 operator|=
 name|NULL
 expr_stmt|;
-return|return
-operator|(
-name|tok
-operator|)
-return|;
-block|}
-operator|*
+else|else
 name|s
-operator|++
+index|[
+operator|-
+literal|1
+index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
-name|last
+operator|*
+name|stringp
 operator|=
 name|s
 expr_stmt|;
@@ -176,12 +187,14 @@ block|}
 do|while
 condition|(
 name|sc
+operator|!=
+literal|0
 condition|)
 do|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 
