@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.5	%H%	*/
+comment|/*	dh.c	3.6	%H%	*/
 end_comment
 
 begin_comment
@@ -60,6 +60,17 @@ include|#
 directive|include
 file|"../h/bk.h"
 end_include
+
+begin_comment
+comment|/*  * When running dz's using only SAE (silo alarm) on input  * it is necessary to call dzrint() at clock interrupt time.  * This is unsafe unless spl5()s in tty code are changed to  * spl6()s to block clock interrupts.  Note that the dh driver  * currently in use works the same way as the dz, even though  * we could try to more intelligently manage its silo.  * Thus don't take this out if you have no dz's unless you  * change clock.c and dhtimer().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|spl5
+value|spl6
+end_define
 
 begin_define
 define|#
@@ -1641,6 +1652,15 @@ decl_stmt|,
 modifier|*
 name|sbar
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
+comment|/* block the clock */
 name|d
 operator|=
 name|minor
@@ -1847,6 +1867,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

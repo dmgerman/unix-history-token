@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.2	%H%	*/
+comment|/*	tty.c	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -85,6 +85,17 @@ name|partab
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * When running dz's using only SAE (silo alarm) on input  * it is necessary to call dzrint() at clock interrupt time.  * This is unsafe unless spl5()s in tty code are changed to  * spl6()s to block clock interrupts.  Note that the dh driver  * currently in use works the same way as the dz, even though  * we could try to more intelligently manage its silo.  * Thus don't take this out if you have no dz's unless you  * change clock.c and dhtimer().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|spl5
+value|spl6
+end_define
 
 begin_comment
 comment|/*  * Input mapping table-- if an entry is non-zero, when the  * corresponding character is typed preceded by "\" the escape  * sequence is replaced by the table value.  Mostly used for  * upper-case only terminals.  */
