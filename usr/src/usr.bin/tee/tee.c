@@ -453,7 +453,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|out
