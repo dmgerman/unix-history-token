@@ -8,7 +8,7 @@ comment|/*      $FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* This version of uvisor is heavily based upon the version in NetBSD  * but is missing the following patches:  *  * 1.10	needed?		connect a ucom to each of the uvisor ports  * 1.11	needed		ucom has an "info" attach message - use it  * 1.12 not needed	rcsids  * 1.13 already merged	extra arg to usbd_do_request_flags  * 1.14 needed		sony and palm support  */
+comment|/* This version of uvisor is heavily based upon the version in NetBSD  * but is missing the following patches:  *  * 1.10	needed?		connect a ucom to each of the uvisor ports  * 1.11	needed		ucom has an "info" attach message - use it  * 1.12 not needed	rcsids  * 1.13 already merged	extra arg to usbd_do_request_flags  * 1.14 needed		sony and palm support  * 1.15 needed		sony clie  * 1.16 merged		trailing whites  */
 end_comment
 
 begin_comment
@@ -160,6 +160,38 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uvisor
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|uvisordebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"uvisor debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
