@@ -67,6 +67,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -80,6 +86,21 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_comment
+comment|/* used for bootdev parsing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -88,16 +109,6 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reboot.h>
-end_include
-
-begin_comment
-comment|/* used for bootdev parsing */
-end_comment
 
 begin_include
 include|#
@@ -1966,6 +1977,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_comment
 comment|/*  * Code to map a bootdev major number into a suitable device name.  * Major numbers are mapped into names as in boot2.c  */
 end_comment
@@ -2198,6 +2215,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This formats and outputs the value of one variable  *  * Returns zero if anything was actually output.  * Returns one if didn't know what to do with this.  * Return minus one if we had errors.  */
@@ -2707,6 +2729,9 @@ expr_stmt|;
 name|fmt
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 operator|!
@@ -2729,6 +2754,8 @@ operator|)
 name|p
 argument_list|)
 return|;
+endif|#
+directive|endif
 name|val
 operator|=
 literal|""
