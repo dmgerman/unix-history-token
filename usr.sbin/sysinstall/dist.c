@@ -3362,6 +3362,9 @@ operator|)
 name|IO_ERROR
 operator|||
 name|intr
+operator|||
+operator|!
+name|mediaDevice
 condition|)
 block|{
 comment|/* Hard error, can't continue */
@@ -3572,6 +3575,9 @@ operator|)
 name|IO_ERROR
 operator|||
 name|intr
+operator|||
+operator|!
+name|mediaDevice
 condition|)
 block|{
 comment|/* Hard error, can't continue */
