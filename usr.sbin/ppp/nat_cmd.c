@@ -1768,7 +1768,7 @@ name|addr
 operator|.
 name|s_addr
 operator|=
-name|INADDR_ANY
+name|INADDR_NONE
 expr_stmt|;
 name|PacketAliasSetTarget
 argument_list|(
