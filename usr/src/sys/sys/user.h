@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.3	84/07/08	*/
+comment|/*	user.h	6.4	84/07/11	*/
 end_comment
 
 begin_ifdef
@@ -373,7 +373,8 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|time_t
+name|struct
+name|timeval
 name|u_start
 decl_stmt|;
 name|short
