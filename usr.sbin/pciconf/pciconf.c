@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$ANA: pciconf.c,v 1.1.1.1 1996/09/25 21:12:57 wollman Exp $  */
+comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -139,26 +165,21 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|argv0
-parameter_list|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n\t%s -l\n"
-literal|"\t%s -a sel\n"
-literal|"\t%s [-r|-w] [-bh] sel addr [value]\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-name|argv0
+literal|"usage: pciconf -l"
 argument_list|,
-name|argv0
+literal|"       pciconf -a sel"
 argument_list|,
-name|argv0
+literal|"       pciconf -r [-b | -h] sel addr"
+argument_list|,
+literal|"       pciconf -w [-b | -h] sel addr [value]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -287,12 +308,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -337,12 +353,7 @@ name|argc
 operator|)
 condition|)
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -452,12 +463,7 @@ block|}
 else|else
 block|{
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 return|return
