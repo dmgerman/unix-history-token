@@ -299,6 +299,17 @@ begin_comment
 comment|/* days bevore current date */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|Friday
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* day before weekend */
+end_comment
+
 begin_struct
 struct|struct
 name|fixs
