@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8188,26 +8188,14 @@ name|fnd
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Set b_proc. It seems a bit silly to do it here, but since bread() 	 * doesn't set it, I will. 	 * Set b_proc == NULL for asynchronous reads, since these may still 	 * be hanging about after the process terminates. 	 */
+comment|/* 	 * Set b_proc. It seems a bit silly to do it here, but since bread() 	 * doesn't set it, I will. 	 * Set b_proc == NULL for asynchronous ops, since these may still 	 * be hanging about after the process terminates. 	 */
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
-operator|(
-name|B_READ
-operator||
 name|B_ASYNC
-operator|)
-operator|)
-operator|==
-operator|(
-name|B_READ
-operator||
-name|B_ASYNC
-operator|)
 condition|)
 name|bp
 operator|->
@@ -8229,7 +8217,20 @@ name|u
 operator|.
 name|u_procp
 expr_stmt|;
-comment|/* 	 * If an i/o daemon is waiting 	 * queue the request, wake it up and wait for completion 	 * otherwise just do it ourselves 	 */
+comment|/* 	 * If the op is asynchronous and an i/o daemon is waiting 	 * queue the request, wake it up and wait for completion 	 * otherwise just do it ourselves. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_proc
+operator|==
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+name|NULL
+condition|)
 for|for
 control|(
 name|i
