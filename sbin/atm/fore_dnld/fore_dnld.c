@@ -2607,16 +2607,11 @@ name|w1
 union|,
 name|w2
 union|;
-endif|#
-directive|endif
 name|int
 name|n
 decl_stmt|;
-name|int
-name|cnt
-init|=
-literal|0
-decl_stmt|;
+endif|#
+directive|endif
 name|u_char
 modifier|*
 name|bufp
@@ -4408,11 +4403,11 @@ argument_list|,
 argument|hb2
 argument_list|,
 argument|hb3;  				hb3 = CP_READ(Mon->mon_bstat); 				if (hb3 != BOOT_RUNNING) { 					if (verbose) 						printf(
-literal|"bstat %x\n"
+literal|"bstat %lx\n"
 argument|, hb3); 					continue; 				}  				hb1 = CP_READ(aap->aali_heartbeat); 				delay(
 literal|1
 argument|); 				hb2 = CP_READ(aap->aali_heartbeat); 				if (verbose) 					printf(
-literal|"hb %x %x\n"
+literal|"hb %lx %lx\n"
 argument|, hb1, hb2); 				if (hb1< hb2) 					break; 			     } 			}  			close ( fd ); 		} 	}
 comment|/* 	 * Exit 	 */
 argument|exit (
