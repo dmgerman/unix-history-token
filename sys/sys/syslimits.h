@@ -37,11 +37,11 @@ name|_SYS_PARAM_H_
 argument_list|)
 end_if
 
-begin_error
-error|#
-directive|error
+begin_warning
+warning|#
+directive|warning
 literal|"No user-serviceable parts inside."
-end_error
+end_warning
 
 begin_endif
 endif|#
