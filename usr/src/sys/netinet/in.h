@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -262,7 +262,7 @@ name|IN_CLASSC
 parameter_list|(
 name|i
 parameter_list|)
-value|(((long)(i)& 0xc0000000) == 0xc0000000)
+value|(((long)(i)& 0xe0000000) == 0xc0000000)
 end_define
 
 begin_define
@@ -284,6 +284,46 @@ define|#
 directive|define
 name|IN_CLASSC_HOST
 value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSD
+parameter_list|(
+name|i
+parameter_list|)
+value|(((long)(i)& 0xf0000000) == 0xe0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_MULTICAST
+parameter_list|(
+name|i
+parameter_list|)
+value|IN_CLASSD(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_EXPERIMENTAL
+parameter_list|(
+name|i
+parameter_list|)
+value|(((long)(i)& 0xe0000000) == 0xe0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_BADCLASS
+parameter_list|(
+name|i
+parameter_list|)
+value|(((long)(i)& 0xf0000000) == 0xf0000000)
 end_define
 
 begin_define
@@ -325,6 +365,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|IN_LOOPBACKNET
+value|127
+end_define
+
+begin_comment
+comment|/* official! */
+end_comment
 
 begin_comment
 comment|/*  * Socket address, internet style.  */
