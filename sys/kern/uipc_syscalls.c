@@ -8209,6 +8209,10 @@ argument_list|,
 name|sf_buf_free
 argument_list|,
 name|NULL
+argument_list|,
+name|M_RDONLY
+argument_list|,
+name|EXT_SFBUF
 argument_list|)
 expr_stmt|;
 name|m

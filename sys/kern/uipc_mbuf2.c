@@ -48,7 +48,7 @@ file|<sys/mbuf.h>
 end_include
 
 begin_comment
-comment|/*  * ensure that [off, off + len) is contiguous on the mbuf chain "m".  * packet chain before "off" is kept untouched.  * if offp == NULL, the target will start at<retval, 0> on resulting chain.  * if offp != NULL, the target will start at<retval, *offp> on resulting chain.  *  * on error return (NULL return value), original "m" will be freed.  *  * XXX M_TRAILINGSPACE/M_LEADINGSPACE on shared cluster (sharedcluster)  */
+comment|/*  * ensure that [off, off + len) is contiguous on the mbuf chain "m".  * packet chain before "off" is kept untouched.  * if offp == NULL, the target will start at<retval, 0> on resulting chain.  * if offp != NULL, the target will start at<retval, *offp> on resulting chain.  *  * on error return (NULL return value), original "m" will be freed.  *  * XXX: M_TRAILINGSPACE/M_LEADINGSPACE only permitted on writable ext_buf.  */
 end_comment
 
 begin_function
@@ -96,7 +96,7 @@ decl_stmt|,
 name|olen
 decl_stmt|;
 name|int
-name|sharedcluster
+name|writable
 decl_stmt|;
 comment|/* check invalid arguments. */
 if|if
@@ -410,6 +410,12 @@ return|;
 comment|/* mbuf chain too short */
 block|}
 comment|/* 	 * easy cases first. 	 * we need to use m_copydata() to get data from<n->m_next, 0>. 	 */
+comment|/* 	 * XXX: This code is flawed because it considers a "writable" mbuf 	 *      data region to require all of the following: 	 *	  (i) mbuf _has_ to have M_EXT set; if it is just a regular 	 *	      mbuf, it is still not considered "writable." 	 *	  (ii) since mbuf has M_EXT, the ext_type _has_ to be 	 *	       EXT_CLUSTER. Anything else makes it non-writable. 	 *	  (iii) M_WRITABLE() must evaluate true. 	 *      Ideally, the requirement should only be (iii). 	 * 	 * If we're writable, we're sure we're writable, because the ref. count 	 * cannot increase from 1, as that would require posession of mbuf 	 * n by someone else (which is impossible). However, if we're _not_ 	 * writable, we may eventually become writable )if the ref. count drops 	 * to 1), but we'll fail to notice it unless we re-evaluate 	 * M_WRITABLE(). For now, we only evaluate once at the beginning and 	 * live with this. 	 */
+comment|/* 	 * XXX: This is dumb. If we're just a regular mbuf with no M_EXT, 	 *      then we're not "writable," according to this code. 	 */
+name|writable
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -419,45 +425,26 @@ name|m_flags
 operator|&
 name|M_EXT
 operator|)
-operator|==
-literal|0
-condition|)
-name|sharedcluster
-operator|=
-literal|0
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|n
 operator|->
 name|m_ext
 operator|.
-name|ext_free
-condition|)
-name|sharedcluster
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|MEXT_IS_REF
+name|ext_type
+operator|==
+name|EXT_CLUSTER
+operator|)
+operator|&&
+name|M_WRITABLE
 argument_list|(
 name|n
 argument_list|)
 condition|)
-name|sharedcluster
+name|writable
 operator|=
 literal|1
 expr_stmt|;
-else|else
-name|sharedcluster
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -475,8 +462,7 @@ argument_list|)
 operator|>=
 name|tlen
 operator|&&
-operator|!
-name|sharedcluster
+name|writable
 condition|)
 block|{
 name|m_copydata
@@ -539,8 +525,7 @@ argument_list|)
 operator|>=
 name|hlen
 operator|&&
-operator|!
-name|sharedcluster
+name|writable
 condition|)
 block|{
 name|n
