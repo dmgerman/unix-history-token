@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"boot2.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lib.h"
 end_include
 
@@ -4497,7 +4503,7 @@ name|v86
 operator|.
 name|addr
 operator|=
-literal|0x704
+name|XREADORG
 expr_stmt|;
 comment|/* call to xread in boot1 */
 name|v86
