@@ -1167,7 +1167,10 @@ name|curthread
 operator|->
 name|interrupted
 expr_stmt|;
-comment|/* Get a fresh copy of signal mask, for thread dump only */
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
+comment|/* Get a fresh copy of signal mask */
 name|curthread
 operator|->
 name|sigmask
@@ -1175,9 +1178,6 @@ operator|=
 name|ucp
 operator|->
 name|uc_sigmask
-expr_stmt|;
-name|_kse_critical_enter
-argument_list|()
 expr_stmt|;
 name|KSE_LOCK_ACQUIRE
 argument_list|(
@@ -1480,6 +1480,13 @@ operator|=
 name|ucp
 operator|->
 name|uc_sigmask
+expr_stmt|;
+name|SIG_CANTMASK
+argument_list|(
+name|curthread
+operator|->
+name|sigmask
+argument_list|)
 expr_stmt|;
 name|_kse_critical_leave
 argument_list|(
@@ -1947,6 +1954,13 @@ operator|=
 name|ucp
 operator|->
 name|uc_sigmask
+expr_stmt|;
+name|SIG_CANTMASK
+argument_list|(
+name|curthread
+operator|->
+name|sigmask
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
