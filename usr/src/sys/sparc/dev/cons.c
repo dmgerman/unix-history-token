@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cons.c	8.2 (Berkeley) %G%  *  * from: $Header: cons.c,v 1.12 93/07/20 00:49:45 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cons.c	8.3 (Berkeley) %G%  *  * from: $Header: cons.c,v 1.12 93/07/20 00:49:45 torek Exp $  */
 end_comment
 
 begin_comment
@@ -202,6 +202,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|char_type
 index|[]
@@ -1810,61 +1811,13 @@ operator|==
 name|CS7
 condition|)
 block|{
+if|#
+directive|if
+literal|0
 comment|/* XXX this should be done elsewhere, if at all */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|PARENB
-condition|)
-if|if
-condition|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|PARODD
-condition|?
-operator|(
-name|char_type
-index|[
-name|c
-operator|&
-literal|0177
-index|]
-operator|&
-literal|0200
-operator|)
-operator|==
-operator|(
-name|c
-operator|&
-literal|0200
-operator|)
-else|:
-operator|(
-name|char_type
-index|[
-name|c
-operator|&
-literal|0177
-index|]
-operator|&
-literal|0200
-operator|)
-operator|!=
-operator|(
-name|c
-operator|&
-literal|0200
-operator|)
-condition|)
-name|c
-operator||=
-name|TTY_PE
-expr_stmt|;
+block|if (tp->t_cflag& PARENB) 			if (tp->t_cflag& PARODD ? 			    (char_type[c& 0177]& 0200) == (c& 0200) : 			    (char_type[c& 0177]& 0200) != (c& 0200)) 				c |= TTY_PE;
+endif|#
+directive|endif
 name|c
 operator|&=
 operator|~
