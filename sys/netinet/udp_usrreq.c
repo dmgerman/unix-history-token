@@ -1022,9 +1022,10 @@ name|s_addr
 argument_list|,
 name|htonl
 argument_list|(
-name|ip
-operator|->
-name|ip_len
+operator|(
+name|u_short
+operator|)
+name|len
 operator|+
 name|m
 operator|->
