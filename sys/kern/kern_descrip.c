@@ -1118,9 +1118,9 @@ return|;
 case|case
 name|F_GETFD
 case|:
-name|td
+name|p
 operator|->
-name|td_retval
+name|p_retval
 index|[
 literal|0
 index|]
