@@ -1094,6 +1094,11 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* No locking needed */
 operator|&
 name|sc
 operator|->

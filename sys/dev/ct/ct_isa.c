@@ -1197,6 +1197,10 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|ct
 operator|->
@@ -1288,7 +1292,7 @@ argument_list|,
 operator|&
 name|addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* setup machdep softc */

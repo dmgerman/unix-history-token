@@ -856,6 +856,11 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|mem
 operator|->
@@ -9819,6 +9824,11 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -9868,6 +9878,11 @@ argument_list|,
 name|MBUF_ALLOC_SIZE
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc
@@ -9919,6 +9934,11 @@ argument_list|,
 name|HE_MAX_PDU
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc

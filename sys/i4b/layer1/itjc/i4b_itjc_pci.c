@@ -5413,6 +5413,11 @@ operator||
 name|BUS_DMA_COHERENT
 argument_list|,
 comment|/* flags*/
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* lockfuunc, lockarg */
 operator|&
 name|ctx
 operator|->

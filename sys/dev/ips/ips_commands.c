@@ -1057,6 +1057,13 @@ argument_list|,
 comment|/* flags     */
 literal|0
 argument_list|,
+comment|/* lockfunc  */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg   */
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|command
 operator|->
@@ -1603,6 +1610,13 @@ name|IPS_DRIVE_INFO_LEN
 argument_list|,
 comment|/* flags     */
 literal|0
+argument_list|,
+comment|/* lockfunc  */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg   */
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|command
@@ -2575,6 +2589,13 @@ name|IPS_NVRAM_PAGE_SIZE
 argument_list|,
 comment|/* flags     */
 literal|0
+argument_list|,
+comment|/* lockfunc  */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg   */
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|command

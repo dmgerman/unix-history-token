@@ -704,6 +704,10 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -747,6 +751,10 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -787,6 +795,10 @@ argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 name|BUS_DMA_ALLOCNOW
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -836,6 +848,11 @@ name|gem_control_data
 argument_list|)
 argument_list|,
 name|BUS_DMA_ALLOCNOW
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc

@@ -1746,6 +1746,13 @@ argument_list|,
 comment|/* flags     */
 literal|0
 argument_list|,
+comment|/* lockfunc  */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg   */
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -1806,6 +1813,13 @@ name|IPS_MAX_IOBUF_SIZE
 argument_list|,
 comment|/* flags     */
 literal|0
+argument_list|,
+comment|/* lockfunc  */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg   */
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc
@@ -2952,6 +2966,13 @@ argument_list|)
 argument_list|,
 comment|/* flags     */
 literal|0
+argument_list|,
+comment|/* lockfunc  */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg   */
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|dmatag

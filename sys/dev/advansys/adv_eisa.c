@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -623,6 +635,13 @@ argument_list|,
 comment|/* flags	*/
 literal|0
 argument_list|,
+comment|/* lockfunc	*/
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg	*/
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|adv_b
 operator|->
@@ -747,6 +766,13 @@ argument_list|,
 comment|/* flags	*/
 literal|0
 argument_list|,
+comment|/* lockfunc	*/
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg	*/
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|adv
 operator|->
@@ -844,6 +870,13 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* flags	*/
 literal|0
+argument_list|,
+comment|/* lockfunc	*/
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg	*/
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|overrun_dmat

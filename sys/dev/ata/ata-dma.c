@@ -42,6 +42,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -413,6 +425,11 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|ch
 operator|->
@@ -471,6 +488,11 @@ argument_list|,
 name|MAXTABSZ
 argument_list|,
 name|BUS_DMA_ALLOCNOW
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|ch
@@ -531,6 +553,11 @@ argument_list|,
 name|MAXSEGSZ
 argument_list|,
 name|BUS_DMA_ALLOCNOW
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|ch

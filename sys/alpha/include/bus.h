@@ -2911,6 +2911,39 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * A function that performs driver-specific syncronization on behalf of  * busdma.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|BUS_DMA_LOCK
+init|=
+literal|0x01
+block|,
+name|BUS_DMA_UNLOCK
+init|=
+literal|0x02
+block|, }
+name|bus_dma_lock_op_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|bus_dma_lock_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|bus_dma_lock_op_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *	alignment:	alignment for segments.  *	boundary:	Boundary that segments cannot cross.  *	lowaddr:	Low restricted address that cannot appear in a mapping.  *	highaddr:	High restricted address that cannot appear in a mapping.  *	filtfunc:	An optional function to further test if an address  *			within the range of lowaddr and highaddr cannot appear  *			in a mapping.  *	filtfuncarg:	An argument that will be passed to filtfunc in addition  *			to the address to test.  *	maxsize:	Maximum mapping size supported by this tag.  *	nsegments:	Number of discontinuities allowed in maps.  *	maxsegsz:	Maximum size of a segment in the map.  *	flags:		Bus DMA flags.  *	dmat:		A pointer to set to a valid dma tag should the return  *			value of this function indicate success.  */
 end_comment
 
@@ -2956,6 +2989,14 @@ name|maxsegsz
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|bus_dma_lock_t
+modifier|*
+name|lockfunc
+parameter_list|,
+name|void
+modifier|*
+name|lockfuncarg
 parameter_list|,
 name|bus_dma_tag_t
 modifier|*
@@ -3267,6 +3308,24 @@ parameter_list|)
 define|\
 value|if ((dmamap) != NULL)				\ 		_bus_dmamap_unload(dmat, dmamap)
 end_define
+
+begin_comment
+comment|/*  * Generic helper function for manipulating mutexes.  */
+end_comment
+
+begin_function_decl
+name|void
+name|busdma_lock_mutex
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|bus_dma_lock_op_t
+name|op
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

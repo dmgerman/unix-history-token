@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -975,6 +987,13 @@ name|ADW_PCI_MAX_DMA_COUNT
 argument_list|,
 comment|/* flags	*/
 literal|0
+argument_list|,
+comment|/* lockfunc	*/
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockarg	*/
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|adw

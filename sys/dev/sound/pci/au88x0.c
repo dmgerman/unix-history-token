@@ -2148,6 +2148,11 @@ name|aui_bufsize
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|aui
 operator|->

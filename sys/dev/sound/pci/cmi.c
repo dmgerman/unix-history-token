@@ -4304,6 +4304,13 @@ argument_list|,
 comment|/*flags*/
 literal|0
 argument_list|,
+comment|/*lockfunc*/
+name|busdma_lock_mutex
+argument_list|,
+comment|/*lockfunc*/
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|sc
 operator|->

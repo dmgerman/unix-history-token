@@ -1034,6 +1034,11 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -1089,6 +1094,12 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -1919,6 +1930,13 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockfunc */
+operator|&
+name|Giant
+argument_list|,
+comment|/* lockarg */
 operator|&
 name|sc
 operator|->
@@ -2172,6 +2190,13 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockfunc */
+operator|&
+name|Giant
+argument_list|,
+comment|/* lockarg */
 operator|&
 name|sc
 operator|->

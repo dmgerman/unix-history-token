@@ -1250,6 +1250,12 @@ argument_list|,
 comment|/* flags	*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
+comment|/* lockfunc	*/
+name|NULL
+argument_list|,
+comment|/* lockarg	*/
+name|NULL
+argument_list|,
 operator|&
 name|ida
 operator|->

@@ -6082,6 +6082,11 @@ name|XL_RX_LIST_SZ
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -6286,6 +6291,11 @@ argument_list|,
 name|XL_TX_LIST_SZ
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc
@@ -6494,6 +6504,11 @@ argument_list|,
 name|MCLBYTES
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc

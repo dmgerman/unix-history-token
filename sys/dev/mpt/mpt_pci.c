@@ -2030,6 +2030,11 @@ name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|mpt
 operator|->
@@ -2080,6 +2085,11 @@ argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|mpt
@@ -2249,6 +2259,11 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|mpt
 operator|->
@@ -2302,6 +2317,11 @@ argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|mpt

@@ -1295,7 +1295,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Init the sync fib lock */
+comment|/* 	 * Initialize locks 	 */
 name|AAC_LOCK_INIT
 argument_list|(
 operator|&
@@ -1304,6 +1304,44 @@ operator|->
 name|aac_sync_lock
 argument_list|,
 literal|"AAC sync FIB lock"
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_aifq_lock
+argument_list|,
+literal|"AAC AIF lock"
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|,
+literal|"AAC I/O lock"
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|,
+literal|"AAC container lock"
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_tqh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialise the adapter. 	 */
@@ -1329,45 +1367,6 @@ comment|/*  	 * Print a little information about the controller. 	 */
 name|aac_describe_controller
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Initialize locks 	 */
-name|AAC_LOCK_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|aac_aifq_lock
-argument_list|,
-literal|"AAC AIF lock"
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|aac_container_tqh
-argument_list|)
-expr_stmt|;
-name|AAC_LOCK_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|aac_container_lock
-argument_list|,
-literal|"AAC container lock"
-argument_list|)
-expr_stmt|;
-name|AAC_LOCK_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|aac_io_lock
-argument_list|,
-literal|"AAC I/O lock"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Register to probe our containers later. 	 */
@@ -6528,6 +6527,15 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockfunc */
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|,
+comment|/* lockfuncarg */
 operator|&
 name|sc
 operator|->
@@ -6608,6 +6616,11 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* No locking needed */
 operator|&
 name|sc
 operator|->
@@ -6683,6 +6696,11 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* No locking needed */
 operator|&
 name|sc
 operator|->

@@ -884,6 +884,12 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
+name|NULL
+argument_list|,
+comment|/* lockfunc */
+name|NULL
+argument_list|,
+comment|/* lockarg */
 operator|&
 name|sc
 operator|->

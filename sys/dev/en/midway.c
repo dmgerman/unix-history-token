@@ -12416,6 +12416,11 @@ name|MIDDMA_MAXBURST
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|tag
 argument_list|)
@@ -13512,6 +13517,11 @@ operator|*
 literal|1024
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|sc

@@ -937,6 +937,13 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
+name|busdma_lock_mutex
+argument_list|,
+comment|/* lockfunc */
+operator|&
+name|Giant
+argument_list|,
+comment|/* lockarg */
 operator|&
 name|sc
 operator|->

@@ -5084,6 +5084,39 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * A function that performs driver-specific syncronization on behalf of  * busdma.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|BUS_DMA_LOCK
+init|=
+literal|0x01
+block|,
+name|BUS_DMA_UNLOCK
+init|=
+literal|0x02
+block|, }
+name|bus_dma_lock_op_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|bus_dma_lock_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|bus_dma_lock_op_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * Method table for a bus_dma_tag.  */
 end_comment
 
@@ -5300,6 +5333,15 @@ decl_stmt|;
 name|int
 name|dt_map_count
 decl_stmt|;
+name|bus_dma_lock_t
+modifier|*
+name|dt_lockfunc
+decl_stmt|;
+name|void
+modifier|*
+modifier|*
+name|dt_lockfuncarg
+decl_stmt|;
 name|struct
 name|bus_dma_methods
 modifier|*
@@ -5336,6 +5378,12 @@ parameter_list|,
 name|bus_size_t
 parameter_list|,
 name|int
+parameter_list|,
+name|bus_dma_lock_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|,
 name|bus_dma_tag_t
 modifier|*
@@ -5504,6 +5552,24 @@ parameter_list|)
 define|\
 value|((t)->dt_mt->dm_dmamem_free((t), (v), (m)))
 end_define
+
+begin_comment
+comment|/*  * Generic helper function for manipulating mutexes.  */
+end_comment
+
+begin_function_decl
+name|void
+name|busdma_lock_mutex
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|bus_dma_lock_op_t
+name|op
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

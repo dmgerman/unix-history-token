@@ -124,6 +124,18 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3409,6 +3421,11 @@ argument_list|,
 name|MEMO_CLUSTER_SIZE
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|mp
@@ -36472,6 +36489,11 @@ literal|24
 operator|)
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|np

@@ -385,7 +385,7 @@ parameter_list|,		\
 name|dma_tagp
 parameter_list|)
 define|\
-value|bus_dma_tag_create(parent_tag, alignment, boundary,		\ 			   lowaddr, highaddr, filter, filterarg,	\ 			   maxsize, nsegments, maxsegsz, flags,		\ 			   dma_tagp)
+value|bus_dma_tag_create(parent_tag, alignment, boundary,		\ 			   lowaddr, highaddr, filter, filterarg,	\ 			   maxsize, nsegments, maxsegsz, flags,		\ 			   busdma_lock_mutex,&Giant, dma_tagp)
 end_define
 
 begin_define

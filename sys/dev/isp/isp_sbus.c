@@ -2326,6 +2326,11 @@ name|BUS_SPACE_MAXADDR_24BIT
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|sbs
 operator|->
@@ -2541,6 +2546,11 @@ argument_list|,
 name|BUS_SPACE_MAXADDR_24BIT
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|isp

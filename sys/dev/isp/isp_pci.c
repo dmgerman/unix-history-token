@@ -5381,6 +5381,11 @@ name|slim
 argument_list|,
 literal|0
 argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
+argument_list|,
 operator|&
 name|pcs
 operator|->
@@ -5609,6 +5614,11 @@ argument_list|,
 name|slim
 argument_list|,
 literal|0
+argument_list|,
+name|busdma_lock_mutex
+argument_list|,
+operator|&
+name|Giant
 argument_list|,
 operator|&
 name|isp
