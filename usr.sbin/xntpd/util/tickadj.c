@@ -3,6 +3,32 @@ begin_comment
 comment|/*  * tickadj - read, and possibly modify, the kernel `tick' and  *	     `tickadj' variables, as well as `dosynctodr'.  Note that  *	     this operates on the running kernel only.  I'd like to be  *	     able to read and write the binary as well, but haven't  *	     mastered this yet.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -199,6 +225,12 @@ end_else
 begin_comment
 comment|/* not Linux... kmem tweaking: */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -439,13 +471,6 @@ value|(*(a) == *(b)&& strcmp((a), (b)) == 0)
 end_define
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|debug
 decl_stmt|;
@@ -627,12 +652,33 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: tickadj [-Adkpqs] [-a newadj] [-t newtick]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * main - parse arguments and handle options  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -721,13 +767,6 @@ name|void
 name|writevar
 parameter_list|()
 function_decl|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -798,16 +837,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unlikely value for tickadj: %s\n"
-argument_list|,
-name|progname
+literal|"unlikely value for tickadj: %s"
 argument_list|,
 name|ntp_optarg
 argument_list|)
@@ -850,16 +882,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unlikely value for tick: %s\n"
-argument_list|,
-name|progname
+literal|"unlikely value for tick: %s"
 argument_list|,
 name|ntp_optarg
 argument_list|)
@@ -883,25 +908,9 @@ name|ntp_optind
 operator|!=
 name|argc
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s [-Aqsp] [-a newadj] [-t newtick]\n"
-argument_list|,
-name|progname
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|kernel
 operator|=
 name|getoffsets
@@ -978,14 +987,9 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No noprintf kernal variable\n"
+literal|"no noprintf kernel variable"
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -1003,14 +1007,9 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No dosynctodr kernal variable\n"
+literal|"no dosynctodr kernel variable"
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -1028,14 +1027,9 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No tickadj kernal variable\n"
+literal|"no tickadj kernel variable"
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -1053,14 +1047,9 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No tick kernal variable\n"
+literal|"no tick kernel variable"
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -1170,25 +1159,13 @@ name|dosync_offset
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: can't find dosynctodr in namelist\n"
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't find dosynctodr in namelist"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1276,25 +1253,13 @@ name|tick
 operator|<=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: the value of tick is silly!\n"
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"the value of tick is silly!"
 argument_list|)
 expr_stmt|;
-block|}
 name|hz
 operator|=
 call|(
@@ -2296,25 +2261,13 @@ name|kname
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: nlist fails: can't find/read /vmunix or /unix\n"
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"nlist fails: can't find/read kernel boot file name"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dokmem
@@ -2565,32 +2518,15 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: open %s: "
-argument_list|,
-name|progname
+literal|"open %s"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|fd
 return|;
@@ -2637,30 +2573,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek fails: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"lseek fails"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|write
@@ -2685,30 +2604,13 @@ argument_list|(
 name|int
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write fails: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"write fails"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2756,30 +2658,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek fails: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"lseek fails"
 argument_list|)
 expr_stmt|;
-block|}
 name|i
 operator|=
 name|read
@@ -2804,30 +2689,13 @@ name|i
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read fails: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"read fails"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i
@@ -2837,17 +2705,11 @@ argument_list|(
 name|int
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: read expected %d, got %d\n"
-argument_list|,
-name|progname
+literal|"read expected %d, got %d"
 argument_list|,
 operator|(
 name|int
@@ -2860,12 +2722,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
