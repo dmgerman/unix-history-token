@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mscp.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mscp.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1416,6 +1416,113 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Macros to break up and build media IDs.  An ID encodes the port  * type in the top 10 bits, and the drive type in the remaining 22.  * The 10 bits, and 15 of the 22, are in groups of 5, with the value  * 0 representing space and values 1..26 representing A..Z.  The low  * 7 bits represent a number in 0..127.  Hence an RA81 on a UDA50  * is<D><U><R><A><>81, or 0x25641051.  This encoding scheme is known  * in part in uda.c.  *  * The casts below are just to make pcc generate better code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_MEDIA_PORT
+parameter_list|(
+name|id
+parameter_list|)
+value|(((long)(id)>> 22)& 0x3ff)
+end_define
+
+begin_comment
+comment|/* port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_MEDIA_DRIVE
+parameter_list|(
+name|id
+parameter_list|)
+value|((long)(id)& 0x003fffff)
+end_define
+
+begin_comment
+comment|/* drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_MID_ECH
+parameter_list|(
+name|n
+parameter_list|,
+name|id
+parameter_list|)
+value|(((long)(id)>> ((n) * 5 + 7))& 0x1f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSCP_MID_CHAR
+parameter_list|(
+name|n
+parameter_list|,
+name|id
+parameter_list|)
+define|\
+value|(MSCP_MID_ECH(n, id) ? MSCP_MID_ECH(n, id) + '@' : ' ')
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSCP_MID_NUM
+parameter_list|(
+name|id
+parameter_list|)
+value|((id)& 0x7f)
+end_define
+
+begin_comment
+comment|/* for, e.g., RA81 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_MKDRIVE2
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(((a) - '@')<< 17 | ((b) - '@')<< 12 | (n))
+end_define
+
+begin_comment
+comment|/* for, e.g., RRD50 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_MKDRIVE3
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(((a) - '@')<< 17 | ((b) - '@')<< 12 | ((c) - '@')<< 7 | (n))
+end_define
+
+begin_comment
 comment|/*  * Error datagram variant.  */
 end_comment
 
@@ -1504,7 +1611,7 @@ name|u_long
 name|erd_hdr
 decl_stmt|;
 comment|/* `header' (block number) */
-name|char
+name|u_char
 name|erd_sdistat
 index|[
 literal|12
