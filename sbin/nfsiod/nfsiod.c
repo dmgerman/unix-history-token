@@ -607,7 +607,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"missing system call: NFS not available."
+literal|"missing system call: NFS not available"
 argument_list|)
 expr_stmt|;
 block|}
