@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.28 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -886,6 +886,7 @@ name|char
 modifier|*
 name|cp1
 decl_stmt|,
+modifier|*
 name|cp2
 decl_stmt|;
 if|if
