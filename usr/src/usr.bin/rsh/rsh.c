@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.4 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|rfd2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nflag
 decl_stmt|;
 end_decl_stmt
 
@@ -399,23 +405,8 @@ operator|,
 name|argc
 operator|--
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-literal|0
-argument_list|)
+name|nflag
+operator|++
 expr_stmt|;
 goto|goto
 name|another
@@ -951,6 +942,13 @@ argument_list|,
 name|sendsig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nflag
+operator|==
+literal|0
+condition|)
+block|{
 name|pid
 operator|=
 name|fork
@@ -974,6 +972,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|ioctl
 argument_list|(
 name|rfd2
@@ -996,6 +995,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nflag
+operator|==
+literal|0
+operator|&&
 name|pid
 operator|==
 literal|0
@@ -1382,6 +1385,12 @@ condition|(
 name|readfrom
 condition|)
 do|;
+if|if
+condition|(
+name|nflag
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
