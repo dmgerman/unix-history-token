@@ -1949,6 +1949,12 @@ else|else
 block|{
 name|td
 operator|->
+name|td_state
+operator|=
+name|TDS_SWAPPED
+expr_stmt|;
+name|td
+operator|->
 name|td_proc
 operator|->
 name|p_sflag

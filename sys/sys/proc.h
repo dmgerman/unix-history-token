@@ -623,6 +623,8 @@ comment|/* would have liked to have run */
 name|TDS_IWAIT
 block|,
 name|TDS_SURPLUS
+block|,
+name|TDS_SWAPPED
 block|}
 name|td_state
 enum|;
@@ -1972,6 +1974,17 @@ begin_comment
 comment|/* Process may need signal delivery. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PS_SWAPPINGIN
+value|0x04000
+end_define
+
+begin_comment
+comment|/* Swapin in progress. */
+end_comment
+
 begin_comment
 comment|/* used only in legacy conversion code */
 end_comment
@@ -2629,7 +2642,7 @@ name|_PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	if ((p)->p_lock++ == 0)						\ 		faultin((p));						\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	if ((p)->p_lock++ == 0) {					\ 		mtx_lock_spin(&sched_lock);				\ 		faultin((p));						\ 		mtx_unlock_spin(&sched_lock);				\ 	}								\ } while (0)
 end_define
 
 begin_define

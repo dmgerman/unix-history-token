@@ -2598,12 +2598,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXXKSE Wrong! */
 name|td
 operator|->
 name|td_state
 operator|=
-name|TDS_RUNQ
+name|TDS_SWAPPED
 expr_stmt|;
 name|p
 operator|->
@@ -2822,12 +2821,11 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* XXXKSE Wrong */
 name|td
 operator|->
 name|td_state
 operator|=
-name|TDS_RUNQ
+name|TDS_SWAPPED
 expr_stmt|;
 name|p
 operator|->
@@ -3315,6 +3313,9 @@ case|:
 case|case
 name|TDS_IWAIT
 case|:
+case|case
+name|TDS_SWAPPED
+case|:
 default|default:
 name|printf
 argument_list|(
@@ -3416,9 +3417,8 @@ name|td
 operator|->
 name|td_state
 operator|=
-name|TDS_RUNQ
+name|TDS_SWAPPED
 expr_stmt|;
-comment|/* XXXKSE not a good idea */
 name|p
 operator|->
 name|p_sflag
