@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -52,11 +53,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_PERROR
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<syslog.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -146,6 +158,11 @@ decl_stmt|;
 name|char
 name|tbuf
 index|[
+sizeof|sizeof
+argument_list|(
+name|_PATH_UUCPLOCK
+argument_list|)
+operator|+
 name|MAXNAMLEN
 index|]
 decl_stmt|;
@@ -202,6 +219,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|USE_PERROR
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -209,6 +229,15 @@ argument_list|,
 literal|"lock open: %m"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|perror
+argument_list|(
+literal|"lock open"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -231,6 +260,9 @@ operator|-
 literal|1
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|USE_PERROR
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -238,6 +270,15 @@ argument_list|,
 literal|"lock read: %m"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|perror
+argument_list|(
+literal|"lock read"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -292,7 +333,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|L_SET
 argument_list|)
@@ -300,6 +344,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|USE_PERROR
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -307,6 +354,15 @@ argument_list|,
 literal|"lock lseek: %m"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|perror
+argument_list|(
+literal|"lock lseek"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -340,6 +396,9 @@ name|pid
 argument_list|)
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|USE_PERROR
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -347,6 +406,15 @@ argument_list|,
 literal|"lock write: %m"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|perror
+argument_list|(
+literal|"lock write"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -398,6 +466,11 @@ block|{
 name|char
 name|tbuf
 index|[
+sizeof|sizeof
+argument_list|(
+name|_PATH_UUCPLOCK
+argument_list|)
+operator|+
 name|MAXNAMLEN
 index|]
 decl_stmt|;
