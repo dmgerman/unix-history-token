@@ -1831,6 +1831,10 @@ name|NOPROC
 value|((void *)-1)
 end_define
 
+begin_comment
+comment|/*  * We need to compare data from the old process entry with the new  * process entry.  * To facilitate doing this quickly we stash a pointer in the kinfo_proc  * structure to cache the mapping.  We also use a negative cache pointer  * of NOPROC to avoid duplicate lookups.  * XXX: this could be done when the actual processes are fetched, we do  * it here out of laziness.  */
+end_comment
+
 begin_function
 specifier|const
 name|struct
@@ -1853,6 +1857,7 @@ decl_stmt|,
 modifier|*
 name|oldp
 decl_stmt|;
+comment|/* 	 * If this is the first fetch of the kinfo_procs then we don't have 	 * any previous entries. 	 */
 if|if
 condition|(
 name|previous_proc_count
@@ -1864,6 +1869,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* negative cache? */
 if|if
 condition|(
 name|pp
@@ -1877,6 +1883,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* cached? */
 if|if
 condition|(
 name|pp
@@ -1892,6 +1899,7 @@ operator|->
 name|ki_udata
 operator|)
 return|;
+comment|/* 	 * Not cached, 	 * 1) look up based on pid. 	 * 2) compare process start. 	 * If we fail here, then setup a negative cache entry, otherwise 	 * cache it. 	 */
 name|oldpp
 operator|=
 name|bsearch
@@ -1986,6 +1994,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Return the total amount of IO done in blocks in/out and faults.  * store the values individually in the pointers passed in.  */
+end_comment
 
 begin_function
 name|long
@@ -2162,6 +2174,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Return the total number of block in/out and faults by a process.  */
+end_comment
 
 begin_function
 name|long
