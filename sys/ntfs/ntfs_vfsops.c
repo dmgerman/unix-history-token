@@ -1598,45 +1598,7 @@ block|}
 else|else
 block|{
 comment|/* 		 ******************** 		 * NEW MOUNT 		 ******************** 		 */
-comment|/* 		 * Since this is a new mount, we want the names for 		 * the device and the mount point copied in.  If an 		 * error occurs,  the mountpoint is discarded by the 		 * upper level code. 		 */
-comment|/* Save "last mounted on" info for mount point (NULL pad)*/
-name|copyinstr
-argument_list|(
-name|path
-argument_list|,
-comment|/* mount point*/
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-argument_list|,
-comment|/* save area*/
-name|MNAMELEN
-operator|-
-literal|1
-argument_list|,
-comment|/* max size*/
-operator|&
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* real size*/
-name|bzero
-argument_list|(
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-operator|+
-name|size
-argument_list|,
-name|MNAMELEN
-operator|-
-name|size
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Since this is a new mount, we want the names for 		 * the device and the mount point copied in.  If an 		 * error occurs, the mountpoint is discarded by the 		 * upper level code.  Note that vfs_mount() handles 		 * copying the mountpoint f_mntonname for us, so we 		 * don't have to do it here unless we want to set it 		 * to something other than "path" for some rason. 		 */
 comment|/* Save "mounted from" info for mount point (NULL pad)*/
 name|copyinstr
 argument_list|(

@@ -686,6 +686,20 @@ operator|&=
 operator|~
 name|MNT_RDONLY
 expr_stmt|;
+comment|/*  	 * Set the mount path to be something useful, because the 	 * filesystem code isn't responsible now for initialising 	 * f_mntonname unless they want to override the default 	 * (which is `path'.) 	 */
+name|strncpy
+argument_list|(
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
+argument_list|,
+literal|"/"
+argument_list|,
+name|MNAMELEN
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VFS_MOUNT

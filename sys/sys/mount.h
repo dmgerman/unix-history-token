@@ -1897,7 +1897,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|mount1
+name|vfs_mount
 name|__P
 argument_list|(
 operator|(
@@ -1906,13 +1906,20 @@ name|proc
 operator|*
 name|p
 operator|,
-expr|struct
-name|mount_args
+name|char
 operator|*
-name|uap
+name|type
+operator|,
+name|char
+operator|*
+name|path
 operator|,
 name|int
-name|segflag
+name|flags
+operator|,
+name|void
+operator|*
+name|data
 operator|)
 argument_list|)
 decl_stmt|;
