@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/kern/RCS/vfs__bio.c,v 1.2 92/01/21 21:30:08 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/vfs__bio.c,v 1.1.1.1 1993/06/12 14:57:30 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,7 @@ file|"resourcevar.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|struct
 name|buf
 modifier|*

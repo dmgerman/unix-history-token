@@ -199,7 +199,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* XXX added to stop gcc from issuing warning */
+comment|/* XXX added to stop gcc1 from issuing warning */
 block|}
 end_function
 
@@ -901,6 +901,12 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* added to stop gcc2 from issuing warning */
 block|}
 end_block
 
