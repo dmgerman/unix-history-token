@@ -5984,7 +5984,26 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* BCR0 and BCR1 can override the RXCFG and TXCFG registers, 	 * so we must set both. 	 */
+comment|/* Set DMA size */
+name|VR_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_BCR0
+argument_list|,
+name|VR_BCR0_DMA_LENGTH
+argument_list|)
+expr_stmt|;
+name|VR_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|VR_BCR0
+argument_list|,
+name|VR_BCR0_DMA_STORENFWD
+argument_list|)
+expr_stmt|;
+comment|/*  	 * BCR0 and BCR1 can override the RXCFG and TXCFG registers, 	 * so we must set both. 	 */
 name|VR_CLRBIT
 argument_list|(
 name|sc
