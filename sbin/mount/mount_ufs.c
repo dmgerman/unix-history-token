@@ -183,10 +183,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
 name|struct
 name|ufs_args
 name|args
