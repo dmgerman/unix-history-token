@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/*  * $Id: vinumhdr.h,v 1.15 1999/10/12 09:40:35 grog Exp grog $  * $FreeBSD$  */
+comment|/*  * $Id: vinumhdr.h,v 1.18 2001/01/04 00:14:14 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -327,7 +327,7 @@ name|Malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc((x), M_DEVBUF, intr_nesting_level == 0? M_WAITOK: M_NOWAIT)
+value|malloc((x), M_DEVBUF, \ 	PCPU_GET(intr_nesting_level) == 0? M_WAITOK: M_NOWAIT)
 end_define
 
 begin_define
