@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_usrreq.c,v 5.4 88/11/18 17:29:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_usrreq.c,v $  *	@(#)tp_usrreq.c	7.7 (Berkeley) %G%  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
+comment|/*   * ARGO TP  *  * $Header: tp_usrreq.c,v 5.4 88/11/18 17:29:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_usrreq.c,v $  *	@(#)tp_usrreq.c	7.8 (Berkeley) %G%  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
 end_comment
 
 begin_ifndef
@@ -1254,8 +1254,6 @@ argument|m
 argument_list|,
 argument|nam
 argument_list|,
-argument|rightsp
-argument_list|,
 argument|controlp
 argument_list|)
 end_macro
@@ -1282,9 +1280,6 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
-decl_stmt|,
-modifier|*
-name|rightsp
 decl_stmt|,
 modifier|*
 name|controlp
@@ -3829,8 +3824,6 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
-argument_list|,
-name|m0
 argument_list|,
 name|m0
 argument_list|)
