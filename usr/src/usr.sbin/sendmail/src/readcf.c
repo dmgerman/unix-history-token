@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.43 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2106,52 +2106,6 @@ comment|/* initialize host maps from local service tables */
 name|inithostmaps
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|stab
-argument_list|(
-literal|"host"
-argument_list|,
-name|ST_MAP
-argument_list|,
-name|ST_FIND
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* user didn't initialize: set up host map */
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-literal|"host host"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|NAMED_BIND
-if|if
-condition|(
-name|ConfigLevel
-operator|>=
-literal|2
-condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|" -a."
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|makemapentry
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -4548,6 +4502,16 @@ name|O_DEFCHARSET
 block|,
 name|TRUE
 block|,
+define|#
+directive|define
+name|O_SSFILE
+value|0x86
+literal|"ServiceSwitchFile"
+block|,
+name|O_SSFILE
+block|,
+name|FALSE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -6684,6 +6648,18 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|O_SSFILE
+case|:
+comment|/* service switch file */
+name|ServiceSwitchFile
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -7163,6 +7139,7 @@ name|p
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|isascii
 argument_list|(
 operator|*
@@ -7175,6 +7152,12 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
+operator|||
+operator|*
+name|p
+operator|==
+literal|'.'
 condition|)
 continue|continue;
 if|if

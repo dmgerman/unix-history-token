@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.29 (Berkeley) %G%"
+literal|"@(#)alias.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,12 +699,6 @@ name|NULL
 condition|;
 control|)
 block|{
-name|char
-name|aname
-index|[
-literal|50
-index|]
-decl_stmt|;
 while|while
 condition|(
 name|isspace
@@ -728,6 +722,44 @@ name|spec
 operator|=
 name|p
 expr_stmt|;
+comment|/* 		**  Treat simple filename specially -- this is the file name 		**  for the files implementation, not necessarily in order. 		*/
+if|if
+condition|(
+name|spec
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|s
+operator|=
+name|stab
+argument_list|(
+literal|"aliases.files"
+argument_list|,
+name|ST_MAP
+argument_list|,
+name|ST_ENTER
+argument_list|)
+expr_stmt|;
+name|map
+operator|=
+operator|&
+name|s
+operator|->
+name|s_map
+expr_stmt|;
+block|}
+else|else
+block|{
+name|char
+name|aname
+index|[
+literal|50
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|NAliasDBs
@@ -781,6 +813,7 @@ index|]
 operator|=
 name|map
 expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 name|map
@@ -869,6 +902,28 @@ name|p
 operator|++
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|20
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"  map %s:%s %s\n"
+argument_list|,
+name|class
+argument_list|,
+name|s
+operator|->
+name|s_name
+argument_list|,
+name|spec
+argument_list|)
 expr_stmt|;
 comment|/* look up class */
 name|s
@@ -963,6 +1018,15 @@ name|MF_VALID
 operator||
 name|MF_ALIAS
 expr_stmt|;
+if|if
+condition|(
+name|AliasDB
+index|[
+name|NAliasDBs
+index|]
+operator|==
+name|map
+condition|)
 name|NAliasDBs
 operator|++
 expr_stmt|;
