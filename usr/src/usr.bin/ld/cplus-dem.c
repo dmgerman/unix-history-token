@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cplus-dem.c	5.2 (Berkeley) %G%"
+literal|"@(#)cplus-dem.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
