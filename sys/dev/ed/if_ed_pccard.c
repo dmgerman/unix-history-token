@@ -885,6 +885,19 @@ name|PCMCIA_CARD
 argument_list|(
 name|IBM
 argument_list|,
+name|HOME_AND_AWAY
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|IBM
+argument_list|,
 name|INFOMOVER
 argument_list|,
 literal|0
@@ -1451,15 +1464,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pp
-operator|-
-name|ed_pccard_products
-operator|,
-name|pp
-operator|->
-name|flags
-block|)
-empty_stmt|;
 if|if
 condition|(
 name|pp
@@ -1487,23 +1491,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_return
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*   * Probe framework for pccards.  Replicates the standard framework,  * minus the pccard driver registration and ignores the ether address  * supplied (from the CIS), relying on the probe to find it instead.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|int
 name|ed_pccard_probe
 parameter_list|(
