@@ -151,6 +151,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_function
 specifier|static
 name|u_int32_t
@@ -206,6 +212,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|struct
@@ -759,7 +770,7 @@ name|__i386__
 ifdef|#
 directive|ifdef
 name|PC98
-comment|/* XXX -- Quick Hack! 	 * Check MS-DOG MO 	 */
+comment|/* XXX -- Quick Hack! 	 * Check MS-DOS MO 	 */
 if|if
 condition|(
 operator|(
@@ -963,6 +974,9 @@ literal|0x22
 case|:
 case|case
 literal|0x23
+case|:
+case|case
+literal|0x24
 case|:
 name|ce
 operator|=
