@@ -1485,9 +1485,11 @@ operator|=
 name|sap
 operator|->
 name|sg_len
+operator|-
+literal|2
 operator|)
 operator|<=
-literal|2
+literal|0
 operator|)
 operator|||
 operator|(
