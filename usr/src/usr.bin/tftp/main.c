@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2530,7 +2530,20 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|feof
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+name|quit
+argument_list|()
+expr_stmt|;
+else|else
 continue|continue;
+block|}
 if|if
 condition|(
 name|line
