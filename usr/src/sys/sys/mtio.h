@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtio.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtio.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -284,6 +284,94 @@ begin_comment
 comment|/* CCI Cipher */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MT_ISCT
+value|0x0a
+end_define
+
+begin_comment
+comment|/* HP 1/4 tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISFHP
+value|0x0b
+end_define
+
+begin_comment
+comment|/* HP 7980 1/2 tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISEXABYTE
+value|0x0c
+end_define
+
+begin_comment
+comment|/* Exabyte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISEXA8200
+value|0x0c
+end_define
+
+begin_comment
+comment|/* Exabyte EXB-8200 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISEXA8500
+value|0x0d
+end_define
+
+begin_comment
+comment|/* Exabyte EXB-8500 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISVIPER1
+value|0x0e
+end_define
+
+begin_comment
+comment|/* Archive Viper-150 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISPYTHON
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Archive Python (DAT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISHPDAT
+value|0x10
+end_define
+
+begin_comment
+comment|/* HP 35450A DAT drive */
+end_comment
+
 begin_comment
 comment|/* mag tape io control commands */
 end_comment
@@ -344,6 +432,98 @@ directive|define
 name|DEFTAPE
 value|"/dev/rmt12"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * minor device number  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_UNIT
+value|003
+end_define
+
+begin_comment
+comment|/* unit selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NOREWIND
+value|004
+end_define
+
+begin_comment
+comment|/* no rewind on close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_DENSEL
+value|030
+end_define
+
+begin_comment
+comment|/* density select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_800BPI
+value|000
+end_define
+
+begin_comment
+comment|/* select  800 bpi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_1600BPI
+value|010
+end_define
+
+begin_comment
+comment|/* select 1600 bpi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_6250BPI
+value|020
+end_define
+
+begin_comment
+comment|/* select 6250 bpi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_BADBPI
+value|030
+end_define
+
+begin_comment
+comment|/* undefined selection */
+end_comment
 
 begin_endif
 endif|#
