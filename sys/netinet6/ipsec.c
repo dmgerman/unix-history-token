@@ -15135,14 +15135,16 @@ operator|&
 name|M_EXT
 condition|)
 block|{
-comment|/* 			 * Make a copy only if there are more than one references 			 * to the cluster. 			 * XXX: is this approach effective? 			 */
+comment|/* 			 * Make a copy only if there are more than one 			 * references to the cluster. 			 * XXX: is this approach effective? 			 */
 if|if
 condition|(
 name|n
 operator|->
 name|m_ext
 operator|.
-name|ext_free
+name|ext_type
+operator|!=
+name|EXT_CLUSTER
 operator|||
 name|MEXT_IS_REF
 argument_list|(
