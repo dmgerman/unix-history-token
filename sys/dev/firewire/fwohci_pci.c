@@ -1662,6 +1662,15 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|fwohci_softc_t
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -1686,7 +1695,13 @@ condition|)
 return|return
 name|err
 return|;
-comment|/* fwohci_stop(dev); */
+name|fwohci_stop
+argument_list|(
+name|sc
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1721,6 +1736,13 @@ name|pci_get_powerstate
 argument_list|(
 name|dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|pci_set_powerstate
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 name|fwohci_pci_init

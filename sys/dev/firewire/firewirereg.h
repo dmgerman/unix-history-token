@@ -362,6 +362,10 @@ name|status
 decl_stmt|;
 define|#
 directive|define
+name|FWBUSNOTREADY
+value|(-1)
+define|#
+directive|define
 name|FWBUSRESET
 value|0
 define|#
