@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.69 (Berkeley) 5/29/97"
+literal|"@(#)collect.c	8.71 (Berkeley) 6/30/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1565,6 +1565,9 @@ argument_list|(
 name|tf
 argument_list|)
 operator|||
+operator|(
+name|SuperSafe
+operator|&&
 name|fsync
 argument_list|(
 name|fileno
@@ -1574,6 +1577,7 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+operator|)
 operator|||
 name|fclose
 argument_list|(
@@ -2009,7 +2013,7 @@ name|addheader
 argument_list|(
 literal|"Bcc"
 argument_list|,
-literal|""
+literal|" "
 argument_list|,
 operator|&
 name|e

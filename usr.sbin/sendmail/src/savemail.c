@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.110 (Berkeley) 4/7/97"
+literal|"@(#)savemail.c	8.114 (Berkeley) 8/2/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,24 +129,6 @@ end_define
 begin_comment
 comment|/* the message is successfully delivered */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_VARTMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_VARTMP
-value|"/usr/tmp/"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -858,7 +840,7 @@ name|sendtolist
 argument_list|(
 name|DoubleBounceAddr
 argument_list|,
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|q
@@ -1123,6 +1105,7 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|SafeFileEnv
 operator|!=
 name|NULL
@@ -1133,6 +1116,18 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|)
+operator|||
+name|DeadLetterDrop
+operator|==
+name|NULL
+operator|||
+name|DeadLetterDrop
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 name|state
@@ -1141,18 +1136,6 @@ name|ESM_PANIC
 expr_stmt|;
 break|break;
 block|}
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|,
-literal|"%sdead.letter"
-argument_list|,
-name|_PATH_VARTMP
-argument_list|)
-expr_stmt|;
 name|flags
 operator|=
 name|SFF_NOLINK
@@ -1170,7 +1153,7 @@ condition|(
 operator|!
 name|writable
 argument_list|(
-name|buf
+name|DeadLetterDrop
 argument_list|,
 name|NULL
 argument_list|,
@@ -1182,11 +1165,9 @@ name|fp
 operator|=
 name|safefopen
 argument_list|(
-name|buf
+name|DeadLetterDrop
 argument_list|,
 name|O_WRONLY
-operator||
-name|O_CREAT
 operator||
 name|O_APPEND
 argument_list|,
@@ -1325,7 +1306,7 @@ name|message
 argument_list|(
 literal|"Saved message in %s"
 argument_list|,
-name|buf
+name|DeadLetterDrop
 argument_list|)
 expr_stmt|;
 name|Verbose
@@ -1348,7 +1329,7 @@ name|e_id
 argument_list|,
 literal|"Saved message in %s"
 argument_list|,
-name|buf
+name|DeadLetterDrop
 argument_list|)
 expr_stmt|;
 name|state
@@ -1365,7 +1346,7 @@ name|fp
 argument_list|,
 literal|"savemail"
 argument_list|,
-name|buf
+name|DeadLetterDrop
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2960,6 +2941,21 @@ operator|==
 literal|'/'
 condition|)
 block|{
+name|int
+name|sff
+init|=
+name|SFF_ROOTOK
+operator||
+name|SFF_REGONLY
+decl_stmt|;
+if|if
+condition|(
+name|DontLockReadFiles
+condition|)
+name|sff
+operator||=
+name|SFF_NOLOCK
+expr_stmt|;
 name|xfile
 operator|=
 name|safefopen
@@ -2970,9 +2966,7 @@ name|O_RDONLY
 argument_list|,
 literal|0444
 argument_list|,
-name|SFF_ROOTOK
-operator||
-name|SFF_REGONLY
+name|sff
 argument_list|)
 expr_stmt|;
 if|if
