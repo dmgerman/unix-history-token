@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|IPS_MARCO_DEVICE_ID
-value|0x0950
+value|0x0250
 end_define
 
 begin_define
