@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -104,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ipl.h>
 end_include
 
 begin_include
@@ -153,22 +165,6 @@ operator|(
 expr|struct
 name|isa_device
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*-  * This space intentionally left blank to stop __LINE__ from screwing up  * regression tests :-(.  *  *  *  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|rcpoll
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -955,6 +951,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|swihand_t
+name|rcpoll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|rc_reinit
 name|__P
@@ -1268,7 +1271,7 @@ index|]
 decl_stmt|;
 specifier|static
 name|int
-name|rc_wakeup_started
+name|rc_started
 init|=
 literal|0
 decl_stmt|;
@@ -1546,9 +1549,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|rc_wakeup_started
+name|rc_started
 condition|)
 block|{
+name|register_swi
+argument_list|(
+name|SWI_TTY
+argument_list|,
+name|rcpoll
+argument_list|)
+expr_stmt|;
 name|rc_wakeup
 argument_list|(
 operator|(
@@ -1558,9 +1568,9 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|rc_wakeup_started
+name|rc_started
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 return|return
