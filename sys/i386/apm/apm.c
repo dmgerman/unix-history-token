@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.26 1996/03/12 21:51:58 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.27 1996/03/13 00:41:38 nate Exp $  */
 end_comment
 
 begin_include
@@ -259,26 +259,8 @@ specifier|static
 name|struct
 name|apm_softc
 name|apm_softc
-index|[
-name|NAPM
-index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|apm_softc
-modifier|*
-name|master_softc
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1861,12 +1843,10 @@ name|struct
 name|apm_softc
 modifier|*
 name|sc
+init|=
+operator|&
+name|apm_softc
 decl_stmt|;
-name|sc
-operator|=
-name|master_softc
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 operator|!
@@ -1913,12 +1893,10 @@ name|struct
 name|apm_softc
 modifier|*
 name|sc
+init|=
+operator|&
+name|apm_softc
 decl_stmt|;
-name|sc
-operator|=
-name|master_softc
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 operator|!
@@ -2087,9 +2065,9 @@ name|apm_softc
 modifier|*
 name|sc
 init|=
-name|master_softc
+operator|&
+name|apm_softc
 decl_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|sc
@@ -2142,9 +2120,9 @@ name|apm_softc
 modifier|*
 name|sc
 init|=
-name|master_softc
+operator|&
+name|apm_softc
 decl_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|sc
@@ -2424,22 +2402,24 @@ modifier|*
 name|dvp
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
+if|if
+condition|(
 name|dvp
 operator|->
 name|id_unit
-decl_stmt|;
-comment|/* 	 * XXX - This is necessary here so that we don't panic in the idle 	 * loop because master_softc is unitialized. 	 */
-name|master_softc
-operator|=
-operator|&
-name|apm_softc
-index|[
-name|unit
-index|]
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"apm: Only one APM driver supported.\n"
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 switch|switch
 condition|(
 name|apm_version
@@ -2457,9 +2437,7 @@ name|APMINI_NOT32BIT
 case|:
 name|printf
 argument_list|(
-literal|"apm%d: 32bit connection is not supported.\n"
-argument_list|,
-name|unit
+literal|"apm: 32bit connection is not supported.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2470,9 +2448,7 @@ name|APMINI_CONNECTERR
 case|:
 name|printf
 argument_list|(
-literal|"apm%d: 32-bit connection error.\n"
-argument_list|,
-name|unit
+literal|"apm: 32-bit connection error.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2673,19 +2649,6 @@ modifier|*
 name|dvp
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|dvp
-operator|->
-name|id_unit
-decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 define|#
 directive|define
 name|APM_KERNBASE
@@ -2697,9 +2660,6 @@ name|sc
 init|=
 operator|&
 name|apm_softc
-index|[
-name|unit
-index|]
 decl_stmt|;
 name|sc
 operator|->
@@ -2829,9 +2789,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"apm%d: Code32 0x%08x, Code16 0x%08x, Data 0x%08x\n"
-argument_list|,
-name|unit
+literal|"apm: Code32 0x%08x, Code16 0x%08x, Data 0x%08x\n"
 argument_list|,
 name|sc
 operator|->
@@ -2848,9 +2806,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"apm%d: Code entry 0x%08x, Idling CPU %s, Management %s\n"
-argument_list|,
-name|unit
+literal|"apm: Code entry 0x%08x, Idling CPU %s, Management %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -2874,9 +2830,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"apm%d: CS_limit=%x, DS_limit=%x\n"
-argument_list|,
-name|unit
+literal|"apm: CS_limit=%x, DS_limit=%x\n"
 argument_list|,
 name|sc
 operator|->
@@ -3033,9 +2987,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"apm%d: Engaged control %s\n"
-argument_list|,
-name|unit
+literal|"apm: Engaged control %s\n"
 argument_list|,
 name|is_enabled
 argument_list|(
@@ -3062,9 +3014,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"apm%d: Idling CPU %s\n"
-argument_list|,
-name|unit
+literal|"apm: Idling CPU %s\n"
 argument_list|,
 name|is_enabled
 argument_list|(
@@ -3239,15 +3189,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"apm%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_devfs_token
@@ -3256,12 +3197,12 @@ name|devfs_add_devsw
 argument_list|(
 literal|"/"
 argument_list|,
-name|name
+literal|"apm"
 argument_list|,
 operator|&
 name|apm_cdevsw
 argument_list|,
-name|unit
+literal|0
 argument_list|,
 name|DV_CHR
 argument_list|,
@@ -3307,12 +3248,6 @@ name|sc
 init|=
 operator|&
 name|apm_softc
-index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -3320,8 +3255,8 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|>=
-name|NAPM
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
@@ -3339,7 +3274,9 @@ name|initialized
 condition|)
 block|{
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 return|return
@@ -3404,12 +3341,6 @@ name|sc
 init|=
 operator|&
 name|apm_softc
-index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-index|]
 decl_stmt|;
 name|int
 name|error
@@ -3421,12 +3352,7 @@ directive|ifdef
 name|APM_DEBUG
 name|printf
 argument_list|(
-literal|"APM ioctl: minor = %d, cmd = 0x%x\n"
-argument_list|,
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+literal|"APM ioctl: cmd = 0x%x\n"
 argument_list|,
 name|cmd
 argument_list|)
@@ -3439,8 +3365,8 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|>=
-name|NAPM
+operator|!=
+literal|0
 condition|)
 block|{
 return|return
