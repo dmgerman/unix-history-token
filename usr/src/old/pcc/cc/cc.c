@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.12 %G%"
+literal|"@(#)cc.c 4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1003,6 +1003,24 @@ condition|)
 name|signal
 argument_list|(
 name|SIGTERM
+argument_list|,
+name|idexit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
+name|signal
+argument_list|(
+name|SIGHUP
 argument_list|,
 name|idexit
 argument_list|)
