@@ -1266,7 +1266,7 @@ name|cp
 operator|->
 name|cn_pri
 operator|=
-name|CN_INTERNAL
+name|CN_LOW
 expr_stmt|;
 block|}
 end_function
