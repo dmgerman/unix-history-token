@@ -725,7 +725,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|callout_reset
+name|_callout_reset
 parameter_list|(
 name|c
 parameter_list|,
@@ -734,6 +734,8 @@ parameter_list|,
 name|ftn
 parameter_list|,
 name|arg
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|callout
@@ -764,6 +766,12 @@ begin_decl_stmt
 name|void
 modifier|*
 name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -823,6 +831,12 @@ operator|(
 name|CALLOUT_ACTIVE
 operator||
 name|CALLOUT_PENDING
+operator||
+operator|(
+name|flags
+operator|&
+name|CALLOUT_MPSAFE
+operator|)
 operator|)
 expr_stmt|;
 name|c
