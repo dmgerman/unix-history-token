@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/segments.h>
 end_include
 
@@ -3113,7 +3119,9 @@ name|sc
 operator|->
 name|always_halt_cpu
 condition|)
-asm|__asm("hlt");
+name|halt
+argument_list|()
+expr_stmt|;
 comment|/* wait for interrupt */
 block|}
 end_function
