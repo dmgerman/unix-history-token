@@ -332,7 +332,7 @@ name|HOSTNAME_FIELD_LEN
 operator|-
 literal|1
 block|,
-literal|"Extra options to ifconfig:"
+literal|"Extra options to ifconfig (usually empty):"
 block|,
 literal|"Any interface-specific options to ifconfig you would like to add"
 block|,
