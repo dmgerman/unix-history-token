@@ -1852,6 +1852,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSG_NBIO
+value|0x4000
+end_define
+
+begin_comment
+comment|/* FIONBIO mode, used by fifofs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSG_COMPAT
 value|0x8000
 end_define
