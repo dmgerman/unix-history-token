@@ -1753,7 +1753,7 @@ name|remove_mode
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * scan the objects entire memory queue 	 */
+comment|/* 		 * scan the objects entire memory queue 		 */
 name|rcount
 operator|=
 name|object
@@ -2378,6 +2378,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* !defined(NO_SWAPPING) */
+end_comment
+
+begin_comment
 comment|/*  * Don't try to be fancy - being fancy can lead to VOP_LOCK's and therefore  * to vnode deadlocks.  We only do it for OBJT_DEFAULT and OBJT_SWAP objects  * which we know can be trivially freed.  */
 end_comment
 
@@ -2714,7 +2718,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Dont mess with busy pages, keep in the front of the 		 * queue, most likely are being paged out. 		 */
+comment|/* 		 * Don't mess with busy pages, keep in the front of the 		 * queue, most likely are being paged out. 		 */
 if|if
 condition|(
 name|m
@@ -5292,6 +5296,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !defined(NO_SWAPPING) */
+end_comment
 
 end_unit
 

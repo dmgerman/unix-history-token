@@ -219,6 +219,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
 comment|/*  * Information passed from the machine-independant VM initialization code  * for use by machine-dependant code (mainly for MMU support)  */
 end_comment
 

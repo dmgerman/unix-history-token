@@ -3445,7 +3445,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * mreq is left bussied after completion, but all the other pages 	 * are freed.  If we had an unrecoverable read error the page will 	 * not be valid. 	 */
+comment|/* 	 * mreq is left busied after completion, but all the other pages 	 * are freed.  If we had an unrecoverable read error the page will 	 * not be valid. 	 */
 if|if
 condition|(
 name|mreq

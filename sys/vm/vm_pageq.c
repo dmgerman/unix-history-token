@@ -826,6 +826,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* PQ_L2_SIZE> 1 */
+end_comment
+
 begin_function
 name|vm_page_t
 name|vm_pageq_find

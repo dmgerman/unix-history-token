@@ -480,7 +480,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curthread); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curthread); \ 		(map)->timestamp++; \ 	} while (0)
 end_define
 
 begin_endif
@@ -1224,6 +1224,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

@@ -268,6 +268,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* TYPEDEF_FOR_UAP */
+end_comment
+
 begin_decl_stmt
 name|int
 name|grow

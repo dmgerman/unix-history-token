@@ -9529,7 +9529,7 @@ parameter_list|(
 name|why
 parameter_list|)
 define|\
-value|{ \ 		vm_map_unlock_read(map); \ 		return(why); \ 		}
+value|{ \ 		vm_map_unlock_read(map); \ 		return (why); \ 		}
 comment|/* 	 * If the map has an interesting hint, try it before calling full 	 * blown lookup routine. 	 */
 name|entry
 operator|=
@@ -10509,7 +10509,7 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    				* Force copy on write for mmaped regions    				*/
+comment|/*    				 * Force copy on write for mmaped regions    				 */
 name|vm_object_pmap_copy_1
 argument_list|(
 name|srcobject
@@ -10521,7 +10521,7 @@ operator|+
 name|osize
 argument_list|)
 expr_stmt|;
-comment|/*    				* Point the object appropriately    				*/
+comment|/*    				 * Point the object appropriately    				 */
 if|if
 condition|(
 name|oldobject
@@ -10529,7 +10529,7 @@ operator|!=
 name|srcobject
 condition|)
 block|{
-comment|/*    				* Set the object optimization hint flag    				*/
+comment|/*    					 * Set the object optimization hint flag    					 */
 name|vm_object_set_flag
 argument_list|(
 name|srcobject
