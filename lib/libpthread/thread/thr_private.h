@@ -91,6 +91,22 @@ value|_thread_exit(__FILE__,__LINE__,string)
 end_define
 
 begin_comment
+comment|/*  * State change macro:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_NEW_STATE
+parameter_list|(
+name|thrd
+parameter_list|,
+name|newstate
+parameter_list|)
+value|{				\ 	(thrd)->state = newstate;					\ 	(thrd)->fname = __FILE__;					\ 	(thrd)->lineno = __LINE__;					\ }
+end_define
+
+begin_comment
 comment|/*  * Queue definitions.  */
 end_comment
 
@@ -506,66 +522,6 @@ name|TIMESLICE_USEC
 value|100000
 end_define
 
-begin_comment
-comment|/*  * Flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_DETACHED
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_SCOPE_SYSTEM
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_INHERIT_SCHED
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_NOFLOAT
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_CREATE_DETACHED
-value|PTHREAD_DETACHED
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_CREATE_JOINABLE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_SCOPE_PROCESS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_EXPLICIT_SCHED
-value|0
-end_define
-
 begin_struct
 struct|struct
 name|pthread_key
@@ -944,6 +900,14 @@ name|union
 name|pthread_wait_data
 name|data
 decl_stmt|;
+comment|/* 	 * Set to TRUE if a blocking operation was 	 * interrupted by a signal: 	 */
+name|int
+name|interrupted
+decl_stmt|;
+comment|/* Signal number when in state PS_SIGWAIT: */
+name|int
+name|signo
+decl_stmt|;
 comment|/* Miscellaneous data. */
 name|char
 name|flags
@@ -970,6 +934,15 @@ name|pthread_cleanup
 modifier|*
 name|cleanup
 decl_stmt|;
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+comment|/* Ptr to source file name  */
+name|int
+name|lineno
+decl_stmt|;
+comment|/* Source line number.      */
 block|}
 struct|;
 end_struct
@@ -999,6 +972,7 @@ name|SCLASS
 name|struct
 name|pthread
 modifier|*
+specifier|volatile
 name|_thread_run
 ifdef|#
 directive|ifdef
@@ -1032,6 +1006,7 @@ name|SCLASS
 name|struct
 name|pthread
 modifier|*
+specifier|volatile
 name|_thread_single
 ifdef|#
 directive|ifdef
@@ -1064,6 +1039,7 @@ name|SCLASS
 name|struct
 name|pthread
 modifier|*
+specifier|volatile
 name|_thread_link_list
 ifdef|#
 directive|ifdef
@@ -1196,6 +1172,7 @@ name|SCLASS
 name|struct
 name|pthread
 modifier|*
+specifier|volatile
 name|_thread_dead
 ifdef|#
 directive|ifdef
@@ -1299,7 +1276,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Default thread attributes: */
+comment|/* Default mutex attributes: */
 end_comment
 
 begin_decl_stmt
@@ -1332,6 +1309,55 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Default condition variable attributes: */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|pthread_cond_attr
+name|pthread_condattr_default
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+block|{
+name|COND_TYPE_FAST
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Standard I/O file descriptors need special flag treatment since  * setting one to non-blocking does all on *BSD. Sigh. This array  * is used to store the initial flag settings.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_pthread_stdio_flags
+index|[
+literal|3
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* File table information: */
@@ -1663,15 +1689,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|_thread_kern_sig_unblock
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_thread_cleanup_pop
 parameter_list|(
 name|int
 parameter_list|)

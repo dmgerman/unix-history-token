@@ -75,12 +75,9 @@ name|NULL
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -133,11 +130,12 @@ name|NULL
 condition|)
 block|{
 comment|/* Make the thread run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|next_thread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * NULL the thread pointer now that the thread has been 		 * detached:  		 */
@@ -150,12 +148,9 @@ block|}
 else|else
 block|{
 comment|/* Return an error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|ESRCH
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=

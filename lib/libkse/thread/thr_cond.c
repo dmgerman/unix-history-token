@@ -793,11 +793,12 @@ name|NULL
 condition|)
 block|{
 comment|/* Allow the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -895,11 +896,12 @@ name|NULL
 condition|)
 block|{
 comment|/* Allow the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 break|break;

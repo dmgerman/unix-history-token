@@ -73,18 +73,11 @@ name|fd
 operator|>=
 name|_thread_dtablesize
 condition|)
-block|{
 comment|/* Return a bad file descriptor error: */
-name|errno
+name|ret
 operator|=
 name|EBADF
 expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 comment|/* 	 * Check if memory has already been allocated for this file 	 * descriptor:  	 */
 elseif|else
 if|if
@@ -96,7 +89,9 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{ 	}
+block|{
+comment|/* Memory has already been allocated. */
+block|}
 comment|/* Allocate memory for the file descriptor table entry: */
 elseif|else
 if|if
@@ -124,20 +119,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 comment|/* Return a bad file descriptor error: */
-name|errno
+name|ret
 operator|=
 name|EBADF
 expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 else|else
 block|{
+comment|/* Assume that the operation will succeed: */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Initialise the file locks: */
 name|_thread_fd_table
 index|[
@@ -241,6 +234,10 @@ expr_stmt|;
 comment|/* Get the flags for the file: */
 if|if
 condition|(
+name|fd
+operator|>=
+literal|3
+operator|&&
 operator|(
 name|_thread_fd_table
 index|[
@@ -262,16 +259,35 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|ret
 operator|=
-operator|-
-literal|1
+name|errno
 expr_stmt|;
-comment|/* Make the file descriptor non-blocking: */
-block|}
 else|else
 block|{
+comment|/* Check if a stdio descriptor: */
+if|if
+condition|(
+name|fd
+operator|<
+literal|3
+condition|)
+comment|/* 				 * Use the stdio flags read by 				 * _pthread_init() to avoid 				 * mistaking the non-blocking 				 * flag that, when set on one 				 * stdio fd, is set on all stdio 				 * fds. 				 */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator|=
+name|_pthread_stdio_flags
+index|[
+name|fd
+index|]
+expr_stmt|;
+comment|/* Make the file descriptor non-blocking: */
+if|if
+condition|(
 name|_thread_sys_fcntl
 argument_list|(
 name|fd
@@ -287,15 +303,21 @@ name|flags
 operator||
 name|O_NONBLOCK
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|ret
+operator|=
+name|errno
 expr_stmt|;
 block|}
 comment|/* Check if one of the fcntl calls failed: */
 if|if
 condition|(
 name|ret
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Free the file descriptor table entry: */
@@ -449,16 +471,17 @@ block|{ 				}
 else|else
 block|{
 comment|/* 					 * Set the state of the new owner of 					 * the thread to  running:  					 */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|_thread_fd_table
 index|[
 name|fd
 index|]
 operator|->
 name|r_owner
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 comment|/* 					 * Reset the number of read locks. 					 * This will be incremented by the 					 * new owner of the lock when it sees 					 * that it has the lock.                            					 */
 name|_thread_fd_table
@@ -550,16 +573,17 @@ block|{ 				}
 else|else
 block|{
 comment|/* 					 * Set the state of the new owner of 					 * the thread to running:  					 */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|_thread_fd_table
 index|[
 name|fd
 index|]
 operator|->
 name|w_owner
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 comment|/* 					 * Reset the number of write locks. 					 * This will be incremented by the 					 * new owner of the lock when it   					 * sees that it has the lock.                            					 */
 name|_thread_fd_table

@@ -507,7 +507,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pthread_keycreate
+name|pthread_key_create
 argument_list|(
 operator|&
 name|ttyname_key

@@ -128,6 +128,66 @@ name|_POSIX_THREAD_SAFE_FUNCTIONS
 end_define
 
 begin_comment
+comment|/*  * Flags for threads and thread attributes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_DETACHED
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_SCOPE_SYSTEM
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_INHERIT_SCHED
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_NOFLOAT
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE_DETACHED
+value|PTHREAD_DETACHED
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE_JOINABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_SCOPE_PROCESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_EXPLICIT_SCHED
+value|0
+end_define
+
+begin_comment
 comment|/*  * Forward structure definitions.  *  * These are mostly opaque to the user.  */
 end_comment
 
@@ -330,18 +390,18 @@ begin_comment
 comment|/*  * Default attribute arguments.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTHREAD_KERNEL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|pthread_condattr_default
 value|NULL
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PTHREAD_KERNEL
-end_ifndef
 
 begin_define
 define|#
@@ -647,7 +707,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|pthread_cleanup_push
 name|__P
 argument_list|(

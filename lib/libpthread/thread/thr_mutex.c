@@ -1025,16 +1025,17 @@ name|NULL
 condition|)
 block|{
 comment|/* Allow the new owner of the mutex to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 operator|(
 operator|*
 name|mutex
 operator|)
 operator|->
 name|m_owner
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -1120,16 +1121,17 @@ name|NULL
 condition|)
 block|{
 comment|/* Allow the new owner of the mutex to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 operator|(
 operator|*
 name|mutex
 operator|)
 operator|->
 name|m_owner
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 break|break;

@@ -86,11 +86,12 @@ name|PS_SUSPENDED
 condition|)
 block|{
 comment|/* Allow the thread to run. */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -116,12 +117,9 @@ block|}
 else|else
 block|{
 comment|/* Thread is in some other state. */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -136,12 +134,9 @@ literal|1
 condition|)
 block|{
 comment|/* No such thread */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|ESRCH
-argument_list|)
 expr_stmt|;
 block|}
 return|return

@@ -96,12 +96,9 @@ block|}
 else|else
 block|{
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* Return the completion status: */

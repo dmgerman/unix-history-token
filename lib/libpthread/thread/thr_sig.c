@@ -179,11 +179,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 block|}

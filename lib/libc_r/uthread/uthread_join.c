@@ -48,6 +48,9 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|pthread_t
+name|pthread1
+decl_stmt|;
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -55,7 +58,84 @@ operator|&
 name|status
 argument_list|)
 expr_stmt|;
+comment|/* Point to the first thread in the list: */
+name|pthread1
+operator|=
+name|_thread_link_list
+expr_stmt|;
+comment|/* Search for the thread to join to: */
+while|while
+condition|(
+name|pthread1
+operator|!=
+name|NULL
+operator|&&
+name|pthread1
+operator|!=
+name|pthread
+condition|)
+block|{
+comment|/* Point to the next thread: */
+name|pthread1
+operator|=
+name|pthread1
+operator|->
+name|nxt
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pthread1
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Point to the first thread in the dead thread list: */
+name|pthread1
+operator|=
+name|_thread_dead
+expr_stmt|;
+comment|/* Search for the thread to join to: */
+while|while
+condition|(
+name|pthread1
+operator|!=
+name|NULL
+operator|&&
+name|pthread1
+operator|!=
+name|pthread
+condition|)
+block|{
+comment|/* Point to the next thread: */
+name|pthread1
+operator|=
+name|pthread1
+operator|->
+name|nxt
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|pthread1
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Return an error: */
+name|errno
+operator|=
+name|ESRCH
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Check if this thread has been detached: */
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -72,12 +152,9 @@ literal|0
 condition|)
 block|{
 comment|/* Return an error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|ESRCH
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -160,12 +237,9 @@ block|}
 else|else
 block|{
 comment|/* Return an error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|ESRCH
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=

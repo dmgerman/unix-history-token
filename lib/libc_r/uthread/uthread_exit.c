@@ -331,7 +331,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_thread_cleanup_pop
+name|pthread_cleanup_pop
 argument_list|(
 literal|1
 argument_list|)
@@ -398,11 +398,12 @@ name|NULL
 condition|)
 block|{
 comment|/* Wake the joined thread and let it detach this thread: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Check if the running thread is at the head of the linked list: */
@@ -513,22 +514,31 @@ comment|/* 				 * The parent thread is waiting on at least 				 * one other sign
 break|break;
 block|}
 block|}
-comment|/* 		 * Check if the parent is not waiting on any other signal 		 * handler threads:  		 */
+comment|/* 		 * Check if the parent is not waiting on any other signal 		 * handler threads and if it hasn't died in the meantime: 		 */
 if|if
 condition|(
 name|pthread
 operator|==
 name|NULL
-condition|)
-block|{
-comment|/* Allow the parent thread to run again: */
+operator|&&
 name|_thread_run
 operator|->
 name|parent_thread
 operator|->
 name|state
-operator|=
+operator|!=
+name|PS_DEAD
+condition|)
+block|{
+comment|/* Allow the parent thread to run again: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|_thread_run
+operator|->
+name|parent_thread
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the signal number: */

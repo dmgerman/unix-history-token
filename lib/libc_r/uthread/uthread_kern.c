@@ -794,11 +794,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 					 * Change the threads state to allow 					 * it to be restarted:  					 */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1918,6 +1919,9 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|int
+name|done
+decl_stmt|;
 name|long
 name|l
 decl_stmt|;
@@ -1932,6 +1936,11 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
+comment|/* 	 * Assume that the signal will not be dealt with according 	 * to the thread state: 	 */
+name|done
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Process according to thread state: */
 switch|switch
 condition|(
@@ -1994,11 +2003,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2012,15 +2022,60 @@ name|EINTR
 argument_list|)
 expr_stmt|;
 comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
+name|pthread
+operator|->
+name|interrupted
+operator|=
+literal|1
+expr_stmt|;
 break|break;
-comment|/* 		 * States that are interrupted by the occurrence of a signal 		 * other than the scheduling alarm:  		 */
+comment|/* Waiting on I/O for zero or more file descriptors: */
+case|case
+name|PS_SELECT_WAIT
+case|:
+name|pthread
+operator|->
+name|data
+operator|.
+name|select_data
+operator|->
+name|nfds
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Return the 'interrupted' error: */
+name|_thread_seterrno
+argument_list|(
+name|pthread
+argument_list|,
+name|EINTR
+argument_list|)
+expr_stmt|;
+name|pthread
+operator|->
+name|interrupted
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	 * States that are interrupted by the occurrence of a signal 	 * other than the scheduling alarm:  	 */
 case|case
 name|PS_FDR_WAIT
 case|:
@@ -2028,13 +2083,7 @@ case|case
 name|PS_FDW_WAIT
 case|:
 case|case
-name|PS_SELECT_WAIT
-case|:
-case|case
 name|PS_SLEEP_WAIT
-case|:
-case|case
-name|PS_SIGWAIT
 case|:
 comment|/* Return the 'interrupted' error: */
 name|_thread_seterrno
@@ -2044,18 +2093,59 @@ argument_list|,
 name|EINTR
 argument_list|)
 expr_stmt|;
-comment|/* Change the state of the thread to run: */
 name|pthread
 operator|->
-name|state
+name|interrupted
 operator|=
+literal|1
+expr_stmt|;
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
 name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+break|break;
+comment|/* Waiting on a signal: */
+case|case
+name|PS_SIGWAIT
+case|:
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+comment|/* Flag the signal as dealt with: */
+name|done
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* Check if this signal is being ignored: */
+comment|/* 	 * Check if this signal has been dealt with, or is being 	 * ignored: 	 */
 if|if
 condition|(
+name|done
+operator|||
 name|pthread
 operator|->
 name|act
@@ -2340,6 +2430,18 @@ operator|->
 name|state
 operator|=
 name|state
+expr_stmt|;
+name|_thread_run
+operator|->
+name|fname
+operator|=
+name|fname
+expr_stmt|;
+name|_thread_run
+operator|->
+name|lineno
+operator|=
+name|lineno
 expr_stmt|;
 comment|/* Schedule the next thread that is ready: */
 name|_thread_kern_sched

@@ -292,20 +292,22 @@ operator|==
 name|PTHREAD_CREATE_SUSPENDED
 condition|)
 block|{
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|new_thread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_SUSPENDED
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|new_thread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_RUNNING
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Initialise the thread for signals: */
@@ -864,11 +866,12 @@ name|NULL
 condition|)
 block|{
 comment|/* 				 * A parent thread was specified, so this is 				 * a signal handler thread which must now 				 * wait for the signal handler to complete:  				 */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|parent
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_SIGTHREAD
+argument_list|)
 expr_stmt|;
 block|}
 else|else
