@@ -307,11 +307,6 @@ modifier|*
 name|d_softc
 decl_stmt|;
 comment|/* Back-pointer to softc. */
-name|struct
-name|proc
-modifier|*
-name|d_worker
-decl_stmt|;
 name|int
 name|d_state
 decl_stmt|;
