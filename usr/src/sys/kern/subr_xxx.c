@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.17	82/08/22	*/
+comment|/*	subr_xxx.c	4.18	82/10/17	*/
 end_comment
 
 begin_include
@@ -82,7 +82,7 @@ file|"../h/uio.h"
 end_include
 
 begin_comment
-comment|/*  * Routine which sets a user error; placed in  * illegal entries in the bdevsw and cdevsw tables.  */
+comment|/*  * Routine placed in illegal entries in the bdevsw and cdevsw tables.  */
 end_comment
 
 begin_macro
@@ -92,12 +92,11 @@ end_macro
 
 begin_block
 block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENODEV
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -111,7 +110,13 @@ argument_list|()
 end_macro
 
 begin_block
-block|{  }
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 end_block
 
 begin_macro
