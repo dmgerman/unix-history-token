@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.8	81/10/17	*/
+comment|/*	file.h	4.9	81/11/08	*/
 end_comment
 
 begin_comment
@@ -14,56 +14,65 @@ block|{
 name|short
 name|f_flag
 decl_stmt|;
+comment|/* read/write and type (socket or inode) */
 name|short
 name|f_count
 decl_stmt|;
 comment|/* reference count */
+union|union
+block|{
+struct|struct
+name|f_in
+block|{
 name|struct
 name|inode
 modifier|*
-name|f_inode
+name|fi_inode
 decl_stmt|;
-comment|/* pointer to inode structure */
-union|union
-block|{
 name|off_t
-name|f_offset
+name|fi_offset
 decl_stmt|;
-comment|/* read/write character pointer */
+block|}
+name|f_in
+struct|;
+struct|struct
+name|f_so
+block|{
 name|struct
-name|port
+name|socket
 modifier|*
-name|f_port
+name|fs_socket
 decl_stmt|;
-comment|/* port (used for pipes, too) */
-ifdef|#
-directive|ifdef
-name|CHAOS
-name|struct
-name|connection
-modifier|*
-name|f_conn
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|BBNNET
-name|struct
-name|ucb
-modifier|*
-name|f_ucb
-decl_stmt|;
-comment|/* net connection block pointer */
-endif|#
-directive|endif
-endif|BBNNET
+block|}
+name|f_so
+struct|;
 block|}
 name|f_un
 union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|f_offset
+value|f_un.f_in.fi_offset
+end_define
+
+begin_define
+define|#
+directive|define
+name|f_inode
+value|f_un.f_in.fi_inode
+end_define
+
+begin_define
+define|#
+directive|define
+name|f_socket
+value|f_un.f_so.fs_socket
+end_define
 
 begin_ifdef
 ifdef|#
@@ -81,10 +90,6 @@ modifier|*
 name|fileNFILE
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* the file table itself */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -122,40 +127,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FREAD
-value|01
+name|FINODE
+value|0x0
 end_define
+
+begin_comment
+comment|/* descriptor of an inode (pseudo) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FREAD
+value|0x1
+end_define
+
+begin_comment
+comment|/* descriptor read/receive'able */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FWRITE
-value|02
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPIPE
-value|04
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPORT
-value|040
-end_define
-
-begin_define
-define|#
-directive|define
-name|FNET
-value|0100
+value|0x2
 end_define
 
 begin_comment
-comment|/* this is a network entry */
+comment|/* descriptor write/send'able */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSOCKET
+value|0x4
+end_define
+
+begin_comment
+comment|/* descriptor of a socket */
 end_comment
 
 end_unit

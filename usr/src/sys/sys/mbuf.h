@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.2 81/10/29 */
+comment|/* mbuf.h 4.3 81/11/08 */
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NMPAGES
+name|NMBPAGES
 value|256
 end_define
 
@@ -87,7 +87,7 @@ name|pftom
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)((x<< 10) + (int)netutl))
+value|((struct mbuf *)((x<< 10) + (int)mbutl))
 end_define
 
 begin_define
@@ -97,7 +97,7 @@ name|mtopf
 parameter_list|(
 name|x
 parameter_list|)
-value|((((int)x& ~0x3ff) - (int)netutl)>> 10)
+value|((((int)x& ~0x3ff) - (int)mbutl)>> 10)
 end_define
 
 begin_comment
@@ -175,48 +175,12 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|mfree
-decl_stmt|,
-modifier|*
-name|mpfree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nmpfree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|mprefcnt
-index|[
-name|NMPAGES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m_get
-argument_list|()
-decl_stmt|,
-modifier|*
-name|m_free
-argument_list|()
-decl_stmt|,
-modifier|*
-name|m_more
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|M_WAIT
+value|1
+end_define
 
 begin_define
 define|#
@@ -288,6 +252,10 @@ name|short
 name|m_pages
 decl_stmt|;
 comment|/* # pages owned by network */
+name|short
+name|m_drops
+decl_stmt|;
+comment|/* times failed to find space */
 block|}
 struct|;
 end_struct
@@ -302,7 +270,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|mbuf
-name|netutl
+name|mbutl
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -315,7 +283,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|pte
-name|Netmap
+name|Mbmap
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -328,6 +296,55 @@ begin_decl_stmt
 name|struct
 name|mbstat
 name|mbstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nmbpages
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|mfree
+decl_stmt|,
+modifier|*
+name|mpfree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nmpfree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mprefcnt
+index|[
+name|NMBPAGES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_get
+argument_list|()
+decl_stmt|,
+modifier|*
+name|m_free
+argument_list|()
+decl_stmt|,
+modifier|*
+name|m_more
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 

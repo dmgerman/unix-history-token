@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.1	81/11/07	*/
+comment|/*	protosw.h	4.2	81/11/08	*/
 end_comment
 
 begin_comment
@@ -27,6 +27,14 @@ name|int
 name|pr_flags
 decl_stmt|;
 comment|/* see below */
+name|int
+function_decl|(
+modifier|*
+name|pr_init
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* initialization hook */
 name|int
 function_decl|(
 modifier|*
@@ -177,10 +185,6 @@ begin_comment
 comment|/* disconnect from peer */
 end_comment
 
-begin_comment
-comment|/* for ISCONN and ISDISCONN a 0 return means yes */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -206,8 +210,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRU_RCVD
+name|PRU_SHUTDOWN
 value|6
+end_define
+
+begin_comment
+comment|/* won't send any more data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_RCVD
+value|7
 end_define
 
 begin_comment
@@ -218,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SEND
-value|7
+value|8
 end_define
 
 begin_comment
@@ -229,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|PRU_ABORT
-value|8
+value|9
 end_define
 
 begin_comment
@@ -240,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|PRU_CLEAR
-value|9
+value|10
 end_define
 
 begin_comment
@@ -251,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|PRU_CONTROL
-value|10
+value|11
 end_define
 
 begin_comment
@@ -262,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|11
+value|12
 end_define
 
 begin_comment
@@ -273,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
-value|12
+value|13
 end_define
 
 begin_comment
@@ -295,6 +310,20 @@ name|struct
 name|protosw
 name|protosw
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|protosw
+modifier|*
+name|pf_findproto
+argument_list|()
+decl_stmt|,
+modifier|*
+name|pf_findtype
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
