@@ -300,36 +300,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_NODUMP
+name|OPTION_HELP
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION_HELP
+name|OPTION_INCLUDE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION_INCLUDE
+name|OPTION_NODUMP
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION_ONE_FILE_SYSTEM
+name|OPTION_NO_SAME_PERMISSIONS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION_NO_SAME_PERMISSIONS
+name|OPTION_NULL
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_ONE_FILE_SYSTEM
+value|8
 end_define
 
 begin_decl_stmt
@@ -628,6 +635,16 @@ block|,
 name|NULL
 block|,
 name|OPTION_NO_SAME_PERMISSIONS
+block|}
+block|,
+block|{
+literal|"null"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NULL
 block|}
 block|,
 block|{
@@ -1035,7 +1052,7 @@ case|case
 literal|'B'
 case|:
 comment|/* GNU tar */
-comment|/* 			 * bsdtar is stream-based internally, so this 			 * option has no effect.  Just ignore it. 			 */
+comment|/* libarchive doesn't need this; just ignore it. */
 break|break;
 case|case
 literal|'b'
@@ -1320,6 +1337,16 @@ comment|/* GNU tar */
 comment|/* 			 * This is always the default in FreeBSD's 			 * version of GNU tar; it's also the default 			 * behavior for bsdtar, so treat the 			 * command-line option as a no-op. 			 */
 break|break;
 case|case
+name|OPTION_NULL
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|option_null
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'O'
 case|:
 comment|/* GNU tar */
@@ -1421,6 +1448,17 @@ name|opt
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|names_from_file
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 comment|/* SUSv2 */
@@ -1453,17 +1491,6 @@ name|bsdtar
 operator|->
 name|verbose
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'T'
-case|:
-comment|/* GNU tar */
-name|bsdtar
-operator|->
-name|names_from_file
-operator|=
-name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1651,7 +1678,7 @@ break|break;
 case|case
 literal|'z'
 case|:
-comment|/* GNU tar, star */
+comment|/* GNU tar, star, many others */
 if|if
 condition|(
 name|bsdtar
@@ -1939,25 +1966,6 @@ if|if
 condition|(
 name|bsdtar
 operator|->
-name|names_from_file
-operator|!=
-name|NULL
-condition|)
-name|only_mode
-argument_list|(
-name|bsdtar
-argument_list|,
-name|mode
-argument_list|,
-literal|"-T"
-argument_list|,
-literal|"cru"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bsdtar
-operator|->
 name|symlink_mode
 operator|!=
 literal|'\0'
@@ -1967,7 +1975,7 @@ name|strcpy
 argument_list|(
 name|buff
 argument_list|,
-literal|"-X"
+literal|"-?"
 argument_list|)
 expr_stmt|;
 name|buff

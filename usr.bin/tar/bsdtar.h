@@ -100,6 +100,10 @@ name|option_no_subdirs
 decl_stmt|;
 comment|/* -d */
 name|char
+name|option_null
+decl_stmt|;
+comment|/* --null */
+name|char
 name|option_stdout
 decl_stmt|;
 comment|/* -p */
@@ -116,6 +120,11 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* Miscellaneous state information */
+name|struct
+name|archive
+modifier|*
+name|archive
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -154,6 +163,10 @@ name|char
 name|warned_lead_slash
 decl_stmt|;
 comment|/* Already displayed warning */
+name|char
+name|next_line_is_dir
+decl_stmt|;
+comment|/* Used for -C parsing in -cT */
 comment|/* 	 * Data for various subsystems.  Full definitions are located in 	 * the file where they are used. 	 */
 name|struct
 name|archive_dir
@@ -268,7 +281,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|exclude
 parameter_list|(
 name|struct
@@ -284,7 +297,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|exclude_from_file
 parameter_list|(
 name|struct
@@ -316,7 +329,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|include
 parameter_list|(
 name|struct
@@ -327,6 +340,54 @@ specifier|const
 name|char
 modifier|*
 name|pattern
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|include_from_file
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pathname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|process_lines
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+name|bsdtar
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pathname
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|process
+function_decl|)
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
