@@ -5659,6 +5659,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 operator|(
 operator|(
 name|dmastat
@@ -5669,14 +5670,8 @@ name|scp
 argument_list|)
 operator|)
 operator|&
-operator|(
-name|ATA_BMSTAT_ACTIVE
-operator||
 name|ATA_BMSTAT_INTERRUPT
 operator|)
-operator|)
-operator|!=
-name|ATA_BMSTAT_INTERRUPT
 condition|)
 return|return;
 name|outb
