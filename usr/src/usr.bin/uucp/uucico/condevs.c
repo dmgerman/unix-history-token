@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.15 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1580,12 +1580,7 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-block|{
-name|acustatus
-operator|++
-expr_stmt|;
 continue|continue;
-block|}
 if|if
 condition|(
 name|acustatus
@@ -2820,11 +2815,13 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|logent
+name|DEBUG
 argument_list|(
-name|buf
+literal|4
 argument_list|,
-literal|"ACUCNTRL:"
+literal|"ACUCNTRL: %s\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
