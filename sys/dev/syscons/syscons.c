@@ -5542,7 +5542,7 @@ switch|switch
 condition|(
 operator|*
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|data
@@ -5734,7 +5734,7 @@ operator|=
 operator|(
 operator|*
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|data
@@ -5749,7 +5749,7 @@ else|:
 operator|(
 operator|*
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|data
@@ -5791,7 +5791,7 @@ operator|=
 operator|(
 operator|*
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|data
@@ -5806,7 +5806,7 @@ else|:
 operator|(
 operator|*
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|data

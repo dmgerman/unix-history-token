@@ -3166,7 +3166,7 @@ switch|switch
 condition|(
 operator|*
 operator|(
-name|int
+name|intptr_t
 operator|*
 operator|)
 name|data
@@ -3689,6 +3689,10 @@ operator|->
 name|border
 operator|=
 operator|*
+operator|(
+name|intptr_t
+operator|*
+operator|)
 name|data
 expr_stmt|;
 if|if
