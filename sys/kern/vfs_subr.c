@@ -10297,7 +10297,7 @@ end_comment
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
-argument|lockedvnodes
+argument|lockedvnods
 argument_list|,
 argument|lockedvnodes
 argument_list|)
