@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.18 (Berkeley) %G%"
+literal|"@(#)mount.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,6 +1273,14 @@ operator|++
 index|]
 operator|=
 name|name
+expr_stmt|;
+name|argv
+index|[
+name|argc
+operator|++
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -3170,13 +3178,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't access %s, errno=%d\n"
+literal|"Can't access %s: "
 argument_list|,
 name|spec
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
 name|nfhret
 operator|.
 name|stat
+expr_stmt|;
+name|perror
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
