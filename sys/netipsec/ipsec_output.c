@@ -2875,7 +2875,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-name|ovbcopy
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
