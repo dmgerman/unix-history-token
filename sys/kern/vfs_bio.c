@@ -3068,9 +3068,19 @@ name|rtval
 operator|)
 return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|oldflags
+operator|&
+name|B_NOWDRAIN
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
-comment|/* 		 * don't allow the async write to saturate the I/O 		 * system.  There is no chance of deadlock here because 		 * we are blocking on I/O that is already in-progress. 		 */
+comment|/* 		 * don't allow the async write to saturate the I/O 		 * system.  Deadlocks can occur only if a device strategy 		 * routine (like in MD) turns around and issues another 		 * high-level write, in which case B_NOWDRAIN is expected 		 * to be set.  Otherwise we will not deadlock here because 		 * we are blocking waiting for I/O that is already in-progress 		 * to complete. 		 */
 name|waitrunningbufspace
 argument_list|()
 expr_stmt|;
@@ -4849,6 +4859,8 @@ operator||
 name|B_RELBUF
 operator||
 name|B_DIRECT
+operator||
+name|B_NOWDRAIN
 operator|)
 expr_stmt|;
 name|bp

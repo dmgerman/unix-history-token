@@ -915,6 +915,17 @@ begin_comment
 comment|/* attempt to bypass buffer cache */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_NOWDRAIN
+value|0x200
+end_define
+
+begin_comment
+comment|/* do not block on wdrain */
+end_comment
+
 begin_comment
 comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
 end_comment

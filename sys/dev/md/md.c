@@ -1625,26 +1625,7 @@ name|uio_td
 operator|=
 name|curthread
 expr_stmt|;
-if|if
-condition|(
-name|VOP_ISLOCKED
-argument_list|(
-name|sc
-operator|->
-name|vnode
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-name|vprint
-argument_list|(
-literal|"unexpected md driver lock"
-argument_list|,
-name|sc
-operator|->
-name|vnode
-argument_list|)
-expr_stmt|;
+comment|/* 		 * When reading set IO_DIRECT to try to avoid double-caching 		 * the data.  When writing IO_DIRECT is not optimal, but we 		 * must set IO_NOWDRAIN to avoid a wdrain deadlock. 		 */
 if|if
 condition|(
 name|bp
@@ -1678,7 +1659,7 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-literal|0
+name|IO_DIRECT
 argument_list|,
 name|sc
 operator|->
@@ -1727,7 +1708,7 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-literal|0
+name|IO_NOWDRAIN
 argument_list|,
 name|sc
 operator|->

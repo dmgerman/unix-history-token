@@ -3987,6 +3987,19 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * If IO_NOWDRAIN then set B_NOWDRAIN (nfs-backed MD  		 * filesystem) 		 */
+if|if
+condition|(
+name|ioflag
+operator|&
+name|IO_NOWDRAIN
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_NOWDRAIN
+expr_stmt|;
 comment|/* 		 * If IO_SYNC do bwrite(). 		 * 		 * IO_INVAL appears to be unused.  The idea appears to be 		 * to turn off caching in this case.  Very odd.  XXX 		 */
 if|if
 condition|(
