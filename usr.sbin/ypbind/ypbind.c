@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.17 1995/07/20 22:32:59 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.18 1995/12/15 03:39:25 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,6 +1576,9 @@ name|transp
 argument_list|,
 name|xdr_argument
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|argument
 argument_list|)
