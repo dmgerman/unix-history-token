@@ -59,14 +59,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SV_MAX_BUFFER
-value|8192
+name|SV_DEFAULT_BUFSZ
+value|16384
 end_define
 
 begin_define
 define|#
 directive|define
-name|SV_MIN_BUFFER
+name|SV_MIN_BLKSZ
 value|128
 end_define
 
@@ -221,6 +221,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|ih
+decl_stmt|;
+comment|/* User configurable buffer size */
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|sc_chinfo
@@ -789,7 +794,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|SV_MAX_BUFFER
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|!=
 literal|0
@@ -886,14 +893,25 @@ name|ch
 init|=
 name|data
 decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+init|=
+name|ch
+operator|->
+name|parent
+decl_stmt|;
 comment|/* user has requested interrupts every blocksize bytes */
 name|RANGE
 argument_list|(
 name|blocksize
 argument_list|,
-name|SV_MIN_BUFFER
+name|SV_MIN_BLKSZ
 argument_list|,
-name|SV_MAX_BUFFER
+name|sc
+operator|->
+name|bufsz
 operator|/
 name|SV_INTR_PER_BUFFER
 argument_list|)
@@ -4003,6 +4021,21 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|SV_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -4029,7 +4062,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|SV_MAX_BUFFER
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1

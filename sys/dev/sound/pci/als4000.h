@@ -27,13 +27,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALS_BUFFER_SIZE
-value|8192
-end_define
-
-begin_define
-define|#
-directive|define
 name|ALS_GCR_DATA
 value|0x08
 end_define

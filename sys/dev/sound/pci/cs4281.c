@@ -44,7 +44,7 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|CS4281_BUFFER_SIZE
+name|CS4281_DEFAULT_BUFSZ
 value|16384
 end_define
 
@@ -246,6 +246,10 @@ name|ih
 decl_stmt|;
 name|int
 name|power
+decl_stmt|;
+name|unsigned
+name|long
+name|bufsz
 decl_stmt|;
 name|struct
 name|sc_chinfo
@@ -1409,7 +1413,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|CS4281_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|!=
 literal|0
@@ -1521,6 +1527,15 @@ name|ch
 init|=
 name|data
 decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+init|=
+name|ch
+operator|->
+name|parent
+decl_stmt|;
 name|u_int32_t
 name|go
 decl_stmt|;
@@ -1542,7 +1557,9 @@ name|MIN
 argument_list|(
 name|blocksize
 argument_list|,
-name|CS4281_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 operator|/
 literal|2
 argument_list|)
@@ -1582,7 +1599,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"cs4281chan_setblocksize: bufsz %d Setting %d\n"
+literal|"cs4281chan_setblocksize: blksz %d Setting %d\n"
 argument_list|,
 name|blocksize
 argument_list|,
@@ -3792,6 +3809,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|CS4281_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -3818,7 +3850,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|CS4281_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
