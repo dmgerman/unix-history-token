@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2308,6 +2308,14 @@ decl_stmt|;
 name|int
 name|mod
 decl_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -2315,15 +2323,6 @@ operator|->
 name|v_usecount
 operator|>
 literal|1
-operator|&&
-operator|!
-operator|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|IN_LOCKED
-operator|)
 condition|)
 block|{
 name|mod
@@ -2364,6 +2363,14 @@ name|lfs_uinodes
 operator|++
 expr_stmt|;
 block|}
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2429,7 +2436,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2454,6 +2461,10 @@ operator|=
 name|ufs_reclaim
 argument_list|(
 name|vp
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 condition|)
 return|return
