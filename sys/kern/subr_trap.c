@@ -374,23 +374,13 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|td
-operator|->
-name|td_locks
-operator|==
+if|#
+directive|if
 literal|0
-argument_list|,
-operator|(
-literal|"userret: Returning with %d locks held."
-operator|,
-name|td
-operator|->
-name|td_locks
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* This is not presently working. */
+block|KASSERT(td->td_locks == 0, 	    ("userret: Returning with %d locks held.", td->td_locks));
+endif|#
+directive|endif
 block|}
 end_function
 
