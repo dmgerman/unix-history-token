@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)libpc.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)libpc.h 1.3 %G%"; */
 end_comment
 
 begin_function_decl
@@ -277,7 +277,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bool
-name|RELGLT
+name|RELTLT
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -285,7 +285,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bool
-name|RELGLE
+name|RELTLE
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -293,7 +293,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bool
-name|RELGGT
+name|RELTGT
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -301,7 +301,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bool
-name|RELGGE
+name|RELTGE
 parameter_list|()
 function_decl|;
 end_function_decl
