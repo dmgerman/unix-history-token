@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -233,6 +233,13 @@ include|#
 directive|include
 file|"../netccitt/pk_var.h"
 end_include
+
+begin_function_decl
+name|void
+name|tp_rsyset
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * NAME: 	tp_local_credit()  *  * CALLED FROM:  *  tp_emit(), tp_usrreq()  *  * FUNCTION and ARGUMENTS:  *	Computes the local credit and stashes it in tpcb->tp_lcredit.  *  It's a macro in the production system rather than a procdure.  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:  *  This doesn't actually get called in a production system -   *  the macro gets expanded instead in place of calls to this proc.  *  But for debugging, we call this and that allows us to add  *  debugging messages easily here.  */
@@ -778,9 +785,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|tp_rsyset
 argument_list|(
 name|tpcb
@@ -1751,6 +1755,11 @@ operator|->
 name|tp_l_tpdusize
 operator|=
 name|mss
+expr_stmt|;
+name|tp_rsyset
+argument_list|(
+name|tpcb
+argument_list|)
 expr_stmt|;
 name|tpcb
 operator|->
