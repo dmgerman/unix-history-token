@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pc3.h 1.5 %G%"; */
+comment|/*	static	char sccsid[] = "@(#)pc3.h 1.6 %G%"; */
 end_comment
 
 begin_comment
@@ -28,18 +28,18 @@ name|int
 name|lookup
 decl_stmt|;
 comment|/* whether new or old */
+name|struct
+name|symbol
+modifier|*
+name|fromp
+decl_stmt|;
+comment|/* its defining .p file */
 union|union
 block|{
 comment|/* either */
 struct|struct
 block|{
 comment|/*   for a symbol, */
-name|struct
-name|symbol
-modifier|*
-name|fromp
-decl_stmt|;
-comment|/*     its defining .p file */
 name|struct
 name|symbol
 modifier|*
@@ -63,10 +63,10 @@ comment|/*     resolving file line */
 block|}
 name|sym_str
 struct|;
-name|time_t
-name|modtime
+name|long
+name|checksum
 decl_stmt|;
-comment|/*   for a file, its st_mtime */
+comment|/*   for a file, its checksum */
 block|}
 name|sym_un
 union|;
@@ -89,9 +89,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
-decl_stmt|;
-name|time_t
-name|modtime
 decl_stmt|;
 name|off_t
 name|nextoffset
