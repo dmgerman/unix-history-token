@@ -384,10 +384,10 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|" yields route %x\n"
+literal|" yields route %lx\n"
 argument_list|,
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rt
 argument_list|)

@@ -1930,12 +1930,12 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"size=%d cp=%x packet=%x\n"
+literal|"size=%d cp=%lx packet=%x\n"
 argument_list|,
 name|size
 argument_list|,
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|cp
 argument_list|,
@@ -2204,12 +2204,12 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"size=%d cp=%x packet=%x\n"
+literal|"size=%d cp=%lx packet=%x\n"
 argument_list|,
 name|size
 argument_list|,
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|cp
 argument_list|,
