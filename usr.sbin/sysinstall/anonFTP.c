@@ -369,7 +369,7 @@ literal|1
 block|,
 literal|"Upload Subdirectory:"
 block|,
-literal|"Designated sub-directory that holds uploads"
+literal|"Designated sub-directory that holds uploads (leave empty for none)"
 block|,
 name|tconf
 operator|.
@@ -1102,6 +1102,9 @@ literal|"are permitted.  You must separately enable both inetd(8), and enable\n"
 literal|"ftpd(8) in inetd.conf(5) for FTP services to be available.  If you\n"
 literal|"did not do so earlier, you will have the opportunity to enable inetd(8)\n"
 literal|"again later.\n\n"
+literal|"If you want the server to be read-only you should leave the upload\n"
+literal|"directory option empty and add the -r command-line option to ftpd(8)\n"
+literal|"in inetd.conf(5)\n\n"
 literal|"Do you wish to continue configuring anonymous FTP?"
 argument_list|)
 condition|)
@@ -1179,25 +1182,6 @@ operator|.
 name|group
 argument_list|,
 name|FTP_GROUP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tconf
-operator|.
-name|upload
-index|[
-literal|0
-index|]
-condition|)
-name|SAFE_STRCPY
-argument_list|(
-name|tconf
-operator|.
-name|upload
-argument_list|,
-name|FTP_UPLOAD
 argument_list|)
 expr_stmt|;
 comment|/*** If the user did not specify a directory, use default ***/
@@ -1312,45 +1296,6 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"mkdir %s/bin&& chmod 555 %s/bin"
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"cp /bin/ls %s/bin&& chmod 111 %s/bin/ls"
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"cp /bin/date %s/bin&& chmod 111 %s/bin/date"
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
 literal|"mkdir %s/etc&& chmod 555 %s/etc"
 argument_list|,
 name|tconf
@@ -1371,6 +1316,16 @@ operator|.
 name|homedir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tconf
+operator|.
+name|upload
+index|[
+literal|0
+index|]
+condition|)
+block|{
 name|vsystem
 argument_list|(
 literal|"mkdir -p %s/%s"
@@ -1397,6 +1352,7 @@ operator|.
 name|upload
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1415,7 +1371,20 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"awk -F: '{if ($3< 10 || $1 == \"ftp\") print $0}' /etc/passwd> %s/etc/passwd&& chmod 444 %s/etc/passwd"
+literal|"awk -F: '{if ((substr($1, 1, 1) != \"+\")&& (substr($1, 1, 1) != \"-\")&& ($3< 10 || $1 == \"ftp\")) print $0}' /etc/master.passwd> %s/etc/master.passwd"
+argument_list|,
+name|tconf
+operator|.
+name|homedir
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"/usr/sbin/pwd_mkdb -d %s/etc %s/etc/master.passwd&& chmod 444 %s/etc/pwd.db"
+argument_list|,
+name|tconf
+operator|.
+name|homedir
 argument_list|,
 name|tconf
 operator|.
@@ -1428,7 +1397,20 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"awk -F: '{if ($3< 100) print $0}' /etc/group> %s/etc/group&& chmod 444 %s/etc/group"
+literal|"rm -f %s/etc/master.passwd %s/etc/spwd.db"
+argument_list|,
+name|tconf
+operator|.
+name|homedir
+argument_list|,
+name|tconf
+operator|.
+name|homedir
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"awk -F: '{if ((substr($1, 1, 1) != \"+\")&& (substr($1, 1, 1) != \"-\")&& ($3< 100)) print $0}' /etc/group> %s/etc/group&& chmod 444 %s/etc/group"
 argument_list|,
 name|tconf
 operator|.
