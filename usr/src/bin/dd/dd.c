@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.12 (Berkeley) %G%"
+literal|"@(#)dd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,6 +275,7 @@ comment|/* conversion table */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -286,8 +287,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|jcl
@@ -491,7 +492,10 @@ name|in
 operator|.
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_CUR
 argument_list|)
@@ -698,7 +702,10 @@ name|out
 operator|.
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_CUR
 argument_list|)
