@@ -1283,7 +1283,7 @@ argument_list|(
 literal|"Now we start initializing PC-card controller and cards.\n"
 literal|"If you've executed this installer from a PC-card floppy\n"
 literal|"drive, this is the last chance to replace it with\n"
-literal|"installation media (PC-card Ethernet, CDROM, etc.).\n"
+literal|"installation media (PC-card Ethernet, CD, DVD, etc.).\n"
 literal|"Please insert installation media and press [Enter].\n"
 literal|"If you've not plugged the PC-card installation media\n"
 literal|"in yet, please plug it in now and press [Enter].\n"

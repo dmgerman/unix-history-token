@@ -1111,7 +1111,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Please insert a FreeBSD live filesystem CDROM and press return"
+literal|"Please insert a FreeBSD live filesystem CD/DVD and press return"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1146,7 +1146,7 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Unable to mount the CDROM - do you want to try again?"
+literal|"Unable to mount the disc - do you want to try again?"
 argument_list|)
 operator|!=
 literal|0
@@ -1171,7 +1171,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to symlink /mnt2 to the CDROM mount point.  Please report this\n"
+literal|"Unable to symlink /mnt2 to the disc mount point.  Please report this\n"
 literal|"unexpected failure to freebsd-bugs@FreeBSD.org."
 argument_list|)
 expr_stmt|;
@@ -1241,7 +1241,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Warning: ldconfig could not create the ld.so hints file.\n"
-literal|"Dynamic executables from the CDROM likely won't work."
+literal|"Dynamic executables from the disc likely won't work."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1303,7 +1303,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Warning: could not create the symlink for ld-elf.so.1\n"
-literal|"Dynamic executables from the CDROM likely won't work."
+literal|"Dynamic executables from the disc likely won't work."
 argument_list|)
 expr_stmt|;
 block|}
