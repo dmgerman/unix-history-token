@@ -699,7 +699,7 @@ name|isascii
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)>= 0 || (c<= 0x7f))
+value|(((unsigned char)c)<= 0x7f)
 end_define
 
 begin_define
@@ -2071,7 +2071,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|ssize_t
+name|int
 name|null_read
 parameter_list|(
 name|struct
@@ -2095,7 +2095,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|ssize_t
+name|int
 name|null_write
 parameter_list|(
 name|struct

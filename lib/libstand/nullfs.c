@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: nullfs.c,v 1.1 1996/01/13 22:25:39 leo Exp $	*/
 end_comment
 
@@ -60,7 +64,7 @@ block|}
 end_function
 
 begin_function
-name|ssize_t
+name|int
 name|null_read
 parameter_list|(
 name|struct
@@ -92,7 +96,7 @@ block|}
 end_function
 
 begin_function
-name|ssize_t
+name|int
 name|null_write
 parameter_list|(
 name|struct
