@@ -1535,6 +1535,9 @@ modifier|*
 name|irqres
 decl_stmt|;
 name|int
+name|configured
+decl_stmt|;
+name|int
 name|state
 decl_stmt|;
 name|int
