@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.23 1995/03/15 14:44:01 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.24 1995/03/21 11:21:01 dufault Exp $  */
 end_comment
 
 begin_define
@@ -2156,6 +2156,9 @@ directive|ifdef
 name|BOUNCE_BUFFERS
 name|vm_bounce_kva_alloc_free
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|xs
 operator|->
 name|data
@@ -2169,8 +2172,6 @@ literal|1
 operator|)
 operator|/
 name|PAGE_SIZE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|#

@@ -5,12 +5,12 @@ name|char
 name|_isdnid
 index|[]
 init|=
-literal|"@(#)$Id: isdn.c,v 1.1 1995/02/14 15:00:33 jkh Exp $"
+literal|"@(#)$Id: isdn.c,v 1.2 1995/02/15 06:28:29 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: isdn.c,v $  * Revision 1.1  1995/02/14  15:00:33  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: isdn.c,v $  * Revision 1.2  1995/02/15  06:28:29  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:33  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gnu/isdn/isdn_ioctl.h"
 end_include
 
@@ -124,16 +130,6 @@ decl_stmt|,
 name|Isdn_Ctrl
 decl_stmt|,
 name|Isdn_Typ
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|isdn_input
-argument_list|()
-decl_stmt|,
-name|isdn_output
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -195,13 +191,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|isdn_stat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|isdn_disconnect
 parameter_list|()
 function_decl|;
 end_function_decl

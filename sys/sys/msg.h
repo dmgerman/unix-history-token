@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: msg.h,v 1.1 1994/09/13 14:47:34 dfr Exp $ */
+comment|/* $Id: msg.h,v 1.2 1994/09/17 13:24:27 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -446,6 +446,18 @@ end_define
 begin_comment
 comment|/* Is this msqid_ds locked? */
 end_comment
+
+begin_decl_stmt
+name|void
+name|msginit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -719,6 +719,9 @@ expr_stmt|;
 return|return
 name|uiomove
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|c
 argument_list|,

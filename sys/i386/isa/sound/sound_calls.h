@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	DMA buffer calls  *  * $Id: sound_calls.h,v 1.7 1994/10/01 02:17:10 swallace Exp $  */
+comment|/*  *	DMA buffer calls  *  * $Id: sound_calls.h,v 1.10 1995/03/12 23:34:06 swallace Exp $  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,26 @@ name|dev
 parameter_list|,
 name|int
 name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|DMAbuf_output_ready
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|DMAbuf_input_ready
+parameter_list|(
+name|int
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1448,6 +1468,20 @@ end_function_decl
 begin_comment
 comment|/*	From pas_card.c	*/
 end_comment
+
+begin_function_decl
+name|void
+name|mix_write
+parameter_list|(
+name|unsigned
+name|char
+name|data
+parameter_list|,
+name|int
+name|ioaddr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.8 1994/10/23 21:27:31 wollman Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.9 1994/11/08 05:41:34 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include

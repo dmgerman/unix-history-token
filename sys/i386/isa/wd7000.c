@@ -106,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<machine/cpu.h>
 end_include
 
 begin_include

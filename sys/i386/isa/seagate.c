@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  *  * $Id: seagate.c,v 1.3 1994/06/16 13:26:14 sean Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  *  * $Id: seagate.c,v 1.5 1995/01/10 11:41:28 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include

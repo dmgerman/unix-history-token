@@ -5,12 +5,12 @@ name|char
 name|_ittyid
 index|[]
 init|=
-literal|"@(#)$Id: iitty.c,v 1.3 1995/02/25 20:08:52 pst Exp $"
+literal|"@(#)$Id: iitty.c,v 1.4 1995/02/28 00:20:30 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.3 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.3  1995/02/25  20:08:52  pst  * (a) remove the pointer to each driver's tty structure array from cdevsw  * (b) add a function callback vector to tty drivers that will return a pointer  *     to a valid tty structure based upon a dev_t  * (c) make syscons structures the same size whether or not APM is enabled so  *     utilities don't crash if NAPM changes (and make the damn kernel compile!)  * (d) rewrite /dev/snp ioctl interface so that it is device driver and i386  *     independant  *  * Revision 1.2  1995/02/15  06:28:28  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.4 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.4  1995/02/28  00:20:30  pst  * Incorporate bde's code-review comments.  *  * (a) bring back ttselect, now that we have xxxdevtotty() it isn't dangerous.  * (b) remove all of the wrappers that have been replaced by ttselect  * (c) fix formatting in syscons.c and definition in syscons.h  * (d) add cxdevtotty  *  * NOT DONE:  * (e) make pcvt work... it was already broken...when someone fixes pcvt to  * 	link properly, just rename get_pccons to xxxdevtotty and we're done  *  * Revision 1.3  1995/02/25  20:08:52  pst  * (a) remove the pointer to each driver's tty structure array from cdevsw  * (b) add a function callback vector to tty drivers that will return a pointer  *     to a valid tty structure based upon a dev_t  * (c) make syscons structures the same size whether or not APM is enabled so  *     utilities don't crash if NAPM changes (and make the damn kernel compile!)  * (d) rewrite /dev/snp ioctl interface so that it is device driver and i386  *     independant  *  * Revision 1.2  1995/02/15  06:28:28  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_include
@@ -111,15 +111,12 @@ directive|include
 file|"gnu/isdn/isdn_ioctl.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|ityattach
-argument_list|()
-decl_stmt|,
 name|ityparam
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
