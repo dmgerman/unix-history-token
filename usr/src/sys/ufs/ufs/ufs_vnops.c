@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.111 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.112 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6932,6 +6932,14 @@ operator|->
 name|p_pid
 expr_stmt|;
 block|}
+else|else
+name|ip
+operator|->
+name|i_lockwaiter
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 endif|#
 directive|endif
 operator|(
@@ -6962,6 +6970,38 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|ip
+operator|->
+name|i_lockholder
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"lockholder (%d) != 0"
+argument_list|,
+name|ip
+operator|->
+name|i_lockholder
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|&&
+name|p
+operator|->
+name|p_pid
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"locking by process 0\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|p
 condition|)
 name|ip
@@ -6971,6 +7011,14 @@ operator|=
 name|p
 operator|->
 name|p_pid
+expr_stmt|;
+else|else
+name|ip
+operator|->
+name|i_lockholder
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 endif|#
 directive|endif
@@ -6991,6 +7039,14 @@ end_function
 begin_comment
 comment|/*  * Unlock an inode.  If WANT bit is on, wakeup.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|lockcount
+init|=
+literal|90
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -7018,6 +7074,17 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -7046,9 +7113,50 @@ literal|"ufs_unlock NOT LOCKED"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
+if|if
+condition|(
+name|p
+operator|&&
+name|p
+operator|->
+name|p_pid
+operator|!=
+name|ip
+operator|->
+name|i_lockholder
+operator|&&
+name|p
+operator|->
+name|p_pid
+operator|>
+operator|-
+literal|1
+operator|&&
+name|ip
+operator|->
+name|i_lockholder
+operator|>
+operator|-
+literal|1
+operator|&&
+name|lockcount
+operator|++
+operator|<
+literal|100
+condition|)
+name|panic
+argument_list|(
+literal|"unlocker (%d) != lock holder (%d)"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|ip
+operator|->
+name|i_lockholder
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|i_lockholder
