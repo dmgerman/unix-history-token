@@ -860,7 +860,7 @@ name|wrch
 operator|)
 condition|)
 block|{
-comment|/* simplex device, already open, exit */
+comment|/* we're a simplex device and already open, no go */
 name|pcm_unlock
 argument_list|(
 name|d
@@ -898,7 +898,7 @@ name|wrch
 operator|)
 condition|)
 block|{
-comment|/* device already open in one or both directions */
+comment|/* 		 * device already open in one or both directions that 		 * the opener wants; we can't handle this. 		 */
 name|pcm_unlock
 argument_list|(
 name|d
@@ -913,7 +913,7 @@ return|return
 name|EBUSY
 return|;
 block|}
-comment|/*  if we get here, the open request is valid */
+comment|/* 	 * if we get here, the open request is valid- either: 	 *   * we were previously not open 	 *   * we were open for play xor record and the opener wants 	 *     the non-open direction 	 */
 if|if
 condition|(
 name|flags
