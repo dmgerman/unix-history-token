@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -89,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -102,12 +114,6 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include
@@ -3256,6 +3262,7 @@ name|it_ih
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* no handlers left, */
 name|icu_unset
 argument_list|(
@@ -3268,6 +3275,60 @@ operator|->
 name|handler
 argument_list|)
 expr_stmt|;
+name|ithds
+index|[
+name|ithd
+operator|->
+name|irq
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ithd
+operator|->
+name|it_proc
+operator|->
+name|p_stat
+operator|==
+name|SWAIT
+condition|)
+block|{
+name|ithd
+operator|->
+name|it_proc
+operator|->
+name|p_stat
+operator|=
+name|SRUN
+expr_stmt|;
+name|setrunqueue
+argument_list|(
+name|ithd
+operator|->
+name|it_proc
+argument_list|)
+expr_stmt|;
+comment|/* 			 * We don't do an ast here because we really 			 * don't care when it runs next. 			 * 			 * XXX: should we lower the threads priority? 			 */
+block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|idesc

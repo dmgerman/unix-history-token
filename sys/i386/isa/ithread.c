@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -103,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -116,12 +128,6 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include
@@ -299,12 +305,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -608,6 +608,62 @@ init|;
 condition|;
 control|)
 block|{
+comment|/* 		 * If we don't have any handlers, then we are an orphaned 		 * thread and just need to die. 		 */
+if|if
+condition|(
+name|me
+operator|->
+name|it_ih
+operator|==
+name|NULL
+condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"ithd_loop pid %d(%s) exiting"
+argument_list|,
+name|me
+operator|->
+name|it_proc
+operator|->
+name|p_pid
+argument_list|,
+name|me
+operator|->
+name|it_proc
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
+name|curproc
+operator|->
+name|p_ithd
+operator|=
+name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|me
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|kthread_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|CTR3
 argument_list|(
 name|KTR_INTR
