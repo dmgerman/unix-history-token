@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.15 (Berkeley) %G%"
+literal|"@(#)tape.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,13 @@ name|cartridge
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|nexttape
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -387,6 +394,12 @@ name|req
 argument_list|)
 expr_stmt|;
 comment|/* 	 * CDC 92181's and 92185's make 0.8" gaps in 1600-bpi start/stop mode 	 * (see DEC TU80 User's Guide).  The shorter gaps of 6250-bpi require 	 * repositioning after stopping, i.e, streaming mode, where the gap is 	 * variable, 0.30" to 0.45".  The gap is maximal when the tape stops. 	 */
+if|if
+condition|(
+name|blocksperfile
+operator|==
+literal|0
+condition|)
 name|tenths
 operator|=
 name|writesize
@@ -1056,6 +1069,10 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+name|nexttape
+operator|==
+literal|0
+operator|&&
 operator|!
 name|query
 argument_list|(
@@ -1106,6 +1123,10 @@ name|int
 name|blks
 decl_stmt|,
 name|i
+decl_stmt|;
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|interrupt
 operator|=
@@ -1375,6 +1396,47 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|TDEBUG
+comment|/* 		 * If we have a name like "/dev/rmt0,/dev/rmt1", 		 * use the name before the comma first, and save 		 * the second name for next time. 		 */
+if|if
+condition|(
+name|nexttape
+operator|&&
+operator|*
+name|nexttape
+condition|)
+name|tape
+operator|=
+name|nexttape
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|tape
+argument_list|,
+literal|','
+argument_list|)
+condition|)
+block|{
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+name|nexttape
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|nexttape
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RDUMP
