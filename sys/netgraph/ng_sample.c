@@ -589,7 +589,7 @@ name|cp
 operator|=
 name|name
 operator|+
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|NG_XXX_HOOK_DLCI_LEADIN
 argument_list|)
@@ -717,11 +717,11 @@ name|chan
 index|]
 operator|.
 name|dlci
-operator|!=
+operator|==
 operator|-
 literal|2
 condition|)
-continue|continue;
+break|break;
 if|if
 condition|(
 name|chan
@@ -733,6 +733,17 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+name|xxxp
+operator|->
+name|channel
+index|[
+name|chan
+index|]
+operator|.
+name|dlci
+operator|=
+name|dlci
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1334,7 +1345,7 @@ comment|/*  * If this were a device node, the data may have been received in res
 end_comment
 
 begin_comment
-unit|devintr() { 	int error; 				 * here */
+unit|devintr() { 	int error;
 comment|/* get packet from device and send on */
 end_comment
 
