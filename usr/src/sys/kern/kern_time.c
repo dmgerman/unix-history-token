@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_time.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_time.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -377,6 +377,13 @@ name|adjtimedelta
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tickadj
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|adjtime
 argument_list|()
@@ -416,6 +423,9 @@ name|timeval
 name|atv
 decl_stmt|,
 name|oatv
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -457,6 +467,11 @@ operator|.
 name|u_error
 condition|)
 return|return;
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -517,6 +532,25 @@ operator|+
 name|atv
 operator|.
 name|tv_usec
+expr_stmt|;
+if|if
+condition|(
+name|adjtimedelta
+operator|%
+name|tickadj
+condition|)
+name|adjtimedelta
+operator|=
+name|adjtimedelta
+operator|/
+name|tickadj
+operator|*
+name|tickadj
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
