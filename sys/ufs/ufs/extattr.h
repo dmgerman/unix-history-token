@@ -22,15 +22,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|UFS_EXTATTR_MAGIC
+value|0x00b5d5ec
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_EXTATTR_VERSION
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|UFS_EXTATTR_FSROOTSUBDIR
-value|".attributes"
+value|".attribute"
 end_define
 
 begin_define
 define|#
 directive|define
 name|UFS_EXTATTR_MAXEXTATTRNAME
-value|33
+value|65
 end_define
 
 begin_comment
@@ -133,6 +147,14 @@ begin_struct
 struct|struct
 name|ufs_extattr_fileheader
 block|{
+name|u_int
+name|uef_magic
+decl_stmt|;
+comment|/* magic number for sanity checking */
+name|u_int
+name|uef_version
+decl_stmt|;
+comment|/* version of attribute file */
 name|u_int
 name|uef_size
 decl_stmt|;
