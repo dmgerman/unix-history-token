@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -76,13 +76,6 @@ name|p
 parameter_list|)
 value|((p)->p_flag&SCTTY ? (p)->p_session->s_ttyvp : NULL)
 end_define
-
-begin_decl_stmt
-specifier|static
-name|off_t
-name|dummyoff
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -221,6 +214,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -233,6 +227,9 @@ operator|.
 name|u_procp
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|ttyvp
@@ -244,21 +241,32 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-return|return
-operator|(
+name|VOP_LOCK
+argument_list|(
+name|ttyvp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|VOP_READ
 argument_list|(
 name|ttyvp
 argument_list|,
 name|uio
 argument_list|,
-operator|&
-name|dummyoff
-argument_list|,
 name|flag
 argument_list|,
 name|NOCRED
 argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|ttyvp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -295,6 +303,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -307,6 +316,9 @@ operator|.
 name|u_procp
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|ttyvp
@@ -318,21 +330,32 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-return|return
-operator|(
+name|VOP_LOCK
+argument_list|(
+name|ttyvp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|VOP_WRITE
 argument_list|(
 name|ttyvp
 argument_list|,
 name|uio
 argument_list|,
-operator|&
-name|dummyoff
-argument_list|,
 name|flag
 argument_list|,
 name|NOCRED
 argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|ttyvp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
