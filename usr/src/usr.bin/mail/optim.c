@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	1.1 %G%"
+literal|"@(#)optim.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,9 +653,15 @@ name|BN
 operator||
 name|SN
 block|,
-literal|"vax135"
+literal|"onyx"
 block|,
 literal|'x'
+block|,
+name|SN
+block|,
+literal|"vax135"
+block|,
+literal|'X'
 block|,
 name|BN
 block|,
