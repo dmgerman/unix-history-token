@@ -122,8 +122,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|u_long
+name|int
 name|setflags
 name|__P
 argument_list|(
