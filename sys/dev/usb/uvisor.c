@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uvisor.c,v 1.9 2001/01/23 14:04:14 augustss Exp $	*/
-end_comment
-
-begin_comment
 comment|/*      $FreeBSD$	*/
 end_comment
 
@@ -676,6 +672,16 @@ block|{
 name|USB_VENDOR_HANDSPRING
 block|,
 name|USB_PRODUCT_HANDSPRING_TREO
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_HANDSPRING
+block|,
+name|USB_PRODUCT_HANDSPRING_TREO600
 block|}
 block|,
 name|PALM4
