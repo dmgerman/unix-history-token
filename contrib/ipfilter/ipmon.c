@@ -1358,9 +1358,12 @@ condition|)
 block|{
 name|port
 operator|=
+name|ntohs
+argument_list|(
 name|s
 operator|->
 name|s_port
+argument_list|)
 expr_stmt|;
 name|name
 operator|=
@@ -1389,9 +1392,12 @@ condition|)
 block|{
 name|port
 operator|=
+name|ntohs
+argument_list|(
 name|s
 operator|->
 name|s_port
+argument_list|)
 expr_stmt|;
 name|name
 operator|=
@@ -2496,6 +2502,38 @@ argument_list|(
 name|t
 argument_list|,
 literal|"NAT:EXPIRE "
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nl
+operator|->
+name|nl_type
+operator|==
+name|NL_NEWBIMAP
+condition|)
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"NAT:BIMAP "
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nl
+operator|->
+name|nl_type
+operator|==
+name|NL_NEWBLOCK
+condition|)
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"NAT:MAPBLOCK "
 argument_list|)
 expr_stmt|;
 else|else

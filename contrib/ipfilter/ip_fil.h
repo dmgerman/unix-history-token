@@ -3052,9 +3052,6 @@ name|ipfr_fastroute
 name|__P
 argument_list|(
 operator|(
-name|qif_t
-operator|*
-operator|,
 name|ip_t
 operator|*
 operator|,
