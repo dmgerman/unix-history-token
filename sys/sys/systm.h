@@ -2455,34 +2455,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Various callout lists.  */
-end_comment
-
-begin_comment
-comment|/*  * Not exactly a callout LIST, but a callout entry.  * Allow an external module to define a hardware watchdog tickler.  * Normally a process would do this, but there are times when the  * kernel needs to be able to hold off the watchdog, when the process  * is not active, e.g., when dumping core.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|watchdog_tickle_fn
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|watchdog_tickle_fn
-name|wdog_tickler
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*   * Common `proc' functions are declared here so that proc.h can be included  * less often.  */
 end_comment
 
