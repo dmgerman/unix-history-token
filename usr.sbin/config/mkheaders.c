@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkheaders.c,v 1.6 1997/09/15 06:37:09 charnier Exp $"
+literal|"$Id: mkheaders.c,v 1.7 1997/10/28 07:21:02 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,9 +331,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|dp
 operator|->
 name|d_type
+operator|&
+name|TYPEMASK
+operator|)
 operator|==
 name|PSEUDO_DEVICE
 condition|)
