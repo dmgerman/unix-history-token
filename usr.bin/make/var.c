@@ -718,7 +718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarPossiblyExpand --  *	Expand a variable name's embedded variables in the given context.  *  * Results:  *	The string pointed to by `name' may change.  *  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarPossiblyExpand --  *	Expand a variable name's embedded variables in the given context.  *  * Results:  *	The contents of name, possibly expanded.  *  * Side Effects:  *	The caller must free the new contents or old contents of name.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -765,6 +765,16 @@ argument_list|,
 name|ctxt
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|name
+operator|=
+name|estrdup
+argument_list|(
+operator|*
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1811,6 +1821,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1997,6 +2012,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2048,6 +2068,11 @@ operator||
 name|FIND_GLOBAL
 operator||
 name|FIND_ENV
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -2167,6 +2192,11 @@ operator||
 name|FIND_GLOBAL
 operator||
 name|FIND_CMD
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 operator|*
