@@ -12220,6 +12220,14 @@ condition|(
 name|p
 condition|)
 block|{
+name|char
+modifier|*
+name|date_1_1
+init|=
+name|vers
+operator|->
+name|date
+decl_stmt|;
 name|vers
 operator|=
 operator|(
@@ -12238,7 +12246,7 @@ name|vers
 operator|->
 name|date
 argument_list|,
-name|date
+name|date_1_1
 argument_list|)
 operator|!=
 literal|0
