@@ -35,7 +35,7 @@ block|{
 name|u_int32_t
 name|ip6_un1_flow
 decl_stmt|;
-comment|/* 20 bits of flow-ID */
+comment|/* 4 bits version, 							 * 8 bits traffic 							 * class, 							 * 20 bits flow-ID */
 name|u_int16_t
 name|ip6_un1_plen
 decl_stmt|;
@@ -54,7 +54,7 @@ struct|;
 name|u_int8_t
 name|ip6_un2_vfc
 decl_stmt|;
-comment|/* 4 bits version, 4 bits class */
+comment|/* 4 bits version, 					      *	top 4 bits trafic class */
 block|}
 name|ip6_ctlun
 union|;

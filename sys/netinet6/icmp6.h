@@ -1682,14 +1682,14 @@ begin_define
 define|#
 directive|define
 name|ICMP6_RR_PCOUSE_RAFLAGS_ONLINK
-value|0x20
+value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICMP6_RR_PCOUSE_RAFLAGS_AUTO
-value|0x10
+value|0x40
 end_define
 
 begin_if

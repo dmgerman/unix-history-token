@@ -4164,6 +4164,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* This must be before ip6_init2(), which is now SI_ORDER_MIDDLE */
+end_comment
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -4171,7 +4175,7 @@ name|route
 argument_list|,
 name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_THIRD
 argument_list|,
 name|route_init
 argument_list|,

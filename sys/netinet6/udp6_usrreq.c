@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ipsec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -197,6 +203,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ipsec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ipsec6.h>
 end_include
 
 begin_endif
@@ -804,10 +816,6 @@ name|IPSEC
 comment|/* 				 * Check AH/ESP integrity. 				 */
 if|if
 condition|(
-name|last
-operator|!=
-name|NULL
-operator|&&
 name|ipsec6_in_reject_so
 argument_list|(
 name|m
@@ -817,14 +825,12 @@ operator|->
 name|inp_socket
 argument_list|)
 condition|)
-block|{
 name|ipsec6stat
 operator|.
 name|in_polvio
 operator|++
 expr_stmt|;
 comment|/* do not inject data into pcb */
-block|}
 elseif|else
 endif|#
 directive|endif
@@ -1003,10 +1009,6 @@ name|IPSEC
 comment|/* 		 * Check AH/ESP integrity. 		 */
 if|if
 condition|(
-name|last
-operator|!=
-name|NULL
-operator|&&
 name|ipsec6_in_reject_so
 argument_list|(
 name|m
@@ -1264,10 +1266,6 @@ name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
-name|in6p
-operator|!=
-name|NULL
-operator|&&
 name|ipsec6_in_reject_so
 argument_list|(
 name|m
@@ -1906,13 +1904,6 @@ operator|!
 name|inp
 operator|->
 name|inp_socket
-operator|||
-operator|!
-name|inp
-operator|->
-name|inp_socket
-operator|->
-name|so_cred
 condition|)
 block|{
 name|error
@@ -2276,17 +2267,41 @@ name|ip6
 operator|->
 name|ip6_flow
 operator|=
+operator|(
+name|ip6
+operator|->
+name|ip6_flow
+operator|&
+operator|~
+name|IPV6_FLOWINFO_MASK
+operator|)
+operator||
+operator|(
 name|in6p
 operator|->
 name|in6p_flowinfo
 operator|&
 name|IPV6_FLOWINFO_MASK
+operator|)
 expr_stmt|;
 name|ip6
 operator|->
 name|ip6_vfc
 operator|=
+operator|(
+name|ip6
+operator|->
+name|ip6_vfc
+operator|&
+operator|~
+name|IPV6_VERSION_MASK
+operator|)
+operator||
+operator|(
 name|IPV6_VERSION
+operator|&
+name|IPV6_VERSION_MASK
+operator|)
 expr_stmt|;
 comment|/* ip6_plen will be filled in ip6_output. */
 name|ip6
@@ -2457,7 +2472,7 @@ name|in6p
 operator|->
 name|in6p_route
 argument_list|,
-literal|0
+name|IPV6_SOCKINMRCVIF
 argument_list|,
 name|in6p
 operator|->

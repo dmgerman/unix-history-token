@@ -66,6 +66,10 @@ name|route
 name|ro
 decl_stmt|;
 comment|/* route, for ip_output. MUST COPY	*/
+name|int
+name|flags
+decl_stmt|;
+comment|/* flags, for ip_output			*/
 ifdef|#
 directive|ifdef
 name|DUMMYNET_DEBUG
@@ -307,6 +311,9 @@ name|struct
 name|ip_fw_chain
 modifier|*
 name|rule
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -85,20 +85,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEYCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|KEYCTL_VARS
-value|{ \ 	0, \&key_debug_level, \&key_spi_trycnt, \&key_spi_minval, \&key_spi_maxval, \&key_int_random, \&key_larval_lifetime, \&key_blockacq_count, \&key_blockacq_lifetime, \ }
-end_define
-
-begin_define
-define|#
-directive|define
 name|_ARRAYLEN
 parameter_list|(
 name|p
@@ -145,35 +131,6 @@ name|in
 parameter_list|)
 value|((struct sockaddr_in *)(in))
 end_define
-
-begin_comment
-comment|/* should not ifdef kernel opt in kernel header file */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -229,78 +186,24 @@ define|\
 value|((((struct sockaddr *)(saddr))->sa_family == AF_INET) ? \ 		((struct sockaddr_in *)(saddr))->sin_port : \ 		((struct sockaddr_in6 *)(saddr))->sin6_port)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
 
-begin_define
-define|#
-directive|define
-name|_IN6ADDR
-parameter_list|(
-name|in6
-parameter_list|)
-value|"#error"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SALENBYAF
-parameter_list|(
-name|family
-parameter_list|)
-value|sizeof(struct sockaddr_in)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_INALENBYAF
-parameter_list|(
-name|family
-parameter_list|)
-value|sizeof(struct in_addr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_INADDRBYSA
-parameter_list|(
-name|saddr
-parameter_list|)
-value|((caddr_t)&((struct sockaddr_in *)(saddr))->sin_addr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_INPORTBYSA
-parameter_list|(
-name|saddr
-parameter_list|)
-value|(((struct sockaddr_in *)(saddr))->sin_port)
-end_define
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_key
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* defined(INET6) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(KERNEL)&& !defined(_KERNEL) */
-end_comment
 
 begin_endif
 endif|#

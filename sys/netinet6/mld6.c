@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ipsec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1276,19 +1282,6 @@ name|m_next
 operator|=
 name|md
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-name|mh
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 name|mh
 operator|->
 name|m_pkthdr

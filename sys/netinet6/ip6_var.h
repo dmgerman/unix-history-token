@@ -440,6 +440,17 @@ begin_comment
 comment|/* most of IPv6 header exists */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6_SOCKINMRCVIF
+value|0x100
+end_define
+
+begin_comment
+comment|/* IPSEC hack; 					 * socket pointer in sending 					 * packet's m_pkthdr.rcvif */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct

@@ -945,7 +945,7 @@ name|ro
 argument_list|,
 name|pkt
 operator|->
-name|dn_dst
+name|flags
 argument_list|,
 name|NULL
 argument_list|)
@@ -1194,6 +1194,9 @@ name|struct
 name|ip_fw_chain
 modifier|*
 name|rule
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1545,6 +1548,13 @@ operator|=
 name|dst
 expr_stmt|;
 comment|/* XXX this can't be right! */
+comment|/* 	 * 'flags' also need to be kept for later packet treatment 	 * such as IPSEC. IPSEC consider sending packet's m->m_pkthdr.rcvif 	 * as 'socket *' at ip_output(), if IP_SOCKINMRCVIF is set. 	 */
+name|pkt
+operator|->
+name|flags
+operator|=
+name|flags
+expr_stmt|;
 block|}
 if|if
 condition|(

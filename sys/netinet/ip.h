@@ -235,6 +235,32 @@ value|0x02
 end_define
 
 begin_comment
+comment|/* ECN bits proposed by Sally Floyd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_CE
+value|0x01
+end_define
+
+begin_comment
+comment|/* congestion experienced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_ECT
+value|0x02
+end_define
+
+begin_comment
+comment|/* ECN-capable transport */
+end_comment
+
+begin_comment
 comment|/*  * Definitions for IP precedence (also in ip_tos) (hopefully unused)  */
 end_comment
 

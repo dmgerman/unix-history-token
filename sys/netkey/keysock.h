@@ -60,7 +60,9 @@ expr|struct
 name|mbuf
 operator|*
 operator|,
-operator|...
+expr|struct
+name|socket
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

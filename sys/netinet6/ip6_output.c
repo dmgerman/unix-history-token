@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_key.h"
+file|"opt_ipsec.h"
 end_include
 
 begin_include
@@ -154,7 +154,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KEY_DEBUG
+name|IPSEC_DEBUG
 end_ifdef
 
 begin_include
@@ -171,7 +171,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|DPRINTF
+name|KEYDEBUG
 parameter_list|(
 name|lev
 parameter_list|,
@@ -179,38 +179,10 @@ name|arg
 parameter_list|)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DDO
-parameter_list|(
-name|lev
-parameter_list|,
-name|stmt
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DP
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KEY_DEBUG */
-end_comment
 
 begin_endif
 endif|#
@@ -612,6 +584,17 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* for AH processing. stupid to have "socket" variable in IP layer... */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|IPV6_SOCKINMRCVIF
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|so
 operator|=
 operator|(
@@ -630,6 +613,12 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+name|so
 operator|=
 name|NULL
 expr_stmt|;
@@ -5399,6 +5388,7 @@ name|m
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_getm
@@ -5408,11 +5398,15 @@ argument_list|,
 operator|&
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* XXX */
 break|break;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_mcopyin
@@ -5421,6 +5415,9 @@ name|sopt
 argument_list|,
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* XXX */
 break|break;
@@ -5503,6 +5500,7 @@ name|EINVAL
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_getm
@@ -5512,11 +5510,15 @@ argument_list|,
 operator|&
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* XXX */
 break|break;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_mcopyin
@@ -5525,6 +5527,9 @@ name|sopt
 argument_list|,
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* XXX */
 break|break;

@@ -39,7 +39,11 @@ expr|struct
 name|mbuf
 operator|*
 operator|,
-operator|...
+name|int
+name|off
+operator|,
+name|int
+name|proto
 operator|)
 argument_list|)
 decl_stmt|;

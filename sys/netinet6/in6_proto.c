@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ipsec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -202,13 +208,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/ah.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ipsec6.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/ah.h>
+file|<netinet6/ah6.h>
 end_include
 
 begin_ifdef
@@ -223,16 +235,16 @@ directive|include
 file|<netinet6/esp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/esp6.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ipcomp.h>
-end_include
 
 begin_endif
 endif|#
@@ -631,40 +643,6 @@ block|, }
 block|,
 endif|#
 directive|endif
-block|{
-name|SOCK_RAW
-block|,
-operator|&
-name|inet6domain
-block|,
-name|IPPROTO_IPCOMP
-block|,
-name|PR_ATOMIC
-operator||
-name|PR_ADDR
-block|,
-name|ipcomp6_input
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-operator|&
-name|nousrreqs
-block|, }
-block|,
 endif|#
 directive|endif
 comment|/* IPSEC */

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ipsec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -734,6 +740,10 @@ begin_comment
 comment|/* cheat */
 end_comment
 
+begin_comment
+comment|/* This must be after route_init(), which is now SI_ORDER_THIRD */
+end_comment
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -741,7 +751,7 @@ name|netinet6init2
 argument_list|,
 name|SI_SUB_PROTO_DOMAIN
 argument_list|,
-name|SI_ORDER_THIRD
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|ip6_init2
 argument_list|,

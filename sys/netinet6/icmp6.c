@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_key.h"
+file|"opt_ipsec.h"
 end_include
 
 begin_include
@@ -178,7 +178,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/ah.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/ipsec6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ah6.h>
 end_include
 
 begin_include
@@ -190,7 +202,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KEY_DEBUG
+name|IPSEC_DEBUG
 end_ifdef
 
 begin_include
@@ -207,7 +219,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|DPRINTF
+name|KEYDEBUG
 parameter_list|(
 name|lev
 parameter_list|,
@@ -215,38 +227,10 @@ name|arg
 parameter_list|)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DDO
-parameter_list|(
-name|lev
-parameter_list|,
-name|stmt
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DP
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KEY_DEBUG */
-end_comment
 
 begin_endif
 endif|#
@@ -5973,20 +5957,6 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*IPSEC*/
-ifdef|#
-directive|ifdef
 name|COMPAT_RFC1885
 name|ip6_output
 argument_list|(
@@ -8369,20 +8339,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* send the packet to outside... */
-ifdef|#
-directive|ifdef
-name|IPSEC
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*IPSEC*/
 name|ip6_output
 argument_list|(
 name|m

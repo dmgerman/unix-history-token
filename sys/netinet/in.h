@@ -2269,6 +2269,10 @@ name|IPCTL_KEEPFAITH
 value|15
 end_define
 
+begin_comment
+comment|/* FAITH IPv4->IPv6 translater ctl */
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -628,7 +628,9 @@ name|rsvp_input
 parameter_list|(
 name|m
 parameter_list|,
-name|iphlen
+name|off
+parameter_list|,
+name|proto
 parameter_list|)
 comment|/* XXX must fixup manually */
 name|struct
@@ -637,7 +639,10 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|iphlen
+name|off
+decl_stmt|;
+name|int
+name|proto
 decl_stmt|;
 block|{
 comment|/* Can still get packets with rsvp_on = 0 if there is a local member      * of the group to which the RSVP packet is addressed.  But in this      * case we want to throw the packet away.      */
@@ -674,7 +679,9 @@ name|rip_input
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
+name|off
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
 return|return;
@@ -698,7 +705,10 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|iphlen
+name|off
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
 comment|/* XXX must fixup manually */
@@ -706,7 +716,9 @@ name|rip_input
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
+name|off
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -7719,7 +7731,9 @@ name|X_ipip_input
 parameter_list|(
 name|m
 parameter_list|,
-name|iphlen
+name|off
+parameter_list|,
+name|proto
 parameter_list|)
 else|#
 directive|else
@@ -7727,7 +7741,9 @@ function|ipip_input
 parameter_list|(
 name|m
 parameter_list|,
-name|iphlen
+name|off
+parameter_list|,
+name|proto
 parameter_list|)
 endif|#
 directive|endif
@@ -7738,7 +7754,10 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|iphlen
+name|off
+decl_stmt|;
+name|int
+name|proto
 decl_stmt|;
 block|{
 name|struct
@@ -7803,7 +7822,9 @@ name|rip_input
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
+name|off
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9713,7 +9734,9 @@ name|rsvp_input
 parameter_list|(
 name|m
 parameter_list|,
-name|iphlen
+name|off
+parameter_list|,
+name|proto
 parameter_list|)
 name|struct
 name|mbuf
@@ -9721,7 +9744,10 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|iphlen
+name|off
+decl_stmt|;
+name|int
+name|proto
 decl_stmt|;
 block|{
 name|int
@@ -9809,9 +9835,12 @@ name|rip_input
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
+name|off
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
+comment|/* xxx */
 return|return;
 block|}
 name|s
