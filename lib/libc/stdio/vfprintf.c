@@ -2409,9 +2409,12 @@ name|nextarg
 operator|=
 literal|1
 expr_stmt|;
+name|va_copy
+argument_list|(
 name|orgap
-operator|=
+argument_list|,
 name|ap
+argument_list|)
 expr_stmt|;
 name|uio
 operator|.
