@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -371,18 +377,15 @@ decl_stmt|,
 name|cached
 decl_stmt|;
 comment|/* buffer / cache memory ??? */
-name|unsigned
-name|long
+name|u_quad_t
 name|swaptotal
 decl_stmt|;
 comment|/* total swap space in bytes */
-name|unsigned
-name|long
+name|u_quad_t
 name|swapused
 decl_stmt|;
 comment|/* used swap space in bytes */
-name|unsigned
-name|long
+name|u_quad_t
 name|swapfree
 decl_stmt|;
 comment|/* free swap space in bytes */
@@ -443,6 +446,9 @@ else|else
 block|{
 name|swaptotal
 operator|=
+operator|(
+name|u_quad_t
+operator|)
 name|swapblist
 operator|->
 name|bl_blocks
@@ -452,6 +458,9 @@ expr_stmt|;
 comment|/* XXX why 1024? */
 name|swapfree
 operator|=
+operator|(
+name|u_quad_t
+operator|)
 name|swapblist
 operator|->
 name|bl_root
@@ -531,14 +540,14 @@ name|sb
 argument_list|,
 literal|"        total:    used:    free:  shared: buffers:  cached:\n"
 literal|"Mem:  %lu %lu %lu %lu %lu %lu\n"
-literal|"Swap: %lu %lu %lu\n"
+literal|"Swap: %llu %llu %llu\n"
 literal|"MemTotal: %9lu kB\n"
 literal|"MemFree:  %9lu kB\n"
 literal|"MemShared:%9lu kB\n"
 literal|"Buffers:  %9lu kB\n"
 literal|"Cached:   %9lu kB\n"
-literal|"SwapTotal:%9lu kB\n"
-literal|"SwapFree: %9lu kB\n"
+literal|"SwapTotal:%9llu kB\n"
+literal|"SwapFree: %9llu kB\n"
 argument_list|,
 name|memtotal
 argument_list|,
@@ -1259,6 +1268,224 @@ name|linux_get_osrelease
 argument_list|(
 name|curp
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|COMMON_END
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|linprocfs_doloadavg
+parameter_list|(
+name|curp
+parameter_list|,
+name|p
+parameter_list|,
+name|pfs
+parameter_list|,
+name|uio
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|curp
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|pfsnode
+modifier|*
+name|pfs
+decl_stmt|;
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+block|{
+name|COMMON_START
+expr_stmt|;
+name|int
+name|lastpid
+decl_stmt|,
+name|ilen
+decl_stmt|;
+name|ilen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|lastpid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kernel_sysctlbyname
+argument_list|(
+name|p
+argument_list|,
+literal|"kern.lastpid"
+argument_list|,
+operator|&
+name|lastpid
+argument_list|,
+operator|&
+name|ilen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|lastpid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* fake it */
+name|sbuf_new
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+name|NULL
+argument_list|,
+literal|128
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|"%d.%02d %d.%02d %d.%02d %d/%d %d\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|averunnable
+operator|.
+name|ldavg
+index|[
+literal|0
+index|]
+operator|/
+name|averunnable
+operator|.
+name|fscale
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|averunnable
+operator|.
+name|ldavg
+index|[
+literal|0
+index|]
+operator|*
+literal|100
+operator|/
+name|averunnable
+operator|.
+name|fscale
+operator|%
+literal|100
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|averunnable
+operator|.
+name|ldavg
+index|[
+literal|1
+index|]
+operator|/
+name|averunnable
+operator|.
+name|fscale
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|averunnable
+operator|.
+name|ldavg
+index|[
+literal|1
+index|]
+operator|*
+literal|100
+operator|/
+name|averunnable
+operator|.
+name|fscale
+operator|%
+literal|100
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|averunnable
+operator|.
+name|ldavg
+index|[
+literal|2
+index|]
+operator|/
+name|averunnable
+operator|.
+name|fscale
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|averunnable
+operator|.
+name|ldavg
+index|[
+literal|2
+index|]
+operator|*
+literal|100
+operator|/
+name|averunnable
+operator|.
+name|fscale
+operator|%
+literal|100
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+comment|/* number of running tasks */
+name|nprocs
+argument_list|,
+comment|/* number of tasks */
+name|lastpid
+comment|/* the last pid */
 argument_list|)
 expr_stmt|;
 name|COMMON_END

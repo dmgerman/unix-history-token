@@ -408,6 +408,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|node_action_t
+name|linprocfs_doloadavg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|node_action_t
 name|procfs_domem
