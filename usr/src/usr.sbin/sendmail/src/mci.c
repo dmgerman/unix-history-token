@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.7 (Berkeley) %G%"
+literal|"@(#)mci.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,6 +647,26 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DAEMON
+specifier|extern
+name|SOCKADDR
+name|CurHostAddr
+decl_stmt|;
+comment|/* clear CurHostAddr so we don't get a bogus address with this name */
+name|bzero
+argument_list|(
+operator|&
+name|CurHostAddr
+argument_list|,
+sizeof|sizeof
+name|CurHostAddr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DAEMON
 name|s
 operator|=
 name|stab
