@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)utmp.h	5.1 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Structure of utmp and wtmp files.  *  * Assuming the number 8 is unwise.  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)utmp.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -17,25 +13,21 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* tty name */
 name|char
 name|ut_name
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* user id */
 name|char
 name|ut_host
 index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* host name, if remote */
-name|long
+name|time_t
 name|ut_time
 decl_stmt|;
-comment|/* time on */
 block|}
 struct|;
 end_struct
