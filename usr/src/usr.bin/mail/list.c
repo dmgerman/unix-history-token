@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	5.12 (Berkeley) %G%"
+literal|"@(#)list.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,6 +542,10 @@ operator|++
 control|)
 if|if
 condition|(
+name|f
+operator|==
+name|MDELETED
+operator|||
 operator|(
 name|message
 index|[
@@ -555,7 +559,7 @@ operator|&
 name|MDELETED
 operator|)
 operator|==
-name|f
+literal|0
 condition|)
 name|mark
 argument_list|(
@@ -1509,7 +1513,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check the passed message number for legality and proper flags.  */
+comment|/*  * Check the passed message number for legality and proper flags.  * If f is MDELETED, then either kind will do.  Otherwise, the message  * has to be undeleted.  */
 end_comment
 
 begin_macro
@@ -1566,6 +1570,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|f
+operator|!=
+name|MDELETED
+operator|&&
 operator|(
 name|mp
 operator|->
@@ -1574,7 +1582,7 @@ operator|&
 name|MDELETED
 operator|)
 operator|!=
-name|f
+literal|0
 condition|)
 block|{
 name|printf
