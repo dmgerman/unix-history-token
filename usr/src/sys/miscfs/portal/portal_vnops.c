@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vnops.c	8.5 (Berkeley) %G%  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vnops.c	8.6 (Berkeley) %G%  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -202,23 +202,18 @@ begin_comment
 comment|/*  * vp is the current namei directory  * cnp is the name to locate in that directory...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_lookup
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_lookup_args
 comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -252,18 +247,6 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_lookup(%s)\n"
-argument_list|,
-name|pname
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ap
@@ -303,16 +286,6 @@ literal|0
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_lookup: allocate new vnode\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|getnewvnode
@@ -456,18 +429,6 @@ operator|=
 name|fvp
 expr_stmt|;
 comment|/*VOP_LOCK(fvp);*/
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_lookup: newvp = %x\n"
-argument_list|,
-name|fvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -481,18 +442,6 @@ condition|(
 name|fvp
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_lookup: vrele(%x)\n"
-argument_list|,
-name|fvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vrele
 argument_list|(
 name|fvp
@@ -506,25 +455,13 @@ name|a_vpp
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_lookup: error = %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -562,16 +499,6 @@ name|unpcb
 modifier|*
 name|unp3
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_connect\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|so2
@@ -615,16 +542,6 @@ operator|(
 name|ECONNREFUSED
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_connect: calling sonewconn\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -687,16 +604,6 @@ name|so2
 operator|=
 name|so3
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_connect: calling unp_connect2\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|unp_connect2
@@ -710,23 +617,18 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|portal_open
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_open_args
 comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|socket
@@ -831,18 +733,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open(%x)\n"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Can't be opened unless the caller is set up 	 * to deal with the side effects.  Check for this 	 * by testing whether the p_dupfd has been set. 	 */
 if|if
 condition|(
@@ -896,16 +786,6 @@ goto|goto
 name|bad
 goto|;
 comment|/* 	 * Reserve some buffer space 	 */
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: calling soreserve\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|res
 operator|=
 name|pt
@@ -939,16 +819,6 @@ goto|goto
 name|bad
 goto|;
 comment|/* 	 * Kick off connection 	 */
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: calling portal_connect\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|portal_connect
@@ -975,16 +845,6 @@ goto|goto
 name|bad
 goto|;
 comment|/* 	 * Wait for connection to complete 	 */
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: waiting for connect\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * XXX: Since the mount point is holding a reference on the 	 * underlying server socket, it is not easy to find out whether 	 * the server process is still running.  To handle this problem 	 * we loop waiting for the new socket to be connected (something 	 * which will only happen if the server is still running) or for 	 * the reference count on the server socket to drop to 1, which 	 * will happen if the server dies.  Sleep for 5 second intervals 	 * and keep polling the reference count.   XXX. 	 */
 name|s
 operator|=
@@ -1028,16 +888,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: server process has gone away\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|bad
 goto|;
@@ -1120,16 +970,6 @@ name|sb_flags
 operator||=
 name|SB_NOINTR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: constructing data uio\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pcred
 operator|.
 name|pcr_flag
@@ -1279,16 +1119,6 @@ index|]
 operator|.
 name|iov_len
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: sending data to server\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|sosend
@@ -1354,40 +1184,6 @@ name|flags
 init|=
 name|MSG_WAITALL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: receiving data from server\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"portal_open: so = %x, cm = %x, resid = %d\n"
-argument_list|,
-name|so
-argument_list|,
-name|cm
-argument_list|,
-name|auio
-operator|.
-name|uio_resid
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"portal_open, uio=%x, mp0=%x, controlp=%x\n"
-argument_list|,
-operator|&
-name|auio
-argument_list|,
-operator|&
-name|cm
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|soreceive
@@ -1415,29 +1211,6 @@ operator|&
 name|flags
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: after receiving data\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"portal_open: so = %x, cm = %x, resid = %d\n"
-argument_list|,
-name|so
-argument_list|,
-name|cm
-argument_list|,
-name|auio
-operator|.
-name|uio_resid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -1495,18 +1268,6 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: error returned is %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -1517,16 +1278,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: no rights received\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ECONNRESET
@@ -1573,20 +1324,6 @@ operator|.
 name|uio_resid
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: still need another %d bytes\n"
-argument_list|,
-name|auio
-operator|.
-name|uio_resid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 literal|0
@@ -1605,16 +1342,6 @@ endif|#
 directive|endif
 block|}
 comment|/* 	 * XXX: Break apart the control message, and retrieve the 	 * received file descriptor.  Note that more than one descriptor 	 * may have been received, or that the rights chain may have more 	 * than a single mbuf in it.  What to do? 	 */
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: about to break apart control message\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|cmsg
 operator|=
 name|mtod
@@ -1652,16 +1379,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: received no fds\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ECONNREFUSED
@@ -1737,18 +1454,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Check that the mode the file is being opened for is a subset  	 * of the mode of the existing descriptor. 	 */
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: checking file flags, fd = %d\n"
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|fp
 operator|=
 name|p
@@ -1800,18 +1505,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: got fd = %d\n"
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Save the dup fd in the proc structure then return the 	 * special error code (ENXIO) which causes magic things to 	 * happen in vn_open.  The whole concept is, well, hmmm. 	 */
 name|p
 operator|->
@@ -1832,16 +1525,6 @@ condition|(
 name|cm
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: free'ing control message\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|cm
@@ -1853,16 +1536,6 @@ condition|(
 name|so
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: calling soshutdown\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|soshutdown
 argument_list|(
 name|so
@@ -1870,65 +1543,32 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_open: calling soclose\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|soclose
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-if|if
-condition|(
-name|error
-operator|!=
-name|ENODEV
-condition|)
-name|printf
-argument_list|(
-literal|"portal_open: error = %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|portal_getattr
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_getattr_args
 comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -2064,16 +1704,6 @@ operator|&
 name|VROOT
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_getattr: stat rootdir\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vap
 operator|->
 name|va_type
@@ -2117,16 +1747,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"portal_getattr: stat portal\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vap
 operator|->
 name|va_type
@@ -2173,25 +1793,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|portal_setattr
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_setattr_args
 comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * Can't mess with the root vnode 	 */
 if|if
@@ -2215,127 +1830,66 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Fake readdir, just return empty directory.  * It is hard to deal with '.' and '..' so don't bother.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_readdir
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_readdir_args
 comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-comment|/* *ap->a_eofflagp = 1; */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|portal_inactive
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_inactive_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGNOSTIC
-if|if
-condition|(
-name|VTOPORTAL
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-operator|->
-name|pt_arg
-condition|)
-name|printf
-argument_list|(
-literal|"portal_inactive(%x, %s)\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-argument_list|,
-name|VTOPORTAL
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-operator|->
-name|pt_arg
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"portal_inactive(%x)\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*vgone(ap->a_vp);*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|portal_reclaim
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_reclaim_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|portalnode
@@ -2349,20 +1903,6 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PORTAL_DIAGOISTIC
-name|printf
-argument_list|(
-literal|"portal_reclaim(%x)\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pt
@@ -2414,7 +1954,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the contents of a Portal vnode.  */
@@ -2424,23 +1964,18 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_print
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_print_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2453,29 +1988,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*void*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_vfree
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_vfree_args
 comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2483,18 +2013,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Portal vnode unsupported operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_enotsupp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -2502,18 +2030,16 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Portal "should never get here" operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_badop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|panic
 argument_list|(
@@ -2522,18 +2048,16 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Portal vnode null operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_nullop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -2541,7 +2065,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
