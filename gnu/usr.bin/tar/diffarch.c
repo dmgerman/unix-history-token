@@ -4,6 +4,10 @@ comment|/* Diff files from a tar archive.    Copyright (C) 1988, 1992, 1993 Free
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Diff files from a tar archive.  *  * Written 30 April 1987 by John Gilmore, ihnp4!hoptoad!gnu.  */
 end_comment
 
@@ -1888,6 +1892,14 @@ name|er
 decl_stmt|;
 endif|#
 directive|endif
+name|current_file_name
+operator|=
+name|NULL
+expr_stmt|;
+name|current_link_name
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
