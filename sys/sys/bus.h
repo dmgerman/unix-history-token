@@ -2071,6 +2071,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|resource_disabled
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|resource_find_match
 parameter_list|(
 name|int
