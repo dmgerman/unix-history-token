@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_nl.c,v 1.3 1998/10/14 15:14:08 Alexander.V.Lukyanov Exp $"
+literal|"$Id: lib_nl.c,v 1.4 1999/10/22 22:31:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -73,18 +73,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__EMX__
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 name|_fsetmode
 argument_list|(
-name|SP
-operator|->
-name|_ofp
+name|NC_OUTPUT
 argument_list|,
 literal|"t"
 argument_list|)
@@ -125,18 +119,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__EMX__
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 name|_fsetmode
 argument_list|(
-name|SP
-operator|->
-name|_ofp
+name|NC_OUTPUT
 argument_list|,
 literal|"b"
 argument_list|)

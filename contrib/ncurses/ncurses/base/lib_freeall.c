@@ -50,7 +50,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_freeall.c,v 1.14 1999/04/03 23:17:06 tom Exp $"
+literal|"$Id: lib_freeall.c,v 1.15 1999/10/22 21:40:10 tom Exp $"
 argument_list|)
 end_macro
 
@@ -321,8 +321,6 @@ operator|->
 name|_color_table
 argument_list|)
 expr_stmt|;
-comment|/* it won't free buffer anyway */
-comment|/*		_nc_set_buffer(SP->_ofp, FALSE);*/
 if|#
 directive|if
 operator|!

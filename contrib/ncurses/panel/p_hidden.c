@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_hidden.c,v 1.2 1998/02/11 12:14:01 tom Exp $"
+literal|"$Id: p_hidden.c,v 1.3 1999/09/18 11:04:19 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -51,9 +51,9 @@ argument_list|(
 name|pan
 argument_list|)
 condition|?
-name|TRUE
-else|:
 name|FALSE
+else|:
+name|TRUE
 operator|)
 return|;
 block|}

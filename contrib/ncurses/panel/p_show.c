@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_show.c,v 1.2 1998/02/11 12:14:01 tom Exp $"
+literal|"$Id: p_show.c,v 1.5 1999/09/29 15:22:32 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -56,6 +56,13 @@ condition|)
 return|return;
 endif|#
 directive|endif
+name|assert
+argument_list|(
+name|_nc_bottom_panel
+operator|==
+name|_nc_stdscr_pseudo_panel
+argument_list|)
+expr_stmt|;
 name|pan
 operator|->
 name|above
@@ -76,11 +83,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|_nc_top_panel
-condition|)
-block|{
 name|_nc_top_panel
 operator|->
 name|above
@@ -93,22 +95,9 @@ name|below
 operator|=
 name|_nc_top_panel
 expr_stmt|;
-block|}
 name|_nc_top_panel
 operator|=
 name|pan
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|_nc_bottom_panel
-condition|)
-name|_nc_bottom_panel
-operator|=
-name|pan
-expr_stmt|;
-name|_nc_calculate_obscure
-argument_list|()
 expr_stmt|;
 name|dStack
 argument_list|(
@@ -143,9 +132,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|Is_Top
+argument_list|(
 name|pan
-operator|==
-name|_nc_top_panel
+argument_list|)
 condition|)
 return|return
 operator|(

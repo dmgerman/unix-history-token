@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tic.c,v 1.51 1999/06/19 21:35:36 Philippe.De.Muyter Exp $"
+literal|"$Id: tic.c,v 1.52 1999/09/25 22:47:54 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2762,7 +2762,8 @@ operator|.
 name|parent
 operator|)
 argument_list|,
-name|infodump
+operator|!
+name|capdump
 argument_list|)
 expr_stmt|;
 operator|(

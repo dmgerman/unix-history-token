@@ -52,16 +52,9 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tputs.c,v 1.39 1999/02/25 10:44:29 tom Exp $"
+literal|"$Id: lib_tputs.c,v 1.41 1999/10/22 23:31:24 tom Exp $"
 argument_list|)
 end_macro
-
-begin_define
-define|#
-directive|define
-name|OUTPUT
-value|((SP != 0) ? SP->_ofp : stdout)
-end_define
 
 begin_decl_stmt
 name|char
@@ -181,13 +174,8 @@ name|my_outch
 operator|==
 name|_nc_outch
 condition|)
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|OUTPUT
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 name|returnCode
@@ -215,13 +203,47 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TRACE */
+if|if
+condition|(
+name|SP
+operator|!=
+literal|0
+operator|&&
+name|SP
+operator|->
+name|_cleanup
+condition|)
+block|{
+name|char
+name|tmp
+init|=
+name|ch
+decl_stmt|;
+comment|/* 		 * POSIX says write() is safe in a signal handler, but the 		 * buffered I/O is not. 		 */
+name|write
+argument_list|(
+name|fileno
+argument_list|(
+name|NC_OUTPUT
+argument_list|)
+argument_list|,
+operator|&
+name|tmp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|putc
 argument_list|(
 name|ch
 argument_list|,
-name|OUTPUT
+name|NC_OUTPUT
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|OK
 return|;

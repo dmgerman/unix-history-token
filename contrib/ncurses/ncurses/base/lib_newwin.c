@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.20 1998/05/23 23:21:32 Alexander.V.Lukyanov Exp $"
+literal|"$Id: lib_newwin.c,v 1.21 1999/10/03 00:42:03 tom Exp $"
 argument_list|)
 end_macro
 
@@ -146,7 +146,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|free
+name|FreeIfNeeded
 argument_list|(
 name|win
 operator|->

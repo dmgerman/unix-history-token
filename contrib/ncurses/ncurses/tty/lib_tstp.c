@@ -58,7 +58,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.19 1999/07/24 22:47:20 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.20 1999/10/22 23:11:09 tom Exp $"
 argument_list|)
 end_macro
 
@@ -461,9 +461,18 @@ name|int
 name|sig
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|nested
+decl_stmt|;
 comment|/* 	 * Actually, doing any sort of I/O from within an signal handler is 	 * "unsafe".  But we'll _try_ to clean up the screen and terminal 	 * settings on the way out. 	 */
 if|if
 condition|(
+operator|!
+name|nested
+operator|++
+operator|&&
+operator|(
 name|sig
 operator|==
 name|SIGINT
@@ -471,6 +480,7 @@ operator|||
 name|sig
 operator|==
 name|SIGQUIT
+operator|)
 condition|)
 block|{
 if|#
@@ -546,6 +556,36 @@ condition|(
 name|scan
 condition|)
 block|{
+if|if
+condition|(
+name|SP
+operator|!=
+literal|0
+operator|&&
+name|SP
+operator|->
+name|_ofp
+operator|!=
+literal|0
+operator|&&
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|SP
+operator|->
+name|_ofp
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|SP
+operator|->
+name|_cleanup
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|set_term
 argument_list|(
 name|scan

@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_above.c,v 1.2 1998/02/11 12:14:01 tom Exp $"
+literal|"$Id: p_above.c,v 1.3 1999/09/18 11:03:28 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -44,9 +44,8 @@ block|{
 comment|/* if top and bottom are equal, we have no or only the pseudo panel; 	 if not, we return the panel above the pseudo panel */
 return|return
 operator|(
-name|_nc_bottom_panel
-operator|==
-name|_nc_top_panel
+name|EMPTY_STACK
+argument_list|()
 condition|?
 operator|(
 name|PANEL

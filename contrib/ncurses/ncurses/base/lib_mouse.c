@@ -141,7 +141,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mouse.c,v 1.44 1999/07/24 21:10:48 tom Exp $"
+literal|"$Id: lib_mouse.c,v 1.45 1999/10/22 21:39:02 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2096,15 +2096,8 @@ endif|#
 directive|endif
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 end_function

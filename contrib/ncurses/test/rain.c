@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: rain.c,v 1.11 1997/09/18 18:36:46 tom Exp $  */
+comment|/*  * $Id: rain.c,v 1.13 1999/10/23 01:31:26 tom Exp $  */
 end_comment
 
 begin_include
@@ -706,6 +706,28 @@ operator|(
 name|EXIT_SUCCESS
 operator|)
 return|;
+case|case
+literal|'s'
+case|:
+name|nodelay
+argument_list|(
+name|stdscr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|' '
+case|:
+name|nodelay
+argument_list|(
+name|stdscr
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|KEY_RESIZE
@@ -783,32 +805,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|float
-name|rv
-decl_stmt|;
 name|long
 name|r
 init|=
+operator|(
 name|rand
 argument_list|()
-decl_stmt|;
-name|r
-operator|&=
+operator|&
 literal|077777
-expr_stmt|;
-name|rv
-operator|=
+operator|)
+decl_stmt|;
+return|return
 operator|(
 operator|(
 name|float
 operator|)
 name|r
 operator|/
-literal|32767.
+literal|32768.
 operator|)
-expr_stmt|;
-return|return
-name|rv
 return|;
 block|}
 end_function

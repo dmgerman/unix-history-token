@@ -304,6 +304,36 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BROKEN_LINKER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_nc_tinfo_fkeys
+value|_nc_tinfo_fkeysf()
+end_define
+
+begin_function_decl
+specifier|extern
+name|struct
+name|tinfo_fkeys
+modifier|*
+name|_nc_tinfo_fkeysf
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -312,6 +342,11 @@ name|_nc_tinfo_fkeys
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	 * The file comp_captab.c contains an array of these structures, one 	 * per possible capability.  These are indexed by a hash table array of 	 * pointers to the same structures for use by the parser. 	 */

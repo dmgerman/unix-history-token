@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_color.c,v 1.35 1999/03/15 01:45:14 Alexander.V.Lukyanov Exp $"
+literal|"$Id: lib_color.c,v 1.36 1999/10/03 00:20:37 Philippe.Blain Exp $"
 argument_list|)
 end_macro
 
@@ -1753,7 +1753,7 @@ operator|<
 literal|0
 operator|||
 name|color
-operator|>
+operator|>=
 name|COLORS
 condition|)
 name|returnCode
@@ -1859,7 +1859,7 @@ operator|)
 operator|||
 operator|(
 name|pair
-operator|>
+operator|>=
 name|COLOR_PAIRS
 operator|)
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.15 1997/10/18 20:11:20 tom Exp $  */
+comment|/*  *	Name: Towers of Hanoi.  *  *	Desc:  *		This is a playable copy of towers of hanoi.  *		Its sole purpose is to demonstrate my Amiga Curses package.  *		This program should compile on any system that has Curses.  *		'hanoi'		will give a manual game with 7 playing pieces.  *		'hanoi n'	will give a manual game with n playing pieces.  *		'hanoi n a' will give an auto solved game with n playing pieces.  *  *	Author: Simon J Raybould	(sie@fulcrum.bt.co.uk).  * 	(This version has been slightly modified by the ncurses maintainers.)  *  *	Date: 05.Nov.90  *  * $Id: hanoi.c,v 1.16 1999/10/23 15:01:01 tom Exp $  */
 end_comment
 
 begin_include
@@ -559,6 +559,12 @@ if|if
 condition|(
 name|AutoFlag
 condition|)
+block|{
+name|curs_set
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|leaveok
 argument_list|(
 name|stdscr
@@ -567,6 +573,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Attempt to remove cursor */
+block|}
 name|InitTiles
 argument_list|(
 name|NTiles
@@ -698,11 +705,6 @@ break|break;
 block|}
 block|}
 block|}
-name|curs_set
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
