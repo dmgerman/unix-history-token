@@ -73,6 +73,19 @@ name|ASM_DEFAULT_SPEC
 value|"-mppc64"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"%{.s: %{mregnames} %{mno-regnames}} \ %{.S: %{mregnames} %{mno-regnames}} \ %{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian} \ %{v:-V} %{Qy:} %{!Qn:-Qy} -a64 %(asm_cpu) %{Wa,*:%*}"
+end_define
+
 begin_comment
 comment|/* 64-bit PowerPC Linux always has a TOC.  */
 end_comment
@@ -187,6 +200,12 @@ end_define
 begin_comment
 comment|/* AIX word-aligns FP doubles but doubleword-aligns 64-bit ints.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ADJUST_FIELD_ALIGN
+end_undef
 
 begin_define
 define|#
@@ -864,6 +883,107 @@ name|LINE
 parameter_list|)
 define|\
 value|do									\   {									\     static int sym_lineno = 1;						\     char temp[256];							\     ASM_GENERATE_INTERNAL_LABEL (temp, "LM", sym_lineno);		\     fprintf (FILE, "\t.stabn 68,0,%d,", LINE);				\     assemble_name (FILE, temp);						\     fputs ("-.", FILE);							\     assemble_name (FILE,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     putc ('\n', FILE);							\     ASM_OUTPUT_INTERNAL_LABEL (FILE, "LM", sym_lineno);			\     sym_lineno += 1;							\   }									\ while (0)
+end_define
+
+begin_comment
+comment|/* Similarly, we want the function code label here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_BRAC
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|BRAC
+parameter_list|)
+define|\
+value|do									\     {									\       const char *flab;							\       fprintf (FILE, "%s%d,0,0,", ASM_STABN_OP, BRAC);			\       assemble_name (FILE, NAME);					\       putc ('-', FILE);							\       if (current_function_func_begin_label != NULL_TREE)		\ 	flab = IDENTIFIER_POINTER (current_function_func_begin_label);	\       else								\ 	{								\ 	  putc ('.', FILE);						\ 	  flab = XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0);	\ 	}								\       assemble_name (FILE, flab);					\       putc ('\n', FILE);						\     }									\   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_LBRAC
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+value|DBX_OUTPUT_BRAC (FILE, NAME, N_LBRAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_RBRAC
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+value|DBX_OUTPUT_BRAC (FILE, NAME, N_RBRAC)
+end_define
+
+begin_comment
+comment|/* Another case where we want the dot name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_NFUN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LSCOPE
+parameter_list|,
+name|DECL
+parameter_list|)
+define|\
+value|do									\     {									\       fprintf (FILE, "%s\"\",%d,0,0,", ASM_STABS_OP, N_FUN);		\       assemble_name (FILE, LSCOPE);					\       fputs ("-.", FILE);						\       assemble_name (FILE, XSTR (XEXP (DECL_RTL (DECL), 0), 0));	\       putc ('\n', FILE);						\     }									\   while (0)
+end_define
+
+begin_comment
+comment|/* Override sysv4.h as these are ABI_V4 only.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_REG_PUSH
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_REG_POP
+end_undef
+
+begin_comment
+comment|/* Select a format to encode pointers in exception handling data.  CODE    is 0 for data, 1 for code labels, 2 for function pointers.  GLOBAL is    true if the symbol may be affected by dynamic relocations.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_PREFERRED_EH_DATA_FORMAT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_PREFERRED_EH_DATA_FORMAT
+parameter_list|(
+name|CODE
+parameter_list|,
+name|GLOBAL
+parameter_list|)
+define|\
+value|(((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel | DW_EH_PE_udata8)
 end_define
 
 end_unit

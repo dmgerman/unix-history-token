@@ -12551,7 +12551,12 @@ condition|)
 block|{
 name|find_reloads_address
 argument_list|(
-name|VOIDmode
+name|recog_data
+operator|.
+name|operand_mode
+index|[
+name|i
+index|]
 argument_list|,
 operator|(
 name|rtx

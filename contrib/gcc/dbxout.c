@@ -1446,6 +1446,20 @@ name|scope_labelno
 operator|++
 expr_stmt|;
 comment|/* By convention, GCC will mark the end of a function with an N_FUN      symbol and an empty string.  */
+ifdef|#
+directive|ifdef
+name|DBX_OUTPUT_NFUN
+name|DBX_OUTPUT_NFUN
+argument_list|(
+name|asmfile
+argument_list|,
+name|lscope_label_name
+argument_list|,
+name|current_function_decl
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|asmfile
@@ -1498,6 +1512,8 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

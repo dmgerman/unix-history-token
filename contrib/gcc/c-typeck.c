@@ -6268,6 +6268,11 @@ condition|)
 return|return
 name|error_mark_node
 return|;
+if|if
+condition|(
+operator|!
+name|skip_evaluation
+condition|)
 name|assemble_external
 argument_list|(
 name|ref

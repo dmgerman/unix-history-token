@@ -120,7 +120,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC32
 define|\
-value|"%{!shared: \      %{pg:/usr/lib/gcrt1.o%s} %{!pg:%{/usr/lib/p:gcrt1.o%s} %{!p:/usr/lib/crt1.o%s}}}\    /usr/lib/crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared: \      %{pg:/usr/lib/gcrt1.o%s} %{!pg:%{p:/usr/lib/gcrt1.o%s} %{!p:/usr/lib/crt1.o%s}}}\    /usr/lib/crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
 
 begin_define
