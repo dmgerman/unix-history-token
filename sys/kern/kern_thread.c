@@ -3134,6 +3134,14 @@ name|td2
 argument_list|)
 operator|&&
 operator|(
+name|td2
+operator|->
+name|td_flags
+operator|&
+name|TDF_SINTR
+operator|)
+operator|&&
+operator|(
 operator|(
 name|td2
 operator|->
