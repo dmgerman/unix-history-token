@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/si.h>
+file|<dev/si/si.h>
 end_include
 
 begin_struct
