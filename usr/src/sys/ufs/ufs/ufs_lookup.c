@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.15	82/04/19	*/
+comment|/*	ufs_lookup.c	4.16	82/06/07	*/
 end_comment
 
 begin_comment
@@ -1382,14 +1382,14 @@ name|dp
 operator|->
 name|i_dev
 expr_stmt|;
-name|irele
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
 name|pdp
 operator|=
 name|dp
+expr_stmt|;
+name|iunlock
+argument_list|(
+name|pdp
+argument_list|)
 expr_stmt|;
 name|dp
 operator|=
@@ -1413,7 +1413,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|iput
+name|irele
 argument_list|(
 name|pdp
 argument_list|)
@@ -1491,7 +1491,7 @@ name|u_error
 operator|=
 name|ELOOP
 expr_stmt|;
-name|iput
+name|irele
 argument_list|(
 name|pdp
 argument_list|)
@@ -1563,7 +1563,7 @@ operator|->
 name|i_number
 argument_list|)
 expr_stmt|;
-name|iput
+name|irele
 argument_list|(
 name|pdp
 argument_list|)
@@ -1629,7 +1629,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|iput
+name|irele
 argument_list|(
 name|pdp
 argument_list|)
@@ -1698,7 +1698,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|iput
+name|irele
 argument_list|(
 name|pdp
 argument_list|)
@@ -1762,7 +1762,7 @@ goto|goto
 name|dirloop
 goto|;
 block|}
-name|iput
+name|irele
 argument_list|(
 name|pdp
 argument_list|)

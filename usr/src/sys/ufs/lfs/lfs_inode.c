@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_inode.c	4.10	82/04/19	*/
+comment|/*	lfs_inode.c	4.11	82/06/07	*/
 end_comment
 
 begin_comment
@@ -640,6 +640,51 @@ end_expr_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|ILOCK
+operator|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"iput"
+argument_list|)
+expr_stmt|;
+name|iunlock
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+name|irele
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|irele
+argument_list|(
+name|ip
+argument_list|)
+specifier|register
+expr|struct
+name|inode
+operator|*
+name|ip
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
 specifier|register
 name|int
 name|i
@@ -655,6 +700,19 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|ILOCK
+condition|)
+name|panic
+argument_list|(
+literal|"irele"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -729,7 +787,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)
@@ -859,12 +917,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|irele
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|i_count
@@ -2397,13 +2449,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|irele
+name|iunlock
 end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|irele
+name|iunlock
 end_undef
 
 begin_endif
@@ -2470,7 +2522,7 @@ comment|/*  * Unlock an inode.  If WANT bit is on, wakeup.  */
 end_comment
 
 begin_expr_stmt
-name|irele
+name|iunlock
 argument_list|(
 name|ip
 argument_list|)
