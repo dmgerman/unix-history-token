@@ -22,57 +22,107 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_TYPELEN
-value|15
+name|NG_TYPESIZ
+value|32
 end_define
 
 begin_comment
-comment|/* max type name len (16 with null) */
+comment|/* max type name len (including null) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_HOOKSIZ
+value|32
+end_define
+
+begin_comment
+comment|/* max hook name len (including null) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NODESIZ
+value|32
+end_define
+
+begin_comment
+comment|/* max node name len (including null) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PATHSIZ
+value|512
+end_define
+
+begin_comment
+comment|/* max path len (including null) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_CMDSTRSIZ
+value|32
+end_define
+
+begin_comment
+comment|/* max command string (including null) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_comment
+comment|/* don't use these - they will go away */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_TYPELEN
+value|(NG_TYPESIZ - 1)
+end_define
 
 begin_define
 define|#
 directive|define
 name|NG_HOOKLEN
-value|15
+value|(NG_HOOKSIZ - 1)
 end_define
-
-begin_comment
-comment|/* max hook name len (16 with null) */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_NODELEN
-value|15
+value|(NG_NODESIZ - 1)
 end_define
-
-begin_comment
-comment|/* max node name len (16 with null) */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_PATHLEN
-value|511
+value|(NG_PATHSIZ - 1)
 end_define
-
-begin_comment
-comment|/* max path len     (512 with null) */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NG_CMDSTRLEN
-value|15
+value|(NG_CMDSTRSIZ - 1)
 end_define
 
-begin_comment
-comment|/* max command string (16 with null) */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
