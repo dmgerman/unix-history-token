@@ -682,9 +682,6 @@ comment|/* the window register is 32 bits */
 name|int
 name|level
 decl_stmt|;
-name|critical_t
-name|crit
-decl_stmt|;
 name|target
 operator|=
 name|IOART_DEST
@@ -706,11 +703,6 @@ operator|+
 name|pin
 expr_stmt|;
 comment|/* IDT vec */
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -747,11 +739,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 comment|/* we only deal with vectored INTs here */
@@ -932,11 +919,6 @@ operator|+
 name|irq
 expr_stmt|;
 comment|/* IDT vec */
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -969,11 +951,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 block|}

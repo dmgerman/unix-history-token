@@ -3618,9 +3618,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
-name|critical_t
-name|crit
-decl_stmt|;
 if|if
 condition|(
 name|statclock_disable
@@ -3739,11 +3736,6 @@ operator|&
 name|clkdesc
 argument_list|)
 expr_stmt|;
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3761,11 +3753,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 else|#
@@ -3793,11 +3780,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3813,11 +3795,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3907,11 +3884,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3940,11 +3912,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 name|writertc
@@ -3989,14 +3956,6 @@ literal|3
 condition|)
 block|{
 comment|/*  			 * The MP table is broken. 			 * The 8254 was not connected to the specified pin 			 * on the IO APIC. 			 * Workaround: Limited variant of mixed mode. 			 */
-name|critical_t
-name|crit
-decl_stmt|;
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -4014,11 +3973,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 name|inthand_remove
@@ -4108,11 +4062,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|crit
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -4130,11 +4079,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
-argument_list|)
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|crit
 argument_list|)
 expr_stmt|;
 block|}

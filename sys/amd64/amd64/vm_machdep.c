@@ -771,20 +771,6 @@ name|int
 operator|)
 name|fork_trampoline
 expr_stmt|;
-name|pcb2
-operator|->
-name|pcb_psl
-operator|=
-name|td2
-operator|->
-name|td_frame
-operator|->
-name|tf_eflags
-operator|&
-operator|~
-name|PSL_I
-expr_stmt|;
-comment|/* ints disabled */
 comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above. 	 * pcb2->pcb_ext:	cleared below. 	 */
 comment|/* 	 * XXX don't copy the i/o pages.  this should probably be fixed. 	 */
 name|pcb2

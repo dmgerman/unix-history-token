@@ -3156,7 +3156,7 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup the sched_lock state so that we can release it.  If 	 * MACHINE_CRITICAL_ENTER is set by the MD architecture, the 	 * trampoline returns with the critical section pre-set. 	 * XXX note: all architectures should do this, because this code 	 * improperly assumes that a critical section == hard interrupt 	 * disablement on entry, which is not necessarily true. 	 */
+comment|/* 	 * Setup the sched_lock state so that we can release it. 	 */
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -3172,9 +3172,6 @@ name|mtx_recurse
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MACHINE_CRITICAL_ENTER
 name|td
 operator|->
 name|td_critnest
@@ -3187,8 +3184,6 @@ name|td_savecrit
 operator|=
 name|CRITICAL_FORK
 expr_stmt|;
-endif|#
-directive|endif
 name|CTR3
 argument_list|(
 name|KTR_PROC

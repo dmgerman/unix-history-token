@@ -103,14 +103,10 @@ modifier|*
 name|pcb_ext
 decl_stmt|;
 comment|/* optional pcb extension */
-name|int
-name|pcb_psl
-decl_stmt|;
-comment|/* process status long */
 name|u_long
 name|__pcb_spare
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 comment|/* adjust to avoid core dump size changes */

@@ -169,16 +169,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX temporary until these routines are moved fully into MD areas  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACHINE_CRITICAL_ENTER
-end_ifndef
-
-begin_comment
 comment|/* Critical sections that prevent preemption. */
 end_comment
 
@@ -268,11 +258,6 @@ operator|--
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Clear the status bit of the queue corresponding to priority level pri,  * indicating that it is empty.  */
