@@ -311,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPP_LINK_TYPE_INFO
-value|{				\ 	{							\ 	  { "enableLink",&ng_parse_int8_type	},	\ 	  { "enableProtoComp",&ng_parse_int8_type	},	\ 	  { "enableACFComp",&ng_parse_int8_type	},	\ 	  { "mru",&ng_parse_int16_type	},	\ 	  { "latency",&ng_parse_int32_type	},	\ 	  { "bandwidth",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	{							\ 	  { "enableLink",&ng_parse_uint8_type	},	\ 	  { "enableProtoComp",&ng_parse_uint8_type	},	\ 	  { "enableACFComp",&ng_parse_uint8_type	},	\ 	  { "mru",&ng_parse_uint16_type	},	\ 	  { "latency",&ng_parse_uint32_type	},	\ 	  { "bandwidth",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
@@ -394,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPP_BUND_TYPE_INFO
-value|{					\ 	{								\ 	  { "mrru",&ng_parse_int16_type	},	\ 	  { "enableMultilink",&ng_parse_int8_type	},	\ 	  { "recvShortSeq",&ng_parse_int8_type	},	\ 	  { "xmitShortSeq",&ng_parse_int8_type	},	\ 	  { "enableRoundRobin",&ng_parse_int8_type	},	\ 	  { "enableIP",&ng_parse_int8_type	},	\ 	  { "enableIPv6",&ng_parse_int8_type	},	\ 	  { "enableAtalk",&ng_parse_int8_type	},	\ 	  { "enableIPX",&ng_parse_int8_type	},	\ 	  { "enableCompression",&ng_parse_int8_type	},	\ 	  { "enableDecompression",&ng_parse_int8_type	},	\ 	  { "enableEncryption",&ng_parse_int8_type	},	\ 	  { "enableDecryption",&ng_parse_int8_type	},	\ 	  { "enableVJCompression",&ng_parse_int8_type	},	\ 	  { "enableVJDecompression",&ng_parse_int8_type	},	\ 	  { NULL }							\ 	}								\ }
+value|{					\ 	{								\ 	  { "mrru",&ng_parse_uint16_type	},	\ 	  { "enableMultilink",&ng_parse_uint8_type	},	\ 	  { "recvShortSeq",&ng_parse_uint8_type	},	\ 	  { "xmitShortSeq",&ng_parse_uint8_type	},	\ 	  { "enableRoundRobin",&ng_parse_uint8_type	},	\ 	  { "enableIP",&ng_parse_uint8_type	},	\ 	  { "enableIPv6",&ng_parse_uint8_type	},	\ 	  { "enableAtalk",&ng_parse_uint8_type	},	\ 	  { "enableIPX",&ng_parse_uint8_type	},	\ 	  { "enableCompression",&ng_parse_uint8_type	},	\ 	  { "enableDecompression",&ng_parse_uint8_type	},	\ 	  { "enableEncryption",&ng_parse_uint8_type	},	\ 	  { "enableDecryption",&ng_parse_uint8_type	},	\ 	  { "enableVJCompression",&ng_parse_uint8_type	},	\ 	  { "enableVJDecompression",&ng_parse_uint8_type	},	\ 	  { NULL }							\ 	}								\ }
 end_define
 
 begin_comment
@@ -488,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPP_STATS_TYPE_INFO
-value|{				\ 	{							\ 	  { "xmitFrames",&ng_parse_int32_type	},	\ 	  { "xmitOctets",&ng_parse_int32_type	},	\ 	  { "recvFrames",&ng_parse_int32_type	},	\ 	  { "recvOctets",&ng_parse_int32_type	},	\ 	  { "badProtos",&ng_parse_int32_type	},	\ 	  { "runts",&ng_parse_int32_type	},	\ 	  { "dupFragments",&ng_parse_int32_type	},	\ 	  { "dropFragments",&ng_parse_int32_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{				\ 	{							\ 	  { "xmitFrames",&ng_parse_uint32_type	},	\ 	  { "xmitOctets",&ng_parse_uint32_type	},	\ 	  { "recvFrames",&ng_parse_uint32_type	},	\ 	  { "recvOctets",&ng_parse_uint32_type	},	\ 	  { "badProtos",&ng_parse_uint32_type	},	\ 	  { "runts",&ng_parse_uint32_type	},	\ 	  { "dupFragments",&ng_parse_uint32_type	},	\ 	  { "dropFragments",&ng_parse_uint32_type	},	\ 	  { NULL }						\ 	}							\ }
 end_define
 
 begin_endif

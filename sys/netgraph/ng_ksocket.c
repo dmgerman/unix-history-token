@@ -641,14 +641,14 @@ block|{
 literal|"len"
 block|,
 operator|&
-name|ng_parse_int8_type
+name|ng_parse_uint8_type
 block|}
 block|,
 block|{
 literal|"family"
 block|,
 operator|&
-name|ng_parse_int8_type
+name|ng_parse_uint8_type
 block|}
 block|,
 block|{
