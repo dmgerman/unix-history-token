@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	7.8	%G%"
+literal|"@(#)ex_cmds.c	5.3.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2302,7 +2302,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"@(#) Version 3.7, %G%."
+literal|"@(#) Version 3.5, %G%."
 operator|+
 literal|5
 argument_list|)

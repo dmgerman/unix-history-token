@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	ex_tune.h	7.7	84/10/22	*/
+comment|/*	ex_tune.h	5.1.1.1	85/05/31	*/
 end_comment
 
 begin_comment

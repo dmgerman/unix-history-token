@@ -1,15 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	7.3	%G%"
+literal|"@(#)ex_unix.c	5.2.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
