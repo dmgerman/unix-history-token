@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpmaptype.c	4.5	83/02/27	*/
+comment|/*	hpmaptype.c	4.6	83/03/01	*/
 end_comment
 
 begin_comment
@@ -366,6 +366,10 @@ name|hpst
 index|[]
 init|=
 block|{
+define|#
+directive|define
+name|HPDT_RM03
+value|0
 literal|32
 block|,
 literal|5
@@ -379,6 +383,10 @@ block|,
 name|rm03_off
 block|,
 comment|/* RM03 */
+define|#
+directive|define
+name|HPDT_RM05
+value|1
 literal|32
 block|,
 literal|19
@@ -392,6 +400,10 @@ block|,
 name|rm05_off
 block|,
 comment|/* RM05 */
+define|#
+directive|define
+name|HPDT_RP06
+value|2
 literal|22
 block|,
 literal|19
@@ -405,6 +417,10 @@ block|,
 name|rp06_off
 block|,
 comment|/* RP06 */
+define|#
+directive|define
+name|HPDT_RM80
+value|3
 literal|31
 block|,
 literal|14
@@ -418,6 +434,10 @@ block|,
 name|rm80_off
 block|,
 comment|/* RM80 */
+define|#
+directive|define
+name|HPDT_RP05
+value|4
 literal|22
 block|,
 literal|19
@@ -430,7 +450,11 @@ literal|411
 block|,
 name|rp06_off
 block|,
-comment|/* RP06 */
+comment|/* RP05 */
+define|#
+directive|define
+name|HPDT_RP07
+value|5
 literal|50
 block|,
 literal|32
@@ -444,6 +468,10 @@ block|,
 name|rp07_off
 block|,
 comment|/* RP07 */
+define|#
+directive|define
+name|HPDT_ML11A
+value|6
 literal|1
 block|,
 literal|1
@@ -455,6 +483,10 @@ block|,
 name|ml_off
 block|,
 comment|/* ML11A */
+define|#
+directive|define
+name|HPDT_ML11B
+value|7
 literal|1
 block|,
 literal|1
@@ -466,6 +498,10 @@ block|,
 name|ml_off
 block|,
 comment|/* ML11B */
+define|#
+directive|define
+name|HPDT_9775
+value|8
 literal|32
 block|,
 literal|40
@@ -479,6 +515,10 @@ block|,
 name|cdc9775_off
 block|,
 comment|/* 9775 */
+define|#
+directive|define
+name|HPDT_9730
+value|9
 literal|32
 block|,
 literal|10
@@ -492,6 +532,10 @@ block|,
 name|cdc9730_off
 block|,
 comment|/* 9730 */
+define|#
+directive|define
+name|HPDT_CAP
+value|10
 literal|32
 block|,
 literal|16
@@ -505,6 +549,10 @@ block|,
 name|capricorn_off
 block|,
 comment|/* Ampex capricorn */
+define|#
+directive|define
+name|HPDT_EAGLE
+value|11
 literal|48
 block|,
 literal|20
@@ -518,6 +566,10 @@ block|,
 name|eagle_off
 block|,
 comment|/* Fuji Eagle */
+define|#
+directive|define
+name|HPDT_RM02
+value|12
 literal|1
 block|,
 literal|1
@@ -529,6 +581,10 @@ block|,
 literal|0
 block|,
 comment|/* rm02 - not used */
+define|#
+directive|define
+name|HPDT_9300
+value|13
 literal|32
 block|,
 literal|19
@@ -597,11 +653,11 @@ if|if
 condition|(
 name|type
 operator|==
-literal|0
+name|HPDT_RM03
 operator|||
 name|type
 operator|==
-literal|1
+name|HPDT_RM05
 condition|)
 block|{
 name|hpsn
@@ -648,7 +704,7 @@ name|SI9775D
 case|:
 return|return
 operator|(
-literal|8
+name|HPDT_9775
 operator|)
 return|;
 case|case
@@ -656,7 +712,7 @@ name|SI9730D
 case|:
 return|return
 operator|(
-literal|9
+name|HPDT_9730
 operator|)
 return|;
 comment|/* 		 * Beware, since the only have SI controller we 		 * have has a 9300 instead of a 9766, we map the 		 * drive type into the 9300.  This means that 		 * on a 9766 you lose the last 8 cylinders (argh). 		 */
@@ -665,7 +721,7 @@ name|SI9766
 case|:
 return|return
 operator|(
-literal|13
+name|HPDT_9300
 operator|)
 return|;
 case|case
@@ -673,7 +729,7 @@ name|SI9762
 case|:
 return|return
 operator|(
-literal|0
+name|HPDT_RM03
 operator|)
 return|;
 case|case
@@ -681,7 +737,7 @@ name|SICAPD
 case|:
 return|return
 operator|(
-literal|10
+name|HPDT_CAP
 operator|)
 return|;
 case|case
@@ -689,7 +745,7 @@ name|SI9751D
 case|:
 return|return
 operator|(
-literal|11
+name|HPDT_EAGLE
 operator|)
 return|;
 block|}
@@ -704,7 +760,7 @@ if|if
 condition|(
 name|type
 operator|==
-literal|13
+name|HPDT_RM02
 condition|)
 block|{
 name|int
@@ -744,7 +800,7 @@ condition|)
 block|{
 name|newtype
 operator|=
-literal|10
+name|HPDT_CAP
 expr_stmt|;
 comment|/* AMPEX capricorn */
 goto|goto
@@ -783,7 +839,7 @@ condition|)
 block|{
 name|newtype
 operator|=
-literal|11
+name|HPDT_EAGLE
 expr_stmt|;
 comment|/* 48 sector Eagle */
 goto|goto
@@ -818,15 +874,15 @@ if|if
 condition|(
 name|type
 operator|==
-literal|6
+name|HPDT_ML11A
 operator|||
 name|type
 operator|==
-literal|7
+name|HPDT_ML11B
 condition|)
 return|return
 operator|(
-literal|6
+name|HPDT_ML11A
 operator|)
 return|;
 return|return
