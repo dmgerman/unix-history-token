@@ -9511,13 +9511,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|nfsrv_object_create
-argument_list|(
-name|nd
-operator|.
-name|ni_vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|exclusive_flag
@@ -9758,13 +9751,6 @@ condition|)
 goto|goto
 name|ereply
 goto|;
-name|nfsrv_object_create
-argument_list|(
-name|nd
-operator|.
-name|ni_vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nd
