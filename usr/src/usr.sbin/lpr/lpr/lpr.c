@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	4.26 (Berkeley) %G%"
+literal|"@(#)lpr.c	4.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,11 +361,9 @@ comment|/* printer name */
 end_comment
 
 begin_decl_stmt
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
+name|struct
+name|stat
+name|statb
 decl_stmt|;
 end_decl_stmt
 
@@ -507,6 +505,12 @@ name|arg
 decl_stmt|,
 modifier|*
 name|cp
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|int
 name|i
@@ -1384,6 +1388,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%d %d"
+argument_list|,
+name|statb
+operator|.
+name|st_dev
+argument_list|,
+name|statb
+operator|.
+name|st_ino
+argument_list|)
+expr_stmt|;
+name|card
+argument_list|(
+literal|'S'
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|format
@@ -1759,6 +1788,12 @@ decl_stmt|,
 name|nr
 decl_stmt|,
 name|nc
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -2136,6 +2171,12 @@ end_expr_stmt
 
 begin_block
 block|{
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2522,10 +2563,6 @@ block|{
 name|struct
 name|exec
 name|execb
-decl_stmt|;
-name|struct
-name|stat
-name|statb
 decl_stmt|;
 specifier|register
 name|int
@@ -2957,6 +2994,12 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 specifier|static
 name|char
 name|pbuf
@@ -3138,6 +3181,12 @@ specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|char
 modifier|*
