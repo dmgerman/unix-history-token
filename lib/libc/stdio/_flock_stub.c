@@ -200,7 +200,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|init_lock_mutex
@@ -248,7 +248,7 @@ name|_lock
 operator|=
 name|p
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|init_lock_mutex
