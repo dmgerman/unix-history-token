@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.37 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,6 +439,13 @@ expr_stmt|;
 comment|/* 	**  See if we resolved to a real mailer. 	*/
 if|if
 condition|(
+name|pvp
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|||
 operator|(
 name|pvp
 index|[
