@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_rmap.c	4.2	%G%	*/
+comment|/*	subr_rmap.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -770,7 +770,7 @@ operator|--
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s rmap overflow, lost [%d,%d)\n"
+literal|"%s: rmap ovflo, lost [%d,%d)\n"
 argument_list|,
 name|mp
 operator|->
