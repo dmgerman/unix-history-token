@@ -5093,7 +5093,7 @@ name|dev
 parameter_list|,
 name|bit
 parameter_list|)
-value|isa_set_flags(dev, isa_get_flags(dev) | (bit))
+value|device_set_flags(dev, device_get_flags(dev) | (bit))
 end_define
 
 begin_define
@@ -5105,7 +5105,7 @@ name|dev
 parameter_list|,
 name|bit
 parameter_list|)
-value|isa_set_flags(dev, isa_get_flags(dev)& ~(bit))
+value|device_set_flags(dev, device_get_flags(dev)& ~(bit))
 end_define
 
 begin_function
@@ -5159,7 +5159,7 @@ decl_stmt|;
 name|u_int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -7761,7 +7761,7 @@ decl_stmt|;
 name|u_int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -8011,7 +8011,7 @@ name|pc98_set_ioport
 argument_list|(
 name|com
 argument_list|,
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -8026,7 +8026,7 @@ operator|->
 name|pc98_if_type
 operator|=
 operator|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -9589,7 +9589,7 @@ name|com
 operator|->
 name|flags
 operator|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -24048,7 +24048,7 @@ operator|=
 name|if_type
 operator|=
 operator|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -24391,7 +24391,7 @@ condition|(
 operator|!
 name|COM_ISMULTIPORT
 argument_list|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -24404,7 +24404,7 @@ argument_list|)
 operator|==
 name|COM_MPMASTER
 argument_list|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)

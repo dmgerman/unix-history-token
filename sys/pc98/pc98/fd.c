@@ -5154,7 +5154,7 @@ literal|0
 case|:
 if|if
 condition|(
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|fdc
 operator|->
