@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.14 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,13 +259,6 @@ block|{
 comment|/* can't return a message with no id */
 return|return;
 block|}
-name|e
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
-expr_stmt|;
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
 condition|(
@@ -2269,6 +2262,18 @@ condition|(
 name|q
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_FATALERRS
+argument_list|,
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|putline

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.33 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3668,6 +3668,9 @@ name|syserr
 argument_list|(
 literal|"deliver: null host name in signature"
 argument_list|)
+expr_stmt|;
+name|curhost
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
