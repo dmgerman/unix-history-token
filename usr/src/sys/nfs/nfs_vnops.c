@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3913,6 +3913,16 @@ name|cn_flags
 decl_stmt|;
 specifier|register
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
+specifier|register
+name|struct
 name|vnode
 modifier|*
 name|newvp
@@ -4107,7 +4117,9 @@ name|vget
 argument_list|(
 name|newvp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
