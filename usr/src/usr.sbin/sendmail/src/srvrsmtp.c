@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.38 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.39 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.38 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.39 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1982,7 +1982,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -2397,8 +2397,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|SMTP
 end_endif
+
+begin_comment
+comment|/* SMTP */
+end_comment
 
 end_unit
 

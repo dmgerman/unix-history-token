@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.31 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,7 +385,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 comment|/* we must have an id to remove disk files */
 if|if
 condition|(
@@ -598,7 +598,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|QUEUE
+comment|/* QUEUE */
 name|syserr
 argument_list|(
 literal|"dropenvelope: queueup"
@@ -606,7 +606,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|QUEUE
+comment|/* QUEUE */
 block|}
 comment|/* now unlock the job */
 name|closexscript
@@ -883,7 +883,7 @@ name|p
 decl_stmt|;
 endif|#
 directive|endif
-endif|TTYNAME
+comment|/* TTYNAME */
 specifier|extern
 name|char
 modifier|*
@@ -1015,7 +1015,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|rindex
+name|strrchr
 argument_list|(
 name|p
 argument_list|,
@@ -1026,7 +1026,7 @@ name|NULL
 condition|)
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|p
 argument_list|,
@@ -1058,7 +1058,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|TTYNAME
+comment|/* TTYNAME */
 block|}
 end_block
 
@@ -1202,7 +1202,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|index
+name|strchr
 argument_list|(
 name|dbuf
 argument_list|,
@@ -1334,7 +1334,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 if|if
 condition|(
 name|e
@@ -1624,7 +1624,7 @@ operator|!=
 name|geteuid
 argument_list|()
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|from
 argument_list|,
@@ -1723,7 +1723,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|from
 operator|=
 name|newstr

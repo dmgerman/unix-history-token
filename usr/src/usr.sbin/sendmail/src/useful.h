@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	4.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	4.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -50,8 +50,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|NULL
 end_endif
+
+begin_comment
+comment|/* NULL */
+end_comment
 
 begin_comment
 comment|/* bit hacking */
@@ -137,8 +140,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|NASSERT
 end_else
+
+begin_comment
+comment|/* NASSERT */
+end_comment
 
 begin_define
 define|#
@@ -156,8 +162,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|NASSERT
 end_endif
+
+begin_comment
+comment|/* NASSERT */
+end_comment
 
 begin_comment
 comment|/* sccs id's */
@@ -182,8 +191,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|lint
 end_else
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_define
 define|#
@@ -199,91 +211,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_comment
-comment|/* define the types of some common functions */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strncpy
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|strcat
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strncat
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 end_unit
 

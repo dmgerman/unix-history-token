@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.58 (Berkeley) %G%"
+literal|"@(#)main.c	5.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,8 +228,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|SETPROCTITLE
 end_endif
+
+begin_comment
+comment|/* SETPROCTITLE */
+end_comment
 
 begin_comment
 comment|/* **  The file in which to log raw recipient information. **	This is logged before aliasing, forwarding, and so forth so we **	can see how our addresses are being used.  For example, this **	would give us the names of aliases (instead of what they alias **	to), the pre-MX hostnames, and so forth. ** **	This is specified on the command line, not in the config file, **	and is therefore really only useful for logging SMTP RCPTs. */
@@ -279,10 +282,10 @@ operator|%
 name|ERROR
 endif|#
 directive|endif
-endif|SMTP
+comment|/* SMTP */
 endif|#
 directive|endif
-endif|DAEMON
+comment|/* DAEMON */
 define|#
 directive|define
 name|MAXCONFIGLEVEL
@@ -1106,8 +1109,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|SETPROCTITLE
 end_endif
+
+begin_comment
+comment|/* SETPROCTITLE */
+end_comment
 
 begin_if
 if|if
@@ -1442,7 +1448,7 @@ end_expr_stmt
 begin_expr_stmt
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|av
@@ -1605,7 +1611,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|DAEMON
+comment|/* DAEMON */
 case|case
 name|MD_SMTP
 case|:
@@ -1624,7 +1630,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|SMTP
+comment|/* SMTP */
 case|case
 name|MD_DELIVER
 case|:
@@ -2044,7 +2050,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|QUEUE
+comment|/* QUEUE */
 name|usrerr
 argument_list|(
 literal|"I don't know about queues"
@@ -2056,7 +2062,7 @@ name|EX_USAGE
 expr_stmt|;
 endif|#
 directive|endif
-endif|QUEUE
+comment|/* QUEUE */
 break|break;
 case|case
 literal|'t'
@@ -2620,7 +2626,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|QUEUE
+comment|/* QUEUE */
 name|usrerr
 argument_list|(
 literal|"No queue to print"
@@ -2631,7 +2637,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|QUEUE
+comment|/* QUEUE */
 case|case
 name|MD_INITALIAS
 case|:
@@ -3177,8 +3183,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|QUEUE
 end_endif
+
+begin_comment
+comment|/* QUEUE */
+end_comment
 
 begin_comment
 comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	**	If we should also be processing the queue, start 	**		doing it in background. 	**	We check for any errors that might have happened 	**		during startup. 	*/
@@ -3278,7 +3287,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|QUEUE
+comment|/* QUEUE */
 name|dropenvelope
 argument_list|(
 name|CurEnv
@@ -3310,7 +3319,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DAEMON
+comment|/* DAEMON */
 block|}
 end_if
 
@@ -3341,8 +3350,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|SMTP
 end_endif
+
+begin_comment
+comment|/* SMTP */
+end_comment
 
 begin_comment
 comment|/* 	**  Do basic system initialization and set the sender 	*/
@@ -3684,8 +3696,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|LOG
 end_endif
+
+begin_comment
+comment|/* LOG */
+end_comment
 
 begin_if
 if|if
@@ -4958,7 +4973,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|errno
 operator|=
 literal|0

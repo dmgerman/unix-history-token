@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.13 (Berkeley) %G%"
+literal|"@(#)collect.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,7 +281,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|NOTUNIX
+comment|/* NOTUNIX */
 comment|/* 	**  Copy InChannel to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header. 	*/
 name|workbuf
 operator|=
@@ -1008,7 +1008,7 @@ name|buf
 decl_stmt|;
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -1499,8 +1499,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|NOTUNIX
 end_endif
+
+begin_comment
+comment|/* NOTUNIX */
+end_comment
 
 end_unit
 

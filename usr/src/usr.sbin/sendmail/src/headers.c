@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.24 (Berkeley) %G%"
+literal|"@(#)headers.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,7 +168,7 @@ name|char
 modifier|*
 name|q
 init|=
-name|index
+name|strchr
 argument_list|(
 name|p
 operator|+
@@ -232,7 +232,7 @@ name|p
 expr_stmt|;
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -707,7 +707,7 @@ name|h_flags
 argument_list|)
 operator|&&
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|fvalue
 argument_list|,
@@ -716,7 +716,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|fvalue
 argument_list|,
@@ -725,7 +725,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|fvalue
 argument_list|,
@@ -734,7 +734,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|fvalue
 argument_list|,
@@ -1380,7 +1380,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 if|if
 condition|(
@@ -1691,7 +1691,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 end_block
 
@@ -2143,7 +2143,7 @@ block|}
 comment|/* check for characters that may have to be quoted */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 literal|".'@,;:[]"
 argument_list|,
@@ -2790,7 +2790,7 @@ condition|(
 operator|(
 name|nlp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,

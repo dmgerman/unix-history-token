@@ -125,7 +125,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.37 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.38 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.37 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.38 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.37 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.38 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,7 +1193,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 else|else
 block|{
@@ -1215,7 +1215,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|message
 argument_list|(
 name|Arpa_Info
@@ -1266,7 +1266,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|readaliases
 argument_list|(
 name|aliasfile
@@ -1279,7 +1279,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-else|DBM
+comment|/* DBM */
 name|readaliases
 argument_list|(
 name|aliasfile
@@ -1291,7 +1291,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DBM
+comment|/* DBM */
 block|}
 end_block
 
@@ -1592,7 +1592,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-endif|DBM
+comment|/* DBM */
 comment|/* 	**  If initializing, create the new DBM files. 	*/
 if|if
 condition|(
@@ -1864,7 +1864,7 @@ operator|++
 expr_stmt|;
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -2467,7 +2467,7 @@ block|}
 else|else
 endif|#
 directive|endif
-endif|DBM
+comment|/* DBM */
 block|{
 name|s
 operator|=
@@ -2619,7 +2619,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DBM
+comment|/* DBM */
 comment|/* closing the alias file drops the lock */
 operator|(
 name|void
@@ -2676,7 +2676,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 end_block
 

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.50 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.51 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.50 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.51 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,7 +284,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|finis
 argument_list|()
 expr_stmt|;
@@ -579,7 +579,7 @@ name|char
 modifier|*
 name|p
 init|=
-name|index
+name|strchr
 argument_list|(
 name|host
 argument_list|,
@@ -1485,7 +1485,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|strcpy
 argument_list|(
@@ -1612,8 +1612,11 @@ end_function
 begin_else
 else|#
 directive|else
-else|DAEMON
 end_else
+
+begin_comment
+comment|/* DAEMON */
+end_comment
 
 begin_comment
 comment|/* code for systems without sophisticated networking */
@@ -1749,8 +1752,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|DAEMON
 end_endif
+
+begin_comment
+comment|/* DAEMON */
+end_comment
 
 end_unit
 

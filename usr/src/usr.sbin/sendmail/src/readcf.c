@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.47 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,7 +422,7 @@ condition|(
 operator|(
 name|e
 operator|=
-name|index
+name|strchr
 argument_list|(
 operator|++
 name|p
@@ -1640,14 +1640,14 @@ name|wordbuf
 expr_stmt|;
 else|#
 directive|else
-else|SCANF
+comment|/* SCANF */
 name|p
 operator|=
 name|buf
 expr_stmt|;
 endif|#
 directive|endif
-endif|SCANF
+comment|/* SCANF */
 comment|/* 		**  Break up the match into words. 		*/
 while|while
 condition|(
@@ -3029,7 +3029,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|QUEUE
+comment|/* QUEUE */
 comment|/* fall through..... */
 case|case
 name|SM_DELIVER

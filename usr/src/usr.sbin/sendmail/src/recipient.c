@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.36 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ operator|==
 name|NULL
 operator|&&
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|list
 argument_list|,
@@ -179,7 +179,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|list
 argument_list|,
@@ -188,7 +188,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|list
 argument_list|,
@@ -197,7 +197,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|list
 argument_list|,
@@ -1518,7 +1518,7 @@ parameter_list|()
 function_decl|;
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|buf
 argument_list|,
@@ -2156,7 +2156,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -2689,7 +2689,7 @@ name|char
 modifier|*
 name|p
 init|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.23 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.24 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.23 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.24 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1828,14 +1828,14 @@ name|ECONNRESET
 expr_stmt|;
 else|#
 directive|else
-else|ECONNRESET
+comment|/* ECONNRESET */
 name|errno
 operator|=
 name|EPIPE
 expr_stmt|;
 endif|#
 directive|endif
-endif|ECONNRESET
+comment|/* ECONNRESET */
 name|message
 argument_list|(
 name|Arpa_TSyserr
@@ -1874,7 +1874,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|mci
 operator|->
 name|mci_state
@@ -1912,7 +1912,7 @@ name|e_xfp
 operator|!=
 name|NULL
 operator|&&
-name|index
+name|strchr
 argument_list|(
 literal|"45"
 argument_list|,
@@ -2217,8 +2217,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|SMTP
 end_endif
+
+begin_comment
+comment|/* SMTP */
+end_comment
 
 end_unit
 

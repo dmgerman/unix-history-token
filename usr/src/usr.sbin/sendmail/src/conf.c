@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.42 (Berkeley) %G%"
+literal|"@(#)conf.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,7 +1221,7 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|EXAMPLE_CODE
+comment|/* EXAMPLE_CODE */
 return|return
 operator|(
 name|TRUE
@@ -2186,7 +2186,7 @@ literal|' '
 expr_stmt|;
 endif|#
 directive|endif
-endif|SETPROCTITLE
+comment|/* SETPROCTITLE */
 block|}
 end_block
 
@@ -2241,7 +2241,7 @@ condition|)
 continue|continue;
 else|#
 directive|else
-else|WNOHANG
+comment|/* WNOHANG */
 specifier|auto
 name|int
 name|status
@@ -2263,7 +2263,7 @@ condition|)
 continue|continue;
 endif|#
 directive|endif
-endif|WNOHANG
+comment|/* WNOHANG */
 block|}
 end_function
 

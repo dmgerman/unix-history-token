@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.40 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.39		%G%"
+literal|"@(#)sendmail.h	5.40		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,8 +44,11 @@ end_endif
 begin_else
 else|#
 directive|else
-else|_DEFINE
 end_else
+
+begin_comment
+comment|/*  _DEFINE */
+end_comment
 
 begin_define
 define|#
@@ -57,13 +60,22 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|_DEFINE
 end_endif
+
+begin_comment
+comment|/* _DEFINE */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -88,6 +100,24 @@ begin_include
 include|#
 directive|include
 file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -123,8 +153,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|LOG
 end_endif
+
+begin_comment
+comment|/* LOG */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -147,8 +180,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|DAEMON
 end_endif
+
+begin_comment
+comment|/* DAEMON */
+end_comment
 
 begin_define
 define|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.20 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1118,7 +1118,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 comment|/* leave the locked queue& transcript files around */
 name|exit
 argument_list|(

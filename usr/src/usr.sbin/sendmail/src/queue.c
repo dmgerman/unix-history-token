@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.49 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.50 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.49 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.50 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,8 +1544,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|LOG
 end_endif
+
+begin_comment
+comment|/* LOG */
+end_comment
 
 begin_expr_stmt
 name|fflush
@@ -1776,7 +1779,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|SIGCHLD
+comment|/* SIGCHLD */
 operator|(
 name|void
 operator|)
@@ -1789,7 +1792,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGCHLD
+comment|/* SIGCHLD */
 if|if
 condition|(
 name|QueueIntvl
@@ -1828,7 +1831,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|SIGCHLD
+comment|/* SIGCHLD */
 operator|(
 name|void
 operator|)
@@ -1841,7 +1844,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGCHLD
+comment|/* SIGCHLD */
 block|}
 name|setproctitle
 argument_list|(
@@ -1875,7 +1878,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 comment|/* 	**  Release any resources used by the daemon code. 	*/
 ifdef|#
 directive|ifdef
@@ -1885,7 +1888,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|DAEMON
+comment|/* DAEMON */
 comment|/* 	**  Create ourselves an envelope 	*/
 name|CurEnv
 operator|=
@@ -2974,7 +2977,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 comment|/* don't use the headers from sendmail.cf... */
 name|e
 operator|->
@@ -3264,7 +3267,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|fclose
 argument_list|(
 name|qfp
@@ -3371,7 +3374,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 operator|(
 name|void
 operator|)
@@ -4329,8 +4332,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|QUEUE
 end_endif
+
+begin_comment
+comment|/* QUEUE */
+end_comment
 
 begin_escape
 end_escape
@@ -4719,7 +4725,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 if|if
 condition|(
@@ -4840,7 +4846,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 if|if
 condition|(
 operator|!

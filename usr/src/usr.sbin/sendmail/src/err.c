@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.14 (Berkeley) %G%"
+literal|"@(#)err.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,7 +257,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|errno
 operator|=
 literal|0
@@ -399,7 +399,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 if|if
 condition|(
 name|QuickAbort
@@ -1094,7 +1094,7 @@ name|SmtpPhase
 decl_stmt|;
 endif|#
 directive|endif
-endif|SMTP
+comment|/* SMTP */
 ifdef|#
 directive|ifdef
 name|DAEMON

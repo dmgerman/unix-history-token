@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.65 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -662,7 +662,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -772,7 +772,7 @@ name|NULL
 expr_stmt|;
 else|#
 directive|else
-else|SMTP
+comment|/* SMTP */
 comment|/* oops!  we don't implement SMTP */
 name|syserr
 argument_list|(
@@ -786,7 +786,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|SMTP
+comment|/* SMTP */
 block|}
 comment|/* 	**  At this point *mvp points to the argument with $u.  We 	**  run through our address list and append all the addresses 	**  we can.  If we run out of space, do not fret!  We can 	**  always send another copy later. 	*/
 name|tobuf
@@ -3053,7 +3053,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGCHLD
+comment|/* SIGCHLD */
 name|DOFORK
 argument_list|(
 name|FORK
@@ -3925,14 +3925,14 @@ name|SmtpError
 expr_stmt|;
 else|#
 directive|else
-else|SMTP
+comment|/* SMTP */
 name|statmsg
 operator|=
 name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-endif|SMTP
+comment|/* SMTP */
 block|}
 block|}
 if|if
@@ -4186,7 +4186,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 end_block
 
@@ -4304,7 +4304,7 @@ argument_list|)
 expr_stmt|;
 name|bang
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -4354,7 +4354,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|UGLYUUCP
+comment|/* UGLYUUCP */
 name|expand
 argument_list|(
 name|template
@@ -5466,7 +5466,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|QUEUE
+comment|/* QUEUE */
 name|oldverbose
 operator|=
 name|Verbose

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.31 (Berkeley) %G%"
+literal|"@(#)util.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,12 +307,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 name|p
 operator|=
 name|malloc
@@ -1283,7 +1277,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -1583,7 +1577,7 @@ block|{
 comment|/* find the end of the line */
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|l
 argument_list|,
@@ -1850,7 +1844,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 name|i
 operator|=
 name|unlink
@@ -1884,7 +1878,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|LOG
+comment|/* LOG */
 block|}
 end_block
 
@@ -2402,7 +2396,7 @@ name|s
 operator|==
 literal|'\0'
 operator|||
-name|index
+name|strchr
 argument_list|(
 literal|"tTyY"
 argument_list|,

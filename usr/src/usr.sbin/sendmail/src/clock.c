@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	5.10 (Berkeley) %G%"
+literal|"@(#)clock.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -561,7 +561,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGVTALRM
+comment|/* SIGVTALRM */
 name|f
 operator|=
 name|ev
