@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.39 1997/09/16 23:20:16 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.40 1997/09/21 13:11:22 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -6333,62 +6333,6 @@ begin_comment
 comment|/* MS_EXT */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VAR_AUTHKEY
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_DIAL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_LOGIN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_AUTHNAME
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_DEVICE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_ACCMAP
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_PHONE
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_HANGUP
-value|7
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -6563,9 +6507,26 @@ break|break;
 case|case
 name|VAR_DEVICE
 case|:
-name|CloseModem
-argument_list|()
+if|if
+condition|(
+name|modem
+operator|!=
+operator|-
+literal|1
+condition|)
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Cannot change device to \"%s\" when \"%s\" is open\n"
+argument_list|,
+name|arg
+argument_list|,
+name|VarDevice
+argument_list|)
 expr_stmt|;
+else|else
+block|{
 name|strncpy
 argument_list|(
 name|VarDevice
@@ -6611,6 +6572,7 @@ literal|1
 else|:
 literal|""
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|VAR_ACCMAP
