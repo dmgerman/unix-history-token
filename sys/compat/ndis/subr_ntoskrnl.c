@@ -4061,9 +4061,9 @@ operator|*
 operator|)
 name|io
 argument_list|,
-sizeof|sizeof
+name|IoSizeOfIrp
 argument_list|(
-name|irp
+name|ssize
 argument_list|)
 argument_list|)
 expr_stmt|;
