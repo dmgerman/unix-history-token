@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -655,7 +661,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.6 1995/08/21 12:32:50 ache Exp $"
+literal|"$Id: parsetime.c,v 1.7 1996/07/19 00:44:55 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,11 +1367,9 @@ name|expectplur
 operator|!=
 name|sc_tokplur
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"at: pluralization is wrong\n"
+literal|"pluralization is wrong"
 argument_list|)
 expr_stmt|;
 name|dateadd
@@ -1548,8 +1552,8 @@ literal|12
 condition|)
 comment|/* 12:xx AM is 00:xx, not 12:xx */
 name|hour
-operator|-=
-literal|12
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|token

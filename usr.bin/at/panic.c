@@ -57,7 +57,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: panic.c,v 1.1 1995/05/24 15:07:32 ig25 Exp $"
+literal|"$Id: panic.c,v 1.4 1995/08/21 12:32:47 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: at [-V] [-q x] [-f file] [-m] time\n"
+literal|"usage: at [-V] [-q x] [-f file] [-m] time\n"
 literal|"       at [-V] -c job [job ...]\n"
 literal|"       atq [-V] [-q x] [-v]\n"
 literal|"       atrm [-V] job [job ...]\n"
