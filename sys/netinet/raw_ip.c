@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -2709,6 +2715,24 @@ name|inp_gencnt
 operator|<=
 name|gencnt
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|showallsockets
+operator|&&
+name|socheckproc
+argument_list|(
+name|inp
+operator|->
+name|inp_socket
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+argument_list|)
+condition|)
+continue|continue;
 name|inp_list
 index|[
 name|i
@@ -2717,6 +2741,7 @@ index|]
 operator|=
 name|inp
 expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
