@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.3	84/04/13	*/
+comment|/*	ioctl.h	6.4	84/08/02	*/
 end_comment
 
 begin_comment
@@ -58,12 +58,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
 
 begin_struct
 struct|struct
@@ -128,6 +122,55 @@ comment|/* literal next character */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Structure for TIOCGETP and TIOCSETP ioctls.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SGTTYB_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SGTTYB_
+end_define
+
+begin_struct
+struct|struct
+name|sgttyb
+block|{
+name|char
+name|sg_ispeed
+decl_stmt|;
+comment|/* input speed */
+name|char
+name|sg_ospeed
+decl_stmt|;
+comment|/* output speed */
+name|char
+name|sg_erase
+decl_stmt|;
+comment|/* erase character */
+name|char
+name|sg_kill
+decl_stmt|;
+comment|/* kill character */
+name|short
+name|sg_flags
+decl_stmt|;
+comment|/* mode flags */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
