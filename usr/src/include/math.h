@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	math.h	4.5	%G%	*/
+comment|/*	math.h	4.6	%G%	*/
 end_comment
 
 begin_decl_stmt
@@ -62,13 +62,16 @@ argument_list|()
 decl_stmt|,
 name|ceil
 argument_list|()
+decl_stmt|,
+name|rint
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|extern
 name|double
-name|gamma
+name|lgamma
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,17 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	@(#)lgamma.c	4.4	%G% */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)lgamma.c	4.4 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
-comment|/* 	C program for floating point log gamma function  	gamma(x) computes the log of the absolute 	value of the gamma function. 	The sign of the gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, floor and sin. */
+comment|/* 	C program for floating point log Gamma function  	lgamma(x) computes the log of the absolute 	value of the Gamma function. 	The sign of the Gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, floor and sin. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
 
 begin_include
 include|#
@@ -25,37 +37,16 @@ directive|ifdef
 name|VAX
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|long
-name|NaN_
-index|[]
-init|=
-block|{
-literal|0x8000
-block|,
-literal|0x0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NaN
-value|(*(double *) NaN_)
-end_define
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -192,7 +183,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|gamma
+name|lgamma
 parameter_list|(
 name|arg
 parameter_list|)
@@ -402,14 +393,9 @@ operator|+=
 literal|1.e0
 expr_stmt|;
 comment|/* t := integer nearest arg */
-if|#
-directive|if
-operator|!
-operator|(
-name|IEEE
-operator||
-name|NATIONAL
-operator|)
+ifdef|#
+directive|ifdef
+name|VAX
 if|if
 condition|(
 name|arg
@@ -417,27 +403,20 @@ operator|==
 name|t
 condition|)
 block|{
-name|errno
-operator|=
-name|EDOM
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VAX
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
 return|return
 operator|(
-name|NaN
+name|infnan
+argument_list|(
+name|ERANGE
+argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|HUGE
-operator|)
-return|;
-endif|#
-directive|endif
+comment|/* +INF */
 block|}
 endif|#
 directive|endif
