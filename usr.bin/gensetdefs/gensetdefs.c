@@ -38,6 +38,11 @@ name|defined
 argument_list|(
 name|arch_alpha
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|arch_sparc64
+argument_list|)
 end_elif
 
 begin_define
