@@ -110,40 +110,6 @@ file|"i386/isa/isa_device.h"
 end_include
 
 begin_comment
-comment|/* These few lines are used by FreeBSD (only??). */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|NSND
-operator|>
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|KERNEL_SOUNDCARD
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL_SOUNDCARD
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Rest of the file is compiled only if the driver is really required.  */
 end_comment
 
