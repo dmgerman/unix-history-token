@@ -2178,7 +2178,7 @@ operator|=
 operator|(
 name|pci_get_slot
 argument_list|(
-name|pcib
+name|dev
 argument_list|)
 operator|+
 operator|(
