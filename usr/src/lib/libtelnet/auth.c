@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)auth.c	8.2 (Berkeley) %G%"
+literal|"@(#)auth.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1612,19 +1612,19 @@ argument_list|)
 else|:
 name|cnt
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|data
+name|_auth_send_data
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|_auth_send_data
+name|data
 argument_list|,
 name|auth_send_cnt
 argument_list|)
@@ -2135,19 +2135,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|data
+name|savename
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|savename
+name|data
 argument_list|,
 name|cnt
 argument_list|)

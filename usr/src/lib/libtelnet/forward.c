@@ -50,7 +50,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	8.1 (Berkeley) %G%"
+literal|"@(#)forward.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,7 +515,7 @@ name|ENOMEM
 return|;
 block|}
 else|else
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -2125,7 +2125,7 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char

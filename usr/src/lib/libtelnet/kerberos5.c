@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos5.c	8.2 (Berkeley) %G%"
+literal|"@(#)kerberos5.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,12 +743,14 @@ argument_list|(
 name|sum
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|Voidptr
 operator|)
 name|sum
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -979,7 +981,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -987,6 +989,8 @@ operator|*
 operator|)
 operator|&
 name|creds
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1212,7 +1216,7 @@ operator|==
 name|KEYTYPE_DES
 condition|)
 comment|/* use the session key in credentials instead */
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -1242,7 +1246,7 @@ empty_stmt|;
 block|}
 else|else
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -1986,8 +1990,13 @@ operator|==
 name|KEYTYPE_DES
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|Voidptr
+operator|)
+name|session_key
+argument_list|,
 operator|(
 name|Voidptr
 operator|)
@@ -1998,11 +2007,6 @@ operator|->
 name|subkey
 operator|->
 name|contents
-argument_list|,
-operator|(
-name|Voidptr
-operator|)
-name|session_key
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2027,8 +2031,13 @@ operator|==
 name|KEYTYPE_DES
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|Voidptr
+operator|)
+name|session_key
+argument_list|,
 operator|(
 name|Voidptr
 operator|)
@@ -2041,11 +2050,6 @@ operator|->
 name|session
 operator|->
 name|contents
-argument_list|,
-operator|(
-name|Voidptr
-operator|)
-name|session_key
 argument_list|,
 sizeof|sizeof
 argument_list|(

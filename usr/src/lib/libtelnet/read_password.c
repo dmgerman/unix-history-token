@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)read_password.c	8.2 (Berkeley) %G%"
+literal|"@(#)read_password.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,19 +153,19 @@ literal|1
 return|;
 block|}
 comment|/* XXX assume jmp_buf is typedef'ed to an array */
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|old_env
+name|env
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|env
+name|old_env
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -279,7 +279,7 @@ condition|(
 operator|(
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
@@ -340,7 +340,7 @@ condition|(
 operator|(
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|key_string
 argument_list|,
@@ -391,9 +391,11 @@ condition|(
 operator|!
 name|ok
 condition|)
-name|bzero
+name|memset
 argument_list|(
 name|s
+argument_list|,
+literal|0
 argument_list|,
 name|max
 argument_list|)
@@ -431,19 +433,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*     pop_signals(); */
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|env
+name|old_env
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|old_env
+name|env
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -455,9 +457,11 @@ if|if
 condition|(
 name|verify
 condition|)
-name|bzero
+name|memset
 argument_list|(
 name|key_string
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

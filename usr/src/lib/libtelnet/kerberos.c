@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos.c	8.2 (Berkeley) %G%"
+literal|"@(#)kerberos.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -844,9 +844,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|instance
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1358,14 +1360,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|data
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -1373,6 +1369,12 @@ operator|)
 name|auth
 operator|.
 name|dat
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|data
 argument_list|,
 name|auth
 operator|.
@@ -1504,8 +1506,14 @@ block|}
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|session_key
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -1513,12 +1521,6 @@ operator|)
 name|adat
 operator|.
 name|session
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|session_key
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1654,19 +1656,19 @@ argument_list|,
 name|sched
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|data
+name|datablock
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|datablock
+name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spx.c	8.1 (Berkeley) %G%"
+literal|"@(#)spx.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2145,7 +2145,7 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
-comment|/*          * hard code fullname to          *   "SPX:/C=US/O=Digital/OU=LKG/OU=Sphinx/OU=Users/CN=Kannan Alagappan"          * and acl_file to "~kannan/.sphinx"          */
+comment|/* 	 * hard code fullname to 	 *   "SPX:/C=US/O=Digital/OU=LKG/OU=Sphinx/OU=Users/CN=Kannan Alagappan" 	 * and acl_file to "~kannan/.sphinx" 	 */
 name|pwd
 operator|=
 name|getpwnam
