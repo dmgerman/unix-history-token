@@ -1037,9 +1037,12 @@ argument_list|)
 expr_stmt|;
 name|hostname
 operator|=
+name|strdup
+argument_list|(
 name|hp
 operator|->
 name|h_name
+argument_list|)
 expr_stmt|;
 block|}
 else|else
