@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	5.6 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

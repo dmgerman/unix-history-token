@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sethostent.c	1.2 (Berkeley) %G%"
+literal|"@(#)sethostent.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
