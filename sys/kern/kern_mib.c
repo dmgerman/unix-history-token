@@ -946,17 +946,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+name|unsigned
 name|long
 name|hostid
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Some trouble here, if sizeof (int) != sizeof (long) */
-end_comment
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
