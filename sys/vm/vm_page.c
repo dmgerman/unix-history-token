@@ -1298,6 +1298,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_zero_idle_wakeup
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
