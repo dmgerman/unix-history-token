@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regex2.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regex2.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * First, the stuff that ends up in the outside-world include file  = typedef off_t regoff_t;  = typedef struct {  = 	int re_magic;  = 	size_t re_nsub;		// number of parenthesized subexpressions  =	const char *re_endp;	// end pointer for REG_PEND  = 	struct re_guts *re_g;	// none of your business :-)  = } regex_t;  = typedef struct {  = 	regoff_t rm_so;		// start of match  = 	regoff_t rm_eo;		// end of match  = } regmatch_t;  */
+comment|/*  * First, the stuff that ends up in the outside-world include file  = typedef off_t regoff_t;  = typedef struct {  = 	int re_magic;  = 	size_t re_nsub;		// number of parenthesized subexpressions  = 	const char *re_endp;	// end pointer for REG_PEND  = 	struct re_guts *re_g;	// none of your business :-)  = } regex_t;  = typedef struct {  = 	regoff_t rm_so;		// start of match  = 	regoff_t rm_eo;		// end of match  = } regmatch_t;  */
 end_comment
 
 begin_comment
@@ -330,16 +330,16 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uchar
+name|uch
 modifier|*
 name|ptr
 decl_stmt|;
-comment|/* -> uchar [csetsize] */
-name|uchar
+comment|/* -> uch [csetsize] */
+name|uch
 name|mask
 decl_stmt|;
 comment|/* bit within array */
-name|uchar
+name|uch
 name|hash
 decl_stmt|;
 comment|/* hash code */
@@ -369,7 +369,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(uchar)(c)] |= (cs)->mask, (cs)->hash += (c))
+value|((cs)->ptr[(uch)(c)] |= (cs)->mask, (cs)->hash += (c))
 end_define
 
 begin_define
@@ -381,7 +381,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(uchar)(c)]&= ~(cs)->mask, (cs)->hash -= (c))
+value|((cs)->ptr[(uch)(c)]&= ~(cs)->mask, (cs)->hash -= (c))
 end_define
 
 begin_define
@@ -393,7 +393,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(uchar)(c)]& (cs)->mask)
+value|((cs)->ptr[(uch)(c)]& (cs)->mask)
 end_define
 
 begin_define
@@ -401,11 +401,13 @@ define|#
 directive|define
 name|MCadd
 parameter_list|(
+name|p
+parameter_list|,
 name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-value|mcadd(cs, cp)
+value|mcadd(p, cs, cp)
 end_define
 
 begin_comment
@@ -417,11 +419,13 @@ define|#
 directive|define
 name|MCsub
 parameter_list|(
+name|p
+parameter_list|,
 name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-value|mcsub(cs, cp)
+value|mcsub(p, cs, cp)
 end_define
 
 begin_define
@@ -429,11 +433,13 @@ define|#
 directive|define
 name|MCin
 parameter_list|(
+name|p
+parameter_list|,
 name|cs
 parameter_list|,
 name|cp
 parameter_list|)
-value|mcin(cs, cp)
+value|mcin(p, cs, cp)
 end_define
 
 begin_comment
@@ -481,11 +487,11 @@ modifier|*
 name|sets
 decl_stmt|;
 comment|/* -> cset [ncsets] */
-name|uchar
+name|uch
 modifier|*
 name|setbits
 decl_stmt|;
-comment|/* -> uchar[csetsize][ncsets/CHAR_BIT] */
+comment|/* -> uch[csetsize][ncsets/CHAR_BIT] */
 name|int
 name|cflags
 decl_stmt|;

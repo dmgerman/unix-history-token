@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)utils.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)utils.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,23 +22,27 @@ begin_define
 define|#
 directive|define
 name|INFINITY
-value|(DUPMAX+1)
+value|(DUPMAX + 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NC
-value|((CHAR_MAX)-(CHAR_MIN)+1)
+value|(CHAR_MAX - CHAR_MIN + 1)
 end_define
 
 begin_typedef
 typedef|typedef
 name|unsigned
 name|char
-name|uchar
+name|uch
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* switch off assertions (if not already off) if no REDEBUG */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -77,6 +81,35 @@ include|#
 directive|include
 file|<assert.h>
 end_include
+
+begin_comment
+comment|/* for old systems with bcopy() but no memmove() */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USEBCOPY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|memmove
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|,
+name|c
+parameter_list|)
+value|bcopy(s, d, c)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
