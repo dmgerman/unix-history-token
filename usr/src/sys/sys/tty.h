@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.12	82/12/05	*/
+comment|/*	tty.h	4.13	82/12/19	*/
 end_comment
 
 begin_ifdef
@@ -195,10 +195,6 @@ decl_stmt|;
 comment|/* tty */
 name|char
 name|t_delct
-decl_stmt|;
-comment|/* tty */
-name|char
-name|t_char
 decl_stmt|;
 comment|/* tty */
 name|char
