@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.30 (Berkeley) %G%"
+literal|"@(#)find.c	4.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +222,7 @@ name|FTS_NOSTAT
 operator||
 name|FTS_PHYSICAL
 expr_stmt|;
-comment|/* 	 * if arguments start with an option, it's new syntax; otherwise, 	 * if has a "-option" anywhere it must be old syntax. 	 */
+comment|/* 	 * if arguments start with an option, treat it like new syntax; 	 * otherwise, if has a "-option" anywhere (which isn't an argument 	 * to another command) treat it as old syntax. 	 */
 if|if
 condition|(
 name|argv
@@ -249,6 +249,47 @@ condition|;
 operator|++
 name|p
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|p
+argument_list|,
+literal|"exec"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|p
+argument_list|,
+literal|"ok"
+argument_list|)
+condition|)
+block|{
+while|while
+condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|&&
+name|strcmp
+argument_list|(
+operator|*
+operator|++
+name|p
+argument_list|,
+literal|";"
+argument_list|)
+condition|)
+empty_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|*
@@ -269,6 +310,7 @@ name|argv
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
