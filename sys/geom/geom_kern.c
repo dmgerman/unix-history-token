@@ -482,11 +482,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"Initializing GEOMetry subsystem\n"
-argument_list|)
-expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&
