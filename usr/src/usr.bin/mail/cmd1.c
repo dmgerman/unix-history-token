@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	5.2 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,7 +848,7 @@ index|]
 decl_stmt|,
 name|wcount
 index|[
-literal|10
+name|LINESIZE
 index|]
 decl_stmt|,
 modifier|*
@@ -1583,16 +1583,16 @@ name|NOSTR
 operator|)
 condition|)
 block|{
+name|nlines
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|page
 condition|)
 block|{
-name|nlines
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|ip
@@ -1636,11 +1636,33 @@ name|cp
 argument_list|)
 condition|)
 block|{
+name|cp
+operator|=
+name|value
+argument_list|(
+literal|"PAGER"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+name|cp
+operator|=
+name|MORE
+expr_stmt|;
 name|obuf
 operator|=
 name|popen
 argument_list|(
-name|MORE
+name|cp
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1654,7 +1676,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|MORE
+name|cp
 argument_list|)
 expr_stmt|;
 name|obuf
