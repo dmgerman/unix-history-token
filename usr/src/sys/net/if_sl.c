@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_sl.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_sl.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -111,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"if_types.h"
 end_include
 
 begin_include
@@ -389,6 +395,14 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timeval
+name|time
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Called from boot code to establish sl interfaces.  */
 end_comment
@@ -458,6 +472,14 @@ operator|.
 name|if_flags
 operator|=
 name|IFF_POINTOPOINT
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_type
+operator|=
+name|IFT_SLIP
 expr_stmt|;
 name|sc
 operator|->
@@ -756,6 +778,16 @@ operator|->
 name|sc_ttyp
 operator|=
 name|tp
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_baudrate
+operator|=
+name|tp
+operator|->
+name|t_ospeed
 expr_stmt|;
 name|ttyflush
 argument_list|(
@@ -1396,6 +1428,14 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+operator|=
+name|time
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1579,6 +1619,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+operator|=
+name|time
+expr_stmt|;
 comment|/* 		 * If system is getting low on clists, just flush our 		 * output queue (if the stuff was important, it'll get 		 * retransmitted). 		 */
 if|if
 condition|(
@@ -1881,6 +1929,16 @@ name|if_opackets
 operator|++
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_obytes
+operator|=
+name|sc
+operator|->
+name|sc_bytessent
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -2165,6 +2223,13 @@ operator|++
 name|sc
 operator|->
 name|sc_bytesrcvd
+expr_stmt|;
+operator|++
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_ibytes
 expr_stmt|;
 name|c
 operator|&=
@@ -2458,6 +2523,14 @@ operator|.
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+operator|=
+name|time
+expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -2483,6 +2556,13 @@ operator|->
 name|sc_if
 operator|.
 name|if_ierrors
+operator|++
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_iqdrops
 operator|++
 expr_stmt|;
 name|m_freem
