@@ -2309,12 +2309,10 @@ name|so_cred
 argument_list|)
 condition|)
 block|{
-name|memset
+name|bzero
 argument_list|(
 operator|&
 name|jail
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
