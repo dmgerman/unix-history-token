@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.26 (Berkeley) %G%"
+literal|"@(#)headers.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2538,7 +2538,7 @@ name|buf
 index|[
 name|MAX
 argument_list|(
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -2564,12 +2564,7 @@ function_decl|;
 name|char
 name|obuf
 index|[
-name|MAX
-argument_list|(
-name|MAXFIELD
-argument_list|,
 name|MAXLINE
-argument_list|)
 index|]
 decl_stmt|;
 for|for

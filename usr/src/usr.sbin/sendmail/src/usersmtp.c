@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.25 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.26 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.25 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.26 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2142,7 +2142,7 @@ block|{
 name|VA_LOCAL_DECL
 name|VA_START
 parameter_list|(
-name|f
+name|mci
 parameter_list|)
 function_decl|;
 operator|(

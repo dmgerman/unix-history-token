@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.33 (Berkeley) %G%"
+literal|"@(#)util.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,9 @@ include|#
 directive|include
 file|"conf.h"
 end_include
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
@@ -2135,7 +2138,7 @@ argument_list|,
 literal|1
 argument_list|)
 block|; }
-comment|/* **  FGETFOLDED -- like fgets, but know about folded lines. ** **	Parameters: **		buf -- place to put result. **		n -- bytes available. **		f -- file to read from. ** **	Returns: **		buf on success, NULL on error or EOF. ** **	Side Effects: **		buf gets lines from f, with continuation lines (lines **		with leading white space) appended.  CRLF's are mapped **		into single newlines.  Any trailing NL is stripped. */
+comment|/* **  FGETFOLDED -- like fgets, but know about folded lines. ** **	Parameters: **		buf -- place to put result. **		n -- bytes available. **		f -- file to read from. ** **	Returns: **		input line(s) on success, NULL on error or EOF. **		This will normally be buf -- unless the line is too **			long, when it will be xalloc()ed. ** **	Side Effects: **		buf gets lines from f, with continuation lines (lines **		with leading white space) appended.  CRLF's are mapped **		into single newlines.  Any trailing NL is stripped. */
 name|char
 operator|*
 name|fgetfolded
@@ -2172,6 +2175,12 @@ specifier|register
 name|char
 modifier|*
 name|p
+init|=
+name|buf
+decl_stmt|;
+name|char
+modifier|*
+name|bp
 init|=
 name|buf
 decl_stmt|;
@@ -2243,28 +2252,100 @@ if|if
 condition|(
 operator|--
 name|n
-operator|>
+operator|<=
 literal|0
 condition|)
+block|{
+comment|/* allocate new space */
+name|char
+modifier|*
+name|nbp
+decl_stmt|;
+name|int
+name|nn
+decl_stmt|;
+name|nn
+operator|=
+operator|(
+name|p
+operator|-
+name|bp
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|nn
+operator|<
+literal|1024
+condition|)
+name|nn
+operator|*=
+literal|2
+expr_stmt|;
+else|else
+name|nn
+operator|+=
+literal|1024
+expr_stmt|;
+name|nbp
+operator|=
+name|xalloc
+argument_list|(
+name|nn
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|bp
+argument_list|,
+name|nbp
+argument_list|,
+name|p
+operator|-
+name|bp
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+operator|&
+name|nbp
+index|[
+name|p
+operator|-
+name|bp
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|!=
+name|buf
+condition|)
+name|free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+name|nbp
+expr_stmt|;
+name|n
+operator|=
+name|nn
+operator|-
+operator|(
+name|p
+operator|-
+name|bp
+operator|)
+expr_stmt|;
+block|}
 operator|*
 name|p
 operator|++
 operator|=
 name|i
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-condition|)
-name|nmessage
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"warning: line truncated"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2316,7 +2397,7 @@ if|if
 condition|(
 name|p
 operator|==
-name|buf
+name|bp
 condition|)
 return|return
 operator|(
@@ -2331,7 +2412,7 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|buf
+name|bp
 operator|)
 return|;
 block|}

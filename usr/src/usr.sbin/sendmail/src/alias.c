@@ -107,7 +107,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	5.40 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.41 (Berkeley) %G% (with NEWDB)"
 expr_stmt|;
 end_expr_stmt
 
@@ -128,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.40 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	5.41 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.40 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	5.41 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2344,6 +2344,26 @@ break|break;
 name|LineNumber
 operator|++
 expr_stmt|;
+comment|/* check for line overflow */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"alias too long"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* 		**  Insert alias into symbol table or DBM file 		*/
 name|lhssize

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.15 (Berkeley) %G%"
+literal|"@(#)collect.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,12 +77,12 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXFIELD
+name|MAXLINE
 index|]
 decl_stmt|,
 name|buf2
 index|[
-name|MAXFIELD
+name|MAXLINE
 index|]
 decl_stmt|;
 specifier|register
@@ -194,7 +194,7 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|)
@@ -257,7 +257,7 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|)
@@ -364,7 +364,7 @@ argument_list|)
 expr_stmt|;
 name|curbuffree
 operator|=
-name|MAXFIELD
+name|MAXLINE
 operator|-
 name|curbuflen
 expr_stmt|;
@@ -390,7 +390,7 @@ name|sfgets
 argument_list|(
 name|freebuf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|)
@@ -440,6 +440,8 @@ name|strlen
 argument_list|(
 name|freebuf
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 comment|/* if insufficient room, dynamically allocate buffer */
 if|if
@@ -478,23 +480,13 @@ name|p
 operator|=
 name|nbuf
 operator|+
-operator|(
-name|p
-operator|-
-name|curbuf
-operator|)
+name|curbuflen
 expr_stmt|;
 name|curbuffree
 operator|=
 name|nbuflen
 operator|-
-operator|(
-name|p
-operator|-
-name|workbuf
-operator|)
-operator|-
-name|clen
+name|curbuflen
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -502,9 +494,7 @@ name|curbuf
 argument_list|,
 name|nbuf
 argument_list|,
-name|p
-operator|-
-name|curbuf
+name|curbuflen
 argument_list|)
 expr_stmt|;
 if|if
@@ -527,6 +517,12 @@ operator|=
 name|nbuf
 expr_stmt|;
 block|}
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\n'
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|freebuf
@@ -534,14 +530,22 @@ argument_list|,
 name|p
 argument_list|,
 name|clen
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|p
 operator|+=
 name|clen
+operator|-
+literal|1
 expr_stmt|;
 name|curbuffree
 operator|-=
+name|clen
+expr_stmt|;
+name|curbuflen
+operator|+=
 name|clen
 expr_stmt|;
 block|}
@@ -639,7 +643,7 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|)
@@ -786,7 +790,7 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|)

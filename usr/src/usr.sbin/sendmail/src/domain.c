@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.35 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.36 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.35 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.36 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,8 +884,11 @@ return|;
 block|}
 end_block
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/*  * Use query type of ANY if possible (NoWildcardMX), which will  * find types CNAME, A, and MX, and will cause all existing records  * to be cached by our local server.  If there is (might be) a  * wildcard MX record in the local domain or its parents that are  * searched, we can't use ANY; it would cause fully-qualified names  * to match as names in a local domain.  */
+comment|/* **  GETCANONNAME -- get the canonical name for named host ** **	Parameters: **		host -- a buffer containing the name of the host. **			This is a value-result parameter. **		hbsize -- the size of the host buffer. ** **	Returns: **		TRUE -- if the host matched. **		FALSE -- otherwise. ** **	Notes: **		Use query type of ANY if possible (NoWildcardMX), which **		will find types CNAME, A, and MX, and will cause all **		existing records to be cached by our local server.  If **		there is (might be) a wildcard MX record in the local **		domain or its parents that are searched, we can't use **		ANY; it would cause fully-qualified names to match as **		names in a local domain. */
 end_comment
 
 begin_function

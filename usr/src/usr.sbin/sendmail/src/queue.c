@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.50 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.51 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.50 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.51 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3109,9 +3109,13 @@ name|stat
 name|st
 decl_stmt|;
 name|char
+modifier|*
+name|bp
+decl_stmt|;
+name|char
 name|buf
 index|[
-name|MAXFIELD
+name|MAXLINE
 index|]
 decl_stmt|;
 specifier|extern
@@ -3222,7 +3226,8 @@ name|st
 operator|.
 name|st_uid
 operator|!=
-literal|0
+name|geteuid
+argument_list|()
 operator|||
 operator|(
 name|st
@@ -3427,6 +3432,9 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|bp
+operator|=
 name|fgetfolded
 argument_list|(
 name|buf
@@ -3436,6 +3444,7 @@ name|buf
 argument_list|,
 name|qfp
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -3453,12 +3462,12 @@ name|printf
 argument_list|(
 literal|"+++++ %s\n"
 argument_list|,
-name|buf
+name|bp
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|buf
+name|bp
 index|[
 literal|0
 index|]
@@ -3473,7 +3482,7 @@ operator|=
 name|setctluser
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3514,7 +3523,7 @@ comment|/* specify error recipient */
 name|sendtolist
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3540,7 +3549,7 @@ operator|)
 name|chompheader
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3562,7 +3571,7 @@ operator|=
 name|newstr
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3578,7 +3587,7 @@ argument_list|(
 name|newstr
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3599,7 +3608,7 @@ operator|=
 name|newstr
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3647,7 +3656,7 @@ operator|=
 name|atol
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3665,7 +3674,7 @@ operator|=
 name|atol
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3680,7 +3689,7 @@ case|:
 comment|/* define macro */
 name|define
 argument_list|(
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -3688,7 +3697,7 @@ argument_list|,
 name|newstr
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|2
 index|]
@@ -3714,11 +3723,22 @@ name|e_id
 argument_list|,
 name|LineNumber
 argument_list|,
-name|buf
+name|bp
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|bp
+operator|!=
+name|buf
+condition|)
+name|free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 name|FileName
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.51 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,10 @@ modifier|*
 name|rwp
 init|=
 name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|bp
 decl_stmt|;
 name|char
 name|buf
@@ -307,6 +311,9 @@ directive|endif
 block|}
 while|while
 condition|(
+operator|(
+name|bp
+operator|=
 name|fgetfolded
 argument_list|(
 name|buf
@@ -316,26 +323,40 @@ name|buf
 argument_list|,
 name|cf
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
 if|if
 condition|(
-name|buf
+name|bp
 index|[
 literal|0
 index|]
 operator|==
 literal|'#'
 condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|!=
+name|buf
+condition|)
+name|free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* map $ into \001 (ASCII SOH) for macro expansion */
 for|for
 control|(
 name|p
 operator|=
-name|buf
+name|bp
 init|;
 operator|*
 name|p
@@ -355,7 +376,7 @@ literal|'#'
 operator|&&
 name|p
 operator|>
-name|buf
+name|bp
 operator|&&
 name|ConfigLevel
 operator|>=
@@ -412,7 +433,7 @@ argument_list|)
 operator|&&
 name|p
 operator|>
-name|buf
+name|bp
 condition|)
 name|p
 operator|--
@@ -503,7 +524,7 @@ block|}
 comment|/* interpret this line */
 switch|switch
 condition|(
-name|buf
+name|bp
 index|[
 literal|0
 index|]
@@ -526,7 +547,7 @@ control|(
 name|p
 operator|=
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -557,7 +578,7 @@ name|syserr
 argument_list|(
 literal|"invalid rewrite line \"%s\""
 argument_list|,
-name|buf
+name|bp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -630,7 +651,7 @@ expr_stmt|;
 name|expand
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -787,7 +808,7 @@ operator|=
 name|atoi
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -829,7 +850,7 @@ case|:
 comment|/* macro definition */
 name|define
 argument_list|(
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -839,7 +860,7 @@ argument_list|(
 name|munchstring
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|2
 index|]
@@ -860,7 +881,7 @@ operator|)
 name|chompheader
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -882,7 +903,7 @@ comment|/* word class from file */
 comment|/* read list of words from argument or file */
 if|if
 condition|(
-name|buf
+name|bp
 index|[
 literal|0
 index|]
@@ -896,7 +917,7 @@ control|(
 name|p
 operator|=
 operator|&
-name|buf
+name|bp
 index|[
 literal|2
 index|]
@@ -948,13 +969,13 @@ continue|continue;
 block|}
 name|fileclass
 argument_list|(
-name|buf
+name|bp
 index|[
 literal|1
 index|]
 argument_list|,
 operator|&
-name|buf
+name|bp
 index|[
 literal|2
 index|]
@@ -972,7 +993,7 @@ control|(
 name|p
 operator|=
 operator|&
-name|buf
+name|bp
 index|[
 literal|2
 index|]
@@ -1050,7 +1071,7 @@ literal|'\0'
 condition|)
 name|setclass
 argument_list|(
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -1125,7 +1146,7 @@ control|(
 name|p
 operator|=
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -1174,7 +1195,7 @@ operator|=
 name|newstr
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -1204,7 +1225,7 @@ comment|/* trusted user(s) */
 name|p
 operator|=
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -1324,7 +1345,7 @@ operator|=
 name|atoi
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -1337,7 +1358,7 @@ case|:
 name|makemapentry
 argument_list|(
 operator|&
-name|buf
+name|bp
 index|[
 literal|1
 index|]
@@ -1351,10 +1372,21 @@ name|syserr
 argument_list|(
 literal|"unknown control line \"%s\""
 argument_list|,
-name|buf
+name|bp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bp
+operator|!=
+name|buf
+condition|)
+name|free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
