@@ -7528,6 +7528,7 @@ condition|(
 operator|!
 name|IFQ_DRV_IS_EMPTY
 argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
