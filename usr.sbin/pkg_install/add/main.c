@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.9 1995/11/12 04:55:19 jkh Exp $"
+literal|"$Id: main.c,v 1.10 1996/03/12 06:12:36 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,14 +72,6 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|NoRecord
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Boolean
-name|Force
 init|=
 name|FALSE
 decl_stmt|;

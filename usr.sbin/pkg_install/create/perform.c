@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.30 1996/03/20 19:05:59 jdp Exp $"
+literal|"$Id: perform.c,v 1.31 1996/06/20 18:33:36 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -720,10 +720,6 @@ name|MTREE_FNAME
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Run through the list again, picking up extra "local" items */
-comment|/* check_list(".",&plist); */
-comment|/* copy_plist(".",&plist); */
-comment|/* mark_plist(&plist); */
 comment|/* Finally, write out the packing list */
 name|fp
 operator|=
