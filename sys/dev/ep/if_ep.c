@@ -2445,16 +2445,13 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+comment|/*      * quick fix: Try to detect an interrupt when the card goes away.      */
 if|if
 condition|(
 name|sc
 operator|->
 name|gone
-condition|)
-return|return;
-comment|/*      * quick fix: Try to detect an interrupt when the card goes away.      */
-if|if
-condition|(
+operator|||
 name|inw
 argument_list|(
 name|BASE
@@ -2464,7 +2461,14 @@ argument_list|)
 operator|==
 literal|0xffff
 condition|)
+block|{
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|ifp
 operator|=
 operator|&
@@ -2528,14 +2532,11 @@ operator||
 name|S_RX_EARLY
 operator|)
 condition|)
-block|{
 name|epread
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|status
