@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.13	82/03/30	*/
+comment|/*	if.c	4.14	82/04/24	*/
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"../h/socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/protosw.h"
 end_include
 
 begin_include
@@ -566,6 +572,48 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Mark an interface down and notify protocols of  * the transition.  */
+end_comment
+
+begin_expr_stmt
+name|if_down
+argument_list|(
+name|ifp
+argument_list|)
+specifier|register
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
+name|pfctlinput
+argument_list|(
+name|PRC_IFDOWN
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifp
+operator|->
+name|if_addr
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Formulate an Internet address from network + host.  Used in  * building addresses stored in the ifnet structure.  */

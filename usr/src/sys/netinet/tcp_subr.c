@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.23	82/04/04	*/
+comment|/*	tcp_subr.c	4.24	82/04/24	*/
 end_comment
 
 begin_include
@@ -1060,6 +1060,33 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|tcp_abort
+argument_list|(
+argument|inp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|tcp_close
+argument_list|(
+name|inp
+operator|->
+name|inp_ppcb
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Close a TCP control block:  *	discard all space held by the tcp  *	discard internet protocol block  *	wake up any sleepers  */
 end_comment
@@ -1250,15 +1277,21 @@ end_block
 begin_macro
 name|tcp_ctlinput
 argument_list|(
-argument|m
+argument|cmd
+argument_list|,
+argument|arg
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|arg
 decl_stmt|;
 end_decl_stmt
 
@@ -1267,11 +1300,6 @@ block|{
 name|COUNT
 argument_list|(
 name|TCP_CTLINPUT
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 block|}

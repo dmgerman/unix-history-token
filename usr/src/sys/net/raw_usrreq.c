@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.14	82/04/11	*/
+comment|/*	raw_usrreq.c	4.15	82/04/24	*/
 end_comment
 
 begin_include
@@ -578,12 +578,8 @@ block|}
 if|if
 condition|(
 name|last
-operator|==
-literal|0
 condition|)
-goto|goto
-name|drop
-goto|;
+block|{
 name|m
 operator|=
 name|m_free
@@ -622,6 +618,7 @@ expr_stmt|;
 goto|goto
 name|next
 goto|;
+block|}
 name|drop
 label|:
 name|m_freem
@@ -632,6 +629,37 @@ expr_stmt|;
 goto|goto
 name|next
 goto|;
+block|}
+end_block
+
+begin_macro
+name|raw_ctlinput
+argument_list|(
+argument|cmd
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|COUNT
+argument_list|(
+name|RAW_CTLINPUT
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -741,7 +769,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EPERM
+name|EACCES
 operator|)
 return|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.h 4.3 81/12/03 */
+comment|/* ip_icmp.h 4.4 82/04/24 */
 end_comment
 
 begin_comment
@@ -50,6 +50,9 @@ decl_stmt|;
 block|}
 name|ih_idseq
 struct|;
+name|int
+name|ih_void
+decl_stmt|;
 block|}
 name|icmp_hun
 union|;
@@ -69,6 +72,10 @@ define|#
 directive|define
 name|icmp_seq
 value|icmp_hun.ih_idseq.icd_seq
+define|#
+directive|define
+name|icmp_void
+value|icmp_hun.ih_void
 union|union
 block|{
 struct|struct
