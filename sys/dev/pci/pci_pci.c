@@ -1330,6 +1330,16 @@ name|sc
 operator|->
 name|iolimit
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|<
+name|end
+condition|)
+name|ok
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1413,7 +1423,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s requested unsupported I/O "
+literal|"%s requested unsupported I/O "
 literal|"range 0x%lx-0x%lx (decoding 0x%x-0x%x)\n"
 argument_list|,
 name|device_get_nameunit
@@ -1448,7 +1458,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s requested decoded I/O range 0x%lx-0x%lx\n"
+literal|"%s requested I/O range 0x%lx-0x%lx: in range\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -1777,7 +1787,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s requested unsupported memory range "
+literal|"%s requested unsupported memory range "
 literal|"0x%lx-0x%lx (decoding 0x%x-0x%x, 0x%x-0x%x)\n"
 argument_list|,
 name|device_get_nameunit
@@ -1824,7 +1834,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s requested decoded memory range 0x%lx-0x%lx\n"
+literal|"%s requested memory range "
+literal|"0x%lx-0x%lx: good\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
