@@ -1399,6 +1399,9 @@ name|INP_HDRINCL
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW_ADD
+case|:
+case|case
 name|IP_FW_DEL
 case|:
 case|case
