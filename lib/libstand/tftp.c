@@ -368,6 +368,10 @@ name|tftphdr
 modifier|*
 name|t
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|len
 operator|=
 name|readudp
@@ -385,7 +389,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|8
+literal|4
 condition|)
 return|return
 operator|(
