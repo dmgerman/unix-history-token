@@ -154,6 +154,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Per uid resource consumption  */
 end_comment
@@ -188,27 +194,10 @@ name|struct
 name|mtx
 name|ui_mtx
 decl_stmt|;
-comment|/* protect counts */
+comment|/* protect all counts/limits */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|uihold
-parameter_list|(
-name|uip
-parameter_list|)
-define|\
-value|do {						\ 		mtx_enter(&(uip)->ui_mtx, MTX_DEF);	\ 		(uip)->ui_ref++;			\ 		mtx_exit(&(uip)->ui_mtx, MTX_DEF);	\ 	} while(0)
-end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -412,6 +401,21 @@ argument_list|(
 operator|(
 name|uid_t
 name|uid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|uihold
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|uidinfo
+operator|*
+name|uip
 operator|)
 argument_list|)
 decl_stmt|;
