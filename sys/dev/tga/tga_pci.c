@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_fb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -177,12 +183,6 @@ begin_include
 include|#
 directive|include
 file|<dev/gfb/gfb_pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_fb.h"
 end_include
 
 begin_function_decl
@@ -385,9 +385,8 @@ block|,
 comment|/* flags */
 literal|0
 block|,
-comment|/* bmaj */
-operator|-
-literal|1
+comment|/* kqfilter */
+name|nokqfilter
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -398,7 +397,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*FB_INSTALL_CDEV*/
+comment|/* FB_INSTALL_CDEV */
 end_comment
 
 begin_function
@@ -520,17 +519,6 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|gfb_softc
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -767,7 +755,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*FB_INSTALL_CDEV*/
+comment|/* FB_INSTALL_CDEV */
 goto|goto
 name|done
 goto|;
