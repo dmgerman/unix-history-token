@@ -1709,6 +1709,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* #define DUMP_FILELOCK_VERBOSE */
+end_comment
+
 begin_function
 name|void
 name|dump_filelock
@@ -1720,6 +1724,9 @@ modifier|*
 name|fl
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DUMP_FILELOCK_VERBOSE
 name|char
 name|hbuff
 index|[
@@ -1734,6 +1741,8 @@ index|[
 name|MAXBUFFERSIZE
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|debug_level
@@ -1757,7 +1766,54 @@ argument_list|,
 name|fl
 argument_list|)
 expr_stmt|;
-comment|/* 		dump_static_object((unsigned char *)&fl->filehandle, 		    sizeof(fl->filehandle), hbuff, sizeof(hbuff), 		    cbuff, sizeof(cbuff)); 		debuglog("Filehandle: %8s  :::  %8s\n", hbuff, cbuff); 		*/
+ifdef|#
+directive|ifdef
+name|DUMP_FILELOCK_VERBOSE
+name|dump_static_object
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|fl
+operator|->
+name|filehandle
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fl
+operator|->
+name|filehandle
+argument_list|)
+argument_list|,
+name|hbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hbuff
+argument_list|)
+argument_list|,
+name|cbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cbuff
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|debuglog
+argument_list|(
+literal|"Filehandle: %8s  :::  %8s\n"
+argument_list|,
+name|hbuff
+argument_list|,
+name|cbuff
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|debuglog
 argument_list|(
 literal|"Dumping nlm4_holder:\n"
@@ -1788,7 +1844,65 @@ operator|.
 name|l_len
 argument_list|)
 expr_stmt|;
-comment|/* 		debuglog("Dumping client identity:\n"); 		dump_netobj(&fl->client.oh); 		 		debuglog("Dumping client cookie:\n"); 		dump_netobj(&fl->client_cookie); 		 		debuglog("nsm: %d  status: %d  flags: %d  locker: %d" 		    "  fd:  %d\n", fl->nsm_status, fl->status, 		    fl->flags, fl->locker, fl->fd); 		*/
+ifdef|#
+directive|ifdef
+name|DUMP_FILELOCK_VERBOSE
+name|debuglog
+argument_list|(
+literal|"Dumping client identity:\n"
+argument_list|)
+expr_stmt|;
+name|dump_netobj
+argument_list|(
+operator|&
+name|fl
+operator|->
+name|client
+operator|.
+name|oh
+argument_list|)
+expr_stmt|;
+name|debuglog
+argument_list|(
+literal|"Dumping client cookie:\n"
+argument_list|)
+expr_stmt|;
+name|dump_netobj
+argument_list|(
+operator|&
+name|fl
+operator|->
+name|client_cookie
+argument_list|)
+expr_stmt|;
+name|debuglog
+argument_list|(
+literal|"nsm: %d  status: %d  flags: %d  locker: %d"
+literal|"  fd:  %d\n"
+argument_list|,
+name|fl
+operator|->
+name|nsm_status
+argument_list|,
+name|fl
+operator|->
+name|status
+argument_list|,
+name|fl
+operator|->
+name|flags
+argument_list|,
+name|fl
+operator|->
+name|locker
+argument_list|,
+name|fl
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -5063,18 +5177,24 @@ name|enum
 name|hwlock_status
 name|test_hwlock
 parameter_list|(
+name|fl
+parameter_list|,
+name|conflicting_fl
+parameter_list|)
 specifier|const
 name|struct
 name|file_lock
 modifier|*
 name|fl
-parameter_list|,
+name|__unused
+decl_stmt|;
 name|struct
 name|file_lock
 modifier|*
 modifier|*
 name|conflicting_fl
-parameter_list|)
+name|__unused
+decl_stmt|;
 block|{
 comment|/* 	 * XXX: lock tests on hardware are not required until 	 * true partial file testing is done on the underlying file 	 */
 return|return
@@ -7053,6 +7173,7 @@ name|exclusive
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -7463,6 +7584,7 @@ parameter_list|,
 specifier|const
 name|int
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -8148,6 +8270,7 @@ name|fl
 decl_stmt|;
 name|int
 name|opcode
+name|__unused
 decl_stmt|;
 block|{
 name|CLIENT

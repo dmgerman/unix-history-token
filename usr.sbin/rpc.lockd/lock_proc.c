@@ -2906,6 +2906,7 @@ parameter_list|)
 name|nlm_res
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -3019,6 +3020,7 @@ parameter_list|)
 name|nlm_res
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -3285,6 +3287,7 @@ parameter_list|)
 name|nlm_notify
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -4852,6 +4855,7 @@ parameter_list|)
 name|nlm4_res
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -4898,6 +4902,7 @@ parameter_list|)
 name|nlm4_res
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -4944,6 +4949,7 @@ parameter_list|)
 name|nlm4_res
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -5211,6 +5217,7 @@ name|struct
 name|nlm4_notify
 modifier|*
 name|arg
+name|__unused
 decl_stmt|;
 name|struct
 name|svc_req
@@ -5268,6 +5275,7 @@ name|struct
 name|svc_req
 modifier|*
 name|rqstp
+name|__unused
 decl_stmt|;
 block|{
 specifier|static
