@@ -1005,7 +1005,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 elseif|else
 if|if
@@ -1086,14 +1086,15 @@ argument_list|,
 name|M_MBUF
 argument_list|)
 expr_stmt|;
-block|}
-name|uma_zfree
-argument_list|(
-name|zone_mbuf
-argument_list|,
 name|m
-argument_list|)
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+operator|=
+name|NULL
 expr_stmt|;
+block|}
 block|}
 comment|/* Decrement (and potentially free) done, safely. */
 break|break;
@@ -1104,6 +1105,13 @@ condition|(
 literal|1
 condition|)
 do|;
+name|uma_zfree
+argument_list|(
+name|zone_mbuf
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
