@@ -1397,23 +1397,6 @@ name|EOF
 operator|)
 return|;
 block|}
-comment|/* 		 * We have a conversion that requires input. 		 */
-if|if
-condition|(
-name|fp
-operator|->
-name|_r
-operator|<=
-literal|0
-operator|&&
-name|__srefill
-argument_list|(
-name|fp
-argument_list|)
-condition|)
-goto|goto
-name|input_failure
-goto|;
 comment|/* 		 * Consume leading white space, except for formats 		 * that suppress this. 		 */
 if|if
 condition|(
