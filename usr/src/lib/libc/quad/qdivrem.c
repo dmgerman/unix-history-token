@@ -205,9 +205,15 @@ name|n
 operator|==
 literal|0
 condition|)
-name|abort
-argument_list|()
+block|{
+operator|*
+name|r
+operator|/=
+name|n
 expr_stmt|;
+comment|/* force a divide-by-zero trap */
+return|return;
+block|}
 block|}
 comment|/* If divisor is a single digit, do short division.  */
 if|if
@@ -838,18 +844,20 @@ operator|==
 literal|0
 condition|)
 block|{
-name|bcopy
-argument_list|(
-name|u
-argument_list|,
-name|w
-argument_list|,
+while|while
+condition|(
 name|n
+operator|--
+operator|>
+literal|0
+condition|)
 operator|*
-sizeof|sizeof
-expr|*
+name|w
+operator|++
+operator|=
+operator|*
 name|u
-argument_list|)
+operator|++
 expr_stmt|;
 return|return
 literal|0
