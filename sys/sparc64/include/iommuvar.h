@@ -64,15 +64,6 @@ begin_struct
 struct|struct
 name|iommu_state
 block|{
-name|vm_offset_t
-name|is_ptsb
-decl_stmt|;
-comment|/* TSB physical address */
-name|u_int64_t
-modifier|*
-name|is_tsb
-decl_stmt|;
-comment|/* TSB virtual address */
 name|int
 name|is_tsbsize
 decl_stmt|;
@@ -84,11 +75,6 @@ name|int64_t
 name|is_cr
 decl_stmt|;
 comment|/* IOMMU control register value */
-name|struct
-name|rman
-name|is_dvma_rman
-decl_stmt|;
-comment|/* DVMA map for this instance */
 name|vm_offset_t
 name|is_flushpa
 index|[
@@ -154,6 +140,12 @@ name|bus_addr_t
 name|is_dtcmp
 decl_stmt|;
 comment|/* tag compare diag. access */
+name|STAILQ_ENTRY
+argument_list|(
+argument|iommu_state
+argument_list|)
+name|is_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -176,6 +168,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|u_int32_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1079,9 +1079,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
-name|da
-decl_stmt|;
 name|u_int64_t
 name|mr
 decl_stmt|;
@@ -2037,6 +2034,7 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: the SBus IOMMU ignores the high bits of an address, so a NULL 	 * DMA pointer will be translated by the first page of the IOTSB. 	 * To detect bugs we'll allocate and ignore the first entry. 	 */
 name|iommu_init
 argument_list|(
 name|name
@@ -2049,6 +2047,8 @@ argument_list|,
 literal|0
 argument_list|,
 operator|-
+literal|1
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2239,52 +2239,6 @@ argument_list|,
 name|SBR_TC0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|da
-operator|=
-name|sc
-operator|->
-name|sc_is
-operator|.
-name|is_dvmabase
-operator|/
-name|IO_PAGE_SIZE
-expr_stmt|;
-comment|/* 	 * Note: the SBUS IOMMU ignores the high bits of an address, so a NULL 	 * DMA pointer will be translated by the first page of the IOTSB. 	 * To detect bugs we'll allocate and ignore the first entry. 	 */
-if|if
-condition|(
-name|rman_reserve_resource
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_is
-operator|.
-name|is_dvma_rman
-argument_list|,
-name|da
-argument_list|,
-name|da
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"sbus_probe: can't toss first dvma page"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INVARIANTS */
 comment|/* 	 * Loop through ROM children, fixing any relative addresses 	 * and then configuring each device. 	 * `specials' is an array of device names that are treated 	 * specially: 	 */
 for|for
 control|(

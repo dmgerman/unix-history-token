@@ -4227,6 +4227,8 @@ argument_list|,
 name|tsbsize
 argument_list|,
 name|iobase
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
