@@ -83,23 +83,6 @@ parameter_list|)
 value|(++(com)->delta_error_counts[errnum])
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DIGI_LOCK_INTR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*#define DIGI_INTERRUPT*/
 end_comment
@@ -611,18 +594,6 @@ name|int
 name|_win
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DIGI_LOCK_INTR
-name|struct
-name|mtx
-name|intr_mutex
-index|[
-literal|1
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
