@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.8 %G%"
+literal|"@(#)asmain.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -46,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"asexpr.h"
+file|"asscan.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"asscan.h"
+file|"asexpr.h"
 end_include
 
 begin_ifdef
@@ -65,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.8"
+value|"VAX/UNIX Assembler V%G% 4.9"
 end_define
 
 begin_endif
@@ -193,6 +205,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|anywarnings
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*no warnings yet*/
+end_comment
+
+begin_decl_stmt
+name|int
 name|orgwarn
 init|=
 literal|0
@@ -237,6 +261,42 @@ end_decl_stmt
 
 begin_comment
 comment|/* initialzed data -> text space */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nGHnumbers
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GH numbers used */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nGHopcodes
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GH opcodes used */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nnewopcodes
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* new opcodes used */
 end_comment
 
 begin_ifdef
@@ -602,6 +662,11 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|sbrk
+parameter_list|()
+function_decl|;
 name|tmpn1
 index|[
 literal|0
@@ -611,10 +676,6 @@ literal|0
 expr_stmt|;
 name|endcore
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|sbrk
 argument_list|(
 literal|0
@@ -736,6 +797,46 @@ condition|)
 name|yyerror
 argument_list|(
 literal|"Caution: absolute origins.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nGHnumbers
+condition|)
+name|yywarning
+argument_list|(
+literal|"Caution: G or H format floating point numbers"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nGHopcodes
+condition|)
+name|yywarning
+argument_list|(
+literal|"Caution: G or H format floating point operators"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nnewopcodes
+condition|)
+name|yywarning
+argument_list|(
+literal|"Caution: New Opcodes"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nGHnumbers
+operator|||
+name|nGHopcodes
+operator|||
+name|nnewopcodes
+condition|)
+name|yywarning
+argument_list|(
+literal|"These are not defined for all implementations of the VAX architecture.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1196,26 +1297,6 @@ name|e_xvalue
 operator|=
 literal|0
 expr_stmt|;
-name|usedot
-index|[
-name|locindex
-index|]
-operator|.
-name|e_yvalue
-operator|=
-literal|0
-expr_stmt|;
-name|usedot
-index|[
-name|NLOC
-operator|+
-name|locindex
-index|]
-operator|.
-name|e_yvalue
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
 end_block
@@ -1305,6 +1386,9 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|tmpn1
@@ -1312,6 +1396,9 @@ argument_list|,
 name|TMP_SUFFIX
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mktemp
 argument_list|(
 name|tmpn1
@@ -2323,7 +2410,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
-literal|0
+literal|0L
 condition|)
 name|yyerror
 argument_list|(

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
-end_comment
-
-begin_comment
-comment|/* "@(#)asscan.h 4.3 %G%" */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.4 %G%  */
 end_comment
 
 begin_comment
@@ -76,8 +72,15 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|int
+name|inttoktype
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|char
-name|toktype
+name|bytetoktype
 typedef|;
 end_typedef
 
@@ -153,7 +156,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(unsigned short *)ptr=val,	ptr += sizeof(short)
+value|*(u_short *)ptr=val,	ptr += sizeof(short)
 end_define
 
 begin_define
@@ -177,7 +180,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(unsigned int *)ptr=val,	ptr += sizeof(int)
+value|*(u_int int *)ptr=val,	ptr += sizeof(int)
 end_define
 
 begin_define
@@ -201,31 +204,31 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(unsigned long *)ptr=val,	ptr += sizeof(long)
+value|*(u_int long *)ptr=val,	ptr += sizeof(long)
 end_define
 
 begin_define
 define|#
 directive|define
-name|pfloat
+name|pnumber
 parameter_list|(
 name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(float *)ptr  = val,	ptr += sizeof (float)
+value|*(Bignum*)ptr=val,	ptr += sizeof(Bignum)
 end_define
 
 begin_define
 define|#
 directive|define
-name|pdouble
+name|popcode
 parameter_list|(
 name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(double *)ptr  = val,	ptr += sizeof (double)
+value|*(struct Opcode*)ptr=val,	ptr += sizeof(struct Opcode)
 end_define
 
 begin_define
@@ -321,7 +324,7 @@ name|val
 parameter_list|,
 name|ptr
 parameter_list|)
-value|val = *(unsigned short *)ptr , ptr += sizeof (short)
+value|val = *(u_short *)ptr , ptr += sizeof (short)
 end_define
 
 begin_define
@@ -345,7 +348,7 @@ name|val
 parameter_list|,
 name|ptr
 parameter_list|)
-value|val = *(unsigend int *)ptr, ptr += sizeof (int)
+value|val = *(u_int *)ptr, ptr += sizeof (int)
 end_define
 
 begin_define
@@ -369,31 +372,31 @@ name|val
 parameter_list|,
 name|ptr
 parameter_list|)
-value|val = *(unsigned long *)ptr, ptr += sizeof (long)
+value|val = *(u_int *)ptr, ptr += sizeof (long)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gfloat
+name|gnumber
 parameter_list|(
 name|val
 parameter_list|,
 name|ptr
 parameter_list|)
-value|val = *(float *)ptr, ptr += sizeof (float)
+value|val = *(Bignum *)ptr, ptr += sizeof(Bignum)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gdouble
+name|gopcode
 parameter_list|(
 name|val
 parameter_list|,
 name|ptr
 parameter_list|)
-value|val = *(double *)ptr, ptr += sizeof (double)
+value|val = *(struct Opcode *)ptr, ptr += sizeof(struct Opcode)
 end_define
 
 begin_define

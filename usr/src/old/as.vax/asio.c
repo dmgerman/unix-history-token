@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Coypright (c) 1980 Regents of the University of California */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asio.c 4.3 %G%"
+literal|"@(#)asio.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -277,6 +289,18 @@ name|bp
 operator|->
 name|b_ptr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+operator|*
+name|to
+operator|=
+operator|*
+name|to
+expr_stmt|;
+endif|#
+directive|endif
+endif|lint
 asm|asm("movc3 r8,(r11),(r7)");
 name|bp
 operator|->
@@ -334,10 +358,16 @@ name|bp
 operator|->
 name|b_off
 condition|)
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|biofd
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_off
@@ -488,10 +518,16 @@ name|bp
 operator|->
 name|b_off
 condition|)
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|biofd
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_off

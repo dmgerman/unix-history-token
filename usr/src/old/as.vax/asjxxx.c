@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.5 %G%"
+literal|"@(#)asjxxx.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -170,7 +182,7 @@ end_comment
 begin_macro
 name|ijxout
 argument_list|(
-argument|op
+argument|opcode
 argument_list|,
 argument|ap
 argument_list|,
@@ -180,9 +192,22 @@ end_macro
 
 begin_decl_stmt
 name|struct
+name|Opcode
+name|opcode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|arg
 modifier|*
 name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nact
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +230,7 @@ decl_stmt|;
 comment|/* 		 *	We assume the MINIMAL length 		 */
 name|putins
 argument_list|(
-name|op
+name|opcode
 argument_list|,
 name|ap
 argument_list|,
@@ -230,7 +255,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|op
+name|opcode
+operator|.
+name|Op_popcode
 operator|==
 name|JBR
 condition|)
@@ -298,27 +325,31 @@ else|else
 block|{
 comment|/* pass2, resolve */
 comment|/* 		 *	READ THIS AFTER LOOKING AT jxxxfix() 		 */
-specifier|register
+name|reg
 name|long
 name|oxvalue
 decl_stmt|;
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
 name|xp
 decl_stmt|;
-specifier|register
+name|reg
 name|struct
 name|symtab
 modifier|*
 name|tunnel
 decl_stmt|;
-specifier|register
+name|reg
 name|struct
 name|arg
 modifier|*
 name|aplast
+decl_stmt|;
+name|struct
+name|Opcode
+name|nopcode
 decl_stmt|;
 name|aplast
 operator|=
@@ -405,7 +436,7 @@ block|{
 comment|/*wasn't bumped, so is short form*/
 name|putins
 argument_list|(
-name|op
+name|opcode
 argument_list|,
 name|ap
 argument_list|,
@@ -417,12 +448,14 @@ else|else
 block|{
 if|if
 condition|(
-name|op
+name|opcode
+operator|.
+name|Op_popcode
 operator|!=
 name|JBR
 condition|)
 block|{
-comment|/*branch reverse conditional byte over  					  branch unconditional word*/
+comment|/* 				 *	branch reverse conditional byte over 				 *	branch unconditional word 				 */
 name|oxvalue
 operator|=
 name|xp
@@ -437,11 +470,19 @@ name|lastjxxx
 operator|->
 name|s_value
 expr_stmt|;
+name|nopcode
+operator|=
+name|opcode
+expr_stmt|;
+name|nopcode
+operator|.
+name|Op_popcode
+operator|^=
+literal|1
+expr_stmt|;
 name|putins
 argument_list|(
-name|op
-operator|^
-literal|1
+name|nopcode
 argument_list|,
 name|ap
 argument_list|,
@@ -455,13 +496,25 @@ operator|=
 name|oxvalue
 expr_stmt|;
 block|}
-name|putins
-argument_list|(
+name|nopcode
+operator|.
+name|Op_eopcode
+operator|=
+name|CORE
+expr_stmt|;
+name|nopcode
+operator|.
+name|Op_popcode
+operator|=
 name|jxxxJUMP
 condition|?
 name|JMP
 else|:
 name|BRW
+expr_stmt|;
+name|putins
+argument_list|(
+name|nopcode
 argument_list|,
 name|aplast
 argument_list|,
@@ -472,10 +525,6 @@ block|}
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/*end of ijxout*/
-end_comment
 
 begin_expr_stmt
 name|jalign
@@ -511,9 +560,13 @@ comment|/* 	 *	Problem with .align 	 * 	 *	When the loader constructs an executa
 if|if
 condition|(
 operator|(
+operator|(
 name|xp
 operator|->
 name|e_xtype
+operator|&
+name|XTYPE
+operator|)
 operator|!=
 name|XABS
 operator|)
@@ -560,7 +613,7 @@ condition|)
 block|{
 name|yywarning
 argument_list|(
-literal|".align %d in any segment is NOT preserved by the loader"
+literal|".align %d is NOT preserved by the loader"
 argument_list|,
 name|xp
 operator|->
@@ -675,44 +728,11 @@ name|e_xvalue
 operator|&
 name|mask
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|UNIX
-name|outb
+name|Outb
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|UNIX
-ifdef|#
-directive|ifdef
-name|VMS
-operator|*
-name|vms_obj_ptr
-operator|++
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-operator|*
-name|vms_obj_ptr
-operator|++
-operator|=
-literal|0
-expr_stmt|;
-name|dotp
-operator|->
-name|e_xvalue
-operator|+=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-endif|VMS
-block|}
 block|}
 block|}
 end_block
@@ -839,6 +859,16 @@ name|topono
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|topno
+operator|=
+name|topno
+expr_stmt|;
+endif|#
+directive|endif
+endif|lint
 ifdef|#
 directive|ifdef
 name|DEBUG

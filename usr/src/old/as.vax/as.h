@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
-end_comment
-
-begin_comment
-comment|/* "@(#)as.h 4.8 %G%" */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.9 %G%  */
 end_comment
 
 begin_ifdef
@@ -32,6 +28,13 @@ endif|#
 directive|endif
 endif|VMS
 end_endif
+
+begin_define
+define|#
+directive|define
+name|reg
+value|register
+end_define
 
 begin_include
 include|#
@@ -517,183 +520,31 @@ comment|/* [%r] */
 end_comment
 
 begin_comment
-comment|/*  * Argument access types used to test validity of operands to operators  */
+comment|/*  *	Definitions for the things found in ``instrs''  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACCR
-value|(1<<3)
-end_define
-
-begin_comment
-comment|/* read */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCW
-value|(2<<3)
-end_define
-
-begin_comment
-comment|/* write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCB
-value|(4<<3)
-end_define
-
-begin_comment
-comment|/* branch displacement */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCA
-value|(8<<3)
-end_define
-
-begin_comment
-comment|/* address only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCM
-value|(ACCR | ACCW)
-end_define
-
-begin_comment
-comment|/* modify */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCI
-value|(ACCB | ACCR)
-end_define
-
-begin_comment
-comment|/* XFC code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACCESSMASK
-value|(ACCA | ACCR | ACCW | ACCB)
-end_define
-
-begin_comment
-comment|/* the mask */
-end_comment
-
-begin_comment
-comment|/*  *	Argument data types  *	Also used to tell outrel what it is relocating  *	(possibly in combination with RELOC_PCREL and TYPNONE)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPB
-value|0
-end_define
-
-begin_comment
-comment|/* byte */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPW
+name|INSTTAB
 value|1
 end_define
 
-begin_comment
-comment|/* word */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPL
-value|2
-end_define
+begin_include
+include|#
+directive|include
+file|"instrs.h"
+end_include
 
 begin_comment
-comment|/* long */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPQ
-value|3
-end_define
-
-begin_comment
-comment|/* quad */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPF
-value|4
-end_define
-
-begin_comment
-comment|/* floating */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPD
-value|5
-end_define
-
-begin_comment
-comment|/* double floating */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPNONE
-value|6
-end_define
-
-begin_comment
-comment|/* when nothing */
+comment|/*  *	Tells outrel what it is relocating  *	RELOC_PCREL is an implicit argument to outrel; it is or'ed in  *	with a TYPX  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RELOC_PCREL
-value|8
-end_define
-
-begin_comment
-comment|/* implicit argument to outrel; ==> PCREL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPMASK
-value|7
+value|(1<<TYPLG)
 end_define
 
 begin_comment
@@ -735,6 +586,13 @@ name|LEN8
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|LEN16
+value|10
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -768,7 +626,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {1,2,4,8} ==> {LEN1, LEN2, LEN4, LEN8} */
+comment|/* {1,2,4,8,16} ==> {LEN1, LEN2, LEN4, LEN8} */
 end_comment
 
 begin_decl_stmt
@@ -780,7 +638,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {1,2,4,8} ==> {bits to construct operands */
+comment|/* {1,2,4,8,16} ==> {bits to construct operands */
 end_comment
 
 begin_decl_stmt
@@ -792,7 +650,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {1,2,4,8} ==> {TYPB, TYPW, TYPL, TYPQ} */
+comment|/* {1,2,4,8,16} ==> {TYPB,TYPW,TYPL,TYPQ,TYPO} */
 end_comment
 
 begin_decl_stmt
@@ -804,7 +662,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {TYPB..TYPD} ==> {1 if relocation not OK */
+comment|/* {TYPB..TYPH} ==> {1 if relocation not OK */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ty_float
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {TYPB..TYPH} ==> {1 if floating number */
 end_comment
 
 begin_decl_stmt
@@ -816,7 +686,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {TYPB..TYPD} ==> {LEN1..LEN8} */
+comment|/* {TYPB..TYPH} ==> {LEN1..LEN16} */
 end_comment
 
 begin_decl_stmt
@@ -828,7 +698,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {TYPB..TYPD} ==> {1,2,4,8} */
+comment|/* {TYPB..TYPH} ==> {1,2,4,8,16} */
 end_comment
 
 begin_decl_stmt
@@ -840,7 +710,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* {TYPB..TYPD} ==> lg{1,2,4,8} */
+comment|/* {TYPB..TYPH} ==> lg{1,2,4,8,16} */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ty_string
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* {TYPB..TYPH} ==> printable */
 end_comment
 
 begin_define
@@ -854,21 +737,28 @@ begin_define
 define|#
 directive|define
 name|HW
-value|01
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW
-value|03
+value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
 name|DW
-value|07
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|OW
+value|0xF
 end_define
 
 begin_ifdef
@@ -1246,10 +1136,13 @@ comment|/* instruction name, type (opcode) */
 name|u_char
 name|s_tag
 decl_stmt|;
+name|u_char
+name|s_eopcode
+decl_stmt|;
 name|char
 name|s_pad
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* round to 20 bytes */
@@ -1257,9 +1150,75 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|instab
+modifier|*
+name|Iptr
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  *	The fields nm.n_desc and nm.n_value total 6 bytes; this is  *	just enough for the 6 bytes describing the argument types.  *	We use a macro to define access to these 6 bytes, assuming that  *	they are allocated adjacently.  *	IF THE FORMAT OF STRUCT nlist CHANGES, THESE MAY HAVE TO BE CHANGED.  *  *	Instab is cleverly declared to look very much like the combination of  *	a struct symtab and a struct nlist.  */
 end_comment
+
+begin_comment
+comment|/*  *	With the 1981 VAX architecture reference manual,  *	DEC defined and named two byte opcodes.   *	In addition, DEC defined four new one byte instructions for  *	queue manipulation.  *	The assembler was patched in 1982 to reflect this change.  *  *	The two byte opcodes are preceded with an escape byte  *	(usually an ESCD) and an opcode byte.  *	For one byte opcodes, the opcode is called the primary opcode.  *	For two byte opcodes, the second opcode is called the primary opcode.  *  *	We store the primary opcode in I_popcode,  *	and the escape opcode in I_eopcode.  *  *	For one byte opcodes in the basic arhitecture,  *		I_eopcode is CORE  *	For one byte opcodes in the new architecture definition,  *		I_eopcode is NEW  *	For the two byte opcodes, I_eopcode is the escape byte.  *  *	The assembler checks if a NEW or two byte opcode is used,  *	and issues a warning diagnostic.  */
+end_comment
+
+begin_comment
+comment|/*  *	For upward compatability reasons, we can't have the two opcodes  *	forming an operator specifier byte(s) be physically adjacent  *	in the instruction table.  *	We define a structure and a constructor that is used in  *	the instruction generator.  */
+end_comment
+
+begin_struct
+struct|struct
+name|Opcode
+block|{
+name|u_char
+name|Op_eopcode
+decl_stmt|;
+name|u_char
+name|Op_popcode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BADPOINT
+value|0xAAAAAAAA
+end_define
+
+begin_comment
+comment|/*  *	See if a structured opcode is bad  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ITABCHECK
+parameter_list|(
+name|o
+parameter_list|)
+value|((itab[o.Op_eopcode] != (Iptr*)BADPOINT)&& (itab[o.Op_eopcode][o.Op_popcode] != (Iptr)BADPOINT))
+end_define
+
+begin_comment
+comment|/*  *	Index the itab by a structured opcode  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ITABFETCH
+parameter_list|(
+name|o
+parameter_list|)
+value|itab[o.Op_eopcode][o.Op_popcode]
+end_define
 
 begin_struct
 struct|struct
@@ -1284,8 +1243,9 @@ decl_stmt|;
 endif|#
 directive|endif
 name|u_char
-name|I_opcode
+name|I_popcode
 decl_stmt|;
+comment|/* basic op code */
 name|char
 name|I_nargs
 decl_stmt|;
@@ -1298,10 +1258,13 @@ decl_stmt|;
 name|u_char
 name|I_s_tag
 decl_stmt|;
+name|u_char
+name|I_eopcode
+decl_stmt|;
 name|char
 name|I_pad
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* round to 20 bytes */
@@ -1316,13 +1279,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|i_opcode
+name|i_popcode
 value|s_nm.n_type
 end_define
 
 begin_comment
 comment|/* use the same field as symtab.type */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|i_eopcode
+value|s_eopcode
+end_define
 
 begin_define
 define|#
@@ -1374,18 +1344,24 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  *	Definitions for numbers and expressions.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"asnumber.h"
+end_include
+
 begin_struct
 struct|struct
 name|exp
 block|{
-name|long
-name|e_xvalue
+name|Bignum
+name|e_number
 decl_stmt|;
-comment|/* MUST be the first field (look at union Double) */
-name|long
-name|e_yvalue
-decl_stmt|;
-comment|/* MUST be second field; least sig word of a double */
+comment|/* 128 bits of #, plus tag */
 name|char
 name|e_xtype
 decl_stmt|;
@@ -1404,56 +1380,23 @@ end_struct
 begin_define
 define|#
 directive|define
-name|doub_MSW
-value|e_xvalue
+name|e_xvalue
+value|e_number.num_num.numIl_int.Il_long
 end_define
 
 begin_define
 define|#
 directive|define
-name|doub_LSW
-value|e_yvalue
+name|MINLIT
+value|0
 end_define
 
-begin_union
-union|union
-name|Double
-block|{
-struct|struct
-block|{
-name|long
-name|doub_MSW
-decl_stmt|;
-name|long
-name|doub_LSW
-decl_stmt|;
-block|}
-name|dis_dvalue
-struct|;
-name|double
-name|dvalue
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_struct
-struct|struct
-name|Quad
-block|{
-name|long
-name|quad_low_long
-decl_stmt|;
-name|long
-name|quad_high_long
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  *	Magic layout macros  */
-end_comment
+begin_define
+define|#
+directive|define
+name|MAXLIT
+value|63
+end_define
 
 begin_define
 define|#
@@ -1467,6 +1410,20 @@ define|#
 directive|define
 name|MAXBYTE
 value|127
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINUBYTE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXUBYTE
+value|255
 end_define
 
 begin_define
@@ -1486,42 +1443,65 @@ end_define
 begin_define
 define|#
 directive|define
-name|LITFLTMASK
-value|0x000043F0
+name|MINUWORD
+value|0
 end_define
-
-begin_comment
-comment|/*really magic*/
-end_comment
-
-begin_comment
-comment|/*  *		Is the floating point double word in xp a  *		short literal floating point number?  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|slitflt
-parameter_list|(
-name|xp
-parameter_list|)
-define|\
-value|(    (xp->doub_LSW == 0) \&&  ( (xp->doub_MSW& LITFLTMASK) \ 			      == xp->doub_MSW) )
+name|MAXUWORD
+value|65535
 end_define
-
-begin_comment
-comment|/*  *	If it is a slitflt, then extract the 6 interesting bits  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|extlitflt
+name|ISLIT
 parameter_list|(
-name|xp
+name|x
 parameter_list|)
-define|\
-value|xp->doub_MSW>> 4
+value|(((x)>= MINLIT)&& ((x)<= MAXLIT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISBYTE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>= MINBYTE)&& ((x)<= MAXBYTE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISUBYTE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>= MINUBYTE)&& ((x)<= MAXUBYTE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISWORD
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>= MINWORD)&& ((x)<= MAXWORD))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISUWORD
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>= MINUWORD)&& ((x)<= MAXUWORD))
 end_define
 
 begin_decl_stmt
@@ -1857,7 +1837,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*errors assembling arguments*/
+comment|/*errors as'ing arguments*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|anywarnings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*warnings as'ing arguments*/
 end_comment
 
 begin_decl_stmt
@@ -1926,6 +1917,39 @@ begin_comment
 comment|/*initialized data into text space*/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nGHnumbers
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GH numbers used */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nGHopcodes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GH opcodes used */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nnewopcodes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* new opcodes used */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1959,6 +1983,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|instab
+modifier|*
 modifier|*
 name|itab
 index|[
@@ -2020,6 +2045,22 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|Calloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|ClearCalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -2041,6 +2082,50 @@ name|lg
 parameter_list|)
 value|dotp->e_xvalue += (lg); if (passno == 2) bwrite((cp), (lg), (txtfil))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Outb
+parameter_list|(
+name|o
+parameter_list|)
+value|outb(o)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|UNIX
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Outb
+parameter_list|(
+name|o
+parameter_list|)
+value|{*vms_obj_ptr++=-1;*vms_obj_ptr++=(char)o;dotp->e_xvalue+=1;}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VMS
+end_endif
 
 begin_comment
 comment|/*  *	Most of the time, the argument to flushfield is a power of two constant,  *	the calculations involving it can be optimized to shifts.  */

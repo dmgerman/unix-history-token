@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asexpr.c 4.2 %G%"
+literal|"@(#)asexpr.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -23,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"asscan.h"
 end_include
 
 begin_include
@@ -352,7 +370,7 @@ name|exp1
 parameter_list|,
 name|exp2
 parameter_list|)
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
@@ -365,14 +383,20 @@ end_function
 
 begin_block
 block|{
-specifier|register
+name|reg
 name|e1_type
-operator|,
+decl_stmt|,
 name|e2_type
-expr_stmt|;
-specifier|register
+decl_stmt|;
+name|reg
 name|back_type
-expr_stmt|;
+decl_stmt|;
+name|char
+modifier|*
+name|btype
+init|=
+literal|"The assembler can only do arithmetic on 1,2, or 4 byte integers"
+decl_stmt|;
 name|lastnam
 operator|=
 literal|0
@@ -458,6 +482,68 @@ name|e2_type
 operator|>>=
 literal|1
 expr_stmt|;
+switch|switch
+condition|(
+name|exp1
+operator|->
+name|e_number
+operator|.
+name|num_tag
+condition|)
+block|{
+case|case
+name|TYPB
+case|:
+case|case
+name|TYPW
+case|:
+case|case
+name|TYPL
+case|:
+break|break;
+default|default:
+name|yyerror
+argument_list|(
+name|btype
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|exp1
+operator|)
+return|;
+block|}
+switch|switch
+condition|(
+name|exp2
+operator|->
+name|e_number
+operator|.
+name|num_tag
+condition|)
+block|{
+case|case
+name|TYPB
+case|:
+case|case
+name|TYPW
+case|:
+case|case
+name|TYPL
+case|:
+break|break;
+default|default:
+name|yyerror
+argument_list|(
+name|btype
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|exp1
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|op
@@ -841,7 +927,7 @@ argument_list|)
 expr_stmt|;
 name|clobber
 argument_list|(
-name|FLTNUM
+name|BIGNUM
 argument_list|,
 name|SAFEEXPRBEG
 argument_list|)
@@ -975,21 +1061,24 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|inttoktype
 name|val
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  *	return the value the read head is sitting on  */
+end_comment
+
 begin_function
-name|int
+name|inttoktype
 name|exprparse
 parameter_list|(
 name|inval
 parameter_list|,
 name|backexpr
 parameter_list|)
-comment|/*return the value the read head is sitting on*/
-name|int
+name|inttoktype
 name|inval
 decl_stmt|;
 name|struct
@@ -999,13 +1088,13 @@ modifier|*
 name|backexpr
 decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
 name|lexpr
 decl_stmt|;
-name|int
+name|inttoktype
 name|op
 decl_stmt|;
 name|val
@@ -1066,13 +1155,13 @@ modifier|*
 name|boolterm
 parameter_list|()
 block|{
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
 name|lexpr
 decl_stmt|;
-name|int
+name|inttoktype
 name|op
 decl_stmt|;
 name|lexpr
@@ -1124,13 +1213,13 @@ modifier|*
 name|term
 parameter_list|()
 block|{
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
 name|lexpr
 decl_stmt|;
-name|int
+name|inttoktype
 name|op
 decl_stmt|;
 name|lexpr
@@ -1187,7 +1276,7 @@ name|exp
 modifier|*
 name|lexpr
 decl_stmt|;
-name|int
+name|inttoktype
 name|op
 decl_stmt|;
 specifier|extern
@@ -1322,9 +1411,17 @@ name|XABS
 expr_stmt|;
 name|lexpr
 operator|->
-name|e_xvalue
+name|e_number
 operator|=
-literal|0
+name|Znumber
+expr_stmt|;
+name|lexpr
+operator|->
+name|e_number
+operator|.
+name|num_tag
+operator|=
+name|TYPL
 expr_stmt|;
 name|lexpr
 operator|=
@@ -1359,9 +1456,17 @@ name|XABS
 expr_stmt|;
 name|lexpr
 operator|->
-name|e_xvalue
+name|e_number
 operator|=
-literal|0
+name|Znumber
+expr_stmt|;
+name|lexpr
+operator|->
+name|e_number
+operator|.
+name|num_tag
+operator|=
+name|TYPL
 expr_stmt|;
 block|}
 return|return
@@ -1372,30 +1477,24 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|struct
 name|exp
 modifier|*
 name|yukkyexpr
-argument_list|(
+parameter_list|(
 name|val
-argument_list|,
+parameter_list|,
 name|np
-argument_list|)
+parameter_list|)
 name|int
 name|val
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-specifier|register
+name|reg
 name|np
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
@@ -1406,6 +1505,11 @@ name|int
 name|exprisname
 decl_stmt|;
 comment|/*last factor is a name*/
+name|int
+name|off
+init|=
+literal|0
+decl_stmt|;
 name|exprisname
 operator|=
 literal|0
@@ -1415,29 +1519,28 @@ operator|=
 name|xp
 operator|++
 expr_stmt|;
-if|if
+name|locxp
+operator|->
+name|e_number
+operator|=
+name|Znumber
+expr_stmt|;
+name|locxp
+operator|->
+name|e_number
+operator|.
+name|num_tag
+operator|=
+name|TYPL
+expr_stmt|;
+switch|switch
 condition|(
 name|val
-operator|==
-name|NAME
-operator|||
-name|val
-operator|==
-name|BFINT
 condition|)
 block|{
-if|if
-condition|(
-name|val
-operator|==
+case|case
 name|BFINT
-condition|)
-block|{
-name|int
-name|off
-init|=
-literal|0
-decl_stmt|;
+case|:
 name|yylval
 operator|=
 operator|(
@@ -1501,6 +1604,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|yytext
@@ -1541,7 +1647,10 @@ operator|*
 operator|)
 name|np
 expr_stmt|;
-block|}
+comment|/* FALLTHROUGH */
+case|case
+name|NAME
+case|:
 name|exprisname
 operator|++
 expr_stmt|;
@@ -1643,10 +1752,23 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-comment|/*INSTn or INST0 or REG*/
+break|break;
+default|default:
+name|yyerror
+argument_list|(
+literal|"Internal Error in yukkyexpr"
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|INSTn
+case|:
+case|case
+name|INST0
+case|:
+case|case
+name|REG
+case|:
 name|locxp
 operator|->
 name|e_xtype
@@ -1678,6 +1800,7 @@ name|e_xname
 operator|=
 name|NULL
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -1685,7 +1808,7 @@ name|locxp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1727,371 +1850,309 @@ name|FIRSTTOKEN
 block|,
 literal|"firsttoken"
 block|,
-comment|/* 0 */
 name|ISPACE
 block|,
 literal|"ispace"
 block|,
-comment|/* 1 */
 name|IBYTE
 block|,
 literal|"ibyte"
 block|,
-comment|/* 2 */
 name|IWORD
 block|,
 literal|"iword"
 block|,
-comment|/* 3 */
 name|IINT
 block|,
 literal|"iint"
 block|,
-comment|/* 4 */
 name|ILONG
 block|,
 literal|"ilong"
 block|,
-comment|/* 5 */
+name|IQUAD
+block|,
+literal|"quad"
+block|,
+name|IOCTA
+block|,
+literal|"octa"
+block|,
 name|IDATA
 block|,
 literal|"idata"
 block|,
-comment|/* 6 */
 name|IGLOBAL
 block|,
 literal|"iglobal"
 block|,
-comment|/* 7 */
 name|ISET
 block|,
 literal|"iset"
 block|,
-comment|/* 8 */
 name|ITEXT
 block|,
 literal|"itext"
 block|,
-comment|/* 9 */
 name|ICOMM
 block|,
 literal|"icomm"
 block|,
-comment|/* 10 */
 name|ILCOMM
 block|,
 literal|"ilcomm"
 block|,
-comment|/* 11 */
-name|IFLOAT
+name|IFFLOAT
 block|,
-literal|"ifloat"
+literal|"iffloat"
 block|,
-comment|/* 12 */
-name|IDOUBLE
+name|IDFLOAT
 block|,
-literal|"idouble"
+literal|"idfloat"
 block|,
-comment|/* 13 */
+name|IGFLOAT
+block|,
+literal|"igfloat"
+block|,
+name|IHFLOAT
+block|,
+literal|"ihfloat"
+block|,
 name|IORG
 block|,
 literal|"iorg"
 block|,
-comment|/* 14 */
 name|IASCII
 block|,
 literal|"iascii"
 block|,
-comment|/* 15 */
 name|IASCIZ
 block|,
 literal|"iasciz"
 block|,
-comment|/* 16 */
 name|ILSYM
 block|,
 literal|"ilsym"
 block|,
-comment|/* 17 */
 name|IFILE
 block|,
 literal|"ifile"
 block|,
-comment|/* 18 */
 name|ILINENO
 block|,
 literal|"ilineno"
 block|,
-comment|/* 19 */
 name|IABORT
 block|,
 literal|"iabort"
 block|,
-comment|/* 20 */
 name|ISTAB
 block|,
 literal|"istab"
 block|,
-comment|/* 23 */
 name|ISTABSTR
 block|,
 literal|"istabstr"
 block|,
-comment|/* 24 */
 name|ISTABNONE
 block|,
 literal|"istabnone"
 block|,
-comment|/* 25 */
 name|ISTABDOT
 block|,
 literal|"istabdot"
 block|,
-comment|/* 26 */
 name|IJXXX
 block|,
 literal|"ijxxx"
 block|,
-comment|/* 27 */
 name|IALIGN
 block|,
 literal|"ialign"
 block|,
-comment|/* 28 */
 name|INST0
 block|,
 literal|"inst0"
 block|,
-comment|/* 29 */
 name|INSTn
 block|,
 literal|"instn"
 block|,
-comment|/* 30 */
 name|BFINT
 block|,
 literal|"bfint"
 block|,
-comment|/* 31 */
 name|PARSEEOF
 block|,
 literal|"parseeof"
 block|,
-comment|/* 32 */
 name|ILINESKIP
 block|,
 literal|"ilineskip"
 block|,
-comment|/* 33 */
 name|VOID
 block|,
 literal|"void"
 block|,
-comment|/* 34 */
 name|SKIP
 block|,
 literal|"skip"
 block|,
-comment|/* 35 */
 name|INT
 block|,
 literal|"int"
 block|,
-comment|/* 36 */
-name|FLTNUM
+name|BIGNUM
 block|,
-literal|"fltnum"
+literal|"bignum"
 block|,
-comment|/* 37 */
 name|NAME
 block|,
 literal|"name"
 block|,
-comment|/* 38 */
 name|STRING
 block|,
 literal|"string"
 block|,
-comment|/* 39 */
-name|QUAD
-block|,
-literal|"quad"
-block|,
-comment|/* 40 */
 name|SIZESPEC
 block|,
 literal|"sizespec"
 block|,
-comment|/* 41 */
 name|REG
 block|,
 literal|"reg"
 block|,
-comment|/* 42 */
 name|MUL
 block|,
 literal|"mul"
 block|,
-comment|/* 43 */
 name|LITOP
 block|,
 literal|"litop"
 block|,
-comment|/* 44 */
 name|LP
 block|,
 literal|"lp"
 block|,
-comment|/* 45 */
 name|MP
 block|,
 literal|"mp"
 block|,
-comment|/* 46 */
 name|NEEDSBUF
 block|,
 literal|"needsbuf"
 block|,
-comment|/* 48 */
 name|REGOP
 block|,
 literal|"regop"
 block|,
-comment|/* 49 */
 name|NL
 block|,
 literal|"nl"
 block|,
-comment|/* 50 */
 name|SCANEOF
 block|,
 literal|"scaneof"
 block|,
-comment|/* 51 */
 name|BADCHAR
 block|,
 literal|"badchar"
 block|,
-comment|/* 52 */
 name|SP
 block|,
 literal|"sp"
 block|,
-comment|/* 53 */
 name|ALPH
 block|,
 literal|"alph"
 block|,
-comment|/* 54 */
 name|DIG
 block|,
 literal|"dig"
 block|,
-comment|/* 55 */
 name|SQ
 block|,
 literal|"sq"
 block|,
-comment|/* 56 */
 name|DQ
 block|,
 literal|"dq"
 block|,
-comment|/* 57 */
 name|SH
 block|,
 literal|"sh"
 block|,
-comment|/* 58 */
 name|LSH
 block|,
 literal|"lsh"
 block|,
-comment|/* 59 */
 name|RSH
 block|,
 literal|"rsh"
 block|,
-comment|/* 60 */
 name|MINUS
 block|,
 literal|"minus"
 block|,
-comment|/* 61 */
 name|SIZEQUOTE
 block|,
 literal|"sizequote"
 block|,
-comment|/* 62 */
 name|XOR
 block|,
 literal|"xor"
 block|,
-comment|/* 64 */
 name|DIV
 block|,
 literal|"div"
 block|,
-comment|/* 65 */
 name|SEMI
 block|,
 literal|"semi"
 block|,
-comment|/* 66 */
 name|COLON
 block|,
 literal|"colon"
 block|,
-comment|/* 67 */
 name|PLUS
 block|,
 literal|"plus"
 block|,
-comment|/* 68 */
 name|IOR
 block|,
 literal|"ior"
 block|,
-comment|/* 69 */
 name|AND
 block|,
 literal|"and"
 block|,
-comment|/* 70 */
 name|TILDE
 block|,
 literal|"tilde"
 block|,
-comment|/* 71 */
 name|ORNOT
 block|,
 literal|"ornot"
 block|,
-comment|/* 72 */
 name|CM
 block|,
 literal|"cm"
 block|,
-comment|/* 73 */
 name|LB
 block|,
 literal|"lb"
 block|,
-comment|/* 74 */
 name|RB
 block|,
 literal|"rb"
 block|,
-comment|/* 75 */
 name|RP
 block|,
 literal|"rp"
 block|,
-comment|/* 76 */
 name|LASTTOKEN
 block|,
 literal|"lasttoken"
-comment|/* 80 */
 block|}
 struct|;
 end_struct
@@ -2099,15 +2160,6 @@ end_struct
 begin_comment
 comment|/*  *	turn a token type into a string  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fixed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|char
@@ -2117,6 +2169,12 @@ parameter_list|(
 name|token
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|fixed
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!

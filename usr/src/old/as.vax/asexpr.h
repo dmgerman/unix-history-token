@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
-end_comment
-
-begin_comment
-comment|/* "@(#)asexpr.h 4.2 %G%" */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asexpr.h 4.3 %G%  */
 end_comment
 
 begin_comment
@@ -222,6 +218,27 @@ name|set
 parameter_list|)
 value|(tokensets[(val)]& (set) )
 end_define
+
+begin_function_decl
+name|inttoktype
+name|exprparse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|inttoktype
+name|funnyreg
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|inttoktype
+name|yylex
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

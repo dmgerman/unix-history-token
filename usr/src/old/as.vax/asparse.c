@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.7 %G%"
+literal|"@(#)asparse.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -28,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"asexpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"asscan.h"
 end_include
 
@@ -41,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"assyms.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"asexpr.h"
 end_include
 
 begin_decl_stmt
@@ -153,6 +165,27 @@ begin_comment
 comment|/*the lexical value; sloppy typing*/
 end_comment
 
+begin_decl_stmt
+name|struct
+name|Opcode
+name|yyopcode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lexical value for an opcode */
+end_comment
+
+begin_decl_stmt
+name|Bignum
+name|yybignum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lexical value for a big number */
+end_comment
+
 begin_comment
 comment|/*  *	Expression and argument managers  */
 end_comment
@@ -232,18 +265,20 @@ begin_comment
 comment|/*name of the assembly source*/
 end_comment
 
-begin_function
-name|int
+begin_macro
 name|yyparse
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
-specifier|register
+name|reg
 name|struct
 name|exp
 modifier|*
 name|locxp
 decl_stmt|;
-comment|/* 			 *	loc1xp and ptrloc1xp are used in the 			 * 	expression lookahead 			 */
+comment|/* 		 *	loc1xp and ptrloc1xp are used in the 		 * 	expression lookahead 		 */
 name|struct
 name|exp
 modifier|*
@@ -265,39 +300,40 @@ modifier|*
 name|pval
 decl_stmt|;
 comment|/*hacking expr:expr*/
-specifier|register
+name|reg
 name|struct
 name|symtab
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
+name|reg
 name|int
 name|argcnt
 decl_stmt|;
-specifier|register
-name|int
+name|reg
+name|inttoktype
 name|val
 decl_stmt|;
 comment|/*what yylex gives*/
-specifier|register
-name|int
+name|reg
+name|inttoktype
 name|auxval
 decl_stmt|;
 comment|/*saves val*/
-specifier|register
+name|reg
 name|struct
 name|arg
 modifier|*
 name|ap
 decl_stmt|;
 comment|/*first free argument*/
+name|reg
 name|struct
 name|symtab
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
+name|reg
 name|struct
 name|symtab
 modifier|*
@@ -372,6 +408,10 @@ name|int
 name|reloc_how
 decl_stmt|;
 comment|/* how to relocate expressions */
+name|int
+name|toconv
+decl_stmt|;
+comment|/* how to convert bignums */
 name|xp
 operator|=
 name|explist
@@ -432,9 +472,18 @@ name|val
 operator|!=
 name|COLON
 condition|)
+block|{
+name|yyerror
+argument_list|(
+literal|"Local label %d is not followed by a ':' for a label definition"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 goto|goto
-name|nocolon
+name|errorfix
 goto|;
+block|}
 if|if
 condition|(
 name|i
@@ -455,6 +504,9 @@ goto|goto
 name|errorfix
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|yytext
@@ -564,8 +616,6 @@ argument_list|(
 name|NAME
 argument_list|)
 expr_stmt|;
-name|nocolon
-label|:
 if|if
 condition|(
 name|val
@@ -655,7 +705,7 @@ argument|switch(val){      default: 	ERROR(
 literal|"Unrecognized instruction or directive"
 argument|);     case IABORT: 	shift; 	sawabort();
 comment|/*NOTREACHED*/
-argument|break;     case PARSEEOF: 	tokptr -= sizeof(toktype); 	*tokptr++ = VOID; 	tokptr[
+argument|break;     case PARSEEOF: 	tokptr -= sizeof(bytetoktype); 	*tokptr++ = VOID; 	tokptr[
 literal|1
 argument|] = VOID; 	tokptr[
 literal|2
@@ -693,9 +743,9 @@ endif|#
 directive|endif
 argument|np->s_tag = OBSOLETE;
 comment|/*invalidate original */
-argument|nforgotten++; 		np = stpt; 		if (locxp->e_xtype != XABS)  			(
-literal|"Illegal lsym"
-argument|); 		np->s_value=locxp->e_xvalue; 		np->s_type=XABS; 		np->s_tag = ILSYM; 	} 	break;     case IGLOBAL:
+argument|nforgotten++; 		np = stpt; 		if ( (locxp->e_xtype& XTYPE) != XABS) 			yyerror(
+literal|"Illegal second argument to lsym"
+argument|); 		np->s_value = locxp->e_xvalue; 		np->s_type = XABS; 		np->s_tag = ILSYM; 	} 	break;     case IGLOBAL:
 comment|/*.globl<name> */
 argument|shift; 	np = (struct symtab *)yylval; 	shiftover(NAME); 	np->s_type |= XXTRN; 	break;     case IDATA:
 comment|/*.data [<expr> ] */
@@ -709,7 +759,9 @@ argument|) {
 comment|/*there wasn't an associated expr*/
 argument|seg_number =
 literal|0
-argument|; 		seg_type = -seg_type; 	} else { 		if (locxp->e_xtype != XABS || (seg_number=locxp->e_xvalue)>= NLOC) { 			yyerror(
+argument|; 		seg_type = -seg_type; 	} else { 		if (   ((locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument||| (seg_number = locxp->e_xvalue)>= NLOC) { 			yyerror(
 literal|"illegal location counter"
 argument|); 			seg_number =
 literal|0
@@ -758,19 +810,21 @@ argument|break;
 comment|/* 	 *	Storage filler directives: 	 * 	 *	.byte	[<exprlist>] 	 * 	 *	exprlist:  empty | exprlist outexpr 	 *	outexpr:<expr> |<expr> :<expr> 	 */
 argument|case IBYTE:	curlen = NBPW/
 literal|4
-argument|; goto elist;     case IINT:    case ILONG:	curlen = NBPW;   goto elist;     case IWORD: 	curlen = NBPW/
+argument|; goto elist;    case IWORD:	curlen = NBPW/
 literal|2
-argument|;    elist: 	seg_type = val; 	shift;
+argument|; goto elist;    case IINT:	curlen = NBPW;   goto elist;    case ILONG:	curlen = NBPW;   goto elist;     elist: 	seg_type = val; 	shift;
 comment|/* 	 *	Expression List processing 	 */
 argument|if (INTOKSET(val, EBEGOPS+YUKKYEXPRBEG+SAFEEXPRBEG)){ 	    do{
 comment|/* 		 *	expression list consists of a list of : 		 *<expr> 		 *<expr> :<expr>  		 *		(pack expr2 into expr1 bits 		 */
 argument|expr(locxp, val);
 comment|/* 		 *	now, pointing at the next token 		 */
-argument|if (val == COLON){ 			shiftover(COLON); 			expr(pval, val); 			if (locxp->e_xtype != XABS) 			  yyerror(
+argument|if (val == COLON){ 			shiftover(COLON); 			expr(pval, val); 			if ((locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument|yyerror(
 literal|"Width not absolute"
-argument|); 			field_width = locxp->e_xvalue; 			locxp = pval; 			if (bitoff + field_width> 			  curlen) 				flushfield(curlen); 			if (field_width> curlen) 				yyerror(
+argument|); 			field_width = locxp->e_xvalue; 			locxp = pval; 			if (bitoff + field_width> curlen) 				flushfield(curlen); 			if (field_width> curlen) 				yyerror(
 literal|"Expression crosses field boundary"
-argument|); 		} else { 			field_width = curlen; 			flushfield(curlen); 		}  		 if ((locxp->e_xtype&XTYPE)!=XABS) { 			if (bitoff) 				yyerror(
+argument|); 		} else { 			field_width = curlen; 			flushfield(curlen); 		}  		if ((locxp->e_xtype& XTYPE) != XABS) { 			if (bitoff) 				yyerror(
 literal|"Illegal relocation in field"
 argument|); 			switch(curlen){ 				case NBPW/
 literal|4
@@ -782,15 +836,17 @@ argument|){ 				dotp->e_xvalue += ty_nbyte[reloc_how]; 			} else { 				outrel(lo
 literal|1L
 argument|<< field_width)-
 literal|1
-argument|); 			bitfield |= field_value<< bitoff; 			bitoff += field_width; 		} 		if ( auxval = (val == CM)) shift; 		xp = explist; 	    } while (auxval); 	}
-comment|/*existed an expression  at all*/
+argument|); 			bitfield |= field_value<< bitoff; 			bitoff += field_width; 		} 		xp = explist; 		if (auxval = (val == CM)) 			shift; 	    } while (auxval); 	}
+comment|/* there existed an expression at all */
 argument|flushfield(curlen); 	if ( ( curlen == NBPW/
 literal|4
 argument|)&& bitoff) 		dotp->e_xvalue ++; 	break;
 comment|/*end of case IBYTE, IWORD, ILONG, IINT*/
 argument|case ISPACE:
 comment|/* .space<expr> */
-argument|shift; 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
+argument|shift; 	expr(locxp, val); 	if ((locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument|yyerror(
 literal|"Space size not absolute"
 argument|); 	space_value = locxp->e_xvalue;   ospace: 	flushfield(NBPW/
 literal|4
@@ -846,9 +902,13 @@ ifdef|#
 directive|ifdef
 name|UNIX
 comment|/* 	 *	.fill rep, size, value 	 *	repeat rep times: fill size bytes with (truncated) value 	 *	size must be between 1 and 8 	 */
-argument|case	IFILL: 	shift; 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
+argument|case	IFILL: 	shift; 	expr(locxp, val); 	if ( (locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument|yyerror(
 literal|"Fill repetition count not absolute"
-argument|); 	fill_rep = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
+argument|); 	fill_rep = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	if ( (locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument|yyerror(
 literal|"Fill size not absolute"
 argument|); 	fill_size = locxp->e_xvalue; 	if (fill_size<=
 literal|0
@@ -858,15 +918,17 @@ argument|) 		yyerror(
 literal|"Fill count not in in 1..8"
 argument|); 	shiftover(CM); 	expr(locxp, val); 	if (passno ==
 literal|2
-argument|&& locxp->e_xtype != XABS) 			yyerror(
+argument|&& (locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument|yyerror(
 literal|"Fill value not absolute"
 argument|); 	flushfield(NBPW/
 literal|4
 argument|); 	if (passno ==
 literal|1
-argument|) { 		locxp->e_xvalue += fill_rep * fill_size; 	} else { 		while(fill_rep-->
+argument|) { 		dotp->e_xvalue += fill_rep * fill_size; 	} else { 		while(fill_rep-->
 literal|0
-argument|) 			bwrite(&locxp->e_xvalue, fill_size, txtfil); 	} 	break;
+argument|) 			bwrite((char *)&locxp->e_xvalue, fill_size, txtfil); 	} 	break;
 endif|#
 directive|endif
 endif|UNIX
@@ -889,7 +951,7 @@ endif|UNIX
 ifdef|#
 directive|ifdef
 name|VMS
-argument|{ 			register int i; 			for (i=
+argument|{ 			reg int i; 			for (i=
 literal|0
 argument|; i< stringp->str_lg; i++){ 			  dotp->e_xvalue +=
 literal|1
@@ -938,7 +1000,9 @@ directive|endif
 endif|VMS
 argument|} 	break; 	    case IORG:
 comment|/* .org<expr> */
-argument|shift; 	expr(locxp, val);  	if (locxp->e_xtype==XABS) 		orgwarn++; 	else if ((locxp->e_xtype& ~XXTRN) != dotp->e_xtype) 		yyerror(
+argument|shift; 	expr(locxp, val);  	if ((locxp->e_xtype& XTYPE) == XABS)
+comment|/* tekmdp */
+argument|orgwarn++; 	else if ((locxp->e_xtype& ~XXTRN) != dotp->e_xtype) 		yyerror(
 literal|"Illegal expression to set origin"
 argument|); 	space_value = locxp->e_xvalue - dotp->e_xvalue; 	if (space_value<
 literal|0
@@ -956,7 +1020,7 @@ argument|; 	if (passno ==
 literal|2
 argument|)	goto errorfix; 	stpt = (struct symtab *)yylval;
 comment|/* 	 *	Make a pointer to the .stab slot. 	 *	There is a pointer in the way (stpt), and 	 *	tokptr points to the next token. 	 */
-argument|stabstart = tokptr; 	(char *)stabstart -= sizeof(struct symtab *); 	(char *)stabstart -= sizeof(toktype); 	shift; 	for (argcnt =
+argument|stabstart = tokptr; 	(char *)stabstart -= sizeof(struct symtab *); 	(char *)stabstart -= sizeof(bytetoktype); 	shift; 	for (argcnt =
 literal|0
 argument|; argcnt< NCPS; argcnt++){ 		expr(locxp, val); 		stpt->s_name[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
 else|#
@@ -970,7 +1034,7 @@ directive|endif
 endif|FLEXNAMES
 argument|tailstab: 	expr(locxp, val); 	if (! (locxp->e_xvalue& STABTYPS)){ 		yyerror(
 literal|"Invalid type in %s"
-argument|,stabname); 		goto errorfix; 	} 	stpt->s_ptype = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	stpt->s_other = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	stpt->s_desc = locxp->e_xvalue; 	shiftover(CM); 	exprisname =
+argument|, stabname); 		goto errorfix; 	} 	stpt->s_ptype = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	stpt->s_other = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	stpt->s_desc = locxp->e_xvalue; 	shiftover(CM); 	exprisname =
 literal|0
 argument|; 	expr(locxp, val); 	p = locxp->e_xname; 	if (p == NULL) {
 comment|/*absolute expr to begin with*/
@@ -980,7 +1044,7 @@ argument|stpt->s_dest = locxp->e_xname; 		stpt->s_index = p->s_index; 		stpt->s_
 comment|/* 		 *	We will assign a more accruate 		 *	guess of locxp's location when 		 *	we sort the symbol table 		 *	The final value of value is 		 *	given by stabfix() 		 */
 argument|stpt->s_tag = STABFLOATING; 	}
 comment|/* 	 *	tokptr now points at one token beyond 	 *	the current token stored in val and yylval, 	 *	which are the next tokens after the end of 	 *	this .stab directive.  This next token must 	 *	be either a SEMI or NL, so is of width just 	 *	one.  Therefore, to point to the next token 	 *	after the end of this stab, just back up one.. 	 */
-argument|buildskip(stabstart, (char *)tokptr - sizeof(toktype)); 	break;
+argument|buildskip(stabstart, (bytetoktype *)tokptr - sizeof(bytetoktype)); 	break;
 comment|/*end of the .stab*/
 argument|case ISTABDOT:	 	stabname =
 literal|".stabd"
@@ -994,7 +1058,7 @@ argument|){ 		expr(locxp, val); 		if (! (locxp->e_xvalue& STABTYPS)){ 			yyerror
 literal|"Invalid type in .stabd"
 argument|); 			goto errorfix; 		} 		stpt->s_ptype = locxp->e_xvalue; 		shiftover(CM); 		expr(locxp, val); 		stpt->s_other = locxp->e_xvalue; 		shiftover(CM); 		expr(locxp, val); 		stpt->s_desc = locxp->e_xvalue;
 comment|/* 		 * 		 *	Now, clobber everything but the 		 *	.stabd pseudo and the pointer 		 *	to its symbol table entry 		 *	tokptr points to the next token, 		 *	build the skip up to this 		 */
-argument|buildskip(stabstart, (toktype *)tokptr - sizeof(toktype)); 	}
+argument|buildskip(stabstart, (bytetoktype *)tokptr - sizeof(bytetoktype)); 	}
 comment|/* 	 *	pass 1:	Assign a good guess for its position 	 *		(ensures they are sorted into right place)/ 	 *	pass 2:	Fix the actual value 	 */
 argument|stpt->s_value = dotp->e_xvalue; 	stpt->s_index = dotp - usedot; 	stpt->s_tag = STABFLOATING;
 comment|/*although it has no effect in pass 2*/
@@ -1004,7 +1068,7 @@ argument|; goto shortstab;     case ISTABSTR: 	stabname =
 literal|".stabs"
 argument|;    shortstab: 	auxval = val; 	if (passno ==
 literal|2
-argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 	(char *)stabstart -= sizeof(struct symtab *); 	(char *)stabstart -= sizeof(toktype); 	shift; 	if (auxval == ISTABSTR){ 		stringp = (struct strdesc *)yylval; 		shiftover(STRING);
+argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 	(bytetoktype *)stabstart -= sizeof(struct symtab *); 	(bytetoktype *)stabstart -= sizeof(bytetoktype); 	shift; 	if (auxval == ISTABSTR){ 		stringp = (struct strdesc *)yylval; 		shiftover(STRING);
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1039,11 +1103,13 @@ argument|goto tailstab; 	break;     case ICOMM:
 comment|/* .comm<name> ,<expr> */
 argument|case ILCOMM:
 comment|/* .lcomm<name> ,<expr> */
-argument|auxval = val; 	shift; 	np = (struct symtab *)yylval; 	shiftover(NAME); 	shiftover(CM); 	expr(locxp, val);  	if (locxp->e_xtype != XABS) 		yyerror(
+argument|auxval = val; 	shift; 	np = (struct symtab *)yylval; 	shiftover(NAME); 	shiftover(CM); 	expr(locxp, val);  	if ( (locxp->e_xtype& XTYPE) != XABS)
+comment|/* tekmdp */
+argument|yyerror(
 literal|"comm size not absolute"
-argument|); 	if (passno==
+argument|); 	if (passno ==
 literal|1
-argument|&& (np->s_type&XTYPE)!=XUNDEF)
+argument|&& (np->s_type&XTYPE) != XUNDEF)
 ifdef|#
 directive|ifdef
 name|FLEXNAMES
@@ -1065,7 +1131,7 @@ argument|) { 		np->s_value = locxp->e_xvalue; 		if (auxval == ICOMM) 			np->s_ty
 comment|/* .align<expr> */
 argument|stpt = (struct symtab *)yylval; 	shift; 	expr(locxp, val); 	jalign(locxp, stpt); 	break;     case INST0:
 comment|/* instructions w/o arguments*/
-argument|insout(yylval, (struct arg *)
+argument|insout(yyopcode, (struct arg *)
 literal|0
 argument|,
 literal|0
@@ -1073,7 +1139,7 @@ argument|); 	shift;	 	break;     case INSTn:
 comment|/* instructions with arguments*/
 argument|case IJXXX:
 comment|/* UNIX style jump instructions */
-argument|auxval = val; 	seg_type = yylval;
+argument|auxval = val;
 comment|/* 	 *	Code to process an argument list 	 */
 argument|ap = arglist; 	xp = explist;	  	shift;
 comment|/* bring in the first token for the arg list*/
@@ -1114,9 +1180,7 @@ argument|}
 comment|/*end of processing an argument*/
 argument|if (sawmul){
 comment|/* 			 * Make a concession for *(%r) 			 * meaning *0(%r)  			 */
-argument|if (ap->a_atype == ABASE) { 				ap->a_atype = ADISP; 				xp->e_xtype = XABS; 				xp->e_xvalue =
-literal|0
-argument|; 				xp->e_xloc =
+argument|if (ap->a_atype == ABASE) { 				ap->a_atype = ADISP; 				xp->e_xtype = XABS; 				xp->e_number = Znumber; 				xp->e_number.num_tag = TYPL; 				xp->e_xloc =
 literal|0
 argument|; 				ap->a_xp = xp++; 			} 			ap->a_atype |= ASTAR; 			sawmul =
 literal|0
@@ -1130,48 +1194,25 @@ argument|if (argcnt>
 literal|6
 argument|){ 		yyerror(
 literal|"More than 6 arguments"
-argument|); 		goto errorfix; 	}  	insout(seg_type, arglist, 		auxval == INSTn ? argcnt : - argcnt); 	break;     case IFLOAT:	curlen =
-literal|4
-argument|;	goto floatlist;    case IQUAD:    case IDOUBLE:  	curlen =
-literal|8
-argument|;       floatlist:
-comment|/* 	 *	eat a list of floating point numbers 	 */
-argument|shift; 	if (val == FLTNUM){
-comment|/* KLS MOD */
-argument|float flocal; 		do{ 			if (val == CM) shift; 			if (val != FLTNUM) { 			  ERROR(
+argument|); 		goto errorfix; 	}  	insout(yyopcode, arglist, 		auxval == INSTn ? argcnt : - argcnt); 	break;     case IQUAD:		toconv = TYPQ;	goto bignumlist;    case IOCTA:		toconv = TYPO;	goto bignumlist;     case IFFLOAT:	toconv = TYPF;	goto bignumlist;    case IDFLOAT:	toconv = TYPD;	goto bignumlist;    case IGFLOAT:	toconv = TYPG;	goto bignumlist;    case IHFLOAT:	toconv = TYPH;	goto bignumlist;    bignumlist:
+comment|/* 	 *	eat a list of non 32 bit numbers. 	 *	IQUAD and IOCTA can, possibly, return 	 *	INT's, if the numbers are "small". 	 * 	 *	The value of the numbers is coming back 	 *	as an expression, NOT in yybignum. 	 */
+argument|shift;
+comment|/* over the opener */
+argument|if ((val == BIGNUM) || (val == INT)){ 		do{ 			if ((val != BIGNUM)&& (val != INT)){ 				ERROR(ty_float[toconv] 				   ?
 literal|"floating number expected"
-argument|); 			} 			dotp->e_xvalue += curlen;
-ifdef|#
-directive|ifdef
-name|UNIX
-argument|if (passno ==
+argument|:
+literal|"integer number expected"
+argument|); 			} 			dotp->e_xvalue += ty_nbyte[toconv]; 			if (passno ==
 literal|2
-argument|) { 			  if(curlen ==
-literal|8
-argument|) 			   bwrite((char *)&(((union Double *)yylval)->dvalue), 				curlen, txtfil); 			  else  { 			   flocal = ((union Double *)yylval)->dvalue; 			   bwrite((char *)&flocal, curlen, txtfil); 			  } 			}
-endif|#
-directive|endif
-endif|UNIX
-ifdef|#
-directive|ifdef
-name|VMS
-argument|if (passno ==
-literal|2
-argument|) { 			   puchar(vms_obj_ptr,-
-literal|4
-argument|); 			   pulong(vms_obj_ptr, 			    ((struct exp *)yylval) 				->doub_MSW); 			   if (curlen==
-literal|8
-argument|) { 			    puchar(vms_obj_ptr,-
-literal|4
-argument|); 			    pulong(vms_obj_ptr, 			    ((struct exp *)yylval) 				->doub_LSW); 			   } 			   if((vms_obj_ptr-sobuf)>
-literal|400
-argument|) { 			    write(objfil,sobuf,vms_obj_ptr-sobuf); 			    vms_obj_ptr = sobuf +
-literal|1
-argument|; 			   } 			}
-endif|#
-directive|endif
-endif|VMS
-argument|shift; 			xp = explist; 		} while (val == CM); 	} 	break;     }
+argument|){ 				bignumwrite( 					((struct exp *)yylval)->e_number, 					toconv); 			} 			xp = explist; 			shift;
+comment|/* over this number */
+argument|if (auxval = (val == CM)) 				shift;
+comment|/* over the comma */
+argument|} while (auxval);
+comment|/* as long as there are commas */
+argument|} 	break;
+comment|/* end of the case for initialized big numbers */
+argument|}
 comment|/*end of the switch for looking at each reserved word*/
 argument|continue;     errorfix:
 comment|/* 	 *	got here by either requesting to skip to the 	 *	end of this statement, or by erroring out and 	 *	wanting to apply panic mode recovery 	 */
@@ -1180,21 +1221,21 @@ comment|/*end of the loop to read the entire file, line by line*/
 argument|}
 comment|/*end of yyparse*/
 comment|/*  *	Process a register declaration of the form  *	%<expr>  *  *	Note:  *		The scanner has already processed funny registers of the form  *	%dd[+-]*, where dd is a decimal number in the range 00 to 15 (optional  *	preceding zero digit).  If there was any space between the % and  *	the digit, the scanner wouldn't have recognized it, so we  *	hack it out here.  */
-argument|int funnyreg(val, regnoback)
+argument|inttoktype funnyreg(val, regnoback)
 comment|/*what the read head will sit on*/
-argument|int	val;
+argument|inttoktype	val;
 comment|/*what the read head is sitting on*/
 argument|int	*regnoback;
 comment|/*call by return*/
-argument|{ 	register	struct	exp *locxp; 			struct	exp *loc1xp; 			struct	exp **ptrloc1xp =& loc1xp;  	expr(locxp, val);
+argument|{ 	reg	struct	exp *locxp; 		struct	exp *loc1xp; 		struct	exp **ptrloc1xp =& loc1xp;  	expr(locxp, val);
 comment|/*and leave the current read head with value*/
 argument|if ( (passno ==
 literal|2
-argument|)&& 	    (   locxp->e_xtype& XTYPE != XABS 	     || locxp->e_xvalue<
+argument|)&& 	    (   (locxp->e_xtype& XTYPE) != XABS 	     || (locxp->e_xvalue<
 literal|0
-argument||| locxp->e_xvalue>=
+argument|) 	     || (locxp->e_xvalue>=
 literal|16
-argument|) 	  ){ 		yyerror(
+argument|) 	    ) 	  ){ 		yyerror(
 literal|"Illegal register"
 argument|); 		return(
 literal|0
@@ -1207,13 +1248,19 @@ name|sink
 value|stdout
 argument|if (anyerrs ==
 literal|0
+argument|&& anywarnings ==
+literal|0
 argument|&& ! silent)  		fprintf(sink,
 literal|"Assembler:\n"
-argument|); 	anyerrs++; 	if (silent) return; 	 	fprintf(sink,
+argument|); 	anyerrs++; 	if (silent) 		return; 	fprintf(sink,
 literal|"\"%s\", line %d: "
 argument|, dotsname, lineno); 	fprintf(sink, s, a1, a2,a3,a4,a5); 	fprintf(sink,
 literal|"\n"
-argument|); }
+argument|);
+undef|#
+directive|undef
+name|sink
+argument|}
 comment|/*VARARGS1*/
 argument|yywarning(s, a1, a2,a3,a4,a5) 	char	*s; {
 define|#
@@ -1222,14 +1269,20 @@ name|sink
 value|stdout
 argument|if (anyerrs ==
 literal|0
+argument|&& anywarnings ==
+literal|0
 argument|&& ! silent)  		fprintf(sink,
 literal|"Assembler:\n"
-argument|); 	if (silent) return; 	 	fprintf(sink,
+argument|); 	anywarnings++; 	if (silent) 		return; 	fprintf(sink,
 literal|"\"%s\", line %d: WARNING: "
 argument|, dotsname, lineno); 	fprintf(sink, s, a1, a2,a3,a4,a5); 	fprintf(sink,
 literal|"\n"
-argument|); }
-end_function
+argument|);
+undef|#
+directive|undef
+name|sink
+argument|}
+end_block
 
 end_unit
 

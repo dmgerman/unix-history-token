@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1980 Regents of the University of California */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assyms.c 4.6 %G%"
+literal|"@(#)assyms.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -152,8 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|instab
+name|Iptr
 modifier|*
 name|itab
 index|[
@@ -208,16 +219,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of label entries */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hshused
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of hash slots used */
 end_comment
 
 begin_comment
@@ -302,9 +303,7 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|struct
-name|instab
-modifier|*
+name|Iptr
 name|ip
 decl_stmt|;
 specifier|register
@@ -322,6 +321,34 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NINST
+condition|;
+name|i
+operator|++
+control|)
+name|itab
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|Iptr
+operator|*
+operator|)
+name|BADPOINT
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FLEXNAMES
@@ -330,9 +357,7 @@ control|(
 name|ip
 operator|=
 operator|(
-expr|struct
-name|instab
-operator|*
+name|Iptr
 operator|)
 name|instab
 init|;
@@ -354,9 +379,7 @@ control|(
 name|ip
 operator|=
 operator|(
-expr|struct
-name|instab
-operator|*
+name|Iptr
 operator|)
 name|instab
 init|;
@@ -451,13 +474,82 @@ operator|)
 condition|)
 continue|continue;
 comment|/* was pseudo-op */
+if|if
+condition|(
 name|itab
 index|[
 name|ip
 operator|->
-name|i_opcode
-operator|&
-literal|0xFF
+name|i_eopcode
+index|]
+operator|==
+operator|(
+name|Iptr
+operator|*
+operator|)
+name|BADPOINT
+condition|)
+block|{
+name|itab
+index|[
+name|ip
+operator|->
+name|i_eopcode
+index|]
+operator|=
+operator|(
+name|Iptr
+operator|*
+operator|)
+name|ClearCalloc
+argument_list|(
+literal|256
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Iptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|256
+condition|;
+name|i
+operator|++
+control|)
+name|itab
+index|[
+name|ip
+operator|->
+name|i_eopcode
+index|]
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|Iptr
+operator|)
+name|BADPOINT
+expr_stmt|;
+block|}
+name|itab
+index|[
+name|ip
+operator|->
+name|i_eopcode
+index|]
+index|[
+name|ip
+operator|->
+name|i_popcode
 index|]
 operator|=
 name|ip
@@ -771,12 +863,13 @@ name|char
 modifier|*
 name|newstuff
 decl_stmt|;
+name|char
+modifier|*
+name|sbrk
+parameter_list|()
+function_decl|;
 name|newstuff
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|sbrk
 argument_list|(
 name|number
@@ -839,6 +932,16 @@ operator|*
 name|size
 decl_stmt|;
 comment|/* r10 */
+ifdef|#
+directive|ifdef
+name|lint
+name|length
+operator|=
+name|length
+expr_stmt|;
+endif|#
+directive|endif
+endif|length
 name|newstuff
 operator|=
 name|Calloc
@@ -2507,7 +2610,7 @@ expr_stmt|;
 name|int
 name|reloc_how
 decl_stmt|;
-comment|/* TYPB..TYPD + (possibly)RELOC_PCREL */
+comment|/* TYPB..TYPH + (possibly)RELOC_PCREL */
 block|{
 name|struct
 name|relocation_info
@@ -2582,7 +2685,7 @@ index|]
 condition|)
 name|yyerror
 argument_list|(
-literal|"Illegal Relocation of float, double or quad."
+literal|"Illegal Relocation of floating or large int number."
 argument_list|)
 expr_stmt|;
 name|reloc
@@ -2804,6 +2907,40 @@ name|dotp
 operator|->
 name|e_xvalue
 expr_stmt|;
+switch|switch
+condition|(
+name|reloc_how
+condition|)
+block|{
+case|case
+name|TYPO
+case|:
+case|case
+name|TYPQ
+case|:
+case|case
+name|TYPF
+case|:
+case|case
+name|TYPD
+case|:
+case|case
+name|TYPG
+case|:
+case|case
+name|TYPH
+case|:
+name|bignumwrite
+argument_list|(
+name|xp
+operator|->
+name|e_number
+argument_list|,
+name|reloc_how
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|bwrite
 argument_list|(
 operator|(
@@ -2825,6 +2962,8 @@ argument_list|,
 name|txtfil
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/*  *	Flush out all of the relocation information.  *	Note that the individual lists of buffers are in  *	reverse order, so we must reverse them  */
 name|off_t
@@ -3247,6 +3386,10 @@ operator|)
 expr_stmt|;
 name|bwrite
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sp
 operator|->
@@ -3300,6 +3443,10 @@ literal|0
 expr_stmt|;
 name|bwrite
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|stroff
 argument_list|,
