@@ -922,10 +922,12 @@ name|ncv_product
 modifier|*
 name|pp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|vendorstr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|prodstr

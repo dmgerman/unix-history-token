@@ -1261,7 +1261,7 @@ argument|vendor_str
 argument_list|,
 argument|VENDOR_STR
 argument_list|,
-argument|char *
+argument|const char *
 argument_list|)
 end_macro
 
@@ -1272,7 +1272,7 @@ argument|product_str
 argument_list|,
 argument|PRODUCT_STR
 argument_list|,
-argument|char *
+argument|const char *
 argument_list|)
 end_macro
 
@@ -1283,7 +1283,7 @@ argument|cis3_str
 argument_list|,
 argument|CIS3_STR
 argument_list|,
-argument|char *
+argument|const char *
 argument_list|)
 end_macro
 
@@ -1294,6 +1294,7 @@ name|cis4_str
 argument_list|,
 name|CIS4_STR
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
