@@ -2504,6 +2504,12 @@ name|sa_handler
 operator|=
 name|async_handler
 expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
 name|sigaction
 argument_list|(
 name|SIGIO
