@@ -2478,8 +2478,6 @@ operator|->
 name|cm_sc
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 name|debug_called
@@ -2537,11 +2535,6 @@ name|cm
 expr_stmt|;
 comment|/* XXX 64-bit physical address issue */
 comment|/* put the FIB on the outbound queue */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|aac_enqueue_fib
