@@ -59,6 +59,12 @@ condition|(
 name|pthread
 operator|==
 name|NULL
+operator|||
+name|pthread
+operator|->
+name|magic
+operator|!=
+name|PTHREAD_MAGIC
 condition|)
 block|{
 comment|/* Return an invalid argument error: */

@@ -51,6 +51,38 @@ decl_stmt|;
 name|pthread_t
 name|pthread1
 decl_stmt|;
+comment|/* Check if the caller has specified an invalid thread: */
+if|if
+condition|(
+name|pthread
+operator|==
+name|NULL
+operator|||
+name|pthread
+operator|->
+name|magic
+operator|!=
+name|PTHREAD_MAGIC
+condition|)
+comment|/* Invalid thread: */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* Check if the caller has specified itself: */
+if|if
+condition|(
+name|pthread
+operator|==
+name|_thread_run
+condition|)
+comment|/* Avoid a deadlock condition: */
+return|return
+operator|(
+name|EDEADLK
+operator|)
+return|;
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
