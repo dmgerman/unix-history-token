@@ -1446,6 +1446,11 @@ argument_list|,
 name|oldmode
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX 	 * NFS doesn't support chflags; ignore errors unless there's reason 	 * to believe we're losing bits.  (Note, this still won't be right 	 * if the server supports flags and we were trying to *remove* flags 	 * on a file that we copied, i.e., that we didn't create.) 	 */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|fchflags
@@ -1456,6 +1461,18 @@ name|sbp
 operator|->
 name|st_flags
 argument_list|)
+condition|)
+if|if
+condition|(
+name|errno
+operator|!=
+name|EOPNOTSUPP
+operator|||
+name|sbp
+operator|->
+name|st_flags
+operator|!=
+literal|0
 condition|)
 name|warn
 argument_list|(
