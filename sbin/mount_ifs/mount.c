@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.24 1998/03/27 10:52:13 peter Exp $"
+literal|"$Id: mount.c,v 1.25 1998/04/08 18:31:18 wosch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2611,7 +2611,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%swrites: sync %d async %d)"
+literal|"%swrites: sync %d async %d"
 argument_list|,
 operator|!
 name|f
