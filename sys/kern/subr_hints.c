@@ -1467,7 +1467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * err = resource_find_at(&anchor,&name,&unit, resname, value)  * Iteratively fetch a list of devices wired "at" something  * res and value are restrictions.  eg: "at", "scbus0".  * For practical purposes, res = required, value = optional.  * *name and *unit are set.  * set *anchor to zero before starting.  */
+comment|/*  * err = resource_find_match(&anchor,&name,&unit, resname, value)  * Iteratively fetch a list of devices wired "at" something  * res and value are restrictions.  eg: "at", "scbus0".  * For practical purposes, res = required, value = optional.  * *name and *unit are set.  * set *anchor to zero before starting.  */
 end_comment
 
 begin_function
