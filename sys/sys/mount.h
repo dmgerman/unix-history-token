@@ -1568,13 +1568,18 @@ operator|,
 name|int
 name|cmd
 operator|,
+expr|struct
+name|vnode
+operator|*
+name|filename_vp
+operator|,
+name|int
+name|namespace
+operator|,
 specifier|const
 name|char
 operator|*
 name|attrname
-operator|,
-name|caddr_t
-name|arg
 operator|,
 expr|struct
 name|proc
@@ -1761,14 +1766,16 @@ name|MP
 parameter_list|,
 name|C
 parameter_list|,
-name|N
+name|FN
 parameter_list|,
-name|A
+name|NS
+parameter_list|,
+name|N
 parameter_list|,
 name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, N, A, P)
+value|(*(MP)->mnt_op->vfs_extattrctl)(MP, C, FN, NS, N, P)
 end_define
 
 begin_include
@@ -2606,13 +2613,18 @@ operator|,
 name|int
 name|cmd
 operator|,
+expr|struct
+name|vnode
+operator|*
+name|filename_vp
+operator|,
+name|int
+name|namespace
+operator|,
 specifier|const
 name|char
 operator|*
 name|attrname
-operator|,
-name|caddr_t
-name|arg
 operator|,
 expr|struct
 name|proc

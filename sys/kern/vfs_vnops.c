@@ -3822,6 +3822,9 @@ parameter_list|,
 name|int
 name|ioflg
 parameter_list|,
+name|int
+name|namespace
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3937,6 +3940,8 @@ name|VOP_GETEXTATTR
 argument_list|(
 name|vp
 argument_list|,
+name|namespace
+argument_list|,
 name|attrname
 argument_list|,
 operator|&
@@ -4007,6 +4012,9 @@ name|vp
 parameter_list|,
 name|int
 name|ioflg
+parameter_list|,
+name|int
+name|namespace
 parameter_list|,
 specifier|const
 name|char
@@ -4150,6 +4158,8 @@ name|VOP_SETEXTATTR
 argument_list|(
 name|vp
 argument_list|,
+name|namespace
+argument_list|,
 name|attrname
 argument_list|,
 operator|&
@@ -4205,6 +4215,9 @@ name|vp
 parameter_list|,
 name|int
 name|ioflg
+parameter_list|,
+name|int
+name|namespace
 parameter_list|,
 specifier|const
 name|char
@@ -4277,6 +4290,8 @@ operator|=
 name|VOP_SETEXTATTR
 argument_list|(
 name|vp
+argument_list|,
+name|namespace
 argument_list|,
 name|attrname
 argument_list|,

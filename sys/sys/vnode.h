@@ -3039,6 +3039,9 @@ operator|,
 name|int
 name|ioflg
 operator|,
+name|int
+name|namespace
+operator|,
 specifier|const
 name|char
 operator|*
@@ -3075,6 +3078,9 @@ operator|,
 name|int
 name|ioflg
 operator|,
+name|int
+name|namespace
+operator|,
 specifier|const
 name|char
 operator|*
@@ -3107,6 +3113,9 @@ name|vp
 parameter_list|,
 name|int
 name|ioflg
+parameter_list|,
+name|int
+name|namespace
 parameter_list|,
 specifier|const
 name|char
