@@ -530,6 +530,10 @@ name|scsi_sense
 name|sense_cmd
 decl_stmt|;
 name|u_int8_t
+name|sg_count
+decl_stmt|;
+comment|/* How full ahc_dma_seg is */
+name|u_int8_t
 name|position
 decl_stmt|;
 comment|/* Position in card's scbarray */
