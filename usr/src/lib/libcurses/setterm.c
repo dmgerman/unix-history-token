@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.10 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,18 @@ name|VS
 block|,
 operator|&
 name|VE
+block|,
+operator|&
+name|al
+block|,
+operator|&
+name|dl
+block|,
+operator|&
+name|sf
+block|,
+operator|&
+name|sr
 block|,
 operator|&
 name|AL_PARM
@@ -764,6 +776,28 @@ argument_list|,
 name|__ttytype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|AL
+operator|&&
+operator|!
+name|al
+operator|)
+operator|||
+operator|(
+operator|!
+name|DL
+operator|&&
+operator|!
+name|dl
+operator|)
+condition|)
+name|__noqch
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|unknown
@@ -903,7 +937,7 @@ condition|)
 do|;
 name|namp
 operator|=
-literal|"albcbtcdceclcmcrcsdcdldmdoedeik0k1k2k3k4k5k6k7k8k9hoicimipkdkekhklkrkskullmandnlpcrcscsesfsosrtatetiucueupusvbvsveALDLUPDOLERI"
+literal|"ALbcbtcdceclcmcrcsdcDLdmdoedeik0k1k2k3k4k5k6k7k8k9hoicimipkdkekhklkrkskullmandnlpcrcscseSFsoSRtatetiucueupusvbvsvealdlsfsrALDLUPDOLERI"
 expr_stmt|;
 name|sp
 operator|=

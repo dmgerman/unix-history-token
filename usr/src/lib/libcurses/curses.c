@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	5.8 (Berkeley) %G%"
+literal|"@(#)curses.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* If stty indicates RAW mode. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__noqch
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  					 * If terminal doesn't have  					 * insert/delete line capabilities  					 * for quick change on refresh. 					 */
 end_comment
 
 begin_comment
@@ -394,6 +406,18 @@ name|VS
 decl_stmt|,
 modifier|*
 name|VE
+decl_stmt|,
+modifier|*
+name|al
+decl_stmt|,
+modifier|*
+name|dl
+decl_stmt|,
+modifier|*
+name|sf
+decl_stmt|,
+modifier|*
+name|sr
 decl_stmt|,
 modifier|*
 name|AL_PARM
