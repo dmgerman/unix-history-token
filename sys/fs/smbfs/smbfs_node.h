@@ -78,6 +78,28 @@ begin_comment
 comment|/* node holds parent from recycling */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFLUSHWIRE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* pending flush request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOPEN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* file is open */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|smbfs_fctx
@@ -134,9 +156,6 @@ name|n_ino
 decl_stmt|;
 name|int
 name|n_dosattr
-decl_stmt|;
-name|int
-name|n_opencount
 decl_stmt|;
 name|u_int16_t
 name|n_fid

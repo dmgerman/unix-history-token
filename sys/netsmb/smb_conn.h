@@ -567,6 +567,8 @@ name|char
 name|srvname
 index|[
 name|SMB_MAXSRVNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
@@ -1022,6 +1024,14 @@ name|int
 name|vc_txmax
 decl_stmt|;
 comment|/* max tx/rx packet size */
+name|int
+name|vc_rxmax
+decl_stmt|;
+comment|/* max readx data size */
+name|int
+name|vc_wxmax
+decl_stmt|;
+comment|/* max writex data size */
 name|struct
 name|smbiod
 modifier|*
@@ -1031,6 +1041,19 @@ name|struct
 name|smb_slock
 name|vc_stlock
 decl_stmt|;
+name|u_int32_t
+name|vc_seqno
+decl_stmt|;
+comment|/* my next sequence number */
+name|u_int8_t
+modifier|*
+name|vc_mackey
+decl_stmt|;
+comment|/* MAC key */
+name|int
+name|vc_mackeylen
+decl_stmt|;
+comment|/* length of MAC key */
 block|}
 struct|;
 end_struct
@@ -1047,6 +1070,16 @@ define|#
 directive|define
 name|vc_flags
 value|obj.co_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMB_UNICODE_STRINGS
+parameter_list|(
+name|vcp
+parameter_list|)
+value|((vcp)->vc_hflags2& SMB_FLAGS2_UNICODE)
 end_define
 
 begin_comment

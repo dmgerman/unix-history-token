@@ -37,7 +37,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): "format,	\ 					    __FUNCTION__ , __LINE__ ,## args)
+value|printf("%s(%d): "format,	\ 					    __func__ , __LINE__ ,## args)
 end_define
 
 begin_else
@@ -157,14 +157,25 @@ begin_define
 define|#
 directive|define
 name|NB_SNDQ
-value|(10 * 1024)
+value|(64 * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NB_RCVQ
-value|(20 * 1024)
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/*  * TCP slowstart presents a problem in conjunction with large  * reads.  To ensure a steady stream of ACKs while reading using  * large transaction sizes, we call soreceive() with a smaller  * buffer size.  See nbssn_recv().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NB_SORECEIVE_CHUNK
+value|(8 * 1024)
 end_define
 
 begin_decl_stmt

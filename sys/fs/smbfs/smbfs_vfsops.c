@@ -199,7 +199,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"SMB/CIFS file system"
+literal|"SMB/CIFS filesystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2144,7 +2144,7 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-comment|/* file system id */
+comment|/* filesystem id */
 name|sbp
 operator|->
 name|f_owner

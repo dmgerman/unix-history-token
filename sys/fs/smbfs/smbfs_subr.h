@@ -44,7 +44,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: "format, __FUNCTION__ ,## args)
+value|printf("%s: "format, __func__ ,## args)
 end_define
 
 begin_ifdef
@@ -63,7 +63,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: "format, __FUNCTION__ ,## args)
+value|printf("%s: "format, __func__ ,## args)
 end_define
 
 begin_else
@@ -500,6 +500,36 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|smbfs_smb_query_info
+parameter_list|(
+name|struct
+name|smbnode
+modifier|*
+name|np
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|struct
+name|smbfattr
+modifier|*
+name|fap
+parameter_list|,
+name|struct
+name|smb_cred
+modifier|*
+name|scred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|smbfs_smb_setpattr
 parameter_list|(
 name|struct
@@ -713,6 +743,23 @@ end_function_decl
 begin_function_decl
 name|int
 name|smbfs_smb_delete
+parameter_list|(
+name|struct
+name|smbnode
+modifier|*
+name|np
+parameter_list|,
+name|struct
+name|smb_cred
+modifier|*
+name|scred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|smbfs_smb_flush
 parameter_list|(
 name|struct
 name|smbnode
