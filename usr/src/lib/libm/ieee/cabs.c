@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
+literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.7 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
