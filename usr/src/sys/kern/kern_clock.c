@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.15	kern_clock.c	*/
+comment|/*	%H%	3.16	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -1064,6 +1064,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|u
 operator|.
 name|u_vm
@@ -1075,6 +1076,9 @@ operator|.
 name|u_vm
 operator|.
 name|vm_stime
+operator|)
+operator|/
+name|HZ
 operator|>
 name|u
 operator|.
