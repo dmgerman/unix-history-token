@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_sl.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_sl.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -179,7 +179,7 @@ file|"if_slvar.h"
 end_include
 
 begin_comment
-comment|/*  * SLMTU is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, that there be enough extra room for the ifnet pointer that  * IP input requires and, if we get a compressed packet, there's  * enough extra room to expand the header into a max length tcp/ip  * header (128 bytes).  So, SLMTU can be at most  * 	MCLBYTES - sizeof(struct ifnet *) - 128   *  * To insure we get good interactive response, the MTU wants to be  * the smallest size that amortizes the header cost.  (Remember  * that even with type-of-service queuing, we have to wait for any  * in-progress packet to finish.  I.e., we wait, on the average,  * 1/2 * mtu / cps, where cps is the line speed in characters per  * second.  E.g., 533ms wait for a 1024 byte MTU on a 9600 baud  * line.  The average compressed header size is 6-8 bytes so any  * MTU> 90 bytes will give us 90% of the line bandwidth.  A 100ms  * wait is tolerable (500ms is not), so want an MTU around 256.  * (Since TCP will send 212 byte segments (to allow for 40 byte  * headers), the typical packet size on the wire will be around 220  * bytes).  In 4.3tahoe+ systems, we can set an MTU in a route  * so we do that& leave the interface MTU relatively high (so we  * don't IP fragment when acting as a gateway to someone using a  * stupid MTU).  */
+comment|/*  * SLMTU is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, that there be enough extra room for the ifnet pointer that  * IP input requires and, if we get a compressed packet, there's  * enough extra room to expand the header into a max length tcp/ip  * header (128 bytes).  So, SLMTU can be at most  * 	MCLBYTES - 128   *  * To insure we get good interactive response, the MTU wants to be  * the smallest size that amortizes the header cost.  (Remember  * that even with type-of-service queuing, we have to wait for any  * in-progress packet to finish.  I.e., we wait, on the average,  * 1/2 * mtu / cps, where cps is the line speed in characters per  * second.  E.g., 533ms wait for a 1024 byte MTU on a 9600 baud  * line.  The average compressed header size is 6-8 bytes so any  * MTU> 90 bytes will give us 90% of the line bandwidth.  A 100ms  * wait is tolerable (500ms is not), so want an MTU around 256.  * (Since TCP will send 212 byte segments (to allow for 40 byte  * headers), the typical packet size on the wire will be around 220  * bytes).  In 4.3tahoe+ systems, we can set an MTU in a route  * so we do that& leave the interface MTU relatively high (so we  * don't IP fragment when acting as a gateway to someone using a  * stupid MTU).  */
 end_comment
 
 begin_define
@@ -193,7 +193,14 @@ begin_define
 define|#
 directive|define
 name|BUFOFFSET
-value|(128+sizeof(struct ifnet **))
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLBUFSIZE
+value|(SLMTU + BUFOFFSET)
 end_define
 
 begin_define
@@ -267,7 +274,7 @@ comment|/* count of escapes */
 end_comment
 
 begin_comment
-comment|/*  * The following disgusting hack gets around the problem that IP TOS  * can't be set in BSD/Sun OS yet.  We want to put "interactive"  * traffic on a high priority queue.  To decide if traffic is  * interactive, we check that a) it is TCP and b) one of it's ports  * if telnet, rlogin or ftp control.  */
+comment|/*  * The following disgusting hack gets around the problem that IP TOS  * can't be set yet.  We want to put "interactive" traffic on a high  * priority queue.  To decide if traffic is interactive, we check that  * a) it is TCP and b) one of its ports is telnet, rlogin or ftp control.  */
 end_comment
 
 begin_decl_stmt
@@ -550,11 +557,7 @@ operator|*
 operator|)
 name|p
 operator|+
-operator|(
-name|BUFOFFSET
-operator|+
-name|SLMTU
-operator|)
+name|SLBUFSIZE
 expr_stmt|;
 else|else
 block|{
@@ -695,7 +698,7 @@ name|SLIPDISC
 condition|)
 return|return
 operator|(
-name|EBUSY
+literal|0
 operator|)
 return|;
 for|for
@@ -864,22 +867,16 @@ name|NULL
 expr_stmt|;
 name|MCLFREE
 argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-operator|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|sc
 operator|->
 name|sc_ep
 operator|-
-operator|(
-name|SLMTU
-operator|+
-name|BUFOFFSET
-operator|)
-operator|)
+name|SLBUFSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1068,22 +1065,24 @@ begin_comment
 comment|/*  * Queue a packet.  Start transmission if not active.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|sloutput
 argument_list|(
-name|ifp
+argument|ifp
 argument_list|,
-name|m
+argument|m
 argument_list|,
-name|dst
+argument|dst
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -1109,6 +1108,14 @@ name|struct
 name|sl_softc
 modifier|*
 name|sc
+init|=
+operator|&
+name|sl_softc
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
 decl_stmt|;
 specifier|register
 name|struct
@@ -1139,8 +1146,10 @@ name|printf
 argument_list|(
 literal|"sl%d: af%d not supported\n"
 argument_list|,
-name|ifp
+name|sc
 operator|->
+name|sc_if
+operator|.
 name|if_unit
 argument_list|,
 name|dst
@@ -1159,16 +1168,6 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-name|sc
-operator|=
-operator|&
-name|sl_softc
-index|[
-name|ifp
-operator|->
-name|if_unit
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1219,8 +1218,10 @@ block|}
 name|ifq
 operator|=
 operator|&
-name|ifp
+name|sc
 operator|->
+name|sc_if
+operator|.
 name|if_snd
 expr_stmt|;
 if|if
@@ -1407,12 +1408,6 @@ name|c_cc
 operator|==
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|slstart
 argument_list|(
 name|sc
@@ -1420,8 +1415,6 @@ operator|->
 name|sc_ttyp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
 name|splx
 argument_list|(
 name|s
@@ -1919,11 +1912,6 @@ name|len
 decl_stmt|;
 block|{
 specifier|register
-name|u_char
-modifier|*
-name|cp
-decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -1949,13 +1937,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * If we have more than MLEN bytes, it's cheaper to 	 * queue the cluster we just filled& allocate a new one 	 * for the input buffer.  Otherwise, fill the mbuf we 	 * allocated above.  Note that code in the input routine 	 * guarantees that packet will fit in a cluster. 	 */
-name|cp
-operator|=
-name|sc
-operator|->
-name|sc_buf
-expr_stmt|;
+comment|/* 	 * If we have more than MHLEN bytes, it's cheaper to 	 * queue the cluster we just filled& allocate a new one 	 * for the input buffer.  Otherwise, fill the mbuf we 	 * allocated above.  Note that code in the input routine 	 * guarantees that packet will fit in a cluster. 	 */
 if|if
 condition|(
 name|len
@@ -1983,8 +1965,11 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* we couldn't get a cluster - if memory's this 			 * low, it's time to start dropping packets. */
-name|m_freem
+comment|/* 			 * we couldn't get a cluster - if memory's this 			 * low, it's time to start dropping packets. 			 */
+operator|(
+name|void
+operator|)
+name|m_free
 argument_list|(
 name|m
 argument_list|)
@@ -2007,11 +1992,7 @@ name|u_char
 operator|*
 argument_list|)
 operator|+
-operator|(
-name|BUFOFFSET
-operator|+
-name|SLMTU
-operator|)
+name|SLBUFSIZE
 expr_stmt|;
 name|m
 operator|->
@@ -2020,7 +2001,30 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|cp
+name|sc
+operator|->
+name|sc_buf
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
+operator|(
+name|int
+operator|)
+name|sc
+operator|->
+name|sc_buf
+operator|&
+operator|~
+name|MCLOFSET
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2029,7 +2033,9 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|cp
+name|sc
+operator|->
+name|sc_buf
 argument_list|,
 name|mtod
 argument_list|(
