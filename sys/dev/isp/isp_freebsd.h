@@ -273,6 +273,9 @@ begin_struct
 struct|struct
 name|isposinfo
 block|{
+name|u_int64_t
+name|default_wwn
+decl_stmt|;
 name|char
 name|name
 index|[
@@ -281,9 +284,6 @@ index|]
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|;
-name|int
-name|seed
 decl_stmt|;
 name|struct
 name|cam_sim
@@ -1025,7 +1025,7 @@ name|lev
 parameter_list|,
 name|x
 parameter_list|)
-value|if (isp->isp_dblev>= lev) printf x
+value|if (isp->isp_dblev>= (u_int8_t) lev) printf x
 end_define
 
 begin_define
@@ -1076,7 +1076,7 @@ name|DEFAULT_WWN
 parameter_list|(
 name|x
 parameter_list|)
-value|(0x0000feeb00000000LL + (x)->isp_osinfo.seed)
+value|(x)->isp_osinfo.default_wwn
 end_define
 
 begin_define
