@@ -910,7 +910,9 @@ operator|)
 operator|&
 name|random_kthread_control
 argument_list|,
-name|PUSER
+name|curthread
+operator|->
+name|td_priority
 argument_list|,
 literal|"term"
 argument_list|,
@@ -1251,7 +1253,9 @@ argument_list|(
 operator|&
 name|harvestfifo
 argument_list|,
-name|PUSER
+name|curthread
+operator|->
+name|td_priority
 argument_list|,
 literal|"-"
 argument_list|,
