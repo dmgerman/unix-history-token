@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpica/acpica_support.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 

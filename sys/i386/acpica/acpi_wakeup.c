@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpica/acpica_support.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
@@ -894,6 +888,10 @@ condition|)
 name|acpi_printcpu
 argument_list|()
 expr_stmt|;
+comment|/* Call ACPICA to enter the desired sleep state */
+name|ACPI_DISABLE_IRQS
+argument_list|()
+expr_stmt|;
 name|ACPI_FLUSH_CPU_CACHE
 argument_list|()
 expr_stmt|;
@@ -909,7 +907,7 @@ name|acpi_s4bios
 condition|)
 name|status
 operator|=
-name|AcpiEnterSleepStateS4Bios
+name|AcpiEnterSleepStateS4bios
 argument_list|()
 expr_stmt|;
 else|else
@@ -919,6 +917,9 @@ name|AcpiEnterSleepState
 argument_list|(
 name|state
 argument_list|)
+expr_stmt|;
+name|ACPI_ENABLE_IRQS
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
