@@ -62,6 +62,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOGIN_NAME_MAX
+value|17
+end_define
+
+begin_comment
+comment|/* max login name length (incl. NUL) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAX_CANON
 value|255
 end_define
