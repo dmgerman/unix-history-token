@@ -67,12 +67,6 @@ directive|include
 file|"pcib_if.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_pci.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|int
