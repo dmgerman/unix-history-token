@@ -591,46 +591,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * NB: These came over from openbsd and are kept private  *     to the crypto code for now.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|m_apply
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|off
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|(
-name|caddr_t
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-parameter_list|,
-name|caddr_t
-name|fstate
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Apply a symmetric encryption/decryption algorithm.  */
 end_comment
 
@@ -2256,7 +2216,8 @@ argument_list|(
 argument|*
 argument_list|)
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|,
 name|caddr_t
 operator|,

@@ -55,25 +55,6 @@ directive|include
 file|<netipsec/ipsec.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|struct
-name|mbuf
-modifier|*
-name|m_getptr
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Create a writable copy of the mbuf chain.  While doing this  * we compact the chain with a goal of producing a chain with  * at most two mbufs.  The second mbuf in this chain is likely  * to be a cluster.  The primary purpose of this work is to create  * a writable packet for encryption, compression, etc.  The  * secondary goal is to linearize the data so the data can be  * passed to crypto hardware in the most efficient manner possible.  */
 end_comment
