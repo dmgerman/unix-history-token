@@ -3078,13 +3078,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|m
-operator|!=
-name|oldm
-condition|)
-comment|/* m changed! */
 name|eh
 operator|=
 operator|&
