@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.192 1999/01/12 11:59:34 eivind Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.193 1999/01/19 08:00:51 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -7666,7 +7666,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 					 * the page is not freed here -- it 					 * is the responsibility of vnode_pager_setsize 					 */
+comment|/* 					 * the page is not freed here -- it 					 * is the responsibility of  					 * vnode_pager_setsize.  However, we 					 * have to wait if it is busy in order 					 * to be able to unwire the page. 					 */
 name|m
 operator|=
 name|bp
@@ -7687,6 +7687,8 @@ literal|"allocbuf: bogus page found"
 operator|)
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
 name|vm_page_sleep
 argument_list|(
 name|m
@@ -7698,7 +7700,8 @@ name|m
 operator|->
 name|busy
 argument_list|)
-expr_stmt|;
+condition|)
+empty_stmt|;
 name|bp
 operator|->
 name|b_pages
