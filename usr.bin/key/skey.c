@@ -3,6 +3,32 @@ begin_comment
 comment|/* Stand-alone program for computing responses to S/Key challenges.  * Takes the iteration count and seed as command line args, prompts  * for the user's key, and produces both word and hex format responses.  *  * Usage example:  *>skey 88 ka9q2  *	Enter password:  *	OMEN US HORN OMIT BACK AHOY  *	C848 666B 6435 0A93  *>  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -51,7 +77,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Assume BSD unix */
+comment|/* Assume BSD Unix */
 end_comment
 
 begin_include
@@ -244,11 +270,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s not positive\n"
+literal|"%s not positive"
 argument_list|,
 name|argv
 index|[
@@ -280,11 +304,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s not positive\n"
+literal|"%s not positive"
 argument_list|,
 name|argv
 index|[
