@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.5 1996/06/24 01:03:05 jmz Exp $ */
+comment|/* $Id: main.c,v 1.6 1996/06/25 21:33:18 ache Exp $ */
 end_comment
 
 begin_include
@@ -1315,15 +1315,16 @@ name|n
 operator|=
 name|status
 operator|=
-name|fread
+name|read
 argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
 name|buffer
 argument_list|,
-literal|1
-argument_list|,
 name|BUFFER_SIZE
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 if|if
