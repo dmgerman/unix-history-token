@@ -13088,7 +13088,7 @@ if|if
 condition|(
 name|a
 operator|>
-literal|65535
+literal|0xFFFF
 condition|)
 name|errx
 argument_list|(
@@ -13112,7 +13112,7 @@ if|if
 condition|(
 name|a
 operator|>
-literal|255
+literal|0xFF
 condition|)
 name|errx
 argument_list|(
