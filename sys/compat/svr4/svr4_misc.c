@@ -1585,11 +1585,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 name|error
