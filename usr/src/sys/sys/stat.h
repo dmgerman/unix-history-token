@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stat.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)stat.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -10,61 +10,289 @@ block|{
 name|dev_t
 name|st_dev
 decl_stmt|;
+comment|/* inode's device */
 name|ino_t
 name|st_ino
 decl_stmt|;
-name|unsigned
-name|short
+comment|/* inode's number */
+name|mode_t
 name|st_mode
 decl_stmt|;
-name|short
+comment|/* inode protection mode */
+name|nlink_t
 name|st_nlink
 decl_stmt|;
+comment|/* number of hard links */
 name|uid_t
 name|st_uid
 decl_stmt|;
+comment|/* user ID of the file's owner */
 name|gid_t
 name|st_gid
 decl_stmt|;
+comment|/* group ID of the file's group */
 name|dev_t
 name|st_rdev
 decl_stmt|;
+comment|/* device type */
 name|off_t
 name|st_size
 decl_stmt|;
+comment|/* file size, in bytes */
 name|time_t
 name|st_atime
 decl_stmt|;
-name|int
+comment|/* time of last access */
+name|long
 name|st_spare1
 decl_stmt|;
 name|time_t
 name|st_mtime
 decl_stmt|;
-name|int
+comment|/* time of last data modification */
+name|long
 name|st_spare2
 decl_stmt|;
 name|time_t
 name|st_ctime
 decl_stmt|;
-name|int
+comment|/* time of last file status change */
+name|long
 name|st_spare3
 decl_stmt|;
 name|long
 name|st_blksize
 decl_stmt|;
+comment|/* optimal blocksize for I/O */
 name|long
 name|st_blocks
 decl_stmt|;
+comment|/* blocks allocated for file */
 name|u_long
 name|st_flags
 decl_stmt|;
+comment|/* user defined flags for file */
 name|u_long
 name|st_gen
 decl_stmt|;
+comment|/* file generation number */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|S_ISUID
+value|0004000
+end_define
+
+begin_comment
+comment|/* set user id on execution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISGID
+value|0002000
+end_define
+
+begin_comment
+comment|/* set group id on execution */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_ISTXT
+value|0001000
+end_define
+
+begin_comment
+comment|/* sticky bit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|S_IRWXU
+value|0000700
+end_define
+
+begin_comment
+comment|/* RWX mask for owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRUSR
+value|0000400
+end_define
+
+begin_comment
+comment|/* R for owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IWUSR
+value|0000200
+end_define
+
+begin_comment
+comment|/* W for owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IXUSR
+value|0000100
+end_define
+
+begin_comment
+comment|/* X for owner */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IREAD
+value|S_IRUSR
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWRITE
+value|S_IWUSR
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IEXEC
+value|S_IXUSR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|S_IRWXG
+value|0000070
+end_define
+
+begin_comment
+comment|/* RWX mask for group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRGRP
+value|0000040
+end_define
+
+begin_comment
+comment|/* R for group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IWGRP
+value|0000020
+end_define
+
+begin_comment
+comment|/* W for group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IXGRP
+value|0000010
+end_define
+
+begin_comment
+comment|/* X for group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRWXO
+value|0000007
+end_define
+
+begin_comment
+comment|/* RWX mask for other */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IROTH
+value|0000004
+end_define
+
+begin_comment
+comment|/* R for other */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IWOTH
+value|0000002
+end_define
+
+begin_comment
+comment|/* W for other */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IXOTH
+value|0000001
+end_define
+
+begin_comment
+comment|/* X for other */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -80,12 +308,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|S_IFDIR
-value|0040000
+name|S_IFIFO
+value|0010000
 end_define
 
 begin_comment
-comment|/* directory */
+comment|/* named pipe (fifo) */
 end_comment
 
 begin_define
@@ -97,6 +325,17 @@ end_define
 
 begin_comment
 comment|/* character special */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IFDIR
+value|0040000
+end_define
+
+begin_comment
+comment|/* directory */
 end_comment
 
 begin_define
@@ -146,67 +385,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|S_ISUID
-value|0004000
-end_define
-
-begin_comment
-comment|/* set user id on execution */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_ISGID
-value|0002000
-end_define
-
-begin_comment
-comment|/* set group id on execution */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|S_ISVTX
 value|0001000
 end_define
 
 begin_comment
 comment|/* save swapped text even after use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_IREAD
-value|0000400
-end_define
-
-begin_comment
-comment|/* read permission, owner */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_IWRITE
-value|0000200
-end_define
-
-begin_comment
-comment|/* write permission, owner */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_IEXEC
-value|0000100
-end_define
-
-begin_comment
-comment|/* execute/search permission, owner */
 end_comment
 
 begin_define
@@ -219,6 +403,120 @@ end_define
 begin_comment
 comment|/* block size used in the stat struct */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|S_ISDIR
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0040000)
+end_define
+
+begin_comment
+comment|/* directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISCHR
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0020000)
+end_define
+
+begin_comment
+comment|/* char special */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISBLK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0060000)
+end_define
+
+begin_comment
+comment|/* block special */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISREG
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0100000)
+end_define
+
+begin_comment
+comment|/* regular file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISFIFO
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0010000)
+end_define
+
+begin_comment
+comment|/* fifo */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_ISLNK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0120000)
+end_define
+
+begin_comment
+comment|/* symbolic link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISSOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0140000)
+end_define
+
+begin_comment
+comment|/* socket */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
