@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prints out tree in human readable form - GNU C-compiler    Copyright (C) 1990, 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Prints out tree in human readable form - GCC    Copyright (C) 1990, 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -84,20 +96,12 @@ begin_function
 name|void
 name|debug_tree
 parameter_list|(
-name|node
-parameter_list|)
 name|tree
 name|node
-decl_stmt|;
+parameter_list|)
 block|{
 name|table
 operator|=
-operator|(
-expr|struct
-name|bucket
-operator|*
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 name|HASH_SIZE
@@ -121,15 +125,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|table
+argument_list|)
+expr_stmt|;
 name|table
 operator|=
 literal|0
 expr_stmt|;
-name|fprintf
+name|putc
 argument_list|(
-name|stderr
+literal|'\n'
 argument_list|,
-literal|"\n"
+name|stderr
 argument_list|)
 expr_stmt|;
 block|}
@@ -143,29 +152,21 @@ begin_function
 name|void
 name|print_node_brief
 parameter_list|(
-name|file
-parameter_list|,
-name|prefix
-parameter_list|,
-name|node
-parameter_list|,
-name|indent
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|,
 name|tree
 name|node
-decl_stmt|;
+parameter_list|,
 name|int
 name|indent
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|class
@@ -206,6 +207,7 @@ argument_list|(
 name|file
 argument_list|,
 literal|"%s<%s "
+name|HOST_PTR_PRINTF
 argument_list|,
 name|prefix
 argument_list|,
@@ -219,13 +221,6 @@ argument_list|(
 name|node
 argument_list|)
 index|]
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
 name|char
@@ -440,18 +435,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|"-"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
 name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
 operator|-
@@ -461,7 +449,6 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|fprintf
 argument_list|(
@@ -594,17 +581,13 @@ begin_function
 name|void
 name|indent_to
 parameter_list|(
-name|file
-parameter_list|,
-name|column
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|int
 name|column
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -657,29 +640,21 @@ begin_function
 name|void
 name|print_node
 parameter_list|(
-name|file
-parameter_list|,
-name|prefix
-parameter_list|,
-name|node
-parameter_list|,
-name|indent
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|,
 name|tree
 name|node
-decl_stmt|;
+parameter_list|,
 name|int
 name|indent
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hash
@@ -773,7 +748,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* It is unsafe to look at any other filds of an ERROR_MARK node.  */
+comment|/* It is unsafe to look at any other fields of an ERROR_MARK node.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -852,11 +827,6 @@ block|}
 comment|/* Add this node to the table.  */
 name|b
 operator|=
-operator|(
-expr|struct
-name|bucket
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -902,6 +872,7 @@ argument_list|(
 name|file
 argument_list|,
 literal|"%s<%s "
+name|HOST_PTR_PRINTF
 argument_list|,
 name|prefix
 argument_list|,
@@ -915,16 +886,9 @@ argument_list|(
 name|node
 argument_list|)
 index|]
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|node
@@ -1255,6 +1219,13 @@ argument_list|)
 condition|)
 name|fputs
 argument_list|(
+name|TYPE_P
+argument_list|(
+name|node
+argument_list|)
+condition|?
+literal|" align-ok"
+else|:
 literal|" nothrow"
 argument_list|,
 name|file
@@ -1613,28 +1584,6 @@ argument_list|)
 operator|==
 name|FUNCTION_DECL
 operator|&&
-name|DID_INLINE_FUNC
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" autoinline"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|node
-argument_list|)
-operator|==
-name|FUNCTION_DECL
-operator|&&
 name|DECL_INLINE
 argument_list|(
 name|node
@@ -1642,7 +1591,14 @@ argument_list|)
 condition|)
 name|fputs
 argument_list|(
+name|DECL_DECLARED_INLINE_P
+argument_list|(
+name|node
+argument_list|)
+condition|?
 literal|" inline"
+else|:
+literal|" autoinline"
 argument_list|,
 name|file
 argument_list|)
@@ -1664,27 +1620,6 @@ condition|)
 name|fputs
 argument_list|(
 literal|" built-in"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|node
-argument_list|)
-operator|==
-name|FUNCTION_DECL
-operator|&&
-name|DECL_BUILT_IN_NONANSI
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" built-in-nonansi"
 argument_list|,
 name|file
 argument_list|)
@@ -2152,18 +2087,11 @@ argument_list|)
 operator|==
 name|FIELD_DECL
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|" offset_align "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
 name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
 name|DECL_OFFSET_ALIGN
@@ -2172,7 +2100,6 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -2242,18 +2169,11 @@ argument_list|(
 name|node
 argument_list|)
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|" alias set "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
 name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|DECL_POINTER_ALIAS_SET
@@ -2262,7 +2182,6 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|TREE_CODE
@@ -2556,16 +2475,10 @@ argument_list|(
 name|file
 argument_list|,
 literal|"saved-insns "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|DECL_SAVED_INSNS
@@ -2769,28 +2682,6 @@ condition|)
 name|fputs
 argument_list|(
 literal|" nonaliased-component"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|node
-argument_list|)
-operator|==
-name|FUNCTION_TYPE
-operator|&&
-name|TYPE_AMBIENT_BOUNDEDNESS
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" ambient-boundedness"
 argument_list|,
 name|file
 argument_list|)
@@ -2999,38 +2890,18 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" align %d"
+literal|" align %d symtab %d alias set "
+name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TYPE_ALIGN
 argument_list|(
 name|node
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|" symtab %d"
 argument_list|,
 name|TYPE_SYMTAB_ADDRESS
 argument_list|(
 name|node
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|" alias set "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TYPE_ALIAS_SET
 argument_list|(
@@ -3645,9 +3516,7 @@ argument_list|(
 name|file
 argument_list|,
 operator|(
-expr|struct
-name|rtx_def
-operator|*
+name|rtx
 operator|)
 name|TREE_OPERAND
 argument_list|(
@@ -3855,18 +3724,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|"-"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
 name|HOST_WIDE_INT_PRINT_UNSIGNED
 argument_list|,
 operator|-
@@ -3876,7 +3738,6 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|fprintf
 argument_list|(
