@@ -198,6 +198,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|char
@@ -216,10 +222,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|YP
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
 end_ifdef
 
 begin_function_decl
@@ -230,6 +247,11 @@ name|basename
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
