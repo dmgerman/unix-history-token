@@ -2013,9 +2013,6 @@ block|{
 name|vm_page_t
 name|p
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -2131,11 +2128,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now free any remaining pages. For internal objects, this also 	 * removes them from paging queues. Don't free wired pages, just 	 * remove them from the object.  	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2230,11 +2222,6 @@ block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Let the pager know object is dead. 	 */
 name|vm_pager_deallocate
@@ -3046,9 +3033,6 @@ name|int
 name|runlen
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|maxf
 decl_stmt|;
 name|int
@@ -3081,11 +3065,6 @@ index|[
 name|vm_pageout_page_count
 index|]
 decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3124,11 +3103,6 @@ operator|!=
 name|curgeneration
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3555,11 +3529,6 @@ operator|+
 name|maxf
 operator|+
 literal|1
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|vm_pageout_flush
 argument_list|(
@@ -4960,9 +4929,6 @@ name|op
 parameter_list|)
 block|{
 name|int
-name|s
-decl_stmt|;
-name|int
 name|r
 init|=
 literal|1
@@ -4976,11 +4942,6 @@ decl_stmt|;
 name|vm_pindex_t
 name|backing_offset_index
 decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -5030,11 +4991,6 @@ operator|!=
 name|OBJT_DEFAULT
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5468,11 +5424,6 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|r
