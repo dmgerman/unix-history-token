@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.76 (Berkeley) %G%"
+literal|"@(#)main.c	8.77 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3066,6 +3066,41 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_comment
+comment|/* 	**  Initialize name server if it is going to be used. 	*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NAMED_BIND
+end_if
+
+begin_if
+if|if
+condition|(
+name|UseNameServer
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|RES_INIT
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
+condition|)
+name|res_init
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	**  Process authorization warnings from command line. 	*/
