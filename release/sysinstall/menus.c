@@ -8268,34 +8268,6 @@ name|tcpMenuSelect
 block|}
 block|,
 block|{
-literal|" NFS client"
-block|,
-literal|"This machine will be an NFS client"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"nfs_client_enable=YES"
-block|}
-block|,
-block|{
-literal|" NFS server"
-block|,
-literal|"This machine will be an NFS server"
-block|,
-name|dmenuVarCheck
-block|,
-name|configNFSServer
-block|,
-name|NULL
-block|,
-literal|"nfs_server_enable=YES"
-block|}
-block|,
-block|{
 literal|" AMD"
 block|,
 literal|"This machine wants to run the auto-mounter service"
@@ -8324,17 +8296,17 @@ literal|"amd_flags"
 block|}
 block|,
 block|{
-literal|" TCP Extensions"
+literal|" Anon FTP"
 block|,
-literal|"Allow RFC1323 and RFC1644 TCP extensions?"
+literal|"This machine wishes to allow anonymous FTP."
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configAnonFTP
 block|,
 name|NULL
 block|,
-literal|"tcp_extensions=YES"
+literal|"anon_ftp"
 block|}
 block|,
 block|{
@@ -8349,6 +8321,34 @@ block|,
 name|NULL
 block|,
 literal|"gateway_enable=YES"
+block|}
+block|,
+block|{
+literal|" NFS client"
+block|,
+literal|"This machine will be an NFS client"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"nfs_client_enable=YES"
+block|}
+block|,
+block|{
+literal|" NFS server"
+block|,
+literal|"This machine will be an NFS server"
+block|,
+name|dmenuVarCheck
+block|,
+name|configNFSServer
+block|,
+name|NULL
+block|,
+literal|"nfs_server_enable=YES"
 block|}
 block|,
 block|{
@@ -8375,7 +8375,21 @@ literal|"ntpdate_enable=YES"
 block|}
 block|,
 block|{
-literal|" router"
+literal|" PCNFSD"
+block|,
+literal|"Run authentication server for clients with PC-NFS."
+block|,
+name|dmenuVarCheck
+block|,
+name|configPCNFSD
+block|,
+name|NULL
+block|,
+literal|"pcnfsd"
+block|}
+block|,
+block|{
+literal|" Routed"
 block|,
 literal|"Select routing daemon (default: routed)"
 block|,
@@ -8403,31 +8417,45 @@ literal|"rwhod_enable=YES"
 block|}
 block|,
 block|{
-literal|" Anon FTP"
+literal|" Sendmail"
 block|,
-literal|"This machine wishes to allow anonymous FTP."
+literal|"This machine wants to run the sendmail daemon"
 block|,
 name|dmenuVarCheck
 block|,
-name|configAnonFTP
+name|dmenuToggleVariable
 block|,
 name|NULL
 block|,
-literal|"anon_ftp"
+literal|"sendmail_enable=YES"
 block|}
 block|,
 block|{
-literal|" PCNFSD"
+literal|" Sshd"
 block|,
-literal|"Run authentication server for clients with PC-NFS."
+literal|"This machine wants to run the ssh daemon"
 block|,
 name|dmenuVarCheck
 block|,
-name|configPCNFSD
+name|dmenuToggleVariable
 block|,
 name|NULL
 block|,
-literal|"pcnfsd"
+literal|"sshd_enable=YES"
+block|}
+block|,
+block|{
+literal|" TCP Extensions"
+block|,
+literal|"Allow RFC1323 and RFC1644 TCP extensions?"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"tcp_extensions=YES"
 block|}
 block|,
 block|{
