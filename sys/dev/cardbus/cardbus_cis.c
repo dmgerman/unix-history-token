@@ -3484,6 +3484,26 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* XXX need cleanup*/
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Unable to allocate memory for "
+literal|"prefetchable memory.\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|start
 operator|=
 name|rman_get_start
@@ -3883,6 +3903,26 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* XXX need cleanup*/
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Unable to allocate memory for "
+literal|"non-prefetchable memory.\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|start
 operator|=
 name|rman_get_start
@@ -4248,6 +4288,25 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* XXX need cleanup*/
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Unable to allocate I/O ports\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|start
 operator|=
 name|rman_get_start
@@ -4540,6 +4599,25 @@ argument_list|,
 name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* XXX need cleanup*/
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Unable to allocate IRQ\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|resource_list_add
 argument_list|(
 operator|&
