@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.15 (Berkeley) %G%"
+literal|"@(#)cico.c	5.16	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,23 +173,6 @@ argument_list|(
 name|BSDTCP
 argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|NOGETPEER
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD2_9
-end_ifdef
 
 begin_define
 define|#
@@ -460,11 +443,10 @@ parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -520,6 +502,21 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|rflags
 index|[
@@ -567,7 +564,7 @@ end_ifdef
 begin_expr_stmt
 name|sigsetmask
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -679,21 +676,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ASSERT
-argument_list|(
+begin_if
+if|if
+condition|(
 name|ret
 operator|==
-literal|0
+name|FAIL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"BAD UID"
-argument_list|,
-name|CNULL
-argument_list|,
-name|ret
+literal|"can't get uid"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_expr_stmt
 name|setbuf
@@ -746,30 +750,24 @@ end_expr_stmt
 begin_while
 while|while
 condition|(
+operator|(
+name|ret
+operator|=
+name|getopt
+argument_list|(
 name|argc
-operator|>
-literal|1
-operator|&&
+argument_list|,
 name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
+argument_list|,
+literal|"RLd:g:p:r:s:x:t:"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
 condition|)
-block|{
 switch|switch
 condition|(
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|1
-index|]
+name|ret
 condition|)
 block|{
 case|case
@@ -777,14 +775,7 @@ literal|'d'
 case|:
 name|Spool
 operator|=
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -797,13 +788,8 @@ name|MaxGrade
 operator|=
 name|DefMaxGrade
 operator|=
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+operator|*
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -813,14 +799,7 @@ name|Role
 operator|=
 name|atoi
 argument_list|(
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -842,14 +821,7 @@ name|strncpy
 argument_list|(
 name|Rmtname
 argument_list|,
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|,
 name|MAXBASENAME
 argument_list|)
@@ -882,14 +854,7 @@ name|Debug
 operator|=
 name|atoi
 argument_list|(
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -908,6 +873,8 @@ name|rflags
 argument_list|,
 name|argv
 index|[
+name|optind
+operator|-
 literal|1
 index|]
 argument_list|)
@@ -920,14 +887,7 @@ name|turntime
 operator|=
 name|atoi
 argument_list|(
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|)
 operator|*
 literal|60
@@ -966,36 +926,35 @@ break|break;
 endif|#
 directive|endif
 endif|NOGETPEER
+case|case
+literal|'?'
+case|:
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"unknown flag %s (ignored)\n"
 argument_list|,
 name|argv
 index|[
+name|optind
+operator|-
 literal|1
 index|]
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|--
-name|argc
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
-block|}
 end_while
 
 begin_while
 while|while
 condition|(
+name|optind
+operator|<
 name|argc
-operator|>
-literal|1
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1004,17 +963,11 @@ literal|"unknown argument %s (ignored)\n"
 argument_list|,
 name|argv
 index|[
-literal|1
+name|optind
+operator|++
 index|]
 argument_list|)
 expr_stmt|;
-operator|--
-name|argc
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
-block|}
 end_while
 
 begin_if
@@ -1136,37 +1089,127 @@ expr_stmt|;
 block|}
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_SYSLOG
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_3
+end_ifdef
+
+begin_expr_stmt
+name|openlog
+argument_list|(
+literal|"uucico"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_UUCP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !BSD4_3 */
+end_comment
+
+begin_expr_stmt
+name|openlog
+argument_list|(
+literal|"uucico"
+argument_list|,
+name|LOG_PID
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !BSD4_3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_SYSLOG */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 endif|BSD4_2
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_3
+end_ifdef
+
 begin_expr_stmt
-name|ret
-operator|=
-name|subchdir
+name|unsetenv
 argument_list|(
-name|Spool
+literal|"TZ"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ASSERT
+begin_comment
+comment|/* We don't want him resetting our time zone */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !BSD4_3 */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|subchdir
 argument_list|(
-name|ret
-operator|>=
+name|Spool
+argument_list|)
+operator|<
 literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"CHDIR FAILED"
+literal|"chdir(%s) failed: %m"
 argument_list|,
 name|Spool
-argument_list|,
-name|ret
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_expr_stmt
 name|strcpy
@@ -1653,13 +1696,13 @@ ifdef|#
 directive|ifdef
 name|NOSTRANGERS
 comment|/* If we don't know them, we won't talk to them... */
-name|assert
+name|syslog
 argument_list|(
-literal|"Unknown host:"
+name|LOG_WARNING
+argument_list|,
+literal|"Unknown host: %s"
 argument_list|,
 name|Rmtname
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|omsg
@@ -2440,6 +2483,16 @@ block|{
 name|do_connect_accounting
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIALINOUT
+comment|/* reenable logins on dialout */
+name|reenable
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|DIALINOUT
 name|StartTime
 operator|=
 literal|0
@@ -4015,6 +4068,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DO_CONNECT_ACCOUNTING
 specifier|register
 name|FILE
 modifier|*
@@ -4042,31 +4098,37 @@ operator|==
 literal|0
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|DO_CONNECT_ACCOUNTING
 name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/usr/spool/uucp/CONNECT"
+name|DO_CONNECT_ACCOUNTING
 argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|fp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ALERT
 argument_list|,
-literal|"Can't open CONNECT file"
+literal|"fopen(%s) failed: %m"
 argument_list|,
-name|Rmtname
-argument_list|,
-name|errno
+name|DO_CONNECT_ACCOUNTING
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|tm
 operator|=
 name|localtime
@@ -4183,11 +4245,9 @@ argument|, RMTDEBUG, Rmtname); 		unlink(buf); 		if (link(temp, buf) !=
 literal|0
 argument|) { 			Debug =
 literal|0
-argument|; 			assert(
-literal|"RMTDEBUG LINK FAIL"
-argument|, temp, errno); 			cleanup(
-literal|1
-argument|); 		} 		parm = DBG_CLEAN; 	} 	if (parm == DBG_CLEAN) { 		if (temp != CNULL) { 			unlink(temp); 			free(temp); 			temp = CNULL; 		} 		return; 	}  	if (Debug ==
+argument|; 			syslog(LOG_ERR,
+literal|"RMTDEBUG link(%s,%s) failed: %m"
+argument|, 				temp, buf); 			cleanup(FAIL); 		} 		parm = DBG_CLEAN; 	} 	if (parm == DBG_CLEAN) { 		if (temp != CNULL) { 			unlink(temp); 			free(temp); 			temp = CNULL; 		} 		return; 	}  	if (Debug ==
 literal|0
 argument|) 		return;
 comment|/* Gotta be in debug to come here.   */
@@ -4241,29 +4301,25 @@ argument|)) {
 comment|/* Directory, rwx    */
 argument|Debug =
 literal|0
-argument|; 		assert(
-literal|"INVALID RMTDEBUG DIRECTORY:"
-argument|, RMTDEBUG, stbuf.st_mode); 		return; 	}  	if (parm == DBG_TEMP) { 		sprintf(buf,
+argument|; 		syslog(LOG_ERR,
+literal|"%s: invalid directory mode: %o"
+argument|, RMTDEBUG, 			stbuf.st_mode); 		return; 	}  	if (parm == DBG_TEMP) { 		sprintf(buf,
 literal|"%s/%d"
 argument|, RMTDEBUG, getpid()); 		temp = malloc(strlen (buf) +
 literal|1
 argument|); 		if (temp == CNULL) { 			Debug =
 literal|0
-argument|; 			assert(
-literal|"RMTDEBUG MALLOC ERROR:"
-argument|, temp, errno); 			cleanup(
-literal|1
-argument|); 		} 		strcpy(temp, buf); 	} else 		sprintf(buf,
+argument|; 			syslog(LOG_ERR,
+literal|"RMTDEBUG malloc failed: %m"
+argument|); 			cleanup(FAIL); 		} 		strcpy(temp, buf); 	} else 		sprintf(buf,
 literal|"%s/%s"
 argument|, RMTDEBUG, Rmtname);  	unlink(buf); 	if (freopen(buf,
 literal|"w"
 argument|, stderr) != stderr) { 		Debug =
 literal|0
-argument|; 		assert(
-literal|"FAILED RMTDEBUG FILE OPEN:"
-argument|, buf, errno); 		cleanup(
-literal|1
-argument|); 	} 	setbuf(stderr, CNULL); 	auditopen =
+argument|; 		syslog(LOG_ERR,
+literal|"RMTDEBUG freopen(%s) failed: %m"
+argument|, buf); 		cleanup(FAIL); 	} 	setbuf(stderr, CNULL); 	auditopen =
 literal|1
 argument|; }
 comment|/*  *	catch SIGALRM routine  */
