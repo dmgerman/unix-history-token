@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.1 (Berkeley) %G%"
+literal|"@(#)compress.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,8 +21,24 @@ directive|endif
 endif|not lint
 end_endif
 
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a>b) ? b : a)
+end_define
+
 begin_comment
-comment|/*  * Set USERMEM to the maximum amount of physical user memory available  * in bytes.  USERMEM is used to determine the maximum BITS that can be used  * for compression.  If USERMEM is big enough, use fast compression algorithm.  *  * SACREDMEM is the amount of physical memory saved for others; compress  * will hog the rest.  */
+comment|/*  * machine variants which require cc -Dmachine:  pdp11, z8000, pcxt  */
+end_comment
+
+begin_comment
+comment|/* Set USERMEM to the maximum amount of physical user memory available  * in bytes.  USERMEM is used to determine the maximum BITS that can be used  * for compression.  If USERMEM is big enough, use fast compression algorithm.  *  * SACREDMEM is the amount of physical memory saved for others; compress  * will hog the rest.  */
 end_comment
 
 begin_ifndef
@@ -37,6 +53,28 @@ directive|define
 name|SACREDMEM
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USERMEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USERMEM
+value|750000
+end_define
+
+begin_comment
+comment|/* default user memory */
+end_comment
 
 begin_endif
 endif|#
@@ -70,44 +108,108 @@ begin_comment
 comment|/* also if "unsigned char" functions as signed char */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SHORT_INT
+end_define
+
+begin_comment
+comment|/* ints are short */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|USERMEM
 end_undef
 
-begin_else
-else|#
-directive|else
-else|!pdp11
-end_else
+begin_endif
+endif|#
+directive|endif
+endif|pdp11
+end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USERMEM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|z8000
+end_ifdef
 
 begin_define
 define|#
 directive|define
+name|BITS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHORT_INT
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|vax
+end_undef
+
+begin_comment
+comment|/* weird preprocessor */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
 name|USERMEM
-value|750000
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+endif|z8000
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|pcxt
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BITS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHORT_INT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMALL_STACK
 end_define
 
 begin_comment
-comment|/* default user memory */
+comment|/* at least for Latice C, sez Lauren */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_undef
+undef|#
+directive|undef
+name|USERMEM
+end_undef
 
 begin_endif
 endif|#
 directive|endif
-endif|!pdp11
+endif|pcxt
 end_endif
 
 begin_comment
@@ -542,7 +644,7 @@ begin_if
 if|#
 directive|if
 name|BITS
-operator|==
+operator|<=
 literal|12
 end_if
 
@@ -555,78 +657,6 @@ end_define
 
 begin_comment
 comment|/* 80% occupancy */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|BITS
-operator|==
-literal|11
-end_if
-
-begin_define
-define|#
-directive|define
-name|HSIZE
-value|2591
-end_define
-
-begin_comment
-comment|/* 79% occupancy */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|BITS
-operator|==
-literal|10
-end_if
-
-begin_define
-define|#
-directive|define
-name|HSIZE
-value|1291
-end_define
-
-begin_comment
-comment|/* 79% occupancy */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|BITS
-operator|==
-literal|9
-end_if
-
-begin_define
-define|#
-directive|define
-name|HSIZE
-value|691
-end_define
-
-begin_comment
-comment|/* 74% occupancy */
 end_comment
 
 begin_endif
@@ -799,7 +829,7 @@ comment|/* initial number of bits/code */
 end_comment
 
 begin_comment
-comment|/*  * compress.c - File compression ala IEEE Computer June 1984.  *  * Authors:	Spencer W. Thomas	(decvax!harpo!utah-cs!utah-gr!thomas)  *		Jim McKie		(decvax!mcvax!jim)  *		Steve Davies		(decvax!vax135!petsd!peora!srd)  *		Ken Turkowski		(decvax!decwrl!turtlevax!ken)  *		James A. Woods		(decvax!ihnp4!ames!jaw)  *		Joe Orost		(decvax!vax135!petsd!joe)  *  * $Header: compress.c,v 3.0 84/11/27 11:50:00 joe Exp $  * $Log:	compress.c,v $  * Revision 3.0   84/11/27  11:50:00  petsd!joe  * Set HSIZE depending on BITS.  Set BITS depending on USERMEM.  Unrolled  * loops in clear routines.  Added "-C" flag for 2.0 compatability.  Used  * unsigned compares on Perkin-Elmer.  Fixed foreground check.  *  * Revision 2.7   84/11/16  19:35:39  ames!jaw  * Cache common hash codes based on input statistics; this improves  * performance for low-density raster images.  Pass on #ifdef bundle  * from Turkowski.  *  * Revision 2.6   84/11/05  19:18:21  ames!jaw  * Vary size of hash tables to reduce time for small files.  * Tune PDP-11 hash function.  *  * Revision 2.5   84/10/30  20:15:14  ames!jaw  * Junk chaining; replace with the simpler (and, on the VAX, faster)  * double hashing, discussed within.  Make block compression standard.  *  * Revision 2.4   84/10/16  11:11:11  ames!jaw  * Introduce adaptive reset for block compression, to boost the rate  * another several percent.  (See mailing list notes.)  *  * Revision 2.3   84/09/22  22:00:00  petsd!joe  * Implemented "-B" block compress.  Implemented REVERSE sorting of tab_next.  * Bug fix for last bits.  Changed fwrite to putchar loop everywhere.  *  * Revision 2.2   84/09/18  14:12:21  ames!jaw  * Fold in news changes, small machine typedef from thomas,  * #ifdef interdata from joe.  *  * Revision 2.1   84/09/10  12:34:56  ames!jaw  * Configured fast table lookup for 32-bit machines.  * This cuts user time in half for b<= FBITS, and is useful for news batching  * from VAX to PDP sites.  Also sped up decompress() [fwrite->putc] and  * added signal catcher [plus beef in writeerr()] to delete effluvia.  *  * Revision 2.0   84/08/28  22:00:00  petsd!joe  * Add check for foreground before prompting user.  Insert maxbits into  * compressed file.  Force file being uncompressed to end with ".Z".  * Added "-c" flag and "zcat".  Prepared for release.  *  * Revision 1.10  84/08/24  18:28:00  turtlevax!ken  * Will only compress regular files (no directories), added a magic number  * header (plus an undocumented -n flag to handle old files without headers),  * added -f flag to force overwriting of possibly existing destination file,  * otherwise the user is prompted for a response.  Will tack on a .Z to a  * filename if it doesn't have one when decompressing.  Will only replace  * file if it was compressed.  *  * Revision 1.9  84/08/16  17:28:00  turtlevax!ken  * Removed scanargs(), getopt(), added .Z extension and unlimited number of  * filenames to compress.  Flags may be clustered (-Ddvb12) or separated  * (-D -d -v -b 12), or combination thereof.  Modes and other status is  * copied with copystat().  -O bug for 4.2 seems to have disappeared with  * 1.8.  *  * Revision 1.8  84/08/09  23:15:00  joe  * Made it compatible with vax version, installed jim's fixes/enhancements  *  * Revision 1.6  84/08/01  22:08:00  joe  * Sped up algorithm significantly by sorting the compress chain.  *  * Revision 1.5  84/07/13  13:11:00  srd  * Added C version of vax asm routines.  Changed structure to arrays to  * save much memory.  Do unsigned compares where possible (faster on  * Perkin-Elmer)  *  * Revision 1.4  84/07/05  03:11:11  thomas  * Clean up the code a little and lint it.  (Lint complains about all  * the regs used in the asm, but I'm not going to "fix" this.)  *  * Revision 1.3  84/07/05  02:06:54  thomas  * Minor fixes.  *  * Revision 1.2  84/07/05  00:27:27  thomas  * Add variable bit length output.  *  */
+comment|/*  * compress.c - File compression ala IEEE Computer, June 1984.  *  * Authors:	Spencer W. Thomas	(decvax!harpo!utah-cs!utah-gr!thomas)  *		Jim McKie		(decvax!mcvax!jim)  *		Steve Davies		(decvax!vax135!petsd!peora!srd)  *		Ken Turkowski		(decvax!decwrl!turtlevax!ken)  *		James A. Woods		(decvax!ihnp4!ames!jaw)  *		Joe Orost		(decvax!vax135!petsd!joe)  *  * $Header: compress.c,v 3.2 85/06/06 21:53:24 jaw Exp $  * $Log:	compress.c,v $  * Revision 3.2  85/06/06  21:53:24  jaw  * Incorporate portability suggestions for Z8000, IBM PC/XT from mailing list.  * Default to "quiet" output (no compression statistics).  *  * Revision 3.1  85/05/12  18:56:13  jaw  * Integrate decompress() stack speedups (from early pointer mods by McKie).  * Repair multi-file USERMEM gaffe.  Unify 'force' flags to mimic semantics  * of SVR2 'pack'.  Streamline block-compress table clear logic.  Increase   * output byte count by magic number size.  *   * Revision 3.0   84/11/27  11:50:00  petsd!joe  * Set HSIZE depending on BITS.  Set BITS depending on USERMEM.  Unrolled  * loops in clear routines.  Added "-C" flag for 2.0 compatibility.  Used  * unsigned compares on Perkin-Elmer.  Fixed foreground check.  *  * Revision 2.7   84/11/16  19:35:39  ames!jaw  * Cache common hash codes based on input statistics; this improves  * performance for low-density raster images.  Pass on #ifdef bundle  * from Turkowski.  *  * Revision 2.6   84/11/05  19:18:21  ames!jaw  * Vary size of hash tables to reduce time for small files.  * Tune PDP-11 hash function.  *  * Revision 2.5   84/10/30  20:15:14  ames!jaw  * Junk chaining; replace with the simpler (and, on the VAX, faster)  * double hashing, discussed within.  Make block compression standard.  *  * Revision 2.4   84/10/16  11:11:11  ames!jaw  * Introduce adaptive reset for block compression, to boost the rate  * another several percent.  (See mailing list notes.)  *  * Revision 2.3   84/09/22  22:00:00  petsd!joe  * Implemented "-B" block compress.  Implemented REVERSE sorting of tab_next.  * Bug fix for last bits.  Changed fwrite to putchar loop everywhere.  *  * Revision 2.2   84/09/18  14:12:21  ames!jaw  * Fold in news changes, small machine typedef from thomas,  * #ifdef interdata from joe.  *  * Revision 2.1   84/09/10  12:34:56  ames!jaw  * Configured fast table lookup for 32-bit machines.  * This cuts user time in half for b<= FBITS, and is useful for news batching  * from VAX to PDP sites.  Also sped up decompress() [fwrite->putc] and  * added signal catcher [plus beef in writeerr()] to delete effluvia.  *  * Revision 2.0   84/08/28  22:00:00  petsd!joe  * Add check for foreground before prompting user.  Insert maxbits into  * compressed file.  Force file being uncompressed to end with ".Z".  * Added "-c" flag and "zcat".  Prepared for release.  *  * Revision 1.10  84/08/24  18:28:00  turtlevax!ken  * Will only compress regular files (no directories), added a magic number  * header (plus an undocumented -n flag to handle old files without headers),  * added -f flag to force overwriting of possibly existing destination file,  * otherwise the user is prompted for a response.  Will tack on a .Z to a  * filename if it doesn't have one when decompressing.  Will only replace  * file if it was compressed.  *  * Revision 1.9  84/08/16  17:28:00  turtlevax!ken  * Removed scanargs(), getopt(), added .Z extension and unlimited number of  * filenames to compress.  Flags may be clustered (-Ddvb12) or separated  * (-D -d -v -b 12), or combination thereof.  Modes and other status is  * copied with copystat().  -O bug for 4.2 seems to have disappeared with  * 1.8.  *  * Revision 1.8  84/08/09  23:15:00  joe  * Made it compatible with vax version, installed jim's fixes/enhancements  *  * Revision 1.6  84/08/01  22:08:00  joe  * Sped up algorithm significantly by sorting the compress chain.  *  * Revision 1.5  84/07/13  13:11:00  srd  * Added C version of vax asm routines.  Changed structure to arrays to  * save much memory.  Do unsigned compares where possible (faster on  * Perkin-Elmer)  *  * Revision 1.4  84/07/05  03:11:11  thomas  * Clean up the code a little and lint it.  (Lint complains about all  * the regs used in the asm, but I'm not going to "fix" this.)  *  * Revision 1.3  84/07/05  02:06:54  thomas  * Minor fixes.  *  * Revision 1.2  84/07/05  00:27:27  thomas  * Add variable bit length output.  *  */
 end_comment
 
 begin_ifndef
@@ -814,7 +844,7 @@ name|char
 name|rcs_ident
 index|[]
 init|=
-literal|"$Header: compress.c,v 3.0 84/11/27 11:50:00 joe Exp$"
+literal|"$Header: compress.c,v 3.1 85/05/12 18:56:13 jaw Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -957,7 +987,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|pdp11
+name|SHORT_INT
 end_ifdef
 
 begin_define
@@ -974,7 +1004,7 @@ end_comment
 begin_else
 else|#
 directive|else
-else|!pdp11
+else|!SHORT_INT
 end_else
 
 begin_define
@@ -991,7 +1021,7 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|!pdp11
+endif|!SHORT_INT
 end_endif
 
 begin_decl_stmt
@@ -1136,7 +1166,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: compress [-dDvqfFc] [-b maxbits] [file ...]\n"
+literal|"Usage: compress [-dDVfc] [-b maxbits] [file ...]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1161,7 +1191,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: compress [-dfFqc] [-b maxbits] [file ...]\n"
+literal|"Usage: compress [-dfvc] [-b maxbits] [file ...]\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1182,7 +1212,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Use a 2 byte magic number header, unless old file */
+comment|/* Use a 3-byte magic number header, unless old file */
 end_comment
 
 begin_decl_stmt
@@ -1201,7 +1231,7 @@ begin_decl_stmt
 name|int
 name|quiet
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,8 +1363,20 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|nfiles
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*****************************************************************  * TAG( main )  *  * Algorithm from "A Technique for High Performance Data Compression",  * Terry A. Welch, IEEE Computer Vol 17, No 6 (June 1984), pp 8-19.  *  * Usage: compress [-dfFqc] [-b bits] [file ...]  * Inputs:  *	-d:	    If given, decompression is done instead.  *  *      -c:         Write output on stdout, don't remove original.  *  *      -b:         Parameter limits the max number of bits/code.  *  *	-f:	    Forces output file to be generated, even if one already  *		    exists; if -f is not used, the user will be prompted if  *		    the stdin is a tty, otherwise, the output file will not  *		    be overwritten.  *  *	-F:	    Forces output file to be generated, even if no space is  *		    saved by compressing.  *  *	-q:	    No output, unless error  *  * 	file ...:   Files to be compressed.  If none specified, stdin  *		    is used.  * Outputs:  *	file.Z:	    Compressed form of file with same mode, owner, and utimes  * 	or stdout   (if stdin used as input)  *  * Assumptions:  *	When filenames are given, replaces with the compressed version  *	(.Z suffix) only if the file decreased in size.  * Algorithm:  * 	Modified Lempel-Ziv method (LZW).  Basically finds common  * substrings and replaces them with a variable size code.  This is  * deterministic, and can be done on the fly.  Thus, the decompression  * procedure needs no input table, but tracks the way the table was  * built.  */
+comment|/* number of files processed */
+end_comment
+
+begin_comment
+comment|/*****************************************************************  * TAG( main )  *  * Algorithm from "A Technique for High Performance Data Compression",  * Terry A. Welch, IEEE Computer Vol 17, No 6 (June 1984), pp 8-19.  *  * Usage: compress [-dfvc] [-b bits] [file ...]  * Inputs:  *	-d:	    If given, decompression is done instead.  *  *      -c:         Write output on stdout, don't remove original.  *  *      -b:         Parameter limits the max number of bits/code.  *  *	-f:	    Forces output file to be generated, even if one already  *		    exists, and even if no space is saved by compressing.  *		    If -f is not used, the user will be prompted if stdin is  *		    a tty, otherwise, the output file will not be overwritten.  *  *      -v:	    Write compression statistics  *  * 	file ...:   Files to be compressed.  If none specified, stdin  *		    is used.  * Outputs:  *	file.Z:	    Compressed form of file with same mode, owner, and utimes  * 	or stdout   (if stdin used as input)  *  * Assumptions:  *	When filenames are given, replaces with the compressed version  *	(.Z suffix) only if the file decreases in size.  * Algorithm:  * 	Modified Lempel-Ziv method (LZW).  Basically finds common  * substrings and replaces them with a variable size code.  This is  * deterministic, and can be done on the fly.  Thus, the decompression  * procedure needs no input table, but tracks the way the table was built.  */
 end_comment
 
 begin_function
@@ -1386,6 +1428,10 @@ name|cp
 decl_stmt|,
 modifier|*
 name|rindex
+argument_list|()
+decl_stmt|,
+modifier|*
+name|malloc
 argument_list|()
 decl_stmt|;
 name|struct
@@ -1581,7 +1627,7 @@ endif|BSD4_2
 end_endif
 
 begin_comment
-comment|/* Argument Processing      * All flags are optional.      * -D => debug      * -d => do_decomp      * -v => verbose      * -f => force overwrite of output file      * -n => no header: useful to uncompress old files      * -b maxbits => maxbits.  If -b is specified, then maxbits MUST be      *	    given also.      * -c => cat all output to stdout      * -C => generate output compatable with compress 2.0.      * if a string is left, must be an input filename.      */
+comment|/* Argument Processing      * All flags are optional.      * -D => debug      * -V => debug verbose      * -d => do_decomp      * -v => unquiet      * -f => force overwrite of output file      * -n => no header: useful to uncompress old files      * -b maxbits => maxbits.  If -b is specified, then maxbits MUST be      *	    given also.      * -c => cat all output to stdout      * -C => generate output compatible with compress 2.0.      * if a string is left, must be an input filename.      */
 end_comment
 
 begin_for
@@ -1644,7 +1690,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'v'
+literal|'V'
 case|:
 name|verbose
 operator|=
@@ -1654,6 +1700,14 @@ break|break;
 endif|#
 directive|endif
 endif|DEBUG
+case|case
+literal|'v'
+case|:
+name|quiet
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -1665,7 +1719,14 @@ break|break;
 case|case
 literal|'f'
 case|:
+case|case
+literal|'F'
+case|:
 name|overwrite
+operator|=
+literal|1
+expr_stmt|;
+name|force
 operator|=
 literal|1
 expr_stmt|;
@@ -1735,14 +1796,6 @@ case|case
 literal|'q'
 case|:
 name|quiet
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'F'
-case|:
-name|force
 operator|=
 literal|1
 expr_stmt|;
@@ -2135,11 +2188,10 @@ operator|.
 name|st_size
 expr_stmt|;
 comment|/* 		 * tune hash table size for small files -- ad hoc 		 */
-if|#
-directive|if
+name|hsize
+operator|=
 name|HSIZE
-operator|>
-literal|5003
+expr_stmt|;
 if|if
 condition|(
 name|fsize
@@ -2152,13 +2204,13 @@ operator|)
 condition|)
 name|hsize
 operator|=
+name|min
+argument_list|(
 literal|5003
-expr_stmt|;
-if|#
-directive|if
+argument_list|,
 name|HSIZE
-operator|>
-literal|9001
+argument_list|)
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -2172,13 +2224,13 @@ operator|)
 condition|)
 name|hsize
 operator|=
+name|min
+argument_list|(
 literal|9001
-expr_stmt|;
-if|#
-directive|if
+argument_list|,
 name|HSIZE
-operator|>
-literal|18013
+argument_list|)
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -2192,13 +2244,13 @@ operator|)
 condition|)
 name|hsize
 operator|=
+name|min
+argument_list|(
 literal|18013
-expr_stmt|;
-if|#
-directive|if
+argument_list|,
 name|HSIZE
-operator|>
-literal|35023
+argument_list|)
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -2212,7 +2264,12 @@ operator|)
 condition|)
 name|hsize
 operator|=
+name|min
+argument_list|(
 literal|35023
+argument_list|,
+name|HSIZE
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -2223,24 +2280,12 @@ literal|47000
 condition|)
 name|hsize
 operator|=
+name|min
+argument_list|(
 literal|50021
-expr_stmt|;
-endif|#
-directive|endif
-endif|HSIZE> 35023
-endif|#
-directive|endif
-endif|HSIZE> 18013
-endif|#
-directive|endif
-endif|HSIZE> 9001
-else|else
-endif|#
-directive|endif
-endif|HSIZE> 5003
-name|hsize
-operator|=
+argument_list|,
 name|HSIZE
+argument_list|)
 expr_stmt|;
 comment|/* Generate output filename */
 name|strcpy
@@ -2368,7 +2413,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" do you wish to overwrite (y or n)? "
+literal|" do you wish to overwrite %s (y or n)? "
 argument_list|,
 name|ofname
 argument_list|)
@@ -2994,8 +3039,9 @@ literal|0
 expr_stmt|;
 name|bytes_out
 operator|=
-literal|0
+literal|3
 expr_stmt|;
+comment|/* includes 3-byte header mojo */
 name|out_count
 operator|=
 literal|0
@@ -3059,6 +3105,17 @@ operator|)
 condition|)
 block|{
 comment|/* use hashing on small files */
+if|if
+condition|(
+name|nfiles
+operator|++
+operator|>
+literal|0
+condition|)
+comment|/* clear table between files */
+name|cl_sparse
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3153,7 +3210,7 @@ condition|)
 continue|continue;
 else|else
 block|{
-name|clear
+name|cl_block
 argument_list|()
 expr_stmt|;
 name|i
@@ -3210,6 +3267,9 @@ name|hsize
 expr_stmt|;
 name|cl_hash
 argument_list|(
+operator|(
+name|count_int
+operator|)
 name|hsize_reg
 argument_list|)
 expr_stmt|;
@@ -3273,7 +3333,7 @@ operator|!=
 name|CHOG
 condition|)
 comment|/* fixup for wrong assumption */
-name|creset
+name|cl_cache
 argument_list|(
 operator|(
 name|count_int
@@ -3328,7 +3388,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|pdp11
+name|SHORT_INT
 name|i
 operator|=
 operator|(
@@ -3350,7 +3410,7 @@ expr_stmt|;
 comment|/* avoid 'lrem' call */
 else|#
 directive|else
-else|!pdp11
+else|!SHORT_INT
 name|i
 operator|=
 name|fcode
@@ -3360,7 +3420,7 @@ expr_stmt|;
 comment|/* division hashing */
 endif|#
 directive|endif
-endif|pdp11
+endif|SHORT_INT
 if|if
 condition|(
 name|htab
@@ -3547,7 +3607,7 @@ name|checkpoint
 operator|&&
 name|block_compress
 condition|)
-name|clear
+name|cl_block
 argument_list|()
 expr_stmt|;
 name|ent
@@ -3802,7 +3862,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|vax
-comment|/* VAX DEPENDENT!! Implementation on other machines may be 	 * difficult. 	 * 	 * Translation: Insert BITS bits from the argument starting at 	 * offset bits from the beginning of buf. 	 */
+comment|/* VAX DEPENDENT!! Implementation on other machines may be difficult. 	 * 	 * Translation: Insert BITS bits from the argument starting at 	 * offset bits from the beginning of buf. 	 */
 literal|0
 expr_stmt|;
 comment|/* C compiler bug ?? */
@@ -3810,7 +3870,7 @@ asm|asm( "insv	4(ap),r11,r10,(r9)" );
 else|#
 directive|else
 else|not a vax
-comment|/* WARNING: byte/bit numbering on the vax is simulated by the following code */
+comment|/*   * byte/bit numbering on the VAX is simulated by the following code  */
 comment|/* 	 * Get to the first byte. 	 */
 name|bp
 operator|+=
@@ -4188,14 +4248,28 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|SMALL_STACK
+name|char_type
+name|stack
+index|[
+name|MAXSTACK
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|decompress
 argument_list|()
 block|{
 specifier|register
+name|char_type
+modifier|*
+name|stackp
+decl_stmt|;
+specifier|register
 name|int
-name|stack_top
-init|=
-name|MAXSTACK
+name|finchar
 decl_stmt|;
 specifier|register
 name|code_int
@@ -4205,16 +4279,17 @@ name|oldcode
 decl_stmt|,
 name|incode
 decl_stmt|;
-specifier|register
-name|int
-name|finchar
-decl_stmt|;
-name|char
+ifndef|#
+directive|ifndef
+name|SMALL_STACK
+name|char_type
 name|stack
 index|[
 name|MAXSTACK
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * As above, initialize the first 256 entries in the table.      */
 name|maxcode
 operator|=
@@ -4285,6 +4360,14 @@ name|finchar
 argument_list|)
 expr_stmt|;
 comment|/* first code must be 8 bits = char */
+name|stackp
+operator|=
+operator|&
+name|stack
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4316,41 +4399,12 @@ operator|=
 literal|255
 init|;
 name|code
-operator|>
+operator|>=
 literal|0
 condition|;
 name|code
-operator|-=
-literal|4
+operator|--
 control|)
-block|{
-name|tab_prefix
-index|[
-name|code
-operator|-
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|tab_prefix
-index|[
-name|code
-operator|-
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|tab_prefix
-index|[
-name|code
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|tab_prefix
 index|[
 name|code
@@ -4358,7 +4412,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|clear_flg
 operator|=
 literal|1
@@ -4396,11 +4449,9 @@ operator|>=
 name|free_ent
 condition|)
 block|{
-name|stack
-index|[
-operator|--
-name|stack_top
-index|]
+operator|*
+name|stackp
+operator|++
 operator|=
 name|finchar
 expr_stmt|;
@@ -4445,11 +4496,9 @@ block|{
 endif|#
 directive|endif
 endif|interdata
-name|stack
-index|[
-operator|--
-name|stack_top
-index|]
+operator|*
+name|stackp
+operator|++
 operator|=
 name|tab_suffix
 index|[
@@ -4464,11 +4513,9 @@ name|code
 index|]
 expr_stmt|;
 block|}
-name|stack
-index|[
-operator|--
-name|stack_top
-index|]
+operator|*
+name|stackp
+operator|++
 operator|=
 name|finchar
 operator|=
@@ -4478,22 +4525,27 @@ name|code
 index|]
 expr_stmt|;
 comment|/* 	 * And put them out in forward order 	 */
-for|for
-control|(
-init|;
-name|stack_top
-operator|<
-name|MAXSTACK
-condition|;
-name|stack_top
-operator|++
-control|)
-name|putchar
-argument_list|(
+while|while
+condition|(
+operator|--
+name|stackp
+operator|>
+operator|&
 name|stack
 index|[
-name|stack_top
+literal|0
 index|]
+condition|)
+name|putchar
+argument_list|(
+operator|*
+name|stackp
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+operator|*
+name|stackp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4505,10 +4557,6 @@ argument_list|)
 condition|)
 name|writeerr
 argument_list|( )
-expr_stmt|;
-name|stack_top
-operator|=
-name|MAXSTACK
 expr_stmt|;
 comment|/* 	 * Generate the new entry. 	 */
 if|if
@@ -4932,7 +4980,7 @@ name|DEBUG
 name|printcodes
 argument_list|()
 block|{
-comment|/*      * Just print out codes from input file.  Mostly for debugging.      */
+comment|/*      * Just print out codes from input file.  For debugging.      */
 name|code_int
 name|code
 decl_stmt|;
@@ -5573,6 +5621,9 @@ operator|(
 operator|!
 name|force
 operator|)
+operator|&&
+operator|!
+name|quiet
 condition|)
 block|{
 comment|/* No compression: remove file.Z */
@@ -5756,28 +5807,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|clear
+name|cl_block
 argument_list|()
 comment|/* table clear for block compress */
 block|{
-specifier|register
-name|code_int
-name|i
-decl_stmt|;
-specifier|register
-name|count_int
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|endp
-decl_stmt|;
-specifier|register
-name|unsigned
-name|short
-modifier|*
-name|q
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5855,91 +5888,21 @@ operator|<=
 name|FBITS
 condition|)
 comment|/* sparse array clear */
-for|for
-control|(
-name|i
-operator|=
-operator|(
-literal|1
-operator|<<
-name|maxbits
-operator|)
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-name|ftable
-index|[
-name|fcodemem
-index|[
-name|i
-index|]
-index|]
-operator|=
-literal|0
+name|cl_sparse
+argument_list|()
 expr_stmt|;
-comment|/* indirect thru "shadow" */
 else|else
 endif|#
 directive|endif
 endif|USERMEM
 comment|/* hash table clear */
 block|{
-name|endp
-operator|=
-operator|&
-name|htab
-index|[
-name|hsize
-index|]
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-operator|&
-name|htab
-index|[
-literal|0
-index|]
-operator|,
-name|q
-operator|=
-operator|&
-name|codetab
-index|[
-literal|0
-index|]
-init|;
-name|p
-operator|<
-name|endp
-condition|;
-control|)
-block|{
-operator|*
-name|p
-operator|++
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-operator|*
-name|q
-operator|++
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|creset
+name|cl_hash
 argument_list|(
-name|MAX_CACHE
+operator|(
+name|count_int
+operator|)
+name|hsize
 argument_list|)
 expr_stmt|;
 block|}
@@ -5978,7 +5941,7 @@ directive|endif
 endif|DEBUG
 block|}
 block|}
-name|creset
+name|cl_cache
 argument_list|(
 name|n
 argument_list|)
@@ -6006,12 +5969,6 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
-specifier|static
-name|int
-name|nfiles
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|nfiles
@@ -6019,7 +5976,7 @@ operator|++
 operator|==
 literal|0
 condition|)
-comment|/* No clear needed if first time */
+comment|/* no clear needed if first time */
 return|return;
 name|n
 operator|=
@@ -6055,6 +6012,7 @@ operator|-=
 literal|16
 control|)
 block|{
+comment|/* can do BSD bzero(3) or Sys V memset(3) */
 operator|*
 operator|(
 name|hash_p
@@ -6256,8 +6214,9 @@ name|cl_hash
 argument_list|(
 name|hsize
 argument_list|)
+comment|/* clear hash cache, re-init code table */
 specifier|register
-name|int
+name|count_int
 name|hsize
 expr_stmt|;
 block|{
@@ -6271,7 +6230,7 @@ operator|+
 name|hsize
 decl_stmt|;
 specifier|register
-name|int
+name|count_int
 name|i
 decl_stmt|;
 specifier|register
@@ -6281,17 +6240,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/* clear hashcache */
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a>b) ? b : a)
-name|creset
+name|cl_cache
 argument_list|(
 name|min
 argument_list|(
@@ -6492,7 +6441,54 @@ operator|=
 name|m1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|USERMEM
+name|cl_sparse
+argument_list|( )
+comment|/* clear sparse table indirectly thru "shadow" array */
+block|{
+specifier|register
+name|code_int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+operator|(
+literal|1
+operator|<<
+name|maxbits
+operator|)
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+name|ftable
+index|[
+name|fcodemem
+index|[
+name|i
+index|]
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|USERMEM
+end_endif
 
 end_unit
 
