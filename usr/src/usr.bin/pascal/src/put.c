@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.16 %G%"
+literal|"@(#)put.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3044,7 +3044,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Patchfil makes loc+2 have value  * as its contents.  */
+comment|/*  * Patchfil makes loc+2 have jmploc  * as its contents.  */
 end_comment
 
 begin_macro
@@ -3052,7 +3052,7 @@ name|patchfil
 argument_list|(
 argument|loc
 argument_list|,
-argument|value
+argument|jmploc
 argument_list|,
 argument|words
 argument_list|)
@@ -3066,7 +3066,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|value
+name|jmploc
 decl_stmt|;
 end_decl_stmt
 
@@ -3122,14 +3122,14 @@ name|loc
 operator|-
 name|HEADER_BYTES
 argument_list|,
-name|value
+name|jmploc
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|val
 operator|=
-name|value
+name|jmploc
 expr_stmt|;
 do|do
 block|{
@@ -3144,14 +3144,14 @@ literal|1
 condition|)
 name|val
 operator|=
-name|value
+name|jmploc
 operator|>>
 literal|16
 expr_stmt|;
 else|else
 name|val
 operator|=
-name|value
+name|jmploc
 expr_stmt|;
 endif|#
 directive|endif
@@ -3244,7 +3244,7 @@ directive|ifdef
 name|DEC11
 name|val
 operator|=
-name|value
+name|jmploc
 operator|>>
 literal|16
 expr_stmt|;
