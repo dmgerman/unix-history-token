@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 4.9.1.7 1994/07/19 22:51:24 vixie Exp $"
+literal|"$Id: subr.c,v 1.1.1.1 1994/09/22 21:36:02 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,13 +105,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"res.h"
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../conf/portability.h"
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"res.h"
 end_include
 
 begin_escape
@@ -122,7 +128,7 @@ comment|/*  ********************************************************************
 end_comment
 
 begin_function
-name|SIG_FN
+name|void
 name|IntrHandler
 parameter_list|()
 block|{
@@ -284,7 +290,7 @@ expr_stmt|;
 else|#
 directive|else
 block|{
-name|SIG_FN
+name|void
 function_decl|(
 modifier|*
 name|old

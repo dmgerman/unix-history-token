@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 4.9.1.3 1993/09/16 09:02:07 vixie Exp $"
+literal|"$Id: main.c,v 1.1.1.1 1994/09/22 21:36:01 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"res.h"
 end_include
 
@@ -154,12 +166,6 @@ begin_include
 include|#
 directive|include
 file|"pathnames.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../../conf/portability.h"
 end_include
 
 begin_comment
@@ -280,7 +286,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|SIG_FN
+name|void
 name|IntrHandler
 parameter_list|()
 function_decl|;

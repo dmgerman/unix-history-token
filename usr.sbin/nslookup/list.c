@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: list.c,v 4.9.1.11 1994/06/06 09:08:43 vixie Exp $"
+literal|"$Id: list.c,v 1.1.1.1 1994/09/22 21:36:01 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/iso.h>
 end_include
 
 begin_include
@@ -111,13 +117,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"res.h"
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../conf/portability.h"
+file|"res.h"
 end_include
 
 begin_decl_stmt
@@ -1938,6 +1944,10 @@ name|struct
 name|in_addr
 name|inaddr
 decl_stmt|;
+name|struct
+name|iso_addr
+name|isoa
+decl_stmt|;
 name|char
 name|name
 index|[
@@ -2961,19 +2971,59 @@ break|break;
 case|case
 name|T_NSAP
 case|:
+name|isoa
+operator|.
+name|isoa_len
+operator|=
+name|dlen
+expr_stmt|;
+if|if
+condition|(
+name|isoa
+operator|.
+name|isoa_len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|isoa
+operator|.
+name|isoa_genaddr
+argument_list|)
+condition|)
+name|isoa
+operator|.
+name|isoa_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|isoa
+operator|.
+name|isoa_genaddr
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|cp
+argument_list|,
+name|isoa
+operator|.
+name|isoa_genaddr
+argument_list|,
+name|isoa
+operator|.
+name|isoa_len
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|" %s"
 argument_list|,
-name|inet_nsap_ntoa
+name|iso_ntoa
 argument_list|(
-name|dlen
-argument_list|,
-name|cp
-argument_list|,
-name|NULL
+operator|&
+name|isoa
 argument_list|)
 argument_list|)
 expr_stmt|;

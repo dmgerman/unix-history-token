@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 4.9.1.6 1994/06/01 21:10:16 vixie Exp $"
+literal|"$Id: getinfo.c,v 1.1.1.1 1994/09/22 21:36:01 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,12 +94,6 @@ begin_include
 include|#
 directive|include
 file|"res.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../../conf/portability.h"
 end_include
 
 begin_decl_stmt

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 4.9.1.5 1994/06/06 09:08:43 vixie Exp $"
+literal|"$Id: send.c,v 1.1.1.1 1994/09/22 21:36:02 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,12 +110,6 @@ begin_include
 include|#
 directive|include
 file|"res.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../../conf/portability.h"
 end_include
 
 begin_decl_stmt
