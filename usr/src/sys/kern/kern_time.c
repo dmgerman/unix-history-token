@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_time.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_time.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -349,6 +349,29 @@ name|tv
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * If the system is secure, we do not allow the time to be  		 * set to an earlier value (it may be slowed using adjtime, 		 * but not set back). This feature prevent interlopers from 		 * setting arbitrary time stamps on files. 		 */
+if|if
+condition|(
+name|securelevel
+operator|>
+literal|0
+operator|&&
+name|timercmp
+argument_list|(
+operator|&
+name|atv
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|<
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* WHAT DO WE DO ABOUT PENDING REAL-TIME TIMEOUTS??? */
 name|s
 operator|=
