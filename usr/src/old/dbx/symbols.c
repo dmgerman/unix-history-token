@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.4 %G%"
+literal|"@(#)symbols.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,13 +262,22 @@ name|rangev
 struct|;
 struct|struct
 block|{
-comment|/* address of function value, code */
 name|int
 name|offset
+range|:
+literal|16
 decl_stmt|;
+comment|/* offset for of function value */
+name|Boolean
+name|src
+range|:
+literal|16
+decl_stmt|;
+comment|/* true if there is source line info */
 name|Address
 name|beginaddr
 decl_stmt|;
+comment|/* address of function code */
 block|}
 name|funcv
 struct|;
@@ -376,6 +385,16 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(Boolean) ( \     s->class == FUNC or s->class == PROC or \     s->class == MODULE or s->class == PROG \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|nosource
+parameter_list|(
+name|f
+parameter_list|)
+value|(not (f)->symvalue.funcv.src)
 end_define
 
 begin_include
