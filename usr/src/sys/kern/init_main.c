@@ -387,7 +387,7 @@ name|rlim_max
 operator|=
 name|RLIM_INFINITY
 expr_stmt|;
-comment|/* 	 * Virtual memory limits get set in vminit(). 	 */
+comment|/* 	 * configure virtual memory system, 	 * set vm rlimits 	 */
 name|vminit
 argument_list|()
 expr_stmt|;
@@ -1109,9 +1109,28 @@ name|nswap
 operator|*=
 name|nswdev
 expr_stmt|;
-name|maxpgio
-operator|*=
+comment|/* 	 * If there are multiple swap areas, 	 * allow more paging operations per second. 	 */
+if|if
+condition|(
 name|nswdev
+operator|>
+literal|1
+condition|)
+name|maxpgio
+operator|=
+operator|(
+name|maxpgio
+operator|*
+operator|(
+literal|2
+operator|*
+name|nswdev
+operator|-
+literal|1
+operator|)
+operator|)
+operator|/
+literal|2
 expr_stmt|;
 name|swfree
 argument_list|(
