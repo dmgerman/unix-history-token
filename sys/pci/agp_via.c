@@ -23,11 +23,22 @@ directive|include
 file|"opt_bus.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"opt_agp.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
