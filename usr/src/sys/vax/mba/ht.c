@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.35	82/12/17	*/
+comment|/*	ht.c	4.36	83/05/27	*/
 end_comment
 
 begin_include
@@ -2825,7 +2825,6 @@ specifier|register
 name|int
 name|htunit
 decl_stmt|;
-comment|/*###439 [lint] htphys arg. 2 used inconsistently ht.c(439) :: ht.c(430)%%%*/
 specifier|register
 name|struct
 name|tu_softc
