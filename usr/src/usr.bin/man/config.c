@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	8.1 (Berkeley) %G%"
+literal|"@(#)config.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -616,7 +616,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -870,7 +870,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -1108,7 +1108,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
