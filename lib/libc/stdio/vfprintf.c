@@ -6440,10 +6440,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|digits
 operator|==
 literal|'0'
+operator|||
+operator|*
+name|digits
+operator|==
+literal|'\0'
+operator|)
 operator|&&
 name|value
 condition|)
