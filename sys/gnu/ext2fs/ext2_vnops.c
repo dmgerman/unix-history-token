@@ -85,12 +85,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -110,18 +104,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<miscfs/specfs/specdev.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<miscfs/fifofs/fifo.h>
 end_include
 
 begin_if
@@ -178,12 +160,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/ufs_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_include

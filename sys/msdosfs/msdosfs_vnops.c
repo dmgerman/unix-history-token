@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.50 1997/10/17 12:36:17 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.51 1997/10/26 20:55:28 phk Exp $ */
 end_comment
 
 begin_comment
@@ -83,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/poll.h>
 end_include
 
 begin_include
