@@ -223,7 +223,7 @@ begin_decl_stmt
 name|int
 name|s
 decl_stmt|,
-comment|/* main RAW socket 	   */
+comment|/* main RAW socket	   */
 name|do_resolv
 decl_stmt|,
 comment|/* Would try to resolve all */
@@ -232,7 +232,7 @@ decl_stmt|,
 comment|/* Show packet/byte count  */
 name|do_time
 decl_stmt|,
-comment|/* Show time stamps        */
+comment|/* Show time stamps	   */
 name|do_quiet
 decl_stmt|,
 comment|/* Be quiet in add and flush  */
@@ -244,7 +244,7 @@ decl_stmt|,
 comment|/* this cmd refers to a pipe */
 name|do_sort
 decl_stmt|,
-comment|/* field to sort results (0=no) */
+comment|/* field to sort results (0 = no) */
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -555,7 +555,7 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 if|if
 condition|(
@@ -967,11 +967,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"                         "
+literal|"			 "
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1119,7 +1121,7 @@ operator|->
 name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 name|IP_FW_F_QUEUE
 case|:
@@ -1132,7 +1134,7 @@ operator|->
 name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 name|IP_FW_F_REJECT
 case|:
@@ -2894,7 +2896,7 @@ name|b
 operator|->
 name|len
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 literal|2
 case|:
@@ -2909,7 +2911,7 @@ name|b
 operator|->
 name|len_bytes
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 literal|3
 case|:
@@ -2924,7 +2926,7 @@ name|b
 operator|->
 name|tot_pkts
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 literal|4
 case|:
@@ -2939,7 +2941,7 @@ name|b
 operator|->
 name|tot_bytes
 expr_stmt|;
-break|break ;
+break|break;
 block|}
 if|if
 condition|(
@@ -3040,7 +3042,7 @@ name|rq_elements
 operator|==
 literal|0
 condition|)
-return|return ;
+return|return;
 name|printf
 argument_list|(
 literal|"BKT Prot ___Source IP/port____ "
@@ -3798,7 +3800,7 @@ operator|*
 operator|)
 name|DN_IS_PIPE
 condition|)
-break|break ;
+break|break;
 name|l
 operator|=
 sizeof|sizeof
@@ -4047,7 +4049,7 @@ operator|*
 operator|)
 name|DN_IS_QUEUE
 condition|)
-break|break ;
+break|break;
 name|l
 operator|=
 sizeof|sizeof
@@ -4464,7 +4466,7 @@ name|exitval
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * show dynamic rules          */
+comment|/* 	 * show dynamic rules 	*/
 if|if
 condition|(
 name|num
@@ -4636,7 +4638,7 @@ argument_list|(
 literal|"<->"
 argument_list|)
 expr_stmt|;
-break|break ;
+break|break;
 block|}
 name|a
 operator|.
@@ -4685,7 +4687,7 @@ name|next
 operator|==
 name|NULL
 condition|)
-break|break ;
+break|break;
 block|}
 block|}
 name|free
@@ -7807,7 +7809,7 @@ name|ac
 operator|<
 literal|1
 condition|)
-break|break ;
+break|break;
 if|if
 condition|(
 operator|!
@@ -7975,7 +7977,7 @@ name|proto
 operator|)
 expr_stmt|;
 else|else
-break|break ;
+break|break;
 if|if
 condition|(
 name|ac
@@ -9332,7 +9334,7 @@ name|pipe
 operator|.
 name|bandwidth
 expr_stmt|;
-comment|/* 		 * max idle time (in ticks) before avg queue size becomes 0.  		 * NOTA:  (3/w_q) is approx the value x so that  		 * (1-w_q)^x< 10^-3.  		 */
+comment|/* 		 * max idle time (in ticks) before avg queue size becomes 0. 		 * NOTA:  (3/w_q) is approx the value x so that 		 * (1-w_q)^x< 10^-3. 		 */
 name|w_q
 operator|=
 operator|(
@@ -13596,13 +13598,13 @@ argument_list|(
 literal|"Are you sure? [yn] "
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|c
 operator|=
 name|toupper
@@ -14612,21 +14614,24 @@ name|status
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
-block|{
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"waitpid()"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|WIFEXITED
 argument_list|(
 name|status
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|WEXITSTATUS
 argument_list|(
 name|status
@@ -14646,7 +14651,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -14655,7 +14659,6 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
 name|errx
 argument_list|(
 name|EX_UNAVAILABLE
@@ -14670,9 +14673,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-block|}
 else|else
+block|{
 name|ipfw_main
 argument_list|(
 name|ac
@@ -14680,6 +14682,7 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|EX_OK
 return|;
