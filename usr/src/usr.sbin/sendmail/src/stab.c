@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.9	%G%"
+literal|"@(#)stab.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,7 @@ name|hfunc
 operator|=
 operator|(
 operator|(
+operator|(
 name|hfunc
 operator|<<
 literal|7
@@ -143,6 +144,9 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
+operator|&
+literal|077777
 operator|)
 operator|%
 name|STABSIZE
