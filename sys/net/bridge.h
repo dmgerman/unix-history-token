@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Luigi Rizzo  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2002 Luigi Rizzo  *  * Work partly supported by: Cisco Systems, Inc. - NSITE lab, RTP, NC  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_decl_stmt
@@ -11,45 +11,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * the hash table for bridge  */
+comment|/*  * We need additional per-interface info for the bridge, which is  * stored in a struct bdg_softc. The ifp2sc[] array provides a pointer  * to this struct using the if_index as a mapping key.  * bdg_softc has a backpointer to the struct ifnet, the bridge  * flags, and a cluster (bridging occurs only between port of the  * same cluster).  */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|hash_table
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|name
-decl_stmt|;
-name|unsigned
-name|char
-name|etheraddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|unsigned
-name|short
-name|used
-decl_stmt|;
-block|}
-name|bdg_hash_table
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|bdg_hash_table
-modifier|*
-name|bdg_table
-decl_stmt|;
-end_decl_stmt
+begin_struct_decl
+struct_decl|struct
+name|cluster_softc
+struct_decl|;
+end_struct_decl
 
 begin_comment
-comment|/*  * We need additional info for the bridge. The bdg_ifp2sc[] array  * provides a pointer to this struct using the if_index.     * bdg_softc has a backpointer to the struct ifnet, the bridge  * flags, and a cluster (bridging occurs only between port of the  * same cluster).  */
+comment|/* opaque here, defined in bridge.c */
 end_comment
 
 begin_struct
@@ -69,7 +41,7 @@ define|#
 directive|define
 name|IFF_BDG_PROMISC
 value|0x0001
-comment|/* set promisc mode on this if.  */
+comment|/* set promisc mode on this if.	*/
 define|#
 directive|define
 name|IFF_MUTE
@@ -80,12 +52,10 @@ directive|define
 name|IFF_USED
 value|0x0004
 comment|/* use this if for bridging.    */
-name|short
-name|cluster_id
-decl_stmt|;
-comment|/* in network format */
-name|u_long
-name|magic
+name|struct
+name|cluster_softc
+modifier|*
+name|cluster
 decl_stmt|;
 block|}
 struct|;
@@ -110,71 +80,8 @@ parameter_list|)
 value|(ifp2sc[ifp->if_index].flags& IFF_USED)
 end_define
 
-begin_define
-define|#
-directive|define
-name|BDG_MUTED
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp2sc[ifp->if_index].flags& IFF_MUTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDG_MUTE
-parameter_list|(
-name|ifp
-parameter_list|)
-value|ifp2sc[ifp->if_index].flags |= IFF_MUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDG_UNMUTE
-parameter_list|(
-name|ifp
-parameter_list|)
-value|ifp2sc[ifp->if_index].flags&= ~IFF_MUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDG_CLUSTER
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp2sc[ifp->if_index].cluster_id)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDG_EH
-parameter_list|(
-name|ifp
-parameter_list|)
-value|((struct arpcom *)ifp)->ac_enaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDG_SAMECLUSTER
-parameter_list|(
-name|ifp
-parameter_list|,
-name|src
-parameter_list|)
-define|\
-value|(src == NULL || BDG_CLUSTER(ifp) == BDG_CLUSTER(src) )
-end_define
-
 begin_comment
-comment|/*  * BDG_ACTIVE(ifp) does all checks to see if bridging is loaded,  * activated and used on a given interface.  */
+comment|/*  * BDG_ACTIVE(ifp) does all checks to see if bridging is enabled, loaded,  * and used on a given interface.  */
 end_comment
 
 begin_define
@@ -187,141 +94,8 @@ parameter_list|)
 value|(do_bridge&& BDG_LOADED&& BDG_USED(ifp))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BDG_MAX_PORTS
-value|128
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_bdg_addr
-block|{
-name|unsigned
-name|char
-name|etheraddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|short
-name|cluster_id
-decl_stmt|;
-block|}
-name|bdg_addr
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|bdg_addr
-name|bdg_addresses
-index|[
-name|BDG_MAX_PORTS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bdg_ports
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * out of the 6 bytes, the last ones are more "variable". Since  * we are on a little endian machine, we have to do some gimmick...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASH_SIZE
-value|8192
-end_define
-
-begin_comment
-comment|/* must be a power of 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASH_FN
-parameter_list|(
-name|addr
-parameter_list|)
-value|(	\ 	ntohs( ((short *)addr)[1] ^ ((short *)addr)[2] )& (HASH_SIZE -1))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BDG_MATCH
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|( \     ((unsigned short *)(a))[2] == ((unsigned short *)(b))[2]&& \     *((unsigned int *)(a)) == *((unsigned int *)(b)) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_ETHER_BROADCAST
-parameter_list|(
-name|a
-parameter_list|)
-value|( \ 	*((unsigned int *)(a)) == 0xffffffff&& \ 	((unsigned short *)(a))[2] == 0xffff )
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* for machines that do not support unaligned access */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BDG_MATCH
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(!bcmp(a, b, ETHER_ADDR_LEN) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_ETHER_BROADCAST
-parameter_list|(
-name|a
-parameter_list|)
-value|(!bcmp(a, "\377\377\377\377\377\377", 6))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * The following constants are not legal ifnet pointers, and are used  * as return values from the classifier, bridge_dst_lookup()  * The same values are used as index in the statistics arrays,  * with BDG_FORWARD replacing specifically forwarded packets.  */
+comment|/*  * The following constants are not legal ifnet pointers, and are used  * as return values from the classifier, bridge_dst_lookup().  * The same values are used as index in the statistics arrays,  * with BDG_FORWARD replacing specifically forwarded packets.  *  * These constants are here because they are used in 'netstat'  * to show bridge statistics.  */
 end_comment
 
 begin_define
@@ -380,6 +154,10 @@ name|BDG_FORWARD
 value|( (struct ifnet *)9 )
 end_define
 
+begin_comment
+comment|/*  * Statistics are passed up with the sysctl interface, "netstat -p bdg"  * reads them. PF_BDG defines the 'bridge' protocol family.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -389,10 +167,6 @@ end_define
 
 begin_comment
 comment|/* XXX superhack */
-end_comment
-
-begin_comment
-comment|/*  * statistics, passed up with sysctl interface and ns -p bdg  */
 end_comment
 
 begin_define
@@ -427,6 +201,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* XXX this should be made dynamic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BDG_MAX_PORTS
+value|128
+end_define
+
 begin_struct
 struct|struct
 name|bdg_stats
@@ -435,7 +220,7 @@ name|struct
 name|bdg_port_stat
 name|s
 index|[
-literal|16
+name|BDG_MAX_PORTS
 index|]
 decl_stmt|;
 block|}
@@ -451,7 +236,7 @@ name|ifp
 parameter_list|,
 name|type
 parameter_list|)
-value|bdg_stats.s[ifp->if_index].p_in[(long)type]++
+value|bdg_stats.s[ifp->if_index].p_in[(uintptr_t)type]++
 end_define
 
 begin_ifdef
