@@ -25,8 +25,7 @@ name|RC_BRD
 parameter_list|(
 name|s
 parameter_list|)
-define|\
-value|((((RC_OSCFREQ + (s) / 2) / (s)) + CD180_CTICKS/2) / CD180_CTICKS)
+value|((s) == 0 ? 0 : \ 	(((RC_OSCFREQ + (s) / 2) / (s)) + CD180_CTICKS/2) / CD180_CTICKS)
 end_define
 
 begin_define
