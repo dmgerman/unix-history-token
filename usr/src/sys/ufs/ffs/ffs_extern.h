@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -681,28 +681,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|__END_DECLS
-specifier|extern
-name|int
-name|inside
-index|[]
-decl_stmt|,
-name|around
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-modifier|*
-name|fragtbl
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
+name|__END_DECLS
 specifier|extern
 name|int
 function_decl|(
