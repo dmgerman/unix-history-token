@@ -1426,6 +1426,9 @@ decl_stmt|;
 name|uint64_t
 name|rate
 decl_stmt|;
+name|register_t
+name|regs
+decl_stmt|;
 comment|/* Look up appropriate bit value based on frequency. */
 name|sc
 operator|=
@@ -1493,7 +1496,9 @@ name|req_val
 argument_list|)
 expr_stmt|;
 comment|/* Disable interrupts and get the other register contents. */
-name|disable_intr
+name|regs
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|old_val
@@ -1562,8 +1567,10 @@ operator|->
 name|ctrl_reg
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|intr_restore
+argument_list|(
+name|regs
+argument_list|)
 expr_stmt|;
 comment|/* Check if the desired state was indeed selected. */
 if|if
