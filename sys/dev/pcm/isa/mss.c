@@ -286,8 +286,8 @@ comment|/* mss_write */
 block|,
 name|mss_ioctl
 block|,
-name|sndpoll
-comment|/* mss_poll */
+name|sndselect
+comment|/* mss_select */
 block|,
 name|mss_intr
 block|,
@@ -379,6 +379,8 @@ name|id_iobase
 operator|=
 literal|0x530
 expr_stmt|;
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"mss_probe: no address supplied, try default 0x%x\n"
@@ -386,6 +388,7 @@ argument_list|,
 name|dev
 operator|->
 name|id_iobase
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -436,7 +439,7 @@ literal|0xff
 condition|)
 block|{
 comment|/* Bus float */
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -476,7 +479,7 @@ operator|!=
 literal|0x00
 condition|)
 block|{
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -1114,17 +1117,21 @@ name|SND_F_BUSY_DSP16
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|d
 operator|->
 name|flags
 operator|&
 name|SND_F_BUSY
-operator|)
 condition|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* device was already set, no need to reinit */
+else|else
 block|{
-comment|/* 	 * device was idle. Do the necessary initialization, 	 * but no need keep interrupts blocked since this device 	 * will not get them 	 */
+comment|/* 	 * device was idle. Do the necessary initialization, 	 * but no need keep interrupts blocked. 	 * will not get them 	 */
 name|splx
 argument_list|(
 name|s
@@ -1274,11 +1281,6 @@ argument_list|)
 expr_stmt|;
 comment|/* and reset buffers... */
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1389,17 +1391,21 @@ name|SND_F_BUSY_DSP16
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|d
 operator|->
 name|flags
 operator|&
 name|SND_F_BUSY_ANY
-operator|)
 condition|)
+comment|/* still some device open */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+else|else
 block|{
-comment|/* last one ... */
+comment|/* last one */
 name|d
 operator|->
 name|flags
@@ -1435,11 +1441,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2259,11 +2260,12 @@ operator|&
 literal|0x10
 condition|)
 block|{
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|"Warning: CD interrupt\n"
+argument|);
 argument_list|)
-expr_stmt|;
 name|mc11
 operator||=
 literal|0x10
@@ -2276,11 +2278,12 @@ operator|&
 literal|0x20
 condition|)
 block|{
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|"Warning: MPU interrupt\n"
+argument|);
 argument_list|)
-expr_stmt|;
 name|mc11
 operator||=
 literal|0x20
@@ -2419,11 +2422,12 @@ condition|)
 goto|goto
 name|again
 goto|;
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|"xxx too many loops\n"
+argument|);
 argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2649,6 +2653,10 @@ name|x
 parameter_list|)
 block|{
 name|int
+name|arg
+init|=
+name|x
+decl_stmt|,
 name|n
 init|=
 literal|0
@@ -2688,7 +2696,9 @@ name|n
 return|;
 name|printf
 argument_list|(
-literal|"AD_WAIT_INIT FAILED 0x%02x\n"
+literal|"AD_WAIT_INIT FAILED %d 0x%02x\n"
+argument_list|,
+name|arg
 argument_list|,
 name|n
 argument_list|)
@@ -4528,7 +4538,7 @@ literal|0x00
 condition|)
 block|{
 comment|/* Not a AD1848 */
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -4597,7 +4607,7 @@ operator|!=
 literal|0x45
 condition|)
 block|{
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -4660,7 +4670,7 @@ operator|!=
 literal|0xaa
 condition|)
 block|{
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -4724,7 +4734,7 @@ literal|0x0f
 operator|)
 condition|)
 block|{
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -4741,15 +4751,14 @@ literal|0
 return|;
 block|}
 comment|/*      * NOTE! Last 4 bits of the reg I12 tell the chip revision.      *	0x01=RevB      *  0x0A=RevC. also CS4231/CS4231A and OPTi931      */
-name|printf
+name|BVDDB
 argument_list|(
+argument|printf(
 literal|"mss_detect - chip revision 0x%02x\n"
-argument_list|,
-name|tmp
-operator|&
+argument|, tmp&
 literal|0x0f
+argument|);
 argument_list|)
-expr_stmt|;
 comment|/*      * The original AD1848/CS4248 has just 16 indirect registers. This      * means that I0 and I16 should return the same value (etc.). Ensure      * that the Mode2 enable bit of I12 is 0. Otherwise this test fails      * with new parts.      */
 name|ad_write
 argument_list|(
@@ -4801,7 +4810,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -4863,11 +4872,12 @@ operator|==
 literal|0x00
 condition|)
 block|{
-name|printf
+name|BVDDB
 argument_list|(
+argument|printf(
 literal|"this should be an OPTi931\n"
+argument|);
 argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4944,7 +4954,7 @@ literal|0xaa
 condition|)
 block|{
 comment|/* Rotten bits? */
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -4959,14 +4969,6 @@ literal|0
 return|;
 block|}
 comment|/* 	     * Verify that some bits of I25 are read only. 	     */
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"mss_detect() - step I\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|tmp1
 operator|=
 name|ad_read
@@ -5162,13 +5164,12 @@ expr_stmt|;
 break|break ;
 default|default:
 comment|/* Assume CS4231 */
-name|printf
+name|BVDDB
 argument_list|(
+argument|printf(
 literal|"unknown id 0x%02x, assuming CS4231\n"
-argument_list|,
-name|id
+argument|, id);
 argument_list|)
-expr_stmt|;
 name|d
 operator|->
 name|bd_id
@@ -5189,7 +5190,7 @@ expr_stmt|;
 comment|/* Restore bits */
 block|}
 block|}
-name|DEB
+name|BVDDB
 argument_list|(
 name|printf
 argument_list|(
@@ -5820,8 +5821,6 @@ condition|(
 name|d
 operator|.
 name|flags
-operator|&
-name|DV_PNP_SBCODEC
 condition|)
 block|{
 comment|/*** use sb-compatible codec ***/
@@ -6221,6 +6220,18 @@ literal|1
 index|]
 operator|)
 expr_stmt|;
+name|tmp_d
+operator|.
+name|synth_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|/* XXX check this for yamaha */
 name|pcmattach
 argument_list|(
 name|dev
@@ -6488,8 +6499,6 @@ operator|=
 name|d
 operator|.
 name|flags
-operator|&
-name|DV_PNP_SBCODEC
 condition|?
 name|sb_op_desc
 else|:
@@ -6561,6 +6570,17 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+name|tmp_d
+operator|.
+name|synth_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|1
+index|]
+expr_stmt|;
 name|opti_write
 argument_list|(
 name|p
@@ -6587,8 +6607,6 @@ condition|(
 name|d
 operator|.
 name|flags
-operator|&
-name|DV_PNP_SBCODEC
 condition|)
 block|{
 comment|/* sb-compatible codec */
@@ -6930,16 +6948,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* d.irq[1] = d.irq[0] ; */
-name|printf
-argument_list|(
-literal|"pnp_read 0xf2 returns 0x%x\n"
-argument_list|,
-name|pnp_read
-argument_list|(
-literal|0xf2
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|pnp_write
 argument_list|(
 literal|0xf2
@@ -7106,11 +7114,6 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"resetting the gus...\n"
-argument_list|)
-expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000
@@ -7222,23 +7225,18 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|BVDDB
 argument_list|(
+argument|printf(
 literal|"GUS: silicon rev %c\n"
-argument_list|,
+argument|,
 literal|'A'
-operator|+
-operator|(
-operator|(
-name|tmp
-operator|&
+argument|+ ( ( tmp&
 literal|0xf
-operator|)
-operator|>>
+argument|)>>
 literal|4
-operator|)
+argument|) );
 argument_list|)
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|tmp_d

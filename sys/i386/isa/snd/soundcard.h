@@ -2958,7 +2958,7 @@ begin_define
 define|#
 directive|define
 name|SOUND_DEVICE_LABELS
-value|{ \ 	"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 	 "Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 	"Line1", "Line2", "Line3", "Digital1", "Digital2", "Digital3", \ 	"PhoneIn", "PhoneOut", "Video", "Radio", "Monitor"}
+value|{ \ 	"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 	"Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 	"Line1", "Line2", "Line3", "Digital1", "Digital2", "Digital3", \ 	"PhoneIn", "PhoneOut", "Video", "Radio", "Monitor"}
 end_define
 
 begin_define

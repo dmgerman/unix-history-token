@@ -279,7 +279,7 @@ literal|"dsp_wrintr: dl %d, rp:rl %d:%d, fp:fl %d:%d\n"
 argument|, 	    b->dl, b->rp, b->rl, b->fp, b->fl)
 argument_list|)
 empty_stmt|;
-comment|/*      * start another dma operation only if have ready data in the buffer,      * there is no pending abort, have a full-duplex device      * or have half duplex device      * and there is no * pending op on the other side.      *      * Force transfers to be aligned to a boundary of 4, which is      * needed when doing stereo and 16-bit. We could make this      * adaptive, but why bother for now...      */
+comment|/*      * start another dma operation only if have ready data in the buffer,      * there is no pending abort, have a full-duplex device, or have a      * half duplex device and there is no pending op on the other side.      *      * Force transfers to be aligned to a boundary of 4, which is      * needed when doing stereo and 16-bit. We could make this      * adaptive, but why bother for now...      */
 if|if
 condition|(
 name|b
@@ -334,6 +334,7 @@ operator|&=
 name|DMA_ALIGN_MASK
 expr_stmt|;
 comment|/* realign things */
+comment|/* 	 * check if we need to reprogram the DMA on the sound card. 	 * This happens if the size has changed _and_ the new size 	 * is smaller, or it matches the blocksize. 	 */
 if|if
 condition|(
 name|l
@@ -341,6 +342,20 @@ operator|!=
 name|b
 operator|->
 name|dl
+operator|&&
+operator|(
+name|l
+operator|<
+name|b
+operator|->
+name|dl
+operator|||
+name|l
+operator|==
+name|d
+operator|->
+name|play_blocksize
+operator|)
 condition|)
 block|{
 comment|/* for any reason, size has changed. Stop and restart */
@@ -366,13 +381,6 @@ name|rl
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|b
-operator|->
-name|dl
-operator|=
-name|l
-expr_stmt|;
-comment|/* record previous transfer size */
 name|d
 operator|->
 name|callback
@@ -384,6 +392,37 @@ operator||
 name|SND_CB_STOP
 argument_list|)
 expr_stmt|;
+comment|/* 	     * at high speed, it might well be that the count 	     * changes in the meantime. So we try to update b->rl 	     */
+name|dsp_wr_dmaupdate
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+name|l
+operator|=
+name|min
+argument_list|(
+name|b
+operator|->
+name|rl
+argument_list|,
+name|d
+operator|->
+name|play_blocksize
+argument_list|)
+expr_stmt|;
+name|l
+operator|&=
+name|DMA_ALIGN_MASK
+expr_stmt|;
+comment|/* realign things */
+name|b
+operator|->
+name|dl
+operator|=
+name|l
+expr_stmt|;
+comment|/* record previous transfer size */
 name|d
 operator|->
 name|callback
@@ -464,7 +503,16 @@ literal|"Race! got wrint while reloading...\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|b
+operator|->
+name|rl
+operator|<=
+literal|0
+condition|)
+comment|/* XXX added 980110 lr */
 name|reset_dbuf
 argument_list|(
 name|b
@@ -557,13 +605,11 @@ name|bufsize
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|n
 operator|=
 name|buf
 operator|->
 name|uio_resid
-operator|)
 condition|)
 block|{
 name|l
@@ -3003,7 +3049,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"timeout flushing dbuf_out.chan, cnt 0x%x flags 0x%08lx\n"
+literal|"timeout flushing dbuf_out.chan, cnt 0x%x flags 0x%08x\n"
 argument_list|,
 name|b
 operator|->

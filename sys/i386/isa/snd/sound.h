@@ -1,5 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* uncomment the next line for -current with select->poll changes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_POLL
+end_define
+
+begin_comment
 comment|/*  * sound.h  *  * include file for kernel sources, sound driver.  *   * Copyright by Hannu Savolainen 1995  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
@@ -165,12 +175,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -183,6 +187,30 @@ end_include
 begin_comment
 comment|/* for DELAY */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_POLL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|d_select_t
+value|d_poll_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -238,7 +266,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|d_poll_t
+name|d_select_t
 value|void
 end_define
 
@@ -423,9 +451,9 @@ name|d_ioctl_t
 modifier|*
 name|ioctl
 decl_stmt|;
-name|d_poll_t
+name|d_select_t
 modifier|*
-name|poll
+name|select
 decl_stmt|;
 name|irq_proc_t
 modifier|*
@@ -479,7 +507,7 @@ name|SND_CB_INIT
 value|0x05
 comment|/* init board parameters */
 comment|/* init can only be called with int enabled and 	 * no pending DMA activity. 	 */
-comment|/*      * whereas from here, parameters are set at runtime.      */
+comment|/*      * whereas from here, parameters are set at runtime.      * io_base == 0 means that the board is not configured.      */
 name|int
 name|io_base
 decl_stmt|;
@@ -500,10 +528,6 @@ name|int
 name|midi_base
 decl_stmt|;
 comment|/* base for the midi */
-name|int
-name|synth_base
-decl_stmt|;
-comment|/* base for the synth */
 name|int
 name|irq
 decl_stmt|;
@@ -550,6 +574,10 @@ define|#
 directive|define
 name|SND_F_BUSY_ANY
 value|0x70000000
+define|#
+directive|define
+name|SND_F_BUSY_SYNTH
+value|0x80000000
 comment|/*      * the next two are used to allow only one pending operation of      * each type.      */
 define|#
 directive|define
@@ -697,6 +725,14 @@ parameter_list|(
 name|unit
 parameter_list|)
 value|( 0xa4d10de0 + unit )
+name|int
+name|synth_base
+decl_stmt|;
+comment|/* base for the synth */
+name|int
+name|synth_type
+decl_stmt|;
+comment|/* type of synth */
 name|void
 modifier|*
 name|device_data
@@ -1439,6 +1475,10 @@ parameter_list|)
 value|MIX_ENT(name, 0,0,0,0, 0,0,0,0)
 end_define
 
+begin_comment
+comment|/*  * some macros for debugging purposes  * DDB/DEB to enable/disable debugging stuff  * BVDDB   to enable debugging when bootverbose  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1453,36 +1493,26 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEB
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|DEB
+name|BVDDB
 parameter_list|(
 name|x
 parameter_list|)
+value|if (bootverbose) x
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DDB
+name|DEB
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DDB
+name|DEB
 parameter_list|(
 name|x
 parameter_list|)
@@ -1606,6 +1636,30 @@ name|struct
 name|isa_device
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * functions in isa.c  */
+end_comment
+
+begin_function_decl
+name|int
+name|isa_dmastatus
+parameter_list|(
+name|int
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isa_dmastop
+parameter_list|(
+name|int
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1800,8 +1854,8 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|d_poll_t
-name|sndpoll
+name|d_select_t
+name|sndselect
 decl_stmt|;
 end_decl_stmt
 
@@ -2068,17 +2122,6 @@ end_comment
 begin_comment
 comment|/* almost all modern cards do not have this set of registers,      * so it is better to make this the default behaviour      */
 end_comment
-
-begin_comment
-comment|/*  * the following flags are for PnP cards only and are undocumented  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DV_PNP_SBCODEC
-value|0x1
-end_define
 
 begin_endif
 endif|#
