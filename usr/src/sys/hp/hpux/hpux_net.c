@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.33 89/08/23$  *  *	@(#)hpux_net.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -169,15 +169,6 @@ name|hpuxsetsockopt
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|file
-modifier|*
-name|getsock
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_struct
 struct|struct
@@ -668,23 +659,23 @@ name|tmp
 decl_stmt|,
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -993,23 +984,23 @@ name|valsize
 decl_stmt|,
 name|error
 decl_stmt|;
-name|fp
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
 argument_list|,
 operator|&
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
