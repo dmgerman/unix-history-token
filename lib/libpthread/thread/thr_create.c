@@ -348,9 +348,12 @@ expr_stmt|;
 comment|/* 				 * scheduling policy and scheduling parameters will be 				 * inherited in following code. 				 */
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SYSTEM_SCOPE_ONLY
+if|if
+condition|(
+name|_thread_scope_system
+operator|!=
+literal|0
+condition|)
 name|new_thread
 operator|->
 name|attr
@@ -359,8 +362,6 @@ name|flags
 operator||=
 name|PTHREAD_SCOPE_SYSTEM
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|create_stack

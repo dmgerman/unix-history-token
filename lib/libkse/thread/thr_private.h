@@ -2439,6 +2439,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thread_scope_system
+name|SCLASS_PRESET
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* List of all threads: */
 end_comment
