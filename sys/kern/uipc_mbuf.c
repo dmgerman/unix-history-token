@@ -728,7 +728,7 @@ name|caddr_t
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|n
 operator|->
@@ -1122,7 +1122,7 @@ name|caddr_t
 name|cp
 parameter_list|)
 block|{
-name|unsigned
+name|u_int
 name|count
 decl_stmt|;
 name|KASSERT
@@ -2256,7 +2256,7 @@ operator|->
 name|m_len
 argument_list|,
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|count
 argument_list|)
@@ -2392,7 +2392,7 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
-name|unsigned
+name|u_int
 name|len
 init|=
 name|len0
@@ -3024,7 +3024,7 @@ name|caddr_t
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|len
 argument_list|)
@@ -3042,7 +3042,7 @@ name|caddr_t
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|len
 argument_list|)
@@ -3235,7 +3235,7 @@ name|caddr_t
 argument_list|)
 argument_list|,
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|mlen
 argument_list|)
@@ -3432,7 +3432,7 @@ block|}
 end_function
 
 begin_function
-name|unsigned
+name|u_int
 name|m_fixhdr
 parameter_list|(
 name|struct
@@ -3441,7 +3441,7 @@ modifier|*
 name|m0
 parameter_list|)
 block|{
-name|unsigned
+name|u_int
 name|len
 decl_stmt|;
 name|len
@@ -3470,7 +3470,7 @@ block|}
 end_function
 
 begin_function
-name|unsigned
+name|u_int
 name|m_length
 parameter_list|(
 name|struct
@@ -3490,7 +3490,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|unsigned
+name|u_int
 name|len
 decl_stmt|;
 name|len
