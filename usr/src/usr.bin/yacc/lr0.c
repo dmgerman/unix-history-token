@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lr0.c	5.2 (Berkeley) %G%"
+literal|"@(#)lr0.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,15 @@ begin_decl_stmt
 specifier|static
 name|core
 modifier|*
+modifier|*
+name|state_set
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|core
+modifier|*
 name|this_state
 decl_stmt|;
 end_decl_stmt
@@ -186,15 +195,6 @@ specifier|static
 name|short
 modifier|*
 name|kernel_items
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|core
-modifier|*
-modifier|*
-name|state_table
 decl_stmt|;
 end_decl_stmt
 
@@ -413,7 +413,7 @@ argument_list|,
 name|short
 argument_list|)
 expr_stmt|;
-name|state_table
+name|state_set
 operator|=
 name|NEW2
 argument_list|(
@@ -452,7 +452,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Entering append_states\n"
+literal|"Entering append_states()\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -596,7 +596,7 @@ argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
-name|state_table
+name|state_set
 argument_list|)
 expr_stmt|;
 block|}
@@ -727,6 +727,7 @@ specifier|register
 name|int
 name|found
 decl_stmt|;
+specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -737,7 +738,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Entering get_state, symbol = %d\n"
+literal|"Entering get_state(%d)\n"
 argument_list|,
 name|symbol
 argument_list|)
@@ -782,7 +783,7 @@ argument_list|)
 expr_stmt|;
 name|sp
 operator|=
-name|state_table
+name|state_set
 index|[
 name|key
 index|]
@@ -896,7 +897,7 @@ block|}
 block|}
 else|else
 block|{
-name|state_table
+name|state_set
 index|[
 name|key
 index|]
@@ -1249,7 +1250,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Entering new_state, symbol = %d\n"
+literal|"Entering new_state(%d)\n"
 argument_list|,
 name|symbol
 argument_list|)
@@ -1948,6 +1949,7 @@ name|reductions
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
 name|short
 modifier|*
 name|rend
