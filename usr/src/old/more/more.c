@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.21 (Berkeley) %G%"
+literal|"@(#)more.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5491,7 +5491,7 @@ name|execute
 argument_list|(
 name|filename
 argument_list|,
-name|VI
+name|_PATH_VI
 argument_list|,
 literal|"vi"
 argument_list|,
