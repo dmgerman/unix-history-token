@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.69 1999/02/26 21:28:12 brian Exp $  *  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.72 1999/04/11 08:51:04 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"layer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ua.h"
 end_include
 
@@ -132,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -6898,13 +6904,21 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
 name|lcp_Input
 parameter_list|(
 name|struct
-name|lcp
+name|bundle
 modifier|*
-name|lcp
+name|bundle
+parameter_list|,
+name|struct
+name|link
+modifier|*
+name|l
 parameter_list|,
 name|struct
 name|mbuf
@@ -6916,13 +6930,18 @@ comment|/* Got PROTO_LCP from link */
 name|fsm_Input
 argument_list|(
 operator|&
-name|lcp
+name|l
 operator|->
+name|lcp
+operator|.
 name|fsm
 argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.50 1999/03/25 11:37:51 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.51 1999/04/26 08:54:33 brian Exp $  */
 end_comment
 
 begin_include
@@ -129,44 +129,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOALIAS
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<alias.h>
+file|"layer.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"alias.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -326,19 +293,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"modem.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"auth.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -1755,7 +1716,7 @@ name|bundle
 operator|->
 name|ifSpeed
 operator|+=
-name|modem_Speed
+name|physical_GetSpeed
 argument_list|(
 name|dl
 operator|->
@@ -1790,7 +1751,7 @@ name|bundle
 operator|->
 name|ifSpeed
 operator|=
-name|modem_Speed
+name|physical_GetSpeed
 argument_list|(
 name|p
 argument_list|)
@@ -1971,7 +1932,7 @@ name|bundle
 operator|->
 name|ifSpeed
 operator|+=
-name|modem_Speed
+name|physical_GetSpeed
 argument_list|(
 name|dl
 operator|->
@@ -3487,39 +3448,28 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|bp
-decl_stmt|;
-name|bp
-operator|=
-name|mbuf_Alloc
-argument_list|(
 name|n
-argument_list|,
-name|MB_IPIN
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|MBUF_CTOP
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
+operator|+=
+sizeof|sizeof
+name|tun
+operator|-
+sizeof|sizeof
 name|tun
 operator|.
 name|data
-argument_list|,
-name|n
-argument_list|)
 expr_stmt|;
-name|ip_Input
+name|write
 argument_list|(
 name|bundle
+operator|->
+name|dev
+operator|.
+name|fd
 argument_list|,
-name|bp
+operator|&
+name|tun
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 name|log_Printf
@@ -3620,50 +3570,6 @@ name|pri
 operator|>=
 literal|0
 condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|NOALIAS
-if|if
-condition|(
-name|bundle
-operator|->
-name|AliasEnabled
-condition|)
-block|{
-name|PacketAliasOut
-argument_list|(
-name|tun
-operator|.
-name|data
-argument_list|,
-sizeof|sizeof
-name|tun
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
-name|n
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|tun
-operator|.
-name|data
-operator|)
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|ip_Enqueue
 argument_list|(
 operator|&
@@ -3682,7 +3588,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -6735,7 +6640,7 @@ name|NULL
 condition|)
 name|add
 operator|=
-name|ip_FlushPacket
+name|ip_PushPacket
 argument_list|(
 operator|&
 name|dl
@@ -6855,7 +6760,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" weight %d, %d bytes/sec"
+literal|" weight %d, %Ld bytes/sec"
 argument_list|,
 name|dl
 operator|->
@@ -9873,7 +9778,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Give away all our modem locks (to the final process) */
+comment|/* Give away all our physical locks (to the final process) */
 for|for
 control|(
 name|dl
@@ -9898,7 +9803,7 @@ name|state
 operator|!=
 name|DATALINK_CLOSED
 condition|)
-name|modem_ChangedPid
+name|physical_ChangedPid
 argument_list|(
 name|dl
 operator|->
@@ -9945,7 +9850,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Give away all our modem locks (to the intermediate process) */
+comment|/* Give away all our physical locks (to the intermediate process) */
 for|for
 control|(
 name|dl
@@ -9970,7 +9875,7 @@ name|state
 operator|!=
 name|DATALINK_CLOSED
 condition|)
-name|modem_ChangedPid
+name|physical_ChangedPid
 argument_list|(
 name|dl
 operator|->

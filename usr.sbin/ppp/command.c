@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.190 1999/03/25 23:36:23 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.191 1999/04/26 08:54:33 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -159,6 +159,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"layer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
 end_include
 
@@ -232,12 +238,6 @@ begin_include
 include|#
 directive|include
 file|"ipcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"modem.h"
 end_include
 
 begin_ifndef
@@ -609,6 +609,20 @@ name|VAR_CD
 value|30
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_PARITY
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_CRTSCTS
+value|32
+end_define
+
 begin_comment
 comment|/* ``accept|deny|disable|enable'' masks */
 end_comment
@@ -728,7 +742,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"2.11"
+literal|"2.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,7 +752,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/03/25 23:36:23 $"
+literal|"$Date: 1999/04/26 08:54:33 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4023,7 +4037,7 @@ name|LOCAL_CX_OPT
 block|,
 literal|"Clear throughput statistics"
 block|,
-literal|"clear ipcp|modem [current|overall|peak]..."
+literal|"clear ipcp|physical [current|overall|peak]..."
 block|}
 block|,
 block|{
@@ -4157,7 +4171,7 @@ name|LOCAL_CX_OPT
 block|,
 literal|"Generate a down event"
 block|,
-literal|"down"
+literal|"down [ccp|lcp]"
 block|}
 block|,
 block|{
@@ -5027,11 +5041,11 @@ literal|"show mem"
 block|}
 block|,
 block|{
-literal|"modem"
+literal|"physical"
 block|,
 name|NULL
 block|,
-name|modem_ShowStatus
+name|physical_ShowStatus
 block|,
 name|LOCAL_AUTH
 operator||
@@ -5039,7 +5053,7 @@ name|LOCAL_CX
 block|,
 literal|"(low-level) link info"
 block|,
-literal|"show modem"
+literal|"show physical"
 block|}
 block|,
 block|{
@@ -8237,51 +8251,6 @@ block|}
 block|}
 return|return
 name|res
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|SetModemParity
-parameter_list|(
-name|struct
-name|cmdargs
-specifier|const
-modifier|*
-name|arg
-parameter_list|)
-block|{
-return|return
-name|arg
-operator|->
-name|argc
-operator|>
-name|arg
-operator|->
-name|argn
-condition|?
-name|modem_SetParity
-argument_list|(
-name|arg
-operator|->
-name|cx
-operator|->
-name|physical
-argument_list|,
-name|arg
-operator|->
-name|argv
-index|[
-name|arg
-operator|->
-name|argn
-index|]
-argument_list|)
-else|:
-operator|-
-literal|1
 return|;
 block|}
 end_function
@@ -11867,29 +11836,9 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-block|}
-return|return
-name|err
-condition|?
-literal|1
-else|:
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|SetCtsRts
-parameter_list|(
-name|struct
-name|cmdargs
-specifier|const
-modifier|*
-name|arg
-parameter_list|)
-block|{
+case|case
+name|VAR_PARITY
+case|:
 if|if
 condition|(
 name|arg
@@ -11902,19 +11851,41 @@ name|argn
 operator|+
 literal|1
 condition|)
-block|{
-if|if
-condition|(
-name|strcmp
+return|return
+name|physical_SetParity
 argument_list|(
 name|arg
 operator|->
-name|argv
-index|[
-name|arg
+name|cx
 operator|->
-name|argn
-index|]
+name|physical
+argument_list|,
+name|argp
+argument_list|)
+return|;
+else|else
+block|{
+name|err
+operator|=
+literal|"Parity value must be odd, even or none\n"
+expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|VAR_CRTSCTS
+case|:
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|argp
 argument_list|,
 literal|"on"
 argument_list|)
@@ -11935,16 +11906,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
-name|arg
-operator|->
-name|argv
-index|[
-name|arg
-operator|->
-name|argn
-index|]
+name|argp
 argument_list|,
 literal|"off"
 argument_list|)
@@ -11963,17 +11927,27 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-return|return
-operator|-
-literal|1
-return|;
-return|return
-literal|0
-return|;
+block|{
+name|err
+operator|=
+literal|"RTS/CTS value must be on or off\n"
+expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 block|}
 return|return
-operator|-
+name|err
+condition|?
 literal|1
+else|:
+literal|0
 return|;
 block|}
 end_function
@@ -12215,7 +12189,7 @@ literal|"ctsrts"
 block|,
 literal|"crtscts"
 block|,
-name|SetCtsRts
+name|SetVariable
 block|,
 name|LOCAL_AUTH
 operator||
@@ -12224,6 +12198,13 @@ block|,
 literal|"Use hardware flow control"
 block|,
 literal|"set ctsrts [on|off]"
+block|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|VAR_CRTSCTS
 block|}
 block|,
 block|{
@@ -12260,7 +12241,7 @@ name|LOCAL_AUTH
 operator||
 name|LOCAL_CX
 block|,
-literal|"modem device name"
+literal|"physical device name"
 block|,
 literal|"set device|line device-name[,device-name]"
 block|,
@@ -12664,15 +12645,22 @@ literal|"parity"
 block|,
 name|NULL
 block|,
-name|SetModemParity
+name|SetVariable
 block|,
 name|LOCAL_AUTH
 operator||
 name|LOCAL_CX
 block|,
-literal|"modem parity"
+literal|"serial parity"
 block|,
 literal|"set parity [odd|even|none]"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|VAR_PARITY
 block|}
 block|,
 block|{
@@ -12837,9 +12825,9 @@ name|LOCAL_AUTH
 operator||
 name|LOCAL_CX
 block|,
-literal|"modem speed"
+literal|"physical speed"
 block|,
-literal|"set speed value"
+literal|"set speed value|sync"
 block|}
 block|,
 block|{
@@ -13766,6 +13754,45 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|arg
+operator|->
+name|bundle
+operator|->
+name|AliasEnabled
+condition|)
+block|{
+if|if
+condition|(
+name|arg
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
+name|fsm
+operator|.
+name|state
+operator|==
+name|ST_OPENED
+condition|)
+name|PacketAliasSetAddress
+argument_list|(
+name|arg
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
+name|my_ip
+argument_list|)
+expr_stmt|;
 name|arg
 operator|->
 name|bundle
@@ -13774,6 +13801,7 @@ name|AliasEnabled
 operator|=
 literal|1
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -16245,7 +16273,7 @@ operator|->
 name|argn
 index|]
 argument_list|,
-literal|"modem"
+literal|"physical"
 argument_list|)
 operator|==
 literal|0
@@ -16283,7 +16311,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"A link must be specified for ``clear modem''\n"
+literal|"A link must be specified for ``clear physical''\n"
 argument_list|)
 expr_stmt|;
 return|return

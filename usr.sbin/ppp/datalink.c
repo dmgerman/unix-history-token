@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.c,v 1.36 1999/04/05 21:52:10 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.c,v 1.37 1999/04/06 14:48:10 brian Exp $  */
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
 end_include
 
 begin_include
@@ -221,19 +227,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"modem.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"prompt.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -520,18 +520,17 @@ name|bundle
 operator|->
 name|CleaningUp
 operator|&&
-name|physical_GetFD
-argument_list|(
 name|dl
 operator|->
 name|physical
-argument_list|)
+operator|->
+name|fd
 operator|!=
 operator|-
 literal|1
 condition|)
 block|{
-comment|/* Don't close our modem if the link is dedicated */
+comment|/* Don't close our device if the link is dedicated */
 name|datalink_LoginDone
 argument_list|(
 name|dl
@@ -539,7 +538,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|modem_Close
+name|physical_Close
 argument_list|(
 name|dl
 operator|->
@@ -1267,18 +1266,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|modem_Raw
+operator|!
+name|physical_Raw
 argument_list|(
 name|dl
 operator|->
 name|physical
-argument_list|,
-name|dl
-operator|->
-name|bundle
 argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
 name|dl
@@ -1312,7 +1306,7 @@ argument_list|,
 name|DATALINK_HANGUP
 argument_list|)
 expr_stmt|;
-name|modem_Offline
+name|physical_Offline
 argument_list|(
 name|dl
 operator|->
@@ -1367,7 +1361,7 @@ operator|==
 name|PHYS_DEDICATED
 condition|)
 comment|/* force a redial timeout */
-name|modem_Close
+name|physical_Close
 argument_list|(
 name|dl
 operator|->
@@ -1644,7 +1638,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|modem_Open
+name|physical_Open
 argument_list|(
 name|dl
 operator|->
@@ -1832,7 +1826,7 @@ name|log_Printf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Failed to open modem (attempt %u of %d)\n"
+literal|"Failed to open device (attempt %u of %d)\n"
 argument_list|,
 name|dl
 operator|->
@@ -1862,7 +1856,7 @@ name|log_Printf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Failed to open modem\n"
+literal|"Failed to open device\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2194,7 +2188,7 @@ argument_list|,
 name|DATALINK_HANGUP
 argument_list|)
 expr_stmt|;
-name|modem_Offline
+name|physical_Offline
 argument_list|(
 name|dl
 operator|->
@@ -2867,7 +2861,7 @@ operator|!=
 name|DATALINK_HANGUP
 condition|)
 block|{
-name|modem_Offline
+name|physical_Offline
 argument_list|(
 name|dl
 operator|->
@@ -4889,7 +4883,7 @@ name|dl
 operator|->
 name|physical
 operator|=
-name|modem_Create
+name|physical_Create
 argument_list|(
 name|dl
 argument_list|,
@@ -5249,7 +5243,7 @@ name|dl
 operator|->
 name|physical
 operator|=
-name|modem_Create
+name|physical_Create
 argument_list|(
 name|dl
 argument_list|,
@@ -5588,7 +5582,7 @@ name|dl
 operator|->
 name|next
 expr_stmt|;
-name|modem_Destroy
+name|physical_Destroy
 argument_list|(
 name|dl
 operator|->
@@ -8047,7 +8041,7 @@ name|dl
 operator|->
 name|physical
 operator|=
-name|iov2modem
+name|iov2physical
 argument_list|(
 name|dl
 argument_list|,
@@ -8397,7 +8391,7 @@ name|DATALINK_MAXNAME
 expr_stmt|;
 name|link_fd
 operator|=
-name|modem2iov
+name|physical2iov
 argument_list|(
 name|dl
 condition|?

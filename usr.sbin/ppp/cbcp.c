@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cbcp.c,v 1.10 1999/02/26 21:28:07 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cbcp.c,v 1.11 1999/03/29 08:21:26 brian Exp $  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
 end_include
 
 begin_include
@@ -114,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -947,7 +953,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|hdlc_Output
+name|link_PushPacket
 argument_list|(
 operator|&
 name|cbcp
@@ -956,11 +962,19 @@ name|p
 operator|->
 name|link
 argument_list|,
+name|bp
+argument_list|,
+name|cbcp
+operator|->
+name|p
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|,
 name|PRI_LINK
 argument_list|,
 name|PROTO_CBCP
-argument_list|,
-name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3380,13 +3394,21 @@ block|}
 end_function
 
 begin_function
-name|void
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
 name|cbcp_Input
 parameter_list|(
 name|struct
-name|physical
+name|bundle
 modifier|*
-name|p
+name|bundle
+parameter_list|,
+name|struct
+name|link
+modifier|*
+name|l
 parameter_list|,
 name|struct
 name|mbuf
@@ -3394,6 +3416,16 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|struct
+name|physical
+modifier|*
+name|p
+init|=
+name|link2physical
+argument_list|(
+name|l
+argument_list|)
+decl_stmt|;
 name|struct
 name|cbcp_header
 modifier|*
@@ -3419,6 +3451,29 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"cbcp_Input: Not a physical link - dropped\n"
+argument_list|)
+expr_stmt|;
+name|mbuf_Free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|bp
 operator|=
 name|mbuf_Contiguous
@@ -3449,7 +3504,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|head
 operator|=
@@ -3501,7 +3558,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 comment|/* XXX check the id */
 name|bp
@@ -4021,6 +4080,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 

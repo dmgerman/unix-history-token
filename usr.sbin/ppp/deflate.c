@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: deflate.c,v 1.11 1998/08/07 18:42:48 brian Exp $  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: deflate.c,v 1.12 1999/03/11 01:49:15 brian Exp $  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -145,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|DEFLATE_CHUNK_LEN
-value|1024
+value|1600
 end_define
 
 begin_comment
@@ -206,7 +212,9 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|DeflateOutput
 parameter_list|(
 name|void
@@ -227,6 +235,7 @@ name|int
 name|pri
 parameter_list|,
 name|u_short
+modifier|*
 name|proto
 parameter_list|,
 name|struct
@@ -292,6 +301,7 @@ name|LogDEBUG
 argument_list|,
 literal|"DeflateOutput: Proto %02x (%d bytes)\n"
 argument_list|,
+operator|*
 name|proto
 argument_list|,
 name|ilen
@@ -333,6 +343,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|proto
 operator|<
 literal|0x100
@@ -344,6 +355,7 @@ index|[
 literal|0
 index|]
 operator|=
+operator|*
 name|proto
 operator|&
 literal|0377
@@ -363,6 +375,7 @@ index|[
 literal|0
 index|]
 operator|=
+operator|*
 name|proto
 operator|>>
 literal|8
@@ -372,6 +385,7 @@ index|[
 literal|1
 index|]
 operator|=
+operator|*
 name|proto
 operator|&
 literal|0377
@@ -563,9 +577,9 @@ name|seqno
 operator|--
 expr_stmt|;
 return|return
-literal|1
+name|mp
 return|;
-comment|/* packet dropped */
+comment|/* Our dictionary's probably dead now :-( */
 block|}
 if|if
 condition|(
@@ -753,6 +767,7 @@ name|ilen
 argument_list|,
 name|olen
 argument_list|,
+operator|*
 name|proto
 argument_list|)
 expr_stmt|;
@@ -770,7 +785,7 @@ name|ilen
 expr_stmt|;
 comment|/* We measure this stuff too */
 return|return
-literal|0
+name|mp
 return|;
 block|}
 name|mbuf_Free
@@ -861,25 +876,20 @@ name|ilen
 argument_list|,
 name|olen
 argument_list|,
+operator|*
 name|proto
 argument_list|)
 expr_stmt|;
-name|hdlc_Output
-argument_list|(
-name|l
-argument_list|,
-name|PRI_NORMAL
-argument_list|,
+operator|*
+name|proto
+operator|=
 name|ccp_Proto
 argument_list|(
 name|ccp
 argument_list|)
-argument_list|,
-name|mo_head
-argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|mo_head
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: throughput.c,v 1.7 1998/06/12 17:45:41 brian Exp $  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: throughput.c,v 1.8 1998/06/12 20:12:26 brian Exp $  */
 end_comment
 
 begin_include
@@ -232,7 +232,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"%ld octets in, %ld octets out\n"
+literal|"%qu octets in, %qu octets out\n"
 argument_list|,
 name|t
 operator|->
@@ -254,7 +254,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"  overall   %5ld bytes/sec\n"
+literal|"  overall   %6qu bytes/sec\n"
 argument_list|,
 operator|(
 name|t
@@ -273,7 +273,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"  currently %5d bytes/sec\n"
+literal|"  currently %6qu bytes/sec\n"
 argument_list|,
 name|t
 operator|->
@@ -284,7 +284,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"  peak      %5d bytes/sec on %s"
+literal|"  peak      %6qu bytes/sec on %s"
 argument_list|,
 name|t
 operator|->
@@ -305,7 +305,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"Overall %ld bytes/sec\n"
+literal|"Overall %qu bytes/sec\n"
 argument_list|,
 operator|(
 name|t
@@ -376,7 +376,7 @@ name|log_Printf
 argument_list|(
 name|level
 argument_list|,
-literal|"%s: Connect time: %d secs: %ld octets in, %ld octets"
+literal|"%s: Connect time: %d secs: %qu octets in, %qu octets"
 literal|" out\n"
 argument_list|,
 name|title
@@ -397,7 +397,7 @@ name|log_Printf
 argument_list|(
 name|level
 argument_list|,
-literal|"Connect time: %d secs: %ld octets in, %ld octets out\n"
+literal|"Connect time: %d secs: %qu octets in, %qu octets out\n"
 argument_list|,
 name|secs_up
 argument_list|,
@@ -430,7 +430,7 @@ name|log_Printf
 argument_list|(
 name|level
 argument_list|,
-literal|" total %ld bytes/sec, peak %d bytes/sec on %s"
+literal|" total %qu bytes/sec, peak %qu bytes/sec on %s"
 argument_list|,
 operator|(
 name|t
@@ -462,7 +462,7 @@ name|log_Printf
 argument_list|(
 name|level
 argument_list|,
-literal|" total %ld bytes/sec\n"
+literal|" total %qu bytes/sec\n"
 argument_list|,
 operator|(
 name|t
@@ -503,7 +503,9 @@ operator|*
 operator|)
 name|v
 decl_stmt|;
-name|u_long
+name|unsigned
+name|long
+name|long
 name|old
 decl_stmt|;
 name|timer_Stop
@@ -746,7 +748,8 @@ name|pppThroughput
 modifier|*
 name|t
 parameter_list|,
-name|int
+name|long
+name|long
 name|n
 parameter_list|)
 block|{
@@ -768,7 +771,8 @@ name|pppThroughput
 modifier|*
 name|t
 parameter_list|,
-name|int
+name|long
+name|long
 name|n
 parameter_list|)
 block|{
@@ -873,7 +877,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"overall cleared (was %5ld bytes/sec)\n"
+literal|"overall cleared (was %6qu bytes/sec)\n"
 argument_list|,
 operator|(
 name|t
@@ -919,7 +923,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"current cleared (was %5d bytes/sec)\n"
+literal|"current cleared (was %6qu bytes/sec)\n"
 argument_list|,
 name|t
 operator|->
@@ -987,7 +991,7 @@ name|prompt_Printf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"peak    cleared (was %5d bytes/sec on %s)\n"
+literal|"peak    cleared (was %6qu bytes/sec on %s)\n"
 argument_list|,
 name|t
 operator|->

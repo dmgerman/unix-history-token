@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.48 1999/04/01 11:05:22 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.49 1999/04/21 08:03:51 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -113,6 +113,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"layer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -143,7 +149,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -498,18 +504,24 @@ argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
-name|hdlc_Output
+name|link_PushPacket
 argument_list|(
 operator|&
 name|physical
 operator|->
 name|link
 argument_list|,
+name|bp
+argument_list|,
+name|physical
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|,
 name|PRI_LINK
 argument_list|,
 name|PROTO_CHAP
-argument_list|,
-name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3102,13 +3114,20 @@ block|}
 end_function
 
 begin_function
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|chap_Input
 parameter_list|(
 name|struct
-name|physical
+name|bundle
 modifier|*
-name|p
+name|bundle
+parameter_list|,
+name|struct
+name|link
+modifier|*
+name|l
 parameter_list|,
 name|struct
 name|mbuf
@@ -3116,6 +3135,16 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|struct
+name|physical
+modifier|*
+name|p
+init|=
+name|link2physical
+argument_list|(
+name|l
+argument_list|)
+decl_stmt|;
 name|struct
 name|chap
 modifier|*
@@ -3158,12 +3187,31 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"chap_Input: Not a physical link - dropped\n"
+argument_list|)
+expr_stmt|;
+name|mbuf_Free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|bundle_Phase
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|)
 operator|!=
@@ -3171,10 +3219,6 @@ name|PHASE_NETWORK
 operator|&&
 name|bundle_Phase
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|)
 operator|!=
@@ -3193,7 +3237,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -3324,10 +3370,6 @@ name|id
 operator|&&
 name|Enabled
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|,
 name|OPT_IDCHECK
@@ -3376,7 +3418,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|chap
 operator|->
@@ -3457,7 +3501,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 operator|*
 name|chap
@@ -3600,7 +3646,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -3630,7 +3678,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 operator|*
 name|ans
@@ -3731,7 +3781,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|bp
 operator|=
@@ -3958,10 +4010,6 @@ case|:
 if|if
 condition|(
 operator|*
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|cfg
@@ -3976,10 +4024,6 @@ name|chap_StartChild
 argument_list|(
 name|chap
 argument_list|,
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|cfg
@@ -3990,10 +4034,6 @@ name|key
 operator|+
 literal|1
 argument_list|,
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|cfg
@@ -4008,10 +4048,6 @@ name|chap_Respond
 argument_list|(
 name|chap
 argument_list|,
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|cfg
@@ -4020,10 +4056,6 @@ name|auth
 operator|.
 name|name
 argument_list|,
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|cfg
@@ -4075,10 +4107,6 @@ name|NORADIUS
 if|if
 condition|(
 operator|*
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|radius
@@ -4127,10 +4155,6 @@ expr_stmt|;
 name|radius_Authenticate
 argument_list|(
 operator|&
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|radius
@@ -4186,10 +4210,6 @@ name|key
 operator|=
 name|auth_GetSecret
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|,
 name|name
@@ -4493,6 +4513,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 

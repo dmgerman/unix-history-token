@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.26 1999/03/29 08:21:28 brian Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.27 1999/03/31 14:21:46 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -48,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -72,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -194,9 +206,17 @@ comment|/* Maximum size of compressed header */
 end_comment
 
 begin_function
-name|void
-name|vj_SendFrame
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|vj_LayerPush
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|,
 name|struct
 name|link
 modifier|*
@@ -207,17 +227,16 @@ name|mbuf
 modifier|*
 name|bp
 parameter_list|,
-name|struct
-name|bundle
+name|int
+name|pri
+parameter_list|,
+name|u_short
 modifier|*
-name|bundle
+name|proto
 parameter_list|)
 block|{
 name|int
 name|type
-decl_stmt|;
-name|u_short
-name|proto
 decl_stmt|;
 name|struct
 name|ip
@@ -241,7 +260,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"vj_SendFrame: COMPPROTO = %x\n"
+literal|"vj_LayerWrite: COMPPROTO = %x\n"
 argument_list|,
 name|bundle
 operator|->
@@ -273,6 +292,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|proto
+operator|==
+name|PROTO_IP
+operator|&&
 name|pip
 operator|->
 name|ip_p
@@ -329,7 +353,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"vj_SendFrame: type = %x\n"
+literal|"vj_LayerWrite: type = %x\n"
 argument_list|,
 name|type
 argument_list|)
@@ -342,14 +366,11 @@ block|{
 case|case
 name|TYPE_IP
 case|:
-name|proto
-operator|=
-name|PROTO_IP
-expr_stmt|;
 break|break;
 case|case
 name|TYPE_UNCOMPRESSED_TCP
 case|:
+operator|*
 name|proto
 operator|=
 name|PROTO_VJUNCOMP
@@ -358,6 +379,7 @@ break|break;
 case|case
 name|TYPE_COMPRESSED_TCP
 case|:
+operator|*
 name|proto
 operator|=
 name|PROTO_VJCOMP
@@ -366,7 +388,7 @@ break|break;
 default|default:
 name|log_Printf
 argument_list|(
-name|LogALERT
+name|LogERROR
 argument_list|,
 literal|"Unknown frame type %x\n"
 argument_list|,
@@ -378,44 +400,14 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 block|}
-else|else
-name|proto
-operator|=
-name|PROTO_IP
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ccp_Compress
-argument_list|(
-operator|&
-name|l
-operator|->
-name|ccp
-argument_list|,
-name|l
-argument_list|,
-name|PRI_NORMAL
-argument_list|,
-name|proto
-argument_list|,
+return|return
 name|bp
-argument_list|)
-condition|)
-name|hdlc_Output
-argument_list|(
-name|l
-argument_list|,
-name|PRI_NORMAL
-argument_list|,
-name|proto
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -550,9 +542,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|bp
-operator|)
 return|;
 block|}
 comment|/*    * Handle compressed packet. 1) Read upto MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necesary space. 4)    * Copy unread data info there.    */
@@ -675,30 +665,35 @@ operator|=
 name|bp
 expr_stmt|;
 return|return
-operator|(
 name|nbp
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
-name|vj_Input
+name|vj_LayerPull
 parameter_list|(
 name|struct
-name|ipcp
+name|bundle
 modifier|*
-name|ipcp
+name|bundle
+parameter_list|,
+name|struct
+name|link
+modifier|*
+name|l
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|bp
 parameter_list|,
-name|int
+name|u_short
+modifier|*
 name|proto
 parameter_list|)
 block|{
@@ -709,8 +704,9 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"vj_Input: proto %02x\n"
+literal|"vj_LayerPull: proto %02x\n"
 argument_list|,
+operator|*
 name|proto
 argument_list|)
 expr_stmt|;
@@ -725,6 +721,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+operator|*
 name|proto
 condition|)
 block|{
@@ -745,34 +742,29 @@ name|TYPE_UNCOMPRESSED_TCP
 expr_stmt|;
 break|break;
 default|default:
-name|log_Printf
-argument_list|(
-name|LogWARN
-argument_list|,
-literal|"vj_Input...???\n"
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
 name|bp
-operator|)
 return|;
 block|}
-name|bp
+operator|*
+name|proto
 operator|=
+name|PROTO_IP
+expr_stmt|;
+return|return
 name|VjUncompressTcp
 argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
 name|ipcp
 argument_list|,
 name|bp
 argument_list|,
 name|type
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|bp
-operator|)
 return|;
 block|}
 end_function
@@ -806,7 +798,7 @@ argument_list|,
 sizeof|sizeof
 name|asc
 argument_list|,
-literal|"%d VJ slots %s slot compression"
+literal|"%d VJ slots with%s slot compression"
 argument_list|,
 call|(
 name|int
@@ -827,9 +819,9 @@ name|val
 operator|&
 literal|1
 condition|?
-literal|"with"
+literal|""
 else|:
-literal|"without"
+literal|"out"
 argument_list|)
 expr_stmt|;
 else|else
@@ -845,6 +837,23 @@ name|asc
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|struct
+name|layer
+name|vjlayer
+init|=
+block|{
+name|LAYER_VJ
+block|,
+literal|"vj"
+block|,
+name|vj_LayerPush
+block|,
+name|vj_LayerPull
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.33 1999/03/31 14:21:45 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.34 1999/04/01 11:05:23 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
 end_include
 
 begin_include
@@ -114,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lcpproto.h"
+file|"proto.h"
 end_include
 
 begin_include
@@ -501,7 +507,7 @@ argument_list|,
 name|keylen
 argument_list|)
 expr_stmt|;
-name|hdlc_Output
+name|link_PushPacket
 argument_list|(
 operator|&
 name|authp
@@ -510,11 +516,13 @@ name|physical
 operator|->
 name|link
 argument_list|,
+name|bp
+argument_list|,
+name|bundle
+argument_list|,
 name|PRI_LINK
 argument_list|,
 name|PROTO_PAP
-argument_list|,
-name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -671,7 +679,7 @@ name|code
 index|]
 argument_list|)
 expr_stmt|;
-name|hdlc_Output
+name|link_PushPacket
 argument_list|(
 operator|&
 name|authp
@@ -680,11 +688,19 @@ name|physical
 operator|->
 name|link
 argument_list|,
+name|bp
+argument_list|,
+name|authp
+operator|->
+name|physical
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|,
 name|PRI_LINK
 argument_list|,
 name|PROTO_PAP
-argument_list|,
-name|bp
 argument_list|)
 expr_stmt|;
 block|}
@@ -856,13 +872,20 @@ block|}
 end_function
 
 begin_function
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|pap_Input
 parameter_list|(
 name|struct
-name|physical
+name|bundle
 modifier|*
-name|p
+name|bundle
+parameter_list|,
+name|struct
+name|link
+modifier|*
+name|l
 parameter_list|,
 name|struct
 name|mbuf
@@ -870,6 +893,16 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|struct
+name|physical
+modifier|*
+name|p
+init|=
+name|link2physical
+argument_list|(
+name|l
+argument_list|)
+decl_stmt|;
 name|struct
 name|authinfo
 modifier|*
@@ -892,12 +925,31 @@ name|key
 decl_stmt|;
 if|if
 condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"pap_Input: Not a physical link - dropped\n"
+argument_list|)
+expr_stmt|;
+name|mbuf_Free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|bundle_Phase
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|)
 operator|!=
@@ -905,10 +957,6 @@ name|PHASE_NETWORK
 operator|&&
 name|bundle_Phase
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|)
 operator|!=
@@ -927,7 +975,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -965,7 +1015,9 @@ argument_list|,
 literal|"Pap Input: Truncated header !\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -1010,7 +1062,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -1038,10 +1092,6 @@ name|id
 operator|&&
 name|Enabled
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|,
 name|OPT_IDCHECK
@@ -1084,7 +1134,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|authp
 operator|->
@@ -1262,10 +1314,6 @@ name|NORADIUS
 if|if
 condition|(
 operator|*
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|radius
@@ -1277,10 +1325,6 @@ condition|)
 name|radius_Authenticate
 argument_list|(
 operator|&
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 operator|->
 name|radius
@@ -1305,10 +1349,6 @@ if|if
 condition|(
 name|auth_Validate
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
 name|bundle
 argument_list|,
 name|authp
@@ -1414,6 +1454,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
