@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.5	82/01/13	*/
+comment|/*	tty_tty.c	4.6	82/01/19	*/
 end_comment
 
 begin_comment
@@ -71,16 +71,6 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
-operator|||
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SDETACH
-operator|)
 condition|)
 block|{
 name|u
@@ -136,16 +126,6 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
-operator|||
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SDETACH
-operator|)
 condition|)
 block|{
 name|u
@@ -199,16 +179,6 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
-operator|||
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SDETACH
-operator|)
 condition|)
 block|{
 name|u
@@ -303,16 +273,6 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
-operator|||
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SDETACH
-operator|)
 condition|)
 block|{
 name|u
@@ -370,16 +330,6 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
-operator|||
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SDETACH
-operator|)
 condition|)
 block|{
 name|u
