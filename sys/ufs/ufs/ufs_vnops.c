@@ -6257,16 +6257,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * From name has disappeared. 		 */
-if|if
-condition|(
-name|doingdirectory
-condition|)
-name|panic
-argument_list|(
-literal|"ufs_rename: lost dir entry"
-argument_list|)
-expr_stmt|;
+comment|/* 		 * From name has disappeared.  IN_RENAME is not sufficient 		 * to protect against directory races due to timing windows, 		 * so we have to remove the panic.  XXX the only real way 		 * to solve this issue is at a much higher level.  By the 		 * time we hit ufs_rename() it's too late. 		 */
+if|#
+directive|if
+literal|0
+block|if (doingdirectory) 			panic("ufs_rename: lost dir entry");
+endif|#
+directive|endif
 name|vrele
 argument_list|(
 name|ap
@@ -6288,15 +6285,13 @@ operator|!=
 name|ip
 condition|)
 block|{
-if|if
-condition|(
-name|doingdirectory
-condition|)
-name|panic
-argument_list|(
-literal|"ufs_rename: lost dir entry"
-argument_list|)
-expr_stmt|;
+comment|/* 		 * From name resolves to a different inode.  IN_RENAME is 		 * not sufficient protection against timing window races 		 * so we can't panic here.  XXX the only real way 		 * to solve this issue is at a much higher level.  By the 		 * time we hit ufs_rename() it's too late. 		 */
+if|#
+directive|if
+literal|0
+block|if (doingdirectory) 			panic("ufs_rename: lost dir entry");
+endif|#
+directive|endif
 block|}
 else|else
 block|{
