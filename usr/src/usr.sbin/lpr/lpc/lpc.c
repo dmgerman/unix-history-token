@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	8.2 (Berkeley) %G%"
+literal|"@(#)lpc.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,19 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"extern.h"
+file|<grp.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
 end_include
 
 begin_include
