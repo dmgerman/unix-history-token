@@ -465,6 +465,14 @@ name|chiptype
 condition|)
 block|{
 case|case
+literal|0x248a8086
+case|:
+comment|/* Intel ICH3 mobile */
+case|case
+literal|0x248b8086
+case|:
+comment|/* Intel ICH3 */
+case|case
 literal|0x244a8086
 case|:
 comment|/* Intel ICH2 mobile */
@@ -692,6 +700,10 @@ case|case
 literal|0x24118086
 case|:
 comment|/* Intel ICH */
+case|case
+literal|0x76018086
+case|:
+comment|/* Intel ICH */
 if|if
 condition|(
 name|udmamode
@@ -910,6 +922,10 @@ expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|0x71118086
+case|:
+comment|/* Intel PIIX4 */
+case|case
+literal|0x84CA8086
 case|:
 comment|/* Intel PIIX4 */
 case|case
