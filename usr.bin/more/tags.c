@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tags.c,v 1.4 1999/06/01 20:02:30 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1267,18 +1267,14 @@ name|gtag_p1
 operator|->
 name|file
 operator|=
-name|file
-expr_stmt|;
-name|gtag_p1
-operator|->
-name|file
-operator|=
 name|malloc
 argument_list|(
 name|strlen
 argument_list|(
 name|file
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
