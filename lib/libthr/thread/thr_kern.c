@@ -166,6 +166,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|SIGDELSET
+argument_list|(
+name|set
+argument_list|,
+name|SIGTRAP
+argument_list|)
+expr_stmt|;
 comment|/* If we have already blocked signals, just up the refcount */
 if|if
 condition|(
