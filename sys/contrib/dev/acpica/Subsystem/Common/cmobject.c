@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    _CmCreateInternalObject  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:  *      We always allocate the worst-case object descriptor because these  *      objects are cached, and we want them to be one-size-satisifies-any-request.  *      This in itself may not be the most memory efficient, but the efficiency  *      of the object cache should more than make up for this!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _CmCreateInternalObject  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because   *              these objects are cached, and we want them to be   *              one-size-satisifies-any-request.  This in itself may not be   *              the most memory efficient, but the efficiency of the object   *              cache should more than make up for this!  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -147,7 +147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmValidInternalObject  *  * PARAMETERS:  Operand             - Object to be validated  *  * RETURN:      Validate a pointer to be an ACPI_OPERAND_OBJECT  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmValidInternalObject  *  * PARAMETERS:  Operand             - Object to be validated  *  * RETURN:      Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -295,7 +295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    _CmAllocateObjectDesc  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _CmAllocateObjectDesc  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -465,7 +465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmDeleteObjectDesc  *  * PARAMETERS:  Object          - Acpi internal object to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Free an ACPI object descriptor or add it to the object cache  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteObjectDesc  *  * PARAMETERS:  Object          - Acpi internal object to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Free an ACPI object descriptor or add it to the object cache  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -620,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmDeleteObjectCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteObjectCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -690,7 +690,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmInitStaticObject  *  * PARAMETERS:  ObjDesc             - Pointer to a "static" object - on stack  *                                    or in the data segment.  *  * RETURN:      None.  *  * DESCRIPTION: Initialize a static object.  Sets flags to disallow dynamic  *              deletion of the object.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmInitStaticObject  *  * PARAMETERS:  ObjDesc             - Pointer to a "static" object - on stack  *                                    or in the data segment.  *  * RETURN:      None.  *  * DESCRIPTION: Initialize a static object.  Sets flags to disallow dynamic  *              deletion of the object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -766,7 +766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmGetSimpleObjectSize  *  * PARAMETERS:  *InternalObj    - Pointer to the object we are examining  *              *RetLength      - Where the length is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a simple object for return to an API user.  *  *              The length includes the object structure plus any additional  *              needed space.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmGetSimpleObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a simple object for return to an API user.  *  *              The length includes the object structure plus any additional  *              needed space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -775,7 +775,7 @@ name|AcpiCmGetSimpleObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|InternalObj
+name|InternalObject
 parameter_list|,
 name|UINT32
 modifier|*
@@ -794,14 +794,14 @@ name|FUNCTION_TRACE_PTR
 argument_list|(
 literal|"CmGetSimpleObjectSize"
 argument_list|,
-name|InternalObj
+name|InternalObject
 argument_list|)
 expr_stmt|;
 comment|/* Handle a null object (Could be a uninitialized package element -- which is legal) */
 if|if
 condition|(
 operator|!
-name|InternalObj
+name|InternalObject
 condition|)
 block|{
 operator|*
@@ -827,7 +827,7 @@ if|if
 condition|(
 name|VALID_DESCRIPTOR_TYPE
 argument_list|(
-name|InternalObj
+name|InternalObject
 argument_list|,
 name|ACPI_DESC_TYPE_NAMED
 argument_list|)
@@ -854,7 +854,7 @@ block|}
 comment|/*      * The final length depends on the object type      * Strings and Buffers are packed right up against the parent object and      * must be accessed bytewise or there may be alignment problems.      *      * TBD:[Investigate] do strings and buffers require alignment also?      */
 switch|switch
 condition|(
-name|InternalObj
+name|InternalObject
 operator|->
 name|Common
 operator|.
@@ -866,7 +866,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|Length
 operator|+=
-name|InternalObj
+name|InternalObject
 operator|->
 name|String
 operator|.
@@ -880,7 +880,7 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|Length
 operator|+=
-name|InternalObj
+name|InternalObject
 operator|->
 name|Buffer
 operator|.
@@ -904,7 +904,7 @@ case|:
 comment|/*          * The only type that should be here is opcode AML_NAMEPATH_OP -- since          * this means an object reference          */
 if|if
 condition|(
-name|InternalObj
+name|InternalObject
 operator|->
 name|Reference
 operator|.
@@ -920,13 +920,13 @@ argument_list|,
 operator|(
 literal|"CmGetSimpleObjectSize: Unsupported Reference opcode=%X in object %p\n"
 operator|,
-name|InternalObj
+name|InternalObject
 operator|->
 name|Reference
 operator|.
 name|OpCode
 operator|,
-name|InternalObj
+name|InternalObject
 operator|)
 argument_list|)
 expr_stmt|;
@@ -944,13 +944,13 @@ argument_list|,
 operator|(
 literal|"CmGetSimpleObjectSize: Unsupported type=%X in object %p\n"
 operator|,
-name|InternalObj
+name|InternalObject
 operator|->
 name|Common
 operator|.
 name|Type
 operator|,
-name|InternalObj
+name|InternalObject
 operator|)
 argument_list|)
 expr_stmt|;
@@ -981,155 +981,61 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmGetPackageObjectSize  *  * PARAMETERS:  *InternalObj    - Pointer to the object we are examining  *              *RetLength      - Where the length is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to determine the space required to contain  *              a package object for return to an API user.  *  *              This is moderately complex since a package contains other objects  *              including packages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyPackageToInternal  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION:   *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmGetPackageObjectSize
+name|AcpiCmGetElementLength
 parameter_list|(
+name|UINT8
+name|ObjectType
+parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|InternalObj
+name|SourceObject
 parameter_list|,
-name|UINT32
+name|ACPI_GENERIC_STATE
 modifier|*
-name|ObjLength
+name|State
+parameter_list|,
+name|void
+modifier|*
+name|Context
 parameter_list|)
 block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ThisInternalObj
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ParentObj
-index|[
-name|MAX_PACKAGE_DEPTH
-index|]
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ThisParent
-decl_stmt|;
-name|UINT32
-name|ThisIndex
-decl_stmt|;
-name|UINT32
-name|Index
-index|[
-name|MAX_PACKAGE_DEPTH
-index|]
-decl_stmt|;
-name|UINT32
-name|Length
+name|ACPI_STATUS
+name|Status
 init|=
-literal|0
+name|AE_OK
+decl_stmt|;
+name|ACPI_PKG_INFO
+modifier|*
+name|Info
+init|=
+operator|(
+name|ACPI_PKG_INFO
+operator|*
+operator|)
+name|Context
 decl_stmt|;
 name|UINT32
 name|ObjectSpace
 decl_stmt|;
-name|UINT32
-name|CurrentDepth
-init|=
-literal|0
-decl_stmt|;
-name|UINT32
-name|PackageCount
-init|=
-literal|1
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|FUNCTION_TRACE_PTR
-argument_list|(
-literal|"CmGetPackageObjectSize"
-argument_list|,
-name|InternalObj
-argument_list|)
-expr_stmt|;
-comment|/* Init the package stack TBD: replace with linked list */
-name|MEMSET
-argument_list|(
-name|ParentObj
-argument_list|,
-literal|0
-argument_list|,
-name|MAX_PACKAGE_DEPTH
-argument_list|)
-expr_stmt|;
-name|MEMSET
-argument_list|(
-name|Index
-argument_list|,
-literal|0
-argument_list|,
-name|MAX_PACKAGE_DEPTH
-argument_list|)
-expr_stmt|;
-name|ParentObj
-index|[
-literal|0
-index|]
-operator|=
-name|InternalObj
-expr_stmt|;
-while|while
+switch|switch
 condition|(
-literal|1
+name|ObjectType
 condition|)
 block|{
-name|ThisParent
-operator|=
-name|ParentObj
-index|[
-name|CurrentDepth
-index|]
-expr_stmt|;
-name|ThisIndex
-operator|=
-name|Index
-index|[
-name|CurrentDepth
-index|]
-expr_stmt|;
-name|ThisInternalObj
-operator|=
-name|ThisParent
-operator|->
-name|Package
-operator|.
-name|Elements
-index|[
-name|ThisIndex
-index|]
-expr_stmt|;
-comment|/*          * Check for 1) An uninitialized package element.  It is completely          *              legal to declare a package and leave it uninitialized          *           2) Any type other than a package.  Packages are handled          *              below.          */
-if|if
-condition|(
-operator|(
-operator|!
-name|ThisInternalObj
-operator|)
-operator|||
-operator|(
-operator|!
-name|IS_THIS_OBJECT_TYPE
-argument_list|(
-name|ThisInternalObj
-argument_list|,
-name|ACPI_TYPE_PACKAGE
-argument_list|)
-operator|)
-condition|)
-block|{
-comment|/*              * Simple object - just get the size (Null object/entry handled              *  also)              */
+case|case
+literal|0
+case|:
+comment|/*          * Simple object - just get the size (Null object/entry is handled          * here also) and sum it into the running package length          */
 name|Status
 operator|=
 name|AcpiCmGetSimpleObjectSize
 argument_list|(
-name|ThisInternalObj
+name|SourceObject
 argument_list|,
 operator|&
 name|ObjectSpace
@@ -1143,48 +1049,117 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+return|return
+operator|(
 name|Status
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
+name|Info
+operator|->
 name|Length
 operator|+=
 name|ObjectSpace
 expr_stmt|;
-name|Index
-index|[
-name|CurrentDepth
-index|]
+break|break;
+case|case
+literal|1
+case|:
+comment|/* Package - nothing much to do here, let the walk handle it */
+name|Info
+operator|->
+name|NumPackages
 operator|++
 expr_stmt|;
-while|while
-condition|(
-name|Index
-index|[
-name|CurrentDepth
-index|]
-operator|>=
-name|ParentObj
-index|[
-name|CurrentDepth
-index|]
+name|State
 operator|->
-name|Package
+name|Pkg
 operator|.
-name|Count
-condition|)
+name|ThisTargetObj
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+default|default:
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmGetPackageObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to   *              contain a package object for return to an API user.  *  *              This is moderately complex since a package contains other   *              objects including packages.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiCmGetPackageObjectSize
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|InternalObject
+parameter_list|,
+name|UINT32
+modifier|*
+name|ObjLength
+parameter_list|)
 block|{
-comment|/*                  * We've handled all of the objects at                  * this level,  This means that we have                  * just completed a package.  That package                  * may have contained one or more packages                  * itself.                  */
-if|if
-condition|(
-name|CurrentDepth
-operator|==
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_PKG_INFO
+name|Info
+decl_stmt|;
+name|FUNCTION_TRACE_PTR
+argument_list|(
+literal|"CmGetPackageObjectSize"
+argument_list|,
+name|InternalObject
+argument_list|)
+expr_stmt|;
+name|Info
+operator|.
+name|Length
+operator|=
 literal|0
-condition|)
-block|{
-comment|/*                      * We have handled all of the objects                      * in the top level package just add the                      * length of the package objects and                      * get out. Round up to the next machine                      * word.                      */
+expr_stmt|;
+name|Info
+operator|.
+name|ObjectSpace
+operator|=
+literal|0
+expr_stmt|;
+name|Info
+operator|.
+name|NumPackages
+operator|=
+literal|1
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiCmWalkPackageTree
+argument_list|(
+name|InternalObject
+argument_list|,
+name|NULL
+argument_list|,
+name|AcpiCmGetElementLength
+argument_list|,
+operator|&
+name|Info
+argument_list|)
+expr_stmt|;
+comment|/*      * We have handled all of the objects in all levels of the package.      * just add the length of the package objects themselves.      * Round up to the next machine word.      */
+name|Info
+operator|.
 name|Length
 operator|+=
 name|ROUND_UP_TO_NATIVE_WORD
@@ -1195,91 +1170,28 @@ name|ACPI_OBJECT
 argument_list|)
 argument_list|)
 operator|*
-name|PackageCount
+name|Info
+operator|.
+name|NumPackages
 expr_stmt|;
+comment|/* Return the total package length */
 operator|*
 name|ObjLength
 operator|=
+name|Info
+operator|.
 name|Length
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*                  * Go back up a level and move the index                  * past the just completed package object.                  */
-name|CurrentDepth
-operator|--
-expr_stmt|;
-name|Index
-index|[
-name|CurrentDepth
-index|]
-operator|++
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/*              * This object is a package              * -- go one level deeper              */
-name|PackageCount
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|CurrentDepth
-operator|<
-name|MAX_PACKAGE_DEPTH
-operator|-
-literal|1
-condition|)
-block|{
-name|CurrentDepth
-operator|++
-expr_stmt|;
-name|ParentObj
-index|[
-name|CurrentDepth
-index|]
-operator|=
-name|ThisInternalObj
-expr_stmt|;
-name|Index
-index|[
-name|CurrentDepth
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*                  * Too many nested levels of packages for us                  * to handle                  */
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"CmGetPackageObjectSize: Pkg nested too deep (max %X)\n"
-operator|,
-name|MAX_PACKAGE_DEPTH
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_LIMIT
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmGetObjectSize  *  * PARAMETERS:  *InternalObj    - Pointer to the object we are examining  *              *RetLength      - Where the length will be returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to determine the space required to  *              contain an object for return to an API user.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmGetObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length will be returned  *  * RETURN:      Status   *  * DESCRIPTION: This function is called to determine the space required to  *              contain an object for return to an API user.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1288,7 +1200,7 @@ name|AcpiCmGetObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|InternalObj
+name|InternalObject
 parameter_list|,
 name|UINT32
 modifier|*
@@ -1303,7 +1215,7 @@ condition|(
 operator|(
 name|VALID_DESCRIPTOR_TYPE
 argument_list|(
-name|InternalObj
+name|InternalObject
 argument_list|,
 name|ACPI_DESC_TYPE_INTERNAL
 argument_list|)
@@ -1312,7 +1224,7 @@ operator|&&
 operator|(
 name|IS_THIS_OBJECT_TYPE
 argument_list|(
-name|InternalObj
+name|InternalObject
 argument_list|,
 name|ACPI_TYPE_PACKAGE
 argument_list|)
@@ -1323,7 +1235,7 @@ name|Status
 operator|=
 name|AcpiCmGetPackageObjectSize
 argument_list|(
-name|InternalObj
+name|InternalObject
 argument_list|,
 name|ObjLength
 argument_list|)
@@ -1335,7 +1247,7 @@ name|Status
 operator|=
 name|AcpiCmGetSimpleObjectSize
 argument_list|(
-name|InternalObj
+name|InternalObject
 argument_list|,
 name|ObjLength
 argument_list|)

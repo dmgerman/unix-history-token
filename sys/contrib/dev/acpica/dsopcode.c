@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -151,6 +151,16 @@ operator|->
 name|FieldUnit
 operator|.
 name|Node
+expr_stmt|;
+name|DEBUG_EXEC
+argument_list|(
+name|AcpiCmDisplayInitPathname
+argument_list|(
+name|Node
+argument_list|,
+literal|"  [Field]"
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|DEBUG_PRINT
 argument_list|(
@@ -481,6 +491,16 @@ operator|->
 name|Region
 operator|.
 name|Node
+expr_stmt|;
+name|DEBUG_EXEC
+argument_list|(
+name|AcpiCmDisplayInitPathname
+argument_list|(
+name|Node
+argument_list|,
+literal|"  [Operation Region]"
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|DEBUG_PRINT
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -106,6 +106,13 @@ begin_decl_stmt
 specifier|extern
 name|BOOLEAN
 name|opt_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|opt_ini_methods
 decl_stmt|;
 end_decl_stmt
 
@@ -661,6 +668,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|AcpiDbFindReferences
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|ObjectArg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDbDisplayResources
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*

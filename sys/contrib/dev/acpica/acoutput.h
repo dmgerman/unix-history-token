@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -376,6 +376,13 @@ define|#
 directive|define
 name|TRACE_MUTEX
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACE_INIT
+value|0x08000000
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 78 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 80 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -258,7 +258,7 @@ control|)
 block|{
 name|Status
 operator|=
-name|AcpiCmBuildInternalObject
+name|AcpiCmCopyEobjectToIobject
 argument_list|(
 operator|&
 name|ParamObjects
@@ -519,7 +519,7 @@ block|{
 comment|/*                          *  We have enough space for the object, build it                          */
 name|Status
 operator|=
-name|AcpiCmBuildExternalObject
+name|AcpiCmCopyIobjectToEobject
 argument_list|(
 name|ReturnObj
 argument_list|,
@@ -1133,28 +1133,23 @@ argument_list|(
 name|ObjHandle
 argument_list|)
 expr_stmt|;
+name|AcpiCmReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|Node
 condition|)
 block|{
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 comment|/*      * Run _STA to determine if device is present      */
 name|Status
 operator|=

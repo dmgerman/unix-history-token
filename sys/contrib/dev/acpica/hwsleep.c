@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 5 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 7 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -419,8 +419,9 @@ name|SleepState
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* the old version was disabling interrupts. let's try it without      * and see how that works      */
-comment|/*disable();*/
+name|disable
+argument_list|()
+expr_stmt|;
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
@@ -439,7 +440,25 @@ argument_list|,
 name|PM1BControl
 argument_list|)
 expr_stmt|;
-comment|/*enable();*/
+name|AcpiHwRegisterWrite
+argument_list|(
+name|ACPI_MTX_LOCK
+argument_list|,
+name|PM1_CONTROL
+argument_list|,
+operator|(
+literal|1
+operator|<<
+name|AcpiHwGetBitShift
+argument_list|(
+name|SLP_EN_MASK
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|enable
+argument_list|()
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

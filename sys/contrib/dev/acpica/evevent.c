@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|(
 literal|"EvInitialize"
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we've got ACPI tables */
+comment|/* Make sure we have ACPI tables */
 if|if
 condition|(
 operator|!
@@ -1843,7 +1843,7 @@ index|[
 name|GpeNumber
 index|]
 expr_stmt|;
-comment|/*          * Edge-Triggered?          * ---------------          * If edge-triggered, clear the GPE status bit now.  Note that          * level-triggered events are cleared after the GPE is serviced.          */
+comment|/*      * Edge-Triggered?      * ---------------      * If edge-triggered, clear the GPE status bit now.  Note that      * level-triggered events are cleared after the GPE is serviced.      */
 if|if
 condition|(
 name|GpeInfo
@@ -1900,7 +1900,7 @@ name|GpeNumber
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Method Handler (e.g. _Exx/_Lxx)?          */
+comment|/*      * Method Handler (e.g. _Exx/_Lxx)?      */
 elseif|else
 if|if
 condition|(
@@ -1931,7 +1931,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/*                          * Shoudn't occur, but if it does report an error. Note that                          * the GPE will remain disabled until the ACPI Core Subsystem                          * is restarted, or the handler is removed/reinstalled.                          */
+comment|/*              * Shoudn't occur, but if it does report an error. Note that              * the GPE will remain disabled until the ACPI Core Subsystem              * is restarted, or the handler is removed/reinstalled.              */
 name|REPORT_ERROR
 argument_list|(
 operator|(
@@ -1943,7 +1943,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * No Handler? Report an error and leave the GPE disabled.          */
+comment|/*      * No Handler? Report an error and leave the GPE disabled.      */
 else|else
 block|{
 name|REPORT_ERROR

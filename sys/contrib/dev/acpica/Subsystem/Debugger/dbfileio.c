@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 37 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 38 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -292,6 +292,16 @@ expr_stmt|;
 name|OutputToFile
 operator|=
 name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not open debug file %s\n"
+argument_list|,
+name|Name
+argument_list|)
 expr_stmt|;
 block|}
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - AcpiRsCalculateByteStreamLength  *                       AcpiRsCalculateListLength  *              $Revision: 18 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - AcpiRsCalculateByteStreamLength  *                       AcpiRsCalculateListLength  *              $Revision: 21 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,6 +23,18 @@ begin_include
 include|#
 directive|include
 file|"acresrc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acnamesp.h"
 end_include
 
 begin_define
@@ -1267,6 +1279,10 @@ name|StructureSize
 operator|=
 name|RESOURCE_LENGTH
 expr_stmt|;
+name|ByteStreamBufferLength
+operator|=
+name|BytesParsed
+expr_stmt|;
 break|break;
 default|default:
 comment|/*                  * If we get here, everything is out of sync,                  *  so exit with an error                  */
@@ -1433,6 +1449,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ACPI_TYPE_STRING
 operator|==
 operator|(
@@ -1443,6 +1460,35 @@ operator|->
 name|Common
 operator|.
 name|Type
+operator|)
+operator|||
+operator|(
+operator|(
+name|INTERNAL_TYPE_REFERENCE
+operator|==
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Reference
+operator|.
+name|OpCode
+operator|==
+name|AML_NAMEPATH_OP
+operator|)
+operator|)
 condition|)
 block|{
 name|NameFound
@@ -1466,7 +1512,7 @@ argument_list|(
 name|PCI_ROUTING_TABLE
 argument_list|)
 operator|-
-literal|1
+literal|4
 operator|)
 expr_stmt|;
 comment|/*          * Was a String type found?          */
@@ -1477,7 +1523,21 @@ operator|==
 name|NameFound
 condition|)
 block|{
-comment|/*              * The length String.Length field includes the              * terminating NULL              */
+if|if
+condition|(
+name|ACPI_TYPE_STRING
+operator|==
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+condition|)
+block|{
+comment|/*                  * The length String.Length field includes the                  * terminating NULL                  */
 name|TempSizeNeeded
 operator|+=
 operator|(
@@ -1489,6 +1549,24 @@ name|String
 operator|.
 name|Length
 expr_stmt|;
+block|}
+else|else
+block|{
+name|TempSizeNeeded
+operator|+=
+name|AcpiNsGetPathnameLength
+argument_list|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Reference
+operator|.
+name|Node
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1518,11 +1596,6 @@ operator|*
 name|BufferSizeNeeded
 operator|=
 name|TempSizeNeeded
-operator|+
-sizeof|sizeof
-argument_list|(
-name|PCI_ROUTING_TABLE
-argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(

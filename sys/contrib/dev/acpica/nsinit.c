@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 12 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 15 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -225,8 +225,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiNsInitializeDevices
 parameter_list|(
-name|UINT32
-name|Flags
+name|void
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -239,12 +238,6 @@ name|FUNCTION_TRACE
 argument_list|(
 literal|"NsInitializeDevices"
 argument_list|)
-expr_stmt|;
-name|Info
-operator|.
-name|Flags
-operator|=
-name|Flags
 expr_stmt|;
 name|Info
 operator|.
@@ -502,6 +495,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|AcpiDbgLevel
+operator|&
+name|TRACE_INIT
+operator|)
+condition|)
+block|{
 name|DEBUG_PRINT_RAW
 argument_list|(
 name|ACPI_OK
@@ -511,6 +514,7 @@ literal|"."
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_FIELD_UNIT
@@ -582,6 +586,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|AcpiDbgLevel
+operator|&
+name|TRACE_INIT
+operator|)
+condition|)
+block|{
 name|DEBUG_PRINT_RAW
 argument_list|(
 name|ACPI_OK
@@ -591,6 +605,7 @@ literal|"."
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 break|break;
@@ -605,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsInitOneDevice  *  * PARAMETERS:  The usual "I'm a namespace callback" stuff  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: This is called once per device soon after ACPI is enabled  *              to initialize each device. It determines if the device is  *              present, and if so, calls _INI.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsInitOneDevice  *  * PARAMETERS:  WALK_CALLBACK  *  * RETURN:      ACPI_STATUS  *  * DESCRIPTION: This is called once per device soon after ACPI is enabled  *              to initialize each device. It determines if the device is  *              present, and if so, calls _INI.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -653,6 +668,16 @@ argument_list|(
 literal|"AcpiNsInitOneDevice"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|AcpiDbgLevel
+operator|&
+name|TRACE_INIT
+operator|)
+condition|)
+block|{
 name|DEBUG_PRINT_RAW
 argument_list|(
 name|ACPI_OK
@@ -662,6 +687,7 @@ literal|"."
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|Info
 operator|->
 name|DeviceCount
@@ -702,6 +728,16 @@ name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
 comment|/*      * Run _STA to determine if we can run _INI on the device.      */
+name|DEBUG_EXEC
+argument_list|(
+name|AcpiCmDisplayInitPathname
+argument_list|(
+name|Node
+argument_list|,
+literal|"_STA  [Method]"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiCmExecute_STA
@@ -750,6 +786,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * The device is present. Run _INI.      */
+name|DEBUG_EXEC
+argument_list|(
+name|AcpiCmDisplayInitPathname
+argument_list|(
+name|ObjHandle
+argument_list|,
+literal|"_INI  [Method]"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsEvaluateRelative

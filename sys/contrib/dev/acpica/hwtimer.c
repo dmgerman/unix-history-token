@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 4 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 5 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Compute Tick Delta:      * -------------------      * Handle timer rollovers on 24- versus 32-bit timers.      */
+comment|/*       * Compute Tick Delta:      * -------------------      * Handle (max one) timer rollovers on 24- versus 32-bit timers.      */
 if|if
 condition|(
 name|StartTicks
@@ -247,12 +247,18 @@ block|{
 name|DeltaTicks
 operator|=
 operator|(
+operator|(
+operator|(
 literal|0x00FFFFFF
 operator|-
 name|StartTicks
 operator|)
 operator|+
 name|EndTicks
+operator|)
+operator|&
+literal|0x00FFFFFF
+operator|)
 expr_stmt|;
 block|}
 comment|/* 32-bit Timer */
@@ -269,6 +275,19 @@ operator|+
 name|EndTicks
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+operator|*
+name|TimeElapsed
+operator|=
+literal|0
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*       * Compute Duration:      * -----------------      * Since certain compilers (gcc/Linux, argh!) don't support 64-bit       * divides in kernel-space we have to do some trickery to preserve       * accuracy while using 32-bit math.      *      * TODO: Change to use 64-bit math when supported.      *       * The process is as follows:      *  1. Compute the number of seconds by dividing Delta Ticks by       *     the timer frequency.      *  2. Compute the number of milliseconds in the remainder from step #1      *     by multiplying by 1000 and then dividing by the timer frequency.      *  3. Compute the number of microseconds in the remainder from step #2      *     by multiplying by 1000 and then dividing by the timer frequency.      *  4. Add the results from steps 1, 2, and 3 to get the total duration.      *      * Example: The time elapsed for DeltaTicks = 0xFFFFFFFF should be       *          1199864031 microseconds.  This is computed as follows:      *          Step #1: Seconds = 1199; Remainder = 3092840      *          Step #2: Milliseconds = 864; Remainder = 113120      *          Step #3: Microseconds = 31; Remainder =<don't care!>      */
 comment|/* Step #1 */
