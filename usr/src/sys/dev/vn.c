@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: fd.c 1.3 89/12/03$  *  *	@(#)vn.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.8 92/12/20$  *  *	@(#)vn.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Vnode disk driver.  *  * Block/character interface to a vnode.  Allows one to treat a file  * as a disk (e.g. build a filesystem in it, mount it, etc.).  *  * NOTE 1: This uses the VOP_BMAP/VOP_STRATEGY interface to the vnode  * instead of a simple VOP_RDWR.  We do this to avoid distorting the  * local buffer cache.  *  * NOTE 2: There is a security issue involved with this driver.  * Once mounted all access to the contents of the "mapped" file via  * the special file is controlled by the permissions on the special  * file, the protection of the mapped file is ignored (effectively,  * by using root credentials in all transactions).  */
+comment|/*  * Vnode disk driver.  *  * Block/character interface to a vnode.  Allows one to treat a file  * as a disk (e.g. build a filesystem in it, mount it, etc.).  *  * NOTE 1: This uses the VOP_BMAP/VOP_STRATEGY interface to the vnode  * instead of a simple VOP_RDWR.  We do this to avoid distorting the  * local buffer cache.  *  * NOTE 2: There is a security issue involved with this driver.  * Once mounted all access to the contents of the "mapped" file via  * the special file is controlled by the permissions on the special  * file, the protection of the mapped file is ignored (effectively,  * by using root credentials in all transactions).  *  * NOTE 3: Doesn't interact with leases, should it?  */
 end_comment
 
 begin_include
@@ -770,6 +770,56 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* XXX */
+name|nbp
+operator|->
+name|b_rcred
+operator|=
+name|vn
+operator|->
+name|sc_cred
+expr_stmt|;
+comment|/* XXX crdup? */
+name|nbp
+operator|->
+name|b_wcred
+operator|=
+name|vn
+operator|->
+name|sc_cred
+expr_stmt|;
+comment|/* XXX crdup? */
+name|nbp
+operator|->
+name|b_dirtyoff
+operator|=
+name|bp
+operator|->
+name|b_dirtyoff
+expr_stmt|;
+name|nbp
+operator|->
+name|b_dirtyend
+operator|=
+name|bp
+operator|->
+name|b_dirtyend
+expr_stmt|;
+name|nbp
+operator|->
+name|b_validoff
+operator|=
+name|bp
+operator|->
+name|b_validoff
+expr_stmt|;
+name|nbp
+operator|->
+name|b_validend
+operator|=
+name|bp
+operator|->
+name|b_validend
+expr_stmt|;
 comment|/* 		 * Just sort by block number 		 */
 name|nbp
 operator|->
@@ -930,6 +980,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+operator|==
+literal|0
+condition|)
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_numoutput
+operator|++
+expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
 name|bp
@@ -1964,15 +2033,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-modifier|*
-name|ufs_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
 specifier|extern
 name|int
 function_decl|(
