@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.15 1999/06/17 14:48:02 sheldonh Exp $"
+literal|"$Id: vacation.c,v 1.16 1999/06/17 14:49:19 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +469,8 @@ decl_stmt|,
 name|lflag
 decl_stmt|,
 name|mfail
+decl_stmt|,
+name|ufail
 decl_stmt|;
 name|opterr
 operator|=
@@ -477,6 +479,8 @@ operator|=
 name|lflag
 operator|=
 name|mfail
+operator|=
+name|ufail
 operator|=
 literal|0
 expr_stmt|;
@@ -620,8 +624,8 @@ name|interval
 operator|<
 literal|0
 condition|)
-name|usage
-argument_list|()
+name|ufail
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -634,12 +638,12 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|usage
-argument_list|()
+name|ufail
+operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* Only die on the above malloc failure here so that the 	 * correct logging medium is used. 	 */
+comment|/*  	 * Only die on the above malloc and usage errors here so that the 	 * correct logging medium is used. 	 */
 if|if
 condition|(
 name|mfail
@@ -658,6 +662,14 @@ name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ufail
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|argc
 operator|-=
 name|optind
