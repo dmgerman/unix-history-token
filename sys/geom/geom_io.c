@@ -556,6 +556,7 @@ begin_function
 name|int
 name|g_io_setattr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|attr
@@ -722,6 +723,7 @@ begin_function
 name|int
 name|g_io_getattr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|attr
