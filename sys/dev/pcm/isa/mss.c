@@ -6343,7 +6343,7 @@ break|break;
 case|case
 literal|0x3500630e
 case|:
-comment|/* CS4236 */
+comment|/* CS4236B */
 case|case
 literal|0x3600630e
 case|:
