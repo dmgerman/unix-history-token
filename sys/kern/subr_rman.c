@@ -912,6 +912,10 @@ condition|(
 name|s
 operator|->
 name|r_start
+operator|+
+name|count
+operator|-
+literal|1
 operator|>
 name|end
 condition|)
@@ -919,7 +923,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"s->r_start (%#lx)> end (%#lx)\n"
+literal|"s->r_start (%#lx) + count - 1> end (%#lx)\n"
 operator|,
 name|s
 operator|->
