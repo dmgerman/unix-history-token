@@ -1296,6 +1296,27 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+operator|(
+operator|*
+name|pde
+operator|&
+name|PG_PS
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* compat with i386 pmap_pte() */
+return|return
+operator|(
+operator|(
+name|pt_entry_t
+operator|*
+operator|)
+name|pde
+operator|)
+return|;
 name|pte
 operator|=
 operator|(
