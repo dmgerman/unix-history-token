@@ -188,6 +188,8 @@ operator|=
 name|D_DISK
 operator||
 name|D_TRACKCLOSE
+operator||
+name|D_NOGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -796,9 +798,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -830,9 +829,6 @@ name|e
 argument_list|)
 expr_stmt|;
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 name|g_waitidle
@@ -990,9 +986,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -1124,9 +1117,6 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
-expr_stmt|;
 name|g_waitidle
 argument_list|()
 expr_stmt|;
@@ -1226,9 +1216,6 @@ operator|(
 literal|"Consumer with zero access count in g_dev_ioctl"
 operator|)
 argument_list|)
-expr_stmt|;
-name|DROP_GIANT
-argument_list|()
 expr_stmt|;
 name|gio
 operator|=
@@ -1538,9 +1525,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|PICKUP_GIANT
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1840,21 +1824,9 @@ argument_list|(
 name|bp2
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
