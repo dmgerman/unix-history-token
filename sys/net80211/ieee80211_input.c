@@ -1035,6 +1035,7 @@ name|ni
 operator|=
 name|ieee80211_fakeup_adhoc_node
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -1583,6 +1584,7 @@ name|ni
 operator|=
 name|ieee80211_dup_bss
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -2227,6 +2229,7 @@ name|ni1
 init|=
 name|ieee80211_find_node
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -4162,6 +4165,7 @@ name|ni
 operator|=
 name|ieee80211_dup_bss
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -4842,6 +4846,7 @@ name|ni
 operator|=
 name|ieee80211_dup_bss
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -8625,6 +8630,7 @@ name|ni
 operator|=
 name|ieee80211_fakeup_adhoc_node
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -9160,6 +9166,7 @@ name|ni
 operator|=
 name|ieee80211_fakeup_adhoc_node
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -9175,6 +9182,7 @@ name|ni
 operator|=
 name|ieee80211_dup_bss
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -9952,6 +9960,7 @@ name|ni
 operator|=
 name|ieee80211_dup_bss
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta

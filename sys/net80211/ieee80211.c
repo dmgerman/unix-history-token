@@ -3205,16 +3205,13 @@ expr_stmt|;
 block|}
 name|nt
 operator|=
+operator|&
 name|ic
 operator|->
 name|ic_sta
 expr_stmt|;
 if|if
 condition|(
-name|nt
-operator|!=
-name|NULL
-operator|&&
 name|nt
 operator|->
 name|nt_inact_timer

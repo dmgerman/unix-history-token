@@ -500,7 +500,6 @@ decl_stmt|;
 comment|/* roaming mode */
 name|struct
 name|ieee80211_node_table
-modifier|*
 name|ic_sta
 decl_stmt|;
 comment|/* stations/neighbors */

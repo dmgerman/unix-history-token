@@ -1635,16 +1635,9 @@ block|}
 else|else
 block|{
 comment|/* 		 * When operating as a station the node table holds 		 * the AP's that were discovered during scanning. 		 * For any other operating mode we want to reset the 		 * tx rate state of each node. 		 */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_sta
-operator|!=
-name|NULL
-condition|)
 name|ieee80211_iterate_nodes
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta
@@ -2182,17 +2175,10 @@ name|ic_bss
 argument_list|)
 expr_stmt|;
 comment|/* NB: no reference */
-elseif|else
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_sta
-operator|!=
-name|NULL
-condition|)
+else|else
 name|ieee80211_iterate_nodes
 argument_list|(
+operator|&
 name|ic
 operator|->
 name|ic_sta

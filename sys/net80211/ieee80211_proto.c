@@ -4296,27 +4296,11 @@ name|IEEE80211_M_HOSTAP
 case|:
 name|nt
 operator|=
+operator|&
 name|ic
 operator|->
 name|ic_sta
 expr_stmt|;
-if|if
-condition|(
-name|nt
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* XXX cannot happen */
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"no sta table (run)\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|IEEE80211_NODE_LOCK
 argument_list|(
 name|nt
@@ -4394,27 +4378,11 @@ name|IEEE80211_M_HOSTAP
 case|:
 name|nt
 operator|=
+operator|&
 name|ic
 operator|->
 name|ic_sta
 expr_stmt|;
-if|if
-condition|(
-name|nt
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* XXX cannot happen */
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"no sta table (assoc)\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|IEEE80211_NODE_LOCK
 argument_list|(
 name|nt
@@ -5168,18 +5136,10 @@ name|nt_inact_timer
 operator|=
 name|IEEE80211_INACT_WAIT
 expr_stmt|;
-if|if
-condition|(
 name|ic
 operator|->
 name|ic_sta
-operator|!=
-name|NULL
-condition|)
-name|ic
-operator|->
-name|ic_sta
-operator|->
+operator|.
 name|nt_inact_timer
 operator|=
 name|IEEE80211_INACT_WAIT
