@@ -889,7 +889,7 @@ name|N_IP6STAT
 block|,
 literal|1
 block|,
-literal|0
+name|protopr
 block|,
 name|ip6_stats
 block|,
@@ -897,7 +897,7 @@ name|ip6_ifstats
 block|,
 literal|"ip6"
 block|,
-literal|0
+name|IPPROTO_RAW
 block|}
 block|,
 block|{
@@ -908,7 +908,7 @@ name|N_ICMP6STAT
 block|,
 literal|1
 block|,
-literal|0
+name|protopr
 block|,
 name|icmp6_stats
 block|,
@@ -916,7 +916,7 @@ name|icmp6_ifstats
 block|,
 literal|"icmp6"
 block|,
-literal|0
+name|IPPROTO_ICMPV6
 block|}
 block|,
 ifdef|#
