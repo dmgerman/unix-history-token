@@ -333,7 +333,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.12 1997/03/03 07:58:00 ache Exp $"
+literal|"$Id: at.c,v 1.13 1997/03/29 04:27:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1916,6 +1916,21 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PRIV_START
 if|if
 condition|(
