@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.6	82/06/05	*/
+comment|/*	defs.h	4.7	82/06/08	*/
 end_comment
 
 begin_comment
@@ -66,19 +66,16 @@ name|rtu_dst
 decl_stmt|;
 name|struct
 name|sockaddr
-name|rtu_gateway
+name|rtu_router
 decl_stmt|;
 name|short
 name|rtu_flags
 decl_stmt|;
 name|short
-name|rtu_retry
-decl_stmt|;
-name|short
-name|rtu_timer
-decl_stmt|;
-name|short
 name|rtu_state
+decl_stmt|;
+name|int
+name|rtu_timer
 decl_stmt|;
 name|int
 name|rtu_metric
@@ -87,6 +84,10 @@ name|struct
 name|ifnet
 modifier|*
 name|rtu_ifp
+decl_stmt|;
+name|struct
+name|sockaddr
+name|rtu_newrouter
 decl_stmt|;
 block|}
 name|rtu_entry
@@ -134,8 +135,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|rt_gateway
-value|rt_rtu.rtu_entry.rtu_gateway
+name|rt_router
+value|rt_rtu.rtu_entry.rtu_router
 end_define
 
 begin_comment
@@ -151,17 +152,6 @@ end_define
 
 begin_comment
 comment|/* kernel flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|rt_retry
-value|rt_rtu.rtu_entry.rtu_retry
-end_define
-
-begin_comment
-comment|/* retries of ioctl */
 end_comment
 
 begin_define
@@ -211,6 +201,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|rt_newrouter
+value|rt_rtu.rtu_entry.rtu_newrouter
+end_define
+
+begin_comment
+comment|/* for change's */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ROUTEHASHSIZ
 value|19
 end_define
@@ -255,12 +256,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTS_HIDDEN
+name|RTS_PASSIVE
 value|0x8
 end_define
 
 begin_comment
 comment|/* don't send to router */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTS_INTERFACE
+value|0x10
+end_define
+
+begin_comment
+comment|/* route is for an interface */
 end_comment
 
 begin_decl_stmt
