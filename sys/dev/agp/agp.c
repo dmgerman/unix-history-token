@@ -1905,10 +1905,16 @@ name|error
 condition|)
 block|{
 comment|/* 				 * Bail out. Reverse all the mappings 				 * and unwire the pages. 				 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -1997,10 +2003,16 @@ name|error
 return|;
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Flush the cpu cache since we are providing a new mapping 	 * for these pages. 	 */
