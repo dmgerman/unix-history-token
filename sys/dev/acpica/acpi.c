@@ -1179,7 +1179,7 @@ specifier|static
 name|int
 name|acpi_osi_method
 init|=
-literal|1
+name|TRUE
 decl_stmt|;
 end_decl_stmt
 
