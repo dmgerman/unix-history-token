@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	5.8 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5141,7 +5141,7 @@ expr_stmt|;
 while|while
 condition|(
 name|i
-operator|>=
+operator|>
 literal|0
 condition|)
 operator|*
@@ -5150,9 +5150,14 @@ operator|++
 operator|=
 name|sfrom
 index|[
-name|i
 operator|--
+name|i
 index|]
+expr_stmt|;
+operator|*
+name|sto
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 end_block
