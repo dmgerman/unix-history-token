@@ -1514,6 +1514,15 @@ argument_list|,
 name|IFAN_DEPARTURE
 argument_list|)
 expr_stmt|;
+name|ifindex2ifnet
+index|[
+name|ifp
+operator|->
+name|if_index
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|found
 operator|=
 literal|0
