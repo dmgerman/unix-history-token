@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.28 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,6 +106,18 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -1264,6 +1276,40 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|one
+operator|=
+name|IPTOS_LOWDELAY
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|rem
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|one
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"rlogin: setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 operator|(
