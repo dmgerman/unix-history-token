@@ -1376,20 +1376,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|madvise
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|p
-argument_list|,
-name|fs
-operator|->
-name|st_size
-argument_list|,
-name|MADV_SEQUENTIAL
-argument_list|)
-expr_stmt|;
+comment|/* Not implemented yet... 		 madvise((caddr_t) p, fs->st_size, MADV_SEQUENTIAL); 		 */
 if|if
 condition|(
 name|write
@@ -1421,6 +1408,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|munmap
 argument_list|(
 operator|(
@@ -1431,6 +1420,22 @@ argument_list|,
 name|fs
 operator|->
 name|st_size
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|from
+operator|.
+name|p_path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
