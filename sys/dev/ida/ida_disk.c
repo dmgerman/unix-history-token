@@ -317,6 +317,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|bp
+operator|->
+name|bio_driver1
+operator|=
+name|drv
+expr_stmt|;
 name|s
 operator|=
 name|splbio
