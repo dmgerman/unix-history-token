@@ -456,6 +456,13 @@ begin_comment
 comment|/* verify time instead of queuing job */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|namep
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Function declarations */
 end_comment
@@ -544,7 +551,7 @@ argument_list|)
 decl_stmt|;
 name|PRIV_END
 block|}
-name|exit
+name|_exit
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -561,10 +568,52 @@ name|int
 name|signo
 parameter_list|)
 block|{
-comment|/* Time out after some seconds  */
-name|panic
+name|char
+name|buf
+index|[
+literal|1024
+index|]
+decl_stmt|;
+comment|/* Time out after some seconds. */
+name|strlcpy
 argument_list|(
-literal|"file locking timed out"
+name|buf
+argument_list|,
+name|namep
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|buf
+argument_list|,
+literal|": file locking timed out\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sigc
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2599,6 +2648,10 @@ else|else
 name|pgm
 operator|++
 expr_stmt|;
+name|namep
+operator|=
+name|pgm
+expr_stmt|;
 comment|/* find out what this program is supposed to do      */
 if|if
 condition|(
@@ -2863,10 +2916,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"at version "
+literal|"%s version "
 name|VERSION
 literal|"\n"
 literal|"Bug reports to: ig25@rz.uni-karlsruhe.de (Thomas Koenig)\n"
+argument_list|,
+name|namep
 argument_list|)
 expr_stmt|;
 comment|/* select our program      */
