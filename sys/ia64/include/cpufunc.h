@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|CRITICAL_FORK
-value|(ia64_get_psr() |= IA64_PSR_I)
+value|(ia64_get_psr() | IA64_PSR_I)
 end_define
 
 begin_ifdef
