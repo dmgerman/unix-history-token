@@ -744,6 +744,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|strsep
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|delim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|strvalid
 parameter_list|(
