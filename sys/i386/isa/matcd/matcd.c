@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.25 1997/04/20 18:02:40 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.26 1997/05/04 15:24:21 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -888,7 +888,7 @@ name|nodump
 block|,
 name|matcdsize
 block|,
-literal|0
+name|D_DISK
 block|,
 literal|"matcd"
 block|,

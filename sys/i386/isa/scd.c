@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.29 1997/04/20 17:26:55 bde Exp $ */
+comment|/* $Id: scd.c,v 1.30 1997/05/04 15:24:20 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -1034,7 +1034,7 @@ name|nodump
 block|,
 name|nopsize
 block|,
-literal|0
+name|D_DISK
 block|,
 literal|"scd"
 block|,
