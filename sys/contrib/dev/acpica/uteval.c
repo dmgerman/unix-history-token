@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -219,9 +219,8 @@ modifier|*
 name|ReturnDesc
 parameter_list|)
 block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
+name|ACPI_PARAMETER_INFO
+name|Info
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -234,19 +233,33 @@ argument_list|(
 literal|"UtEvaluateObject"
 argument_list|)
 expr_stmt|;
+name|Info
+operator|.
+name|Node
+operator|=
+name|PrefixNode
+expr_stmt|;
+name|Info
+operator|.
+name|Parameters
+operator|=
+name|NULL
+expr_stmt|;
+name|Info
+operator|.
+name|ParameterType
+operator|=
+name|ACPI_PARAM_ARGS
+expr_stmt|;
 comment|/* Evaluate the object/method */
 name|Status
 operator|=
 name|AcpiNsEvaluateRelative
 argument_list|(
-name|PrefixNode
-argument_list|,
 name|Path
 argument_list|,
-name|NULL
-argument_list|,
 operator|&
-name|ObjDesc
+name|Info
 argument_list|)
 expr_stmt|;
 if|if
@@ -305,7 +318,9 @@ comment|/* Did we get a return object? */
 if|if
 condition|(
 operator|!
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 condition|)
 block|{
 if|if
@@ -341,7 +356,9 @@ switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 condition|)
 block|{
@@ -417,7 +434,9 @@ name|Path
 operator|,
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 operator|)
 argument_list|)
@@ -425,7 +444,9 @@ expr_stmt|;
 comment|/* On error exit, we must delete the return object */
 name|AcpiUtRemoveReference
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -438,7 +459,9 @@ comment|/* Object type is OK, return it */
 operator|*
 name|ReturnDesc
 operator|=
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 154 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 156 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -239,9 +239,8 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
+name|ACPI_PARAMETER_INFO
+name|Info
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -271,6 +270,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Evaluate the namespace object containing the values for this state      */
+name|Info
+operator|.
+name|Parameters
+operator|=
+name|NULL
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsEvaluateByName
@@ -287,10 +292,8 @@ index|[
 name|SleepState
 index|]
 argument_list|,
-name|NULL
-argument_list|,
 operator|&
-name|ObjDesc
+name|Info
 argument_list|)
 expr_stmt|;
 if|if
@@ -330,7 +333,9 @@ comment|/* Must have a return object */
 if|if
 condition|(
 operator|!
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 condition|)
 block|{
 name|ACPI_REPORT_ERROR
@@ -351,7 +356,9 @@ if|if
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 operator|!=
 name|ACPI_TYPE_PACKAGE
@@ -373,7 +380,9 @@ comment|/* The package must have at least two elements */
 elseif|else
 if|if
 condition|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -401,7 +410,9 @@ condition|(
 operator|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -417,7 +428,9 @@ operator|||
 operator|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -438,7 +451,9 @@ literal|"Sleep State package elements are not both Integers (%s, %s)\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -450,7 +465,9 @@ argument_list|)
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -477,7 +494,9 @@ call|(
 name|UINT8
 call|)
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -498,7 +517,9 @@ call|(
 name|UINT8
 call|)
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|->
 name|Package
 operator|.
@@ -533,11 +554,15 @@ index|[
 name|SleepState
 index|]
 operator|,
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 operator|)
 argument_list|)
@@ -545,7 +570,9 @@ expr_stmt|;
 block|}
 name|AcpiUtRemoveReference
 argument_list|(
-name|ObjDesc
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 198 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 201 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -440,7 +440,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Strings supported by the _OSI predefined (internal) method */
+comment|/*  * Strings supported by the _OSI predefined (internal) method.  * When adding strings, be sure to update ACPI_NUM_OSI_STRINGS.  */
 end_comment
 
 begin_decl_stmt
@@ -460,6 +460,16 @@ block|,
 literal|"Windows 2001"
 block|,
 literal|"Windows 2001.1"
+block|,
+literal|"Windows 2001 SP0"
+block|,
+literal|"Windows 2001 SP1"
+block|,
+literal|"Windows 2001 SP2"
+block|,
+literal|"Windows 2001 SP3"
+block|,
+literal|"Windows 2001 SP4"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -514,7 +524,7 @@ block|,
 block|{
 literal|"_TZ_"
 block|,
-name|ACPI_TYPE_LOCAL_SCOPE
+name|ACPI_TYPE_THERMAL
 block|,
 name|NULL
 block|}
@@ -2638,6 +2648,10 @@ comment|/* Hardware oriented */
 name|AcpiGbl_EventsInitialized
 operator|=
 name|FALSE
+expr_stmt|;
+name|AcpiGbl_SystemAwakeAndRunning
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* Namespace */
 name|AcpiGbl_RootNode
