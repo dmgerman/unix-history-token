@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)lseek.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)lseek.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,35 +12,27 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stand/saio.h>
+file|<stand.att/saio.h>
 end_include
 
-begin_macro
+begin_function
+name|off_t
 name|lseek
-argument_list|(
-argument|fdesc
-argument_list|,
-argument|addr
-argument_list|,
-argument|ptr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fdesc
+parameter_list|,
+name|addr
+parameter_list|,
+name|ptr
+parameter_list|)
 name|int
 name|fdesc
 decl_stmt|,
 name|ptr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|off_t
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -151,7 +143,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
