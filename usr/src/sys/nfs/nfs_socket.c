@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,18 +158,6 @@ directive|define
 name|FALSE
 value|0
 end_define
-
-begin_decl_stmt
-name|int
-name|netnetnet
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|netaddrhash
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Estimate rto for an nfs rpc sent via. an unreliable datagram.  * Use the mean and mean deviation of rtt for the appropriate type of rpc  * for the frequent rpcs and a default for the others.  * The justification for doing "other" this way is that these rpcs  * happen so infrequently that timer est. would probably be stale.  * Also, since many of these rpcs are  * non-idempotent, a conservative timeout is desired.  * getattr, lookup - A+2D  * read, write     - A+4D  * other           - nm_timeo  */
