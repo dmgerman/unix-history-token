@@ -1806,10 +1806,6 @@ name|VAR_HOSTNAME
 argument_list|,
 name|hostname
 argument_list|,
-name|use_dhcp
-condition|?
-literal|0
-else|:
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1853,10 +1849,6 @@ name|VAR_GATEWAY
 argument_list|,
 name|gateway
 argument_list|,
-name|use_dhcp
-condition|?
-literal|0
-else|:
 literal|1
 argument_list|)
 expr_stmt|;
