@@ -4434,7 +4434,7 @@ name|ums_devclass
 argument_list|,
 name|UMS_CDEV_MAJOR
 argument_list|,
-name|NODEV
+name|NOMAJ
 argument_list|,
 name|ums_cdevsw
 argument_list|,

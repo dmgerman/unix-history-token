@@ -2067,7 +2067,7 @@ name|ulpt_devclass
 argument_list|,
 name|ULPT_CDEV_MAJOR
 argument_list|,
-name|NODEV
+name|NOMAJ
 argument_list|,
 name|ulpt_cdevsw
 argument_list|,

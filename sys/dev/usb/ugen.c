@@ -5263,7 +5263,7 @@ name|ugen_devclass
 argument_list|,
 name|UGEN_CDEV_MAJOR
 argument_list|,
-name|NODEV
+name|NOMAJ
 argument_list|,
 name|ugen_cdevsw
 argument_list|,
