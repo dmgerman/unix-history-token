@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.17	(Berkeley)	83/08/11"
+literal|"@(#)restore.c	3.18	(Berkeley)	83/12/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -2629,6 +2629,9 @@ operator|==
 name|NODE
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|linkit
 argument_list|(
 name|name
@@ -2644,6 +2647,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|linkit
 argument_list|(
 name|name
