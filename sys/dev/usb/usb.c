@@ -596,7 +596,7 @@ begin_define
 define|#
 directive|define
 name|USB_MAX_EVENTS
-value|50
+value|100
 end_define
 
 begin_struct
