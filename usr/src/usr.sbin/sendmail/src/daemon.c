@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.67 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.68 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.67 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.68 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -971,7 +971,7 @@ name|mci
 operator|->
 name|mci_status
 operator|=
-literal|"466"
+literal|"4.4.3"
 expr_stmt|;
 return|return
 operator|(
