@@ -843,7 +843,7 @@ argument_list|(
 literal|"lp: still open\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|lprintf
 argument_list|(
 literal|"still open %x\n"
 argument_list|,
