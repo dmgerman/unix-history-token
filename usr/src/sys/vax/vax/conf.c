@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.15	%G%	*/
+comment|/*	conf.c	4.16	%G%	*/
 end_comment
 
 begin_include
@@ -354,7 +354,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NTM
+name|NTM03
 operator|>
 literal|0
 end_if
