@@ -179,13 +179,10 @@ name|u_char
 name|fw_prot
 decl_stmt|;
 comment|/* IP protocol */
+comment|/* 	 * N'of src ports and # of dst ports in ports array (dst ports 	 * follow src ports; max of 10 ports in all; count of 0 means 	 * match all ports) 	 */
 name|u_char
 name|fw_nports
 decl_stmt|;
-comment|/* N'of src ports and # of dst ports */
-comment|/* in ports array (dst ports follow */
-comment|/* src ports; max of 10 ports in all; */
-comment|/* count of 0 means match all ports) */
 name|void
 modifier|*
 name|pipe_ptr
@@ -633,8 +630,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_SMSK
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* src-port + mask 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_DMSK
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* dst-port + mask 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_KEEP_S
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* keep state	 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x00FFFFFF
+value|0x03FFFFFF
 end_define
 
 begin_comment
@@ -762,6 +792,20 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|IP_FW_PORT_DYNT_FLAG
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_PORT_TEE_FLAG
+value|0x20000
+end_define
+
 begin_comment
 comment|/*  * Function definitions.  */
 end_comment
@@ -852,72 +896,6 @@ modifier|*
 name|ip_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* IP NAT hooks */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_nat_t
-name|__P
-typedef|((struct
-name|ip
-modifier|*
-modifier|*
-typedef|, struct
-name|mbuf
-modifier|*
-modifier|*
-typedef|, struct
-name|ifnet
-modifier|*
-typedef|,
-name|int
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_nat_ctl_t
-name|__P
-typedef|((struct
-name|sockopt
-modifier|*
-typedef|));
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_nat_t
-modifier|*
-name|ip_nat_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ip_nat_ctl_t
-modifier|*
-name|ip_nat_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IP_NAT_IN
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_NAT_OUT
-value|0x00000002
-end_define
 
 begin_endif
 endif|#
