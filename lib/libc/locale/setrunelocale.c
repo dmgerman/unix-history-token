@@ -162,6 +162,10 @@ condition|(
 operator|!
 name|encoding
 operator|||
+operator|!
+operator|*
+name|encoding
+operator|||
 name|strlen
 argument_list|(
 name|encoding
