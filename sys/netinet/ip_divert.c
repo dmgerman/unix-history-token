@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ipfw.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_mac.h"
 end_include
 
@@ -35,6 +41,23 @@ begin_error
 error|#
 directive|error
 literal|"IPDIVERT requires INET."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPFIREWALL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"IPDIVERT requires IPFIREWALL"
 end_error
 
 begin_endif
