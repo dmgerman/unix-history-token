@@ -344,7 +344,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s:S:m:r:k:f:t:F:M:vd"
+literal|"s:S:m:r:k:f:t:F:V:vd"
 argument_list|)
 operator|)
 operator|!=
@@ -366,7 +366,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'S'
+literal|'V'
 case|:
 name|screensavertype
 argument_list|(
@@ -402,7 +402,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'M'
+literal|'S'
 case|:
 name|mapscr
 argument_list|(
@@ -620,7 +620,7 @@ name|usagestr
 index|[]
 init|=
 block|{
-literal|"\ Usage: syscons  -v               (be verbose)\n\                 -s {TIME|off}    (set screensaver timeout to TIME seconds)\n\ 		-S {NAME|list}   (set screensaver type or list available types\n\                 -m {80x25|80x50} (set screen to 25 or 50 lines)\n\                 -r DELAY.REPEAT  (set keyboard delay& repeat rate)\n\                 -r fast		 (set keyboard delay& repeat to fast)\n\                 -r slow		 (set keyboard delay& repeat to slow)\n\                 -r normal	 (set keyboard delay& repeat to normal)\n\                 -k MAPFILE       (load keyboard map file)\n\                 -f SIZE FILE     (load font file of size 8, 14 or 16)\n\                 -t SCRNUM        (switch to specified VT)\n\                 -F NUM STRING    (set function key NUM to send STRING)\n\                 -M SCRNMAP       (load screen map file)\n\ "
+literal|"\ Usage: syscons  -v               (be verbose)\n\                 -s {TIME|off}    (set screensaver timeout to TIME seconds)\n\ 		-V {NAME|list}   (set screensaver type or list available types\n\                 -m {80x25|80x50} (set screen to 25 or 50 lines)\n\                 -r DELAY.REPEAT  (set keyboard delay& repeat rate)\n\                 -r fast		 (set keyboard delay& repeat to fast)\n\                 -r slow		 (set keyboard delay& repeat to slow)\n\                 -r normal	 (set keyboard delay& repeat to normal)\n\                 -k MAPFILE       (load keyboard map file)\n\                 -f SIZE FILE     (load font file of size 8, 14 or 16)\n\                 -t SCRNUM        (switch to specified VT)\n\                 -F NUM STRING    (set function key NUM to send STRING)\n\ 		-S SCRNMAP       (load screen map file)\n\ "
 block|}
 decl_stmt|;
 name|fprintf
