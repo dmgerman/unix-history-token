@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	4.10 (Berkeley) 83/06/11"
+literal|"@(#)proc.c	4.11 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -1030,6 +1030,22 @@ name|jobflags
 decl_stmt|,
 name|reason
 decl_stmt|;
+while|while
+condition|(
+name|pp
+operator|->
+name|p_pid
+operator|!=
+name|pp
+operator|->
+name|p_jobid
+condition|)
+name|pp
+operator|=
+name|pp
+operator|->
+name|p_friends
+expr_stmt|;
 name|fp
 operator|=
 name|pp
@@ -1398,14 +1414,7 @@ name|pp
 operator|->
 name|p_pid
 operator|&&
-name|pp
-operator|->
-name|p_pid
-operator|==
-name|pp
-operator|->
-name|p_jobid
-operator|&&
+comment|/* pp->p_pid == pp->p_jobid&& */
 name|pp
 operator|->
 name|p_flags
@@ -4219,6 +4228,10 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -4250,11 +4263,18 @@ operator|*
 name|v
 condition|)
 block|{
+name|cp
+operator|=
+name|globone
+argument_list|(
+operator|*
+name|v
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|*
-name|v
+name|cp
 operator|==
 literal|'%'
 condition|)
@@ -4265,8 +4285,7 @@ name|pp
 operator|=
 name|pfind
 argument_list|(
-operator|*
-name|v
+name|cp
 argument_list|)
 expr_stmt|;
 do|do
@@ -4321,8 +4340,7 @@ name|printf
 argument_list|(
 literal|"%s: Already stopped\n"
 argument_list|,
-operator|*
-name|v
+name|cp
 argument_list|)
 expr_stmt|;
 name|err
@@ -4369,8 +4387,7 @@ operator|!
 name|digit
 argument_list|(
 operator|*
-operator|*
-name|v
+name|cp
 argument_list|)
 condition|)
 name|bferr
@@ -4384,8 +4401,7 @@ name|pid
 operator|=
 name|atoi
 argument_list|(
-operator|*
-name|v
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4444,6 +4460,11 @@ expr_stmt|;
 block|}
 name|cont
 label|:
+name|xfree
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 name|v
 operator|++
 expr_stmt|;
