@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.21	83/05/18	*/
+comment|/*	proc.h	4.22	83/05/22	*/
 end_comment
 
 begin_comment
@@ -206,6 +206,12 @@ name|struct
 name|itimerval
 name|p_realtimer
 decl_stmt|;
+name|struct
+name|quota
+modifier|*
+name|p_quota
+decl_stmt|;
+comment|/* quotas for this process */
 ifdef|#
 directive|ifdef
 name|sun
@@ -215,30 +221,6 @@ modifier|*
 name|p_ctx
 decl_stmt|;
 comment|/* pointer to current context */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|QUOTA
-name|struct
-name|quota
-modifier|*
-name|p_quota
-decl_stmt|;
-comment|/* quotas for this process (MUSH) */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MUSH
-name|mmsgbuf
-name|p_mb
-decl_stmt|;
-comment|/* pending message */
-name|int
-name|p_msgflgs
-decl_stmt|;
-comment|/* message flags */
 endif|#
 directive|endif
 block|}
@@ -285,17 +267,6 @@ name|pfind
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_decl_stmt
 name|struct

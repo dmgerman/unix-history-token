@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.34	83/03/31	*/
+comment|/*	systm.h	4.35	83/05/22	*/
 end_comment
 
 begin_comment
@@ -268,40 +268,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* its size */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUSH
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mcode
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MUSH: startup code */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|szmcode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*& its size */
 end_comment
 
 begin_endif
