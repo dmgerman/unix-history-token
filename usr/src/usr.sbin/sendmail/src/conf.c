@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.47 (Berkeley) %G%"
+literal|"@(#)conf.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6383,7 +6383,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETVENDOR -- process vendor code from V configuration line ** **	Parameters: **		vendor -- string representation of vendor. ** **	Returns: **		TRUE -- if ok. **		FALSE -- if vendor code could not be processed. */
+comment|/* **  SETVENDOR -- process vendor code from V configuration line ** **	Parameters: **		vendor -- string representation of vendor. ** **	Returns: **		TRUE -- if ok. **		FALSE -- if vendor code could not be processed. ** **	Side Effects: **		It is reasonable to set mode flags here to tweak **		processing in other parts of the code if necessary. **		For example, if you are a vendor that uses $%y to **		indicate YP lookups, you could enable that here. */
 end_comment
 
 begin_function
@@ -6397,8 +6397,8 @@ modifier|*
 name|vendor
 decl_stmt|;
 block|{
-return|return
-operator|(
+if|if
+condition|(
 name|strcasecmp
 argument_list|(
 name|vendor
@@ -6407,7 +6407,13 @@ literal|"Berkeley"
 argument_list|)
 operator|==
 literal|0
-operator|)
+condition|)
+return|return
+name|TRUE
+return|;
+comment|/* add vendor extensions here */
+return|return
+name|FALSE
 return|;
 block|}
 end_function
