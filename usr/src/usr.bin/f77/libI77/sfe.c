@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.7";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.8";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -1044,9 +1044,12 @@ literal|'\n'
 condition|)
 return|return
 operator|(
-name|F_EREREC
+name|cursor
+operator|=
+literal|0
 operator|)
 return|;
+comment|/* be tolerant */
 if|if
 condition|(
 name|n
