@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.9 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,8 +422,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buffer
+operator|)
 operator|==
 name|IAC
 condition|)
