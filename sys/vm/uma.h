@@ -358,18 +358,15 @@ comment|/* Cache line size align */
 end_comment
 
 begin_comment
-comment|/*  * Destroys a uma zone  *  * Arguments:  *	zone  The zone we want to destroy.  *	wait  This flag indicates whether or not we should wait for all  *		allocations to free, or return an errno on outstanding memory.  *  * Returns:  *	0 on successful completion, or EWOULDBLOCK if there are outstanding  *	allocations and the wait flag is M_NOWAIT  */
+comment|/*  * Destroys an empty uma zone.  If the zone is not empty uma complains loudly.  *  * Arguments:  *	zone  The zone we want to destroy.  *  */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|uma_zdestroy
 parameter_list|(
 name|uma_zone_t
 name|zone
-parameter_list|,
-name|int
-name|wait
 parameter_list|)
 function_decl|;
 end_function_decl
