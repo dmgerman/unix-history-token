@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1449,10 +1449,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
+name|curproc
 operator|->
 name|p_stats
-operator|.
+operator|->
 name|p_prof
 operator|.
 name|pr_scale
@@ -1465,7 +1465,7 @@ operator|&
 name|curproc
 operator|->
 name|p_stats
-operator|.
+operator|->
 name|p_prof
 argument_list|,
 literal|1
