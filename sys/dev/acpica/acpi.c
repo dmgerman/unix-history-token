@@ -8768,6 +8768,12 @@ name|ACPI_CA_DISASSEMBLER
 block|}
 block|,
 block|{
+literal|"ACPI_ALL_COMPONENTS"
+block|,
+name|ACPI_ALL_COMPONENTS
+block|}
+block|,
+block|{
 literal|"ACPI_BUS"
 block|,
 name|ACPI_BUS
@@ -8834,12 +8840,6 @@ name|ACPI_ALL_DRIVERS
 block|}
 block|,
 block|{
-literal|"ACPI_ALL_COMPONENTS"
-block|,
-name|ACPI_ALL_COMPONENTS
-block|}
-block|,
-block|{
 name|NULL
 block|,
 literal|0
@@ -8893,6 +8893,12 @@ name|ACPI_LV_ALL_EXCEPTIONS
 block|}
 block|,
 comment|/* Trace verbosity level 1 [Standard Trace Level] */
+block|{
+literal|"ACPI_LV_INIT_NAMES"
+block|,
+name|ACPI_LV_INIT_NAMES
+block|}
+block|,
 block|{
 literal|"ACPI_LV_PARSE"
 block|,
@@ -8969,12 +8975,6 @@ block|{
 literal|"ACPI_LV_PACKAGE"
 block|,
 name|ACPI_LV_PACKAGE
-block|}
-block|,
-block|{
-literal|"ACPI_LV_INIT_NAMES"
-block|,
-name|ACPI_LV_INIT_NAMES
 block|}
 block|,
 block|{
