@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.38 1998/07/21 21:47:51 dfr Exp $"
+literal|"$Id: mkioconf.c,v 1.39 1998/09/03 21:03:43 nsouch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4116,6 +4116,13 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include<sys/queue.h>\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
