@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rusers_proc.c,v 1.1.1.1 1994/08/28 14:53:44 csgr Exp $"
+literal|"$Id: rusers_proc.c,v 1.2 1994/11/04 02:12:49 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,6 +1143,7 @@ modifier|*
 name|rusers_num
 parameter_list|()
 block|{
+specifier|static
 name|int
 name|num_users
 init|=
@@ -1276,6 +1277,7 @@ name|utmpidlearr
 modifier|*
 name|utidle
 decl_stmt|;
+specifier|static
 name|utmparr
 name|ut
 decl_stmt|;
