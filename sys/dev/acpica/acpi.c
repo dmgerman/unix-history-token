@@ -8308,6 +8308,7 @@ name|acpi_prw_data
 name|prw
 decl_stmt|;
 name|int
+modifier|*
 name|sstate
 decl_stmt|;
 comment|/* It's ok not to have _PRW if the device can't wake the system. */
@@ -8332,14 +8333,13 @@ name|sstate
 operator|=
 operator|(
 name|int
-operator|)
-operator|(
-name|intptr_t
+operator|*
 operator|)
 name|context
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|sstate
 operator|>
 name|prw
@@ -8408,13 +8408,7 @@ literal|100
 argument_list|,
 name|acpi_wake_limit
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
+operator|&
 name|sstate
 argument_list|,
 name|NULL
