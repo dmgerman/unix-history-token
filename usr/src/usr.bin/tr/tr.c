@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tr.c	4.6 (Berkeley) %G%"
+literal|"@(#)tr.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,19 +736,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|next
 argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|STR
-modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+name|STR
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -982,6 +980,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Translate \-escapes.  Up to 3 octal digits => char; no digits => literal.  * Unadorned backslash "\" is like \000.  */
+end_comment
+
 begin_expr_stmt
 name|tran
 argument_list|(
@@ -1001,19 +1003,19 @@ name|int
 name|ch
 decl_stmt|,
 name|cnt
+init|=
+literal|0
 decl_stmt|,
 name|val
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
-name|val
-operator|=
-name|cnt
-operator|=
-literal|0
 init|;
-name|isascii
-argument_list|(
+condition|;
+control|)
+block|{
 name|ch
 operator|=
 operator|*
@@ -1021,19 +1023,27 @@ name|s
 operator|->
 name|str
 operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+name|ch
 argument_list|)
-operator|&&
+operator|||
+operator|!
 name|isdigit
 argument_list|(
 name|ch
 argument_list|)
-operator|&&
-name|cnt
+operator|||
 operator|++
-operator|<
+name|cnt
+operator|>
 literal|3
-condition|;
-control|)
+condition|)
+break|break;
 name|val
 operator|=
 name|val
@@ -1043,6 +1053,20 @@ operator|+
 name|ch
 operator|-
 literal|'0'
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cnt
+operator|||
+name|ch
+operator|==
+literal|0
+condition|)
+name|s
+operator|->
+name|str
+operator|--
 expr_stmt|;
 return|return
 operator|(
