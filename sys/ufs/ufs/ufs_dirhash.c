@@ -442,6 +442,60 @@ name|ufsdirhash_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|DIRHASHLIST_LOCK
+parameter_list|()
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRHASHLIST_UNLOCK
+parameter_list|()
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRHASH_LOCK
+parameter_list|(
+name|dh
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRHASH_UNLOCK
+parameter_list|(
+name|dh
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRHASH_BLKALLOC_WAITOK
+parameter_list|()
+value|zalloc(ufsdirhash_zone)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRHASH_BLKFREE
+parameter_list|(
+name|ptr
+parameter_list|)
+value|zfree(ufsdirhash_zone, ptr)
+end_define
+
 begin_comment
 comment|/* Dirhash list; recently-used entries are near the tail. */
 end_comment
@@ -456,6 +510,10 @@ argument_list|)
 name|ufsdirhash_list
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Locking is simple in 4.X. Comments on locking refer to FreeBSD 5+. */
+end_comment
 
 begin_comment
 comment|/*  * Attempt to build up a hash table for the directory contents in  * inode 'ip'. Returns 0 on success, or -1 of the operation failed.  */
@@ -735,6 +793,9 @@ operator|->
 name|dh_blkfree
 argument_list|)
 expr_stmt|;
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|memreqd
@@ -744,6 +805,9 @@ operator|>
 name|ufs_dirhashmaxmem
 condition|)
 block|{
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|memreqd
@@ -774,11 +838,14 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Enough was freed. */
+comment|/* Enough was freed, and list has been locked. */
 block|}
 name|ufs_dirhashmem
 operator|+=
 name|memreqd
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Use non-blocking mallocs so that we will revert to a linear 	 * lookup on failure rather than potentially blocking forever. 	 */
 name|MALLOC
@@ -807,9 +874,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|memreqd
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -914,10 +987,8 @@ index|[
 name|i
 index|]
 operator|=
-name|zalloc
-argument_list|(
-name|ufsdirhash_zone
-argument_list|)
+name|DIRHASH_BLKALLOC_WAITOK
+argument_list|()
 operator|)
 operator|==
 name|NULL
@@ -1286,6 +1357,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1301,6 +1375,9 @@ operator|->
 name|dh_onlist
 operator|=
 literal|1
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1342,10 +1419,8 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|zfree
+name|DIRHASH_BLKFREE
 argument_list|(
-name|ufsdirhash_zone
-argument_list|,
 name|dh
 operator|->
 name|dh_hash
@@ -1394,9 +1469,15 @@ name|i_dirhash
 operator|=
 name|NULL
 expr_stmt|;
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|memreqd
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1444,6 +1525,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -1459,6 +1548,14 @@ name|dh
 argument_list|,
 name|dh_list
 argument_list|)
+expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* The dirhash pointed to by 'dh' is exclusively ours now. */
 name|mem
@@ -1493,10 +1590,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|zfree
+name|DIRHASH_BLKFREE
 argument_list|(
-name|ufsdirhash_zone
-argument_list|,
 name|dh
 operator|->
 name|dh_hash
@@ -1578,9 +1673,15 @@ name|i_dirhash
 operator|=
 name|NULL
 expr_stmt|;
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|mem
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1674,7 +1775,7 @@ operator|(
 name|EJUSTRETURN
 operator|)
 return|;
-comment|/* 	 * Move this dirhash towards the end of the list if it has a 	 * score higher than the next entry. 	 * Optimise the case where it's already the last by performing 	 * an unlocked read of the TAILQ_NEXT pointer. 	 */
+comment|/* 	 * Move this dirhash towards the end of the list if it has a 	 * score higher than the next entry, and acquire the dh_mtx. 	 * Optimise the case where it's already the last by performing 	 * an unlocked read of the TAILQ_NEXT pointer. 	 * 	 * In both cases, end up holding just dh_mtx. 	 */
 if|if
 condition|(
 name|TAILQ_NEXT
@@ -1687,6 +1788,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If the new score will be greater than that of the next 		 * entry, then move this entry past it. With both mutexes 		 * held, dh_next won't go away, but its dh_score could 		 * change; that's not important since it is just a hint. 		 */
 if|if
 condition|(
@@ -1752,6 +1861,18 @@ name|dh_list
 argument_list|)
 expr_stmt|;
 block|}
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Already the last, though that could change as we wait. */
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1762,6 +1883,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -1937,6 +2063,11 @@ operator|==
 name|DIRHASH_DEL
 condition|)
 continue|continue;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -2196,6 +2327,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2205,6 +2341,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -2246,6 +2387,11 @@ name|restart
 goto|;
 block|}
 block|}
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -2333,6 +2479,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2342,6 +2493,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -2403,6 +2559,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2435,6 +2596,11 @@ argument_list|,
 operator|(
 literal|"ufsdirhash_findfree: bad stats"
 operator|)
+argument_list|)
+expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
 argument_list|)
 expr_stmt|;
 name|pos
@@ -2761,6 +2927,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2770,6 +2941,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -2800,6 +2976,11 @@ operator|/
 name|DIRALIGN
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2838,6 +3019,11 @@ operator|/
 name|DIRALIGN
 condition|)
 break|break;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 call|(
@@ -2898,6 +3084,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2907,6 +3098,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -2947,6 +3143,11 @@ operator|/
 literal|4
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3033,6 +3234,11 @@ name|dirp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3079,6 +3285,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3088,6 +3299,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3151,6 +3367,11 @@ name|dirp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3200,6 +3421,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3209,6 +3435,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3266,6 +3497,11 @@ argument_list|)
 operator|=
 name|newoff
 expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3307,6 +3543,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3316,6 +3557,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3354,6 +3600,11 @@ name|dh_nblk
 condition|)
 block|{
 comment|/* Out of space; must rebuild. */
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3402,6 +3653,11 @@ index|]
 operator|=
 name|block
 expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3445,6 +3701,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3454,6 +3715,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3503,6 +3769,11 @@ operator|>
 literal|1
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3600,6 +3871,11 @@ name|dh_dirblks
 operator|=
 name|block
 expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3662,6 +3938,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3671,6 +3952,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3908,6 +4194,11 @@ argument_list|(
 literal|"ufsdirhash_checkblock: missing first-free entry"
 argument_list|)
 expr_stmt|;
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3952,6 +4243,7 @@ name|hash
 operator|=
 name|fnv_32_buf
 argument_list|(
+operator|&
 name|dh
 argument_list|,
 sizeof|sizeof
@@ -3975,7 +4267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Adjust the number of free bytes in the block containing `offset'  * by the value specified by `diff'.  *  * The caller must ensure we have exclusive access to `dh'.  */
+comment|/*  * Adjust the number of free bytes in the block containing `offset'  * by the value specified by `diff'.  *  * The caller must ensure we have exclusive access to `dh'; normally  * that means that dh_mtx should be held, but this is also called  * from ufsdirhash_build() where exclusive access can be assumed.  */
 end_comment
 
 begin_function
@@ -4594,7 +4886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to free up `wanted' bytes by stealing memory from existing  * dirhashes. Returns zero if successful.  */
+comment|/*  * Try to free up `wanted' bytes by stealing memory from existing  * dirhashes. Returns zero with list locked if successful.  */
 end_comment
 
 begin_function
@@ -4627,6 +4919,9 @@ name|mem
 decl_stmt|,
 name|narrays
 decl_stmt|;
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|wanted
@@ -4652,6 +4947,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -4659,6 +4957,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|DIRHASH_LOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|dh
@@ -4683,6 +4986,14 @@ operator|>
 literal|0
 condition|)
 block|{
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -4774,7 +5085,15 @@ operator|->
 name|dh_blkfree
 argument_list|)
 expr_stmt|;
-comment|/* Free the detached memory. */
+comment|/* Unlock everything, free the detached memory. */
+name|DIRHASH_UNLOCK
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+name|DIRHASHLIST_UNLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4788,10 +5107,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|zfree
+name|DIRHASH_BLKFREE
 argument_list|(
-name|ufsdirhash_zone
-argument_list|,
 name|hash
 index|[
 name|i
@@ -4813,12 +5130,15 @@ name|M_DIRHASH
 argument_list|)
 expr_stmt|;
 comment|/* Account for the returned memory, and repeat if necessary. */
+name|DIRHASHLIST_LOCK
+argument_list|()
+expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|mem
 expr_stmt|;
 block|}
-comment|/* Success. */
+comment|/* Success; return with list locked. */
 return|return
 operator|(
 literal|0

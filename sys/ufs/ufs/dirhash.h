@@ -16,7 +16,7 @@ name|_UFS_UFS_DIRHASH_H_
 end_define
 
 begin_comment
-comment|/*  * For fast operations on large directories, we maintain a hash  * that maps the file name to the offset of the directory entry within  * the directory file.  *  * The hashing uses a dumb spillover to the next free slot on  * collisions, so we must keep the utilisation low to avoid  * long linear searches. Deleted entries that are not the last  * in a chain must be marked DIRHASH_DEL.  *  * We also maintain a information about free space in each block  * to speed up creations.  */
+comment|/*  * For fast operations on large directories, we maintain a hash  * that maps the file name to the offset of the directory entry within  * the directory file.  *  * The hashing uses a dumb spillover to the next free slot on  * collisions, so we must keep the utilisation low to avoid  * long linear searches. Deleted entries that are not the last  * in a chain must be marked DIRHASH_DEL.  *  * We also maintain information about free space in each block  * to speed up creations.  */
 end_comment
 
 begin_define
