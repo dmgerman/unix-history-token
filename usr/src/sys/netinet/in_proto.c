@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	6.6	84/08/29	*/
+comment|/*	in_proto.c	6.7	85/06/02	*/
 end_comment
 
 begin_include
@@ -184,6 +184,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NSIP
+end_ifdef
+
+begin_function_decl
+name|int
+name|idpip_input
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -327,13 +345,13 @@ block|,
 operator|&
 name|inetdomain
 block|,
-name|IPPROTO_EGP
+name|IPPROTO_ICMP
 block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-name|rip_input
+name|icmp_input
 block|,
 name|rip_output
 block|,
@@ -352,19 +370,56 @@ block|,
 literal|0
 block|, }
 block|,
+ifdef|#
+directive|ifdef
+name|NSIP
 block|{
 name|SOCK_RAW
 block|,
 operator|&
 name|inetdomain
 block|,
-name|IPPROTO_ICMP
+name|IPPROTO_PUP
 block|,
 name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-name|icmp_input
+name|idpip_input
+block|,
+name|rip_output
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|raw_usrreq
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+endif|#
+directive|endif
+comment|/* raw wildcard */
+block|{
+name|SOCK_RAW
+block|,
+operator|&
+name|inetdomain
+block|,
+literal|0
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|rip_input
 block|,
 name|rip_output
 block|,
