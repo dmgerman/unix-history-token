@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)rcons_kern.c	8.1 (Berkeley) %G%  *  * from: $Header: rcons_kern.c,v 1.28 93/04/20 11:15:38 torek Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)rcons_kern.c	8.2 (Berkeley) %G%  *  * from: $Header: rcons_kern.c,v 1.29 93/09/27 00:52:02 torek Exp $  */
 end_comment
 
 begin_include
@@ -815,12 +815,6 @@ name|row
 decl_stmt|,
 name|col
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|100
-index|]
-decl_stmt|;
 name|myfbdevicep
 operator|=
 name|fb
@@ -1152,63 +1146,20 @@ operator|->
 name|height
 expr_stmt|;
 comment|/* Determine addresses of prom emulator row and column */
-name|fb
-operator|->
-name|fb_row
-operator|=
-name|fb
-operator|->
-name|fb_col
-operator|=
-name|NULL
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"' line#>body>user %x !"
-argument_list|,
-operator|&
-name|fb
-operator|->
-name|fb_row
-argument_list|)
-expr_stmt|;
-name|rominterpret
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"' column#>body>user %x !"
-argument_list|,
-operator|&
-name|fb
-operator|->
-name|fb_col
-argument_list|)
-expr_stmt|;
-name|rominterpret
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|romgetcursoraddr
+argument_list|(
+operator|&
 name|fb
 operator|->
 name|fb_row
-operator|==
-name|NULL
-operator|||
+argument_list|,
+operator|&
 name|fb
 operator|->
 name|fb_col
-operator|==
-name|NULL
+argument_list|)
 condition|)
 block|{
 comment|/* Can't find addresses; use private copies */
