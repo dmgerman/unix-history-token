@@ -4656,6 +4656,8 @@ block|,
 literal|0x00
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4666,6 +4668,8 @@ block|,
 literal|0x08
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4676,6 +4680,8 @@ block|,
 literal|0x10
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4686,6 +4692,8 @@ block|,
 literal|0x18
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4696,6 +4704,8 @@ block|,
 literal|0x20
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4706,6 +4716,8 @@ block|,
 literal|0x28
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4716,6 +4728,8 @@ block|,
 literal|0x30
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4726,6 +4740,8 @@ block|,
 literal|0x38
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4736,6 +4752,8 @@ block|,
 literal|0x40
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4746,6 +4764,8 @@ block|,
 literal|0x48
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4756,6 +4776,8 @@ block|,
 literal|0x50
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4766,6 +4788,8 @@ block|,
 literal|0x58
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4776,6 +4800,8 @@ block|,
 literal|0x60
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4786,6 +4812,8 @@ block|,
 literal|0x68
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4796,6 +4824,8 @@ block|,
 literal|0x70
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|,
 block|{
@@ -4806,6 +4836,8 @@ block|,
 literal|0x78
 block|,
 name|COM_FREQ
+operator|*
+literal|4
 block|}
 block|, 	    }
 block|, 	}
@@ -4844,6 +4876,8 @@ block|,
 literal|0x00
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4854,6 +4888,8 @@ block|,
 literal|0x08
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4864,6 +4900,8 @@ block|,
 literal|0x10
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4874,6 +4912,8 @@ block|,
 literal|0x18
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4884,6 +4924,8 @@ block|,
 literal|0x20
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4894,6 +4936,8 @@ block|,
 literal|0x28
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4904,6 +4948,8 @@ block|,
 literal|0x30
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4914,6 +4960,8 @@ block|,
 literal|0x38
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4924,6 +4972,8 @@ block|,
 literal|0x40
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4934,6 +4984,8 @@ block|,
 literal|0x48
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4944,6 +4996,8 @@ block|,
 literal|0x50
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4954,6 +5008,8 @@ block|,
 literal|0x58
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4964,6 +5020,8 @@ block|,
 literal|0x60
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4974,6 +5032,8 @@ block|,
 literal|0x68
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4984,6 +5044,8 @@ block|,
 literal|0x70
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|,
 block|{
@@ -4994,6 +5056,8 @@ block|,
 literal|0x78
 block|,
 name|COM_FREQ
+operator|*
+literal|8
 block|}
 block|, 	    }
 block|, 	}
