@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.16 1996/10/20 13:20:57 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.17 1996/10/26 08:19:07 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ comment|/* as in "Duh" :-) */
 end_comment
 
 begin_comment
-comment|/*  * The basic parameters you can tweak.  *  * malloc_pageshift	pagesize = 1<< malloc_pageshift  *			It's probably best if this is the native  *			page size, but it shouldn't have to be.  *  * malloc_minsize	minimum size of an allocation  *			If this is too small it's too much work  *			to manage them.  *  */
+comment|/*  * The basic parameters you can tweak.  *  * malloc_pageshift	pagesize = 1<< malloc_pageshift  *			It's probably best if this is the native  *			page size, but it shouldn't have to be.  *  * malloc_minsize	minimum size of an allocation in bytes.  *			If this is too small it's too much work  *			to manage them.  This is also the smallest  *			unit of alignment used for the storage  *			returned by malloc/realloc.  *  */
 end_comment
 
 begin_if
@@ -3209,6 +3209,8 @@ expr_stmt|;
 if|if
 condition|(
 name|malloc_zero
+operator|&&
+name|result
 condition|)
 name|memset
 argument_list|(
