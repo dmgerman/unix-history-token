@@ -1120,7 +1120,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * DaisyTechnology PhotoClip on Zoran chip 		 * PR: kern/43580 		 */
+comment|/* 		 * Daisy Technology PhotoClip on Zoran chip 		 * PR: kern/43580 		 */
 block|{
 name|T_DIRECT
 block|,
