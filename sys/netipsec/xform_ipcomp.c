@@ -685,6 +685,8 @@ operator|->
 name|crp_flags
 operator|=
 name|CRYPTO_F_IMBUF
+operator||
+name|CRYPTO_F_CBIFSYNC
 expr_stmt|;
 name|crp
 operator|->
@@ -2218,6 +2220,8 @@ operator|->
 name|crp_flags
 operator|=
 name|CRYPTO_F_IMBUF
+operator||
+name|CRYPTO_F_CBIFSYNC
 expr_stmt|;
 name|crp
 operator|->
