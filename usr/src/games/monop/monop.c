@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)monop.c	5.1 (Berkeley) %G%"
+literal|"@(#)monop.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,7 +390,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|name_list
 index|[
