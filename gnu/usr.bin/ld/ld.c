@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.11 1993/11/05 12:47:11 pk Exp $  */
+comment|/*  *	$Id: ld.c,v 1.5 1993/11/09 04:18:56 paul Exp $  */
 end_comment
 
 begin_comment
@@ -7237,6 +7237,11 @@ name|EX_DYNAMIC
 else|:
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|oldmagic
+condition|)
 name|N_SET_FLAG
 argument_list|(
 name|outheader
