@@ -2160,7 +2160,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* reset attributes */
+comment|/* reset colors and attributes */
 name|tcp
 operator|->
 name|attr_mask
@@ -2290,7 +2290,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* set ansi attribute directly */
+comment|/* set video attribute directly */
 name|tcp
 operator|->
 name|attr_mask
@@ -2425,7 +2425,7 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* set ansi reverse video directly */
+comment|/* set reverse video attribute directly */
 name|tcp
 operator|->
 name|rev_color
@@ -2883,7 +2883,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* set ansi foreground */
+comment|/* set foreground */
 if|if
 condition|(
 name|tcp
@@ -2935,7 +2935,7 @@ break|break;
 case|case
 literal|'G'
 case|:
-comment|/* set ansi background */
+comment|/* set background */
 if|if
 condition|(
 name|tcp
@@ -2987,7 +2987,7 @@ break|break;
 case|case
 literal|'H'
 case|:
-comment|/* set ansi reverse video foreground */
+comment|/* set reverse video foreground */
 if|if
 condition|(
 name|tcp
@@ -3026,7 +3026,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-comment|/* set ansi reverse video background */
+comment|/* set reverse video background */
 if|if
 condition|(
 name|tcp
