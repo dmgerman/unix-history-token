@@ -9355,7 +9355,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|=
-name|XPT_GDEV_TYPE
+name|XPT_GDEV_STATS
 expr_stmt|;
 if|if
 condition|(
@@ -9371,7 +9371,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"error sending XPT_GDEV_TYPE CCB"
+literal|"error sending XPT_GDEV_STATS CCB"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -9399,7 +9399,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"XPT_GDEV_TYPE CCB failed, status %#x"
+literal|"XPT_GDEV_STATS CCB failed, status %#x"
 argument_list|,
 name|ccb
 operator|->
@@ -9440,7 +9440,7 @@ literal|"dev_openings  %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|dev_openings
 argument_list|)
@@ -9462,7 +9462,7 @@ literal|"dev_active    %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|dev_active
 argument_list|)
@@ -9484,7 +9484,7 @@ literal|"devq_openings %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|devq_openings
 argument_list|)
@@ -9506,7 +9506,7 @@ literal|"devq_queued   %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|devq_queued
 argument_list|)
@@ -9528,7 +9528,7 @@ literal|"held          %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|held
 argument_list|)
@@ -9550,7 +9550,7 @@ literal|"mintags       %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|mintags
 argument_list|)
@@ -9572,7 +9572,7 @@ literal|"maxtags       %d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|maxtags
 argument_list|)
@@ -9612,13 +9612,13 @@ literal|"%d\n"
 argument_list|,
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|dev_openings
 operator|+
 name|ccb
 operator|->
-name|cgd
+name|cgds
 operator|.
 name|dev_active
 argument_list|)
