@@ -246,7 +246,8 @@ begin_function_decl
 name|int
 name|kernacc
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -411,7 +412,8 @@ begin_function_decl
 name|int
 name|useracc
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -650,7 +652,8 @@ begin_function_decl
 name|void
 name|vslock
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -661,7 +664,8 @@ begin_function_decl
 name|void
 name|vsunlock
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|)

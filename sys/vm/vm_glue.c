@@ -295,7 +295,8 @@ name|len
 parameter_list|,
 name|rw
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|addr
 decl_stmt|;
 name|int
@@ -396,7 +397,8 @@ name|len
 parameter_list|,
 name|rw
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|addr
 decl_stmt|;
 name|int
@@ -527,7 +529,8 @@ name|addr
 parameter_list|,
 name|len
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|addr
 decl_stmt|;
 name|u_int
@@ -579,7 +582,8 @@ name|addr
 parameter_list|,
 name|len
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|addr
 decl_stmt|;
 name|u_int
