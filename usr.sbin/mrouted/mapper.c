@@ -2783,6 +2783,10 @@ name|e
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|addr
 argument_list|,
@@ -4378,6 +4382,13 @@ operator|.
 name|sin_family
 operator|=
 name|AF_INET
+expr_stmt|;
+name|addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+name|addr
 expr_stmt|;
 name|addr
 operator|.

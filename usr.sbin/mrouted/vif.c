@@ -2323,6 +2323,13 @@ name|AF_INET
 expr_stmt|;
 name|addr
 operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+name|addr
+expr_stmt|;
+name|addr
+operator|.
 name|sin_addr
 operator|.
 name|s_addr
@@ -2748,6 +2755,13 @@ operator|.
 name|sin_family
 operator|=
 name|AF_INET
+expr_stmt|;
+name|addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+name|addr
 expr_stmt|;
 name|addr
 operator|.
