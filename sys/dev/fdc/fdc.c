@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.56 1995/04/06 07:20:15 rgrimes Exp $  *  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.57 1995/04/12 20:47:41 wollman Exp $  *  */
 end_comment
 
 begin_include
@@ -2747,6 +2747,21 @@ name|ic_type
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|caddr_t
+name|key
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 name|fdc
 operator|->
 name|fdcu
@@ -3435,6 +3450,21 @@ name|kdc_description
 operator|=
 literal|"1.2MB (1200K) 5.25in floppy disk drive"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"fd%d.1200"
+argument_list|,
+name|fdu
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 break|break;
 case|case
 name|RTCFDT_144M
@@ -3459,6 +3489,21 @@ name|kdc_description
 operator|=
 literal|"1.44MB (1440K) 3.5in floppy disk drive"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"fd%d.1440"
+argument_list|,
+name|fdu
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 break|break;
 case|case
 name|RTCFDT_288M
@@ -3483,6 +3528,21 @@ name|kdc_description
 operator|=
 literal|"2.88MB (2880K) 3.5in floppy disk drive in 1.44 mode"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"fd%d.1440"
+argument_list|,
+name|fdu
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 break|break;
 case|case
 name|RTCFDT_360K
@@ -3507,6 +3567,21 @@ name|kdc_description
 operator|=
 literal|"360KB 5.25in floppy disk drive"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"fd%d.360"
+argument_list|,
+name|fdu
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 break|break;
 case|case
 name|RTCFDT_720K
@@ -3531,6 +3606,21 @@ name|kdc_description
 operator|=
 literal|"720KB 3.5in floppy disk drive"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"fd%d.720"
+argument_list|,
+name|fdu
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 break|break;
 default|default:
 name|printf
@@ -3544,6 +3634,21 @@ name|type
 operator|=
 name|NO_TYPE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"fd%d.xxxx"
+argument_list|,
+name|fdu
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 break|break;
 block|}
 name|kdc_fd
@@ -3555,6 +3660,64 @@ name|kdc_state
 operator|=
 name|DC_IDLE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|key
+operator|=
+name|dev_add
+argument_list|(
+literal|"/disks/rfloppy"
+argument_list|,
+name|name
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|Fdopen
+argument_list|,
+name|fdu
+operator|*
+literal|8
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+name|key
+operator|=
+name|dev_add
+argument_list|(
+literal|"/disks/floppy"
+argument_list|,
+name|name
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|Fdopen
+argument_list|,
+name|fdu
+operator|*
+literal|8
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 if|if
 condition|(
 name|dk_ndrive
