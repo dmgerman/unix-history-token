@@ -107,7 +107,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* align next field to 16 bytes */
-comment|/* 	 * See<machine/npx.h> for the internals of mc_fpstate[]. 	 */
+comment|/* 	 * See<i386/include/npx.h> for the internals of mc_fpstate[]. 	 */
 name|int
 name|mc_fpstate
 index|[
