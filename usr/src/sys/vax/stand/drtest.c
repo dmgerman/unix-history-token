@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drtest.c	4.8	83/02/20	*/
+comment|/*	drtest.c	4.9	83/03/01	*/
+end_comment
+
+begin_comment
+comment|/*  * Standalone program to test a disk and driver  * by reading the disk in CHUNK sector units.  */
 end_comment
 
 begin_include
@@ -26,10 +30,6 @@ include|#
 directive|include
 file|"saio.h"
 end_include
-
-begin_comment
-comment|/* Standalone program to test a disk driver by reading every sector on  * the disk in chunks of CHUNK.  */
-end_comment
 
 begin_define
 define|#
@@ -121,7 +121,7 @@ name|askunit
 label|:
 name|printf
 argument_list|(
-literal|"Enter disk name [ type(adapter,unit), e.g, hp(1,3) ] ? "
+literal|"Enter disk name [type(adapter,unit), e.g, hp(1,3)] ? "
 argument_list|)
 expr_stmt|;
 name|gets
@@ -355,12 +355,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|x
+operator|&&
 operator|(
 name|x
-operator|+
-literal|1
 operator|%
-literal|25
+literal|125
 operator|)
 operator|==
 literal|0
