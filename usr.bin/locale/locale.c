@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002, 2003 Alexey Zelkin<phantom@FreeBSD.org>  * Al
 end_comment
 
 begin_comment
-comment|/*  * XXX: implement missing int_* (LC_MONETARY) and era_* (LC_CTIME) keywords  *      (require libc modification)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *      localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  *  * XXX: implement '-k list' to show all available keywords.  Add descriptions  *      for all of keywords (and mention FreeBSD only there)  *  */
+comment|/*  * XXX: implement missing int_* (LC_MONETARY) (require libc modification) and  *	era_* (LC_TIME) keywords (require libc& nl_langinfo(3) extensions)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *      localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  */
 end_comment
 
 begin_include
@@ -100,6 +100,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|lookup_localecat
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|kwval_lconv
@@ -135,6 +146,15 @@ name|showdetails
 parameter_list|(
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|showkeywordslist
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -417,6 +437,11 @@ comment|/* LC_* */
 name|int
 name|value_ref
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|comment
+decl_stmt|;
 block|}
 name|kwinfo
 index|[]
@@ -430,6 +455,8 @@ block|,
 name|LC_CTYPE
 block|,
 name|CODESET
+block|,
+literal|""
 block|}
 block|,
 comment|/* hack */
@@ -441,6 +468,8 @@ block|,
 name|LC_NUMERIC
 block|,
 name|RADIXCHAR
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -451,6 +480,8 @@ block|,
 name|LC_NUMERIC
 block|,
 name|THOUSEP
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -461,6 +492,8 @@ block|,
 name|LC_NUMERIC
 block|,
 name|KW_GROUPING
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -471,6 +504,8 @@ block|,
 name|LC_NUMERIC
 block|,
 name|RADIXCHAR
+block|,
+literal|"Same as decimal_point (FreeBSD only)"
 block|}
 block|,
 comment|/* compat */
@@ -482,6 +517,8 @@ block|,
 name|LC_NUMERIC
 block|,
 name|THOUSEP
+block|,
+literal|"Same as thousands_sep (FreeBSD only)"
 block|}
 block|,
 comment|/* compat */
@@ -493,6 +530,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_INT_CURR_SYMBOL
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -503,6 +542,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_CURRENCY_SYMBOL
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -513,6 +554,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_MON_DECIMAL_POINT
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -523,6 +566,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_MON_THOUSANDS_SEP
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -533,6 +578,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_MON_GROUPING
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -543,6 +590,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_POSITIVE_SIGN
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -553,6 +602,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_NEGATIVE_SIGN
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -563,6 +614,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_INT_FRAC_DIGITS
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -573,6 +626,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_FRAC_DIGITS
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -583,6 +638,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_P_CS_PRECEDES
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -593,6 +650,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_P_SEP_BY_SPACE
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -603,6 +662,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_N_CS_PRECEDES
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -613,6 +674,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_N_SEP_BY_SPACE
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -623,6 +686,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_P_SIGN_POSN
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -633,6 +698,8 @@ block|,
 name|LC_MONETARY
 block|,
 name|KW_N_SIGN_POSN
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -643,6 +710,8 @@ block|,
 name|LC_TIME
 block|,
 name|D_T_FMT
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -653,6 +722,8 @@ block|,
 name|LC_TIME
 block|,
 name|D_FMT
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -663,6 +734,8 @@ block|,
 name|LC_TIME
 block|,
 name|T_FMT
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -673,6 +746,8 @@ block|,
 name|LC_TIME
 block|,
 name|AM_STR
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -683,6 +758,8 @@ block|,
 name|LC_TIME
 block|,
 name|PM_STR
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -693,6 +770,8 @@ block|,
 name|LC_TIME
 block|,
 name|T_FMT_AMPM
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -703,6 +782,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_1
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -713,6 +794,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_2
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -723,6 +806,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_3
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -733,6 +818,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_4
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -743,6 +830,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_5
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -753,6 +842,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_6
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -763,6 +854,8 @@ block|,
 name|LC_TIME
 block|,
 name|DAY_7
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -773,6 +866,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_1
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -783,6 +878,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_2
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -793,6 +890,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_3
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -803,6 +902,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_4
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -813,6 +914,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_5
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -823,6 +926,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_6
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -833,6 +938,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABDAY_7
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -843,6 +950,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_1
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -853,6 +962,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_2
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -863,6 +974,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_3
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -873,6 +986,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_4
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -883,6 +998,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_5
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -893,6 +1010,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_6
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -903,6 +1022,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_7
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -913,6 +1034,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_8
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -923,6 +1046,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_9
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -933,6 +1058,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_10
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -943,6 +1070,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_11
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -953,6 +1082,8 @@ block|,
 name|LC_TIME
 block|,
 name|MON_12
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -963,6 +1094,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_1
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -973,6 +1106,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_2
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -983,6 +1118,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_3
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -993,6 +1130,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_4
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1003,6 +1142,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_5
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1013,6 +1154,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_6
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1023,6 +1166,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_7
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1033,6 +1178,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_8
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1043,6 +1190,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_9
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1053,6 +1202,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_10
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1063,6 +1214,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_11
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1073,6 +1226,8 @@ block|,
 name|LC_TIME
 block|,
 name|ABMON_12
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1083,6 +1238,8 @@ block|,
 name|LC_TIME
 block|,
 name|ERA
+block|,
+literal|"(unavailable)"
 block|}
 block|,
 block|{
@@ -1093,6 +1250,8 @@ block|,
 name|LC_TIME
 block|,
 name|ERA_D_FMT
+block|,
+literal|"(unavailable)"
 block|}
 block|,
 block|{
@@ -1103,6 +1262,8 @@ block|,
 name|LC_TIME
 block|,
 name|ERA_D_T_FMT
+block|,
+literal|"(unavailable)"
 block|}
 block|,
 block|{
@@ -1113,6 +1274,8 @@ block|,
 name|LC_TIME
 block|,
 name|ERA_T_FMT
+block|,
+literal|"(unavailable)"
 block|}
 block|,
 block|{
@@ -1123,6 +1286,8 @@ block|,
 name|LC_TIME
 block|,
 name|ALT_DIGITS
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1133,6 +1298,8 @@ block|,
 name|LC_TIME
 block|,
 name|D_MD_ORDER
+block|,
+literal|"(FreeBSD only)"
 block|}
 block|,
 comment|/* local */
@@ -1144,6 +1311,8 @@ block|,
 name|LC_MESSAGES
 block|,
 name|YESEXPR
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1154,6 +1323,8 @@ block|,
 name|LC_MESSAGES
 block|,
 name|NOEXPR
+block|,
+literal|""
 block|}
 block|,
 block|{
@@ -1164,9 +1335,11 @@ block|,
 name|LC_MESSAGES
 block|,
 name|YESSTR
+block|,
+literal|"(POSIX legacy)"
 block|}
 block|,
-comment|/* local */
+comment|/* compat */
 block|{
 literal|"nostr"
 block|,
@@ -1175,8 +1348,10 @@ block|,
 name|LC_MESSAGES
 block|,
 name|NOSTR
+block|,
+literal|"(POSIX legacy)"
 block|}
-comment|/* local */
+comment|/* compat */
 block|}
 struct|;
 end_struct
@@ -1203,6 +1378,9 @@ parameter_list|)
 block|{
 name|char
 name|ch
+decl_stmt|;
+name|int
+name|tmp
 decl_stmt|;
 while|while
 condition|(
@@ -1356,6 +1534,50 @@ comment|/* 		 * XXX: charmaps are not supported by FreeBSD now.  It 		 * need to
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* check for special case '-k list' */
+name|tmp
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|prt_keywords
+operator|&&
+name|argc
+operator|>
+literal|0
+condition|)
+while|while
+condition|(
+name|tmp
+operator|<
+name|argc
+condition|)
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|argv
+index|[
+name|tmp
+operator|++
+index|]
+argument_list|,
+literal|"list"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|showkeywordslist
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2309,17 +2531,9 @@ name|cat
 decl_stmt|,
 name|tmpval
 decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|kwval
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|tmps
 decl_stmt|;
 if|if
 condition|(
@@ -2348,61 +2562,14 @@ condition|(
 name|prt_categories
 condition|)
 block|{
-name|tmps
-operator|=
-name|NULL
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NLCINFO
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|lcinfo
-index|[
-name|i
-index|]
-operator|.
-name|id
-operator|==
-name|cat
-condition|)
-block|{
-name|tmps
-operator|=
-name|lcinfo
-index|[
-name|i
-index|]
-operator|.
-name|name
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|tmps
-operator|==
-name|NULL
-condition|)
-name|tmps
-operator|=
-literal|"UNKNOWN"
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|tmps
+name|lookup_localecat
+argument_list|(
+name|cat
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2487,6 +2654,170 @@ name|tmpval
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Convert locale category id into string  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|lookup_localecat
+parameter_list|(
+name|int
+name|cat
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NLCINFO
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|lcinfo
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|==
+name|cat
+condition|)
+block|{
+return|return
+operator|(
+name|lcinfo
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|"UNKNOWN"
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Show list of keywords  */
+end_comment
+
+begin_function
+name|void
+name|showkeywordslist
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|;
+define|#
+directive|define
+name|FMT
+value|"%-20s %-12s %-7s %-20s\n"
+name|printf
+argument_list|(
+literal|"List of available keywords\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|FMT
+argument_list|,
+literal|"Keyword"
+argument_list|,
+literal|"Category"
+argument_list|,
+literal|"Type"
+argument_list|,
+literal|"Comment"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"-------------------- ------------ ------- --------------------\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NKWINFO
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+name|FMT
+argument_list|,
+name|kwinfo
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|lookup_localecat
+argument_list|(
+name|kwinfo
+index|[
+name|i
+index|]
+operator|.
+name|catid
+argument_list|)
+argument_list|,
+operator|(
+name|kwinfo
+index|[
+name|i
+index|]
+operator|.
+name|isstr
+operator|==
+literal|0
+operator|)
+condition|?
+literal|"number"
+else|:
+literal|"string"
+argument_list|,
+name|kwinfo
+index|[
+name|i
+index|]
+operator|.
+name|comment
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
