@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.34	82/06/14	*/
+comment|/*	if_imp.c	4.35	82/06/15	*/
 end_comment
 
 begin_include
@@ -111,11 +111,9 @@ directive|include
 file|"../net/if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|IMPLEADERS
-end_define
+begin_comment
+comment|/* define IMPLEADERS here to get leader printing code */
+end_comment
 
 begin_include
 include|#
@@ -520,6 +518,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IMPLEADERS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|impprintfs
@@ -527,6 +531,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ARPAnet 1822 input routine.  * Called from hardware input interrupt routine to handle 1822  * IMP-host messages.  Type 0 messages (non-control) are  * passed to higher level protocol processors on the basis  * of link number.  Other type messages (control) are handled here.  */
@@ -703,6 +712,9 @@ name|imp_leader
 operator|*
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IMPLEADERS
 if|if
 condition|(
 name|impprintfs
@@ -714,6 +726,8 @@ argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* check leader type */
 if|if
 condition|(
@@ -1054,38 +1068,6 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* restart output in case something was q'd */
-if|if
-condition|(
-name|sc
-operator|->
-name|imp_cb
-operator|.
-name|ic_oactive
-operator|==
-literal|0
-condition|)
-call|(
-modifier|*
-name|sc
-operator|->
-name|imp_cb
-operator|.
-name|ic_start
-call|)
-argument_list|(
-name|sc
-operator|->
-name|imp_if
-operator|.
-name|if_unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|drop
 goto|;
