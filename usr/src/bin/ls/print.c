@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1497,7 +1497,9 @@ literal|"%s/%s"
 argument_list|,
 name|p
 operator|->
-name|fts_path
+name|fts_parent
+operator|->
+name|fts_accpath
 argument_list|,
 name|p
 operator|->
@@ -1517,7 +1519,7 @@ name|path
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|name
+name|path
 argument_list|)
 operator|-
 literal|1
