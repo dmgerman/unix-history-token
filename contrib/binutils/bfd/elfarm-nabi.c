@@ -431,10 +431,10 @@ comment|/* name */
 name|false
 argument_list|,
 comment|/* partial_inplace */
-literal|0
+literal|0x0000ffff
 argument_list|,
 comment|/* src_mask */
-literal|0
+literal|0x0000ffff
 argument_list|,
 comment|/* dst_mask */
 name|false

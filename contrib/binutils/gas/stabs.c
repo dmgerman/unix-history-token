@@ -755,6 +755,34 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|desc
+operator|>
+literal|0xffff
+operator|)
+operator|||
+operator|(
+name|desc
+operator|<
+operator|-
+literal|0x8000
+operator|)
+condition|)
+comment|/* This could happen for example with a source file with a huge        number of lines.  The only cure is to use a different debug        format, probably DWARF.  */
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".stab%c: description field '%x' too big, try a different debug format"
+argument_list|)
+argument_list|,
+name|what
+argument_list|,
+name|desc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|what
 operator|==
 literal|'s'

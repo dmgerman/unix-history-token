@@ -1945,6 +1945,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_rela_normal
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_rela_normal
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ELF_MACHINE_ALT1
 end_ifndef
 
@@ -2158,6 +2176,8 @@ block|,
 name|elf_backend_may_use_rela_p
 block|,
 name|elf_backend_default_use_rela_p
+block|,
+name|elf_backend_rela_normal
 block|,
 name|elf_backend_sign_extend_vma
 block|,

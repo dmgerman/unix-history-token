@@ -6314,7 +6314,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|BFD_RELOC_32_BASEREL
+name|BFD_RELOC_16_BASEREL
 argument_list|)
 block|,
 name|MAP
@@ -7741,7 +7741,7 @@ name|fixp
 operator|->
 name|fx_r_type
 operator|!=
-name|BFD_RELOC_32_BASEREL
+name|BFD_RELOC_16_BASEREL
 operator|&&
 name|fixp
 operator|->
@@ -9700,7 +9700,7 @@ name|BFD_RELOC_PPC64_PLT16_LO_DS
 expr_stmt|;
 break|break;
 case|case
-name|BFD_RELOC_32_BASEREL
+name|BFD_RELOC_16_BASEREL
 case|:
 name|reloc
 operator|=
@@ -21011,9 +21011,6 @@ case|case
 name|BFD_RELOC_32_PCREL
 case|:
 case|case
-name|BFD_RELOC_32_BASEREL
-case|:
-case|case
 name|BFD_RELOC_PPC_EMB_NADDR32
 case|:
 name|md_number_to_chars
@@ -21096,6 +21093,9 @@ name|BFD_RELOC_HI16_GOTOFF
 case|:
 case|case
 name|BFD_RELOC_HI16_S_GOTOFF
+case|:
+case|case
+name|BFD_RELOC_16_BASEREL
 case|:
 case|case
 name|BFD_RELOC_LO16_BASEREL

@@ -1965,6 +1965,12 @@ name|default_use_rela_p
 range|:
 literal|1
 decl_stmt|;
+comment|/* Set if RELA relocations for a relocatable link can be handled by      generic code.  Backends that set this flag need do nothing in the      backend relocate_section routine for relocatable linking.  */
+name|unsigned
+name|rela_normal
+range|:
+literal|1
+decl_stmt|;
 comment|/* True if addresses "naturally" sign extend.  This is used when      swapping in from Elf32 when BFD64.  */
 name|unsigned
 name|sign_extend_vma

@@ -4,16 +4,12 @@ comment|/* PowerPC64-specific support for 64-bit ELF.    Copyright 2002 Free Sof
 end_comment
 
 begin_decl_stmt
-name|boolean
-name|ppc64_elf_set_toc
+name|bfd_vma
+name|ppc64_elf_toc
 name|PARAMS
 argument_list|(
 operator|(
 name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
 operator|*
 operator|)
 argument_list|)

@@ -128,6 +128,152 @@ name|bfd_powerpc_archs
 index|[]
 init|=
 block|{
+if|#
+directive|if
+name|BFD_DEFAULT_TARGET_SIZE
+operator|==
+literal|64
+comment|/* default arch must come first.  */
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc64
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:common64"
+block|,
+literal|3
+block|,
+name|true
+block|,
+comment|/* default for 64 bit target */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|bfd_powerpc_archs
+index|[
+literal|1
+index|]
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc
+block|,
+comment|/* for the POWER/PowerPC common architecture */
+literal|"powerpc"
+block|,
+literal|"powerpc:common"
+block|,
+literal|3
+block|,
+name|false
+block|,
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|bfd_powerpc_archs
+index|[
+literal|2
+index|]
+block|,   }
+block|,
+else|#
+directive|else
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc
+block|,
+comment|/* for the POWER/PowerPC common architecture */
+literal|"powerpc"
+block|,
+literal|"powerpc:common"
+block|,
+literal|3
+block|,
+name|true
+block|,
+comment|/* default for 32 bit target */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|bfd_powerpc_archs
+index|[
+literal|1
+index|]
+block|,   }
+block|,
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc64
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:common64"
+block|,
+literal|3
+block|,
+name|false
+block|,
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|bfd_powerpc_archs
+index|[
+literal|2
+index|]
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|32
 block|,
@@ -158,7 +304,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|1
+literal|3
 index|]
 block|}
 block|,
@@ -192,7 +338,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|2
+literal|4
 index|]
 block|}
 block|,
@@ -226,7 +372,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|3
+literal|5
 index|]
 block|}
 block|,
@@ -260,7 +406,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|4
+literal|6
 index|]
 block|}
 block|,
@@ -294,7 +440,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|5
+literal|7
 index|]
 block|}
 block|,
@@ -328,7 +474,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|6
+literal|8
 index|]
 block|}
 block|,
@@ -362,7 +508,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|7
+literal|9
 index|]
 block|}
 block|,
@@ -396,7 +542,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|8
+literal|10
 index|]
 block|}
 block|,
@@ -430,7 +576,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|9
+literal|11
 index|]
 block|}
 block|,
@@ -464,7 +610,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|10
+literal|12
 index|]
 block|}
 block|,
@@ -498,7 +644,7 @@ block|,
 operator|&
 name|bfd_powerpc_archs
 index|[
-literal|11
+literal|13
 index|]
 block|}
 block|,
@@ -525,79 +671,6 @@ block|,
 name|false
 block|,
 comment|/* not the default */
-name|powerpc_compatible
-block|,
-name|bfd_default_scan
-block|,
-operator|&
-name|bfd_powerpc_archs
-index|[
-literal|12
-index|]
-block|}
-block|,
-block|{
-literal|64
-block|,
-comment|/* 64 bits in a word */
-literal|64
-block|,
-comment|/* 64 bits in an address */
-literal|8
-block|,
-comment|/* 8 bits in a byte */
-name|bfd_arch_powerpc
-block|,
-name|bfd_mach_ppc64
-block|,
-literal|"powerpc"
-block|,
-literal|"powerpc:common64"
-block|,
-literal|3
-block|,
-name|BFD_DEFAULT_TARGET_SIZE
-operator|==
-literal|64
-block|,
-comment|/* default for 64 bit target */
-name|powerpc_compatible
-block|,
-name|bfd_default_scan
-block|,
-operator|&
-name|bfd_powerpc_archs
-index|[
-literal|13
-index|]
-block|}
-block|,
-block|{
-literal|32
-block|,
-comment|/* 32 bits in a word */
-literal|32
-block|,
-comment|/* 32 bits in an address */
-literal|8
-block|,
-comment|/* 8 bits in a byte */
-name|bfd_arch_powerpc
-block|,
-name|bfd_mach_ppc
-block|,
-comment|/* for the POWER/PowerPC common architecture */
-literal|"powerpc"
-block|,
-literal|"powerpc:common"
-block|,
-literal|3
-block|,
-name|BFD_DEFAULT_TARGET_SIZE
-operator|!=
-literal|64
-block|,
-comment|/* default for 32 bit target */
 name|powerpc_compatible
 block|,
 name|bfd_default_scan

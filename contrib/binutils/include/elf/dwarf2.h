@@ -1104,6 +1104,10 @@ name|DW_AT_body_end
 init|=
 literal|0x2106
 block|,
+name|DW_AT_GNU_vector
+init|=
+literal|0x2107
+block|,
 comment|/* VMS Extensions.  */
 name|DW_AT_VMS_rtnbeg_pd_address
 init|=

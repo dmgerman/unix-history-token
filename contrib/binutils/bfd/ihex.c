@@ -3399,11 +3399,11 @@ name|rec_addr
 operator|+
 name|now
 operator|>
-literal|0xfffff
+literal|0xffff
 condition|)
 name|now
 operator|=
-literal|0xffff
+literal|0x10000
 operator|-
 name|rec_addr
 expr_stmt|;
