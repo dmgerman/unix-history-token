@@ -212,28 +212,6 @@ name|WANT_ENV_MKLVL
 value|1
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEFMAXLOCAL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEFMAXLOCAL
-value|DEFMAXJOBS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEFMAXLOCAL */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -345,17 +323,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -j argument given */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|maxLocal
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -L argument */
 end_comment
 
 begin_decl_stmt
@@ -1159,10 +1126,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|maxLocal
-operator|=
-name|maxJobs
-expr_stmt|;
 name|MFLAGS_append
 argument_list|(
 literal|"-j"
@@ -2172,14 +2135,9 @@ name|jobsRunning
 operator|=
 name|FALSE
 expr_stmt|;
-name|maxLocal
-operator|=
-name|DEFMAXLOCAL
-expr_stmt|;
-comment|/* Set default local max concurrency */
 name|maxJobs
 operator|=
-name|maxLocal
+name|DEFMAXJOBS
 expr_stmt|;
 name|forceJobs
 operator|=
@@ -3274,22 +3232,11 @@ operator|!
 name|queryFlag
 condition|)
 block|{
-if|if
-condition|(
-name|maxLocal
-operator|==
-operator|-
-literal|1
-condition|)
-name|maxLocal
-operator|=
-name|maxJobs
-expr_stmt|;
 name|Job_Init
 argument_list|(
 name|maxJobs
 argument_list|,
-name|maxLocal
+name|maxJobs
 argument_list|)
 expr_stmt|;
 name|jobsRunning
