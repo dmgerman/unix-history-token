@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.11 (Berkeley) %G%"
+literal|"@(#)ps.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7345,7 +7345,7 @@ name|char
 modifier|*
 name|lhdr
 init|=
-literal|"      F UID   PID  PPID CP PRI NI ADDR  SZ  RSS %*s STAT TT  TIME"
+literal|"      F UID   PID  PPID CP PRI NI ADDR    SZ  RSS %*sSTAT TT  TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -7390,7 +7390,7 @@ name|lp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%7x%4d%6u%6u%3d%4d%3d%5x%4d%5d"
+literal|"%7x %3d %5u %5u %2d %3d %2d %4x %5d %4d"
 argument_list|,
 name|ap
 operator|->
@@ -7480,7 +7480,8 @@ name|lp
 operator|->
 name|l_wchan
 operator|&
-literal|0xffffff
+operator|~
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 else|else
@@ -7505,7 +7506,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4.4s "
+literal|" %-3.3s "
 argument_list|,
 name|state
 argument_list|(
@@ -7573,7 +7574,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"%3ld:%02ld"
+literal|" %2ld:%02ld"
 argument_list|,
 name|ap
 operator|->
@@ -7596,7 +7597,7 @@ name|char
 modifier|*
 name|uhdr
 init|=
-literal|"%s   PID %%CPU %%MEM   SZ  RSS TT STAT  TIME"
+literal|"%s   PID %%CPU %%MEM    SZ   RSS TT STAT TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -7703,7 +7704,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%5d%5.1f%5.1f%5d%5d"
+literal|"%5d %4.1f %4.1f %5d %5d"
 argument_list|,
 name|ap
 operator|->
@@ -7739,7 +7740,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4.4s"
+literal|" %-3.3s"
 argument_list|,
 name|state
 argument_list|(
@@ -7760,7 +7761,7 @@ name|char
 modifier|*
 name|vhdr
 init|=
-literal|" SIZE  PID TT STAT  TIME SL RE PAGEIN SIZE  RSS   LIM TSIZ TRS %CPU %MEM"
+literal|" SIZE  PID TT STAT TIME SL RE PAGEIN  SIZE   RSS   LIM TSIZ TRS %CPU %MEM"
 operator|+
 literal|5
 decl_stmt|;
@@ -7823,7 +7824,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4.4s"
+literal|" %-3.3s"
 argument_list|,
 name|state
 argument_list|(
@@ -7838,7 +7839,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%3d%3d%7d%5d%5d"
+literal|" %2d %2d %6d %5d %5d"
 argument_list|,
 name|ap
 operator|->
@@ -7903,7 +7904,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%6d"
+literal|" %5d"
 argument_list|,
 name|pgtok
 argument_list|(
@@ -7915,7 +7916,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%5d%4d%5.1f%5.1f"
+literal|" %4d %3d %4.1f %4.1f"
 argument_list|,
 name|pgtok
 argument_list|(
@@ -8018,7 +8019,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4.4s"
+literal|" %-3.3s"
 argument_list|,
 name|state
 argument_list|(
@@ -8048,21 +8049,18 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|char
-name|stat
-decl_stmt|,
-name|load
-decl_stmt|,
-name|nice
-decl_stmt|,
-name|anom
-decl_stmt|;
 specifier|static
 name|char
 name|res
 index|[
 literal|5
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+init|=
+name|res
 decl_stmt|;
 switch|switch
 condition|(
@@ -8074,7 +8072,8 @@ block|{
 case|case
 name|SSTOP
 case|:
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'T'
 expr_stmt|;
@@ -8098,12 +8097,14 @@ name|a_slptime
 operator|>=
 name|MAXSLP
 condition|)
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'I'
 expr_stmt|;
 else|else
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'S'
 expr_stmt|;
@@ -8116,12 +8117,14 @@ name|a_flag
 operator|&
 name|SPAGE
 condition|)
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'P'
 expr_stmt|;
 else|else
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'D'
 expr_stmt|;
@@ -8135,7 +8138,8 @@ case|:
 case|case
 name|SIDL
 case|:
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'R'
 expr_stmt|;
@@ -8143,26 +8147,33 @@ break|break;
 case|case
 name|SZOMB
 case|:
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'Z'
 expr_stmt|;
 break|break;
 default|default:
-name|stat
+operator|*
+name|cp
 operator|=
 literal|'?'
 expr_stmt|;
 block|}
-name|load
-operator|=
+name|cp
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|ap
 operator|->
 name|a_flag
 operator|&
 name|SLOAD
-condition|?
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|ap
 operator|->
 name|a_rss
@@ -8170,12 +8181,19 @@ operator|>
 name|ap
 operator|->
 name|a_maxrss
-condition|?
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
 literal|'>'
-else|:
-literal|' '
-operator|)
-else|:
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|cp
+operator|++
+operator|=
 literal|'W'
 expr_stmt|;
 if|if
@@ -8186,7 +8204,9 @@ name|a_nice
 operator|<
 name|NZERO
 condition|)
-name|nice
+operator|*
+name|cp
+operator|++
 operator|=
 literal|'<'
 expr_stmt|;
@@ -8199,68 +8219,40 @@ name|a_nice
 operator|>
 name|NZERO
 condition|)
-name|nice
+operator|*
+name|cp
+operator|++
 operator|=
 literal|'N'
 expr_stmt|;
-else|else
-name|nice
-operator|=
-literal|' '
-expr_stmt|;
-name|anom
-operator|=
-operator|(
+if|if
+condition|(
 name|ap
 operator|->
 name|a_flag
 operator|&
 name|SUANOM
-operator|)
-condition|?
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
 literal|'A'
-else|:
-operator|(
-operator|(
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|ap
 operator|->
 name|a_flag
 operator|&
 name|SSEQL
-operator|)
-condition|?
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
 literal|'S'
-else|:
-literal|' '
-operator|)
-expr_stmt|;
-name|res
-index|[
-literal|0
-index|]
-operator|=
-name|stat
-expr_stmt|;
-name|res
-index|[
-literal|1
-index|]
-operator|=
-name|load
-expr_stmt|;
-name|res
-index|[
-literal|2
-index|]
-operator|=
-name|nice
-expr_stmt|;
-name|res
-index|[
-literal|3
-index|]
-operator|=
-name|anom
 expr_stmt|;
 return|return
 operator|(
