@@ -287,6 +287,46 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Harvest children if we are init.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|reap_children
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+name|int
+name|errbak
+init|=
+name|errno
+decl_stmt|;
+while|while
+condition|(
+name|waitpid
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+name|WNOHANG
+argument_list|)
+operator|>
+literal|0
+condition|)
+empty_stmt|;
+name|errno
+operator|=
+name|errbak
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Expand a file into a convenient location, nuking it each time */
 end_comment
 
@@ -733,6 +773,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reap_children
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
