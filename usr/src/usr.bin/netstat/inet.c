@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.6 (Berkeley) %G%"
+literal|"@(#)inet.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -750,6 +750,13 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"%s:\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|klseek
 argument_list|(
 name|kmem
@@ -776,93 +783,311 @@ name|tcpstat
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+define|#
+directive|define
+name|p
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|printf("	m\n",tcpstat.tcps_
+comment|/**/
+value|f,plural(tcpstat.tcps_
+comment|/**/
+value|f))
+define|#
+directive|define
+name|p2
+parameter_list|(
+name|f1
+parameter_list|,
+name|f2
+parameter_list|,
+name|m
+parameter_list|)
+value|printf("	m\n",tcpstat.tcps_
+comment|/**/
+value|f1,plural(tcpstat.tcps_
+comment|/**/
+value|f1),tcpstat.tcps_
+comment|/**/
+value|f2,plural(tcpstat.tcps_
+comment|/**/
+value|f2))
+name|p
 argument_list|(
-literal|"%s:\n\t%u incomplete header%s\n"
+argument|sndtotal
 argument_list|,
-name|name
-argument_list|,
-name|tcpstat
-operator|.
-name|tcps_hdrops
-argument_list|,
-name|plural
+argument|%d packet%s sent
+argument_list|)
+empty_stmt|;
+name|p2
 argument_list|(
-name|tcpstat
-operator|.
-name|tcps_hdrops
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t%u bad checksum%s\n"
+argument|sndpack
 argument_list|,
-name|tcpstat
-operator|.
-name|tcps_badsum
+argument|sndbyte
 argument_list|,
-name|plural
-argument_list|(
-name|tcpstat
-operator|.
-name|tcps_badsum
+argument|\t%d data packet%s (%d byte%s)
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
+empty_stmt|;
+name|p2
 argument_list|(
-literal|"\t%u bad header offset field%s\n"
+argument|sndrexmitpack
 argument_list|,
-name|tcpstat
-operator|.
-name|tcps_badoff
+argument|sndrexmitbyte
 argument_list|,
-name|plural
-argument_list|(
-name|tcpstat
-operator|.
-name|tcps_badoff
+argument|\t%d data packet%s (%d byte%s) retransmitted
 argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|printf
+empty_stmt|;
+name|p2
 argument_list|(
-literal|"\t%u bad segment%s\n"
+argument|sndacks
 argument_list|,
-name|tcpstat
-operator|.
-name|tcps_badsegs
+argument|delack
 argument_list|,
-name|plural
-argument_list|(
-name|tcpstat
-operator|.
-name|badsegs
+argument|\t%d ack-only packet%s (%d delayed)
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
+empty_stmt|;
+name|p
 argument_list|(
-literal|"\t%u unacknowledged packet%s\n"
+argument|sndurg
 argument_list|,
-name|tcpstat
-operator|.
-name|tcps_unack
-argument_list|,
-name|plural
+argument|\t%d URG only packet%s
+argument_list|)
+empty_stmt|;
+name|p
 argument_list|(
-name|tcpstat
-operator|.
-name|tcps_unack
+argument|sndprobe
+argument_list|,
+argument|\t%d window probe packet%s
 argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|sndwinup
+argument_list|,
+argument|\t%d window update packet%s
 argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+empty_stmt|;
+name|p
+argument_list|(
+argument|sndctrl
+argument_list|,
+argument|\t%d control packet%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvtotal
+argument_list|,
+argument|%d packet%s received
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rcvackpack
+argument_list|,
+argument|rcvackbyte
+argument_list|,
+argument|\t%d ack%s (for %d byte%s)
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvdupack
+argument_list|,
+argument|\t%d duplicate ack%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvacktoomuch
+argument_list|,
+argument|\t%d ack%s for unsent data
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rcvpack
+argument_list|,
+argument|rcvbyte
+argument_list|,
+argument|\t%d packet%s (%d byte%s) received in-sequence
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rcvduppack
+argument_list|,
+argument|rcvdupbyte
+argument_list|,
+argument|\t%d completely duplicate packet%s (%d byte%s)
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rcvpartduppack
+argument_list|,
+argument|rcvpartdupbyte
+argument_list|,
+argument|\t%d packet%s with some dup. data (%d byte%s duped)
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rcvoopack
+argument_list|,
+argument|rcvoobyte
+argument_list|,
+argument|\t%d out-of-order packet%s (%d byte%s)
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rcvpackafterwin
+argument_list|,
+argument|rcvbyteafterwin
+argument_list|,
+argument|\t%d packet%s (%d byte%s) of data after window
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvwinprobe
+argument_list|,
+argument|\t%d window probe%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvwinupd
+argument_list|,
+argument|\t%d window update packet%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvafterclose
+argument_list|,
+argument|\t%d packet%s received after close
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvbadsum
+argument_list|,
+argument|\t%d discarded for bad checksum%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvbadoff
+argument_list|,
+argument|\t%d discarded for bad header offset field%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rcvshort
+argument_list|,
+argument|\t%d discarded because packet too short
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|connattempt
+argument_list|,
+argument|%d connection request%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|accepts
+argument_list|,
+argument|%d connection accept%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|connects
+argument_list|,
+argument|%d connection%s established (including accepts)
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|closed
+argument_list|,
+argument|drops
+argument_list|,
+argument|%d connection%s closed (including %d drop%s)
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|conndrops
+argument_list|,
+argument|%d embryonic connection%s dropped
+argument_list|)
+empty_stmt|;
+name|p2
+argument_list|(
+argument|rttupdated
+argument_list|,
+argument|segstimed
+argument_list|,
+argument|%d segment%s updated rtt (of %d attempt%s)
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|rexmttimeo
+argument_list|,
+argument|%d retransmit timeout%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|timeoutdrop
+argument_list|,
+argument|\t%d connection%s dropped by rexmit timeout
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|persisttimeo
+argument_list|,
+argument|%d persist timeout%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|keeptimeo
+argument_list|,
+argument|%d keepalive timeout%s
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|keepprobe
+argument_list|,
+argument|\t%d keepalive probe%s sent
+argument_list|)
+empty_stmt|;
+name|p
+argument_list|(
+argument|keepdrops
+argument_list|,
+argument|\t%d connection%s dropped by keepalive
+argument_list|)
+empty_stmt|;
+undef|#
+directive|undef
+name|p
+undef|#
+directive|undef
+name|p2
 block|}
 end_block
 
