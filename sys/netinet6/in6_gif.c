@@ -1015,6 +1015,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
 operator|(
 name|sc
 operator|->
@@ -1024,8 +1025,14 @@ name|if_flags
 operator|&
 name|IFF_LINK0
 operator|)
-operator|==
-literal|0
+operator|&&
+name|sc
+operator|->
+name|gif_ro6
+operator|.
+name|ro_rt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|RTFREE
