@@ -1890,14 +1890,6 @@ expr_stmt|;
 name|appcstrg
 argument_list|(
 operator|&
-name|lcflags
-argument_list|,
-literal|"-Wtraditional"
-argument_list|)
-expr_stmt|;
-name|appcstrg
-argument_list|(
-operator|&
 name|deflibs
 argument_list|,
 literal|"c"
@@ -2129,6 +2121,14 @@ break|break;
 case|case
 literal|'p'
 case|:
+name|appcstrg
+argument_list|(
+operator|&
+name|lcflags
+argument_list|,
+literal|"-Wtraditional -Wno-system-headers"
+argument_list|)
+expr_stmt|;
 name|appcstrg
 argument_list|(
 operator|&
