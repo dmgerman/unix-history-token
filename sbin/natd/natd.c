@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.c,v 1.11.2.3 1999/03/30 10:18:00 brian Exp $  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.c,v 1.11.2.4 1999/05/16 11:59:52 brian Exp $  */
 end_comment
 
 begin_define
@@ -2978,6 +2978,16 @@ argument_list|(
 expr|struct
 name|sockaddr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|extra
+operator|<
+literal|0
+condition|)
+name|extra
+operator|=
+literal|0
 expr_stmt|;
 name|ifPtr
 operator|++
