@@ -16,7 +16,11 @@ name|_SYS_BUS_H_
 end_define
 
 begin_comment
-comment|/*  * Interface information structure.  */
+comment|/**  * @defgroup NEWBUS newbus - a generic framework for managing devices  * @{  */
+end_comment
+
+begin_comment
+comment|/**  * @brief Interface information structure.  */
 end_comment
 
 begin_struct
@@ -26,7 +30,7 @@ block|{
 name|int
 name|ub_version
 decl_stmt|;
-comment|/* interface version */
+comment|/**< @brief interface version */
 define|#
 directive|define
 name|BUS_USER_VERSION
@@ -34,13 +38,13 @@ value|1
 name|int
 name|ub_generation
 decl_stmt|;
-comment|/* generation count */
+comment|/**< @brief generation count */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * State of the device.  */
+comment|/**  * @brief State of the device.  */
 end_comment
 
 begin_typedef
@@ -50,22 +54,22 @@ name|device_state
 block|{
 name|DS_NOTPRESENT
 block|,
-comment|/* not probed or probe failed */
+comment|/**< @brief not probed or probe failed */
 name|DS_ALIVE
 block|,
-comment|/* probe succeeded */
+comment|/**< @brief probe succeeded */
 name|DS_ATTACHED
 block|,
-comment|/* attach method called */
+comment|/**< @brief attach method called */
 name|DS_BUSY
-comment|/* device is open */
+comment|/**< @brief device is open */
 block|}
 name|device_state_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Device information exported to userspace.  */
+comment|/**  * @brief Device information exported to userspace.  */
 end_comment
 
 begin_struct
@@ -84,47 +88,47 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Name of device in tree. */
+comment|/**< @brief Name of device in tree. */
 name|char
 name|dv_desc
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Driver description */
+comment|/**< @brief Driver description */
 name|char
 name|dv_drivername
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Driver name */
+comment|/**< @brief Driver name */
 name|char
 name|dv_pnpinfo
 index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* Plug and play info */
+comment|/**< @brief Plug and play info */
 name|char
 name|dv_location
 index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* Where is the device? */
+comment|/**< @brief Where is the device? */
 name|uint32_t
 name|dv_devflags
 decl_stmt|;
-comment|/* API Flags for device */
+comment|/**< @brief API Flags for device */
 name|uint16_t
 name|dv_flags
 decl_stmt|;
-comment|/* flags for dev date */
+comment|/**< @brief flags for dev date */
 name|device_state_t
 name|dv_state
 decl_stmt|;
-comment|/* State of attachment */
+comment|/**< @brief State of attachment */
 comment|/* XXX more driver info? */
 block|}
 struct|;
@@ -149,7 +153,7 @@ file|<sys/kobj.h>
 end_include
 
 begin_comment
-comment|/*  * devctl hooks.  Typically one should use the devctl_notify  * hook to send the message.  However, devctl_queue_data is also  * included in case devctl_notify isn't sufficiently general.  */
+comment|/**  * devctl hooks.  Typically one should use the devctl_notify  * hook to send the message.  However, devctl_queue_data is also  * included in case devctl_notify isn't sufficiently general.  */
 end_comment
 
 begin_function_decl
@@ -203,6 +207,10 @@ name|device_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**  * @brief A device driver (included mainly for compatibility with  * FreeBSD 4.x).  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -210,6 +218,10 @@ name|kobj_class
 name|driver_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/**  * @brief A device class  *  * The devclass object has two main functions in the system. The first  * is to manage the allocation of unit numbers for device instances  * and the second is to hold the list of device drivers for a  * particular bus type. Each devclass has a name and there cannot be  * two devclasses with the same name. This ensures that unique unit  * numbers are allocated to device instances.  *  * Drivers that support several different bus attachments (e.g. isa,  * pci, pccard) should all use the same devclass to ensure that unit  * numbers do not conflict.  *  * Each devclass may also have a parent devclass. This is used when  * searching for device drivers to allow a form of inheritance. When  * matching drivers with devices, first the driver list of the parent  * device's devclass is searched. If no driver is found in that list,  * the search continues in the parent devclass (if any).  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -220,12 +232,20 @@ name|devclass_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/**  * @brief A device method (included mainly for compatibility with  * FreeBSD 4.x).  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|device_method_t
 value|kobj_method_t
 end_define
+
+begin_comment
+comment|/**  * @brief A driver interrupt service routine  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -239,7 +259,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Interrupt type bits.  These flags are used both by newbus interrupt  * registration (nexus.c) and also in struct intrec, which defines  * interrupt properties.  *  * XXX We should probably revisit this and remove the vestiges of the  * spls implicit in names like INTR_TYPE_TTY.  In the meantime, don't  * confuse things by renaming them (Grog, 18 July 2000).  *  * We define this in terms of bits because some devices may belong  * to multiple classes (and therefore need to be included in  * multiple interrupt masks, which is what this really serves to  * indicate.  Buses which do interrupt remapping will want to  * change their type to reflect what sort of devices are underneath.  */
+comment|/**  * @brief Interrupt type bits.  *   * These flags are used both by newbus interrupt  * registration (nexus.c) and also in struct intrec, which defines  * interrupt properties.  *  * XXX We should probably revisit this and remove the vestiges of the  * spls implicit in names like INTR_TYPE_TTY. In the meantime, don't  * confuse things by renaming them (Grog, 18 July 2000).  *  * We define this in terms of bits because some devices may belong  * to multiple classes (and therefore need to be included in  * multiple interrupt masks, which is what this really serves to  * indicate. Buses which do interrupt remapping will want to  * change their type to reflect what sort of devices are underneath.  */
 end_comment
 
 begin_enum
@@ -348,7 +368,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * This structure is deprecated. Use the kobj(9) macro DEFINE_CLASS to  * declare classes which implement device drivers.  */
+comment|/**  * @brief This structure is deprecated.  *  * Use the kobj(9) macro DEFINE_CLASS to  * declare classes which implement device drivers.  */
 end_comment
 
 begin_struct
@@ -371,6 +391,10 @@ name|resource
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/**  * @brief An entry for a single resource in a resource list.  */
+end_comment
+
 begin_struct
 struct|struct
 name|resource_list_entry
@@ -384,29 +408,29 @@ expr_stmt|;
 name|int
 name|type
 decl_stmt|;
-comment|/* type argument to alloc_resource */
+comment|/**< @brief type argument to alloc_resource */
 name|int
 name|rid
 decl_stmt|;
-comment|/* resource identifier */
+comment|/**< @brief resource identifier */
 name|struct
 name|resource
 modifier|*
 name|res
 decl_stmt|;
-comment|/* the real resource when allocated */
+comment|/**< @brief the real resource when allocated */
 name|u_long
 name|start
 decl_stmt|;
-comment|/* start of resource range */
+comment|/**< @brief start of resource range */
 name|u_long
 name|end
 decl_stmt|;
-comment|/* end of resource range */
+comment|/**< @brief end of resource range */
 name|u_long
 name|count
 decl_stmt|;
-comment|/* count within range */
+comment|/**< @brief count within range */
 block|}
 struct|;
 end_struct
@@ -421,10 +445,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * Initialise a resource list.  */
-end_comment
-
 begin_function_decl
 name|void
 name|resource_list_init
@@ -437,10 +457,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Reclaim memory used by a resource list.  */
-end_comment
-
 begin_function_decl
 name|void
 name|resource_list_free
@@ -452,10 +468,6 @@ name|rl
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Add a resource entry or modify an existing entry if one exists with  * the same type and rid.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -508,10 +520,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Find a resource entry by type and rid.  */
-end_comment
-
 begin_function_decl
 name|struct
 name|resource_list_entry
@@ -532,10 +540,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Delete a resource entry.  */
-end_comment
-
 begin_function_decl
 name|void
 name|resource_list_delete
@@ -553,10 +557,6 @@ name|rid
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Implement BUS_ALLOC_RESOURCE by looking up a resource from the list  * and passing the allocation up to the parent of bus. This assumes  * that the first entry of device_get_ivars(child) is a struct  * resource_list. This also handles 'passthrough' allocations where a  * child is a remote descendant of bus by passing the allocation up to  * the parent of bus.  */
-end_comment
 
 begin_function_decl
 name|struct
@@ -597,10 +597,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Implement BUS_RELEASE_RESOURCE.  */
-end_comment
-
 begin_function_decl
 name|int
 name|resource_list_release
@@ -629,10 +625,6 @@ name|res
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Print all resources of a specified type, for use in bus_print_child.  * The name is printed if at least one resource of the given type is available.  * The format ist used to print resource start and end.  */
-end_comment
 
 begin_function_decl
 name|int
@@ -2455,7 +2447,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Shorthand for constructing method tables.  */
+comment|/**  * Shorthand for constructing method tables.  */
 end_comment
 
 begin_define
@@ -2504,7 +2496,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Module support for automatically adding drivers to busses.  */
+comment|/**  * Module support for automatically adding drivers to busses.  */
 end_comment
 
 begin_struct
@@ -2569,7 +2561,7 @@ value|static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh,
 end_define
 
 begin_comment
-comment|/*  * Generic ivar accessor generation macros for bus drivers  */
+comment|/**  * Generic ivar accessor generation macros for bus drivers  */
 end_comment
 
 begin_define

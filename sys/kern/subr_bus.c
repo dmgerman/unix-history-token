@@ -317,7 +317,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Implementation of device.  */
+comment|/**  * @brief Implementation of device.  */
 end_comment
 
 begin_struct
@@ -334,57 +334,62 @@ argument|device
 argument_list|)
 name|link
 expr_stmt|;
-comment|/* list of devices in parent */
+comment|/**< list of devices in parent */
 name|TAILQ_ENTRY
 argument_list|(
 argument|device
 argument_list|)
 name|devlink
 expr_stmt|;
-comment|/* global device list membership */
+comment|/**< global device list membership */
 name|device_t
 name|parent
 decl_stmt|;
+comment|/**< parent of this device  */
 name|device_list_t
 name|children
 decl_stmt|;
-comment|/* list of subordinate devices */
+comment|/**< list of child devices */
 comment|/* 	 * Details of this device. 	 */
 name|driver_t
 modifier|*
 name|driver
 decl_stmt|;
+comment|/**< current driver */
 name|devclass_t
 name|devclass
 decl_stmt|;
-comment|/* device class which we are in */
+comment|/**< current device class */
 name|int
 name|unit
 decl_stmt|;
+comment|/**< current unit number */
 name|char
 modifier|*
 name|nameunit
 decl_stmt|;
-comment|/* name+unit e.g. foodev0 */
+comment|/**< name+unit e.g. foodev0 */
 name|char
 modifier|*
 name|desc
 decl_stmt|;
-comment|/* driver specific description */
+comment|/**< driver specific description */
 name|int
 name|busy
 decl_stmt|;
-comment|/* count of calls to device_busy() */
+comment|/**< count of calls to device_busy() */
 name|device_state_t
 name|state
 decl_stmt|;
+comment|/**< current device state  */
 name|u_int32_t
 name|devflags
 decl_stmt|;
-comment|/* api level flags for device_get_flags() */
+comment|/**< api level flags for device_get_flags() */
 name|u_short
 name|flags
 decl_stmt|;
+comment|/**< internal device flags  */
 define|#
 directive|define
 name|DF_ENABLED
@@ -423,7 +428,7 @@ comment|/* softc not allocated by us */
 name|u_char
 name|order
 decl_stmt|;
-comment|/* order from device_add_child_ordered() */
+comment|/**< order from device_add_child_ordered() */
 name|u_char
 name|pad
 decl_stmt|;
@@ -431,48 +436,23 @@ name|void
 modifier|*
 name|ivars
 decl_stmt|;
+comment|/**< instance variables  */
 name|void
 modifier|*
 name|softc
 decl_stmt|;
+comment|/**< current driver's variables  */
 name|struct
 name|sysctl_ctx_list
 name|sysctl_ctx
 decl_stmt|;
+comment|/**< state for sysctl variables  */
 name|struct
 name|sysctl_oid
 modifier|*
 name|sysctl_tree
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|device_op_desc
-block|{
-name|unsigned
-name|int
-name|offset
-decl_stmt|;
-comment|/* offset in driver ops */
-name|struct
-name|method
-modifier|*
-name|method
-decl_stmt|;
-comment|/* internal method implementation */
-name|devop_t
-name|deflt
-decl_stmt|;
-comment|/* default implementation */
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* unique name (for registration) */
+comment|/**< state for sysctl variables */
 block|}
 struct|;
 end_struct
@@ -591,7 +571,7 @@ value|((d)? d->name : "no devclass")
 end_define
 
 begin_comment
-comment|/* Produce the indenting, indent*2 spaces plus a '.' ahead of that to  * prevent syslog from deleting initial spaces  */
+comment|/**  * Produce the indenting, indent*2 spaces plus a '.' ahead of that to  * prevent syslog from deleting initial spaces  */
 end_comment
 
 begin_define
@@ -2444,7 +2424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generic interface to queue data to the devctl device.  It is  * assumed that data is properly formatted.  It is further assumed  * that data is allocated.  */
+comment|/**  * @brief Queue data to be read from the devctl device  *  * Generic interface to queue data to the devctl device.  It is  * assumed that @p data is properly formatted.  It is further assumed  * that @p data is allocated using the M_BUS malloc type.  */
 end_comment
 
 begin_function
@@ -2575,7 +2555,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a 'notification' to userland, using standard ways  */
+comment|/**  * @brief Send a 'notification' to userland, using standard ways  */
 end_comment
 
 begin_function
@@ -3447,6 +3427,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/**  * @internal  * @brief Find or create a device class  *  * If a device class with the name @p classname exists, return it,  * otherwise if @p create is non-zero create and return a new device  * class.  *  * If @p parentname is non-NULL, the parent of the devclass is set to  * the devclass of that name.  *  * @param classname	the devclass name to find or create  * @param parentname	the parent devclass name or @c NULL  * @param create	non-zero to create a devclass  */
+end_comment
+
 begin_function
 specifier|static
 name|devclass_t
@@ -3647,6 +3631,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Create a device class  *  * If a device class with the name @p classname exists, return it,  * otherwise create and return a new device class.  *  * @param classname	the devclass name to find or create  */
+end_comment
+
 begin_function
 name|devclass_t
 name|devclass_create
@@ -3672,6 +3660,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Find a device class  *  * If a device class with the name @p classname exists, return it,  * otherwise return @c NULL.  *  * @param classname	the devclass name to find  */
+end_comment
+
 begin_function
 name|devclass_t
 name|devclass_find
@@ -3696,6 +3688,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Add a device driver to a device class  *  * Add a device driver to a devclass. This is normally called  * automatically by DRIVER_MODULE(). The BUS_DRIVER_ADDED() method of  * all devices in the devclass will be called to allow them to attempt  * to re-probe any unmatched children.  *  * @param dc		the devclass to edit  * @param driver	the driver to register  */
+end_comment
 
 begin_function
 name|int
@@ -3843,6 +3839,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Delete a device driver from a device class  *  * Delete a device driver from a devclass. This is normally called  * automatically by DRIVER_MODULE().  *  * If the driver is currently attached to any devices,  * devclass_delete_driver() will first attempt to detach from each  * device. If one of the detach calls fails, the driver will not be  * deleted.  *  * @param dc		the devclass to edit  * @param driver	the driver to unregister  */
+end_comment
 
 begin_function
 name|int
@@ -4087,6 +4087,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @internal  */
+end_comment
+
 begin_function
 specifier|static
 name|driverlink_t
@@ -4162,6 +4166,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Search a devclass for a driver  *  * This function searches the devclass's list of drivers and returns  * the first driver whose name is @p classname or @c NULL if there is  * no driver of that name.  *  * @param dc		the devclass to search  * @param classname	the driver name to search for  */
+end_comment
+
 begin_function
 name|kobj_class_t
 name|devclass_find_driver
@@ -4206,6 +4214,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the name of the devclass  */
+end_comment
+
 begin_function
 specifier|const
 name|char
@@ -4225,6 +4237,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Find a device given a unit number  *  * @param dc		the devclass to search  * @param unit		the unit number to search for  *   * @returns		the device with the given unit number or @c  *			NULL if there is no such device  */
+end_comment
 
 begin_function
 name|device_t
@@ -4271,6 +4287,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Find the softc field of a device given a unit number  *  * @param dc		the devclass to search  * @param unit		the unit number to search for  *   * @returns		the softc field of the device with the given  *			unit number or @c NULL if there is no such  *			device  */
+end_comment
+
 begin_function
 name|void
 modifier|*
@@ -4315,6 +4335,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Get a list of devices in the devclass  *  * An array containing a list of all the devices in the given devclass  * is allocated and returned in @p *devlistp. The number of devices  * in the array is returned in @p *devcountp. The caller should free  * the array using @c free(p, M_TEMP).  *  * @param dc		the devclass to examine  * @param devlistp	points at location for array pointer return  *			value  * @param devcountp	points at location for array size return value  *  * @retval 0		success  * @retval ENOMEM	the array allocation failed  */
+end_comment
 
 begin_function
 name|int
@@ -4467,6 +4491,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Get the maximum unit number used in a devclass  *  * @param dc		the devclass to examine  */
+end_comment
+
 begin_function
 name|int
 name|devclass_get_maxunit
@@ -4484,6 +4512,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Find a free unit number in a devclass  *  * This function searches for the first unused unit number greater  * that or equal to @p unit.  *  * @param dc		the devclass to examine  * @param unit		the first unit number to check  */
+end_comment
 
 begin_function
 name|int
@@ -4535,6 +4567,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Set the parent of a devclass  *  * The parent class is normally initialised automatically by  * DRIVER_MODULE().  *  * @param dc		the devclass to edit  * @param pdc		the new parent devclass  */
+end_comment
+
 begin_function
 name|void
 name|devclass_set_parent
@@ -4554,6 +4590,10 @@ name|pdc
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Get the parent of a devclass  *  * @param dc		the devclass to examine  */
+end_comment
 
 begin_function
 name|devclass_t
@@ -4613,6 +4653,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @internal  * @brief Allocate a unit number  *  * On entry, @p *unitp is the desired unit number (or @c -1 if any  * will do). The allocated unit number is returned in @p *unitp.   * @param dc		the devclass to allocate from  * @param unitp		points at the location for the allocated unit  *			number  *  * @retval 0		success  * @retval EEXIST	the requested unit number is already allocated  * @retval ENOMEM	memory allocation failure  */
+end_comment
 
 begin_function
 specifier|static
@@ -4890,6 +4934,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @internal  * @brief Add a device to a devclass  *  * A unit number is allocated for the device (using the device's  * preferred unit number if any) and the device is registered in the  * devclass. This allows the device to be looked up by its unit  * number, e.g. by decoding a dev_t minor number.  *  * @param dc		the devclass to add to  * @param dev		the device to add  *  * @retval 0		success  * @retval EEXIST	the requested unit number is already allocated  * @retval ENOMEM	memory allocation failure  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -5065,6 +5113,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @internal  * @brief Delete a device from a devclass  *  * The device is removed from the devclass's device list and its unit  * number is freed.   * @param dc		the devclass to delete from  * @param dev		the device to delete  *  * @retval 0		success  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -5185,6 +5237,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @internal  * @brief Make a new device and add it as a child of @p parent  *  * @param parent	the parent of the new device  * @param name		the devclass name of the new device or @c NULL  *			to leave the devclass unspecified  * @parem unit		the unit number of the new device of @c -1 to  *			leave the unit number unspecified  *  * @returns the new device  */
+end_comment
 
 begin_function
 specifier|static
@@ -5464,6 +5520,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @internal  * @brief Print a description of a device.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -5515,6 +5575,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Create a new device  *  * This creates a new device and adds it as a child of an existing  * parent device. The new device will be added after the last existing  * child with order zero.  *   * @param dev		the device which will be the parent of the  *			new child device  * @param name		devclass name for new device or @c NULL if not  *			specified  * @param unit		unit number for new device or @c -1 if not  *			specified  *   * @returns		the new device  */
+end_comment
+
 begin_function
 name|device_t
 name|device_add_child
@@ -5547,6 +5611,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Create a new device  *  * This creates a new device and adds it as a child of an existing  * parent device. The new device will be added after the last existing  * child with the same order.  *   * @param dev		the device which will be the parent of the  *			new child device  * @param order		a value which is used to partially sort the  *			children of @p dev - devices created using  *			lower values of @p order appear first in @p  *			dev's list of children  * @param name		devclass name for new device or @c NULL if not  *			specified  * @param unit		unit number for new device or @c -1 if not  *			specified  *   * @returns		the new device  */
+end_comment
 
 begin_function
 name|device_t
@@ -5680,6 +5748,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Delete a device  *  * This function deletes a device along with all of its children. If  * the device currently has a driver attached to it, the device is  * detached first using device_detach().  *   * @param dev		the parent device  * @param child		the device to delete  *  * @retval 0		success  * @retval non-zero	a unit error code describing the error  */
+end_comment
 
 begin_function
 name|int
@@ -5834,7 +5906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find only devices attached to this bus.  */
+comment|/**  * @brief Find a device given a unit number  *  * This is similar to devclass_get_devices() but only searches for  * devices which have @p dev as a parent.  *  * @param dev		the parent device to search  * @param unit		the unit number to search for  *   * @returns		the device with the given unit number or @c  *			NULL if there is no such device  */
 end_comment
 
 begin_function
@@ -5908,6 +5980,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @internal  */
+end_comment
+
 begin_function
 specifier|static
 name|driverlink_t
@@ -5953,6 +6029,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @internal  */
+end_comment
 
 begin_function
 specifier|static
@@ -6042,6 +6122,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @internal  */
+end_comment
 
 begin_function
 specifier|static
@@ -6347,6 +6431,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the parent of a device  */
+end_comment
+
 begin_function
 name|device_t
 name|device_get_parent
@@ -6364,6 +6452,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Get a list of children of a device  *  * An array containing a list of all the children of the given device  * is allocated and returned in @p *devlistp. The number of devices  * in the array is returned in @p *devcountp. The caller should free  * the array using @c free(p, M_TEMP).  *  * @param dev		the device to examine  * @param devlistp	points at location for array pointer return  *			value  * @param devcountp	points at location for array size return value  *  * @retval 0		success  * @retval ENOMEM	the array allocation failed  */
+end_comment
 
 begin_function
 name|int
@@ -6479,6 +6571,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the current driver for the device or @c NULL if there  * is no driver currently attached  */
+end_comment
+
 begin_function
 name|driver_t
 modifier|*
@@ -6498,6 +6594,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the current devclass for the device or @c NULL if  * there is none.  */
+end_comment
+
 begin_function
 name|devclass_t
 name|device_get_devclass
@@ -6515,6 +6615,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Return the name of the device's devclass or @c NULL if there  * is none.  */
+end_comment
 
 begin_function
 specifier|const
@@ -6554,6 +6658,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return a string containing the device's devclass name  * followed by an ascii representation of the device's unit number  * (e.g. @c "foo2").  */
+end_comment
+
 begin_function
 specifier|const
 name|char
@@ -6574,6 +6682,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the device's unit number.  */
+end_comment
+
 begin_function
 name|int
 name|device_get_unit
@@ -6591,6 +6703,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Return the device's description string  */
+end_comment
 
 begin_function
 specifier|const
@@ -6611,6 +6727,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Return the device's flags  */
+end_comment
 
 begin_function
 name|u_int32_t
@@ -6671,6 +6791,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Print the name of the device followed by a colon and a space  *  * @returns the number of characters printed  */
+end_comment
+
 begin_function
 name|int
 name|device_print_prettyname
@@ -6720,6 +6844,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Print the name of the device followed by a colon, a space  * and the result of calling vprintf() with the value of @p fmt and  * the following arguments.  *  * @returns the number of characters printed  */
+end_comment
 
 begin_function
 name|int
@@ -6777,6 +6905,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @internal  */
+end_comment
 
 begin_function
 specifier|static
@@ -6905,6 +7037,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Set the device's description  *  * The value of @c desc should be a string constant that will not  * change (at least until the description is changed in a subsequent  * call to device_set_desc() or device_set_desc_copy()).  */
+end_comment
+
 begin_function
 name|void
 name|device_set_desc
@@ -6929,6 +7065,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Set the device's description  *  * The string pointed to by @c desc is copied. Use this function if  * the device description is generated, (e.g. with sprintf()).  */
+end_comment
 
 begin_function
 name|void
@@ -6955,6 +7095,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Set the device's flags  */
+end_comment
+
 begin_function
 name|void
 name|device_set_flags
@@ -6975,6 +7119,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the device's softc field  *  * The softc is allocated and zeroed when a driver is attached, based  * on the size field of the driver.  */
+end_comment
+
 begin_function
 name|void
 modifier|*
@@ -6993,6 +7141,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Set the device's softc field  *  * Most drivers do not need to use this since the softc is allocated  * automatically when the driver is attached.  */
+end_comment
 
 begin_function
 name|void
@@ -7059,6 +7211,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Get the device's ivars field  *  * The ivars field is used by the parent device to store per-device  * state (e.g. the physical location of the device or a list of  * resources).  */
+end_comment
+
 begin_function
 name|void
 modifier|*
@@ -7088,6 +7244,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Set the device's ivars field  */
+end_comment
 
 begin_function
 name|void
@@ -7121,6 +7281,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return the device's state  */
+end_comment
+
 begin_function
 name|device_state_t
 name|device_get_state
@@ -7139,6 +7303,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Set the DF_ENABLED flag for the device  */
+end_comment
+
 begin_function
 name|void
 name|device_enable
@@ -7155,6 +7323,10 @@ name|DF_ENABLED
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Clear the DF_ENABLED flag for the device  */
+end_comment
 
 begin_function
 name|void
@@ -7173,6 +7345,10 @@ name|DF_ENABLED
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Increment the busy counter for the device  */
+end_comment
 
 begin_function
 name|void
@@ -7227,6 +7403,10 @@ name|DS_BUSY
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Decrement the busy counter for the device  */
+end_comment
 
 begin_function
 name|void
@@ -7286,6 +7466,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Set the DF_QUIET flag for the device  */
+end_comment
+
 begin_function
 name|void
 name|device_quiet
@@ -7302,6 +7486,10 @@ name|DF_QUIET
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Clear the DF_QUIET flag for the device  */
+end_comment
 
 begin_function
 name|void
@@ -7320,6 +7508,10 @@ name|DF_QUIET
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Return non-zero if the DF_QUIET flag is set on the device  */
+end_comment
 
 begin_function
 name|int
@@ -7345,6 +7537,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return non-zero if the DF_ENABLED flag is set on the device  */
+end_comment
+
 begin_function
 name|int
 name|device_is_enabled
@@ -7369,6 +7565,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return non-zero if the device was successfully probed  */
+end_comment
+
 begin_function
 name|int
 name|device_is_alive
@@ -7389,6 +7589,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Return non-zero if the device currently has a driver  * attached to it  */
+end_comment
+
 begin_function
 name|int
 name|device_is_attached
@@ -7408,6 +7612,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Set the devclass of a device  * @see devclass_add_device().  */
+end_comment
 
 begin_function
 name|int
@@ -7513,6 +7721,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Set the driver of a device  *  * @retval 0		success  * @retval EBUSY	the device already has a driver attached  * @retval ENOMEM	a memory allocation failure occurred  */
+end_comment
 
 begin_function
 name|int
@@ -7721,6 +7933,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Probe a device and attach a driver if possible  *  * This function is the core of the device autoconfiguration  * system. Its purpose is to select a suitable driver for a device and  * then call that driver to initialise the hardware appropriately. The  * driver is selected by calling the DEVICE_PROBE() method of a set of  * candidate drivers and then choosing the driver which returned the  * best value. This driver is then attached to the device using  * device_attach().  *  * The set of suitable drivers is taken from the list of drivers in  * the parent device's devclass. If the device was originally created  * with a specific class name (see device_add_child()), only drivers  * with that name are probed, otherwise all drivers in the devclass  * are probed. If no drivers return successful probe values in the  * parent devclass, the search continues in the parent of that  * devclass (see devclass_get_parent()) if any.  *  * @param dev		the device to initialise  *  * @retval 0		success  * @retval ENXIO	no driver was found  * @retval ENOMEM	memory allocation failure  * @retval non-zero	some other unix error code  */
+end_comment
+
 begin_function
 name|int
 name|device_probe_and_attach
@@ -7851,6 +8067,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Attach a device driver to a device  *  * This function is a wrapper around the DEVICE_ATTACH() driver  * method. In addition to calling DEVICE_ATTACH(), it initialises the  * device's sysctl tree, optionally prints a description of the device  * and queues a notification event for user-based device management  * services.  *  * Normally this function is only called internally from  * device_probe_and_attach().  *  * @param dev		the device to initialise  *  * @retval 0		success  * @retval ENXIO	no driver was found  * @retval ENOMEM	memory allocation failure  * @retval non-zero	some other unix error code  */
+end_comment
+
 begin_function
 name|int
 name|device_attach
@@ -7973,6 +8193,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Detach a driver from a device  *  * This function is a wrapper around the DEVICE_DETACH() driver  * method. If the call to DEVICE_DETACH() succeeds, it calls  * BUS_CHILD_DETACHED() for the parent of @p dev, queues a  * notification event for user-based device management services and  * cleans up the device's sysctl tree.  *  * @param dev		the device to un-initialise  *  * @retval 0		success  * @retval ENXIO	no driver was found  * @retval ENOMEM	memory allocation failure  * @retval non-zero	some other unix error code  */
+end_comment
 
 begin_function
 name|int
@@ -8114,6 +8338,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Notify a device of system shutdown  *  * This function calls the DEVICE_SHUTDOWN() driver method if the  * device currently has an attached driver.  *  * @returns the value returned by DEVICE_SHUTDOWN()  */
+end_comment
+
 begin_function
 name|int
 name|device_shutdown
@@ -8145,6 +8373,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Set the unit number of a device  *  * This function can be used to override the unit number used for a  * device (e.g. to wire a device to a pre-configured unit number).  */
+end_comment
 
 begin_function
 name|int
@@ -8251,6 +8483,10 @@ begin_comment
 comment|/*  * Some useful method implementations to make life easier for bus drivers.  */
 end_comment
 
+begin_comment
+comment|/**  * @brief Initialise a resource list.  *  * @param rl		the resource list to initialise  */
+end_comment
+
 begin_function
 name|void
 name|resource_list_init
@@ -8268,6 +8504,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Reclaim memory used by a resource list.  *  * This function frees the memory for all resource entries on the list  * (if any).  *  * @param rl		the resource list to free		  */
+end_comment
 
 begin_function
 name|void
@@ -8326,6 +8566,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Add a resource entry.  *  * This function adds a resource entry using the given @p type, @p  * start, @p end and @p count values. A rid value is chosen by  * searching sequentially for the first unused rid starting at zero.  *  * @param rl		the resource list to edit  * @param type		the resource entry type (e.g. SYS_RES_MEMORY)  * @param start		the start address of the resource  * @param end		the end address of the resource  * @param count		XXX end-start+1  */
+end_comment
 
 begin_function
 name|int
@@ -8394,6 +8638,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Add or modify a resource entry.  *  * If an existing entry exists with the same type and rid, it will be  * modified using the given values of @p start, @p end and @p  * count. If no entry exists, a new one will be created using the  * given values.  *  * @param rl		the resource list to edit  * @param type		the resource entry type (e.g. SYS_RES_MEMORY)  * @param rid		the resource identifier  * @param start		the start address of the resource  * @param end		the end address of the resource  * @param count		XXX end-start+1  */
+end_comment
 
 begin_function
 name|void
@@ -8527,6 +8775,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Find a resource entry by type and rid.  *  * @param rl		the resource list to search  * @param type		the resource entry type (e.g. SYS_RES_MEMORY)  * @param rid		the resource identifier  *  * @returns the resource entry pointer or NULL if there is no such  * entry.  */
+end_comment
+
 begin_function
 name|struct
 name|resource_list_entry
@@ -8586,6 +8838,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Delete a resource entry.  *  * @param rl		the resource list to edit  * @param type		the resource entry type (e.g. SYS_RES_MEMORY)  * @param rid		the resource identifier  */
+end_comment
 
 begin_function
 name|void
@@ -8656,6 +8912,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_ALLOC_RESOURCE()  *  * Implement BUS_ALLOC_RESOURCE() by looking up a resource from the list  * and passing the allocation up to the parent of @p bus. This assumes  * that the first entry of @c device_get_ivars(child) is a struct  * resource_list. This also handles 'passthrough' allocations where a  * child is a remote descendant of bus by passing the allocation up to  * the parent of bus.  *  * Typically, a bus driver would store a list of child resources  * somewhere in the child device's ivars (see device_get_ivars()) and  * its implementation of BUS_ALLOC_RESOURCE() would find that list and  * then call resource_list_alloc() to perform the allocation.  *  * @param rl		the resource list to allocate from  * @param bus		the parent device of @p child  * @param child		the device which is requesting an allocation  * @param type		the type of resource to allocate  * @param rid		a pointer to the resource identifier  * @param start		hint at the start of the resource range - pass  *			@c 0UL for any start address  * @param end		hint at the end of the resource range - pass  *			@c ~0UL for any end address  * @param count		hint at the size of range required - pass @c 1  *			for any size  * @param flags		any extra flags to control the resource  *			allocation - see @c RF_XXX flags in  *<sys/rman.h> for details  *   * @returns		the resource which was allocated or @c NULL if no  *			resource could be allocated  */
+end_comment
 
 begin_function
 name|struct
@@ -8903,6 +9163,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_RELEASE_RESOURCE()  *   * Implement BUS_RELEASE_RESOURCE() using a resource list. Normally  * used with resource_list_alloc().  *   * @param rl		the resource list which was allocated from  * @param bus		the parent device of @p child  * @param child		the device which is requesting a release  * @param type		the type of resource to allocate  * @param rid		the resource identifier  * @param res		the resource to release  *   * @retval 0		success  * @retval non-zero	a standard unix error code indicating what  *			error condition prevented the operation  */
+end_comment
+
 begin_function
 name|int
 name|resource_list_release
@@ -9051,6 +9315,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Print a description of resources in a resource list  *  * Print all resources of a specified type, for use in BUS_PRINT_CHILD().  * The name is printed if at least one resource of the given type is available.  * The format is used to print resource start and end.  *  * @param rl		the resource list to print  * @param name		the name of @p type, e.g. @c "memory"  * @param type		type type of resource entry to print  * @param format	printf(9) format string to print resource  *			start and end values  *   * @returns		the number of characters printed  */
+end_comment
+
 begin_function
 name|int
 name|resource_list_print_type
@@ -9193,7 +9461,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Call DEVICE_IDENTIFY for each driver.  */
+comment|/**  * @brief Helper function for implementing DEVICE_PROBE()  *  * This function can be used to help implement the DEVICE_PROBE() for  * a bus (i.e. a device which has other devices attached to it). It  * calls the DEVICE_IDENTIFY() method of each driver in the device's  * devclass.  */
 end_comment
 
 begin_function
@@ -9241,6 +9509,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing DEVICE_ATTACH()  *  * This function can be used to help implement the DEVICE_ATTACH() for  * a bus. It calls device_probe_and_attach() for each of the device's  * children.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_attach
@@ -9274,6 +9546,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing DEVICE_DETACH()  *  * This function can be used to help implement the DEVICE_DETACH() for  * a bus. It calls device_detach() for each of the device's  * children.  */
+end_comment
 
 begin_function
 name|int
@@ -9338,6 +9614,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing DEVICE_SHUTDOWN()  *  * This function can be used to help implement the DEVICE_SHUTDOWN()  * for a bus. It calls device_shutdown() for each of the device's  * children.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_shutdown
@@ -9371,6 +9651,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing DEVICE_SUSPEND()  *  * This function can be used to help implement the DEVICE_SUSPEND()  * for a bus. It calls DEVICE_SUSPEND() for each of the device's  * children. If any call to DEVICE_SUSPEND() fails, the suspend  * operation is aborted and any devices which were suspended are  * resumed immediately by calling their DEVICE_RESUME() methods.  */
+end_comment
 
 begin_function
 name|int
@@ -9456,6 +9740,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing DEVICE_RESUME()  *  * This function can be used to help implement the DEVICE_RESUME() for  * a bus. It calls DEVICE_RESUME() on each of the device's children.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_resume
@@ -9490,6 +9778,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_PRINT_CHILD().  *  * This function prints the first part of the ascii representation of  * @p child, including its name, unit and description (if any - see  * device_set_desc()).  *  * @returns the number of characters printed  */
+end_comment
 
 begin_function
 name|int
@@ -9553,6 +9845,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_PRINT_CHILD().  *  * This function prints the last part of the ascii representation of  * @p child, which consists of the string @c " on " followed by the  * name and unit of the @p dev.  *  * @returns the number of characters printed  */
+end_comment
+
 begin_function
 name|int
 name|bus_print_child_footer
@@ -9579,6 +9875,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_PRINT_CHILD().  *  * This function simply calls bus_print_child_header() followed by  * bus_print_child_footer().  *  * @returns the number of characters printed  */
+end_comment
 
 begin_function
 name|int
@@ -9622,6 +9922,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Stub function for implementing BUS_READ_IVAR().  *   * @returns ENOENT  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_read_ivar
@@ -9648,6 +9952,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Stub function for implementing BUS_WRITE_IVAR().  *   * @returns ENOENT  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_write_ivar
@@ -9673,6 +9981,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Stub function for implementing BUS_GET_RESOURCE_LIST().  *   * @returns NULL  */
+end_comment
+
 begin_function
 name|struct
 name|resource_list
@@ -9693,6 +10005,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_DRIVER_ADDED().  *  * This implementation of BUS_DRIVER_ADDED() simply calls the driver's  * DEVICE_IDENTIFY() method to allow it to add new children to the bus  * and then calls device_probe_and_attach() for each unattached child.  */
+end_comment
 
 begin_function
 name|void
@@ -9741,6 +10057,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_SETUP_INTR().  *  * This simple implementation of BUS_SETUP_INTR() simply calls the  * BUS_SETUP_INTR() method of the parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -9811,6 +10131,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_TEARDOWN_INTR().  *  * This simple implementation of BUS_TEARDOWN_INTR() simply calls the  * BUS_TEARDOWN_INTR() method of the parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_teardown_intr
@@ -9861,6 +10185,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_ALLOC_RESOURCE().  *  * This simple implementation of BUS_ALLOC_RESOURCE() simply calls the  * BUS_ALLOC_RESOURCE() method of the parent of @p dev.  */
+end_comment
 
 begin_function
 name|struct
@@ -9933,6 +10261,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_RELEASE_RESOURCE().  *  * This simple implementation of BUS_RELEASE_RESOURCE() simply calls the  * BUS_RELEASE_RESOURCE() method of the parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_release_resource
@@ -9987,6 +10319,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_ACTIVATE_RESOURCE().  *  * This simple implementation of BUS_ACTIVATE_RESOURCE() simply calls the  * BUS_ACTIVATE_RESOURCE() method of the parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -10043,6 +10379,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_DEACTIVATE_RESOURCE().  *  * This simple implementation of BUS_DEACTIVATE_RESOURCE() simply calls the  * BUS_DEACTIVATE_RESOURCE() method of the parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_deactivate_resource
@@ -10098,6 +10438,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_CONFIG_INTR().  *  * This simple implementation of BUS_CONFIG_INTR() simply calls the  * BUS_CONFIG_INTR() method of the parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_config_intr
@@ -10147,6 +10491,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_GET_RESOURCE().  *  * This implementation of BUS_GET_RESOURCE() uses the  * resource_list_find() function to do most of the work. It calls  * BUS_GET_RESOURCE_LIST() to find a suitable resource list to  * search.  */
+end_comment
 
 begin_function
 name|int
@@ -10257,6 +10605,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_SET_RESOURCE().  *  * This implementation of BUS_SET_RESOURCE() uses the  * resource_list_add() function to do most of the work. It calls  * BUS_GET_RESOURCE_LIST() to find a suitable resource list to  * edit.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_rl_set_resource
@@ -10335,6 +10687,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_DELETE_RESOURCE().  *  * This implementation of BUS_DELETE_RESOURCE() uses the  * resource_list_delete() function to do most of the work. It calls  * BUS_GET_RESOURCE_LIST() to find a suitable resource list to  * edit.  */
+end_comment
+
 begin_function
 name|void
 name|bus_generic_rl_delete_resource
@@ -10386,6 +10742,10 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_RELEASE_RESOURCE().  *  * This implementation of BUS_RELEASE_RESOURCE() uses the  * resource_list_release() function to do most of the work. It calls  * BUS_GET_RESOURCE_LIST() to find a suitable resource list.  */
+end_comment
 
 begin_function
 name|int
@@ -10455,6 +10815,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_ALLOC_RESOURCE().  *  * This implementation of BUS_ALLOC_RESOURCE() uses the  * resource_list_alloc() function to do most of the work. It calls  * BUS_GET_RESOURCE_LIST() to find a suitable resource list.  */
+end_comment
 
 begin_function
 name|struct
@@ -10541,12 +10905,16 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Helper function for implementing BUS_CHILD_PRESENT().  *  * This simple implementation of BUS_CHILD_PRESENT() simply calls the  * BUS_CHILD_PRESENT() method of the parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_generic_child_present
 parameter_list|(
 name|device_t
-name|bus
+name|dev
 parameter_list|,
 name|device_t
 name|child
@@ -10558,10 +10926,10 @@ name|BUS_CHILD_PRESENT
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|bus
+name|dev
 argument_list|)
 argument_list|,
-name|bus
+name|dev
 argument_list|)
 operator|)
 return|;
@@ -10570,6 +10938,10 @@ end_function
 
 begin_comment
 comment|/*  * Some convenience functions to make it easier for drivers to use the  * resource-management functions.  All these really do is hide the  * indirection through the parent's method table, making for slightly  * less-wordy code.  In the future, it might make sense for this code  * to maintain some sort of a list of resources allocated by each device.  */
+end_comment
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_ALLOC_RESOURCE().  *  * This function simply calls the BUS_ALLOC_RESOURCE() method of the  * parent of @p dev.  */
 end_comment
 
 begin_function
@@ -10641,6 +11013,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_ACTIVATE_RESOURCE().  *  * This function simply calls the BUS_ACTIVATE_RESOURCE() method of the  * parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_activate_resource
@@ -10693,6 +11069,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_DEACTIVATE_RESOURCE().  *  * This function simply calls the BUS_DEACTIVATE_RESOURCE() method of the  * parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -10747,6 +11127,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_RELEASE_RESOURCE().  *  * This function simply calls the BUS_RELEASE_RESOURCE() method of the  * parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_release_resource
@@ -10799,6 +11183,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_SETUP_INTR().  *  * This function simply calls the BUS_SETUP_INTR() method of the  * parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -10956,6 +11344,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_TEARDOWN_INTR().  *  * This function simply calls the BUS_TEARDOWN_INTR() method of the  * parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_teardown_intr
@@ -11005,6 +11397,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_SET_RESOURCE().  *  * This function simply calls the BUS_SET_RESOURCE() method of the  * parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_set_resource
@@ -11048,6 +11444,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_GET_RESOURCE().  *  * This function simply calls the BUS_GET_RESOURCE() method of the  * parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -11094,6 +11494,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_GET_RESOURCE().  *  * This function simply calls the BUS_GET_RESOURCE() method of the  * parent of @p dev and returns the start value.  */
+end_comment
 
 begin_function
 name|u_long
@@ -11156,6 +11560,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_GET_RESOURCE().  *  * This function simply calls the BUS_GET_RESOURCE() method of the  * parent of @p dev and returns the count value.  */
+end_comment
+
 begin_function
 name|u_long
 name|bus_get_resource_count
@@ -11217,6 +11625,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_DELETE_RESOURCE().  *  * This function simply calls the BUS_DELETE_RESOURCE() method of the  * parent of @p dev.  */
+end_comment
+
 begin_function
 name|void
 name|bus_delete_resource
@@ -11248,6 +11660,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_CHILD_PRESENT().  *  * This function simply calls the BUS_CHILD_PRESENT() method of the  * parent of @p dev.  */
+end_comment
+
 begin_function
 name|int
 name|bus_child_present
@@ -11271,6 +11687,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_CHILD_PNPINFO_STR().  *  * This function simply calls the BUS_CHILD_PNPINFO_STR() method of the  * parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -11331,6 +11751,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Wrapper function for BUS_CHILD_LOCATION_STR().  *  * This function simply calls the BUS_CHILD_LOCATION_STR() method of the  * parent of @p dev.  */
+end_comment
 
 begin_function
 name|int
@@ -11754,6 +12178,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/**  * @brief Automatically configure devices  *  * This function begins the autoconfiguration process by calling  * device_probe_and_attach() for each child of the @c root0 device.  */
+end_comment
+
 begin_function
 name|void
 name|root_bus_configure
@@ -11788,6 +12216,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/**  * @brief Module handler for registering device drivers  *  * This module handler is used to automatically register device  * drivers when modules are loaded. If @p what is MOD_LOAD, it calls  * devclass_add_driver() for the driver described by the  * driver_module_data structure pointed to by @p arg  */
+end_comment
 
 begin_function
 name|int
