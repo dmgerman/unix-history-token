@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.19 %G%"
+literal|"@(#)pcproc.c 1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1616,9 +1616,14 @@ name|putstrop
 argument_list|(
 name|P2STASG
 argument_list|,
+name|ADDTYPE
+argument_list|(
 name|p2type
 argument_list|(
 name|filetype
+argument_list|)
+argument_list|,
+name|P2PTR
 argument_list|)
 argument_list|,
 name|lwidth
@@ -4709,9 +4714,14 @@ name|putstrop
 argument_list|(
 name|P2STASG
 argument_list|,
+name|ADDTYPE
+argument_list|(
 name|p2type
 argument_list|(
 name|ap
+argument_list|)
+argument_list|,
+name|P2PTR
 argument_list|)
 argument_list|,
 name|lwidth

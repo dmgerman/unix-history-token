@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.22 %G%"
+literal|"@(#)call.c 1.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,7 +1608,12 @@ name|putstrop
 argument_list|(
 name|P2STASG
 argument_list|,
+name|ADDTYPE
+argument_list|(
 name|p_type_p2type
+argument_list|,
+name|P2PTR
+argument_list|)
 argument_list|,
 name|lwidth
 argument_list|(
