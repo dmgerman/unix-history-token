@@ -138,6 +138,9 @@ name|char
 operator|*
 operator|,
 name|int
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

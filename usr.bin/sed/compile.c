@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: compile.c,v 1.10 1998/09/22 18:39:47 brian Exp $"
+literal|"$Id: compile.c,v 1.11 1998/12/07 05:35:54 archie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,6 +826,8 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -2463,6 +2465,11 @@ decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
+name|int
+name|more
+init|=
+literal|0
+decl_stmt|;
 name|c
 operator|=
 operator|*
@@ -2650,6 +2657,8 @@ operator|++
 name|p
 operator|==
 literal|'\0'
+operator|&&
+name|more
 condition|)
 block|{
 if|if
@@ -2662,6 +2671,9 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
+argument_list|,
+operator|&
+name|more
 argument_list|)
 condition|)
 name|p
@@ -2772,6 +2784,9 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
+argument_list|,
+operator|&
+name|more
 argument_list|)
 condition|)
 do|;
@@ -3452,6 +3467,8 @@ sizeof|sizeof
 argument_list|(
 name|lbuf
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
