@@ -181,9 +181,11 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|s
+argument_list|,
+literal|256
 argument_list|,
 name|fmt
 argument_list|,
