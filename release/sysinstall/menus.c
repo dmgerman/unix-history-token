@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.27 1995/06/07 05:50:59 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.28 1995/06/07 06:50:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -3454,12 +3454,62 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|char
+modifier|*
+name|menuCheckNTP
+parameter_list|(
+name|DMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|getenv
+argument_list|(
+literal|"ntpdate"
+argument_list|)
+condition|?
+literal|"ON"
+else|:
+literal|"OFF"
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|menuCheckRouted
+parameter_list|(
+name|DMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|getenv
+argument_list|(
+literal|"routedflags"
+argument_list|)
+condition|?
+literal|"ON"
+else|:
+literal|"OFF"
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|DMenu
 name|MenuNetworking
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_MULTIPLE_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network Services Menu"
 block|,
@@ -3482,6 +3532,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3496,6 +3548,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3525,6 +3579,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|menuCheckNTP
 block|}
 block|,
 block|{
@@ -3539,6 +3595,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|menuCheckRouted
 block|}
 block|,
 block|{
@@ -3553,6 +3611,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3996,6 +4056,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4010,6 +4072,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4024,6 +4088,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4038,6 +4104,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4052,6 +4120,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4066,6 +4136,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4080,6 +4152,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4094,6 +4168,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4108,6 +4184,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4122,6 +4200,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4136,6 +4216,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4150,6 +4232,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4164,6 +4248,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4179,7 +4265,7 @@ name|DMenu
 name|MenuSysconsKeyrate
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_RADIO_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -4204,6 +4290,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4218,6 +4306,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4232,6 +4322,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4246,6 +4338,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4256,12 +4350,38 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|char
+modifier|*
+name|menuSaverTimeoutCheck
+parameter_list|(
+name|DMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|getenv
+argument_list|(
+literal|"blanktime"
+argument_list|)
+condition|?
+literal|"ON"
+else|:
+literal|"OFF"
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|DMenu
 name|MenuSysconsSaver
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_MULTIPLE_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Screen Saver"
 block|,
@@ -4284,6 +4404,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4298,6 +4420,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4312,6 +4436,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4326,6 +4452,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -4340,6 +4468,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|menuSaverTimeoutCheck
 block|}
 block|,
 block|{
