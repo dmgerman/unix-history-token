@@ -157,7 +157,7 @@ name|struct
 name|iovec
 name|localiov
 index|[
-literal|6
+literal|7
 index|]
 decl_stmt|;
 name|int
