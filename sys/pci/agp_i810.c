@@ -257,6 +257,14 @@ operator|(
 literal|"Intel 82810E (i810E GMCH) SVGA controller"
 operator|)
 return|;
+case|case
+literal|0x11328086
+case|:
+return|return
+operator|(
+literal|"Intel 82815 (i815 GMCH) SVGA controller"
+operator|)
+return|;
 block|}
 empty_stmt|;
 return|return
@@ -292,16 +300,43 @@ decl_stmt|;
 name|u_int32_t
 name|devid
 decl_stmt|;
-comment|/* 	 * XXX assume that the bridge device's ID is one minus the vga ID. 	 */
+comment|/* 	 * Calculate bridge device's ID. 	 */
 name|devid
 operator|=
 name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
-operator|-
+expr_stmt|;
+switch|switch
+condition|(
+name|devid
+condition|)
+block|{
+case|case
+literal|0x71218086
+case|:
+case|case
+literal|0x71238086
+case|:
+case|case
+literal|0x71258086
+case|:
+name|devid
+operator|-=
 literal|0x10000
 expr_stmt|;
+break|break;
+case|case
+literal|0x11328086
+case|:
+name|devid
+operator|=
+literal|0x11308086
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
 if|if
 condition|(
 name|device_get_children
