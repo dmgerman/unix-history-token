@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ifconfig.c,v 1.36 1998/07/06 06:53:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,10 +1174,10 @@ name|af_getaddr
 modifier|*
 name|af_getaddr
 decl_stmt|;
-name|int
+name|u_long
 name|af_difaddr
 decl_stmt|;
-name|int
+name|u_long
 name|af_aifaddr
 decl_stmt|;
 name|caddr_t
