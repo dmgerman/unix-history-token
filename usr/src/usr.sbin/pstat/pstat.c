@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.22 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4607,6 +4607,21 @@ operator|->
 name|m_name
 operator|=
 literal|"swap"
+expr_stmt|;
+name|swapmap
+operator|->
+name|m_limit
+operator|=
+operator|(
+expr|struct
+name|mapent
+operator|*
+operator|)
+operator|&
+name|swapmap
+index|[
+name|nswapmap
+index|]
 expr_stmt|;
 name|nswap
 operator|=
