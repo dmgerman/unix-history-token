@@ -25,9 +25,18 @@ begin_comment
 comment|/*  * Provide the equivelant to Solaris thr_main() function  */
 end_comment
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_main_np
+name|=
+name|_pthread_main_np
+end_pragma
+
 begin_function
 name|int
-name|pthread_main_np
+name|_pthread_main_np
 parameter_list|()
 block|{
 if|if
