@@ -614,13 +614,6 @@ break|break;
 case|case
 literal|'d'
 case|:
-if|if
-condition|(
-name|pd
-condition|)
-goto|goto
-name|new
-goto|;
 name|pd
 operator|=
 literal|1
