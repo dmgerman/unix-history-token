@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1251,26 +1251,22 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"free: unaligned addr 0x%x, size %d, type %d, mask %d\n"
+literal|"free: unaligned addr 0x%x, size %d, type %s, mask %d\n"
 argument_list|,
 name|addr
 argument_list|,
 name|size
 argument_list|,
+name|memname
+index|[
 name|type
+index|]
 argument_list|,
 name|alloc
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"free: unaligned addr"
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
