@@ -56,6 +56,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_comment
 comment|/*  * Shell variables.  */
 end_comment
@@ -373,7 +379,8 @@ name|VSTRFIXED
 operator||
 name|VTEXTFIXED
 block|,
-literal|"PATH=/bin:/usr/bin"
+literal|"PATH="
+name|_PATH_DEFPATH
 block|,
 name|changepath
 block|}

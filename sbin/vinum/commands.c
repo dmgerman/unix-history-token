@@ -142,7 +142,7 @@ name|NULL
 condition|)
 name|editor
 operator|=
-literal|"/usr/bin/vi"
+name|_PATH_VI
 expr_stmt|;
 name|sprintf
 argument_list|(

@@ -58,7 +58,7 @@ name|char
 name|client_script_name
 index|[]
 init|=
-literal|"/sbin/dhclient-script"
+name|_PATH_DHCLIENT_SCRIPT
 decl_stmt|;
 end_decl_stmt
 

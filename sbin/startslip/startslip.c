@@ -1223,7 +1223,7 @@ name|downscript
 condition|?
 name|downscript
 else|:
-literal|"/sbin/ifconfig"
+name|_PATH_IFCONFIG
 argument_list|,
 name|unitname
 argument_list|)
@@ -2403,7 +2403,7 @@ name|upscript
 condition|?
 name|upscript
 else|:
-literal|"/sbin/ifconfig"
+name|_PATH_IFCONFIG
 argument_list|,
 name|unitname
 argument_list|)

@@ -3,6 +3,20 @@ begin_comment
 comment|/* @(#)pathnames.h.in	8.4 (Berkeley) 6/26/96 */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/* Read standard system paths first. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
