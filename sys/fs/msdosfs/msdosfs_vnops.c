@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.74 1998/07/04 20:45:36 julian Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.75 1998/07/11 07:45:50 bde Exp $ */
 end_comment
 
 begin_comment
@@ -5483,9 +5483,16 @@ condition|(
 name|ip
 operator|->
 name|de_dirclust
-operator|!=
+operator|==
 name|MSDOSFSROOT
 condition|)
+name|ip
+operator|->
+name|de_diroffset
+operator|=
+name|to_diroffset
+expr_stmt|;
+else|else
 name|ip
 operator|->
 name|de_diroffset
