@@ -1322,12 +1322,6 @@ index|]
 expr_stmt|;
 name|ktrgenio
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|s
 argument_list|,
 name|UIO_WRITE
@@ -1777,12 +1771,6 @@ name|uio_resid
 expr_stmt|;
 name|ktrgenio
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|s
 argument_list|,
 name|UIO_READ

@@ -763,8 +763,6 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -872,12 +870,6 @@ name|cnt
 expr_stmt|;
 name|ktrgenio
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|fd
 argument_list|,
 name|UIO_READ
@@ -1240,8 +1232,6 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -1379,12 +1369,6 @@ name|cnt
 expr_stmt|;
 name|ktrgenio
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|uap
 operator|->
 name|fd
@@ -1905,8 +1889,6 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -2056,12 +2038,6 @@ name|cnt
 expr_stmt|;
 name|ktrgenio
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|fd
 argument_list|,
 name|UIO_WRITE
@@ -2443,8 +2419,6 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_GENIO
 argument_list|)
@@ -2624,12 +2598,6 @@ name|cnt
 expr_stmt|;
 name|ktrgenio
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|uap
 operator|->
 name|fd
