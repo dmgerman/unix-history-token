@@ -15,6 +15,18 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|_shutdown
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 specifier|static
 struct|struct
@@ -305,6 +317,12 @@ name|userAddUser
 block|}
 block|,
 block|{
+literal|"shutdown"
+block|,
+name|_shutdown
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -400,6 +418,31 @@ block|}
 end_function
 
 begin_comment
+comment|/* Just convenience */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|_shutdown
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|systemShutdown
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* For a given string, call it or spit out an undefined command diagnostic */
 end_comment
 
@@ -438,6 +481,27 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+comment|/* If it's got a newline, trim it */
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|index
+argument_list|(
+name|str
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* A command might be a pathname if it's encoded in argv[0], as we also support */
 if|if
 condition|(
@@ -454,11 +518,13 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-return|return
+name|i
+operator|=
 name|DITEM_SUCCESS
-return|;
+expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -501,9 +567,11 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-return|return
+name|i
+operator|=
 name|DITEM_FAILURE
-return|;
+expr_stmt|;
+block|}
 block|}
 return|return
 name|i

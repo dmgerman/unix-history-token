@@ -31,6 +31,31 @@ name|Variable
 modifier|*
 name|vp
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+comment|/* Trim leading and trailing whitespace */
+name|var
+operator|=
+name|string_skipwhite
+argument_list|(
+name|string_prune
+argument_list|(
+name|var
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|var
+operator|||
+operator|!
+operator|*
+name|var
+condition|)
+return|return;
 comment|/* Put it in the environment in any case */
 name|setenv
 argument_list|(
@@ -254,7 +279,10 @@ name|make_variable
 argument_list|(
 name|tmp
 argument_list|,
+name|string_skipwhite
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -387,7 +415,13 @@ argument_list|)
 expr_stmt|;
 name|var
 operator|=
+name|string_skipwhite
+argument_list|(
+name|string_prune
+argument_list|(
 name|name
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now search to see if it's in our list, if we have one.. */
