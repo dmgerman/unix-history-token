@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acpi.h"
 end_include
 
@@ -1291,6 +1297,26 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_host_mem_start
+init|=
+literal|0x80000000
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.acpi.host_mem_start"
+argument_list|,
+operator|&
+name|acpi_host_mem_start
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|struct
 name|resource
@@ -1341,7 +1367,7 @@ literal|0UL
 condition|)
 name|start
 operator|=
-literal|0xfe000000
+name|acpi_host_mem_start
 expr_stmt|;
 return|return
 operator|(
