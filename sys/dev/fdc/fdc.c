@@ -445,7 +445,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|BIO_FORMAT
+name|FDBIO_FORMAT
 value|BIO_CMD2
 end_define
 
@@ -649,7 +649,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 value|BIO_CMD1
 end_define
 
@@ -7636,13 +7636,13 @@ name|bp
 operator|->
 name|bio_cmd
 operator|!=
-name|BIO_FORMAT
+name|FDBIO_FORMAT
 operator|&&
 name|bp
 operator|->
 name|bio_cmd
 operator|!=
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 condition|)
 block|{
 if|if
@@ -8467,7 +8467,7 @@ name|fdmisccmd
 argument_list|(
 name|dev
 argument_list|,
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 argument_list|,
 operator|&
 name|id
@@ -8527,7 +8527,7 @@ name|fdmisccmd
 argument_list|(
 name|dev
 argument_list|,
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 argument_list|,
 operator|&
 name|id
@@ -8943,7 +8943,7 @@ name|bp
 operator|->
 name|bio_cmd
 operator|==
-name|BIO_FORMAT
+name|FDBIO_FORMAT
 expr_stmt|;
 name|rdsectid
 operator|=
@@ -8951,7 +8951,7 @@ name|bp
 operator|->
 name|bio_cmd
 operator|==
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 expr_stmt|;
 if|if
 condition|(
@@ -11764,7 +11764,7 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|BIO_FORMAT
+name|FDBIO_FORMAT
 condition|)
 block|{
 name|bp
@@ -11825,7 +11825,7 @@ if|if
 condition|(
 name|cmd
 operator|==
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 condition|)
 block|{
 name|bp
@@ -12733,7 +12733,7 @@ name|fdmisccmd
 argument_list|(
 name|dev
 argument_list|,
-name|BIO_FORMAT
+name|FDBIO_FORMAT
 argument_list|,
 name|addr
 argument_list|)
@@ -12995,7 +12995,7 @@ name|fdmisccmd
 argument_list|(
 name|dev
 argument_list|,
-name|BIO_RDSECTID
+name|FDBIO_RDSECTID
 argument_list|,
 name|addr
 argument_list|)
