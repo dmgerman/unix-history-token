@@ -65,6 +65,7 @@ name|LstNode
 modifier|*
 name|ln
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|d

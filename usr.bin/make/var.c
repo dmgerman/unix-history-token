@@ -163,20 +163,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
-name|VarCmp
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|VarPossiblyExpand
 parameter_list|(
@@ -319,10 +305,12 @@ specifier|static
 name|int
 name|VarCmp
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|v
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|name
@@ -336,6 +324,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 name|Var
 operator|*
 operator|)

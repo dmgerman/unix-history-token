@@ -171,9 +171,11 @@ typedef|typedef
 name|int
 name|CompareProc
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|)
@@ -535,6 +537,7 @@ parameter_list|,
 name|LstNode
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,

@@ -502,9 +502,11 @@ specifier|static
 name|int
 name|ReadMakefile
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|)
@@ -3288,10 +3290,12 @@ specifier|static
 name|Boolean
 name|ReadMakefile
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|q
@@ -3323,9 +3327,13 @@ decl_stmt|;
 name|int
 name|setMAKEFILE
 decl_stmt|;
+comment|/* XXX - remove this once constification is done */
 name|fname
 operator|=
+name|estrdup
+argument_list|(
 name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
