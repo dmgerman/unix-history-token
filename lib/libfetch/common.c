@@ -1920,6 +1920,10 @@ operator|+=
 name|fetchTimeout
 expr_stmt|;
 block|}
+name|total
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|len

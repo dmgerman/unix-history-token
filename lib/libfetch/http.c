@@ -567,6 +567,11 @@ name|bufsize
 operator|=
 name|len
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
