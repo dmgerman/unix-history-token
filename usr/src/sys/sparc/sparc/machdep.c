@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.40 93/04/20 11:16:12 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.6 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.41 93/05/27 04:39:05 torek Exp $  */
 end_comment
 
 begin_include
@@ -120,6 +120,12 @@ begin_include
 include|#
 directive|include
 file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -1252,6 +1258,111 @@ comment|/* actual sigcontext */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * machine dependent system variables.  */
+end_comment
+
+begin_macro
+name|cpu_sysctl
+argument_list|(
+argument|name
+argument_list|,
+argument|namelen
+argument_list|,
+argument|oldp
+argument_list|,
+argument|oldlenp
+argument_list|,
+argument|newp
+argument_list|,
+argument|newlen
+argument_list|,
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|namelen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|oldp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+modifier|*
+name|oldlenp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|newp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|newlen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* all sysctl names are this level are terminal */
+if|if
+condition|(
+name|namelen
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+name|ENOTDIR
+operator|)
+return|;
+comment|/* overloaded */
+switch|switch
+condition|(
+name|name
+index|[
+literal|0
+index|]
+condition|)
+block|{
+default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_block
 
 begin_comment
 comment|/*  * Send an interrupt to process.  */
