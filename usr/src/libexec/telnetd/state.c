@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	5.1 (Berkeley) %G%"
+literal|"@(#)state.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2668,7 +2668,7 @@ if|if
 condition|(
 name|hisopts
 index|[
-name|TELOPT_TSPEED
+name|TELOPT_TTYPE
 index|]
 operator|==
 name|OPT_NO
