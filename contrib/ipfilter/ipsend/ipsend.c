@@ -150,6 +150,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<netinet/ip_compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipsend.h"
 end_include
 

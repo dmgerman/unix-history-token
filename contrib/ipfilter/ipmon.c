@@ -76,6 +76,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -120,6 +126,11 @@ include|#
 directive|include
 file|<sys/byteorder.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
