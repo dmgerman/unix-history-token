@@ -1,16 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.16 (Berkeley) %G%"
+literal|"@(#)ps.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * ps; VAX 4BSD version  */
+comment|/*  * ps  */
 end_comment
 
 begin_include
@@ -52,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dir.h>
 end_include
 
 begin_include
@@ -232,7 +243,6 @@ name|sssav
 modifier|*
 name|ssp
 decl_stmt|;
-comment|/* RAND 2/81 */
 block|}
 name|sun
 union|;
@@ -288,7 +298,7 @@ decl_stmt|;
 name|char
 name|a_tty
 index|[
-name|DIRSIZ
+name|MAXNAMLEN
 operator|+
 literal|1
 index|]
@@ -340,34 +350,22 @@ name|sshdr
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* RAND 2/81 */
-end_comment
-
 begin_struct
 struct|struct
 name|sssav
 block|{
-comment|/* RAND 2/81 */
 name|short
 name|ss_ppid
 decl_stmt|;
-comment|/* RAND 2/81 */
 name|short
 name|ss_brother
 decl_stmt|;
-comment|/* RAND 2/81 */
 name|short
 name|ss_sons
 decl_stmt|;
-comment|/* RAND 2/81 */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* RAND 2/81 */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -439,16 +437,6 @@ name|text
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|paduser1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* avoid hardware mem clobbering botch */
-end_comment
-
 begin_union
 union|union
 block|{
@@ -476,16 +464,6 @@ directive|define
 name|u
 value|user.user
 end_define
-
-begin_decl_stmt
-name|int
-name|paduser2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* avoid hardware mem clobbering botch */
-end_comment
 
 begin_define
 define|#
@@ -521,7 +499,6 @@ name|sflg
 decl_stmt|,
 name|ssflg
 decl_stmt|,
-comment|/* RAND 2/81 */
 name|nonssflg
 decl_stmt|,
 name|uflg
@@ -567,17 +544,40 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|rindex
+argument_list|()
+decl_stmt|,
+modifier|*
+name|calloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|sbrk
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strncat
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|long
+name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* RAND 2/81 */
-end_comment
 
 begin_decl_stmt
 name|double
@@ -652,7 +652,7 @@ block|{
 name|char
 name|name
 index|[
-name|DIRSIZ
+name|MAXNAMLEN
 operator|+
 literal|1
 index|]
@@ -823,7 +823,6 @@ argument_list|,
 literal|'/'
 argument_list|)
 condition|)
-comment|/* RAND 2/81 */
 name|ap
 operator|++
 expr_stmt|;
@@ -845,13 +844,6 @@ condition|)
 comment|/* If name starts with 's' */
 name|ssflg
 operator|++
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
 expr_stmt|;
 name|argc
 operator|--
@@ -1113,7 +1105,6 @@ condition|(
 name|ssflg
 condition|)
 block|{
-comment|/* RAND 2/81 */
 if|if
 condition|(
 name|nonssflg
@@ -1238,8 +1229,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|char
-operator|*
+name|long
 operator|)
 name|procp
 argument_list|,
@@ -1470,7 +1460,6 @@ condition|(
 name|ssflg
 condition|)
 block|{
-comment|/* RAND 2/81 */
 name|walk
 argument_list|(
 name|npr
@@ -1674,7 +1663,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|off_t
+name|unsigned
+name|long
 name|loc
 decl_stmt|;
 end_decl_stmt
@@ -1688,6 +1678,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|long
+operator|)
 name|loc
 argument_list|,
 literal|0
@@ -1699,6 +1692,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|word
 argument_list|,
@@ -1742,9 +1739,17 @@ end_macro
 begin_decl_stmt
 name|int
 name|fd
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|loc
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|off
 decl_stmt|;
 end_decl_stmt
@@ -1759,10 +1764,16 @@ name|loc
 operator|&=
 literal|0x7fffffff
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|long
+operator|)
 name|loc
 argument_list|,
 name|off
@@ -2095,6 +2106,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|nswap
 argument_list|,
@@ -2146,6 +2161,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|maxslp
 argument_list|,
@@ -2197,6 +2216,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ccpu
 argument_list|,
@@ -2248,6 +2271,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ecmx
 argument_list|,
@@ -2355,7 +2382,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|atext
 argument_list|,
@@ -2452,7 +2479,6 @@ name|ssflg
 condition|?
 name|sshdr
 else|:
-comment|/* RAND 2/81 */
 operator|(
 name|lflg
 condition|?
@@ -2506,6 +2532,9 @@ argument_list|,
 name|hdr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -2552,6 +2581,7 @@ end_block
 begin_decl_stmt
 name|struct
 name|direct
+modifier|*
 name|dbuf
 decl_stmt|;
 end_decl_stmt
@@ -2570,15 +2600,9 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|FILE
+name|DIR
 modifier|*
 name|df
-decl_stmt|;
-specifier|register
-name|struct
-name|ttys
-modifier|*
-name|dp
 decl_stmt|;
 name|dialbase
 operator|=
@@ -2590,11 +2614,9 @@ condition|(
 operator|(
 name|df
 operator|=
-name|fopen
+name|opendir
 argument_list|(
 literal|"."
-argument_list|,
-literal|"r"
 argument_list|)
 operator|)
 operator|==
@@ -2616,44 +2638,21 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|fread
-argument_list|(
 operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|dbuf
-argument_list|,
-sizeof|sizeof
+operator|=
+name|readdir
 argument_list|(
-name|dbuf
-argument_list|)
-argument_list|,
-literal|1
-argument_list|,
 name|df
 argument_list|)
-operator|==
-literal|1
+operator|)
+operator|!=
+name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|dbuf
-operator|.
-name|d_ino
-operator|==
-literal|0
-condition|)
-continue|continue;
 name|maybetty
-argument_list|(
-name|dp
-argument_list|)
+argument_list|()
 expr_stmt|;
-block|}
-name|fclose
+name|closedir
 argument_list|(
 name|df
 argument_list|)
@@ -2678,7 +2677,7 @@ modifier|*
 name|cp
 init|=
 name|dbuf
-operator|.
+operator|->
 name|d_name
 decl_stmt|;
 specifier|register
@@ -2739,11 +2738,7 @@ argument_list|,
 literal|"drum"
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 break|break;
 case|case
 literal|'f'
@@ -2758,11 +2753,7 @@ argument_list|,
 literal|"floppy"
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 break|break;
 case|case
 literal|'k'
@@ -2875,11 +2866,7 @@ index|]
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 break|break;
 case|case
@@ -2917,11 +2904,7 @@ index|]
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 if|if
 condition|(
 name|cp
@@ -2938,11 +2921,7 @@ index|]
 operator|==
 literal|'t'
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 break|break;
 case|case
 literal|'n'
@@ -2957,11 +2936,7 @@ argument_list|,
 literal|"null"
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 break|break;
 case|case
 literal|'v'
@@ -2999,41 +2974,20 @@ index|]
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 break|break;
 block|}
-name|mightbe
-label|:
 name|cp
 operator|=
 name|dbuf
-operator|.
+operator|->
 name|d_name
-expr_stmt|;
-while|while
-condition|(
-name|cp
-operator|<
-operator|&
+operator|+
 name|dbuf
-operator|.
-name|d_name
-index|[
-name|DIRSIZ
-index|]
-operator|&&
-operator|*
-name|cp
-condition|)
-name|cp
-operator|++
-expr_stmt|;
-operator|--
-name|cp
+operator|->
+name|d_namlen
+operator|-
+literal|1
 expr_stmt|;
 name|x
 operator|=
@@ -3107,7 +3061,7 @@ condition|(
 name|cp
 operator|>
 name|dbuf
-operator|.
+operator|->
 name|d_name
 operator|&&
 name|isdigit
@@ -3208,17 +3162,18 @@ name|ttys
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strcpy
 argument_list|(
 name|dp
 operator|->
 name|name
 argument_list|,
 name|dbuf
-operator|.
+operator|->
 name|d_name
-argument_list|,
-name|DIRSIZ
 argument_list|)
 expr_stmt|;
 name|dp
@@ -4106,7 +4061,6 @@ condition|(
 operator|!
 name|ssflg
 condition|)
-comment|/* RAND 2/18 */
 name|sp
 operator|->
 name|sun
@@ -4429,10 +4383,6 @@ name|pteaddr
 decl_stmt|,
 name|apte
 decl_stmt|;
-name|int
-name|pad1
-decl_stmt|;
-comment|/* avoid hardware botch */
 name|struct
 name|pte
 name|arguutl
@@ -4442,10 +4392,6 @@ operator|+
 name|CLSIZE
 index|]
 decl_stmt|;
-name|int
-name|pad2
-decl_stmt|;
-comment|/* avoid hardware botch */
 specifier|register
 name|int
 name|i
@@ -4483,10 +4429,16 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|swap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctob
 argument_list|(
 name|mproc
@@ -4594,6 +4546,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pteaddr
 argument_list|,
 literal|0
@@ -4641,10 +4596,16 @@ literal|0
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|mem
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctob
 argument_list|(
 name|apte
@@ -4786,10 +4747,16 @@ name|ncl
 operator|*
 name|CLSIZE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|mem
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctob
 argument_list|(
 name|arguutl
@@ -4875,10 +4842,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|int
-name|pad1
-decl_stmt|;
-comment|/* avoid hardware botch */
 union|union
 block|{
 name|char
@@ -4905,10 +4868,6 @@ decl_stmt|;
 block|}
 name|argspac
 union|;
-name|int
-name|pad2
-decl_stmt|;
-comment|/* avoid hardware botch */
 specifier|register
 name|char
 modifier|*
@@ -4957,6 +4916,9 @@ condition|(
 name|cflg
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|cmdbuf
@@ -5016,10 +4978,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|swap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctob
 argument_list|(
 name|db
@@ -5060,10 +5028,16 @@ goto|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|mem
 argument_list|,
+operator|(
+name|long
+operator|)
 name|argaddr
 argument_list|,
 literal|0
@@ -5296,6 +5270,9 @@ operator|*
 operator|)
 name|ip
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|cmdbuf
@@ -5339,6 +5316,9 @@ operator|<=
 literal|' '
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cmdbuf
@@ -5346,6 +5326,9 @@ argument_list|,
 literal|" ("
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncat
 argument_list|(
 name|cmdbuf
@@ -5362,6 +5345,9 @@ name|u_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cmdbuf
@@ -5394,6 +5380,9 @@ argument_list|)
 expr_stmt|;
 name|retucomm
 label|:
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|cmdbuf
@@ -5401,6 +5390,9 @@ argument_list|,
 literal|" ("
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncat
 argument_list|(
 name|cmdbuf
@@ -5417,6 +5409,9 @@ name|u_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cmdbuf
@@ -6864,6 +6859,9 @@ literal|0
 index|]
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|names
@@ -6964,6 +6962,10 @@ operator|*
 operator|)
 name|sbrk
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|i
 operator|=
 name|size
@@ -6973,6 +6975,7 @@ condition|?
 name|size
 else|:
 literal|2048
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7084,6 +7087,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dp
@@ -7579,9 +7585,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|long
-name|tm
-decl_stmt|;
 if|if
 condition|(
 operator|!

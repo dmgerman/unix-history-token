@@ -124,7 +124,7 @@ begin_decl_stmt
 name|CHAR
 name|isymbol
 index|[
-name|BSIZE
+literal|1024
 index|]
 decl_stmt|;
 end_decl_stmt

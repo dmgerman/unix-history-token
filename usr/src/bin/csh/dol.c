@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c 4.2 %G%"
+literal|"@(#)dol.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,7 +1121,7 @@ name|dimen
 init|=
 literal|0
 decl_stmt|,
-name|isset
+name|bitset
 init|=
 literal|0
 decl_stmt|;
@@ -1188,7 +1188,7 @@ name|c
 operator|==
 literal|'?'
 condition|)
-name|isset
+name|bitset
 operator|++
 operator|,
 name|c
@@ -1211,7 +1211,7 @@ if|if
 condition|(
 name|dimen
 operator|||
-name|isset
+name|bitset
 condition|)
 goto|goto
 name|syntax
@@ -1234,7 +1234,7 @@ if|if
 condition|(
 name|dimen
 operator|||
-name|isset
+name|bitset
 condition|)
 goto|goto
 name|syntax
@@ -1423,7 +1423,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|isset
+name|bitset
 condition|)
 block|{
 name|dolp
@@ -1460,7 +1460,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|isset
+name|bitset
 condition|)
 goto|goto
 name|syntax
@@ -1571,7 +1571,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isset
+name|bitset
 condition|)
 block|{
 name|dolp

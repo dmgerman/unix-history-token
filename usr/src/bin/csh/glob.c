@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c 4.3 %G%"
+literal|"@(#)glob.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_comment
