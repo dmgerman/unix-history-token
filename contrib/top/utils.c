@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  */
+comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -978,12 +978,56 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * errmsg(errnum) - return an error message string appropriate to the  *           error number "errnum".  This is a substitute for the System V  *           function "strerror" with one important difference:  the string  *           returned by this function does NOT end in a newline!  *           N.B.:  there appears to be no reliable way to determine if  *           "strerror" exists at compile time, so I make do by providing  *           something of similar functionality.  */
+comment|/*  * errmsg(errnum) - return an error message string appropriate to the  *           error number "errnum".  This is a substitute for the System V  *           function "strerror".  There appears to be no reliable way to  *           determine if "strerror" exists at compile time, so I make do  *           by providing something of similar functionality.  For those  *           systems that have strerror and NOT errlist, define  *           -DHAVE_STRERROR in the module file and this function will  *           use strerror.  */
 end_comment
 
 begin_comment
 comment|/* externs referenced by errmsg */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRERROR
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_ERRLIST_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYS_ERRLIST_DECLARED
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|char
@@ -996,6 +1040,31 @@ name|int
 name|errnum
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_STRERROR
+name|char
+modifier|*
+name|msg
+init|=
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|msg
+operator|!=
+name|NULL
+condition|)
+block|{
+return|return
+name|msg
+return|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|errnum
@@ -1020,6 +1089,8 @@ index|]
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|"No error"

@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  */
+comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
 comment|/*  *  Username translation code for top.  *  *  These routines handle uid to username mapping.  *  They use a hashing table scheme to reduce reading overhead.  *  For the time being, these are very straightforward hashing routines.  *  Maybe someday I'll put in something better.  But with the advent of  *  "random access" password files, it might not be worth the effort.  *  *  Changes to these have been provided by John Gilmore (gnu@toad.com).  *  *  The hash has been simplified in this release, to avoid the  *  table overflow problems of previous releases.  If the value  *  at the initial hash location is not right, it is replaced  *  by the right value.  Collisions will cause us to call getpw*  *  but hey, this is a cache, not the Library of Congress.  *  This makes the table size independent of the passwd file size.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#

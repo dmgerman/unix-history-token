@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  */
+comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -394,7 +394,7 @@ name|errs
 comment|/* structure for a system-call error */
 block|{
 name|int
-name|error
+name|errnum
 decl_stmt|;
 comment|/* value of errno (that is, the actual error) */
 name|char
@@ -464,7 +464,7 @@ name|p
 parameter_list|,
 name|e
 parameter_list|)
-value|if (errcnt>= ERRMAX) \ 		    { \ 			return(err_toomany); \ 		    } \ 		    else \ 		    { \ 			errs[errcnt].arg = (p); \ 			errs[errcnt++].error = (e); \ 		    }
+value|if (errcnt>= ERRMAX) \ 		    { \ 			return(err_toomany); \ 		    } \ 		    else \ 		    { \ 			errs[errcnt].arg = (p); \ 			errs[errcnt++].errnum = (e); \ 		    }
 end_define
 
 begin_comment
@@ -598,7 +598,7 @@ if|if
 condition|(
 name|errp
 operator|->
-name|error
+name|errnum
 operator|!=
 name|currerr
 condition|)
@@ -651,7 +651,7 @@ name|currerr
 operator|=
 name|errp
 operator|->
-name|error
+name|errnum
 expr_stmt|;
 name|first
 operator|=
@@ -980,11 +980,11 @@ name|result
 operator|=
 name|p1
 operator|->
-name|error
+name|errnum
 operator|-
 name|p2
 operator|->
-name|error
+name|errnum
 operator|)
 operator|==
 literal|0
@@ -1090,7 +1090,7 @@ name|arg
 argument_list|,
 name|errp
 operator|->
-name|error
+name|errnum
 operator|==
 literal|0
 condition|?
@@ -1100,7 +1100,7 @@ name|errmsg
 argument_list|(
 name|errp
 operator|->
-name|error
+name|errnum
 argument_list|)
 argument_list|)
 expr_stmt|;
