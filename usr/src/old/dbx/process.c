@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.4 (Berkeley) %G%"
+literal|"@(#)process.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1248,14 +1248,14 @@ end_typedef
 
 begin_decl_stmt
 name|private
-name|Intfunc
-modifier|*
+name|sig_t
 name|dbintr
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 name|private
+name|void
 name|intr
 parameter_list|()
 function_decl|;
@@ -1381,6 +1381,7 @@ end_comment
 
 begin_function
 name|private
+name|void
 name|intr
 parameter_list|()
 block|{
@@ -3922,8 +3923,7 @@ end_comment
 
 begin_decl_stmt
 name|private
-name|Intfunc
-modifier|*
+name|sig_t
 name|sigfunc
 index|[
 name|NSIG

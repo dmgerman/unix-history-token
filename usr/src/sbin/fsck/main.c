@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.13 (Berkeley) %G%"
+literal|"@(#)main.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|catch
 argument_list|()
 decl_stmt|,
@@ -150,17 +150,6 @@ name|int
 name|returntosingle
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|int
-argument_list|(
-operator|*
-name|signal
-argument_list|()
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dc.c	4.6	(Berkeley)	%G%"
+literal|"@(#)dc.c	4.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5483,12 +5483,10 @@ return|return;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -5535,7 +5533,7 @@ name|commnds
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|pushp
@@ -9065,15 +9063,13 @@ modifier|*
 name|sl
 decl_stmt|;
 specifier|register
-argument_list|(
-operator|*
-name|savint
-argument_list|)
-argument_list|()
-decl_stmt|,
+name|int
 name|pid
 decl_stmt|,
 name|rpid
+decl_stmt|;
+name|sig_t
+name|savint
 decl_stmt|;
 name|int
 name|retcode

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.16 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,18 +24,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -71,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|<ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -2408,12 +2408,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|catch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|ckfini
 argument_list|()
@@ -2424,18 +2422,16 @@ literal|12
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When preening, allow a single quit to signal  * a special exit after filesystem checks complete  * so that reboot sequence may be interrupted.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|catchquit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 extern|extern returntosingle;
 name|printf
@@ -2458,18 +2454,16 @@ name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Ignore a single quit signal; wait and flush just in case.  * Used by child processes in preen.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|voidquit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|sleep
 argument_list|(
@@ -2497,7 +2491,7 @@ name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * determine whether an inode should be fixed.  */

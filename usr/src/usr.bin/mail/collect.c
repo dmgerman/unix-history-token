@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.19 (Berkeley) %G%"
+literal|"@(#)collect.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,76 +52,56 @@ begin_comment
 comment|/*  * The following hokiness with global variables is so that on  * receipt of an interrupt signal, the partial message can be salted  * away on dead.letter.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|saveint
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Previous SIGINT value */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|savehup
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Previous SIGHUP value */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|savetstp
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Previous SIGTSTP value */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|savettou
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Previous SIGTTOU value */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|savettin
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Previous SIGTTIN value */
@@ -1777,12 +1757,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigint
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -1790,7 +1766,7 @@ name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
-function_decl|;
+decl_stmt|;
 name|FILE
 modifier|*
 name|nf
@@ -1885,12 +1861,8 @@ name|FILE
 modifier|*
 name|nf
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigint
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -1898,7 +1870,7 @@ name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
-function_decl|;
+decl_stmt|;
 specifier|extern
 name|char
 name|tempEdit
@@ -2336,12 +2308,8 @@ end_macro
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|old_action
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -2349,7 +2317,7 @@ name|s
 argument_list|,
 name|SIG_DFL
 argument_list|)
-function_decl|;
+decl_stmt|;
 name|sigsetmask
 argument_list|(
 name|sigblock

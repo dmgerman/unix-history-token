@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.10 (Berkeley) %G%"
+literal|"@(#)compress.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,15 +1608,11 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|oldint
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1690,19 +1686,14 @@ name|struct
 name|stat
 name|statbuf
 decl_stmt|;
-extern|extern onintr(
-block|)
-operator|,
-function|oops
-parameter_list|()
-function|;
-end_function
-
-begin_comment
+name|void
+name|onintr
+argument_list|()
+decl_stmt|,
+name|oops
+argument_list|()
+decl_stmt|;
 comment|/* This bg check only works for sh. */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1734,28 +1725,16 @@ name|oops
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|bgnd_flag
 operator|=
 name|oldint
 operator|!=
 name|SIG_DFL
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|notdef
-end_ifdef
-
-begin_comment
 comment|/* This works for csh but we don't want it. */
-end_comment
-
-begin_block
 block|{
 name|int
 name|tgrp
@@ -1794,40 +1773,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|COMPATIBLE
-end_ifdef
-
-begin_expr_stmt
 name|nomagic
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Original didn't have a magic number */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* COMPATIBLE */
-end_comment
-
-begin_expr_stmt
 name|filelist
 operator|=
 name|fileptr
@@ -1850,17 +1808,11 @@ argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|*
 name|filelist
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1894,9 +1846,6 @@ literal|0
 index|]
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|strcmp
@@ -1936,40 +1885,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|BSD4_2
-end_ifdef
-
-begin_comment
 comment|/* 4.2BSD dependent - take it out if not */
-end_comment
-
-begin_expr_stmt
 name|setlinebuf
 argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* BSD4_2 */
-end_comment
-
-begin_comment
 comment|/* Argument Processing      * All flags are optional.      * -D => debug      * -V => print Version; debug verbose      * -d => do_decomp      * -v => unquiet      * -f => force overwrite of output file      * -n => no header: useful to uncompress old files      * -b maxbits => maxbits.  If -b is specified, then maxbits MUST be      *	    given also.      * -c => cat all output to stdout      * -C => generate output compatible with compress 2.0.      * if a string is left, must be an input filename.      */
-end_comment
-
-begin_for
 for|for
 control|(
 name|argc
@@ -2196,9 +2124,6 @@ name|nextarg
 label|:
 continue|continue;
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|maxbits
@@ -2209,9 +2134,6 @@ name|maxbits
 operator|=
 name|INIT_BITS
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|maxbits
@@ -2222,18 +2144,12 @@ name|maxbits
 operator|=
 name|BITS
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|maxmaxcode
 operator|=
 literal|1
 operator|<<
 name|maxbits
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|*
@@ -3168,9 +3084,6 @@ directive|endif
 comment|/* DEBUG */
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|exit
 argument_list|(
 name|perm_stat
@@ -3180,10 +3093,11 @@ else|:
 name|exit_stat
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_decl_stmt
-unit|}  static
+specifier|static
 name|int
 name|offset
 decl_stmt|;
@@ -6048,8 +5962,9 @@ name|ofname
 argument_list|)
 expr_stmt|;
 block|}
+name|void
 name|onintr
-argument_list|( )
+parameter_list|( )
 block|{
 if|if
 condition|(
@@ -6067,8 +5982,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|void
 name|oops
-argument_list|( )
+parameter_list|( )
 comment|/* wild pointer -- assume bad input */
 block|{
 if|if
@@ -6685,7 +6601,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, Berkeley 5.10 %G%\n"
+literal|"%s, Berkeley 5.11 %G%\n"
 argument_list|,
 name|rcs_ident
 argument_list|)

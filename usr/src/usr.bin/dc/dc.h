@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dc.h	1.3	86/04/26	*/
+comment|/*	dc.h	1.4	89/09/15	*/
 end_comment
 
 begin_define
@@ -904,19 +904,8 @@ name|pp
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|int
-argument_list|(
-operator|*
-name|signal
-argument_list|()
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
-name|int
+name|void
 name|onintr
 parameter_list|()
 function_decl|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.9 (Berkeley) %G%"
+literal|"@(#)tape.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,25 +1043,23 @@ decl_stmt|;
 name|int
 name|waitpid
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|interrupt
-function_decl|)
-parameter_list|()
-init|=
+decl_stmt|;
+name|int
+name|blks
+decl_stmt|,
+name|i
+decl_stmt|;
+name|interrupt
+operator|=
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
-function_decl|;
-name|int
-name|blks
-decl_stmt|,
-name|i
-decl_stmt|;
+expr_stmt|;
 name|parentpid
 operator|=
 name|getpid
@@ -1069,6 +1067,9 @@ argument_list|()
 expr_stmt|;
 name|restore_check_point
 label|:
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
