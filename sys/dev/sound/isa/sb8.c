@@ -38,7 +38,7 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|SB_BUFFSIZE
+name|SB_DEFAULT_BUFSZ
 value|4096
 end_define
 
@@ -250,6 +250,10 @@ name|ih
 decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsize
 decl_stmt|;
 name|int
 name|bd_id
@@ -1247,6 +1251,16 @@ operator|->
 name|drq
 condition|)
 block|{
+name|isa_dma_release
+argument_list|(
+name|rman_get_start
+argument_list|(
+name|sb
+operator|->
+name|drq
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1459,11 +1473,6 @@ operator|->
 name|irq
 condition|)
 block|{
-name|int
-name|bs
-init|=
-name|SB_BUFFSIZE
-decl_stmt|;
 name|isa_dma_acquire
 argument_list|(
 name|rman_get_start
@@ -1483,7 +1492,9 @@ operator|->
 name|drq
 argument_list|)
 argument_list|,
-name|bs
+name|sb
+operator|->
+name|bufsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -2811,7 +2822,9 @@ name|sb
 operator|->
 name|parent_dmat
 argument_list|,
-name|SB_BUFFSIZE
+name|sb
+operator|->
+name|bufsize
 argument_list|)
 operator|==
 operator|-
@@ -3370,11 +3383,6 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-name|int
-name|bs
-init|=
-name|SB_BUFFSIZE
-decl_stmt|;
 name|uintptr_t
 name|ver
 decl_stmt|;
@@ -3449,6 +3457,21 @@ literal|0xffff0000
 operator|)
 operator|>>
 literal|16
+expr_stmt|;
+name|sb
+operator|->
+name|bufsize
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|SB_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3561,7 +3584,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|bs
+name|sb
+operator|->
+name|bufsize
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -3598,7 +3623,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld drq %ld"
+literal|"at io 0x%lx irq %ld drq %ld bufsz %u"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -3620,6 +3645,10 @@ name|sb
 operator|->
 name|drq
 argument_list|)
+argument_list|,
+name|sb
+operator|->
+name|bufsize
 argument_list|)
 expr_stmt|;
 if|if
