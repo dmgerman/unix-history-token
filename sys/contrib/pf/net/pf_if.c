@@ -944,6 +944,9 @@ argument_list|,
 name|pfi_clone_cookie
 argument_list|)
 expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
 name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
@@ -995,7 +998,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|PF_LOCK
+name|IFNET_RUNLOCK
 argument_list|()
 expr_stmt|;
 name|pfi_detach_ifnet
@@ -1003,15 +1006,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|PF_UNLOCK
+name|IFNET_RLOCK
 argument_list|()
 expr_stmt|;
 block|}
 block|}
 name|IFNET_RUNLOCK
-argument_list|()
-expr_stmt|;
-name|PF_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* XXX clear all other interface group */
