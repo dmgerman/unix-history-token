@@ -196,7 +196,7 @@ modifier|*
 name|mpc
 parameter_list|)
 function_decl|;
-comment|/* 	 * General policy-directed security system call so that policies 	 * may implement new services without reserving explicit 	 * system call numbers. 	 */
+comment|/* 	 * General policy-directed security system call so that policies may 	 * implement new services without reserving explicit system call 	 * numbers. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -216,7 +216,7 @@ modifier|*
 name|arg
 parameter_list|)
 function_decl|;
-comment|/* 	 * Label operations. 	 */
+comment|/* 	 * Label operations.  Initialize label storage, destroy label 	 * storage, recycle for re-use without init/destroy, copy a label to 	 * initialized storage, and externalize/internalize from/to 	 * initialized storage. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -3886,6 +3886,10 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * struct mac_policy_conf is the registration structure for policies, and is  * provided to the MAC Framework using MAC_POLICY_SET() to invoke a SYSINIT  * to register the policy.  In general, the fields are immutable, with the  * exception of the "security field", run-time flags, and policy list entry,  * which are managed by the MAC Framework.  Be careful when modifying this  * structure, as its layout is statically compiled into all policies.  */
+end_comment
 
 begin_struct
 struct|struct
