@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyget.c 1.2 %G%"
+literal|"@(#)yyget.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1129,6 +1129,19 @@ name|ip
 operator|->
 name|Printed
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ
+comment|/* 	 * For the debugger pdx, we need to note that we've changed files. 	 */
+name|newfile
+argument_list|(
+name|filename
+argument_list|,
+name|yyline
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PC
