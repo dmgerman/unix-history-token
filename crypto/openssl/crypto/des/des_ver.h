@@ -13,11 +13,54 @@ directive|include
 file|<openssl/e_os2.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_BUILD_SHLIBCRYPTO
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_EXTERN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_EXTERN
+value|OPENSSL_EXPORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The following macros make sure the names are different from libdes names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DES_version
+value|OSSL_DES_version
+end_define
+
+begin_define
+define|#
+directive|define
+name|libdes_version
+value|OSSL_libdes_version
+end_define
+
 begin_decl_stmt
 name|OPENSSL_EXTERN
+specifier|const
 name|char
 modifier|*
-name|DES_version
+name|OSSL_DES_version
 decl_stmt|;
 end_decl_stmt
 
@@ -27,9 +70,10 @@ end_comment
 
 begin_decl_stmt
 name|OPENSSL_EXTERN
+specifier|const
 name|char
 modifier|*
-name|libdes_version
+name|OSSL_libdes_version
 decl_stmt|;
 end_decl_stmt
 

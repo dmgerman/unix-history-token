@@ -548,7 +548,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|512
+literal|520
 index|]
 decl_stmt|;
 name|char
@@ -568,7 +568,7 @@ name|unsigned
 name|char
 name|iv
 index|[
-literal|8
+name|EVP_MAX_IV_LENGTH
 index|]
 decl_stmt|;
 name|unsigned

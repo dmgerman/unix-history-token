@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_include
@@ -51,6 +51,7 @@ name|EVP_CIPHER_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|type
@@ -104,11 +105,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|EVP_DecryptInit
+name|EVP_DecryptInit_ex
 argument_list|(
 name|ctx
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -229,9 +232,11 @@ block|}
 if|if
 condition|(
 operator|!
-name|EVP_DecryptInit
+name|EVP_DecryptInit_ex
 argument_list|(
 name|ctx
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -255,11 +260,9 @@ name|key
 operator|!=
 name|NULL
 condition|)
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|size
 argument_list|)
@@ -300,7 +303,7 @@ name|i
 decl_stmt|;
 name|i
 operator|=
-name|EVP_DecryptFinal
+name|EVP_DecryptFinal_ex
 argument_list|(
 name|ctx
 argument_list|,
@@ -309,9 +312,11 @@ argument_list|,
 name|outl
 argument_list|)
 expr_stmt|;
-name|EVP_DecryptInit
+name|EVP_DecryptInit_ex
 argument_list|(
 name|ctx
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -334,7 +339,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !NO_RSA */
+comment|/* !OPENSSL_NO_RSA */
 end_comment
 
 begin_ifdef

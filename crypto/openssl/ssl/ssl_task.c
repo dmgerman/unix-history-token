@@ -87,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"openssl/e_os.h"
+file|"e_os.h"
 end_include
 
 begin_include
@@ -802,18 +802,6 @@ decl_stmt|;
 name|struct
 name|rpc_msg
 name|msg
-decl_stmt|;
-specifier|static
-name|char
-name|cbuf
-index|[
-literal|200
-index|]
-decl_stmt|,
-name|sbuf
-index|[
-literal|200
-index|]
 decl_stmt|;
 name|SSL
 modifier|*

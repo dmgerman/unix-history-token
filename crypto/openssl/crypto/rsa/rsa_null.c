@@ -53,6 +53,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -81,6 +82,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -109,6 +111,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -137,6 +140,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -168,7 +172,7 @@ comment|/* not currently used */
 end_comment
 
 begin_endif
-unit|static int RSA_null_mod_exp(BIGNUM *r0, BIGNUM *i, RSA *rsa);
+unit|static int RSA_null_mod_exp(const BIGNUM *r0, const BIGNUM *i, RSA *rsa);
 endif|#
 directive|endif
 end_endif
@@ -229,6 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|RSA_METHOD
 modifier|*
 name|RSA_null_method
@@ -253,6 +258,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -293,6 +299,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -333,6 +340,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -373,6 +381,7 @@ parameter_list|(
 name|int
 name|flen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

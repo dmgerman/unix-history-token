@@ -25,23 +25,23 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSDOS
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMS
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<openssl/opensslconf.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_MSDOS
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_VMS
+end_ifndef
 
 begin_include
 include|#
@@ -55,7 +55,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VMS */
+comment|/* OPENSSL_SYS_VMS */
 end_comment
 
 begin_ifdef
@@ -100,7 +100,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VMS */
+comment|/* OPENSSL_SYS_VMS */
 end_comment
 
 begin_else
@@ -109,7 +109,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* MSDOS */
+comment|/* OPENSSL_SYS_MSDOS */
 end_comment
 
 begin_include
@@ -138,7 +138,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 end_ifdef
 
 begin_include
@@ -196,6 +196,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/rand.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/ui_compat.h>
 end_include
 
 begin_function_decl
@@ -315,30 +321,30 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|des_3cbc_encrypt
+name|DES_3cbc_encrypt
 parameter_list|(
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|input
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|output
 parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
 name|sk1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
 name|sk2
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec1
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec2
 parameter_list|,
@@ -351,7 +357,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 end_ifdef
 
 begin_define
@@ -512,7 +518,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|des_cblock
+name|DES_cblock
 name|cksum
 init|=
 block|{
@@ -739,6 +745,18 @@ argument_list|,
 literal|200
 argument_list|)
 expr_stmt|;
+name|cksumname
+index|[
+sizeof|sizeof
+argument_list|(
+name|cksumname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|p
 operator|+=
 name|strlen
@@ -766,6 +784,18 @@ name|p
 argument_list|,
 literal|200
 argument_list|)
+expr_stmt|;
+name|cksumname
+index|[
+sizeof|sizeof
+argument_list|(
+name|cksumname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|p
 operator|+=
@@ -862,6 +892,18 @@ name|p
 argument_list|,
 literal|200
 argument_list|)
+expr_stmt|;
+name|uuname
+index|[
+sizeof|sizeof
+argument_list|(
+name|uuname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|p
 operator|+=
@@ -1126,7 +1168,7 @@ operator|)
 operator|&&
 ifndef|#
 directive|ifndef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 operator|(
 name|stat
 argument_list|(
@@ -1175,7 +1217,7 @@ operator|)
 condition|)
 else|#
 directive|else
-comment|/* MSDOS */
+comment|/* OPENSSL_SYS_MSDOS */
 operator|(
 name|strcmp
 argument_list|(
@@ -1344,7 +1386,7 @@ end_if
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 end_ifdef
 
 begin_comment
@@ -1568,12 +1610,12 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|des_key_schedule
+name|DES_key_schedule
 name|ks
 decl_stmt|,
 name|ks2
 decl_stmt|;
-name|des_cblock
+name|DES_cblock
 name|iv
 decl_stmt|,
 name|iv2
@@ -1605,7 +1647,7 @@ name|ex
 init|=
 literal|0
 decl_stmt|;
-name|des_cblock
+name|DES_cblock
 name|kk
 decl_stmt|,
 name|k2
@@ -1621,7 +1663,7 @@ literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 specifier|static
 name|unsigned
 name|char
@@ -1981,19 +2023,18 @@ operator|=
 name|k
 expr_stmt|;
 block|}
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|k2
 argument_list|,
+operator|&
 name|ks2
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|k2
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2015,7 +2056,7 @@ condition|(
 name|flag3
 condition|)
 block|{
-name|des_string_to_2keys
+name|DES_string_to_2keys
 argument_list|(
 name|key
 argument_list|,
@@ -2026,19 +2067,18 @@ operator|&
 name|k2
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|k2
 argument_list|,
+operator|&
 name|ks2
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|k2
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2048,7 +2088,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|des_string_to_key
+name|DES_string_to_key
 argument_list|(
 name|key
 argument_list|,
@@ -2143,19 +2183,18 @@ operator||
 literal|0x80
 expr_stmt|;
 block|}
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|kk
 argument_list|,
+operator|&
 name|ks
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2163,11 +2202,9 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|kk
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2348,7 +2385,7 @@ condition|(
 name|cflag
 condition|)
 block|{
-name|des_cbc_cksum
+name|DES_cbc_cksum
 argument_list|(
 name|buf
 argument_list|,
@@ -2360,6 +2397,7 @@ name|long
 operator|)
 name|len
 argument_list|,
+operator|&
 name|ks
 argument_list|,
 operator|&
@@ -2405,10 +2443,10 @@ name|i
 operator|+=
 literal|8
 control|)
-name|des_ecb_encrypt
+name|DES_ecb_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2420,7 +2458,7 @@ index|]
 operator|)
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2431,6 +2469,7 @@ name|i
 index|]
 operator|)
 argument_list|,
+operator|&
 name|ks
 argument_list|,
 name|do_encrypt
@@ -2457,10 +2496,10 @@ name|i
 operator|+=
 literal|8
 control|)
-name|des_ecb2_encrypt
+name|DES_ecb2_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2472,7 +2511,7 @@ index|]
 operator|)
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2483,8 +2522,10 @@ name|i
 index|]
 operator|)
 argument_list|,
+operator|&
 name|ks
 argument_list|,
+operator|&
 name|ks2
 argument_list|,
 name|do_encrypt
@@ -2528,16 +2569,16 @@ operator|)
 name|rem
 argument_list|)
 expr_stmt|;
-name|des_3cbc_encrypt
+name|DES_3cbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 name|buf
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 name|obuf
@@ -2586,7 +2627,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 name|buf
 argument_list|,
@@ -2597,6 +2638,7 @@ name|long
 operator|)
 name|l
 argument_list|,
+operator|&
 name|ks
 argument_list|,
 operator|&
@@ -2858,10 +2900,10 @@ name|i
 operator|+=
 literal|8
 control|)
-name|des_ecb_encrypt
+name|DES_ecb_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2873,7 +2915,7 @@ index|]
 operator|)
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2884,6 +2926,7 @@ name|i
 index|]
 operator|)
 argument_list|,
+operator|&
 name|ks
 argument_list|,
 name|do_encrypt
@@ -2910,10 +2953,10 @@ name|i
 operator|+=
 literal|8
 control|)
-name|des_ecb2_encrypt
+name|DES_ecb2_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2925,7 +2968,7 @@ index|]
 operator|)
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 operator|&
@@ -2936,8 +2979,10 @@ name|i
 index|]
 operator|)
 argument_list|,
+operator|&
 name|ks
 argument_list|,
+operator|&
 name|ks2
 argument_list|,
 name|do_encrypt
@@ -2952,16 +2997,16 @@ operator|!
 name|bflag
 condition|)
 block|{
-name|des_3cbc_encrypt
+name|DES_3cbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 name|buf
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 name|obuf
@@ -2987,7 +3032,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|des_cbc_encrypt
+name|DES_cbc_encrypt
 argument_list|(
 name|buf
 argument_list|,
@@ -2998,6 +3043,7 @@ name|long
 operator|)
 name|l
 argument_list|,
+operator|&
 name|ks
 argument_list|,
 operator|&
@@ -3158,12 +3204,12 @@ if|if
 condition|(
 name|cflag
 condition|)
-name|des_cbc_cksum
+name|DES_cbc_cksum
 argument_list|(
 name|obuf
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 name|cksum
@@ -3177,10 +3223,11 @@ literal|8
 operator|*
 literal|8
 argument_list|,
+operator|&
 name|ks
 argument_list|,
 operator|(
-name|des_cblock
+name|DES_cblock
 operator|*
 operator|)
 name|cksum
@@ -3347,11 +3394,9 @@ expr_stmt|;
 block|}
 name|problems
 label|:
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3359,11 +3404,9 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|obuf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3371,11 +3414,10 @@ name|obuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
+operator|&
 name|ks
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3383,11 +3425,10 @@ name|ks
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
+operator|&
 name|ks2
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3395,11 +3436,9 @@ name|ks2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|iv
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3407,11 +3446,9 @@ name|iv
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|iv2
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3419,11 +3456,9 @@ name|iv2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|kk
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3431,11 +3466,9 @@ name|kk
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|k2
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3443,11 +3476,9 @@ name|k2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|uubuf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3455,11 +3486,9 @@ name|uubuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|b
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3467,11 +3496,9 @@ name|b
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|bb
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3479,11 +3506,9 @@ name|bb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|cksum
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

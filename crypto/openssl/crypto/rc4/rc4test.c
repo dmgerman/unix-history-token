@@ -25,10 +25,16 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_RC4
+name|OPENSSL_NO_RC4
 end_ifdef
 
 begin_function
@@ -1362,7 +1368,7 @@ argument_list|(
 literal|"done\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

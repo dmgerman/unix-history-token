@@ -22,7 +22,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_DES
+name|OPENSSL_NO_DES
 end_ifdef
 
 begin_include

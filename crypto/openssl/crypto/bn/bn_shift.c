@@ -33,6 +33,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -223,6 +224,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -431,6 +433,12 @@ name|a
 operator|->
 name|neg
 expr_stmt|;
+name|nw
+operator|=
+name|n
+operator|/
+name|BN_BITS2
+expr_stmt|;
 if|if
 condition|(
 name|bn_wexpand
@@ -441,11 +449,7 @@ name|a
 operator|->
 name|top
 operator|+
-operator|(
-name|n
-operator|/
-name|BN_BITS2
-operator|)
+name|nw
 operator|+
 literal|1
 argument_list|)
@@ -457,12 +461,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|nw
-operator|=
-name|n
-operator|/
-name|BN_BITS2
-expr_stmt|;
 name|lb
 operator|=
 name|n
@@ -643,6 +641,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a

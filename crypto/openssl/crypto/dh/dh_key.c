@@ -37,6 +37,12 @@ directive|include
 file|<openssl/dh.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -59,6 +65,7 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|pub_key
@@ -75,6 +82,7 @@ specifier|static
 name|int
 name|dh_bn_mod_exp
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|dh
@@ -83,6 +91,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a
@@ -163,6 +172,7 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|pub_key
@@ -215,6 +225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|DH_METHOD
 modifier|*
 name|DH_OpenSSL
@@ -253,6 +264,7 @@ name|unsigned
 name|l
 decl_stmt|;
 name|BN_CTX
+modifier|*
 name|ctx
 decl_stmt|;
 name|BN_MONT_CTX
@@ -270,12 +282,20 @@ name|priv_key
 init|=
 name|NULL
 decl_stmt|;
-name|BN_CTX_init
-argument_list|(
-operator|&
 name|ctx
-argument_list|)
+operator|=
+name|BN_CTX_new
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ctx
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|dh
@@ -395,7 +415,6 @@ name|dh
 operator|->
 name|p
 argument_list|,
-operator|&
 name|ctx
 argument_list|)
 condition|)
@@ -479,7 +498,6 @@ name|dh
 operator|->
 name|p
 argument_list|,
-operator|&
 name|ctx
 argument_list|,
 name|mont
@@ -563,7 +581,6 @@ argument_list|)
 expr_stmt|;
 name|BN_CTX_free
 argument_list|(
-operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
@@ -585,6 +602,7 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|pub_key
@@ -595,6 +613,7 @@ name|dh
 parameter_list|)
 block|{
 name|BN_CTX
+modifier|*
 name|ctx
 decl_stmt|;
 name|BN_MONT_CTX
@@ -611,15 +630,22 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|BN_CTX_init
-argument_list|(
-operator|&
 name|ctx
-argument_list|)
+operator|=
+name|BN_CTX_new
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ctx
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|BN_CTX_start
 argument_list|(
-operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
@@ -627,7 +653,6 @@ name|tmp
 operator|=
 name|BN_CTX_get
 argument_list|(
-operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
@@ -704,7 +729,6 @@ name|dh
 operator|->
 name|p
 argument_list|,
-operator|&
 name|ctx
 argument_list|)
 condition|)
@@ -745,7 +769,6 @@ name|dh
 operator|->
 name|p
 argument_list|,
-operator|&
 name|ctx
 argument_list|,
 name|mont
@@ -776,13 +799,11 @@ name|err
 label|:
 name|BN_CTX_end
 argument_list|(
-operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
 name|BN_CTX_free
 argument_list|(
-operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
@@ -799,6 +820,7 @@ specifier|static
 name|int
 name|dh_bn_mod_exp
 parameter_list|(
+specifier|const
 name|DH
 modifier|*
 name|dh
@@ -807,6 +829,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|a

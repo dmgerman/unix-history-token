@@ -303,6 +303,18 @@ name|err
 label|:
 end_label
 
+begin_if
+if|if
+condition|(
+name|ret
+condition|)
+name|sk_free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
+end_if
+
 begin_return
 return|return
 operator|(
@@ -400,7 +412,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|err0
+name|err
 goto|;
 if|if
 condition|(
@@ -429,7 +441,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 for|for
 control|(
@@ -482,15 +494,17 @@ operator|(
 name|ret
 operator|)
 return|;
-name|err1
+name|err
 label|:
+if|if
+condition|(
+name|ret
+condition|)
 name|OPENSSL_free
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
-name|err0
-label|:
 return|return
 operator|(
 name|NULL
@@ -1664,6 +1678,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|st
+operator|&&
 operator|!
 name|st
 operator|->

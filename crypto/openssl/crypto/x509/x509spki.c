@@ -29,12 +29,6 @@ directive|include
 file|<openssl/x509.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/asn1_mac.h>
-end_include
-
 begin_function
 name|int
 name|NETSCAPE_SPKI_set_pubkey

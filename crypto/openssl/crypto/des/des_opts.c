@@ -17,14 +17,14 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 operator|&&
 operator|(
 operator|!
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|||
 name|defined
@@ -32,6 +32,12 @@ argument_list|(
 name|__DECC
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MACOSX
+argument_list|)
 end_if
 
 begin_define
@@ -54,7 +60,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 end_ifndef
 
 begin_include
@@ -148,12 +154,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__DECC
+name|OPENSSL_SYS_VMS_DECC
 argument_list|)
 operator|&&
 operator|!
@@ -342,28 +343,28 @@ end_undef
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u4_cisc_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u4_cisc_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u4_cisc_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u4_cisc_idx
 end_define
 
@@ -412,52 +413,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u16_cisc_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u16_cisc_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u16_cisc_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u16_cisc_idx
 end_define
 
@@ -506,52 +507,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u4_risc1_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u4_risc1_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u4_risc1_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u4_risc1_idx
 end_define
 
@@ -611,52 +612,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u4_risc2_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u4_risc2_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u4_risc2_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u4_risc2_idx
 end_define
 
@@ -705,52 +706,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u16_risc1_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u16_risc1_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u16_risc1_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u16_risc1_idx
 end_define
 
@@ -799,52 +800,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u16_risc2_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u16_risc2_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u16_risc2_idx
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u16_risc2_idx
 end_define
 
@@ -904,52 +905,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u4_cisc_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u4_cisc_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u4_cisc_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u4_cisc_ptr
 end_define
 
@@ -998,52 +999,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u16_cisc_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u16_cisc_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u16_cisc_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u16_cisc_ptr
 end_define
 
@@ -1092,52 +1093,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u4_risc1_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u4_risc1_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u4_risc1_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u4_risc1_ptr
 end_define
 
@@ -1197,52 +1198,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u4_risc2_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u4_risc2_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u4_risc2_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u4_risc2_ptr
 end_define
 
@@ -1291,52 +1292,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u16_risc1_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u16_risc1_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u16_risc1_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u16_risc1_ptr
 end_define
 
@@ -1385,52 +1386,52 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt1
+name|DES_encrypt1
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt2
+name|DES_encrypt2
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_encrypt3
+name|DES_encrypt3
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|des_decrypt3
+name|DES_decrypt3
 end_undef
 
 begin_define
 define|#
 directive|define
-name|des_encrypt1
+name|DES_encrypt1
 value|des_encrypt_u16_risc2_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt2
+name|DES_encrypt2
 value|des_encrypt2_u16_risc2_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_encrypt3
+name|DES_encrypt3
 value|des_encrypt3_u16_risc2_ptr
 end_define
 
 begin_define
 define|#
 directive|define
-name|des_decrypt3
+name|DES_decrypt3
 value|des_decrypt3_u16_risc2_ptr
 end_define
 
@@ -1890,7 +1891,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|print_name(name); \ 	Time_F(START); \ 	for (count=0,run=1; COND(cb); count++) \ 		{ \ 		unsigned long d[2]; \ 		func(d,&(sch[0]),DES_ENCRYPT); \ 		} \ 	tm[index]=Time_F(STOP); \ 	fprintf(stderr,"%ld %s's in %.2f second\n",count,name,tm[index]); \ 	tm[index]=((double)COUNT(cb))/tm[index];
+value|print_name(name); \ 	Time_F(START); \ 	for (count=0,run=1; COND(cb); count++) \ 		{ \ 		unsigned long d[2]; \ 		func(d,&sch,DES_ENCRYPT); \ 		} \ 	tm[index]=Time_F(STOP); \ 	fprintf(stderr,"%ld %s's in %.2f second\n",count,name,tm[index]); \ 	tm[index]=((double)COUNT(cb))/tm[index];
 end_define
 
 begin_define
@@ -1931,7 +1932,7 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|key
 init|=
 block|{
@@ -1953,7 +1954,7 @@ literal|0xf0
 block|}
 decl_stmt|;
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|key2
 init|=
 block|{
@@ -1975,7 +1976,7 @@ literal|0x12
 block|}
 decl_stmt|;
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|key3
 init|=
 block|{
@@ -1996,7 +1997,7 @@ block|,
 literal|0x34
 block|}
 decl_stmt|;
-name|des_key_schedule
+name|DES_key_schedule
 name|sch
 decl_stmt|,
 name|sch2
@@ -2105,27 +2106,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key
 argument_list|,
+operator|&
 name|sch
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key2
 argument_list|,
+operator|&
 name|sch2
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key3
 argument_list|,
+operator|&
 name|sch3
 argument_list|)
 expr_stmt|;
@@ -2139,7 +2143,7 @@ argument_list|,
 literal|"First we calculate the approximate speed ...\n"
 argument_list|)
 expr_stmt|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 operator|&
 name|key
@@ -2183,7 +2187,7 @@ condition|;
 name|i
 operator|--
 control|)
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|data
 argument_list|,
@@ -3138,7 +3142,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 return|return
 operator|(

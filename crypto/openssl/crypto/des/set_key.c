@@ -17,14 +17,19 @@ directive|include
 file|"des_locl.h"
 end_include
 
-begin_decl_stmt
-name|OPENSSL_GLOBAL
+begin_expr_stmt
+name|OPENSSL_IMPLEMENT_GLOBAL
+argument_list|(
 name|int
-name|des_check_key
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|DES_check_key
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* defaults to false */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -554,9 +559,9 @@ end_decl_stmt
 
 begin_function
 name|void
-name|des_set_odd_parity
+name|DES_set_odd_parity
 parameter_list|(
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|key
 parameter_list|)
@@ -601,9 +606,9 @@ end_function
 
 begin_function
 name|int
-name|des_check_key_parity
+name|DES_check_key_parity
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|key
 parameter_list|)
@@ -673,7 +678,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|des_cblock
+name|DES_cblock
 name|weak_keys
 index|[
 name|NUM_WEAK_KEY
@@ -975,9 +980,9 @@ end_decl_stmt
 
 begin_function
 name|int
-name|des_is_weak_key
+name|DES_is_weak_key
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|key
 parameter_list|)
@@ -1012,7 +1017,7 @@ name|key
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|des_cblock
+name|DES_cblock
 argument_list|)
 argument_list|)
 operator|==
@@ -2117,23 +2122,24 @@ end_decl_stmt
 
 begin_function
 name|int
-name|des_set_key
+name|DES_set_key
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|key
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|)
 block|{
 if|if
 condition|(
-name|des_check_key
+name|DES_check_key
 condition|)
 block|{
 return|return
-name|des_set_key_checked
+name|DES_set_key_checked
 argument_list|(
 name|key
 argument_list|,
@@ -2143,7 +2149,7 @@ return|;
 block|}
 else|else
 block|{
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 name|key
 argument_list|,
@@ -2163,20 +2169,21 @@ end_comment
 
 begin_function
 name|int
-name|des_set_key_checked
+name|DES_set_key_checked
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|key
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|!
-name|des_check_key_parity
+name|DES_check_key_parity
 argument_list|(
 name|key
 argument_list|)
@@ -2189,7 +2196,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|des_is_weak_key
+name|DES_is_weak_key
 argument_list|(
 name|key
 argument_list|)
@@ -2200,7 +2207,7 @@ operator|-
 literal|2
 operator|)
 return|;
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 argument_list|(
 name|key
 argument_list|,
@@ -2215,13 +2222,14 @@ end_function
 
 begin_function
 name|void
-name|des_set_key_unchecked
+name|DES_set_key_unchecked
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|key
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|)
 block|{
@@ -2294,13 +2302,38 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENBSD_DEV_CRYPTO
+name|memcpy
+argument_list|(
+name|schedule
+operator|->
+name|key
+argument_list|,
+name|key
+argument_list|,
+sizeof|sizeof
+name|schedule
+operator|->
+name|key
+argument_list|)
+expr_stmt|;
+name|schedule
+operator|->
+name|session
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|k
 operator|=
 operator|&
 name|schedule
 operator|->
 name|ks
-operator|.
+operator|->
 name|deslong
 index|[
 literal|0
@@ -2804,19 +2837,20 @@ end_function
 
 begin_function
 name|int
-name|des_key_sched
+name|DES_key_sched
 parameter_list|(
-name|const_des_cblock
+name|const_DES_cblock
 modifier|*
 name|key
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|schedule
 parameter_list|)
 block|{
 return|return
 operator|(
-name|des_set_key
+name|DES_set_key
 argument_list|(
 name|key
 argument_list|,
@@ -2827,28 +2861,9 @@ return|;
 block|}
 end_function
 
-begin_undef
-undef|#
-directive|undef
-name|des_fixup_key_parity
-end_undef
-
-begin_function
-name|void
-name|des_fixup_key_parity
-parameter_list|(
-name|des_cblock
-modifier|*
-name|key
-parameter_list|)
-block|{
-name|des_set_odd_parity
-argument_list|(
-name|key
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* #undef des_fixup_key_parity void des_fixup_key_parity(des_cblock *key) 	{ 	des_set_odd_parity(key); 	} */
+end_comment
 
 end_unit
 

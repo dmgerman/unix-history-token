@@ -31,10 +31,28 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"e_os.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 end_ifdef
 
 begin_include
@@ -92,24 +110,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"openssl/e_os.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/rand.h>
-end_include
 
 begin_undef
 undef|#
@@ -344,11 +344,9 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -410,7 +408,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 comment|/* For some reason Win32 can't write to files created this way */
 comment|/* chmod(..., 0600) is too late to protect the file, 	 * permissions should be restrictive from the start */
@@ -561,7 +559,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 comment|/* Try to delete older versions of the file, until there aren't 	   any */
 block|{
 name|char
@@ -622,17 +620,15 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* VMS */
+comment|/* OPENSSL_SYS_VMS */
 name|fclose
 argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -699,25 +695,24 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strncpy
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+operator|>=
+name|size
+condition|)
+return|return
+name|NULL
+return|;
+name|strcpy
 argument_list|(
 name|buf
 argument_list|,
 name|s
-argument_list|,
-name|size
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-name|size
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|ret
 operator|=
@@ -789,7 +784,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|VMS
+name|OPENSSL_SYS_VMS
 name|strcat
 argument_list|(
 name|buf

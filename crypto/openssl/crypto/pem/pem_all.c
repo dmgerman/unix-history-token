@@ -58,7 +58,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_function_decl
@@ -87,7 +87,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_function_decl
@@ -112,32 +112,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_macro
-name|IMPLEMENT_PEM_rw
-argument_list|(
-argument|X509
-argument_list|,
-argument|X509
-argument_list|,
-argument|PEM_STRING_X509
-argument_list|,
-argument|X509
-argument_list|)
-end_macro
-
-begin_macro
-name|IMPLEMENT_PEM_rw
-argument_list|(
-argument|X509_AUX
-argument_list|,
-argument|X509
-argument_list|,
-argument|PEM_STRING_X509_TRUSTED
-argument_list|,
-argument|X509_AUX
-argument_list|)
-end_macro
 
 begin_macro
 name|IMPLEMENT_PEM_rw
@@ -204,36 +178,10 @@ argument|NETSCAPE_CERT_SEQUENCE
 argument_list|)
 end_macro
 
-begin_macro
-name|IMPLEMENT_PEM_rw
-argument_list|(
-argument|PKCS8
-argument_list|,
-argument|X509_SIG
-argument_list|,
-argument|PEM_STRING_PKCS8
-argument_list|,
-argument|X509_SIG
-argument_list|)
-end_macro
-
-begin_macro
-name|IMPLEMENT_PEM_rw
-argument_list|(
-argument|PKCS8_PRIV_KEY_INFO
-argument_list|,
-argument|PKCS8_PRIV_KEY_INFO
-argument_list|,
-argument|PEM_STRING_PKCS8INF
-argument_list|,
-argument|PKCS8_PRIV_KEY_INFO
-argument_list|)
-end_macro
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 end_ifndef
 
 begin_comment
@@ -365,7 +313,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -471,7 +419,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 end_ifndef
 
 begin_function
@@ -625,7 +573,7 @@ end_macro
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
@@ -705,7 +653,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 end_ifndef
 
 begin_macro
@@ -729,19 +677,6 @@ end_endif
 begin_comment
 comment|/* The PrivateKey case is not that straightforward.  *   IMPLEMENT_PEM_rw_cb(PrivateKey, EVP_PKEY, PEM_STRING_EVP_PKEY, PrivateKey)  * does not work, RSA and DSA keys have specific strings.  * (When reading, parameter PEM_STRING_EVP_PKEY is a wildcard for anything  * appropriate.)  */
 end_comment
-
-begin_macro
-name|IMPLEMENT_PEM_read
-argument_list|(
-argument|PrivateKey
-argument_list|,
-argument|EVP_PKEY
-argument_list|,
-argument|PEM_STRING_EVP_PKEY
-argument_list|,
-argument|PrivateKey
-argument_list|)
-end_macro
 
 begin_macro
 name|IMPLEMENT_PEM_write_cb

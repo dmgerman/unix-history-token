@@ -50,7 +50,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_OBJECT
+name|OPENSSL_NO_OBJECT
 end_ifndef
 
 begin_include
@@ -383,17 +383,23 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* static unsigned long add_hash(ADDED_OBJ *ca) */
+end_comment
+
 begin_function
 specifier|static
 name|unsigned
 name|long
 name|add_hash
 parameter_list|(
-name|ADDED_OBJ
+specifier|const
+name|void
 modifier|*
-name|ca
+name|ca_void
 parameter_list|)
 block|{
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|a
@@ -411,6 +417,16 @@ name|unsigned
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|ADDED_OBJ
+modifier|*
+name|ca
+init|=
+operator|(
+name|ADDED_OBJ
+operator|*
+operator|)
+name|ca_void
 decl_stmt|;
 name|a
 operator|=
@@ -542,18 +558,24 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* static int add_cmp(ADDED_OBJ *ca, ADDED_OBJ *cb) */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|add_cmp
 parameter_list|(
-name|ADDED_OBJ
+specifier|const
+name|void
 modifier|*
-name|ca
+name|ca_void
 parameter_list|,
-name|ADDED_OBJ
+specifier|const
+name|void
 modifier|*
-name|cb
+name|cb_void
 parameter_list|)
 block|{
 name|ASN1_OBJECT
@@ -565,6 +587,26 @@ name|b
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|ADDED_OBJ
+modifier|*
+name|ca
+init|=
+operator|(
+name|ADDED_OBJ
+operator|*
+operator|)
+name|ca_void
+decl_stmt|;
+name|ADDED_OBJ
+modifier|*
+name|cb
+init|=
+operator|(
+name|ADDED_OBJ
+operator|*
+operator|)
+name|cb_void
 decl_stmt|;
 name|i
 operator|=
@@ -758,12 +800,6 @@ return|return
 literal|0
 return|;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* should not get here */
 block|}
 end_function
 
@@ -894,12 +930,33 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
+specifier|static
+name|IMPLEMENT_LHASH_DOALL_FN
+argument_list|(
+argument|cleanup1
+argument_list|,
+argument|ADDED_OBJ *
+argument_list|)
+specifier|static
+name|IMPLEMENT_LHASH_DOALL_FN
+argument_list|(
+argument|cleanup2
+argument_list|,
+argument|ADDED_OBJ *
+argument_list|)
+specifier|static
+name|IMPLEMENT_LHASH_DOALL_FN
+argument_list|(
+argument|cleanup3
+argument_list|,
+argument|ADDED_OBJ *
+argument_list|)
 name|void
 name|OBJ_cleanup
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
 block|{
 if|if
 condition|(
@@ -914,49 +971,83 @@ name|down_load
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|lh_doall
 argument_list|(
 name|added
 argument_list|,
+name|LHASH_DOALL_FN
+argument_list|(
 name|cleanup1
 argument_list|)
+argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* zero counters */
+end_comment
+
+begin_expr_stmt
 name|lh_doall
 argument_list|(
 name|added
 argument_list|,
+name|LHASH_DOALL_FN
+argument_list|(
 name|cleanup2
 argument_list|)
+argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* set counters */
+end_comment
+
+begin_expr_stmt
 name|lh_doall
 argument_list|(
 name|added
 argument_list|,
+name|LHASH_DOALL_FN
+argument_list|(
 name|cleanup3
 argument_list|)
+argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* free objects */
+end_comment
+
+begin_expr_stmt
 name|lh_free
 argument_list|(
 name|added
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|added
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|OBJ_new_nid
-parameter_list|(
-name|int
-name|num
-parameter_list|)
+argument_list|(
+argument|int num
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -975,12 +1066,13 @@ name|i
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int
 name|OBJ_add_object
 parameter_list|(
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|obj
@@ -1782,6 +1874,7 @@ begin_function
 name|int
 name|OBJ_obj2nid
 parameter_list|(
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|a
@@ -1841,8 +1934,13 @@ name|ad
 operator|.
 name|obj
 operator|=
+operator|(
+name|ASN1_OBJECT
+operator|*
+operator|)
 name|a
 expr_stmt|;
+comment|/* XXX: ugly but harmless */
 name|adp
 operator|=
 operator|(
@@ -2121,7 +2219,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-name|i
+name|j
 argument_list|)
 expr_stmt|;
 name|OPENSSL_free
@@ -2146,6 +2244,7 @@ parameter_list|,
 name|int
 name|buf_len
 parameter_list|,
+specifier|const
 name|ASN1_OBJECT
 modifier|*
 name|a
@@ -2370,7 +2469,7 @@ argument_list|(
 name|tbuf
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|BUF_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2450,7 +2549,7 @@ name|buf_len
 operator|>
 literal|0
 condition|)
-name|strncpy
+name|BUF_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2504,7 +2603,7 @@ argument_list|(
 name|nid
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|BUF_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2521,15 +2620,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|buf
-index|[
-name|buf_len
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 return|return
 operator|(
 name|n
@@ -2542,6 +2632,7 @@ begin_function
 name|int
 name|OBJ_txt2nid
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2951,14 +3042,17 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|OBJ_bsearch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|base
@@ -2994,6 +3088,7 @@ name|i
 decl_stmt|,
 name|c
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3447,14 +3542,17 @@ begin_function
 name|int
 name|OBJ_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|oid
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|sn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|ln

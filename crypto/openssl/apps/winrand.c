@@ -331,12 +331,6 @@ decl_stmt|;
 name|RECT
 name|rect
 decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|200
-index|]
-decl_stmt|;
 specifier|static
 name|int
 name|seeded

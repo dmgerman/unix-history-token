@@ -35,10 +35,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|USE_SOCKETS
+end_define
+
+begin_include
+include|#
+directive|include
+file|"apps.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 end_ifdef
 
 begin_define
@@ -51,12 +63,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|USE_SOCKETS
-end_define
 
 begin_include
 include|#
@@ -74,12 +80,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/pem.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"apps.h"
 end_include
 
 begin_include
@@ -123,20 +123,41 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|MSDOS
+name|OPENSSL_SYS_MSDOS
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+include|OPENSSL_UNISTD
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MSDOS
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|VXWORKS
+name|OPENSSL_SYS_VXWORKS
 argument_list|)
 operator|&&
 operator|(
 operator|!
 name|defined
 argument_list|(
-name|VMS
+name|OPENSSL_SYS_VMS
 argument_list|)
 operator|||
 name|defined
@@ -144,11 +165,6 @@ argument_list|(
 name|__DECC
 argument_list|)
 operator|)
-operator|||
-name|defined
-argument_list|(
-name|_DARWIN
-argument_list|)
 end_if
 
 begin_define
@@ -211,12 +227,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__DECC
+name|OPENSSL_SYS_VMS_DECC
 argument_list|)
 operator|&&
 operator|!
@@ -249,7 +260,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|VXWORKS
+name|OPENSSL_SYS_VXWORKS
 argument_list|)
 end_if
 
@@ -257,23 +268,6 @@ begin_include
 include|#
 directive|include
 file|<sys/timeb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
 end_include
 
 begin_endif
@@ -328,11 +322,39 @@ directive|ifndef
 name|HZ
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SC_CLK_TCK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|((double)sysconf(_SC_CLK_TCK))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|CLK_TCK
 end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_BSD_CLK_TCK_
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD hack */
+end_comment
 
 begin_define
 define|#
@@ -340,6 +362,27 @@ directive|define
 name|HZ
 value|100.0
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _BSD_CLK_TCK_ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|((double)_BSD_CLK_TCK_)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -356,6 +399,11 @@ directive|define
 name|HZ
 value|((double)CLK_TCK)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -419,6 +467,13 @@ define|#
 directive|define
 name|BUFSIZZ
 value|1024*10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MYBUFSIZ
+value|1024*8
 end_define
 
 begin_undef
@@ -699,7 +754,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 end_ifdef
 
 begin_decl_stmt
@@ -795,7 +850,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|WIN32
+name|OPENSSL_SYS_WIN32
 name|exitNow
 operator|=
 literal|0
@@ -1275,6 +1330,30 @@ operator|++
 name|argv
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|s_www_path
+argument_list|)
+operator|>
+name|MYBUFSIZ
+operator|-
+literal|100
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-www option too long\n"
+argument_list|)
+expr_stmt|;
+name|badop
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1295,7 +1374,7 @@ literal|1
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 elseif|else
 if|if
 condition|(
@@ -1318,7 +1397,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 elseif|else
 if|if
 condition|(
@@ -1537,7 +1616,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|VXWORKS
+name|OPENSSL_SYS_VXWORKS
 argument_list|)
 block|{
 specifier|static
@@ -1799,13 +1878,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 argument_list|)
 name|s_time_meth
 operator|=
@@ -1817,7 +1896,7 @@ directive|elif
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL3
+name|OPENSSL_NO_SSL3
 argument_list|)
 name|s_time_meth
 operator|=
@@ -1829,7 +1908,7 @@ directive|elif
 operator|!
 name|defined
 argument_list|(
-name|NO_SSL2
+name|OPENSSL_NO_SSL2
 argument_list|)
 name|s_time_meth
 operator|=
@@ -1975,7 +2054,6 @@ argument_list|,
 literal|"No CIPHER specified\n"
 argument_list|)
 expr_stmt|;
-comment|/*		EXIT(1); */
 block|}
 if|if
 condition|(
@@ -2028,6 +2106,9 @@ if|if
 condition|(
 name|finishtime
 operator|<
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -2258,6 +2339,9 @@ call|(
 name|int
 call|)
 argument_list|(
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -2294,6 +2378,9 @@ literal|"%d connections in %ld real seconds, %ld bytes read per connection\n"
 argument_list|,
 name|nConn
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -2439,6 +2526,9 @@ literal|0.0
 expr_stmt|;
 name|finishtime
 operator|=
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -2470,6 +2560,9 @@ if|if
 condition|(
 name|finishtime
 operator|<
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -2707,6 +2800,9 @@ literal|"%d connections in %ld real seconds, %ld bytes read per connection\n"
 argument_list|,
 name|nConn
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|NULL
@@ -2755,7 +2851,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

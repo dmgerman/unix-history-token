@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"cryptlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -27,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/x509.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
 end_include
 
 begin_comment
@@ -58,10 +58,12 @@ block|{
 name|int
 name|pbe_nid
 decl_stmt|;
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|cipher
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 name|md
@@ -187,7 +189,8 @@ name|i2t_ASN1_OBJECT
 argument_list|(
 name|obj_tmp
 argument_list|,
-literal|80
+sizeof|sizeof
+name|obj_tmp
 argument_list|,
 name|pbe_obj
 argument_list|)
@@ -367,10 +370,12 @@ parameter_list|(
 name|int
 name|nid
 parameter_list|,
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|cipher
 parameter_list|,
+specifier|const
 name|EVP_MD
 modifier|*
 name|md

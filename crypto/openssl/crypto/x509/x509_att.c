@@ -561,11 +561,11 @@ name|X509at_add1_attr_by_OBJ
 argument_list|(
 argument|STACK_OF(X509_ATTRIBUTE) **x
 argument_list|,
-argument|ASN1_OBJECT *obj
+argument|const ASN1_OBJECT *obj
 argument_list|,
 argument|int type
 argument_list|,
-argument|unsigned char *bytes
+argument|const unsigned char *bytes
 argument_list|,
 argument|int len
 argument_list|)
@@ -643,7 +643,7 @@ argument|int nid
 argument_list|,
 argument|int type
 argument_list|,
-argument|unsigned char *bytes
+argument|const unsigned char *bytes
 argument_list|,
 argument|int len
 argument_list|)
@@ -717,11 +717,11 @@ name|X509at_add1_attr_by_txt
 argument_list|(
 argument|STACK_OF(X509_ATTRIBUTE) **x
 argument_list|,
-argument|char *attrname
+argument|const char *attrname
 argument_list|,
 argument|int type
 argument_list|,
-argument|unsigned char *bytes
+argument|const unsigned char *bytes
 argument_list|,
 argument|int len
 argument_list|)
@@ -796,7 +796,7 @@ argument|int nid
 argument_list|,
 argument|int atrtype
 argument_list|,
-argument|void *data
+argument|const void *data
 argument_list|,
 argument|int len
 argument_list|)
@@ -882,11 +882,11 @@ name|X509_ATTRIBUTE_create_by_OBJ
 argument_list|(
 argument|X509_ATTRIBUTE **attr
 argument_list|,
-argument|ASN1_OBJECT *obj
+argument|const ASN1_OBJECT *obj
 argument_list|,
 argument|int atrtype
 argument_list|,
-argument|void *data
+argument|const void *data
 argument_list|,
 argument|int len
 argument_list|)
@@ -1057,11 +1057,11 @@ name|X509_ATTRIBUTE_create_by_txt
 argument_list|(
 argument|X509_ATTRIBUTE **attr
 argument_list|,
-argument|char *atrname
+argument|const char *atrname
 argument_list|,
 argument|int type
 argument_list|,
-argument|unsigned char *bytes
+argument|const unsigned char *bytes
 argument_list|,
 argument|int len
 argument_list|)
@@ -1149,7 +1149,7 @@ name|X509_ATTRIBUTE_set1_object
 argument_list|(
 argument|X509_ATTRIBUTE *attr
 argument_list|,
-argument|ASN1_OBJECT *obj
+argument|const ASN1_OBJECT *obj
 argument_list|)
 end_macro
 
@@ -1209,6 +1209,7 @@ parameter_list|,
 name|int
 name|attrtype
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|data
@@ -1373,9 +1374,9 @@ name|err
 goto|;
 name|attr
 operator|->
-name|set
+name|single
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|ASN1_TYPE_set
 argument_list|(
@@ -1415,9 +1416,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|attr
 operator|->
-name|set
+name|single
 condition|)
 return|return
 name|sk_ASN1_TYPE_num
@@ -1587,9 +1589,10 @@ name|NULL
 return|;
 if|if
 condition|(
+operator|!
 name|attr
 operator|->
-name|set
+name|single
 condition|)
 return|return
 name|sk_ASN1_TYPE_value

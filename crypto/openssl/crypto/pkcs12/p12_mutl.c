@@ -14,7 +14,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_HMAC
+name|OPENSSL_NO_HMAC
 end_ifndef
 
 begin_include
@@ -214,7 +214,13 @@ return|return
 literal|0
 return|;
 block|}
-name|HMAC_Init
+name|HMAC_CTX_init
+argument_list|(
+operator|&
+name|hmac
+argument_list|)
+expr_stmt|;
+name|HMAC_Init_ex
 argument_list|(
 operator|&
 name|hmac
@@ -224,6 +230,8 @@ argument_list|,
 name|PKCS12_MAC_KEY_LENGTH
 argument_list|,
 name|md_type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|HMAC_Update
@@ -260,6 +268,12 @@ argument_list|,
 name|mac
 argument_list|,
 name|maclen
+argument_list|)
+expr_stmt|;
+name|HMAC_CTX_cleanup
+argument_list|(
+operator|&
+name|hmac
 argument_list|)
 expr_stmt|;
 return|return
@@ -426,6 +440,7 @@ parameter_list|,
 name|int
 name|iter
 parameter_list|,
+specifier|const
 name|EVP_MD
 modifier|*
 name|md_type
@@ -571,6 +586,7 @@ parameter_list|,
 name|int
 name|saltlen
 parameter_list|,
+specifier|const
 name|EVP_MD
 modifier|*
 name|md_type

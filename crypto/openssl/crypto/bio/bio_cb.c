@@ -434,13 +434,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_STDIO
+name|OPENSSL_NO_STDIO
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 else|else
 name|fputs

@@ -18,7 +18,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DESCBCM
+name|OPENSSL_NO_DESCBCM
 end_ifndef
 
 begin_include
@@ -29,7 +29,7 @@ end_include
 
 begin_function
 name|void
-name|des_ede3_cbcm_encrypt
+name|DES_ede3_cbcm_encrypt
 parameter_list|(
 specifier|const
 name|unsigned
@@ -45,20 +45,23 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks1
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks2
 parameter_list|,
-name|des_key_schedule
+name|DES_key_schedule
+modifier|*
 name|ks3
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec1
 parameter_list|,
-name|des_cblock
+name|DES_cblock
 modifier|*
 name|ivec2
 parameter_list|,
@@ -191,7 +194,7 @@ index|]
 operator|=
 name|m1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -274,7 +277,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -297,7 +300,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -320,7 +323,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -475,7 +478,7 @@ index|]
 operator|=
 name|m1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -534,7 +537,7 @@ index|]
 operator|=
 name|tin1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -557,7 +560,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,
@@ -580,7 +583,7 @@ index|]
 operator|^=
 name|m1
 expr_stmt|;
-name|des_encrypt1
+name|DES_encrypt1
 argument_list|(
 name|tin
 argument_list|,

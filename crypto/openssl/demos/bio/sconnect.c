@@ -127,6 +127,17 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WATT32
+name|dbug_init
+argument_list|()
+expr_stmt|;
+name|sock_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Lets get nice error messages */
 name|SSL_load_error_strings
 argument_list|()

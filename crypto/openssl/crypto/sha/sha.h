@@ -19,6 +19,12 @@ directive|define
 name|HEADER_SHA_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -35,18 +41,18 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|NO_SHA
+name|OPENSSL_NO_SHA
 argument_list|)
 operator|||
 operator|(
 name|defined
 argument_list|(
-name|NO_SHA0
+name|OPENSSL_NO_SHA0
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|NO_SHA1
+name|OPENSSL_NO_SHA1
 argument_list|)
 operator|)
 error|#
@@ -59,7 +65,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 operator|||
 name|defined
@@ -74,7 +80,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_CRAY
+name|OPENSSL_SYS_CRAY
 argument_list|)
 operator|||
 name|defined
@@ -148,8 +154,8 @@ name|SHA_CTX
 typedef|;
 ifndef|#
 directive|ifndef
-name|NO_SHA0
-name|void
+name|OPENSSL_NO_SHA0
+name|int
 name|SHA_Init
 parameter_list|(
 name|SHA_CTX
@@ -157,7 +163,7 @@ modifier|*
 name|c
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|SHA_Update
 parameter_list|(
 name|SHA_CTX
@@ -174,7 +180,7 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|SHA_Final
 parameter_list|(
 name|unsigned
@@ -226,8 +232,8 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_SHA1
-name|void
+name|OPENSSL_NO_SHA1
+name|int
 name|SHA1_Init
 parameter_list|(
 name|SHA_CTX
@@ -235,7 +241,7 @@ modifier|*
 name|c
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|SHA1_Update
 parameter_list|(
 name|SHA_CTX
@@ -252,7 +258,7 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|SHA1_Final
 parameter_list|(
 name|unsigned

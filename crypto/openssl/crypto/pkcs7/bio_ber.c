@@ -419,13 +419,11 @@ name|a
 operator|->
 name|ptr
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
 operator|->
 name|ptr
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1381,7 +1379,7 @@ name|finished
 operator|=
 literal|0
 expr_stmt|;
-name|EVP_CipherInit
+name|EVP_CipherInit_ex
 argument_list|(
 operator|&
 operator|(
@@ -1389,6 +1387,8 @@ name|ctx
 operator|->
 name|cipher
 operator|)
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1587,7 +1587,7 @@ literal|0
 expr_stmt|;
 name|ret
 operator|=
-name|EVP_CipherFinal
+name|EVP_CipherFinal_ex
 argument_list|(
 operator|&
 operator|(
@@ -1932,7 +1932,7 @@ name|b
 operator|->
 name|ptr
 expr_stmt|;
-name|EVP_CipherInit
+name|EVP_CipherInit_ex
 argument_list|(
 operator|&
 operator|(
@@ -1942,6 +1942,8 @@ name|cipher
 operator|)
 argument_list|,
 name|c
+argument_list|,
+name|NULL
 argument_list|,
 name|k
 argument_list|,

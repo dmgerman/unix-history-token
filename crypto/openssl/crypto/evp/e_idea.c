@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_IDEA
+name|OPENSSL_NO_IDEA
 end_ifndef
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"evp_locl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/idea.h>
 end_include
 
 begin_function_decl
@@ -111,12 +117,9 @@ name|out
 operator|+
 name|i
 argument_list|,
-operator|&
 name|ctx
 operator|->
-name|c
-operator|.
-name|idea_ks
+name|cipher_data
 argument_list|)
 expr_stmt|;
 return|return
@@ -129,6 +132,18 @@ begin_comment
 comment|/* Can't use IMPLEMENT_BLOCK_CIPHER because idea_ecb_encrypt is different */
 end_comment
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|IDEA_KEY_SCHEDULE
+name|ks
+decl_stmt|;
+block|}
+name|EVP_IDEA_KEY
+typedef|;
+end_typedef
+
 begin_macro
 name|BLOCK_CIPHER_func_cbc
 argument_list|(
@@ -136,7 +151,9 @@ argument|idea
 argument_list|,
 argument|idea
 argument_list|,
-argument|idea_ks
+argument|EVP_IDEA_KEY
+argument_list|,
+argument|ks
 argument_list|)
 end_macro
 
@@ -147,7 +164,11 @@ argument|idea
 argument_list|,
 argument|idea
 argument_list|,
-argument|idea_ks
+literal|64
+argument_list|,
+argument|EVP_IDEA_KEY
+argument_list|,
+argument|ks
 argument_list|)
 end_macro
 
@@ -158,7 +179,11 @@ argument|idea
 argument_list|,
 argument|idea
 argument_list|,
-argument|idea_ks
+literal|64
+argument_list|,
+argument|EVP_IDEA_KEY
+argument_list|,
+argument|ks
 argument_list|)
 end_macro
 
@@ -167,7 +192,7 @@ name|BLOCK_CIPHER_defs
 argument_list|(
 argument|idea
 argument_list|,
-argument|idea_ks
+argument|IDEA_KEY_SCHEDULE
 argument_list|,
 argument|NID_idea
 argument_list|,
@@ -176,6 +201,8 @@ argument_list|,
 literal|16
 argument_list|,
 literal|8
+argument_list|,
+literal|64
 argument_list|,
 literal|0
 argument_list|,
@@ -258,14 +285,9 @@ name|idea_set_encrypt_key
 argument_list|(
 name|key
 argument_list|,
-operator|&
-operator|(
 name|ctx
 operator|->
-name|c
-operator|.
-name|idea_ks
-operator|)
+name|cipher_data
 argument_list|)
 expr_stmt|;
 else|else
@@ -286,17 +308,12 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-operator|&
-operator|(
 name|ctx
 operator|->
-name|c
-operator|.
-name|idea_ks
-operator|)
+name|cipher_data
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|(
 name|unsigned
@@ -305,8 +322,6 @@ operator|*
 operator|)
 operator|&
 name|tmp
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

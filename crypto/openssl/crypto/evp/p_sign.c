@@ -56,7 +56,7 @@ modifier|*
 name|type
 parameter_list|)
 block|{
-name|EVP_DigestInit
+name|EVP_DigestInit_ex
 argument_list|(
 name|ctx
 argument_list|,
@@ -153,7 +153,13 @@ name|siglen
 operator|=
 literal|0
 expr_stmt|;
-name|EVP_MD_CTX_copy
+name|EVP_MD_CTX_init
+argument_list|(
+operator|&
+name|tmp_ctx
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_copy_ex
 argument_list|(
 operator|&
 name|tmp_ctx
@@ -161,7 +167,7 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-name|EVP_DigestFinal
+name|EVP_DigestFinal_ex
 argument_list|(
 operator|&
 name|tmp_ctx
@@ -176,6 +182,12 @@ operator|)
 argument_list|,
 operator|&
 name|m_len
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|tmp_ctx
 argument_list|)
 expr_stmt|;
 for|for

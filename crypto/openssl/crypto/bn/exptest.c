@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../e_os.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/bio.h>
 end_include
 
@@ -52,7 +58,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WINDOWS
+name|OPENSSL_SYS_WINDOWS
 end_ifdef
 
 begin_include
@@ -158,7 +164,7 @@ name|ctx
 operator|==
 name|NULL
 condition|)
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -236,7 +242,7 @@ name|out
 operator|==
 name|NULL
 condition|)
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -413,7 +419,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -451,7 +457,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -489,7 +495,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -653,7 +659,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -715,7 +721,7 @@ argument_list|(
 literal|" done\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|0
 argument_list|)
@@ -730,7 +736,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)

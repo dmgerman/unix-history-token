@@ -26,9 +26,10 @@ file|<openssl/opensslv.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
-modifier|*
 name|RC5_version
+index|[]
 init|=
 literal|"RC5"
 name|OPENSSL_VERSION_PTEXT

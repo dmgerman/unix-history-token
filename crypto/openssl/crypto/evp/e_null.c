@@ -87,6 +87,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|EVP_CIPHER
 name|n_cipher
 init|=
@@ -119,6 +120,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|EVP_enc_null
@@ -160,25 +162,7 @@ name|int
 name|enc
 parameter_list|)
 block|{
-name|memset
-argument_list|(
-operator|&
-operator|(
-name|ctx
-operator|->
-name|c
-operator|)
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ctx
-operator|->
-name|c
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/*	memset(&(ctx->c),0,sizeof(ctx->c));*/
 return|return
 literal|1
 return|;

@@ -7,7 +7,7 @@ begin_if
 if|#
 directive|if
 name|defined
-name|NO_MD5
+name|OPENSSL_NO_MD5
 operator|||
 name|defined
 name|CHARSET_EBCDIC
@@ -30,7 +30,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|NO_DES
+name|OPENSSL_NO_DES
 argument_list|)
 operator|||
 operator|!
@@ -85,7 +85,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 end_ifndef
 
 begin_include
@@ -323,7 +323,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* -crypt        - standard Unix password algorithm (default)  * -1            - MD5-based password algorithm  * -apr1         - MD5-based password algorithm, Apache variant  * -salt string  - salt  * -in file      - read passwords from file  * -stdin        - read passwords from stdin  * -quiet        - no warnings  * -table        - format output as table  * -reverse      - switch table columns  */
+comment|/* -crypt        - standard Unix password algorithm (default)  * -1            - MD5-based password algorithm  * -apr1         - MD5-based password algorithm, Apache variant  * -salt string  - salt  * -in file      - read passwords from file  * -stdin        - read passwords from stdin  * -noverify     - never verify when reading password from terminal  * -quiet        - no warnings  * -table        - format output as table  * -reverse      - switch table columns  */
 end_comment
 
 begin_function_decl
@@ -365,6 +365,11 @@ name|NULL
 decl_stmt|;
 name|int
 name|in_stdin
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|in_noverify
 init|=
 literal|0
 decl_stmt|;
@@ -493,6 +498,19 @@ operator||
 name|BIO_FP_TEXT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|load_config
+argument_list|(
+name|bio_err
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|out
 operator|=
 name|BIO_new
@@ -523,7 +541,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -786,6 +804,25 @@ index|[
 name|i
 index|]
 argument_list|,
+literal|"-noverify"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|in_noverify
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
 literal|"-quiet"
 argument_list|)
 operator|==
@@ -915,7 +952,7 @@ expr_stmt|;
 comment|/* reject unsupported algorithms */
 ifdef|#
 directive|ifdef
-name|NO_DES
+name|OPENSSL_NO_DES
 if|if
 condition|(
 name|usecrypt
@@ -962,7 +999,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1010,6 +1047,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"-stdin             read passwords from stdin\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-noverify          never verify when reading password from terminal\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1216,7 +1260,12 @@ name|passwd_malloc_size
 argument_list|,
 literal|"Password: "
 argument_list|,
-literal|0
+operator|!
+operator|(
+name|passed_salt
+operator|||
+name|in_noverify
+operator|)
 argument_list|)
 operator|!=
 literal|0
@@ -1510,7 +1559,10 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)
@@ -1580,8 +1632,10 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
-name|MD5_CTX
+name|EVP_MD_CTX
 name|md
+decl_stmt|,
+name|md2
 decl_stmt|;
 name|size_t
 name|passwd_len
@@ -1685,13 +1739,24 @@ operator|<=
 literal|8
 argument_list|)
 expr_stmt|;
-name|MD5_Init
+name|EVP_MD_CTX_init
 argument_list|(
 operator|&
 name|md
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestInit_ex
+argument_list|(
+operator|&
+name|md
+argument_list|,
+name|EVP_md5
+argument_list|()
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1701,7 +1766,7 @@ argument_list|,
 name|passwd_len
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1711,7 +1776,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1724,7 +1789,7 @@ name|magic
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1734,7 +1799,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1744,17 +1809,24 @@ argument_list|,
 name|salt_len
 argument_list|)
 expr_stmt|;
-block|{
-name|MD5_CTX
-name|md2
-decl_stmt|;
-name|MD5_Init
+name|EVP_MD_CTX_init
 argument_list|(
 operator|&
 name|md2
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestInit_ex
+argument_list|(
+operator|&
+name|md2
+argument_list|,
+name|EVP_md5
+argument_list|()
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1764,7 +1836,7 @@ argument_list|,
 name|passwd_len
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1774,7 +1846,7 @@ argument_list|,
 name|salt_len
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1784,15 +1856,16 @@ argument_list|,
 name|passwd_len
 argument_list|)
 expr_stmt|;
-name|MD5_Final
+name|EVP_DigestFinal_ex
 argument_list|(
-name|buf
-argument_list|,
 operator|&
 name|md2
+argument_list|,
+name|buf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -1809,7 +1882,7 @@ operator|-=
 sizeof|sizeof
 name|buf
 control|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1820,7 +1893,7 @@ sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1839,7 +1912,7 @@ condition|(
 name|n
 condition|)
 block|{
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md
@@ -1862,12 +1935,14 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
-name|MD5_Final
+name|EVP_DigestFinal_ex
 argument_list|(
-name|buf
-argument_list|,
 operator|&
 name|md
+argument_list|,
+name|buf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -1884,16 +1959,18 @@ name|i
 operator|++
 control|)
 block|{
-name|MD5_CTX
-name|md2
-decl_stmt|;
-name|MD5_Init
+name|EVP_DigestInit_ex
 argument_list|(
 operator|&
 name|md2
+argument_list|,
+name|EVP_md5
+argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1931,7 +2008,7 @@ name|i
 operator|%
 literal|3
 condition|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1947,7 +2024,7 @@ name|i
 operator|%
 literal|7
 condition|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1957,7 +2034,7 @@ argument_list|,
 name|passwd_len
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|md2
@@ -1989,15 +2066,23 @@ else|:
 name|passwd_len
 argument_list|)
 expr_stmt|;
-name|MD5_Final
+name|EVP_DigestFinal_ex
 argument_list|(
+operator|&
+name|md2
+argument_list|,
 name|buf
 argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|EVP_MD_CTX_cleanup
+argument_list|(
 operator|&
 name|md2
 argument_list|)
 expr_stmt|;
-block|}
 block|{
 comment|/* transform buf into output string */
 name|unsigned
@@ -2277,6 +2362,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|md
+argument_list|)
+expr_stmt|;
 return|return
 name|out_buf
 return|;
@@ -2365,7 +2456,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 if|if
 condition|(
 name|usecrypt
@@ -2495,7 +2586,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* !NO_DES */
+comment|/* !OPENSSL_NO_DES */
 ifndef|#
 directive|ifndef
 name|NO_MD5CRYPT_1
@@ -2665,14 +2756,14 @@ expr_stmt|;
 comment|/* now compute password hash */
 ifndef|#
 directive|ifndef
-name|NO_DES
+name|OPENSSL_NO_DES
 if|if
 condition|(
 name|usecrypt
 condition|)
 name|hash
 operator|=
-name|des_crypt
+name|DES_crypt
 argument_list|(
 name|passwd
 argument_list|,
@@ -2799,7 +2890,7 @@ literal|"Program not available.\n"
 argument_list|,
 argument|stderr
 argument_list|)
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 literal|1
 argument_list|)

@@ -156,6 +156,13 @@ name|ENC_BLOCK_SIZE
 value|(1024*4)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUF_OFFSET
+value|EVP_MAX_BLOCK_LENGTH
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -181,12 +188,15 @@ comment|/* bad decrypt */
 name|EVP_CIPHER_CTX
 name|cipher
 decl_stmt|;
+comment|/* buf is larger than ENC_BLOCK_SIZE because EVP_DecryptUpdate 	 * can return up to a block more data than is presented to it 	 */
 name|char
 name|buf
 index|[
 name|ENC_BLOCK_SIZE
 operator|+
-literal|10
+name|BUF_OFFSET
+operator|+
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -394,13 +404,11 @@ name|cipher
 operator|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
 operator|->
 name|ptr
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -620,7 +628,7 @@ operator|<=
 literal|0
 condition|)
 break|break;
-comment|/* read in at offset 8, read the EVP_Cipher 		 * documentation about why */
+comment|/* read in at IV offset, read the EVP_Cipher 		 * documentation about why */
 name|i
 operator|=
 name|BIO_read
@@ -635,7 +643,7 @@ name|ctx
 operator|->
 name|buf
 index|[
-literal|8
+name|BUF_OFFSET
 index|]
 operator|)
 argument_list|,
@@ -669,7 +677,7 @@ name|i
 expr_stmt|;
 name|i
 operator|=
-name|EVP_CipherFinal
+name|EVP_CipherFinal_ex
 argument_list|(
 operator|&
 operator|(
@@ -761,7 +769,7 @@ name|ctx
 operator|->
 name|buf
 index|[
-literal|8
+name|BUF_OFFSET
 index|]
 operator|)
 argument_list|,
@@ -1245,7 +1253,7 @@ name|finished
 operator|=
 literal|0
 expr_stmt|;
-name|EVP_CipherInit
+name|EVP_CipherInit_ex
 argument_list|(
 operator|&
 operator|(
@@ -1253,6 +1261,8 @@ name|ctx
 operator|->
 name|cipher
 operator|)
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1451,7 +1461,7 @@ literal|0
 expr_stmt|;
 name|ret
 operator|=
-name|EVP_CipherFinal
+name|EVP_CipherFinal_ex
 argument_list|(
 operator|&
 operator|(
@@ -1825,7 +1835,7 @@ name|b
 operator|->
 name|ptr
 expr_stmt|;
-name|EVP_CipherInit
+name|EVP_CipherInit_ex
 argument_list|(
 operator|&
 operator|(
@@ -1835,6 +1845,8 @@ name|cipher
 operator|)
 argument_list|,
 name|c
+argument_list|,
+name|NULL
 argument_list|,
 name|k
 argument_list|,

@@ -3,6 +3,10 @@ begin_comment
 comment|/* apps/rand.c */
 end_comment
 
+begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -88,6 +92,12 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|ENGINE
+modifier|*
+name|e
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -129,6 +139,12 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|char
+modifier|*
+name|engine
+init|=
+name|NULL
+decl_stmt|;
 name|apps_startup
 argument_list|()
 expr_stmt|;
@@ -163,6 +179,19 @@ operator||
 name|BIO_FP_TEXT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|load_config
+argument_list|(
+name|bio_err
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|badopt
 operator|=
 literal|0
@@ -220,6 +249,55 @@ name|NULL
 operator|)
 condition|)
 name|outfile
+operator|=
+name|argv
+index|[
+operator|++
+name|i
+index|]
+expr_stmt|;
+else|else
+name|badopt
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-engine"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|argv
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|engine
+operator|==
+name|NULL
+operator|)
+condition|)
+name|engine
 operator|=
 name|argv
 index|[
@@ -414,14 +492,21 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-out file            - write to file\n"
+literal|"-out file             - write to file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-rand file%cfile%c...  - seed PRNG from files\n"
+literal|"-engine e             - use engine e, possibly a hardware device.\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-rand file%cfile%c... - seed PRNG from files\n"
 argument_list|,
 name|LIST_SEPARATOR_CHAR
 argument_list|,
@@ -432,13 +517,24 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-base64              - encode output\n"
+literal|"-base64               - encode output\n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|err
 goto|;
 block|}
+name|e
+operator|=
+name|setup_engine
+argument_list|(
+name|bio_err
+argument_list|,
+name|engine
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|app_RAND_load_file
 argument_list|(
 name|NULL
@@ -519,7 +615,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -684,7 +780,10 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|apps_shutdown
+argument_list|()
+expr_stmt|;
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

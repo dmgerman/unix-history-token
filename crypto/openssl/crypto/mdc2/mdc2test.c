@@ -25,25 +25,31 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|NO_DES
+name|OPENSSL_NO_DES
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_MDC2
+name|OPENSSL_NO_MDC2
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|NO_MDC2
+name|OPENSSL_NO_MDC2
 end_define
 
 begin_endif
@@ -54,7 +60,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_MDC2
+name|OPENSSL_NO_MDC2
 end_ifdef
 
 begin_function
@@ -87,6 +93,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<openssl/evp.h>
+end_include
 
 begin_include
 include|#
@@ -229,7 +241,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|MDC2_CTX
+name|EVP_MD_CTX
 name|c
 decl_stmt|;
 specifier|static
@@ -256,13 +268,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|MDC2_Init
+name|EVP_MD_CTX_init
 argument_list|(
 operator|&
 name|c
 argument_list|)
 expr_stmt|;
-name|MDC2_Update
+name|EVP_DigestInit_ex
+argument_list|(
+operator|&
+name|c
+argument_list|,
+name|EVP_mdc2
+argument_list|()
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|c
@@ -280,8 +303,11 @@ name|text
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MDC2_Final
+name|EVP_DigestFinal_ex
 argument_list|(
+operator|&
+name|c
+argument_list|,
 operator|&
 operator|(
 name|md
@@ -290,8 +316,7 @@ literal|0
 index|]
 operator|)
 argument_list|,
-operator|&
-name|c
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -375,19 +400,33 @@ argument_list|(
 literal|"pad1 - ok\n"
 argument_list|)
 expr_stmt|;
-name|MDC2_Init
+name|EVP_DigestInit_ex
 argument_list|(
 operator|&
 name|c
+argument_list|,
+name|EVP_mdc2
+argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* FIXME: use a ctl function? */
+operator|(
+operator|(
+name|MDC2_CTX
+operator|*
+operator|)
 name|c
 operator|.
+name|md_data
+operator|)
+operator|->
 name|pad_type
 operator|=
 literal|2
 expr_stmt|;
-name|MDC2_Update
+name|EVP_DigestUpdate
 argument_list|(
 operator|&
 name|c
@@ -405,8 +444,11 @@ name|text
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MDC2_Final
+name|EVP_DigestFinal_ex
 argument_list|(
+operator|&
+name|c
+argument_list|,
 operator|&
 operator|(
 name|md
@@ -415,8 +457,7 @@ literal|0
 index|]
 operator|)
 argument_list|,
-operator|&
-name|c
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -500,7 +541,13 @@ argument_list|(
 literal|"pad2 - ok\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EVP_MD_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
+name|EXIT
 argument_list|(
 name|ret
 argument_list|)

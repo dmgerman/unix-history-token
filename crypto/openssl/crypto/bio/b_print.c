@@ -194,7 +194,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN32
+name|OPENSSL_SYS_WIN32
 argument_list|)
 operator|&&
 operator|!
@@ -2027,7 +2027,12 @@ decl_stmt|;
 name|char
 name|convert
 index|[
-literal|20
+name|DECIMAL_SIZE
+argument_list|(
+name|value
+argument_list|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -2167,7 +2172,8 @@ operator|&&
 operator|(
 name|place
 operator|<
-literal|20
+sizeof|sizeof
+name|convert
 operator|)
 condition|)
 do|;
@@ -2175,7 +2181,8 @@ if|if
 condition|(
 name|place
 operator|==
-literal|20
+sizeof|sizeof
+name|convert
 condition|)
 name|place
 operator|--
@@ -2732,7 +2739,8 @@ operator|&&
 operator|(
 name|iplace
 operator|<
-literal|20
+sizeof|sizeof
+name|iplace
 operator|)
 condition|)
 do|;
@@ -2740,7 +2748,8 @@ if|if
 condition|(
 name|iplace
 operator|==
-literal|20
+sizeof|sizeof
+name|iplace
 condition|)
 name|iplace
 operator|--
@@ -2794,7 +2803,8 @@ if|if
 condition|(
 name|fplace
 operator|==
-literal|20
+sizeof|sizeof
+name|fplace
 condition|)
 name|fplace
 operator|--

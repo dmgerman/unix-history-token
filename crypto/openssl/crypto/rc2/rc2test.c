@@ -29,10 +29,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_RC2
+name|OPENSSL_NO_RC2
 end_ifdef
 
 begin_function
@@ -1263,7 +1269,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|exit
+name|EXIT
 argument_list|(
 name|err
 argument_list|)

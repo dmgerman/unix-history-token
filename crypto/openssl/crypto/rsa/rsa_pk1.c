@@ -49,6 +49,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -73,7 +74,7 @@ operator|>
 operator|(
 name|tlen
 operator|-
-literal|11
+name|RSA_PKCS1_PADDING_SIZE
 operator|)
 condition|)
 block|{
@@ -179,6 +180,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -196,6 +198,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -411,6 +414,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -598,6 +602,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -615,6 +620,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

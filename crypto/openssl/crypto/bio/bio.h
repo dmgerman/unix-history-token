@@ -22,7 +22,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_include
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
 end_include
 
 begin_ifdef
@@ -428,7 +434,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)->flags& BIO_FLAGS_SHOULD_RETRY)
-comment|/* The next two are used in conjunction with the  * BIO_should_io_special() condition.  After this returns true,  * BIO *BIO_get_retry_BIO(BIO *bio, int *reason); will walk the BIO   * stack and return the 'reason' for the special and the offending BIO.  * Given a BIO, BIO_get_retry_reason(bio) will return the code. */
+comment|/* The next three are used in conjunction with the  * BIO_should_io_special() condition.  After this returns true,  * BIO *BIO_get_retry_BIO(BIO *bio, int *reason); will walk the BIO   * stack and return the 'reason' for the special and the offending BIO.  * Given a BIO, BIO_get_retry_reason(bio) will return the code. */
 comment|/* Returned from the SSL bio when the certificate retrieval code had an error */
 define|#
 directive|define
@@ -439,6 +445,11 @@ define|#
 directive|define
 name|BIO_RR_CONNECT
 value|0x02
+comment|/* Returned from the accept BIO when an accept would have blocked */
+define|#
+directive|define
+name|BIO_RR_ACCEPT
+value|0x03
 comment|/* These are passed by the BIO callback */
 define|#
 directive|define
@@ -564,7 +575,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 typedef|typedef
 struct|struct
 name|bio_method_st
@@ -1748,7 +1759,7 @@ name|b
 parameter_list|,
 name|cbp
 parameter_list|)
-value|(int)BIO_ctrl(b,BIO_CTRL_GET_CALLBACK,0,(bio_info_cb **)(cbp))
+value|(int)BIO_ctrl(b,BIO_CTRL_GET_CALLBACK,0, \ 						   cbp)
 define|#
 directive|define
 name|BIO_set_info_callback
@@ -1757,7 +1768,7 @@ name|b
 parameter_list|,
 name|cb
 parameter_list|)
-value|(int)BIO_callback_ctrl(b,BIO_CTRL_SET_CALLBACK,(bio_info_cb *)(cb))
+value|(int)BIO_callback_ctrl(b,BIO_CTRL_SET_CALLBACK,cb)
 comment|/* For the BIO_f_buffer() type */
 define|#
 directive|define
@@ -1920,12 +1931,12 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 operator|&&
 name|defined
@@ -2124,6 +2135,20 @@ specifier|const
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+name|int
+name|BIO_indent
+parameter_list|(
+name|BIO
+modifier|*
+name|b
+parameter_list|,
+name|int
+name|indent
+parameter_list|,
+name|int
+name|max
 parameter_list|)
 function_decl|;
 name|long
@@ -2351,7 +2376,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|WIN16
+name|OPENSSL_SYS_WIN16
 name|long
 name|BIO_debug_callback
 parameter_list|(
@@ -2455,6 +2480,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_OS2
 name|BIO_METHOD
 modifier|*
 name|BIO_s_log
@@ -2462,6 +2490,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|BIO_METHOD
 modifier|*
 name|BIO_s_bio
@@ -2492,7 +2522,7 @@ parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 name|BIO_METHOD
 modifier|*
 name|BIO_f_linebuffer
@@ -2759,20 +2789,7 @@ modifier|*
 name|b
 parameter_list|)
 function_decl|;
-name|long
-name|BIO_ghbn_ctrl
-parameter_list|(
-name|int
-name|cmd
-parameter_list|,
-name|int
-name|iarg
-parameter_list|,
-name|char
-modifier|*
-name|parg
-parameter_list|)
-function_decl|;
+comment|/*long BIO_ghbn_ctrl(int cmd,int iarg,char *parg);*/
 name|int
 name|BIO_printf
 parameter_list|(
@@ -2953,6 +2970,10 @@ name|BIO_F_FILE_CTRL
 value|116
 define|#
 directive|define
+name|BIO_F_FILE_READ
+value|130
+define|#
+directive|define
 name|BIO_F_LINEBUFFER_CTRL
 value|129
 define|#
@@ -3048,6 +3069,10 @@ define|#
 directive|define
 name|BIO_R_NO_PORT_SPECIFIED
 value|114
+define|#
+directive|define
+name|BIO_R_NO_SUCH_FILE
+value|128
 define|#
 directive|define
 name|BIO_R_NULL_PARAMETER

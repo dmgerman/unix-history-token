@@ -195,6 +195,9 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
 name|BN_copy
 argument_list|(
 operator|&
@@ -206,7 +209,13 @@ operator|)
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
 name|BN_zero
 argument_list|(
 operator|&
@@ -216,7 +225,10 @@ operator|->
 name|Nr
 operator|)
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|recp
 operator|->
 name|num_bits
@@ -248,10 +260,12 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|x
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|y
@@ -273,6 +287,11 @@ decl_stmt|;
 name|BIGNUM
 modifier|*
 name|a
+decl_stmt|;
+specifier|const
+name|BIGNUM
+modifier|*
+name|ca
 decl_stmt|;
 name|BN_CTX_start
 argument_list|(
@@ -345,29 +364,31 @@ goto|goto
 name|err
 goto|;
 block|}
+name|ca
+operator|=
+name|a
+expr_stmt|;
 block|}
 else|else
-name|a
+name|ca
 operator|=
 name|x
 expr_stmt|;
 comment|/* Just do the mod */
+name|ret
+operator|=
 name|BN_div_recp
 argument_list|(
 name|NULL
 argument_list|,
 name|r
 argument_list|,
-name|a
+name|ca
 argument_list|,
 name|recp
 argument_list|,
 name|ctx
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|1
 expr_stmt|;
 name|err
 label|:
@@ -396,6 +417,7 @@ name|BIGNUM
 modifier|*
 name|rem
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|m
@@ -524,18 +546,30 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|BN_zero
 argument_list|(
 name|d
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
 name|BN_copy
 argument_list|(
 name|r
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 name|BN_CTX_end
 argument_list|(
 name|ctx
@@ -548,6 +582,7 @@ operator|)
 return|;
 block|}
 comment|/* We want the remainder 	 * Given input of ABCDEF / ab 	 * we need multiply ABCDEF by 3 digests of the reciprocal of ab 	 * 	 */
+comment|/* i := max(BN_num_bits(m), 2*BN_num_bits(N)) */
 name|i
 operator|=
 name|BN_num_bits
@@ -573,10 +608,7 @@ name|i
 operator|=
 name|j
 expr_stmt|;
-name|j
-operator|>>=
-literal|1
-expr_stmt|;
+comment|/* Nr := round(2^i / N) */
 if|if
 condition|(
 name|i
@@ -610,6 +642,20 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
+comment|/* BN_reciprocal returns i, or -1 for an error */
+if|if
+condition|(
+name|recp
+operator|->
+name|shift
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|err
+goto|;
+comment|/* d := |round(round(m / 2^BN_num_bits(N)) * recp->Nr / 2^(i - BN_num_bits(N)))| 	 *    = |round(round(m / 2^BN_num_bits(N)) * round(2^i / N) / 2^(i - BN_num_bits(N)))| 	 *<= |(m / 2^BN_num_bits(N)) * (2^i / N) * (2^BN_num_bits(N) / 2^i)| 	 *    = |m/N| 	 */
 if|if
 condition|(
 operator|!
@@ -619,7 +665,9 @@ name|a
 argument_list|,
 name|m
 argument_list|,
-name|j
+name|recp
+operator|->
+name|num_bits
 argument_list|)
 condition|)
 goto|goto
@@ -658,7 +706,9 @@ name|b
 argument_list|,
 name|i
 operator|-
-name|j
+name|recp
+operator|->
+name|num_bits
 argument_list|)
 condition|)
 goto|goto
@@ -844,6 +894,10 @@ begin_comment
 comment|/* len is the expected size of the result  * We actually calculate with an extra word of precision, so  * we can do faster division if the remainder is not required.  */
 end_comment
 
+begin_comment
+comment|/* r := 2^len / m */
+end_comment
+
 begin_function
 name|int
 name|BN_reciprocal
@@ -852,6 +906,7 @@ name|BIGNUM
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|m
@@ -879,12 +934,18 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|BN_zero
 argument_list|(
 operator|&
 name|t
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!

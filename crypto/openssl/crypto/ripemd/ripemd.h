@@ -19,6 +19,12 @@ directive|define
 name|HEADER_RIPEMD_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -33,7 +39,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_RIPEMD
+name|OPENSSL_NO_RIPEMD
 error|#
 directive|error
 error|RIPEMD is disabled.
@@ -43,7 +49,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 operator|||
 name|defined
@@ -58,7 +64,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_CRAY
+name|OPENSSL_SYS_CRAY
 argument_list|)
 operator|||
 name|defined
@@ -125,7 +131,7 @@ decl_stmt|;
 block|}
 name|RIPEMD160_CTX
 typedef|;
-name|void
+name|int
 name|RIPEMD160_Init
 parameter_list|(
 name|RIPEMD160_CTX
@@ -133,7 +139,7 @@ modifier|*
 name|c
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|RIPEMD160_Update
 parameter_list|(
 name|RIPEMD160_CTX
@@ -150,7 +156,7 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|RIPEMD160_Final
 parameter_list|(
 name|unsigned

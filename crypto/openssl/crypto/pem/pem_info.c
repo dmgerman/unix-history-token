@@ -52,7 +52,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_expr_stmt
@@ -341,7 +341,7 @@ name|error
 operator|=
 name|ERR_GET_REASON
 argument_list|(
-name|ERR_peek_error
+name|ERR_peek_last_error
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -620,7 +620,7 @@ block|}
 elseif|else
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 if|if
 condition|(
 name|strcmp
@@ -775,7 +775,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DSA
+name|OPENSSL_NO_DSA
 if|if
 condition|(
 name|strcmp
@@ -1503,6 +1503,27 @@ name|err
 goto|;
 block|}
 comment|/* create the right magic header stuff */
+name|OPENSSL_assert
+argument_list|(
+name|strlen
+argument_list|(
+name|objstr
+argument_list|)
+operator|+
+literal|23
+operator|+
+literal|2
+operator|*
+name|enc
+operator|->
+name|iv_len
+operator|+
+literal|13
+operator|<=
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
 name|buf
 index|[
 literal|0
@@ -1565,7 +1586,7 @@ block|{
 comment|/* Add DSA/DH */
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 comment|/* normal optionally encrypted stuff */
 if|if
 condition|(
@@ -1637,7 +1658,7 @@ literal|1
 expr_stmt|;
 name|err
 label|:
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|(
 name|char
@@ -1646,19 +1667,15 @@ operator|)
 operator|&
 name|ctx
 argument_list|,
-literal|0
-argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|PEM_BUFSIZE
 argument_list|)

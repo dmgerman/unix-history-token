@@ -19,6 +19,12 @@ directive|define
 name|HEADER_MD4_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -33,7 +39,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_MD4
+name|OPENSSL_NO_MD4
 error|#
 directive|error
 error|MD4 is disabled.
@@ -44,7 +50,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|WIN16
+name|OPENSSL_SYS_WIN16
 argument_list|)
 operator|||
 name|defined
@@ -59,7 +65,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_CRAY
+name|OPENSSL_SYS_CRAY
 argument_list|)
 operator|||
 name|defined
@@ -125,7 +131,7 @@ decl_stmt|;
 block|}
 name|MD4_CTX
 typedef|;
-name|void
+name|int
 name|MD4_Init
 parameter_list|(
 name|MD4_CTX
@@ -133,7 +139,7 @@ modifier|*
 name|c
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MD4_Update
 parameter_list|(
 name|MD4_CTX
@@ -150,7 +156,7 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MD4_Final
 parameter_list|(
 name|unsigned

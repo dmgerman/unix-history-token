@@ -38,7 +38,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifndef
 
 begin_include
@@ -61,7 +61,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NO_BIO
+name|OPENSSL_NO_BIO
 end_ifdef
 
 begin_function
@@ -253,53 +253,10 @@ operator|->
 name|num_hash_comps
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"p                     = %u\n"
-argument_list|,
-name|lh
-operator|->
-name|p
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"pmax                  = %u\n"
-argument_list|,
-name|lh
-operator|->
-name|pmax
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"up_load               = %lu\n"
-argument_list|,
-name|lh
-operator|->
-name|up_load
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"down_load             = %lu\n"
-argument_list|,
-name|lh
-operator|->
-name|down_load
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|fprintf(out,"p                     = %u\n",lh->p); 	fprintf(out,"pmax                  = %u\n",lh->pmax); 	fprintf(out,"up_load               = %lu\n",lh->up_load); 	fprintf(out,"down_load             = %lu\n",lh->down_load);
 endif|#
 directive|endif
 block|}
@@ -583,13 +540,14 @@ end_else
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_FP_API
+name|OPENSSL_NO_FP_API
 end_ifndef
 
 begin_function
 name|void
 name|lh_stats
 parameter_list|(
+specifier|const
 name|LHASH
 modifier|*
 name|lh
@@ -651,6 +609,7 @@ begin_function
 name|void
 name|lh_node_stats
 parameter_list|(
+specifier|const
 name|LHASH
 modifier|*
 name|lh
@@ -712,6 +671,7 @@ begin_function
 name|void
 name|lh_node_usage_stats
 parameter_list|(
+specifier|const
 name|LHASH
 modifier|*
 name|lh
@@ -778,6 +738,7 @@ begin_function
 name|void
 name|lh_stats_bio
 parameter_list|(
+specifier|const
 name|LHASH
 modifier|*
 name|lh
@@ -787,15 +748,9 @@ modifier|*
 name|out
 parameter_list|)
 block|{
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|sprintf
+name|BIO_printf
 argument_list|(
-name|buf
+name|out
 argument_list|,
 literal|"num_items             = %lu\n"
 argument_list|,
@@ -804,16 +759,9 @@ operator|->
 name|num_items
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_nodes             = %u\n"
 argument_list|,
@@ -822,16 +770,9 @@ operator|->
 name|num_nodes
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_alloc_nodes       = %u\n"
 argument_list|,
@@ -840,16 +781,9 @@ operator|->
 name|num_alloc_nodes
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_expands           = %lu\n"
 argument_list|,
@@ -858,16 +792,9 @@ operator|->
 name|num_expands
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_expand_reallocs   = %lu\n"
 argument_list|,
@@ -876,16 +803,9 @@ operator|->
 name|num_expand_reallocs
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_contracts         = %lu\n"
 argument_list|,
@@ -894,16 +814,9 @@ operator|->
 name|num_contracts
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_contract_reallocs = %lu\n"
 argument_list|,
@@ -912,16 +825,9 @@ operator|->
 name|num_contract_reallocs
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_hash_calls        = %lu\n"
 argument_list|,
@@ -930,16 +836,9 @@ operator|->
 name|num_hash_calls
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_comp_calls        = %lu\n"
 argument_list|,
@@ -948,16 +847,9 @@ operator|->
 name|num_comp_calls
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_insert            = %lu\n"
 argument_list|,
@@ -966,16 +858,9 @@ operator|->
 name|num_insert
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_replace           = %lu\n"
 argument_list|,
@@ -984,16 +869,9 @@ operator|->
 name|num_replace
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_delete            = %lu\n"
 argument_list|,
@@ -1002,16 +880,9 @@ operator|->
 name|num_delete
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_no_delete         = %lu\n"
 argument_list|,
@@ -1020,16 +891,9 @@ operator|->
 name|num_no_delete
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_retrieve          = %lu\n"
 argument_list|,
@@ -1038,16 +902,9 @@ operator|->
 name|num_retrieve
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_retrieve_miss     = %lu\n"
 argument_list|,
@@ -1056,16 +913,9 @@ operator|->
 name|num_retrieve_miss
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"num_hash_comps        = %lu\n"
 argument_list|,
@@ -1074,88 +924,10 @@ operator|->
 name|num_hash_comps
 argument_list|)
 expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"p                     = %u\n"
-argument_list|,
-name|lh
-operator|->
-name|p
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pmax                  = %u\n"
-argument_list|,
-name|lh
-operator|->
-name|pmax
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"up_load               = %lu\n"
-argument_list|,
-name|lh
-operator|->
-name|up_load
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"down_load             = %lu\n"
-argument_list|,
-name|lh
-operator|->
-name|down_load
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|BIO_printf(out,"p                     = %u\n",lh->p); 	BIO_printf(out,"pmax                  = %u\n",lh->pmax); 	BIO_printf(out,"up_load               = %lu\n",lh->up_load); 	BIO_printf(out,"down_load             = %lu\n",lh->down_load);
 endif|#
 directive|endif
 block|}
@@ -1165,6 +937,7 @@ begin_function
 name|void
 name|lh_node_stats_bio
 parameter_list|(
+specifier|const
 name|LHASH
 modifier|*
 name|lh
@@ -1183,12 +956,6 @@ name|int
 name|i
 decl_stmt|,
 name|num
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
 decl_stmt|;
 for|for
 control|(
@@ -1234,22 +1001,15 @@ control|)
 name|num
 operator|++
 expr_stmt|;
-name|sprintf
+name|BIO_printf
 argument_list|(
-name|buf
+name|out
 argument_list|,
 literal|"node %6u -> %3u\n"
 argument_list|,
 name|i
 argument_list|,
 name|num
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1260,6 +1020,7 @@ begin_function
 name|void
 name|lh_node_usage_stats_bio
 parameter_list|(
+specifier|const
 name|LHASH
 modifier|*
 name|lh
@@ -1290,12 +1051,6 @@ decl_stmt|,
 name|n_used
 init|=
 literal|0
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
 decl_stmt|;
 for|for
 control|(
@@ -1357,9 +1112,9 @@ name|num
 expr_stmt|;
 block|}
 block|}
-name|sprintf
+name|BIO_printf
 argument_list|(
-name|buf
+name|out
 argument_list|,
 literal|"%lu nodes used out of %u\n"
 argument_list|,
@@ -1370,27 +1125,13 @@ operator|->
 name|num_nodes
 argument_list|)
 expr_stmt|;
-name|BIO_puts
+name|BIO_printf
 argument_list|(
 name|out
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
 argument_list|,
 literal|"%lu items\n"
 argument_list|,
 name|total
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1400,9 +1141,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|sprintf
+name|BIO_printf
 argument_list|(
-name|buf
+name|out
 argument_list|,
 literal|"load %d.%02d  actual load %d.%02d\n"
 argument_list|,
@@ -1459,13 +1200,6 @@ literal|100
 operator|/
 name|n_used
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|BIO_puts
-argument_list|(
-name|out
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 block|}

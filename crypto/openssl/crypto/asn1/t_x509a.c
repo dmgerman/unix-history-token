@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/asn1_mac.h>
+file|<openssl/asn1.h>
 end_include
 
 begin_include
@@ -148,7 +148,8 @@ name|OBJ_obj2txt
 argument_list|(
 name|oidstr
 argument_list|,
-literal|80
+sizeof|sizeof
+name|oidstr
 argument_list|,
 name|sk_ASN1_OBJECT_value
 argument_list|(
@@ -258,7 +259,8 @@ name|OBJ_obj2txt
 argument_list|(
 name|oidstr
 argument_list|,
-literal|80
+sizeof|sizeof
+name|oidstr
 argument_list|,
 name|sk_ASN1_OBJECT_value
 argument_list|(

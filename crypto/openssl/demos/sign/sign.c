@@ -156,6 +156,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -275,6 +277,8 @@ operator|=
 name|PEM_read_X509
 argument_list|(
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

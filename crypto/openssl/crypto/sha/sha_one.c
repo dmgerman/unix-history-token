@@ -25,10 +25,16 @@ directive|include
 file|<openssl/sha.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SHA0
+name|OPENSSL_NO_SHA0
 end_ifndef
 
 begin_function
@@ -98,12 +104,10 @@ operator|&
 name|c
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|&
 name|c
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

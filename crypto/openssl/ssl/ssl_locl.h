@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"openssl/e_os.h"
+file|"e_os.h"
 end_include
 
 begin_include
@@ -106,6 +106,36 @@ include|#
 directive|include
 file|<openssl/ssl.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/symhacks.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_BUILD_SHLIBSSL
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|OPENSSL_EXTERN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_EXTERN
+value|OPENSSL_EXPORT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -334,7 +364,7 @@ begin_define
 define|#
 directive|define
 name|SSL_MKEY_MASK
-value|0x0000001FL
+value|0x0000003FL
 end_define
 
 begin_define
@@ -391,6 +421,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SSL_kKRB5
+value|0x00000020L
+end_define
+
+begin_comment
+comment|/* Kerberos5 key exchange */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SSL_EDH
 value|(SSL_kEDH|(SSL_AUTH_MASK^SSL_aNULL))
 end_define
@@ -399,14 +440,14 @@ begin_define
 define|#
 directive|define
 name|SSL_AUTH_MASK
-value|0x000003e0L
+value|0x00000FC0L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_aRSA
-value|0x00000020L
+value|0x00000040L
 end_define
 
 begin_comment
@@ -417,7 +458,7 @@ begin_define
 define|#
 directive|define
 name|SSL_aDSS
-value|0x00000040L
+value|0x00000080L
 end_define
 
 begin_comment
@@ -435,14 +476,14 @@ begin_define
 define|#
 directive|define
 name|SSL_aFZA
-value|0x00000080L
+value|0x00000100L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_aNULL
-value|0x00000100L
+value|0x00000200L
 end_define
 
 begin_comment
@@ -453,11 +494,22 @@ begin_define
 define|#
 directive|define
 name|SSL_aDH
-value|0x00000200L
+value|0x00000400L
 end_define
 
 begin_comment
 comment|/* no Authenticate, ADH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_aKRB5
+value|0x00000800L
+end_define
+
+begin_comment
+comment|/* Authenticate with KRB5 */
 end_comment
 
 begin_define
@@ -498,78 +550,92 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSL_KRB5
+value|(SSL_kKRB5|SSL_aKRB5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSL_ENC_MASK
-value|0x0001Fc00L
+value|0x0087F000L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_DES
-value|0x00000400L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_3DES
-value|0x00000800L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_RC4
 value|0x00001000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_RC2
+name|SSL_3DES
 value|0x00002000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_IDEA
+name|SSL_RC4
 value|0x00004000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_eFZA
+name|SSL_RC2
 value|0x00008000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_eNULL
+name|SSL_IDEA
 value|0x00010000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_MAC_MASK
-value|0x00060000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_MD5
+name|SSL_eFZA
 value|0x00020000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_SHA1
+name|SSL_eNULL
 value|0x00040000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_AES
+value|0x00800000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_MAC_MASK
+value|0x00180000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_MD5
+value|0x00080000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_SHA1
+value|0x00100000L
 end_define
 
 begin_define
@@ -583,21 +649,21 @@ begin_define
 define|#
 directive|define
 name|SSL_SSL_MASK
-value|0x00180000L
+value|0x00600000L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_SSLV2
-value|0x00080000L
+value|0x00200000L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_SSLV3
-value|0x00100000L
+value|0x00400000L
 end_define
 
 begin_define
@@ -612,7 +678,7 @@ comment|/* for now */
 end_comment
 
 begin_comment
-comment|/* we have used 001fffff - 11 bits left to go */
+comment|/* we have used 007fffff - 9 bits left to go */
 end_comment
 
 begin_comment
@@ -931,7 +997,7 @@ name|export_mask
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 name|RSA
 modifier|*
 name|rsa_tmp
@@ -958,7 +1024,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 name|DH
 modifier|*
 name|dh_tmp
@@ -1029,7 +1095,7 @@ decl_stmt|;
 comment|/* Obviously we don't have the private keys of these, 	 * so maybe we shouldn't even use the CERT_PKEY type here. */
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|OPENSSL_NO_RSA
 name|RSA
 modifier|*
 name|peer_rsa_tmp
@@ -1039,7 +1105,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_DH
+name|OPENSSL_NO_DH
 name|DH
 modifier|*
 name|peer_dh_tmp
@@ -1336,7 +1402,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 end_ifdef
 
 begin_undef
@@ -2122,7 +2188,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)
@@ -2143,7 +2209,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)
@@ -2685,14 +2751,14 @@ argument_list|(
 name|SSL_CIPHER
 argument_list|)
 operator|*
-name|have
+name|clnt
 argument_list|,
 name|STACK_OF
 argument_list|(
 name|SSL_CIPHER
 argument_list|)
 operator|*
-name|pref
+name|srvr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2843,7 +2909,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)
@@ -2864,7 +2930,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)
@@ -3018,7 +3084,7 @@ parameter_list|,
 name|long
 name|larg
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|parg
 parameter_list|)

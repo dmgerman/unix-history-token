@@ -49,6 +49,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -251,6 +252,7 @@ parameter_list|,
 name|int
 name|tlen
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -270,6 +272,7 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

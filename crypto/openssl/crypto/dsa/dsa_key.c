@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SHA
+name|OPENSSL_NO_SHA
 end_ifndef
 
 begin_include
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"cryptlib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/sha.h>
 end_include
 
 begin_include

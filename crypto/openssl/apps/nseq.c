@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"apps.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/pem.h>
 end_include
 
@@ -33,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"apps.h"
 end_include
 
 begin_undef
@@ -319,7 +319,7 @@ argument_list|,
 literal|"-toseq    output NS Sequence file\n"
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -416,7 +416,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VMS
+name|OPENSSL_SYS_VMS
 block|{
 name|BIO
 modifier|*
@@ -631,7 +631,7 @@ argument_list|(
 name|seq
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

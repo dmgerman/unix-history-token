@@ -39,7 +39,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_MDC2
+name|OPENSSL_NO_MDC2
 error|#
 directive|error
 error|MDC2 is disabled.
@@ -67,7 +67,7 @@ index|[
 name|MDC2_BLOCK
 index|]
 decl_stmt|;
-name|des_cblock
+name|DES_cblock
 name|h
 decl_stmt|,
 name|hh
@@ -79,7 +79,7 @@ comment|/* either 1 or 2, default 1 */
 block|}
 name|MDC2_CTX
 typedef|;
-name|void
+name|int
 name|MDC2_Init
 parameter_list|(
 name|MDC2_CTX
@@ -87,7 +87,7 @@ modifier|*
 name|c
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MDC2_Update
 parameter_list|(
 name|MDC2_CTX
@@ -105,7 +105,7 @@ name|long
 name|len
 parameter_list|)
 function_decl|;
-name|void
+name|int
 name|MDC2_Final
 parameter_list|(
 name|unsigned
