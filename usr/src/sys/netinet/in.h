@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.6 81/11/29 */
+comment|/* in.h 4.7 82/01/24 */
 end_comment
 
 begin_comment
@@ -10,13 +10,6 @@ end_comment
 begin_comment
 comment|/*  * Protocols  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IPPROTO_RAW
-value|-1
-end_define
 
 begin_define
 define|#
@@ -71,6 +64,17 @@ end_define
 
 begin_comment
 comment|/* user datagram protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RAW
+value|255
+end_define
+
+begin_comment
+comment|/* raw IP packet */
 end_comment
 
 begin_define
