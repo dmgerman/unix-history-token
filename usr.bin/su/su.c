@@ -902,8 +902,7 @@ name|PAM_SET_ITEM
 argument_list|(
 name|PAM_RUSER
 argument_list|,
-name|getlogin
-argument_list|()
+name|username
 argument_list|)
 expr_stmt|;
 name|mytty
