@@ -1183,7 +1183,33 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* No autosense yet 		bcopy(sense,&ctio->sense_data, sizeof(*sense)); 		ctio->sense_len = sizeof(*sense);  XXX 		*/
+name|bcopy
+argument_list|(
+name|sense
+argument_list|,
+operator|&
+name|ctio
+operator|->
+name|sense_data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sense
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ctio
+operator|->
+name|sense_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sense
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|ctio
 operator|->
 name|ccb_h
@@ -1630,6 +1656,9 @@ operator|<<
 literal|5
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCSI_REV_SPC
 name|inq
 operator|->
 name|version
@@ -1637,6 +1666,17 @@ operator|=
 name|SCSI_REV_SPC
 expr_stmt|;
 comment|/* was 2 */
+else|#
+directive|else
+name|inq
+operator|->
+name|version
+operator|=
+name|SCSI_REV_3
+expr_stmt|;
+comment|/* was 2 */
+endif|#
+directive|endif
 comment|/* 	 * XXX cpi.hba_inquiry doesn't support Addr16 so we give the 	 * user what they want if they ask for it. 	 */
 if|if
 condition|(
