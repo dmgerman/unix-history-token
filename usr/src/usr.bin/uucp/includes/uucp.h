@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.10	86/01/06	*/
+comment|/*	uucp.h	5.11	86/02/12	*/
 end_comment
 
 begin_include
@@ -83,11 +83,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATT2224
+end_define
+
+begin_comment
+comment|/* AT&T 2224 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BSDTCP
 end_define
 
 begin_comment
 comment|/* 4.2bsd or 2.9bsd TCP/IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDS224
+end_define
+
+begin_comment
+comment|/* Concord Data Systems 2400 */
 end_comment
 
 begin_comment
@@ -132,6 +152,16 @@ end_define
 
 begin_comment
 comment|/* Hayes' Smartmodem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAYES2400
+end_define
+
+begin_comment
+comment|/* Hayes' 2400 baud Smartmodem */
 end_comment
 
 begin_comment
@@ -188,6 +218,16 @@ end_comment
 
 begin_comment
 comment|/* #define UNETTCP	/* 3Com's UNET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR2400
+end_define
+
+begin_comment
+comment|/* USRobotics Courier 2400 */
 end_comment
 
 begin_define
@@ -255,6 +295,33 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|USR2400
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAYES
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAYES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|USR2400&& !HAYES
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|UNETTCP
 argument_list|)
 operator|||
@@ -314,7 +381,7 @@ comment|/*#define	USG	/**/
 end_comment
 
 begin_comment
-comment|/*  * If you are running 4.3bsd, define BSD4_3 and BSD4_2  * If you are just running 4.2bsd, define BSD4_2  */
+comment|/*  * If you are running 4.3bsd, define BSD4_3 and BSD4_2  * If you are just running 4.2bsd, define BSD4_2  * If you are running the BRL version of 4.2BSD define BRL4_2, NOT BSD4_3  */
 end_comment
 
 begin_define
@@ -336,6 +403,43 @@ end_define
 begin_comment
 comment|/**/
 end_comment
+
+begin_comment
+comment|/*#define BRL4_2 /**/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BRL4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BSD4_2
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|BSD4_3
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+endif|BRL4_2
+end_endif
 
 begin_comment
 comment|/*  * If you are running 2.9bsd, define BSD2_9  */
@@ -360,16 +464,23 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*  * If you are running 4.3bsd, you are running the inetd  */
+comment|/*  * If you are running 4.3bsd or BRL 4.2, you are running the inetd  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|BSD4_3
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BRL4_2
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -387,7 +498,7 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|BSD4_3&& !BSDINETD
+endif|(BSD4_3 ||BRL4_2)&& !BSDINETD
 end_endif
 
 begin_comment
@@ -420,22 +531,6 @@ directive|define
 name|WFMASK
 value|0137
 end_define
-
-begin_comment
-comment|/* define UUSTAT if you need "uustat" command */
-end_comment
-
-begin_comment
-comment|/* #define UUSTAT	/**/
-end_comment
-
-begin_comment
-comment|/* define UUSUB if you need "uusub" command */
-end_comment
-
-begin_comment
-comment|/* #define UUSUB /**/
-end_comment
 
 begin_comment
 comment|/* define the value of LOGMASK - for LOGFILE, SYSLOG, ERRLOG */
@@ -621,13 +716,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SQLOCK
-value|"SQ"
-end_define
-
-begin_define
-define|#
-directive|define
 name|SYSLOG
 value|"/usr/spool/uucp/SYSLOG"
 end_define
@@ -637,6 +725,13 @@ define|#
 directive|define
 name|PUBDIR
 value|"/usr/spool/uucppublic"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SQLOCK
+value|"SQ"
 end_define
 
 begin_define
