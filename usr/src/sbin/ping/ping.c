@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	5.1 (Berkeley) %G%"
+literal|"@(#)ping.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,9 +573,6 @@ name|catcher
 argument_list|()
 decl_stmt|,
 name|finish
-argument_list|()
-decl_stmt|,
-name|prefinish
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -1587,7 +1584,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|prefinish
+name|finish
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3391,50 +3388,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * prefinish --  *	On the first SIGINT, allow any outstanding packets to dribble in.  */
-end_comment
-
-begin_macro
-name|prefinish
-argument_list|()
-end_macro
-
-begin_block
-block|{
-comment|/* quit now if caught up or if remote is dead */
-if|if
-condition|(
-operator|!
-name|nreceived
-operator|||
-name|nreceived
-operator|>=
-name|ntransmitted
-condition|)
-name|finish
-argument_list|()
-expr_stmt|;
-comment|/* do this only the 1st time, let the normal limit work */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|finish
-argument_list|)
-expr_stmt|;
-name|npackets
-operator|=
-name|ntransmitted
-operator|+
-literal|1
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * finish --  *	Print out statistics, and give up.  */
 end_comment
 
@@ -3445,6 +3398,16 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
