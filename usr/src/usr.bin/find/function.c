@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.7 (Berkeley) %G%"
+literal|"@(#)function.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2448,6 +2448,10 @@ decl_stmt|;
 name|mode_t
 modifier|*
 name|set
+decl_stmt|,
+modifier|*
+name|setmode
+argument_list|()
 decl_stmt|;
 name|ftsoptions
 operator|&=
