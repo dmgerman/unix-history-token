@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* cre-conv-tab.c -- Create conversion table in a wordsize-dependent way.  Copyright (C) 1991 Free Software Foundation, Inc.  This file is part of the GNU MP Library.  The GNU MP Library is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  The GNU MP Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with the GNU MP Library; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* cre-conv-tab.c -- Create conversion table in a wordsize-dependent way.   $Id$  Copyright (C) 1991 Free Software Foundation, Inc.  This file is part of the GNU MP Library.  The GNU MP Library is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  The GNU MP Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with the GNU MP Library; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
 
 begin_include
 include|#
@@ -21,22 +33,6 @@ directive|include
 file|"longlong.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|double
-name|floor
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|double
-name|log
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|unsigned
@@ -44,19 +40,15 @@ name|long
 name|int
 name|upow
 parameter_list|(
-name|b
-parameter_list|,
-name|e
-parameter_list|)
 name|unsigned
 name|long
 name|int
 name|b
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|e
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -116,13 +108,11 @@ name|unsigned
 name|int
 name|ulog2
 parameter_list|(
-name|x
-parameter_list|)
 name|unsigned
 name|long
 name|int
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -152,8 +142,11 @@ block|}
 end_function
 
 begin_function
+name|void
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
