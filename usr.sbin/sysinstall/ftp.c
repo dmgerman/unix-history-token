@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.3 1995/05/24 09:00:19 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -79,6 +79,24 @@ begin_include
 include|#
 directive|include
 file|"ftp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_ifndef
@@ -827,15 +845,6 @@ name|unsigned
 name|long
 name|temp
 decl_stmt|;
-specifier|extern
-name|unsigned
-name|long
-name|inet_addr
-argument_list|(
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1032,6 +1041,8 @@ condition|)
 block|{
 name|debug
 argument_list|(
+name|ftp
+argument_list|,
 literal|"Socket open failed: %s (%i)\n"
 argument_list|,
 name|strerror
@@ -1071,6 +1082,8 @@ condition|)
 block|{
 name|debug
 argument_list|(
+name|ftp
+argument_list|,
 literal|"Connection failed: %s (%i)\n"
 argument_list|,
 name|strerror
@@ -1380,6 +1393,15 @@ operator|->
 name|passive
 condition|)
 block|{
+name|debug
+argument_list|(
+name|ftp
+argument_list|,
+literal|"LIBFTP: send<%s>\n"
+argument_list|,
+literal|"PASV"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|writes
@@ -1395,6 +1417,8 @@ return|return
 operator|-
 literal|1
 return|;
+operator|*
+operator|/
 name|i
 operator|=
 name|get_a_number
@@ -1518,6 +1542,27 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|debug
+argument_list|(
+name|ftp
+argument_list|,
+literal|"Opening active socket to %s : %u\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|,
+name|htons
+argument_list|(
+name|sin
+operator|.
+name|sin_port
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1541,6 +1586,27 @@ return|return
 operator|-
 literal|1
 return|;
+name|debug
+argument_list|(
+name|ftp
+argument_list|,
+literal|"Connecting to %s:%u\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|,
+name|htons
+argument_list|(
+name|sin
+operator|.
+name|sin_port
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|connect
@@ -1576,7 +1642,12 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"connect, errno = %d\n"
+literal|"connect: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|,
 name|errno
 argument_list|)
@@ -1770,7 +1841,7 @@ name|FtpChdir
 argument_list|(
 name|ftp
 argument_list|,
-literal|"/pub"
+literal|"/"
 argument_list|)
 expr_stmt|;
 name|FtpChdir
@@ -1786,7 +1857,7 @@ name|FtpGet
 argument_list|(
 name|ftp
 argument_list|,
-literal|"README_CTM_MOVED"
+literal|"README"
 argument_list|)
 expr_stmt|;
 while|while
