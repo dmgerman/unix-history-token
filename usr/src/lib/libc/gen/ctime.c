@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.26 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5982,23 +5982,6 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|--
-operator|*
-name|tensptr
-expr_stmt|;
-operator|*
-name|unitsptr
-operator|+=
-name|base
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|unitsptr
-operator|<
-literal|0
-condition|)
-block|{
 operator|*
 name|tensptr
 operator|-=
@@ -6006,8 +5989,12 @@ literal|1
 operator|+
 operator|(
 operator|-
+operator|(
 operator|*
 name|unitsptr
+operator|+
+literal|1
+operator|)
 operator|)
 operator|/
 name|base
@@ -6017,15 +6004,20 @@ name|unitsptr
 operator|=
 name|base
 operator|-
+literal|1
+operator|-
 operator|(
 operator|-
+operator|(
 operator|*
 name|unitsptr
+operator|+
+literal|1
+operator|)
 operator|)
 operator|%
 name|base
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
