@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -223,10 +223,16 @@ name|NULL
 operator|||
 name|mp
 operator|->
-name|m_dev
+name|m_fs
 operator|==
-name|NODEV
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|)
+literal|1
 condition|)
+comment|/* XXX */
 continue|continue;
 name|fs
 operator|=
@@ -1507,7 +1513,7 @@ name|KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Getfs maps a device number into a pointer to the incore super block.  *  * The algorithm is a linear search through the mount table. A  * consistency check of the super block magic number is performed.  *  * panic: no fs -- the device is not mounted.  *	this "cannot happen"  */
+comment|/*  * Getfs maps a device number into a pointer to the incore super block.  *  * The algorithm is a linear search through the mount table. A  * consistency check of the super block magic number is performed.  * Filesystems still working on a mount are skipped.  *  * panic: no fs -- the device is not mounted.  *	this "cannot happen"  */
 end_comment
 
 begin_function
@@ -1560,16 +1566,28 @@ if|if
 condition|(
 name|mp
 operator|->
+name|m_dev
+operator|!=
+name|dev
+operator|||
+name|mp
+operator|->
 name|m_fs
 operator|==
 name|NULL
 operator|||
 name|mp
 operator|->
-name|m_dev
-operator|!=
-name|dev
+name|m_fs
+operator|==
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|)
+literal|1
 condition|)
+comment|/* XXX */
 continue|continue;
 name|fs
 operator|=
