@@ -1515,7 +1515,7 @@ literal|0
 block|if uhci_init 		was successful 		    we should call something like uhci_deinit
 endif|#
 directive|endif
-comment|/* 		 * disable interrupts that might have been switched on in 		 * uhci_init. 		 */
+comment|/* 	 * disable interrupts that might have been switched on in 	 * uhci_init. 	 */
 if|if
 condition|(
 name|sc
