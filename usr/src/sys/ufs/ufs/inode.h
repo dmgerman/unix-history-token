@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -90,12 +90,6 @@ modifier|*
 name|i_text
 decl_stmt|;
 comment|/* text entry, if any (should be region) */
-name|struct
-name|inode
-modifier|*
-name|i_devlst
-decl_stmt|;
-comment|/* list of block device inodes */
 name|long
 name|i_diroff
 decl_stmt|;
@@ -107,7 +101,7 @@ comment|/* end of useful stuff in directory */
 name|long
 name|i_spare
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 union|union
@@ -281,59 +275,6 @@ directive|define
 name|i_back
 value|i_chain[1]
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|u_long
-name|nextgennumber
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* next generation number to assign */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnodeops
-name|ufs_vnodeops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode operations for ufs */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnodeops
-name|blk_vnodeops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode operations for blk devices */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|ino_t
-name|dirpref
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* flags */
@@ -531,6 +472,24 @@ name|mode
 parameter_list|)
 value|(int)(VTTOIF(indx) | (mode))
 end_define
+
+begin_decl_stmt
+name|u_long
+name|nextgennumber
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* next generation number to assign */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|ino_t
+name|dirpref
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Lock and unlock inodes.  */
