@@ -743,6 +743,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|send_len
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* counters */
 end_comment
@@ -1201,12 +1207,12 @@ name|hold
 decl_stmt|,
 name|i
 decl_stmt|,
+name|icmp_len
+decl_stmt|,
 name|mib
 index|[
 literal|4
 index|]
-decl_stmt|,
-name|packlen
 decl_stmt|,
 name|preload
 decl_stmt|,
@@ -2229,18 +2235,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|maxpayload
+name|icmp_len
 operator|=
-name|IP_MAXPACKET
-operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
 argument_list|)
-operator|-
+operator|+
 name|MINICMPLEN
-operator|-
+operator|+
 name|phdr_len
 expr_stmt|;
 if|if
@@ -2249,9 +2253,15 @@ name|options
 operator|&
 name|F_RROUTE
 condition|)
-name|maxpayload
-operator|-=
+name|icmp_len
+operator|+=
 name|MAX_IPOPTLEN
+expr_stmt|;
+name|maxpayload
+operator|=
+name|IP_MAXPACKET
+operator|-
+name|icmp_len
 expr_stmt|;
 if|if
 condition|(
@@ -2269,6 +2279,12 @@ name|datalen
 argument_list|,
 name|maxpayload
 argument_list|)
+expr_stmt|;
+name|send_len
+operator|=
+name|icmp_len
+operator|+
+name|datalen
 expr_stmt|;
 name|datap
 operator|=
@@ -2743,24 +2759,6 @@ comment|/* can we time transfer */
 name|timing
 operator|=
 literal|1
-expr_stmt|;
-name|packlen
-operator|=
-name|MAXIPLEN
-operator|+
-name|MAXICMPLEN
-operator|+
-name|datalen
-expr_stmt|;
-name|packlen
-operator|=
-name|packlen
-operator|>
-name|IP_MAXPACKET
-condition|?
-name|IP_MAXPACKET
-else|:
-name|packlen
 expr_stmt|;
 if|if
 condition|(
@@ -3815,7 +3813,7 @@ name|iov
 operator|.
 name|iov_len
 operator|=
-name|packlen
+name|IP_MAXPACKET
 expr_stmt|;
 if|if
 condition|(
@@ -4940,6 +4938,8 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
+name|recv_len
+decl_stmt|,
 name|seq
 decl_stmt|;
 specifier|static
@@ -4970,6 +4970,10 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
+expr_stmt|;
+name|recv_len
+operator|=
+name|cc
 expr_stmt|;
 if|if
 condition|(
@@ -5419,6 +5423,26 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|recv_len
+operator|!=
+name|send_len
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\nwrong total length %d instead of %d"
+argument_list|,
+name|recv_len
+argument_list|,
+name|send_len
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* check the data */
 name|cp
 operator|=
@@ -5570,7 +5594,7 @@ condition|(
 operator|(
 name|i
 operator|%
-literal|32
+literal|16
 operator|)
 operator|==
 literal|8
@@ -5588,7 +5612,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%x "
+literal|"%2x "
 argument_list|,
 operator|*
 name|cp
@@ -5633,7 +5657,7 @@ condition|(
 operator|(
 name|i
 operator|%
-literal|32
+literal|16
 operator|)
 operator|==
 literal|8
@@ -5651,7 +5675,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%x "
+literal|"%2x "
 argument_list|,
 operator|*
 name|cp
