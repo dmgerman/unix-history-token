@@ -5389,7 +5389,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DC_CTYPE_PUP_AUTOSENSe
+name|DC_CTYPE_PUP_AUTOSENSE
 value|0x8800
 end_define
 
