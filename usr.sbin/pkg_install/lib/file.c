@@ -917,9 +917,9 @@ literal|"tar"
 argument_list|,
 name|Verbose
 condition|?
-literal|"-xzvf"
+literal|"-xzpvf"
 else|:
-literal|"-xzf"
+literal|"-xzpf"
 argument_list|,
 literal|"-"
 argument_list|,
