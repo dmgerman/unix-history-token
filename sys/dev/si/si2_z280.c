@@ -8,6 +8,7 @@ comment|/* SI2_Z280.C Version, Bootstrap and Download Code Arrays... */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|si2_z280_ident

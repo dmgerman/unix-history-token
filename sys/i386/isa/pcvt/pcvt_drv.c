@@ -5157,6 +5157,7 @@ define|#
 directive|define
 name|cntld
 value|4
+specifier|static
 name|int
 name|getchar
 parameter_list|(

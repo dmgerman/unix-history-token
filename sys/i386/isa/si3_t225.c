@@ -8,6 +8,7 @@ comment|/* SI3_T225.C Version, Bootstrap and Download Code Arrays... */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|si3_t225_ident
