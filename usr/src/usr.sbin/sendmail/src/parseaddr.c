@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.31 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3106,7 +3106,7 @@ name|s_class
 argument_list|)
 condition|)
 goto|goto
-name|backup
+name|extendclass
 goto|;
 break|break;
 block|}
@@ -4351,6 +4351,8 @@ name|cataddr
 argument_list|(
 name|xpvp
 argument_list|,
+name|NULL
+argument_list|,
 name|replac
 argument_list|,
 operator|&
@@ -4431,6 +4433,8 @@ block|{
 name|cataddr
 argument_list|(
 name|xpvp
+argument_list|,
+name|NULL
 argument_list|,
 name|replac
 argument_list|,
@@ -5295,6 +5299,8 @@ argument_list|(
 operator|++
 name|tv
 argument_list|,
+name|NULL
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -5579,6 +5585,8 @@ name|cataddr
 argument_list|(
 name|tv
 argument_list|,
+name|NULL
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -5694,6 +5702,8 @@ name|cataddr
 argument_list|(
 name|tv
 argument_list|,
+name|NULL
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -5765,7 +5775,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; if null, **			use SpaceSub. ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. */
+comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		evp -- last parameter to include.  Can be NULL to **			use entire pvp. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; if null, **			use SpaceSub. ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. */
 end_comment
 
 begin_function
@@ -5773,6 +5783,8 @@ name|void
 name|cataddr
 parameter_list|(
 name|pvp
+parameter_list|,
+name|evp
 parameter_list|,
 name|buf
 parameter_list|,
@@ -5784,6 +5796,11 @@ name|char
 modifier|*
 modifier|*
 name|pvp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|evp
 decl_stmt|;
 name|char
 modifier|*
@@ -5921,9 +5938,14 @@ name|i
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|pvp
 operator|++
-expr_stmt|;
+operator|==
+name|evp
+condition|)
+break|break;
 block|}
 operator|*
 name|p
