@@ -2390,6 +2390,11 @@ index|[
 name|reqpage
 index|]
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2401,11 +2406,6 @@ condition|)
 block|{
 comment|/* handled by vm_fault now	  */
 comment|/* vm_page_zero_invalid(m, TRUE); */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2450,6 +2450,11 @@ return|return
 literal|0
 return|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|smb_makescred
 argument_list|(
 operator|&
@@ -2597,10 +2602,6 @@ operator|&
 name|smbfs_pbuf_freecnt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -2833,10 +2834,6 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object

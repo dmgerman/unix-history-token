@@ -2319,10 +2319,6 @@ operator|&
 name|nwfs_pbuf_freecnt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -2559,10 +2555,6 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
