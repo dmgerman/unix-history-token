@@ -2600,7 +2600,7 @@ literal|"=other"
 block|}
 block|,
 block|{
-literal|"Snapshots Server"
+literal|"Snapshots Server Japan"
 block|,
 literal|"snapshots.jp.freebsd.org"
 block|,
@@ -2612,6 +2612,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://snapshots.jp.freebsd.org"
+block|}
+block|,
+block|{
+literal|"Snapshots Server Sweden"
+block|,
+literal|"snapshots.se.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://snapshots.se.freebsd.org"
 block|}
 block|,
 block|{
