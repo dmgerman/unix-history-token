@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tth19.c	3.9 83/09/15"
+literal|"@(#)tth19.c	3.10 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -670,7 +670,7 @@ operator|.
 name|tt_row
 operator|==
 name|row
-operator|+
+operator|-
 literal|1
 condition|)
 block|{
