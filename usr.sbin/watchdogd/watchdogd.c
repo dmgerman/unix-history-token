@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -287,7 +281,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Periodically write to the debug.watchdog.reset sysctl OID  * to keep the software watchdog from firing.  */
+comment|/*  * Periodically pat the watchdog, preventing it from firing.  */
 end_comment
 
 begin_function
@@ -573,7 +567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Locate the OID for the 'debug.watchdog.reset' sysctl setting.  * Upon finding it, do an initial reset on the watchdog.  */
+comment|/*  * Open the watchdog device.  */
 end_comment
 
 begin_function
