@@ -611,7 +611,7 @@ name|__inline
 name|u_int8_t
 name|readb
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|addr
 parameter_list|)
 block|{
@@ -646,7 +646,7 @@ name|__inline
 name|u_int16_t
 name|readw
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|addr
 parameter_list|)
 block|{
@@ -681,7 +681,7 @@ name|__inline
 name|u_int32_t
 name|readl
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|addr
 parameter_list|)
 block|{
@@ -716,7 +716,7 @@ name|__inline
 name|void
 name|writeb
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|addr
 parameter_list|,
 name|u_int8_t
@@ -750,7 +750,7 @@ name|__inline
 name|void
 name|writew
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|addr
 parameter_list|,
 name|u_int16_t
@@ -784,7 +784,7 @@ name|__inline
 name|void
 name|writel
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|addr
 parameter_list|,
 name|u_int32_t
@@ -822,7 +822,7 @@ name|u_int8_t
 modifier|*
 name|addr
 parameter_list|,
-name|size_t
+name|u_int64_t
 name|ofs
 parameter_list|,
 name|size_t
@@ -861,10 +861,10 @@ name|__inline
 name|void
 name|memcpy_io
 parameter_list|(
-name|size_t
+name|u_int64_t
 name|dst
 parameter_list|,
-name|size_t
+name|u_int64_t
 name|src
 parameter_list|,
 name|size_t
@@ -913,7 +913,7 @@ name|__inline
 name|void
 name|memcpy_toio
 parameter_list|(
-name|size_t
+name|u_int64_t
 name|ofs
 parameter_list|,
 name|u_int8_t
@@ -956,7 +956,7 @@ name|__inline
 name|void
 name|memset_io
 parameter_list|(
-name|size_t
+name|u_int64_t
 name|ofs
 parameter_list|,
 name|u_int8_t
@@ -1027,7 +1027,7 @@ name|__inline
 name|void
 name|memsetw_io
 parameter_list|(
-name|size_t
+name|u_int64_t
 name|ofs
 parameter_list|,
 name|u_int16_t
