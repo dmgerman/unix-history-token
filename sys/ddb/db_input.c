@@ -1358,21 +1358,5 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* called from kdb_trap in db_interface.c */
-end_comment
-
-begin_function
-name|void
-name|cnpollc
-parameter_list|(
-name|flag
-parameter_list|)
-name|int
-name|flag
-decl_stmt|;
-block|{ }
-end_function
-
 end_unit
 

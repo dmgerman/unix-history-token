@@ -12720,6 +12720,8 @@ argument_list|,
 name|siocncheckc
 argument_list|,
 name|siocnputc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

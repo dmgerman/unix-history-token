@@ -124,6 +124,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|db_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|db_regs_t
 name|ddb_regs
 decl_stmt|;
@@ -338,11 +344,6 @@ name|rss
 argument_list|()
 expr_stmt|;
 block|}
-name|cnpollc
-argument_list|(
-name|TRUE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -405,10 +406,19 @@ name|db_global_jmpbuf_valid
 operator|=
 name|TRUE
 expr_stmt|;
+name|db_active
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|ddb_mode
 condition|)
+block|{
+name|cndbctl
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|db_trap
 argument_list|(
 name|type
@@ -416,6 +426,12 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+name|cndbctl
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|gdb_handle_exception
 argument_list|(
@@ -426,6 +442,9 @@ name|type
 argument_list|,
 name|code
 argument_list|)
+expr_stmt|;
+name|db_active
+operator|--
 expr_stmt|;
 name|db_global_jmpbuf_valid
 operator|=
@@ -507,11 +526,6 @@ comment|/* CPUSTOP_ON_DDBBREAK */
 endif|#
 directive|endif
 comment|/* SMP */
-name|cnpollc
-argument_list|(
-name|FALSE
-argument_list|)
-expr_stmt|;
 name|regs
 operator|->
 name|tf_eip
@@ -995,15 +1009,6 @@ begin_comment
 comment|/*  * XXX  * Move this to machdep.c and allow it to be called if any debugger is  * installed.  */
 end_comment
 
-begin_decl_stmt
-specifier|volatile
-name|int
-name|in_Debugger
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|Debugger
@@ -1016,6 +1021,11 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
+specifier|static
+specifier|volatile
+name|u_char
+name|in_Debugger
+decl_stmt|;
 comment|/* 	 * XXX 	 * Do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
 if|if
 condition|(

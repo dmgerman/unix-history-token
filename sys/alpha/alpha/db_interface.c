@@ -4,6 +4,10 @@ comment|/* $NetBSD: db_interface.c,v 1.2 1997/09/16 19:07:19 thorpej Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*   * Mach Operating System  * Copyright (c) 1992,1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	db_interface.c,v 2.4 1991/02/05 17:11:13 mrt (CMU)  */
 end_comment
 
@@ -175,8 +179,6 @@ end_endif
 begin_decl_stmt
 name|int
 name|db_active
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -912,16 +914,17 @@ expr_stmt|;
 name|db_active
 operator|++
 expr_stmt|;
-name|cnpollc
-argument_list|(
-name|TRUE
-argument_list|)
-expr_stmt|;
-comment|/* Set polling mode, unblank video */
 if|if
 condition|(
 name|ddb_mode
 condition|)
+block|{
+name|cndbctl
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+comment|/* DDB active, unblank video */
 name|db_trap
 argument_list|(
 name|entry
@@ -930,6 +933,13 @@ name|a0
 argument_list|)
 expr_stmt|;
 comment|/* Where the work happens */
+name|cndbctl
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* DDB inactive */
+block|}
 else|else
 name|gdb_handle_exception
 argument_list|(
@@ -941,12 +951,6 @@ argument_list|,
 name|a0
 argument_list|)
 expr_stmt|;
-name|cnpollc
-argument_list|(
-name|FALSE
-argument_list|)
-expr_stmt|;
-comment|/* Resume interrupt mode */
 name|db_active
 operator|--
 expr_stmt|;

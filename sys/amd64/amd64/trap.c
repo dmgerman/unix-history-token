@@ -250,25 +250,11 @@ directive|include
 file|<machine/vm86.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|in_Debugger
-decl_stmt|,
-name|debugger_on_panic
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
 
 begin_include
 include|#
@@ -3155,7 +3141,7 @@ condition|(
 operator|(
 name|debugger_on_panic
 operator|||
-name|in_Debugger
+name|db_active
 operator|)
 operator|&&
 name|kdb_trap

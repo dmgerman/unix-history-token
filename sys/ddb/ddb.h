@@ -109,6 +109,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|db_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|db_indent
 decl_stmt|;
 end_decl_stmt
@@ -124,6 +131,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|db_load_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|debugger_on_panic
 decl_stmt|;
 end_decl_stmt
 
@@ -160,18 +174,6 @@ struct_decl|struct
 name|vm_map
 struct_decl|;
 end_struct_decl
-
-begin_decl_stmt
-name|void
-name|cnpollc
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
