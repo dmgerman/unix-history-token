@@ -260,54 +260,6 @@ begin_comment
 comment|/* host view of screen */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|ScreenImage
-name|Terminal
-index|[
-name|MAXSCREENSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-name|FieldForward
-index|[
-name|MAXSCREENSIZE
-index|]
-decl_stmt|,
-comment|/* non-zero for SF, 0..1919 */
-name|FieldReverse
-index|[
-name|MAXSCREENSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* non-zero for SF, 1919..0 */
-end_comment
-
 begin_decl_stmt
 name|EXTERN
 name|char

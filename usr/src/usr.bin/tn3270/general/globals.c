@@ -86,6 +86,33 @@ directive|include
 file|"../general.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SLOWSCREEN
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|ScreenImage
+name|Terminal
+index|[
+name|MAXSCREENSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(SLOWSCREEN) */
+end_comment
+
 begin_comment
 comment|/*  * init_system()  *  * Initialize the global values in case of a restart.  */
 end_comment
@@ -128,30 +155,6 @@ expr_stmt|;
 name|ClearArray
 argument_list|(
 name|Host
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-name|ClearArray
-argument_list|(
-name|Terminal
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
-name|ClearArray
-argument_list|(
-name|FieldForward
-argument_list|)
-expr_stmt|;
-name|ClearArray
-argument_list|(
-name|FieldReverse
 argument_list|)
 expr_stmt|;
 name|CursorAddress
