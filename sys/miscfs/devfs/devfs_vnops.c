@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.26 1996/09/11 07:52:18 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.27 1996/09/20 05:55:47 nate Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -2076,6 +2076,62 @@ return|return
 name|EINVAL
 return|;
 block|}
+if|if
+condition|(
+name|cred
+operator|->
+name|cr_uid
+operator|!=
+name|file_node
+operator|->
+name|uid
+operator|&&
+operator|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|cred
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_acflag
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|vap
+operator|->
+name|va_vaflags
+operator|&
+name|VA_UTIMES_NULL
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vp
+argument_list|,
+name|VWRITE
+argument_list|,
+name|cred
+argument_list|,
+name|p
+argument_list|)
+operator|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|vap
@@ -6446,7 +6502,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_write
+name|devfs_write
 block|}
 block|,
 comment|/* write */
@@ -6458,7 +6514,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_ioctl
+name|devfs_ioctl
 block|}
 block|,
 comment|/* ioctl */
