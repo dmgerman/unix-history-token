@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.154 2002/02/27 12:12:45 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.155 2002/02/27 12:42:41 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6478,6 +6478,38 @@ if|if
 condition|(
 name|ii
 operator|->
+name|xfer
+operator|->
+name|status
+operator|==
+name|USBD_CANCELLED
+operator|||
+name|ii
+operator|->
+name|xfer
+operator|->
+name|status
+operator|==
+name|USBD_TIMEOUT
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"uhci_check_intr: aborted xfer=%p\n"
+operator|,
+name|ii
+operator|->
+name|xfer
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ii
+operator|->
 name|stdstart
 operator|==
 name|NULL
@@ -6786,32 +6818,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|xfer
-operator|->
-name|status
-operator|==
-name|USBD_CANCELLED
-operator|||
-name|xfer
-operator|->
-name|status
-operator|==
-name|USBD_TIMEOUT
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"uhci_idone: aborted xfer=%p\n"
-operator|,
-name|xfer
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|xfer
