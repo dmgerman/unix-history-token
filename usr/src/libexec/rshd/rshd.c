@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.23 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2205,9 +2205,47 @@ name|pwd
 operator|->
 name|pw_uid
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+name|use_kerberos
+condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
+operator||
+name|LOG_AUTH
+argument_list|,
+literal|"ROOT Kerberos shell from %s.%s@%s on %s, comm: %s\n"
+argument_list|,
+name|kdata
+operator|->
+name|pname
+argument_list|,
+name|kdata
+operator|->
+name|pinst
+argument_list|,
+name|kdata
+operator|->
+name|prealm
+argument_list|,
+name|hostname
+argument_list|,
+name|cmdbuf
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+operator||
+name|LOG_AUTH
 argument_list|,
 literal|"ROOT shell from %s@%s, comm: %s\n"
 argument_list|,
@@ -2218,6 +2256,7 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
+block|}
 name|execl
 argument_list|(
 name|pwd
