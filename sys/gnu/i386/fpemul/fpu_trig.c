@@ -4496,7 +4496,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|fscale
+name|emu_fscale
 parameter_list|(
 name|void
 parameter_list|)
@@ -5182,7 +5182,7 @@ name|fsincos
 block|,
 name|frndint_
 block|,
-name|fscale
+name|emu_fscale
 block|,
 name|fsin
 block|,
