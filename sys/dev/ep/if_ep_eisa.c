@@ -963,7 +963,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ep
+name|if_ep
 argument_list|,
 name|eisa
 argument_list|,
