@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -31,6 +31,26 @@ name|long
 name|tv_usec
 decl_stmt|;
 comment|/* and microseconds */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure defined by POSIX.4 to be like a timeval.  */
+end_comment
+
+begin_struct
+struct|struct
+name|timespec
+block|{
+name|long
+name|ts_sec
+decl_stmt|;
+comment|/* seconds */
+name|long
+name|ts_nsec
+decl_stmt|;
+comment|/* and nanoseconds */
 block|}
 struct|;
 end_struct
