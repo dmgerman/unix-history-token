@@ -2064,6 +2064,12 @@ name|ret
 operator|!=
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|keytable
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|P2T
@@ -2072,6 +2078,7 @@ name|ret
 argument_list|)
 operator|)
 return|;
+block|}
 for|for
 control|(
 name|i
