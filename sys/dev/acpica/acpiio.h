@@ -69,7 +69,7 @@ comment|/* percent */
 name|int
 name|min
 decl_stmt|;
-comment|/* remianing time */
+comment|/* remaining time */
 name|int
 name|state
 decl_stmt|;
@@ -120,11 +120,11 @@ comment|/* Low capacity */
 name|u_int32_t
 name|gra1
 decl_stmt|;
-comment|/* Granulity 1(Warn to Low) */
+comment|/* Granularity 1 (Warn to Low) */
 name|u_int32_t
 name|gra2
 decl_stmt|;
-comment|/* Granulity 2(Full to Warn) */
+comment|/* Granularity 2 (Full to Warn) */
 name|char
 name|model
 index|[
