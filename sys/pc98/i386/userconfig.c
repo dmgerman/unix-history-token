@@ -1199,16 +1199,6 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"matcd"
-block|,
-literal|"Matsushita/Panasonic/Creative CDROM"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
 literal|"wt"
 block|,
 literal|"Wangtek/Archive QIC-02 Tape drive"
