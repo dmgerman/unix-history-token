@@ -522,9 +522,10 @@ name|type
 operator|=
 name|RTP_PRIO_IDLE
 expr_stmt|;
-name|PROC_LOCK
+name|mtx_lock_spin
 argument_list|(
-name|p
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 name|rtp_to_pri
@@ -538,9 +539,10 @@ operator|->
 name|p_pri
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
+name|mtx_unlock_spin
 argument_list|(
-name|p
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 for|for
