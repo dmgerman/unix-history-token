@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)findfp.c	8.1 (Berkeley) %G%"
+literal|"@(#)findfp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,17 +94,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NSTATIC
-value|20
-end_define
-
-begin_comment
-comment|/* stdin + stdout + stderr + the usual */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NDYNAMIC
 value|10
 end_define
@@ -130,21 +119,21 @@ begin_comment
 comment|/*	 p r w flags file _bf z  cookie      close    read    seek    write */
 end_comment
 
+begin_comment
+comment|/* the usual - (stdin + stdout + stderr) */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|FILE
 name|usual
 index|[
-name|NSTATIC
+name|FOPEN_MAX
 operator|-
 literal|3
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* the usual */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -155,7 +144,7 @@ init|=
 block|{
 literal|0
 block|,
-name|NSTATIC
+name|FOPEN_MAX
 operator|-
 literal|3
 block|,
@@ -557,23 +546,25 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|n
-init|=
-name|getdtablesize
-argument_list|()
-operator|-
-name|NSTATIC
-operator|+
-literal|20
-decl_stmt|;
-comment|/* 20 for slop */
 specifier|register
 name|struct
 name|glue
 modifier|*
 name|g
 decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|n
+operator|=
+name|getdtablesize
+argument_list|()
+operator|-
+name|FOPEN_MAX
+operator|+
+literal|20
+expr_stmt|;
+comment|/* 20 for slop. */
 for|for
 control|(
 name|g
