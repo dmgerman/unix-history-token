@@ -5381,9 +5381,15 @@ block|if (bp->bio_blkno< 0 || bp->bio_blkno + sz> maxsz) {
 comment|/* if exactly at end of disk, return an EOF */
 block|if (bp->bio_blkno == maxsz) {                         bp->bio_resid = bp->bio_bcount;                         return(0);                 }
 comment|/* or truncate if part of it fits */
-block|sz = maxsz - bp->bio_blkno;                 if (sz<= 0) {                         bp->bio_error = EINVAL;                         goto bad;                 }                 bp->bio_bcount = sz<< DEV_BSHIFT;         }          bp->bio_pblkno = bp->bio_blkno + p->p_offset;         return(1);  bad:         bp->bio_flags |= BIO_ERROR;
+block|sz = maxsz - bp->bio_blkno;                 if (sz<= 0) {                         bp->bio_error = EINVAL;                         goto bad;                 }                 bp->bio_bcount = sz<< DEV_BSHIFT;         }          bp->bio_pblkno = bp->bio_blkno + p->p_offset;         return(1);  bad:
 endif|#
 directive|endif
+name|bp
+operator|->
+name|bio_flags
+operator||=
+name|BIO_ERROR
+expr_stmt|;
 return|return
 operator|(
 operator|-
