@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.8 (Berkeley) %G%"
+literal|"@(#)stty.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,27 +122,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STATIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_comment
-comment|/* ??? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -152,7 +131,7 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-value|(strcmp(s1, s2) == 0)
+value|(strcmp((s1), (s2)) == 0)
 end_define
 
 begin_define
@@ -161,16 +140,6 @@ directive|define
 name|WRAPCOL
 value|65
 end_define
-
-begin_define
-define|#
-directive|define
-name|COMPAT_43
-end_define
-
-begin_macro
-name|STATIC
-end_macro
 
 begin_struct
 struct|struct
@@ -191,7 +160,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|STATIC
 name|struct
 name|modes
 name|imodes
@@ -396,7 +364,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|struct
 name|modes
 name|omodes
@@ -452,20 +419,6 @@ name|OXTABS
 block|,
 literal|0
 block|,
-literal|"xtabs"
-block|,
-name|OXTABS
-block|,
-literal|0
-block|,
-comment|/* ??? */
-literal|"-xtabs"
-block|,
-literal|0
-block|,
-name|OXTABS
-block|,
-comment|/* ??? */
 literal|"oxtabs"
 block|,
 name|OXTABS
@@ -484,7 +437,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|struct
 name|modes
 name|cmodes
@@ -687,7 +639,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|struct
 name|modes
 name|lmodes
@@ -1016,16 +967,8 @@ begin_define
 define|#
 directive|define
 name|MAXNAMES
-value|5
+value|3
 end_define
-
-begin_comment
-comment|/* ??? */
-end_comment
-
-begin_macro
-name|STATIC
-end_macro
 
 begin_struct
 struct|struct
@@ -1035,11 +978,8 @@ modifier|*
 name|names
 index|[
 name|MAXNAMES
-operator|+
-literal|1
 index|]
 decl_stmt|;
-comment|/* ??? */
 name|int
 name|sub
 decl_stmt|;
@@ -1227,7 +1167,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|STATIC
 name|struct
 name|winsize
 name|win
@@ -1235,21 +1174,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|ldisc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|dodisc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|debug
 init|=
@@ -1258,7 +1194,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|trace
 decl_stmt|,
@@ -1300,7 +1235,6 @@ comment|/* default control descriptor */
 end_comment
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|ctl
 init|=
@@ -1311,15 +1245,6 @@ end_decl_stmt
 begin_extern
 extern|extern errno;
 end_extern
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1366,7 +1291,6 @@ comment|/* print modes in a form that can be re-input to stty */
 end_comment
 
 begin_function
-name|STATIC
 name|main
 parameter_list|(
 name|argc
@@ -1492,108 +1416,6 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
-while|while
-condition|(
-operator|(
-name|ch
-operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|"f:ga"
-argument_list|)
-operator|)
-operator|!=
-name|EOF
-condition|)
-switch|switch
-condition|(
-operator|(
-name|char
-operator|)
-name|ch
-condition|)
-block|{
-case|case
-literal|'f'
-case|:
-if|if
-condition|(
-operator|(
-name|ctl
-operator|=
-name|open
-argument_list|(
-operator|*
-name|optarg
-argument_list|,
-name|O_RDONLY
-operator||
-name|O_NONBLOCK
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|syserrexit
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'a'
-case|:
-name|fmt
-operator|=
-name|ALL
-expr_stmt|;
-break|break;
-case|case
-literal|'g'
-case|:
-name|fmt
-operator|=
-name|GFMT
-expr_stmt|;
-break|break;
-case|case
-literal|'?'
-case|:
-default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|argc
-operator|-=
-name|optind
-expr_stmt|;
-name|argv
-operator|+=
-name|optind
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ioctl
@@ -1648,21 +1470,16 @@ name|warning
 argument_list|(
 literal|"TIOCGWINSZ: %s"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_43
 name|checkredirect
 argument_list|()
 expr_stmt|;
 comment|/* conversion aid */
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
@@ -2067,17 +1884,6 @@ name|c_oflag
 operator|=
 name|TTYDEF_OFLAG
 expr_stmt|;
-name|t
-operator|.
-name|c_oflag
-operator||=
-operator|(
-name|OPOST
-operator||
-name|ONLCR
-operator|)
-expr_stmt|;
-comment|/* XXX */
 goto|goto
 name|next
 goto|;
@@ -2180,9 +1986,6 @@ name|argv
 argument_list|)
 condition|)
 block|{
-name|int
-name|code
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -2958,7 +2761,7 @@ name|SLIPDISC
 case|:
 name|ld
 operator|=
-literal|"slip(ed)"
+literal|"slip"
 expr_stmt|;
 break|break;
 default|default:
@@ -3789,12 +3592,6 @@ block|}
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-end_ifdef
-
 begin_comment
 comment|/*  * gross, but since we're changing the control descriptor  * from 1 to 0, most users will be probably be doing  * "stty> /dev/sometty" by accident. If 1 and 2 are both ttys,   * but not the same, assume that 1 was incorrectly redirected.  */
 end_comment
@@ -3864,13 +3661,7 @@ expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-name|STATIC
 name|char
 modifier|*
 name|ccval
@@ -4021,16 +3812,21 @@ return|;
 block|}
 end_function
 
-begin_function
-name|STATIC
+begin_macro
 name|mdput
-parameter_list|(
-name|s
-parameter_list|)
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|static
 name|int
@@ -4099,48 +3895,89 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|STATIC
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_macro
 name|put
-parameter_list|(
-name|f
-parameter_list|,
-name|a
-parameter_list|)
-comment|/* ??? */
+argument_list|(
+argument|va_alist
+argument_list|)
+end_macro
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_block
+block|{
 name|char
 modifier|*
-name|f
+name|fmt
 decl_stmt|;
-block|{
-name|_doprnt
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
-name|f
+name|ap
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
 argument_list|,
-operator|&
-name|a
-argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
 name|OUT
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|STATIC
+begin_macro
 name|warning
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
+argument_list|(
+argument|va_alist
+argument_list|)
+end_macro
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_block
+block|{
 name|char
 modifier|*
-name|s
+name|fmt
 decl_stmt|;
-block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|ERR
@@ -4148,17 +3985,38 @@ argument_list|,
 literal|"stty: warning: "
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|va_start
 argument_list|(
-name|s
-argument_list|,
-operator|&
-name|a
-argument_list|,
-name|ERR
+name|ap
 argument_list|)
 expr_stmt|;
-comment|/* ??? */
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|ERR
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|ERR
@@ -4167,21 +4025,28 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|STATIC
+begin_macro
 name|errexit
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
+argument_list|(
+argument|va_alist
+argument_list|)
+end_macro
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_block
+block|{
 name|char
 modifier|*
-name|s
+name|fmt
 decl_stmt|;
-block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|ERR
@@ -4189,17 +4054,38 @@ argument_list|,
 literal|"stty: "
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|va_start
 argument_list|(
-name|s
-argument_list|,
-operator|&
-name|a
-argument_list|,
-name|ERR
+name|ap
 argument_list|)
 expr_stmt|;
-comment|/* ??? */
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|ERR
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|ERR
@@ -4213,22 +4099,28 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|STATIC
+begin_macro
 name|syserrexit
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|)
-comment|/* ??? */
+argument_list|(
+argument|va_alist
+argument_list|)
+end_macro
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_block
+block|{
 name|char
 modifier|*
-name|s
+name|fmt
 decl_stmt|;
-block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|ERR
@@ -4236,14 +4128,36 @@ argument_list|,
 literal|"stty: "
 argument_list|)
 expr_stmt|;
-name|_doprnt
+name|va_start
 argument_list|(
-name|s
+name|ap
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
 argument_list|,
-operator|&
-name|a
-argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
 name|ERR
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -4252,10 +4166,10 @@ name|ERR
 argument_list|,
 literal|": %s\n"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4264,7 +4178,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 
