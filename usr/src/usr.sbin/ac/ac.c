@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * acct [ -w wtmp ] [ -d ] [ -p ] [ people ]  */
+comment|/*  * ac [ -w wtmp ] [ -d ] [ -p ] [ people ]  */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.5 (Berkeley) %G%"
+literal|"@(#)ac.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
