@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.23 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.24 %G%"; */
 end_comment
 
 begin_define
@@ -2414,6 +2414,15 @@ begin_function_decl
 name|struct
 name|nl
 modifier|*
+name|pcasgconf
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|nl
+modifier|*
 name|gtype
 parameter_list|()
 function_decl|;
@@ -2460,6 +2469,15 @@ name|struct
 name|nl
 modifier|*
 name|cset
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|nl
+modifier|*
+name|tycrang
 parameter_list|()
 function_decl|;
 end_function_decl
