@@ -5721,9 +5721,9 @@ name|vinum_cdevsw
 argument_list|,
 name|VINUMRMINOR
 argument_list|(
-name|VINUM_SD_TYPE
-argument_list|,
 name|sdno
+argument_list|,
+name|VINUM_SD_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
@@ -6463,9 +6463,9 @@ name|vinum_cdevsw
 argument_list|,
 name|VINUMRMINOR
 argument_list|(
-name|VINUM_PLEX_TYPE
-argument_list|,
 name|plexno
+argument_list|,
+name|VINUM_PLEX_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
@@ -7267,9 +7267,9 @@ name|vinum_cdevsw
 argument_list|,
 name|VINUMRMINOR
 argument_list|(
-name|VINUM_VOLUME_TYPE
-argument_list|,
 name|volno
+argument_list|,
+name|VINUM_VOLUME_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
