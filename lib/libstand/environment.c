@@ -810,6 +810,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|value
