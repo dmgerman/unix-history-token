@@ -572,6 +572,9 @@ comment|/* XXX What the hell is this?! */
 block|for (i = 0; i< 8; i++) {                 rseed ^= (rseed<< 8);         }  	f=open("/dev/random",O_NONBLOCK|O_RDONLY); 	if (f>=0) 	{ 		read(f,&devrand,sizeof(devrand)); 		close(f); 	}         srand48((long)rseed^devrand);          for (i = 0; i< seedsize; i++) {                 seed[i] = (lrand48()& 0xff);         }
 else|#
 directive|else
+name|int
+name|i
+decl_stmt|;
 name|srandomdev
 argument_list|()
 expr_stmt|;
@@ -1077,16 +1080,8 @@ argument_list|)
 expr_stmt|;
 name|des_cbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|in
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|deslen
@@ -1386,16 +1381,8 @@ argument_list|)
 expr_stmt|;
 name|des_cbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|buf
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|out
 argument_list|,
 name|strlen
