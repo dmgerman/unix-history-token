@@ -1076,8 +1076,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|ret
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
