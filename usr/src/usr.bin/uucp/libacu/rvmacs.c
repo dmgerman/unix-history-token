@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvmacs.c	4.2 (Berkeley) %G%"
+literal|"@(#)rvmacs.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,10 +148,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|char
-modifier|*
-name|q
-decl_stmt|;
-name|char
 name|c
 decl_stmt|,
 name|acu
@@ -180,10 +176,23 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTISPEED
+name|char
+modifier|*
+name|pp
+decl_stmt|;
+else|#
+directive|else
+else|!MULTISPEED
 name|struct
 name|sgttyb
 name|sg
 decl_stmt|;
+endif|#
+directive|endif
+endif|MULTISPEED
 name|child
 operator|=
 operator|-
