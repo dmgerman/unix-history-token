@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selsub.c	4.4	(Berkeley)	%G%"
+literal|"@(#)selsub.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"sys/types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/file.h"
 end_include
 
 begin_include
@@ -719,10 +725,9 @@ expr_stmt|;
 block|}
 comment|/* after this point, we have a working directory. */
 comment|/* have to call wrapup to clean up */
-if|if
-condition|(
-name|access
-argument_list|(
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|ans1
@@ -733,16 +738,22 @@ name|direct
 argument_list|,
 name|sname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|ans1
 argument_list|,
-literal|04
+name|R_OK
 argument_list|)
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
-name|system
-argument_list|(
+block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|ans1
@@ -755,6 +766,12 @@ name|sname
 argument_list|,
 name|level
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|system
+argument_list|(
+name|ans1
 argument_list|)
 operator|!=
 literal|0
@@ -770,6 +787,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
