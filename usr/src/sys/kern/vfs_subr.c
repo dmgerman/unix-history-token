@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2492,6 +2492,50 @@ name|vnode
 modifier|*
 name|vq
 decl_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VALIASED
+condition|)
+block|{
+comment|/* 		 * If a vgone (or vclean) is already in progress, 		 * wait until it is done and return. 		 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VXLOCK
+condition|)
+block|{
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VXWANT
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vp
+argument_list|,
+name|PINOD
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 		 * Ensure that vp will not be vgone'd while we 		 * are eliminating its aliases. 		 */
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VXLOCK
+expr_stmt|;
 while|while
 condition|(
 name|vp
@@ -2549,6 +2593,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+comment|/* 		 * Remove the lock so that vgone below will 		 * really eliminate the vnode after which time 		 * vgone will awaken any sleepers. 		 */
+name|vp
+operator|->
+name|v_flag
+operator|&=
+operator|~
+name|VXLOCK
+expr_stmt|;
 block|}
 name|vgone
 argument_list|(
