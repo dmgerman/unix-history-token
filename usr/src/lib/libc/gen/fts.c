@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.30 (Berkeley) %G%"
+literal|"@(#)fts.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3575,10 +3575,13 @@ argument_list|)
 condition|?
 literal|0
 else|:
+name|ALIGN
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|stat
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3639,7 +3642,8 @@ expr|struct
 name|stat
 operator|*
 operator|)
-operator|(
+name|ALIGN
+argument_list|(
 name|p
 operator|->
 name|fts_name
@@ -3647,7 +3651,7 @@ operator|+
 name|len
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
