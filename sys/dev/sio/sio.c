@@ -14877,10 +14877,7 @@ name|sp
 decl_stmt|;
 if|if
 condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|siogdbunit
 operator|==
 name|siocnunit
 condition|)
@@ -14990,10 +14987,7 @@ name|sp
 decl_stmt|;
 if|if
 condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|siogdbunit
 operator|==
 name|siocnunit
 condition|)
