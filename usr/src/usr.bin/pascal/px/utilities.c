@@ -9,9 +9,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.2 %G%"
+literal|"@(#)utilities.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"whoami.h"
+end_include
 
 begin_include
 include|#
@@ -324,7 +330,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|long
+name|int
 name|errnum
 decl_stmt|;
 end_decl_stmt
@@ -476,7 +482,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"+%1d near line %1d."
+literal|"+%D near line %D."
 argument_list|,
 name|i
 argument_list|,
@@ -560,7 +566,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|long
+name|int
 name|code
 decl_stmt|;
 end_decl_stmt

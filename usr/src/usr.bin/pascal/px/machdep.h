@@ -4,8 +4,14 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static 	char sccsid[] = "@(#)machdep.h 1.1 %G%"; */
+comment|/* static char sccsid[] = "@(#)machdep.h 1.2 %G%"; */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
 
 begin_define
 define|#
@@ -21,15 +27,30 @@ name|popaddr
 value|(char *)pop4
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
-name|popargs
-parameter_list|(
-name|num
-parameter_list|)
-value|popsp(num * sizeof(int))
+name|pushaddr
+value|push2
 end_define
+
+begin_define
+define|#
+directive|define
+name|popaddr
+value|(char *)pop2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX
+end_endif
 
 end_unit
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)version.c 1.1 %G%"
+literal|"@(#)version.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,11 +17,13 @@ begin_comment
 comment|/*      *	this writes the declaration of the current time stamp      *	onto standard output.      *	useful for making Version.c to give the creation date for px.      */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
+begin_function_decl
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -29,7 +31,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"long	createtime = %d;\n"
+literal|"long	createtime = %D;\n"
 argument_list|,
 name|time
 argument_list|(

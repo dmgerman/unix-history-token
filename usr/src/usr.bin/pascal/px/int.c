@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)int.c 1.1 %G%"
+literal|"@(#)int.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"whoami.h"
 end_include
 
 begin_include
@@ -42,7 +48,7 @@ name|ac
 parameter_list|,
 name|av
 parameter_list|)
-name|long
+name|int
 name|ac
 decl_stmt|;
 name|char
@@ -52,18 +58,18 @@ name|av
 decl_stmt|;
 block|{
 specifier|register
-name|long
-name|bytesread
-decl_stmt|,
-name|block
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|objprog
 decl_stmt|,
 modifier|*
 name|file
+decl_stmt|;
+specifier|register
+name|long
+name|bytesread
+decl_stmt|,
+name|block
 decl_stmt|;
 specifier|register
 name|FILE
@@ -82,7 +88,7 @@ define|#
 directive|define
 name|pipesize
 value|4096
-comment|/*  * Initialize everything  */
+comment|/* 	 * Initialize everything 	 */
 name|_argc
 operator|=
 name|ac
@@ -93,9 +99,9 @@ name|av
 expr_stmt|;
 name|_nodump
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
-comment|/*  * Determine how PX was invoked, and how to process the program   */
+comment|/* 	 * Determine how PX was invoked, and how to process the program  	 */
 if|if
 condition|(
 name|_argv
@@ -241,7 +247,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Process program header information  */
+comment|/* 	 * Process program header information 	 */
 if|if
 condition|(
 name|_mode
@@ -295,12 +301,17 @@ name|fseek
 argument_list|(
 name|prog
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|HEADER_BYTES
 operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|pxhdr
+argument_list|)
 argument_list|)
 argument_list|,
 literal|0
@@ -353,7 +364,7 @@ name|pxhd
 operator|.
 name|magicnum
 operator|!=
-literal|0403
+name|MAGICNUM
 condition|)
 block|{
 name|fprintf
@@ -371,11 +382,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Load program into memory  */
+comment|/* 	 * Load program into memory 	 */
 name|objprog
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|int
+operator|)
 name|pxhd
 operator|.
 name|objsize
@@ -400,9 +414,14 @@ name|read
 argument_list|(
 name|pipe
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|objprog
 operator|+
 name|bytesread
+argument_list|)
 argument_list|,
 name|pipesize
 argument_list|)
@@ -428,6 +447,9 @@ name|objprog
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|pxhd
 operator|.
 name|objsize
@@ -489,7 +511,7 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-comment|/*  * set interpreter to catch expected signals and begin interpretation  */
+comment|/* 	 * set interpreter to catch expected signals and begin interpretation 	 */
 name|signal
 argument_list|(
 name|SIGILL
@@ -550,12 +572,13 @@ argument_list|,
 name|liberr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * do it 	 */
 name|interpreter
 argument_list|(
 name|objprog
 argument_list|)
 expr_stmt|;
-comment|/*  * reset signals, deallocate memory, and exit normally  */
+comment|/* 	 * reset signals, deallocate memory, and exit normally 	 */
 name|signal
 argument_list|(
 name|SIGINT

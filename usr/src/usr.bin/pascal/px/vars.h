@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.5 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.6 %G%"; */
 end_comment
 
 begin_include
@@ -48,20 +48,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXLVL
 value|20
 end_define
@@ -87,6 +73,12 @@ name|PREDEF
 value|2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -100,6 +92,31 @@ directive|define
 name|GLVL
 value|((struct iorec *)(0x7ffffff0))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STDLVL
+value|((struct iorec *)(0xfff1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLVL
+value|((struct iorec *)(0xfff0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX
+end_endif
 
 begin_define
 define|#
@@ -204,6 +221,18 @@ name|relge
 value|10
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|FALSE
+block|,
+name|TRUE
+block|}
+name|bool
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * interrupt and allocation routines  */
 end_comment
@@ -229,6 +258,14 @@ specifier|extern
 name|char
 modifier|*
 name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|time
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -370,7 +407,7 @@ name|lp
 decl_stmt|;
 name|double
 modifier|*
-name|dp
+name|dbp
 decl_stmt|;
 name|struct
 name|hdr
@@ -440,7 +477,7 @@ name|long
 name|nargs
 decl_stmt|;
 comment|/* number of bytes of arguments */
-name|short
+name|bool
 name|tests
 decl_stmt|;
 comment|/* TRUE => perform runtime tests */
@@ -601,7 +638,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|bool
 name|_nodump
 decl_stmt|;
 end_decl_stmt
@@ -612,7 +649,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|bool
 name|_runtst
 decl_stmt|;
 end_decl_stmt
