@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)externs.h	1.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)externs.h	1.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -26,6 +26,23 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* outside this world */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +78,9 @@ name|showoptions
 decl_stmt|,
 name|net
 decl_stmt|,
+name|tout
+decl_stmt|,
+comment|/* Terminal output file descriptor */
 name|crlf
 decl_stmt|,
 comment|/* Should '\r' be mapped to<CR><LF> (or<CR><NUL>)? */
@@ -206,6 +226,88 @@ decl_stmt|,
 name|ttyiring
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Tn3270 section */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|HaveInput
+decl_stmt|,
+comment|/* Whether an asynchronous I/O indication came in */
+name|noasynch
+decl_stmt|,
+comment|/* Don't do signals on I/O (SIGURG, SIGIO) */
+name|shell_active
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Subshell is active */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Ibackp
+decl_stmt|,
+comment|/* Oldest byte of 3270 data */
+name|Ibuf
+index|[]
+decl_stmt|,
+comment|/* 3270 buffer */
+modifier|*
+name|Ifrontp
+decl_stmt|,
+comment|/* Where next 3270 byte goes */
+name|tline
+index|[]
+decl_stmt|,
+modifier|*
+name|transcom
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Transparent command */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|settranscom
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|inputAvailable
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(TN3270) */
+end_comment
 
 end_unit
 

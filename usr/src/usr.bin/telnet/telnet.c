@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.29 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ argument_list|(
 name|unix
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_comment
 comment|/* By the way, we need to include curses.h before telnet.h since,  * among other things, telnet.h #defines 'DO', which is a variable  * declared in curses.h.  */
@@ -1408,7 +1414,6 @@ begin_escape
 end_escape
 
 begin_function
-specifier|static
 name|int
 name|telrcv
 parameter_list|()
@@ -1585,7 +1590,7 @@ name|telrcv_state
 operator|=
 name|TS_IAC
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 if|#
 directive|if
@@ -1636,7 +1641,7 @@ name|telrcv_state
 operator|=
 name|TS_IAC
 expr_stmt|;
-break|break;
+continue|continue;
 block|}
 operator|*
 name|Ifrontp
@@ -2882,7 +2887,7 @@ name|DataFromTerminal
 argument_list|(
 name|ttyiring
 operator|.
-name|send
+name|consume
 argument_list|,
 name|ring_full_consecutive
 argument_list|(
@@ -3165,9 +3170,10 @@ block|}
 comment|/* If there is data waiting to go out to terminal, don't 		 * schedule any more data for the terminal. 		 */
 if|if
 condition|(
-name|tfrontp
-operator|-
-name|tbackp
+name|ring_full_count
+argument_list|(
+name|ttyoring
+argument_list|)
 condition|)
 block|{
 name|schedValue

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.10 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,47 +123,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* There is input available to scan */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-name|char
-name|tline
-index|[
-literal|200
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|transcom
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* transparent mode command (default: none) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(TN3270) */
 end_comment
 
 begin_decl_stmt
