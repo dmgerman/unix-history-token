@@ -1149,9 +1149,16 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|gets
+name|fgets
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+name|line
+operator|-
+literal|1
+argument_list|,
+name|stdin
 argument_list|)
 operator|!=
 name|NULL
