@@ -1932,6 +1932,21 @@ break|break;
 block|}
 if|if
 condition|(
+operator|*
+name|p_drv
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"camperiphfree: attempt to free non-existant periph\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|periph
 operator|->
 name|periph_dtor
