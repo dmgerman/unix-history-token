@@ -824,6 +824,14 @@ name|ypos
 decl_stmt|;
 comment|/* current Y position */
 name|int
+name|saved_xpos
+decl_stmt|;
+comment|/* saved X position */
+name|int
+name|saved_ypos
+decl_stmt|;
+comment|/* saved Y position */
+name|int
 name|xsize
 decl_stmt|;
 comment|/* X text size */
