@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmjob.c	4.7 (Berkeley) %G%"
+literal|"@(#)rmjob.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -869,6 +869,35 @@ name|FILE
 modifier|*
 name|cfp
 decl_stmt|;
+comment|/* 	 * Check for valid cf file name (mostly checking current). 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|file
+argument_list|)
+operator|<
+literal|7
+operator|||
+name|file
+index|[
+literal|0
+index|]
+operator|!=
+literal|'c'
+operator|||
+name|file
+index|[
+literal|1
+index|]
+operator|!=
+literal|'f'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|all
