@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.9 1994/01/31 23:48:23 davidg Exp $  */
+comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.10 1994/04/02 07:00:36 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -171,6 +171,23 @@ name|tlbflush
 parameter_list|()
 block|{
 asm|__asm __volatile("movl %%cr3, %%eax; movl %%eax, %%cr3" : : : "ax");
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|u_long
+name|rcr2
+parameter_list|()
+block|{
+name|u_long
+name|data
+decl_stmt|;
+asm|__asm __volatile("movl %%cr2,%%eax" : "=a" (data));
+return|return
+name|data
+return|;
 block|}
 end_function
 
@@ -914,15 +931,6 @@ end_function_decl
 begin_function_decl
 name|u_long
 name|rcr3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_long
-name|rcr2
 parameter_list|(
 name|void
 parameter_list|)
