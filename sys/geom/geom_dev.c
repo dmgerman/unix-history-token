@@ -1359,6 +1359,13 @@ operator|==
 name|ENOIOCTL
 condition|)
 block|{
+if|if
+condition|(
+name|g_debugflags
+operator|&
+name|G_T_TOPOLOGY
+condition|)
+block|{
 name|i
 operator|=
 name|IOCGROUP
@@ -1452,6 +1459,7 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ENOTTY
