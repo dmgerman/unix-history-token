@@ -5059,11 +5059,12 @@ name|fdc
 operator|->
 name|dmachan
 operator|=
+name|rman_get_start
+argument_list|(
 name|fdc
 operator|->
 name|res_drq
-operator|->
-name|r_start
+argument_list|)
 expr_stmt|;
 block|}
 return|return
