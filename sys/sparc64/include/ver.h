@@ -6,160 +6,173 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PSTATE_H_
+name|_MACHINE_VER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PSTATE_H_
+name|_MACHINE_VER_H_
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_AG
-value|(1<<0)
+name|VER_MANUF_SHIFT
+value|(48)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_IE
-value|(1<<1)
+name|VER_IMPL_SHIFT
+value|(32)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_PRIV
-value|(1<<2)
+name|VER_MASK_SHIFT
+value|(24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_AM
-value|(1<<3)
+name|VER_MAXTL_SHIFT
+value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_PEF
-value|(1<<4)
+name|VER_MAXWIN_SHIFT
+value|(0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_RED
-value|(1<<5)
+name|VER_MANUF_SIZE
+value|(16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MM_SHIFT
-value|(6)
+name|VER_IMPL_SIZE
+value|(16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MM_MASK
-value|((1<<PSTATE_MM_SHIFT)|(1<<(PSTATE_MM_SHIFT+1)))
+name|VER_MASK_SIZE
+value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MM_TSO
-value|(0<<PSTATE_MM_SHIFT)
+name|VER_MAXTL_SIZE
+value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MM_PSO
-value|(1<<PSTATE_MM_SHIFT)
+name|VER_MAXWIN_SIZE
+value|(5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MM_RMO
-value|(2<<PSTATE_MM_SHIFT)
+name|VER_MANUF_MASK
+value|(((1L<<VER_MANUF_SIZE)-1)<<VER_MANUF_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_TLE
-value|(1<<8)
+name|VER_IMPL_MASK
+value|(((1L<<VER_IMPL_SIZE)-1)<<VER_IMPL_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_CLE
-value|(1<<9)
+name|VER_MASK_MASK
+value|(((1L<<VER_MASK_SIZE)-1)<<VER_MASK_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MG
-value|(1<<10)
+name|VER_MAXTL_MASK
+value|(((1L<<VER_MAXTL_SIZE)-1)<<VER_MAXTL_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_IG
-value|(1<<11)
+name|VER_MAXWIN_MASK
+value|(((1L<<VER_MAXWIN_SIZE)-1)<<VER_MAXWIN_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MM
-value|PSTATE_MM_TSO
+name|VER_MANUF
+parameter_list|(
+name|ver
+parameter_list|)
+define|\
+value|(((ver)& VER_MANUF_MASK)>> VER_MANUF_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_NORMAL
-value|(PSTATE_MM | PSTATE_PEF | PSTATE_PRIV)
+name|VER_IMPL
+parameter_list|(
+name|ver
+parameter_list|)
+define|\
+value|(((ver)& VER_IMPL_MASK)>> VER_IMPL_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_ALT
-value|(PSTATE_NORMAL | PSTATE_AG)
+name|VER_MASK
+parameter_list|(
+name|ver
+parameter_list|)
+define|\
+value|(((ver)& VER_MASK_MASK)>> VER_MASK_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_INTR
-value|(PSTATE_NORMAL | PSTATE_IG)
+name|VER_MAXTL
+parameter_list|(
+name|ver
+parameter_list|)
+define|\
+value|(((ver)& VER_MAXTL_MASK)>> VER_MAXTL_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PSTATE_MMU
-value|(PSTATE_NORMAL | PSTATE_MG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSTATE_KERNEL
-value|(PSTATE_NORMAL | PSTATE_IE)
+name|VER_MAXWIN
+parameter_list|(
+name|ver
+parameter_list|)
+define|\
+value|(((ver)& VER_MAXWIN_MASK)>> VER_MAXWIN_SHIFT)
 end_define
 
 begin_endif
@@ -168,7 +181,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PSTATE_H_ */
+comment|/* !_MACHINE_VER_H_ */
 end_comment
 
 end_unit
