@@ -106,6 +106,22 @@ name|int
 name|ds_type
 decl_stmt|;
 comment|/* (foreign) slice type */
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+name|ds_subtype
+decl_stmt|;
+comment|/* sub slice type */
+name|u_char
+name|ds_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* slice name */
+endif|#
+directive|endif
 name|struct
 name|dkbad_intern
 modifier|*
@@ -217,6 +233,17 @@ argument|u_long	ds_size;
 comment|/* number of sectors */
 argument|int	ds_type;
 comment|/* (foreign) slice type */
+ifdef|#
+directive|ifdef
+name|PC98
+argument|int	ds_subtype;
+comment|/* sub slice type */
+argument|u_char	ds_name[
+literal|16
+argument|];
+comment|/* slice name */
+endif|#
+directive|endif
 argument|struct dkbad_intern *ds_bad;
 comment|/* bad sector table, if any */
 argument|void	*ds_date;
