@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.16 92/12/20$  *  *	@(#)param.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.16 92/12/20$  *  *	@(#)param.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -761,6 +761,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIMPLELOCK_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SIMPLELOCK_H_
+end_define
+
 begin_comment
 comment|/*  * A simple spin lock.  *  * This structure only sets one bit of data, but is sized based on the  * minimum word size that can be operated on by the hardware test-and-set  * instruction. It is only needed for multiprocessors, as uniprocessors  * will always run to completion or a sleep. It is an error to hold one  * of these locks while a process is sleeping.  */
 end_comment
@@ -906,6 +918,15 @@ end_endif
 
 begin_comment
 comment|/* NCPUS> 1 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_SIMPLELOCK_H_ */
 end_comment
 
 end_unit
