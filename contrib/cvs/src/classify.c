@@ -93,7 +93,7 @@ begin_function
 name|Ctype
 name|Classify_File
 parameter_list|(
-name|file
+name|finfo
 parameter_list|,
 name|tag
 parameter_list|,
@@ -104,22 +104,15 @@ parameter_list|,
 name|force_tag_match
 parameter_list|,
 name|aflag
-parameter_list|,
-name|repository
-parameter_list|,
-name|entries
-parameter_list|,
-name|rcsnode
 parameter_list|,
 name|versp
 parameter_list|,
-name|update_dir
-parameter_list|,
 name|pipeout
 parameter_list|)
-name|char
+name|struct
+name|file_info
 modifier|*
-name|file
+name|finfo
 decl_stmt|;
 name|char
 modifier|*
@@ -138,27 +131,11 @@ name|force_tag_match
 decl_stmt|;
 name|int
 name|aflag
-decl_stmt|;
-name|char
-modifier|*
-name|repository
-decl_stmt|;
-name|List
-modifier|*
-name|entries
-decl_stmt|;
-name|RCSNode
-modifier|*
-name|rcsnode
 decl_stmt|;
 name|Vers_TS
 modifier|*
 modifier|*
 name|versp
-decl_stmt|;
-name|char
-modifier|*
-name|update_dir
 decl_stmt|;
 name|int
 name|pipeout
@@ -171,61 +148,12 @@ decl_stmt|;
 name|Ctype
 name|ret
 decl_stmt|;
-name|char
-modifier|*
-name|fullname
-decl_stmt|;
-name|fullname
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|update_dir
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|file
-argument_list|)
-operator|+
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|update_dir
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|strcpy
-argument_list|(
-name|fullname
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
-argument_list|(
-name|fullname
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|update_dir
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
 comment|/* get all kinds of good data about the file */
 name|vers
 operator|=
 name|Version_TS
 argument_list|(
-name|repository
+name|finfo
 argument_list|,
 name|options
 argument_list|,
@@ -233,15 +161,9 @@ name|tag
 argument_list|,
 name|date
 argument_list|,
-name|file
-argument_list|,
 name|force_tag_match
 argument_list|,
 literal|0
-argument_list|,
-name|entries
-argument_list|,
-name|rcsnode
 argument_list|)
 expr_stmt|;
 if|if
@@ -274,6 +196,7 @@ name|NULL
 condition|)
 block|{
 comment|/* there is no user file */
+comment|/* FIXME: Why do we skip this message if vers->tag or 		   vers->date is set?  It causes "cvs update -r tag98 foo" 		   to silently do nothing, which is seriously confusing 		   behavior.  "cvs update foo" gives this message, which 		   is what I would expect.  */
 if|if
 condition|(
 operator|!
@@ -303,6 +226,8 @@ literal|0
 argument_list|,
 literal|"nothing known about %s"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -314,6 +239,7 @@ block|}
 else|else
 block|{
 comment|/* there is a user file */
+comment|/* FIXME: Why do we skip this message if vers->tag or 		   vers->date is set?  It causes "cvs update -r tag98 foo" 		   to silently do nothing, which is seriously confusing 		   behavior.  "cvs update foo" gives this message, which 		   is what I would expect.  */
 if|if
 condition|(
 operator|!
@@ -343,6 +269,8 @@ literal|0
 argument_list|,
 literal|"use `cvs add' to create an entry for %s"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -375,10 +303,9 @@ name|ts_user
 operator|==
 name|NULL
 condition|)
-comment|/* 		 * Logically seems to me this should be T_UPTODATE. 		 * But the joining code in update.c seems to expect 		 * T_CHECKOUT, and that is what has traditionally been 		 * returned for this case. 		 */
 name|ret
 operator|=
-name|T_CHECKOUT
+name|T_UPTODATE
 expr_stmt|;
 else|else
 block|{
@@ -390,6 +317,8 @@ literal|0
 argument_list|,
 literal|"use `cvs add' to create an entry for %s"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -436,15 +365,9 @@ if|if
 condition|(
 name|No_Difference
 argument_list|(
-name|file
+name|finfo
 argument_list|,
 name|vers
-argument_list|,
-name|entries
-argument_list|,
-name|repository
-argument_list|,
-name|update_dir
 argument_list|)
 condition|)
 block|{
@@ -462,6 +385,8 @@ literal|0
 argument_list|,
 literal|"move away %s; it is in the way"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -518,6 +443,8 @@ literal|0
 argument_list|,
 literal|"warning: new-born %s has disappeared"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -596,6 +523,8 @@ literal|0
 argument_list|,
 literal|"\ conflict: %s has been added, but already exists"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -616,6 +545,8 @@ literal|0
 argument_list|,
 literal|"\ conflict: %s created independently by second party"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -650,33 +581,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-name|tmp
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
 comment|/* There is no user file (as it should be) */
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|tmp
-argument_list|,
-literal|"-%s"
-argument_list|,
-name|vers
-operator|->
-name|vn_rcs
-condition|?
-name|vers
-operator|->
-name|vn_rcs
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vers
@@ -684,6 +589,17 @@ operator|->
 name|vn_rcs
 operator|==
 name|NULL
+operator|||
+name|RCS_isdead
+argument_list|(
+name|vers
+operator|->
+name|srcfile
+argument_list|,
+name|vers
+operator|->
+name|vn_rcs
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * There is no RCS file; this is all-right, but it has been 		 * removed independently by a second party; remove the entry 		 */
@@ -695,13 +611,32 @@ block|}
 elseif|else
 if|if
 condition|(
+name|vers
+operator|->
+name|vn_rcs
+operator|==
+name|NULL
+condition|?
+name|vers
+operator|->
+name|vn_user
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+else|:
 name|strcmp
 argument_list|(
-name|tmp
+name|vers
+operator|->
+name|vn_rcs
 argument_list|,
 name|vers
 operator|->
 name|vn_user
+operator|+
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -727,6 +662,8 @@ literal|0
 argument_list|,
 literal|"conflict: removed %s was modified by second party"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -752,6 +689,8 @@ literal|0
 argument_list|,
 literal|"%s should be removed and is still there"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -797,6 +736,8 @@ literal|0
 argument_list|,
 literal|"warning: %s is not (any longer) pertinent"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -836,6 +777,8 @@ literal|0
 argument_list|,
 literal|"%s is no longer in the repository"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -851,15 +794,9 @@ if|if
 condition|(
 name|No_Difference
 argument_list|(
-name|file
+name|finfo
 argument_list|,
 name|vers
-argument_list|,
-name|entries
-argument_list|,
-name|repository
-argument_list|,
-name|update_dir
 argument_list|)
 condition|)
 block|{
@@ -877,6 +814,8 @@ literal|0
 argument_list|,
 literal|"conflict: %s is modified but no longer in the repository"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -901,6 +840,8 @@ literal|0
 argument_list|,
 literal|"warning: %s is not (any longer) pertinent"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -963,6 +904,8 @@ literal|0
 argument_list|,
 literal|"warning: %s was lost"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -1023,16 +966,24 @@ directive|ifdef
 name|SERVER_SUPPORT
 name|sticky_ck
 argument_list|(
+name|finfo
+operator|->
 name|file
 argument_list|,
 name|aflag
 argument_list|,
 name|vers
 argument_list|,
+name|finfo
+operator|->
 name|entries
 argument_list|,
+name|finfo
+operator|->
 name|repository
 argument_list|,
+name|finfo
+operator|->
 name|update_dir
 argument_list|)
 expr_stmt|;
@@ -1040,12 +991,16 @@ else|#
 directive|else
 name|sticky_ck
 argument_list|(
+name|finfo
+operator|->
 name|file
 argument_list|,
 name|aflag
 argument_list|,
 name|vers
 argument_list|,
+name|finfo
+operator|->
 name|entries
 argument_list|)
 expr_stmt|;
@@ -1064,15 +1019,9 @@ if|if
 condition|(
 name|No_Difference
 argument_list|(
-name|file
+name|finfo
 argument_list|,
 name|vers
-argument_list|,
-name|entries
-argument_list|,
-name|repository
-argument_list|,
-name|update_dir
 argument_list|)
 condition|)
 block|{
@@ -1125,16 +1074,24 @@ directive|ifdef
 name|SERVER_SUPPORT
 name|sticky_ck
 argument_list|(
+name|finfo
+operator|->
 name|file
 argument_list|,
 name|aflag
 argument_list|,
 name|vers
 argument_list|,
+name|finfo
+operator|->
 name|entries
 argument_list|,
+name|finfo
+operator|->
 name|repository
 argument_list|,
+name|finfo
+operator|->
 name|update_dir
 argument_list|)
 expr_stmt|;
@@ -1142,12 +1099,16 @@ else|#
 directive|else
 name|sticky_ck
 argument_list|(
+name|finfo
+operator|->
 name|file
 argument_list|,
 name|aflag
 argument_list|,
 name|vers
 argument_list|,
+name|finfo
+operator|->
 name|entries
 argument_list|)
 expr_stmt|;
@@ -1239,6 +1200,8 @@ literal|0
 argument_list|,
 literal|"warning: %s was lost"
 argument_list|,
+name|finfo
+operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
@@ -1337,15 +1300,9 @@ if|if
 condition|(
 name|No_Difference
 argument_list|(
-name|file
+name|finfo
 argument_list|,
 name|vers
-argument_list|,
-name|entries
-argument_list|,
-name|repository
-argument_list|,
-name|update_dir
 argument_list|)
 condition|)
 comment|/* really modified, needs to merge */
@@ -1449,11 +1406,6 @@ name|freevers_ts
 argument_list|(
 operator|&
 name|vers
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|fullname
 argument_list|)
 expr_stmt|;
 comment|/* return the status of the file */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Like vsprintf but provides a pointer to malloc'd storage, which must    be freed by the caller.    Copyright (C) 1994 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Like vsprintf but provides a pointer to malloc'd storage, which must    be freed by the caller.    Copyright (C) 1994 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  */
 end_comment
 
 begin_include
@@ -60,14 +60,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|int
-name|abs
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -85,7 +77,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDC_HEADERS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
+specifier|extern
+name|int
+name|abs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|unsigned
 name|long
 name|strtoul
@@ -94,12 +112,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -222,6 +246,11 @@ name|strtoul
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|p
 argument_list|,
@@ -270,6 +299,11 @@ name|strtoul
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|p
 argument_list|,
@@ -464,6 +498,23 @@ name|va_list
 name|args
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|VA_LIST_IS_ARRAY
+comment|/* If va_list is an array, we do not need the additional indirection */
+return|return
+name|int_vasprintf
+argument_list|(
+name|result
+argument_list|,
+name|format
+argument_list|,
+name|args
+argument_list|)
+return|;
+else|#
+directive|else
+comment|/* va_list is some sort of pointer */
 return|return
 name|int_vasprintf
 argument_list|(
@@ -475,6 +526,8 @@ operator|&
 name|args
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

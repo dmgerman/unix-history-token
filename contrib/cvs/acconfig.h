@@ -39,5 +39,25 @@ directive|undef
 name|AUTH_SERVER_SUPPORT
 end_undef
 
+begin_comment
+comment|/* Define if you want encryption support.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENCRYPTION
+end_undef
+
+begin_comment
+comment|/* Define if you have the connect function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_CONNECT
+end_undef
+
 end_unit
 

@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $CVSid: @(#)myndbm.h 1.4 94/09/21 $	 */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef

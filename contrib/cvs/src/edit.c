@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation for "cvs edit", "cvs watch on", and related commands     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Implementation for "cvs edit", "cvs watch on", and related commands     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_include
@@ -92,6 +92,10 @@ name|onoff_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -106,8 +110,14 @@ specifier|static
 name|int
 name|onoff_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -142,12 +152,18 @@ name|onoff_filesdoneproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|int
 operator|,
 name|char
 operator|*
 operator|,
 name|char
+operator|*
+operator|,
+name|List
 operator|*
 operator|)
 argument_list|)
@@ -159,12 +175,20 @@ specifier|static
 name|int
 name|onoff_filesdoneproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|err
 parameter_list|,
 name|repository
 parameter_list|,
 name|update_dir
+parameter_list|,
+name|entries
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -175,6 +199,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|update_dir
+decl_stmt|;
+name|List
+modifier|*
+name|entries
 decl_stmt|;
 block|{
 if|if
@@ -244,7 +272,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"l"
+literal|"+lR"
 argument_list|)
 operator|)
 operator|!=
@@ -263,6 +291,14 @@ case|:
 name|local
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|local
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -317,7 +353,6 @@ argument_list|,
 name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
-comment|/* FIXME:  We shouldn't have to send current files, but I'm not sure 	   whether it works.  So send the files -- 	   it's slower but it works.  */
 name|send_files
 argument_list|(
 name|argc
@@ -327,6 +362,8 @@ argument_list|,
 name|local
 argument_list|,
 literal|0
+argument_list|,
+name|SEND_NO_CONTENTS
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -385,6 +422,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -404,11 +443,9 @@ operator|)
 name|NULL
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|lock_tree_cleanup
+name|Lock_Cleanup
 argument_list|()
 expr_stmt|;
 return|return
@@ -491,6 +528,10 @@ name|dummy_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -505,8 +546,14 @@ specifier|static
 name|int
 name|dummy_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -527,6 +574,10 @@ name|ncheck_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -545,8 +596,14 @@ specifier|static
 name|int
 name|ncheck_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -590,7 +647,7 @@ decl_stmt|;
 comment|/* We send notifications even if noexec.  I'm not sure which behavior        is most sensible.  */
 name|fp
 operator|=
-name|fopen
+name|CVS_FOPEN
 argument_list|(
 name|CVSADM_NOTIFY
 argument_list|,
@@ -844,7 +901,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlink
+name|CVS_UNLINK
 argument_list|(
 name|CVSADM_NOTIFY
 argument_list|)
@@ -968,6 +1025,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -985,8 +1044,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1058,6 +1115,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -1077,11 +1136,9 @@ operator|)
 name|NULL
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|lock_tree_cleanup
+name|Lock_Cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -1101,6 +1158,10 @@ name|edit_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -1115,8 +1176,14 @@ specifier|static
 name|int
 name|edit_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -1297,47 +1364,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Now stash the file away in CVSADM so that unedit can revert even if        it can't communicate with the server.  We stash away a writable        copy so that if the user removes the working file, then restores it        with "cvs update" (which clears _editors but does not update        CVSADM_BASE), then a future "cvs edit" can still win.  */
-comment|/* Could save a system call by only calling mkdir if trying to create        the output file fails.  But copy_file isn't set up to facilitate        that.  */
-if|if
-condition|(
-name|CVS_MKDIR
+comment|/* Could save a system call by only calling mkdir_if_needed if        trying to create the output file fails.  But copy_file isn't        set up to facilitate that.  */
+name|mkdir_if_needed
 argument_list|(
-name|CVSADM_BASE
-argument_list|,
-literal|0777
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|!=
-name|EEXIST
-ifdef|#
-directive|ifdef
-name|EACCESS
-comment|/* OS/2; see longer comment in client.c.  */
-operator|&&
-name|errno
-operator|!=
-name|EACCESS
-endif|#
-directive|endif
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot mkdir %s"
-argument_list|,
 name|CVSADM_BASE
 argument_list|)
 expr_stmt|;
-block|}
 name|basefilename
 operator|=
 name|xmalloc
@@ -1408,13 +1440,15 @@ name|edit_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-l] [files...]\n"
+literal|"Usage: %s %s [-lR] [files...]\n"
 block|,
 literal|"-l: Local directory only, not recursive\n"
 block|,
+literal|"-R: Process directories recursively\n"
+block|,
 literal|"-a: Specify what actions for temporary watch, one of\n"
 block|,
-literal|"    edit,unedit,commit.all,none\n"
+literal|"    edit,unedit,commit,all,none\n"
 block|,
 name|NULL
 block|}
@@ -1495,7 +1529,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"la:"
+literal|"+lRa:"
 argument_list|)
 operator|)
 operator|!=
@@ -1514,6 +1548,14 @@ case|:
 name|local
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|local
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1689,6 +1731,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -1706,8 +1750,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1736,6 +1778,10 @@ name|unedit_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -1750,8 +1796,14 @@ specifier|static
 name|int
 name|unedit_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -2066,7 +2118,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"l"
+literal|"+lR"
 argument_list|)
 operator|)
 operator|!=
@@ -2085,6 +2137,14 @@ case|:
 name|local
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|local
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2129,6 +2189,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -2146,8 +2208,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -3281,7 +3341,7 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot
+name|CVSroot_directory
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -3297,7 +3357,7 @@ name|strcpy
 argument_list|(
 name|usersname
 argument_list|,
-name|CVSroot
+name|CVSroot_directory
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -3330,7 +3390,7 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|=
-name|fopen
+name|CVS_FOPEN
 argument_list|(
 name|usersname
 argument_list|,
@@ -3748,7 +3808,7 @@ return|return;
 comment|/* We send notifications even if noexec.  I'm not sure which behavior        is most sensible.  */
 name|fp
 operator|=
-name|fopen
+name|CVS_FOPEN
 argument_list|(
 name|CVSADM_NOTIFY
 argument_list|,
@@ -3876,6 +3936,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|line
+condition|)
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ferror
 argument_list|(
 name|fp
@@ -3935,7 +4004,11 @@ name|editors_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [files...]\n"
+literal|"Usage: %s %s [-lR] [files...]\n"
+block|,
+literal|"\t-l\tProcess this directory only (not recursive).\n"
+block|,
+literal|"\t-R\tProcess directories recursively.\n"
 block|,
 name|NULL
 block|}
@@ -3949,6 +4022,10 @@ name|editors_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -3963,8 +4040,14 @@ specifier|static
 name|int
 name|editors_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -4216,7 +4299,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"l"
+literal|"+lR"
 argument_list|)
 operator|)
 operator|!=
@@ -4235,6 +4318,14 @@ case|:
 name|local
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|local
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -4289,7 +4380,6 @@ argument_list|,
 name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
-comment|/* FIXME:  We shouldn't have to send current files, but I'm not sure 	   whether it works.  So send the files -- 	   it's slower but it works.  */
 name|send_files
 argument_list|(
 name|argc
@@ -4299,6 +4389,8 @@ argument_list|,
 name|local
 argument_list|,
 literal|0
+argument_list|,
+name|SEND_NO_CONTENTS
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -4336,6 +4428,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -4353,8 +4447,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)

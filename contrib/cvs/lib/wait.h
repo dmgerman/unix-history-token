@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* wait.h -- POSIX macros for evaluating exit statuses    Copyright (C) 1990 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* wait.h -- POSIX macros for evaluating exit statuses    Copyright (C) 1990 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifdef
@@ -46,10 +46,16 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIFSTOPPED
+end_ifndef
 
 begin_define
 define|#
@@ -61,6 +67,17 @@ parameter_list|)
 value|(((w)& 0xff) == 0x7f)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIFSIGNALED
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -70,6 +87,17 @@ name|w
 parameter_list|)
 value|(((w)& 0xff) != 0x7f&& ((w)& 0xff) != 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIFEXITED
+end_ifndef
 
 begin_define
 define|#
@@ -81,6 +109,17 @@ parameter_list|)
 value|(((w)& 0xff) == 0)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WSTOPSIG
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -91,6 +130,17 @@ parameter_list|)
 value|(((w)>> 8)& 0xff)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WTERMSIG
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -100,6 +150,17 @@ name|w
 parameter_list|)
 value|((w)& 0x7f)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WEXITSTATUS
+end_ifndef
 
 begin_define
 define|#
