@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipfw.c,v 1.72 1999/08/01 16:57:24 green Exp $"
+literal|"$Id: ipfw.c,v 1.73 1999/08/11 15:36:13 luigi Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6209,6 +6209,14 @@ literal|0x7fffffff
 argument_list|)
 expr_stmt|;
 block|}
+name|av
+operator|+=
+literal|2
+expr_stmt|;
+name|ac
+operator|-=
+literal|2
+expr_stmt|;
 block|}
 if|if
 condition|(
