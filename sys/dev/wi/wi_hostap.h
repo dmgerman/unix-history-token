@@ -221,6 +221,10 @@ decl_stmt|;
 name|u_int8_t
 name|tx_max_rate
 decl_stmt|;
+name|u_int32_t
+modifier|*
+name|challenge
+decl_stmt|;
 name|struct
 name|callout_handle
 name|tmo
