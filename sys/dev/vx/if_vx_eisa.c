@@ -365,7 +365,7 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-comment|/*      * The addresses are sorted in increasing order      * so we know the port to pass to the core ep      * driver comes first.      */
+comment|/*          * The addresses are sorted in increasing order          * so we know the port to pass to the core ep          * driver comes first.          */
 name|rid
 operator|=
 literal|0
@@ -532,11 +532,9 @@ operator|&
 name|ih
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 name|sc
 operator|->
 name|vx_intrhand

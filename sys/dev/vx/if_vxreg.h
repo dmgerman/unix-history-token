@@ -491,7 +491,7 @@ value|(1<<5)
 end_define
 
 begin_comment
-comment|/**************************************************************************  *										  *  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  *										  *  **************************************************************************/
+comment|/**************************************************************************  * These are the registers for the 3Com 3c509 and their bit patterns when *  * applicable.  They have been taken out the the "EtherLink III Parallel  *  * Tasking EISA and ISA Technical Reference" "Beta Draft 10/30/92" manual *  * from 3com.								  *  **************************************************************************/
 end_comment
 
 begin_define
@@ -1033,7 +1033,7 @@ value|(u_short) (0xc<<11)
 end_define
 
 begin_comment
-comment|/*  * The following C_* acknowledge the various interrupts. Some of them don't  * do anything.  See the manual.  */
+comment|/*  * The following C_* acknowledge the various interrupts.  * Some of them don't do anything.  See the manual.  */
 end_comment
 
 begin_define
@@ -1265,7 +1265,7 @@ value|while (CSR_READ_2(sc, VX_STATUS)& S_COMMAND_IN_PROGRESS)
 end_define
 
 begin_comment
-comment|/* Address Config. Register.      * Window 0/Port 06  */
+comment|/* Address Config. Register.  * Window 0/Port 06  */
 end_comment
 
 begin_define
@@ -1378,7 +1378,7 @@ value|(u_short) (0x1000)
 end_define
 
 begin_comment
-comment|/*  * TX Status.   *  *   Reports the transmit status of a completed transmission. Writing this  *   register pops the transmit completion stack.  *  *   Window 1/Port 0x0b.  *  *     7:      Complete  *     6:      Interrupt on successful transmission requested.  *     5:      Jabber Error (TP Only, TX Reset required. )  *     4:      Underrun (TX Reset required. )  *     3:      Maximum Collisions.  *     2:      TX Status Overflow.  *     1-0:    Undefined.  *  */
+comment|/*  * TX Status.  *  *   Reports the transmit status of a completed transmission. Writing this  *   register pops the transmit completion stack.  *  *   Window 1/Port 0x0b.  *  *     7:      Complete  *     6:      Interrupt on successful transmission requested.  *     5:      Jabber Error (TP Only, TX Reset required. )  *     4:      Underrun (TX Reset required. )  *     3:      Maximum Collisions.  *     2:      TX Status Overflow.  *     1-0:    Undefined.  *  */
 end_comment
 
 begin_define
@@ -1593,7 +1593,7 @@ begin_define
 define|#
 directive|define
 name|TX_INDICATE
-value|1<<15
+value|(1<<15)
 end_define
 
 begin_define

@@ -15,11 +15,11 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-comment|/* Ethernet common part		*/
+comment|/* Ethernet common part		 */
 name|int
 name|unit
 decl_stmt|;
-comment|/* unit number */
+comment|/* unit number                   */
 name|bus_space_tag_t
 name|bst
 decl_stmt|;
@@ -44,7 +44,7 @@ define|#
 directive|define
 name|MAX_MBS
 value|8
-comment|/* # of mbufs we keep around	*/
+comment|/* # of mbufs we keep around	 */
 name|struct
 name|mbuf
 modifier|*
@@ -53,32 +53,32 @@ index|[
 name|MAX_MBS
 index|]
 decl_stmt|;
-comment|/* spare mbuf storage.		*/
+comment|/* spare mbuf storage.		 */
 name|int
 name|next_mb
 decl_stmt|;
-comment|/* Which mbuf to use next. 	*/
+comment|/* Which mbuf to use next. 	 */
 name|int
 name|last_mb
 decl_stmt|;
-comment|/* Last mbuf.			*/
+comment|/* Last mbuf.			 */
 name|char
 name|vx_connectors
 decl_stmt|;
-comment|/* Connectors on this card.	*/
+comment|/* Connectors on this card.	 */
 name|char
 name|vx_connector
 decl_stmt|;
-comment|/* Connector to use.		*/
+comment|/* Connector to use.		 */
 name|short
 name|tx_start_thresh
 decl_stmt|;
-comment|/* Current TX_start_thresh.	*/
+comment|/* Current TX_start_thresh.	 */
 name|int
 name|tx_succ_ok
 decl_stmt|;
-comment|/* # packets sent in sequence	*/
-comment|/* w/o underrun			*/
+comment|/* # packets sent in sequence	 */
+comment|/* w/o underrun			 */
 name|struct
 name|callout_handle
 name|ch

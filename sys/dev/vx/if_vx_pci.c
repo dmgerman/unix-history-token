@@ -283,7 +283,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -567,11 +566,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 goto|goto
 name|bad
 goto|;
-block|}
 comment|/* defect check for 3C590 */
 if|if
 condition|(
@@ -641,13 +638,11 @@ operator|&
 name|NO_RX_OVN_ANOMALY
 operator|)
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"Warning! Defective early revision adapter!\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

@@ -298,7 +298,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -326,10 +325,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* void vxstop(struct vx_softc *); */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -418,19 +413,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* int vxbusyeeprom(struct vx_softc *); */
-end_comment
-
 begin_function
 name|int
 name|vxattach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vx_softc
@@ -486,7 +475,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*      * Read the station address from the eeprom      */
+comment|/*          * Read the station address from the eeprom          */
 name|GO_WINDOW
 argument_list|(
 literal|0
@@ -697,12 +686,10 @@ specifier|static
 name|void
 name|vxinit
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vx_softc
@@ -852,7 +839,7 @@ operator||
 name|S_TX_AVAIL
 argument_list|)
 expr_stmt|;
-comment|/*      * Attempt to get rid of any stray interrupts that occured during      * configuration.  On the i386 this isn't possible because one may      * already be queued.  However, a single stray interrupt is      * unimportant.      */
+comment|/*          * Attempt to get rid of any stray interrupts that occured during          * configuration.  On the i386 this isn't possible because one may          * already be queued.  However, a single stray interrupt is          * unimportant.          */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -928,13 +915,11 @@ specifier|static
 name|void
 name|vxsetfilter
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -992,13 +977,11 @@ specifier|static
 name|void
 name|vxgetlink
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -1061,13 +1044,11 @@ name|n
 operator|>
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"%s"
@@ -1189,13 +1170,11 @@ specifier|static
 name|void
 name|vxsetlink
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1242,15 +1221,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|prev_conn
 operator|=
 name|sc
 operator|->
 name|vx_connector
 expr_stmt|;
-block|}
-comment|/*      * S.B.      *      * Now behavior was slightly changed:      *      * if any of flags link[0-2] is used and its connector is      * physically present the following connectors are used:      *      *   link0 - AUI * highest precedence      *   link1 - BNC      *   link2 - UTP * lowest precedence      *      * If none of them is specified then      * connector specified in the EEPROM is used      * (if present on card or UTP if not).      */
+comment|/*          * S.B.          *          * Now behavior was slightly changed:          *          * if any of flags link[0-2] is used and its connector is          * physically present the following connectors are used:          *          *   link0 - AUI * highest precedence          *   link1 - BNC          *   link2 - UTP * lowest precedence          *          * If none of them is specified then          * connector specified in the EEPROM is used          * (if present on card or UTP if not).          */
 name|i
 operator|=
 name|sc
@@ -1649,13 +1626,11 @@ specifier|static
 name|void
 name|vxstart
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1746,7 +1721,7 @@ operator|)
 operator|&
 literal|3
 expr_stmt|;
-comment|/*      * The 3c509 automatically pads short packets to minimum ethernet length,      * but we drop packets that are too large. Perhaps we should truncate      * them instead?      */
+comment|/*          * The 3c509 automatically pads short packets to minimum ethernet 	 * length, but we drop packets that are too large. Perhaps we should 	 * truncate them instead?          */
 if|if
 condition|(
 name|len
@@ -1820,7 +1795,7 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* not enough room in FIFO */
+comment|/* not enough room in FIFO - make sure */
 if|if
 condition|(
 name|CSR_READ_2
@@ -1837,7 +1812,6 @@ operator|+
 literal|4
 condition|)
 block|{
-comment|/* make sure */
 name|ifp
 operator|->
 name|if_flags
@@ -1923,7 +1897,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/*      * Do the output at splhigh() so that an interrupt from another device      * won't cause a FIFO underrun.      */
+comment|/*          * Do the output at splhigh() so that an interrupt from another device          * won't cause a FIFO underrun.          */
 name|sh
 operator|=
 name|splhigh
@@ -2100,7 +2074,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * No interrupt, read the packet and continue 	     * Is  this supposed to happen? Is my motherboard 	     * completely busted? 	     */
+comment|/* 		         * No interrupt, read the packet and continue 		         * Is this supposed to happen?  Is my motherboard 		         * completely busted? 		         */
 name|vxread
 argument_list|(
 name|sc
@@ -2108,7 +2082,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* Got an interrupt, return so that it gets serviced. */
+comment|/* 			 * Got an interrupt, return so that it gets 			 * serviced. 			 */
 return|return;
 block|}
 else|else
@@ -2159,18 +2133,16 @@ specifier|static
 name|int
 name|vxstatus
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fifost
 decl_stmt|;
-comment|/*      * Check the FIFO status and act accordingly      */
+comment|/*          * Check the FIFO status and act accordingly          */
 name|GO_WINDOW
 argument_list|(
 literal|4
@@ -2339,18 +2311,16 @@ specifier|static
 name|void
 name|vxtxstat
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-comment|/*     * We need to read+write TX_STATUS until we get a 0 status     * in order to turn off the interrupt flag.     */
+comment|/*         * We need to read+write TX_STATUS until we get a 0 status         * in order to turn off the interrupt flag.         */
 while|while
 condition|(
 operator|(
@@ -2561,12 +2531,10 @@ begin_function
 name|void
 name|vxintr
 parameter_list|(
-name|voidsc
-parameter_list|)
 name|void
 modifier|*
 name|voidsc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|short
@@ -2634,7 +2602,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* 	 * Acknowledge any interrupts.  It's important that we do this 	 * first, since there would otherwise be a race condition. 	 * Due to the i386 interrupt queueing, we may get spurious 	 * interrupts occasionally. 	 */
+comment|/* 		 * Acknowledge any interrupts.  It's important that we do this 		 * first, since there would otherwise be a race condition. 		 * Due to the i386 interrupt queueing, we may get spurious 		 * interrupts occasionally. 		 */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -2758,13 +2726,11 @@ specifier|static
 name|void
 name|vxread
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -3044,7 +3010,7 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*      * XXX: Some cards seem to be in promiscous mode all the time.      * we need to make sure we only get our own stuff always.      * bleah!      */
+comment|/*          * XXX: Some cards seem to be in promiscous mode all the time.          * we need to make sure we only get our own stuff always.          * bleah!          */
 if|if
 condition|(
 operator|(
@@ -3098,7 +3064,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/*     * In periods of high traffic we can actually receive enough     * packets so that the fifo overrun bit will be set at this point,     * even though we just read a packet. In this case we     * are not going to receive any more interrupts. We check for     * this condition and read again until the fifo is not full.     * We could simplify this test by not using vxstatus(), but     * rechecking the RX_STATUS register directly. This test could     * result in unnecessary looping in cases where there is a new     * packet but the fifo is not full, but it will not fix the     * stuck behavior.     *     * Even with this improvement, we still get packet overrun errors     * which are hurting performance. Maybe when I get some more time     * I'll modify vxread() so that it can handle RX_EARLY interrupts.     */
+comment|/*         * In periods of high traffic we can actually receive enough         * packets so that the fifo overrun bit will be set at this point,         * even though we just read a packet. In this case we         * are not going to receive any more interrupts. We check for         * this condition and read again until the fifo is not full.         * We could simplify this test by not using vxstatus(), but         * rechecking the RX_STATUS register directly. This test could         * result in unnecessary looping in cases where there is a new         * packet but the fifo is not full, but it will not fix the         * stuck behavior.         *         * Even with this improvement, we still get packet overrun errors         * which are hurting performance. Maybe when I get some more time         * I'll modify vxread() so that it can handle RX_EARLY interrupts.         */
 if|if
 condition|(
 name|vxstatus
@@ -3174,18 +3140,14 @@ name|mbuf
 modifier|*
 name|vxget
 parameter_list|(
-name|sc
-parameter_list|,
-name|totlen
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|totlen
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -3379,13 +3341,13 @@ operator|=
 operator|&
 name|top
 expr_stmt|;
-comment|/*      * We read the packet at splhigh() so that an interrupt from another      * device doesn't cause the card's buffer to overflow while we're      * reading it.  We may still lose packets at other times.      */
+comment|/*          * We read the packet at splhigh() so that an interrupt from another          * device doesn't cause the card's buffer to overflow while we're          * reading it.  We may still lose packets at other times.          */
 name|sh
 operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-comment|/*      * Since we don't set allowLargePackets bit in MacControl register,      * we can assume that totlen<= 1500bytes.      * The while loop will be performed iff we have a packet with      * MLEN< m_len< MINCLSIZE.      */
+comment|/*          * Since we don't set allowLargePackets bit in MacControl register,          * we can assume that totlen<= 1500bytes.          * The while loop will be performed iff we have a packet with          * MLEN< m_len< MINCLSIZE.          */
 while|while
 condition|(
 name|totlen
@@ -3635,24 +3597,18 @@ specifier|static
 name|int
 name|vxioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|cmd
-parameter_list|,
-name|data
-parameter_list|)
 specifier|register
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vx_softc
@@ -3718,7 +3674,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*              * If interface is marked up and it is stopped, then              * start it.              */
+comment|/* 	                 * If interface is marked up and it is stopped, then 	                 * start it. 	                 */
 name|vxstop
 argument_list|(
 name|sc
@@ -3756,7 +3712,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*              * If interface is marked up and it is stopped, then              * start it.              */
+comment|/* 	                 * If interface is marked up and it is stopped, then 	                 * start it. 	                 */
 name|vxinit
 argument_list|(
 name|sc
@@ -3765,7 +3721,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * deal with flags changes:              * IFF_MULTICAST, IFF_PROMISC,              * IFF_LINK0, IFF_LINK1,              */
+comment|/* 	                 * deal with flags changes: 	                 * IFF_MULTICAST, IFF_PROMISC, 	                 * IFF_LINK0, IFF_LINK1, 	                 */
 name|vxsetfilter
 argument_list|(
 name|sc
@@ -3781,7 +3737,7 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
-comment|/*          * Set the interface MTU.          */
+comment|/* 	         * Set the interface MTU. 	         */
 if|if
 condition|(
 name|ifr
@@ -3814,7 +3770,7 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-comment|/* 	 * Multicast list has changed; set the hardware filter 	 * accordingly. 	 */
+comment|/* 		 * Multicast list has changed; set the hardware filter 		 * accordingly. 		 */
 name|vxreset
 argument_list|(
 name|sc
@@ -3857,13 +3813,11 @@ specifier|static
 name|void
 name|vxreset
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -3896,13 +3850,11 @@ specifier|static
 name|void
 name|vxwatchdog
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vx_softc
@@ -3952,13 +3904,11 @@ begin_function
 name|void
 name|vxstop
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -4091,13 +4041,11 @@ begin_function
 name|int
 name|vxbusyeeprom
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|j
@@ -4169,12 +4117,10 @@ specifier|static
 name|void
 name|vxmbuffill
 parameter_list|(
-name|sp
-parameter_list|)
 name|void
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vx_softc
@@ -4323,13 +4269,11 @@ specifier|static
 name|void
 name|vxmbufempty
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vx_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
