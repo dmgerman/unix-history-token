@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)uda.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)uda.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10097,7 +10097,7 @@ name|ra82_sizes
 block|,
 literal|57
 block|,
-literal|14
+literal|15
 block|,
 literal|1423
 block|}
