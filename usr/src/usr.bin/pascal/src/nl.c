@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.10 %G%"
+literal|"@(#)nl.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ include|#
 directive|include
 file|"objfmt.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PI
+end_ifdef
 
 begin_comment
 comment|/*  * NAMELIST SEGMENT DEFINITIONS  */
@@ -1575,6 +1581,12 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|PI
+end_endif
 
 begin_escape
 end_escape
