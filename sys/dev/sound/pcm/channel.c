@@ -1858,11 +1858,16 @@ name|CHN_F_TRIGGERED
 operator|)
 operator|||
 operator|(
+operator|(
 name|c
 operator|->
 name|flags
 operator|&
 name|CHN_F_NOTRIGGER
+operator|)
+operator|&&
+operator|!
+name|force
 operator|)
 condition|)
 return|return
