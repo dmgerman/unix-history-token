@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: get_args.c,v 5.2.2.1 1992/02/09 15:08:23 jsp beta $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: get_args.c,v 1.2 1998/12/27 06:24:46 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -109,24 +109,25 @@ begin_comment
 comment|/* symbol must be available always */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_decl_stmt
-name|int
-name|debug_flags
-init|=
-name|D_AMQ
+begin_comment
+unit|int debug_flags = D_AMQ
 comment|/* Register AMQ */
-operator||
-name|D_DAEMON
-decl_stmt|;
-end_decl_stmt
+end_comment
 
 begin_comment
+unit|| D_DAEMON;
 comment|/* Enter daemon mode */
 end_comment
 
@@ -138,6 +139,11 @@ end_endif
 begin_comment
 comment|/* DEBUG */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Return the version string (dynamic buffer)  */
@@ -436,7 +442,8 @@ literal|"nprvSa:c:d:k:l:o:t:w:x:y:C:D:F:T:O:H"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -460,7 +467,8 @@ name|stderr
 argument_list|,
 literal|"%s: -a option must begin with a '/'\n"
 argument_list|,
-name|progname
+name|am_get_progname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
@@ -751,7 +759,8 @@ name|stderr
 argument_list|,
 literal|"%s: not compiled with DEBUG option -- sorry.\n"
 argument_list|,
-name|progname
+name|am_get_progname
+argument_list|()
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1143,6 +1152,8 @@ argument_list|(
 name|gopt
 operator|.
 name|logfile
+argument_list|,
+name|orig_umask
 argument_list|)
 operator|!=
 literal|0
@@ -1238,7 +1249,8 @@ name|stderr
 argument_list|,
 literal|"Usage: %s [-nprvHS] [-a mount_point] [-c cache_time] [-d domain]\n\ \t[-k kernel_arch] [-l logfile%s\n\ \t[-t timeout.retrans] [-w wait_timeout] [-C cluster_name]\n\ \t[-o op_sys_ver] [-O op_sys_name]\n\ \t[-F conf_file] [-T conf_tag]"
 argument_list|,
-name|progname
+name|am_get_progname
+argument_list|()
 argument_list|,
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_defs.h,v 1.1 1996/01/13 23:23:39 ezk Exp ezk $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_defs.h,v 1.2 1998/12/27 06:25:23 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -1546,6 +1546,31 @@ directive|ifdef
 name|HAVE_RPCSVC_YP_PROT_H
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_BAD_HEADERS
+end_ifdef
+
+begin_comment
+comment|/* avoid circular dependency in aix 4.3 with<rpcsvc/ypclnt.h> */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ypall_callback
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_BAD_HEADERS */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2639,6 +2664,31 @@ ifdef|#
 directive|ifdef
 name|HAVE_ARPA_INET_H
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_BAD_HEADERS
+end_ifdef
+
+begin_comment
+comment|/* aix 4.3: avoid including<net/if_dl.h> */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_dl
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_BAD_HEADERS */
+end_comment
 
 begin_include
 include|#
@@ -3896,7 +3946,7 @@ name|HAVE_TIUSER_H
 end_ifdef
 
 begin_comment
-comment|/*  * Some systems like AIX have multiple definitions for T_NULL and othersd  * that are defined first in<arpa/nameser.h>.  */
+comment|/*  * Some systems like AIX have multiple definitions for T_NULL and others  * that are defined first in<arpa/nameser.h>.  */
 end_comment
 
 begin_ifdef
@@ -4128,7 +4178,7 @@ name|STAT_MACROS_BROKEN_notused
 end_ifndef
 
 begin_comment
-comment|/*  * RedHat Linux 4.2 (alpha) has a problem in the headers that causes  * dupicate definitions, and also some other nasty bugs.  Upgrade to Redhat  * 5.0!  */
+comment|/*  * RedHat Linux 4.2 (alpha) has a problem in the headers that causes  * duplicate definitions, and also some other nasty bugs.  Upgrade to Redhat  * 5.0!  */
 end_comment
 
 begin_ifdef
@@ -5191,6 +5241,32 @@ begin_comment
 comment|/* defined(HAVE_GETHOSTNAME)&& !defined(HAVE_EXTERN_GETHOSTNAME) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_EXTERN_GETLOGIN
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getlogin
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_EXTERN_GETLOGIN */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -5347,6 +5423,41 @@ end_endif
 
 begin_comment
 comment|/* not HAVE_EXTERN_SBRK */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETEUID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_EXTERN_SETEUID
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|seteuid
+parameter_list|(
+name|uid_t
+name|euid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not defined(HAVE_SETEUID)&& !defined(HAVE_EXTERN_SETEUID) */
 end_comment
 
 begin_ifndef
@@ -5583,10 +5694,12 @@ name|xdr_opaque_auth
 parameter_list|(
 name|XDR
 modifier|*
+name|xdrs
 parameter_list|,
 name|struct
 name|opaque_auth
 modifier|*
+name|auth
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5598,32 +5711,6 @@ end_endif
 
 begin_comment
 comment|/* not HAVE_EXTERN_XDR_OPAQUE_AUTH */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_EXTERN_GETLOGIN
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getlogin
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not HAVE_EXTERN_GETLOGIN */
 end_comment
 
 begin_comment
@@ -5674,7 +5761,7 @@ file|<aux_conf.h>
 end_include
 
 begin_comment
-comment|/* compatibilty with old amd, while autoconfistating it */
+comment|/* compatibility with old amd, while autoconfiscating it */
 end_comment
 
 begin_include
@@ -5688,7 +5775,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * External defintions that depend on other macros available (or not)  * and those are probably declared in any of the above headers.  */
+comment|/*  * External definitions that depend on other macros available (or not)  * and those are probably declared in any of the above headers.  */
 end_comment
 
 begin_ifndef
