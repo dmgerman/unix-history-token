@@ -963,11 +963,12 @@ name|target_sprt
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Resetting via the passthrough causes problems. */
 name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_NOBUSRESET
 expr_stmt|;
 name|cpi
 operator|->
@@ -2414,7 +2415,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"Error 0x%x sending passthrough\n"
+literal|"Error %d sending ResetBus command\n"
 argument_list|,
 name|e
 argument_list|)
@@ -2626,7 +2627,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"Error %d sending VMIoctl command\n"
+literal|"Error %d sending GetDeviceProbeInfo"
+literal|" command\n"
 argument_list|,
 name|error
 argument_list|)
@@ -2666,13 +2668,12 @@ operator|!=
 name|ST_OK
 condition|)
 block|{
-name|device_printf
+comment|/* 		 * The only reason why this command will return an error is 		 * if the requested device doesn't exist. 		 */
+name|debug
 argument_list|(
-name|sc
-operator|->
-name|aac_dev
+literal|1
 argument_list|,
-literal|"VM_Ioctl returned %d\n"
+literal|"GetDeviceProbeInfo returned %d\n"
 argument_list|,
 name|vmi_resp
 operator|->
@@ -2686,7 +2687,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|CAM_REQ_CMP_ERR
+name|CAM_DEV_NOT_THERE
 operator|)
 return|;
 block|}
