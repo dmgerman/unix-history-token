@@ -1348,6 +1348,7 @@ name|void
 name|wrterror
 parameter_list|(
 name|char
+specifier|const
 modifier|*
 name|p
 parameter_list|)
@@ -3594,6 +3595,7 @@ name|index
 parameter_list|,
 name|struct
 name|pginfo
+specifier|const
 modifier|*
 name|info
 parameter_list|)
