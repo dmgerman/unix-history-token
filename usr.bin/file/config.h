@@ -183,6 +183,14 @@ comment|/* #undef uint64_t */
 end_comment
 
 begin_comment
+comment|/* Define to `int' if standard headers don't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef int32_t */
+end_comment
+
+begin_comment
 comment|/* The number of bytes in a uint8_t.  */
 end_comment
 
@@ -300,6 +308,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETOPT_H
+value|1
 end_define
 
 begin_comment
@@ -310,6 +319,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
+value|1
 end_define
 
 begin_comment
@@ -421,7 +431,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"3.40"
+value|"3.41"
 end_define
 
 begin_comment
