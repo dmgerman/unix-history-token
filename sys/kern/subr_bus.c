@@ -5356,6 +5356,17 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|hasclass
+init|=
+operator|(
+name|dev
+operator|->
+name|devclass
+operator|!=
+literal|0
+operator|)
+decl_stmt|;
 if|if
 condition|(
 name|dev
@@ -5441,6 +5452,19 @@ operator|->
 name|unit
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+comment|/* Unset the class that was set in device_probe_child */
+if|if
+condition|(
+operator|!
+name|hasclass
+condition|)
+name|device_set_devclass
+argument_list|(
+name|dev
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|device_set_driver
