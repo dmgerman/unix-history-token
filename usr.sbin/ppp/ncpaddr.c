@@ -783,6 +783,27 @@ end_function
 
 begin_function
 name|int
+name|ncpaddr_isset
+parameter_list|(
+specifier|const
+name|struct
+name|ncpaddr
+modifier|*
+name|addr
+parameter_list|)
+block|{
+return|return
+name|addr
+operator|->
+name|ncpaddr_family
+operator|!=
+name|AF_UNSPEC
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|ncpaddr_isdefault
 parameter_list|(
 specifier|const
