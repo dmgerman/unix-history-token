@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.11 (Berkeley) %G%"
+literal|"@(#)cp.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * cp copies source files to target files.  *   * The global path_t structures "to" and "from" always contain paths to the  * current source and target files, respectively.  Since cp does not change  * directories, these paths can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and "from", and then call the  * recursive copy() function to do the actual work.  If "from" is a file,  * copy copies the data.  If "from" is a directory, copy creates the  * corresponding "to" directory, and calls itself recursively on all of  * the entries in the "from" directory.  */
+comment|/*  * cp copies source files to target files.  *   * The global PATH_T structures "to" and "from" always contain paths to the  * current source and target files, respectively.  Since cp does not change  * directories, these paths can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and "from", and then call the  * recursive copy() function to do the actual work.  If "from" is a file,  * copy copies the data.  If "from" is a directory, copy creates the  * corresponding "to" directory, and calls itself recursively on all of  * the entries in the "from" directory.  */
 end_comment
 
 begin_include
@@ -104,25 +104,6 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-modifier|*
-name|p_path
-decl_stmt|;
-comment|/* pointer to the start of a path. */
-name|char
-modifier|*
-name|p_end
-decl_stmt|;
-comment|/* pointer to NULL at end of path. */
-block|}
-name|path_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -132,6 +113,57 @@ name|st
 parameter_list|)
 value|((st).st_mode& S_IFMT)
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+name|p_path
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* pointer to the start of a path. */
+name|char
+modifier|*
+name|p_end
+decl_stmt|;
+comment|/* pointer to NULL at end of path. */
+block|}
+name|PATH_T
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|PATH_T
+name|from
+init|=
+block|{
+literal|""
+block|,
+name|from
+operator|.
+name|p_path
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PATH_T
+name|to
+init|=
+block|{
+literal|""
+block|,
+name|to
+operator|.
+name|p_path
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|uid_t
@@ -182,13 +214,6 @@ begin_comment
 comment|/* I/O; malloc for best alignment. */
 end_comment
 
-begin_function_decl
-name|void
-name|path_restore
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -198,48 +223,6 @@ decl_stmt|,
 modifier|*
 name|path_basename
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|from_buf
-index|[
-name|MAXPATHLEN
-operator|+
-literal|1
-index|]
-decl_stmt|,
-name|to_buf
-index|[
-name|MAXPATHLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|path_t
-name|from
-init|=
-block|{
-name|from_buf
-block|,
-name|from_buf
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|path_t
-name|to
-init|=
-block|{
-name|to_buf
-block|,
-name|to_buf
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2476,7 +2459,7 @@ comment|/********************************************************************  *
 end_comment
 
 begin_comment
-comment|/*  * These functions manipulate paths in "path_t" structures.  *   * They eliminate multiple slashes in paths when they notice them, and keep  * the path non-slash terminated.  *  * Both path_set() and path_append() return 0 if the requested name  * would be too long.  */
+comment|/*  * These functions manipulate paths in PATH_T structures.  *   * They eliminate multiple slashes in paths when they notice them, and keep  * the path non-slash terminated.  *  * Both path_set() and path_append() return 0 if the requested name  * would be too long.  */
 end_comment
 
 begin_define
@@ -2501,7 +2484,7 @@ argument_list|,
 name|string
 argument_list|)
 specifier|register
-name|path_t
+name|PATH_T
 operator|*
 name|p
 expr_stmt|;
@@ -2631,7 +2614,7 @@ parameter_list|,
 name|len
 parameter_list|)
 specifier|register
-name|path_t
+name|PATH_T
 modifier|*
 name|p
 decl_stmt|;
@@ -2787,22 +2770,30 @@ begin_comment
 comment|/*  * Restore path to previous value.  (As returned by path_append.)  */
 end_comment
 
-begin_function
-name|void
+begin_macro
 name|path_restore
-parameter_list|(
-name|p
-parameter_list|,
-name|old
-parameter_list|)
-name|path_t
+argument_list|(
+argument|p
+argument_list|,
+argument|old
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|PATH_T
 modifier|*
 name|p
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|old
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|p
 operator|->
@@ -2818,7 +2809,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Return basename of path.  (Like basename(1).)  */
@@ -2831,7 +2822,7 @@ name|path_basename
 parameter_list|(
 name|p
 parameter_list|)
-name|path_t
+name|PATH_T
 modifier|*
 name|p
 decl_stmt|;
@@ -2880,7 +2871,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cp [-ip] f1 f2; or: cp [-irp] f1 ... fn directory\n"
+literal|"usage: cp [-fhipr] src target;\n   or: cp [-fhipr] src1 ... srcN directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
