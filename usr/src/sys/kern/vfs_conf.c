@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -544,15 +544,15 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vfsops
-name|isofs_vfsops
+name|cd9660_vfsops
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|ISOFS_VFSOPS
-value|&isofs_vfsops
+name|CD9660_VFSOPS
+value|&cd9660_vfsops
 end_define
 
 begin_else
@@ -563,7 +563,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ISOFS_VFSOPS
+name|CD9660_VFSOPS
 value|NULL
 end_define
 
@@ -622,7 +622,7 @@ comment|/* 12 = MOUNT_PROCFS */
 name|AFS_VFSOPS
 block|,
 comment|/* 13 = MOUNT_AFS */
-name|ISOFS_VFSOPS
+name|CD9660_VFSOPS
 block|,
 comment|/* 14 = MOUNT_CD9660 */
 literal|0
@@ -798,7 +798,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vnodeopv_desc
-name|isofs_vnodeop_opv_desc
+name|cd9660_vnodeop_opv_desc
 decl_stmt|;
 end_decl_stmt
 
@@ -806,7 +806,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vnodeopv_desc
-name|isofs_specop_opv_desc
+name|cd9660_specop_opv_desc
 decl_stmt|;
 end_decl_stmt
 
@@ -814,7 +814,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vnodeopv_desc
-name|isofs_fifoop_opv_desc
+name|cd9660_fifoop_opv_desc
 decl_stmt|;
 end_decl_stmt
 
@@ -960,16 +960,16 @@ ifdef|#
 directive|ifdef
 name|CD9660
 operator|&
-name|isofs_vnodeop_opv_desc
+name|cd9660_vnodeop_opv_desc
 block|,
 operator|&
-name|isofs_specop_opv_desc
+name|cd9660_specop_opv_desc
 block|,
 ifdef|#
 directive|ifdef
 name|FIFO
 operator|&
-name|isofs_fifoop_opv_desc
+name|cd9660_fifoop_opv_desc
 block|,
 endif|#
 directive|endif
