@@ -276,6 +276,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|usedefault
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for data transfers */
+end_comment
+
+begin_decl_stmt
 name|char
 name|hostname
 index|[
@@ -288,6 +300,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|remotehost
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|servent
+modifier|*
+name|sp
 decl_stmt|;
 end_decl_stmt
 
@@ -342,11 +362,6 @@ decl_stmt|,
 name|options
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|servent
-modifier|*
-name|sp
 decl_stmt|;
 name|union
 name|wait
@@ -704,10 +719,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|data_dest
-operator|=
-name|his_addr
-expr_stmt|;
 if|if
 condition|(
 name|fork
@@ -1951,6 +1962,10 @@ argument_list|,
 name|sizebuf
 argument_list|)
 expr_stmt|;
+name|usedefault
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|fdopen
@@ -2029,6 +2044,10 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
+name|usedefault
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2041,6 +2060,37 @@ name|fileno
 argument_list|(
 name|file
 argument_list|)
+expr_stmt|;
+comment|/* 	 * If no PORT command was specified, 	 * use the default address. 	 */
+if|if
+condition|(
+name|usedefault
+condition|)
+block|{
+name|data_dest
+operator|=
+name|his_addr
+expr_stmt|;
+name|data_dest
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|usedefault
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
