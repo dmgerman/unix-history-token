@@ -4,7 +4,7 @@ comment|/* buf.c: This file contains the scratch-file buffer rountines for the  
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: buf.c,v 1.10 1997/02/22 14:03:11 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -843,6 +843,12 @@ name|open_sbuf
 parameter_list|()
 block|{
 name|int
+name|fd
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|u
 decl_stmt|;
 name|isbinary
@@ -867,19 +873,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mktemp
+operator|(
+name|fd
+operator|=
+name|mkstemp
 argument_list|(
 name|sfn
 argument_list|)
+operator|)
 operator|==
-name|NULL
+operator|-
+literal|1
 operator|||
 operator|(
 name|sfp
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|sfn
+name|fd
 argument_list|,
 literal|"w+"
 argument_list|)
@@ -888,21 +899,24 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|sfn
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|fd
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|perror
+argument_list|(
+name|sfn
+argument_list|)
+expr_stmt|;
+name|strcpy
 argument_list|(
 name|errmsg
 argument_list|,
