@@ -2662,7 +2662,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|uhid
 argument_list|,
-name|usb
+name|uhub
 argument_list|,
 name|uhid_driver
 argument_list|,

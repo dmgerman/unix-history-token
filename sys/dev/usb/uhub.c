@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhub.c,v 1.14 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: uhub.c,v 1.5 1999/01/07 23:31:34 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -273,18 +273,84 @@ comment|/*void uhub_disco __P((void *));*/
 end_comment
 
 begin_expr_stmt
-name|USB_DECLARE_DRIVER_NAME
+name|USB_DECLARE_DRIVER
 argument_list|(
-name|usb
-argument_list|,
 name|uhub
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* FIXME what does FreeBSD need? */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|devclass_t
+name|uhubroot_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_method_t
+name|uhubroot_methods
+index|[]
+init|=
+block|{
+name|DEVMETHOD
+argument_list|(
+name|device_probe
+argument_list|,
+name|uhub_match
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|uhub_attach
+argument_list|)
+block|,
+comment|/* detach is not allowed for a root hub */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|uhubroot_driver
+init|=
+block|{
+literal|"uhub"
+block|,
+name|uhubroot_methods
+block|,
+name|DRIVER_TYPE_MISC
+block|,
+expr|sizeof
+operator|(
+expr|struct
+name|uhub_softc
+operator|)
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2477,6 +2543,24 @@ argument_list|(
 name|uhub
 argument_list|,
 name|usb
+argument_list|,
+name|uhubroot_driver
+argument_list|,
+name|uhubroot_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|uhub
+argument_list|,
+name|uhub
 argument_list|,
 name|uhub_driver
 argument_list|,

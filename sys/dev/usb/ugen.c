@@ -5171,7 +5171,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ugen
 argument_list|,
-name|usb
+name|uhub
 argument_list|,
 name|ugen_driver
 argument_list|,

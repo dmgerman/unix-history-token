@@ -2071,7 +2071,7 @@ name|CDEV_DRIVER_MODULE
 argument_list|(
 name|ulpt
 argument_list|,
-name|usb
+name|uhub
 argument_list|,
 name|ulpt_driver
 argument_list|,

@@ -532,7 +532,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|umodem
 argument_list|,
-name|usb
+name|uhub
 argument_list|,
 name|umodem_driver
 argument_list|,

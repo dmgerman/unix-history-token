@@ -2963,7 +2963,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%c (%d) %s\n"
+literal|"%c (%d) %s "
 argument_list|,
 operator|(
 operator|(
@@ -3012,7 +3012,7 @@ name|modifiers
 condition|)
 name|printf
 argument_list|(
-literal|"0x%04x\n"
+literal|"mod = 0x%04x "
 argument_list|,
 name|ud
 operator|->
@@ -3654,7 +3654,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ukbd
 argument_list|,
-name|usb
+name|uhub
 argument_list|,
 name|ukbd_driver
 argument_list|,

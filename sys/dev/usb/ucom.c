@@ -531,7 +531,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ucom
 argument_list|,
-name|usb
+name|uhub
 argument_list|,
 name|ucom_driver
 argument_list|,
