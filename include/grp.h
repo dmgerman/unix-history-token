@@ -33,12 +33,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_struct
 struct|struct
 name|group
