@@ -451,6 +451,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPOPT_CIPSO
+value|134
+end_define
+
+begin_comment
+comment|/* commerical security */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPOPT_SATID
 value|136
 end_define
