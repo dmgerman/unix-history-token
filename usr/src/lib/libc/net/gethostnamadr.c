@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.8 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2168,6 +2168,7 @@ name|h_addrtype
 operator|==
 name|type
 operator|&&
+operator|!
 name|bcmp
 argument_list|(
 name|p
