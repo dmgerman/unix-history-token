@@ -541,11 +541,6 @@ operator|=
 name|vop_stddestroyvobject
 block|,
 operator|.
-name|vop_getvobject
-operator|=
-name|vop_stdgetvobject
-block|,
-operator|.
 name|vop_getwritemount
 operator|=
 name|vop_stdgetwritemount
