@@ -931,18 +931,25 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|syslog(LOG_ERR, "pam_authenticate: %s", 		    pam_strerror(pamh, retcode));
+endif|#
+directive|endif
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_AUTH
+operator||
+name|LOG_WARNING
 argument_list|,
-literal|"pam_authenticate: %s"
+literal|"BAD SU %s to %s on %s"
 argument_list|,
-name|pam_strerror
-argument_list|(
-name|pamh
+name|username
 argument_list|,
-name|retcode
-argument_list|)
+name|user
+argument_list|,
+name|mytty
 argument_list|)
 expr_stmt|;
 name|errx
