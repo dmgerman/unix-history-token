@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.84 1994/11/01 06:04:12 ache Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.85 1994/11/03 14:57:54 jkh Exp $  */
 end_comment
 
 begin_include
@@ -222,7 +222,19 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
+file|"ether.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/npx.h>
 end_include
 
 begin_include
@@ -235,6 +247,12 @@ begin_include
 include|#
 directive|include
 file|<machine/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -270,13 +288,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/rtc.h>
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ether.h>
+file|<i386/isa/rtc.h>
 end_include
 
 begin_function_decl
@@ -521,19 +539,6 @@ decl_stmt|,
 name|_ucodesel
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|adjkerntz
-decl_stmt|,
-name|disable_rtc_set
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from	clock.c	*/
-end_comment
 
 begin_comment
 comment|/*  * Machine-dependent startup code  */
@@ -1783,15 +1788,6 @@ operator|==
 name|CPUCLASS_586
 condition|)
 block|{
-specifier|extern
-name|void
-name|calibrate_cyclecounter
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|pentium_mhz
-decl_stmt|;
 name|calibrate_cyclecounter
 argument_list|()
 expr_stmt|;
@@ -3746,86 +3742,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HZ
-end_ifdef
-
-begin_comment
-comment|/*  * If HZ is defined we use this code, otherwise the code in  * /sys/i386/i386/microtime.s is used.  The othercode only works  * for HZ=100.  */
-end_comment
-
-begin_expr_stmt
-name|microtime
-argument_list|(
-name|tvp
-argument_list|)
-specifier|register
-expr|struct
-name|timeval
-operator|*
-name|tvp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
-operator|*
-name|tvp
-operator|=
-name|time
-expr_stmt|;
-name|tvp
-operator|->
-name|tv_usec
-operator|+=
-name|tick
-expr_stmt|;
-while|while
-condition|(
-name|tvp
-operator|->
-name|tv_usec
-operator|>
-literal|1000000
-condition|)
-block|{
-name|tvp
-operator|->
-name|tv_sec
-operator|++
-expr_stmt|;
-name|tvp
-operator|->
-name|tv_usec
-operator|-=
-literal|1000000
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HZ */
-end_comment
 
 begin_function
 specifier|static
