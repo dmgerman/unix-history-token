@@ -172,6 +172,15 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|form
+modifier|*
+name|form
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|input_field
@@ -339,7 +348,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|edit_form
 parameter_list|(
 name|struct

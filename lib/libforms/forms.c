@@ -1556,7 +1556,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|edit_form
 parameter_list|(
 name|struct
@@ -1598,6 +1598,26 @@ operator|->
 name|x
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|window
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Failed to open window\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|keypad
 argument_list|(
 name|window
@@ -1620,7 +1640,7 @@ name|fields
 expr_stmt|;
 do|do
 block|{
-comment|/* Just skip over text fields */
+comment|/* Skip over any preceeding text fields */
 if|if
 condition|(
 name|cur_field
@@ -1630,6 +1650,19 @@ operator|==
 name|FORM_FTYPE_TEXT
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|cur_field
+operator|->
+name|link
+condition|)
+comment|/* No editable fields, reached end of text fields */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|cur_field
 operator|=
 name|cur_field
@@ -1828,6 +1861,11 @@ name|FORM_EXIT
 index|]
 condition|)
 do|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
