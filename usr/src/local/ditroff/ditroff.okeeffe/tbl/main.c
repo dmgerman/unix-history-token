@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.3 (CWI) 85/10/02"
+literal|"@(#)main.c	1.4 (CWI) 86/11/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,22 @@ condition|)
 name|device
 operator|=
 name|DEVVER
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"psc"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|device
+operator|=
+name|DEVPSC
 expr_stmt|;
 else|else
 name|fprintf
@@ -361,6 +377,31 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+literal|"-Tpsc"
+argument_list|,
+operator|*
+name|sargv
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|device
+operator|=
+name|DEVPSC
+expr_stmt|;
+name|sargc
+operator|--
+expr_stmt|;
+name|sargv
+operator|++
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
 literal|"-d"
 argument_list|,
 operator|*
@@ -535,6 +576,15 @@ case|:
 name|dprint
 argument_list|(
 literal|".\\\" -- device HARRIS\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DEVPSC
+case|:
+name|dprint
+argument_list|(
+literal|".\\\" -- device PostScript\n"
 argument_list|)
 expr_stmt|;
 break|break;

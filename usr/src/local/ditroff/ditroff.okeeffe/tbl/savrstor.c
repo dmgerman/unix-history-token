@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savrstor.c	1.2 (CWI) 85/10/02"
+literal|"@(#)savrstor.c	1.3 (CWI) 86/11/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,9 @@ name|CAT
 case|:
 case|case
 name|DEVVER
+case|:
+case|case
+name|DEVPSC
 case|:
 name|printf
 argument_list|(
