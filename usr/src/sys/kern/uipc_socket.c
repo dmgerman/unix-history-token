@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.39	82/04/10	*/
+comment|/*	uipc_socket.c	4.40	82/05/20	*/
 end_comment
 
 begin_include
@@ -646,6 +646,13 @@ block|}
 block|}
 name|drop
 label|:
+if|if
+condition|(
+name|so
+operator|->
+name|so_pcb
+condition|)
+block|{
 name|u
 operator|.
 name|u_error
@@ -668,6 +675,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|exiting
+operator|==
+literal|0
+operator|&&
+name|u
+operator|.
+name|u_error
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 name|discard
 label|:
 name|so
