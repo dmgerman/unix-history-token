@@ -917,6 +917,33 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* Compaq/HP -- vendor 0x0e11 */
+case|case
+literal|0x60100e11
+case|:
+name|s
+operator|=
+literal|"Compaq/HP Model 6010 HotPlug PCI Bridge"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|legacy_pcib_read_config
+argument_list|(
+literal|0
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+literal|0xc8
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* Integrated Micro Solutions -- vendor 0x10e0 */
 case|case
 literal|0x884910e0
