@@ -359,7 +359,7 @@ name|EX_OSERR
 argument_list|,
 literal|"%s"
 argument_list|,
-name|target
+name|source
 argument_list|)
 expr_stmt|;
 if|if
