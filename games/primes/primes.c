@@ -1145,7 +1145,7 @@ comment|/* temp storage for mod */
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|q
 operator|&
@@ -1161,7 +1161,7 @@ operator|(
 name|factor
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|q
 operator|)
@@ -1183,7 +1183,7 @@ name|factor
 operator|-
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|q
 operator|/
