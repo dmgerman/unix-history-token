@@ -3126,7 +3126,7 @@ name|r
 operator|->
 name|bfe_map
 argument_list|,
-name|BUS_DMASYNC_PREWRITE
+name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 name|ctrl
