@@ -35,6 +35,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"opt_reset.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
