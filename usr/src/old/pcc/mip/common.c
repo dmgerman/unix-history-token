@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	common.c	4.2	85/08/22	*/
+comment|/*	common.c	4.3	87/12/09	*/
 end_comment
 
 begin_ifdef
@@ -2077,6 +2077,22 @@ name|tstrused
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|char
 modifier|*
@@ -2143,10 +2159,6 @@ condition|)
 block|{
 name|dp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|TSTRSZ
@@ -2170,6 +2182,9 @@ name|dp
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dp
