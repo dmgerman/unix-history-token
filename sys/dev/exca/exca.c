@@ -131,12 +131,6 @@ directive|include
 file|<dev/exca/excavar.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|EXCA_DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
