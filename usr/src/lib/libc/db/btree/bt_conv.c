@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_conv.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_conv.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,7 +411,7 @@ argument_list|(
 name|pgno_t
 argument_list|)
 expr_stmt|;
-name|BSPSWAP
+name|BLPSWAP
 argument_list|(
 name|p
 argument_list|)
@@ -459,7 +459,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|BSPSWAP
+name|BLPSWAP
 argument_list|(
 name|p
 argument_list|)
@@ -471,7 +471,7 @@ argument_list|(
 name|size_t
 argument_list|)
 expr_stmt|;
-name|BSPSWAP
+name|BLPSWAP
 argument_list|(
 name|p
 argument_list|)
@@ -529,7 +529,7 @@ argument_list|(
 name|pgno_t
 argument_list|)
 expr_stmt|;
-name|BSPSWAP
+name|BLPSWAP
 argument_list|(
 name|p
 argument_list|)
@@ -561,7 +561,7 @@ argument_list|(
 name|pgno_t
 argument_list|)
 expr_stmt|;
-name|BSPSWAP
+name|BLPSWAP
 argument_list|(
 name|p
 argument_list|)
