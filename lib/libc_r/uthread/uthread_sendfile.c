@@ -101,7 +101,7 @@ name|nwritten
 init|=
 literal|0
 decl_stmt|;
-comment|/* Write the headers if any. */
+comment|/* 	 * Write the headers if any. 	 * If some data is written but not all we must return here. 	 */
 if|if
 condition|(
 operator|(
@@ -152,10 +152,57 @@ name|ERROR
 goto|;
 block|}
 else|else
+block|{
+name|int
+name|i
+decl_stmt|;
+name|ssize_t
+name|hdrtot
+decl_stmt|;
 name|nwritten
 operator|+=
 name|wvret
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|hdrtot
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|hdtr
+operator|->
+name|hdr_cnt
+condition|;
+name|i
+operator|++
+control|)
+name|hdrtot
+operator|+=
+name|hdtr
+operator|->
+name|headers
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+if|if
+condition|(
+name|wvret
+operator|<
+name|hdrtot
+condition|)
+goto|goto
+name|SHORT_WRITE
+goto|;
+block|}
 block|}
 comment|/* Lock the descriptors. */
 if|if
@@ -311,6 +358,28 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
+comment|/* 	 * Emulate sendfile(2) weirdness, sendfile doesn't actually send 	 * nbytes of the file, it really sends (nbytes - headers_size) of 	 * the file.  If (nbytes - headers_size) == 0 we just send trailers. 	 */
+if|if
+condition|(
+name|nbytes
+operator|!=
+literal|0
+condition|)
+block|{
+name|nbytes
+operator|-=
+name|nwritten
+expr_stmt|;
+if|if
+condition|(
+name|nbytes
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|ERROR_2
+goto|;
+block|}
 comment|/* 	 * Loop while no error occurs and until the expected number of bytes are 	 * written. 	 */
 for|for
 control|(
@@ -343,6 +412,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We have to handle the sideways return path of sendfile. 		 * 		 * If the result is 0, we're done. 		 * If the result is anything else check the errno. 		 * If the errno is not EGAIN return the error. 		 * Otherwise, take into account how much 		 * sendfile may have written for us because sendfile can 		 * return EAGAIN even though it has written data. 		 * 		 * We don't clear 'ret' because the sendfile(2) syscall 		 * would not have either. 		 */
 if|if
 condition|(
 name|ret
@@ -360,10 +430,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|blocking
-operator|)
-operator|&&
 operator|(
 name|ret
 operator|==
@@ -384,6 +450,16 @@ name|num
 operator|+=
 name|n
 expr_stmt|;
+comment|/* 			 * If we're not blocking then return. 			 */
+if|if
+condition|(
+operator|!
+name|blocking
+condition|)
+goto|goto
+name|SHORT_WRITE
+goto|;
+comment|/* 			 * Otherwise wait on the fd. 			 */
 name|_thread_run
 operator|->
 name|data
@@ -511,6 +587,8 @@ name|wvret
 expr_stmt|;
 block|}
 block|}
+name|SHORT_WRITE
+label|:
 if|if
 condition|(
 name|sbytes
