@@ -1769,6 +1769,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_PNP_ACTIONTEC
+value|0x1802A904
+end_define
+
+begin_comment
+comment|/* AEI0218 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_IBM3765
+value|0x65374d24
+end_define
+
+begin_comment
+comment|/* IBM3765 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_PNP_82365
 value|0x000ED041
 end_define
@@ -1813,34 +1835,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_PNP_ACTIONTEC
-value|0x1802A904
-end_define
-
-begin_comment
-comment|/* AEI0218 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCIC_PNP_SCM_SWAPBOX
-value|0x1802A904
-end_define
-
-begin_comment
-comment|/* SCM0469 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_PNP_SCM_SWAPBOX2
 value|0x69046d4c
 end_define
 
 begin_comment
-comment|/* SCM SwapBox Classic X2P */
+comment|/* SMC0469 */
 end_comment
 
 end_unit
