@@ -1101,6 +1101,11 @@ name|col
 index|]
 argument_list|)
 expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|0
+expr_stmt|;
 name|trim_trailing_spaces
 argument_list|(
 name|lineout
