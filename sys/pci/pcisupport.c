@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.109 1999/05/10 14:07:14 n_hibma Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.110 1999/05/10 17:56:23 dfr Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -19,18 +19,6 @@ begin_include
 include|#
 directive|include
 file|"opt_smp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"intpm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"alpm.h"
 end_include
 
 begin_include
@@ -4769,6 +4757,144 @@ comment|/* PCI_QUIET */
 end_comment
 
 begin_function
+specifier|const
+name|char
+modifier|*
+name|ide_pci_match
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|u_int32_t
+name|data
+decl_stmt|;
+name|data
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_STORAGE
+operator|&&
+operator|(
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_STORAGE_IDE
+operator|||
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_STORAGE_RAID
+operator|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x12308086
+case|:
+return|return
+literal|"Intel PIIX IDE controller"
+return|;
+case|case
+literal|0x70108086
+case|:
+return|return
+literal|"Intel PIIX3 IDE controller"
+return|;
+case|case
+literal|0x71118086
+case|:
+return|return
+literal|"Intel PIIX4 IDE controller"
+return|;
+case|case
+literal|0x4d33105a
+case|:
+return|return
+literal|"Promise Ultra/33 IDE controller"
+return|;
+case|case
+literal|0x522910b9
+case|:
+return|return
+literal|"AcerLabs Aladdin IDE controller"
+return|;
+case|case
+literal|0x05711106
+case|:
+return|return
+literal|"VIA Apollo IDE controller"
+return|;
+case|case
+literal|0x06401095
+case|:
+return|return
+literal|"CMD 640 IDE controller"
+return|;
+case|case
+literal|0x06461095
+case|:
+return|return
+literal|"CMD 646 IDE controller"
+return|;
+case|case
+literal|0xc6931080
+case|:
+return|return
+literal|"Cypress 82C693 IDE controller"
+return|;
+case|case
+literal|0x01021078
+case|:
+return|return
+literal|"Cyrix 5530 IDE controller"
+return|;
+case|case
+literal|0x55131039
+case|:
+return|return
+operator|(
+literal|"SiS 5591 IDE Controller"
+operator|)
+return|;
+default|default:
+return|return
+literal|"Unknown PCI IDE controller"
+return|;
+block|}
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|chipset_attach
@@ -5137,28 +5263,13 @@ name|dev
 argument_list|)
 condition|)
 block|{
+comment|/* Intel -- vendor 0x8086 */
 case|case
 literal|0x84cb8086
 case|:
 return|return
 operator|(
 literal|"Intel 82454NX PCI Expander Bridge"
-operator|)
-return|;
-case|case
-literal|0x00221014
-case|:
-return|return
-operator|(
-literal|"IBM 82351 PCI-PCI bridge"
-operator|)
-return|;
-case|case
-literal|0x00011011
-case|:
-return|return
-operator|(
-literal|"DEC 21050 PCI-PCI bridge"
 operator|)
 return|;
 case|case
@@ -5214,6 +5325,23 @@ comment|/* 5243 seems like 5247, need more info to divide*/
 return|return
 operator|(
 literal|"AcerLabs M5243 PCI-PCI bridge"
+operator|)
+return|;
+comment|/* Others */
+case|case
+literal|0x00221014
+case|:
+return|return
+operator|(
+literal|"IBM 82351 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00011011
+case|:
+return|return
+operator|(
+literal|"DEC 21050 PCI-PCI bridge"
 operator|)
 return|;
 block|}
@@ -6041,6 +6169,7 @@ name|dev
 argument_list|)
 condition|)
 block|{
+comment|/* Intel -- vendor 0x8086 */
 case|case
 literal|0x00088086
 case|:
@@ -6219,7 +6348,7 @@ literal|0x12508086
 case|:
 return|return
 operator|(
-literal|"Intel 82439"
+literal|"Intel 82439HX PCI cache memory controller"
 operator|)
 return|;
 case|case
@@ -6241,23 +6370,11 @@ return|;
 case|case
 literal|0x71138086
 case|:
-if|#
-directive|if
-name|NINTPM
-operator|>
-literal|0
-return|return
-name|NULL
-return|;
-else|#
-directive|else
 return|return
 operator|(
 literal|"Intel 82371AB Power management controller"
 operator|)
 return|;
-endif|#
-directive|endif
 case|case
 literal|0x12378086
 case|:
@@ -6302,6 +6419,22 @@ case|:
 return|return
 operator|(
 literal|"SiS 85c601"
+operator|)
+return|;
+case|case
+literal|0x55911039
+case|:
+return|return
+operator|(
+literal|"SiS 5591 host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00011039
+case|:
+return|return
+operator|(
+literal|"SiS 5591 host to AGP bridge"
 operator|)
 return|;
 comment|/* VLSI -- vendor 0x1004 */
@@ -6384,13 +6517,22 @@ operator|(
 literal|"VIA 82C586B ACPI interface"
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-comment|/* XXX New info added-in */
-block|case 0x05711106: 		return("VIA 82C586B IDE controller");
-endif|#
-directive|endif
+case|case
+literal|0x05711106
+case|:
+return|return
+operator|(
+literal|"VIA 82C586B IDE controller"
+operator|)
+return|;
+case|case
+literal|0x30381106
+case|:
+return|return
+operator|(
+literal|"VIA 82C586B USB controller"
+operator|)
+return|;
 comment|/* NEC -- vendor 0x1033 */
 case|case
 literal|0x00021033
@@ -6422,23 +6564,11 @@ return|;
 case|case
 literal|0x710110b9
 case|:
-if|#
-directive|if
-name|NALPM
-operator|>
-literal|0
-return|return
-name|NULL
-return|;
-else|#
-directive|else
 return|return
 operator|(
 literal|"AcerLabs M15x3 Power Management Unit"
 operator|)
 return|;
-endif|#
-directive|endif
 comment|/* Ross (?) -- vendor 0x1166 */
 case|case
 literal|0x00051166
@@ -6536,6 +6666,19 @@ expr_stmt|;
 if|if
 condition|(
 name|desc
+operator|==
+name|NULL
+condition|)
+name|desc
+operator|=
+name|ide_pci_match
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|desc
 condition|)
 block|{
 name|device_set_desc_copy
@@ -6546,8 +6689,10 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|100
 return|;
+comment|/* Low match priority */
 block|}
 return|return
 name|ENXIO
@@ -7738,8 +7883,10 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|100
 return|;
+comment|/* Low match priority */
 block|}
 return|return
 name|ENXIO
