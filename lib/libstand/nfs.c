@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: nfs.c,v 1.2 1998/01/24 12:43:09 drochner Exp $	*/
 end_comment
 
@@ -383,6 +387,14 @@ name|sb
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|nfs_iodesc
+name|nfs_root_node
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1621,11 +1633,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|static
-name|struct
-name|nfs_iodesc
-name|nfs_root_node
-decl_stmt|;
 name|struct
 name|iodesc
 modifier|*
@@ -2362,6 +2369,11 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|fp
+operator|!=
+operator|&
+name|nfs_root_node
+operator|&&
 name|fp
 condition|)
 name|free
