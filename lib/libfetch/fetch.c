@@ -176,6 +176,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -292,6 +293,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -324,6 +326,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -438,6 +441,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -556,6 +560,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -661,6 +666,7 @@ name|FILE
 modifier|*
 name|fetchXGetURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|URL
@@ -670,6 +676,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -731,10 +738,12 @@ name|FILE
 modifier|*
 name|fetchGetURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -762,10 +771,12 @@ name|FILE
 modifier|*
 name|fetchPutURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -824,6 +835,7 @@ begin_function
 name|int
 name|fetchStatURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|URL
@@ -833,6 +845,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -895,10 +908,12 @@ name|url_ent
 modifier|*
 name|fetchListURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -960,10 +975,12 @@ name|url
 modifier|*
 name|fetchMakeURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|scheme
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|host
@@ -971,14 +988,17 @@ parameter_list|,
 name|int
 name|port
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|doc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pwd
@@ -1142,6 +1162,7 @@ name|url
 modifier|*
 name|fetchParseURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|URL
@@ -1150,7 +1171,9 @@ block|{
 name|char
 modifier|*
 name|doc
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|p
 decl_stmt|,

@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -587,6 +593,7 @@ parameter_list|(
 name|int
 name|cd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -697,10 +704,12 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|_ftp_filename
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -749,6 +758,7 @@ parameter_list|(
 name|int
 name|cd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -844,6 +854,7 @@ parameter_list|(
 name|int
 name|cd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -857,7 +868,9 @@ block|{
 name|char
 modifier|*
 name|ln
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|s
 decl_stmt|;
@@ -1875,9 +1888,6 @@ literal|"Waiting for final status\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|r
 operator|=
 name|_ftp_chkerr
@@ -1886,22 +1896,6 @@ name|io
 operator|->
 name|csd
 argument_list|)
-operator|)
-operator|!=
-name|FTP_TRANSFER_COMPLETE
-condition|)
-name|io
-operator|->
-name|err
-operator|=
-name|r
-expr_stmt|;
-else|else
-name|io
-operator|->
-name|err
-operator|=
-literal|0
 expr_stmt|;
 name|close
 argument_list|(
@@ -1910,22 +1904,22 @@ operator|->
 name|csd
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
 name|io
-operator|->
-name|csd
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 return|return
-name|io
-operator|->
-name|err
+operator|(
+name|r
+operator|==
+name|FTP_TRANSFER_COMPLETE
+operator|)
 condition|?
+literal|0
+else|:
 operator|-
 literal|1
-else|:
-literal|0
 return|;
 block|}
 end_function
@@ -2049,10 +2043,12 @@ parameter_list|(
 name|int
 name|cd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|oper
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -2063,6 +2059,7 @@ parameter_list|,
 name|off_t
 name|offset
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -3680,6 +3677,7 @@ name|url
 modifier|*
 name|purl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -3716,10 +3714,13 @@ name|char
 modifier|*
 name|logname
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|user
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|pwd
 decl_stmt|;
@@ -4285,6 +4286,7 @@ name|url
 modifier|*
 name|purl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4600,6 +4602,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4783,6 +4786,7 @@ name|url
 modifier|*
 name|url
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4815,6 +4819,7 @@ name|url
 modifier|*
 name|url
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4970,6 +4975,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -5131,19 +5137,6 @@ begin_comment
 comment|/*  * List a directory  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|warnx
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|struct
 name|url_ent
@@ -5155,6 +5148,7 @@ name|url
 modifier|*
 name|url
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags

@@ -317,6 +317,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -332,6 +333,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -347,6 +349,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -365,6 +368,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -381,6 +385,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -404,6 +409,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -419,6 +425,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -434,6 +441,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -452,6 +460,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -468,6 +477,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -491,6 +501,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -506,6 +517,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -521,6 +533,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -539,6 +552,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -555,6 +569,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -570,6 +585,7 @@ name|FILE
 modifier|*
 name|fetchXGetURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -577,6 +593,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -588,9 +605,11 @@ name|FILE
 modifier|*
 name|fetchGetURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -602,9 +621,11 @@ name|FILE
 modifier|*
 name|fetchPutURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -615,6 +636,7 @@ begin_function_decl
 name|int
 name|fetchStatURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -622,6 +644,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -634,9 +657,11 @@ name|url_ent
 modifier|*
 name|fetchListURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -656,6 +681,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -671,6 +697,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -686,6 +713,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -704,6 +732,7 @@ name|struct
 name|url_stat
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -720,6 +749,7 @@ name|struct
 name|url
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -736,20 +766,25 @@ name|url
 modifier|*
 name|fetchMakeURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -762,6 +797,7 @@ name|url
 modifier|*
 name|fetchParseURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

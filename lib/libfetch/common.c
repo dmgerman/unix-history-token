@@ -153,6 +153,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|ENDL
 index|[
@@ -441,6 +442,7 @@ begin_function
 name|void
 name|_fetch_info
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -494,6 +496,7 @@ begin_function
 name|int
 name|_fetch_default_port
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|scheme
@@ -569,6 +572,7 @@ begin_function
 name|int
 name|_fetch_default_proxy_port
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|scheme
@@ -616,6 +620,7 @@ begin_function
 name|int
 name|_fetch_connect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
@@ -1297,6 +1302,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1323,6 +1329,10 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|str
 expr_stmt|;
 name|iov
@@ -1341,6 +1351,10 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|ENDL
 expr_stmt|;
 name|iov
@@ -1408,6 +1422,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
