@@ -1111,7 +1111,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"bad command '%s'"
+name|__FUNCTION__
+literal|": bad command '%s'"
 argument_list|,
 name|pline
 argument_list|)
@@ -1481,7 +1482,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unknown command type %d (%s)"
+name|__FUNCTION__
+literal|": unknown command type %d (%s)"
 argument_list|,
 name|plist
 operator|->
@@ -2241,7 +2243,7 @@ condition|(
 operator|(
 name|cp2
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|cp1
 argument_list|,

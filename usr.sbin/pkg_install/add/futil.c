@@ -97,7 +97,7 @@ condition|(
 operator|(
 name|cp2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp1
 argument_list|,

@@ -290,7 +290,7 @@ name|FALSE
 decl_stmt|;
 name|idx
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|str
 argument_list|,
@@ -340,7 +340,7 @@ name|idx
 decl_stmt|;
 name|idx
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|str
 argument_list|,
