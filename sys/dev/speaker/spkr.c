@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.24 1996/03/27 19:07:33 bde Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.25 1996/07/20 18:48:54 joerg Exp $  */
 end_comment
 
 begin_include
@@ -2333,7 +2333,11 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
+operator|(
 name|DEV_BSIZE
+operator|-
+literal|1
+operator|)
 condition|)
 comment|/* prevent system crashes */
 return|return
@@ -2367,10 +2371,6 @@ name|b_un
 operator|.
 name|b_addr
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|error
 operator|=
 name|uiomove
@@ -2381,8 +2381,20 @@ name|n
 argument_list|,
 name|uio
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
 condition|)
+block|{
+name|cp
+index|[
+name|n
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|playstring
 argument_list|(
 name|cp
@@ -2390,6 +2402,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
