@@ -14,20 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"eisa.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NEISA
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|"opt_dpt.h"
 end_include
 
@@ -921,15 +907,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEISA> 0 */
-end_comment
 
 end_unit
 
