@@ -306,7 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * MAC Framework per-object type functions.  It's not yet clear how  * the namespaces, etc, should work for these, so for now, sort by  * object type.  */
+comment|/*  * MAC Framework per-object type functions.  It's not yet clear how  * the namespaces, etc, should work for these, so for now, sort by  * object type.  */
 end_comment
 
 begin_function_decl
