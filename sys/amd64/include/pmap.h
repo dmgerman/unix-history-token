@@ -290,6 +290,10 @@ parameter_list|)
 value|( \ 	((unsigned long)(l4)<< PML4SHIFT) | \ 	((unsigned long)(l3)<< PDPSHIFT) | \ 	((unsigned long)(l2)<< PDRSHIFT) | \ 	((unsigned long)(l1)<< PAGE_SHIFT))
 end_define
 
+begin_comment
+comment|/* Initial number of kernel page tables */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -300,11 +304,11 @@ begin_define
 define|#
 directive|define
 name|NKPT
-value|120
+value|240
 end_define
 
 begin_comment
-comment|/* initial number of kernel page tables */
+comment|/* Enough for 16GB (2MB page tables) */
 end_comment
 
 begin_endif

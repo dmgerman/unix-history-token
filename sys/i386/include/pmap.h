@@ -304,6 +304,10 @@ parameter_list|)
 value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
 end_define
 
+begin_comment
+comment|/* Actual number of kernel page tables */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -320,11 +324,11 @@ begin_define
 define|#
 directive|define
 name|NKPT
-value|120
+value|240
 end_define
 
 begin_comment
-comment|/* actual number of kernel page tables */
+comment|/* Enough for 16GB (2MB page tables) */
 end_comment
 
 begin_else
@@ -340,7 +344,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* actual number of kernel page tables */
+comment|/* Enough for 4GB (4MB page tables) */
 end_comment
 
 begin_endif
