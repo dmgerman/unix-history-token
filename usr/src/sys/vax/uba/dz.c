@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.3	%G%	*/
+comment|/*	dz.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -2067,13 +2067,11 @@ if|if
 condition|(
 name|ttioctl
 argument_list|(
-name|cmd
-argument_list|,
 name|tp
 argument_list|,
-name|addr
+name|cmd
 argument_list|,
-name|dev
+name|addr
 argument_list|,
 name|flag
 argument_list|)
