@@ -32031,6 +32031,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|old_interface_only
+init|=
+name|interface_only
+decl_stmt|;
+name|int
 name|old_interface_unknown
 init|=
 name|interface_unknown
@@ -32058,6 +32063,10 @@ name|push_lang_context
 argument_list|(
 name|lang_name_c
 argument_list|)
+expr_stmt|;
+name|interface_only
+operator|=
+literal|0
 expr_stmt|;
 name|interface_unknown
 operator|=
@@ -32212,6 +32221,10 @@ expr_stmt|;
 name|interface_unknown
 operator|=
 name|old_interface_unknown
+expr_stmt|;
+name|interface_only
+operator|=
+name|old_interface_only
 expr_stmt|;
 name|pop_lang_context
 argument_list|()
