@@ -678,6 +678,58 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* The extra casts work around common compiler bugs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_SIGNED
+parameter_list|(
+name|t
+parameter_list|)
+value|(! ((t) 0< (t) -1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_MINIMUM
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) (TYPE_SIGNED (t) \ 			      ? ~ (t) 0<< (sizeof (t) * CHAR_BIT - 1) \ 			      : (t) 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_MAXIMUM
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CHAR_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CHAR_MAX
+value|TYPE_MAXIMUM (char)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -688,7 +740,7 @@ begin_define
 define|#
 directive|define
 name|INT_MAX
-value|2147483647
+value|TYPE_MAXIMUM (int)
 end_define
 
 begin_endif
@@ -706,7 +758,7 @@ begin_define
 define|#
 directive|define
 name|UCHAR_MAX
-value|255
+value|TYPE_MAXIMUM (unsigned char)
 end_define
 
 begin_endif
