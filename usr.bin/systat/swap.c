@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: swap.c,v 1.8 1999/01/22 10:53:13 dillon Exp $"
+literal|"$Id: swap.c,v 1.9 1999/01/22 10:57:50 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,6 +581,35 @@ name|col
 operator|+=
 literal|5
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|kvmsw
+index|[
+name|i
+index|]
+operator|.
+name|ksw_total
+operator|==
+literal|0
+condition|)
+block|{
+name|mvwprintw
+argument_list|(
+name|wnd
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|,
+name|col
+operator|+
+literal|5
+argument_list|,
+literal|"(swap not configured)"
+argument_list|)
+expr_stmt|;
+continue|continue;
 block|}
 name|mvwprintw
 argument_list|(
