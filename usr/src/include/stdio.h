@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1347,6 +1347,20 @@ name|L_ctermid
 value|1024
 comment|/* size for ctermid(); PATH_MAX */
 name|__BEGIN_DECLS
+name|char
+modifier|*
+name|ctermid
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|fdopen
