@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.6 (Berkeley) %G%"
+literal|"@(#)termout.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,12 +131,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../telnet.ext"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../api/disp_asc.h"
 end_include
 
@@ -149,7 +143,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ctlr/inbound.ext"
+file|"../ctlr/externs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ctlr/declare.h"
 end_include
 
 begin_include
@@ -161,25 +161,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ctlr/options.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ctlr/outbound.ext"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../ctlr/screen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ascii/map3270.ext"
 end_include
 
 begin_include
@@ -188,13 +170,11 @@ directive|include
 file|"../general/globals.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-name|EmptyTerminal
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"../telextrn.h"
+end_include
 
 begin_define
 define|#
@@ -450,16 +430,10 @@ specifier|static
 name|void
 name|OurExitString
 parameter_list|(
-name|file
-parameter_list|,
 name|string
 parameter_list|,
 name|value
 parameter_list|)
-name|FILE
-modifier|*
-name|file
-decl_stmt|;
 name|char
 modifier|*
 name|string
@@ -486,8 +460,6 @@ literal|1
 expr_stmt|;
 name|ExitString
 argument_list|(
-name|file
-argument_list|,
 name|string
 argument_list|,
 name|value
@@ -517,8 +489,6 @@ condition|)
 block|{
 name|OurExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"ERR from refresh\n"
 argument_list|,
 literal|1
@@ -576,8 +546,6 @@ argument_list|)
 expr_stmt|;
 name|OurExitString
 argument_list|(
-name|stderr
-argument_list|,
 name|foo
 argument_list|,
 literal|1
@@ -1562,6 +1530,9 @@ comment|/* Should we display? */
 comment|/* Display translated data */
 name|addch
 argument_list|(
+operator|(
+name|char
+operator|)
 name|disp_asc
 index|[
 name|GetTerminalPointer
@@ -1721,6 +1692,10 @@ expr_stmt|;
 comment|/* close out */
 name|addstr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tmpbuf
 argument_list|)
 expr_stmt|;
@@ -1822,6 +1797,10 @@ literal|0
 expr_stmt|;
 name|addstr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tmpbuf
 argument_list|)
 expr_stmt|;
@@ -1862,6 +1841,10 @@ literal|0
 expr_stmt|;
 name|addstr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tmpbuf
 argument_list|)
 expr_stmt|;
@@ -1977,6 +1960,10 @@ end_function_decl
 begin_escape
 end_escape
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|void
 name|ScreenOIA
@@ -2046,6 +2033,11 @@ block|}
 decl_stmt|;
 endif|#
 directive|endif
+specifier|extern
+name|void
+name|InitMapping
+parameter_list|()
+function_decl|;
 name|InitMapping
 argument_list|()
 expr_stmt|;
@@ -2565,6 +2557,11 @@ name|void
 name|LocalClearScreen
 parameter_list|()
 block|{
+specifier|extern
+name|void
+name|Clear3270
+parameter_list|()
+function_decl|;
 name|outputPurge
 argument_list|()
 expr_stmt|;
@@ -2704,8 +2701,6 @@ condition|)
 block|{
 name|OurExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Error from newwin in RingBell"
 argument_list|,
 literal|1
@@ -2747,8 +2742,6 @@ condition|)
 block|{
 name|OurExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Error from wmove in RingBell"
 argument_list|,
 literal|1
@@ -2777,8 +2770,6 @@ condition|)
 block|{
 name|OurExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Error from waddch in RingBell"
 argument_list|,
 literal|1
@@ -2803,8 +2794,6 @@ condition|)
 block|{
 name|OurExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Error from wrefresh in RingBell"
 argument_list|,
 literal|1
@@ -3054,8 +3043,6 @@ name|outpipefd
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|savemode
 decl_stmt|;
 name|void
 name|aborttc
@@ -3329,6 +3316,13 @@ name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|aborttc
 argument_list|)
 expr_stmt|;
@@ -3362,6 +3356,10 @@ name|void
 operator|)
 name|DataToTerminal
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buffer
 argument_list|,
 name|count
@@ -3385,6 +3383,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|extern
+name|void
+name|TransInput
+parameter_list|()
+function_decl|;
 name|TransInput
 argument_list|(
 literal|1
@@ -3412,9 +3415,6 @@ name|void
 name|aborttc
 parameter_list|()
 block|{
-name|int
-name|savemode
-decl_stmt|;
 name|setcommandmode
 argument_list|()
 expr_stmt|;

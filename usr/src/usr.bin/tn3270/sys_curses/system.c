@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	3.3 (Berkeley) %G%"
+literal|"@(#)system.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,15 +351,31 @@ end_enum
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|storage_location
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Address we have */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|short
 name|storage_length
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Length we have */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|storage_must_send
 init|=
 literal|0
@@ -672,16 +688,16 @@ index|[
 literal|200
 index|]
 decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-name|int
-name|was
-decl_stmt|;
 name|struct
 name|storage_descriptor
 name|sd
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|crypt
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|api_exch_intype
@@ -779,6 +795,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+specifier|extern
+name|uid_t
+name|geteuid
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(
@@ -786,6 +807,9 @@ name|pwent
 operator|=
 name|getpwuid
 argument_list|(
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -1180,12 +1204,6 @@ name|void
 name|freestorage
 parameter_list|()
 block|{
-name|char
-name|buffer
-index|[
-literal|40
-index|]
-decl_stmt|;
 name|struct
 name|storage_descriptor
 name|sd
@@ -1322,9 +1340,10 @@ name|length
 parameter_list|,
 name|copyin
 parameter_list|)
-name|int
+name|long
 name|address
-decl_stmt|,
+decl_stmt|;
+name|int
 name|length
 decl_stmt|,
 name|copyin
@@ -1333,12 +1352,6 @@ block|{
 name|struct
 name|storage_descriptor
 name|sd
-decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|40
-index|]
 decl_stmt|;
 name|freestorage
 argument_list|()
@@ -1410,6 +1423,9 @@ name|sd
 operator|.
 name|location
 operator|=
+operator|(
+name|long
+operator|)
 name|storage_location
 expr_stmt|;
 name|sd
@@ -1505,6 +1521,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|void
 name|movetous
@@ -1521,6 +1541,7 @@ name|char
 modifier|*
 name|local
 decl_stmt|;
+name|unsigned
 name|int
 name|es
 decl_stmt|,
@@ -1530,6 +1551,16 @@ name|int
 name|length
 decl_stmt|;
 block|{
+name|long
+name|where
+init|=
+name|SEG_OFF_BACK
+argument_list|(
+name|es
+argument_list|,
+name|di
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|length
@@ -1572,7 +1603,7 @@ return|return;
 block|}
 name|getstorage
 argument_list|(
-name|di
+name|where
 argument_list|,
 name|length
 argument_list|,
@@ -1583,12 +1614,20 @@ name|memcpy
 argument_list|(
 name|local
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|storage
 operator|+
 operator|(
-name|di
+operator|(
+name|where
 operator|-
 name|storage_location
+operator|)
+operator|)
 operator|)
 argument_list|,
 name|length
@@ -1596,6 +1635,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_function
 name|void
@@ -1609,6 +1652,7 @@ name|local
 parameter_list|,
 name|length
 parameter_list|)
+name|unsigned
 name|int
 name|es
 decl_stmt|,
@@ -1622,6 +1666,16 @@ name|int
 name|length
 decl_stmt|;
 block|{
+name|long
+name|where
+init|=
+name|SEG_OFF_BACK
+argument_list|(
+name|es
+argument_list|,
+name|di
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|length
@@ -1684,7 +1738,7 @@ name|length
 expr_stmt|;
 name|storage_location
 operator|=
-name|di
+name|where
 expr_stmt|;
 name|storage_must_send
 operator|=
@@ -1704,9 +1758,11 @@ name|length
 parameter_list|,
 name|copyin
 parameter_list|)
-name|int
+name|char
+modifier|*
 name|location
-decl_stmt|,
+decl_stmt|;
+name|int
 name|length
 decl_stmt|,
 name|copyin
@@ -1753,6 +1809,9 @@ argument_list|()
 expr_stmt|;
 name|getstorage
 argument_list|(
+operator|(
+name|long
+operator|)
 name|location
 argument_list|,
 name|length
@@ -1775,39 +1834,36 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|unaccess_api
-argument_list|(
-argument|location
-argument_list|,
-argument|local
-argument_list|,
-argument|length
-argument_list|,
-argument|copyout
-argument_list|)
-end_macro
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
-begin_decl_stmt
-name|int
+begin_function
+name|void
+name|unaccess_api
+parameter_list|(
+name|location
+parameter_list|,
+name|local
+parameter_list|,
+name|length
+parameter_list|,
+name|copyout
+parameter_list|)
+name|char
+modifier|*
 name|location
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|local
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|length
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|copyout
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1848,7 +1904,7 @@ name|copyout
 expr_stmt|;
 comment|/* if needs to go back */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Accept a connection from an API client, aborting if the child dies.  */
@@ -1911,10 +1967,23 @@ argument_list|,
 operator|&
 name|fdset
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)
@@ -1952,8 +2021,17 @@ name|accept
 argument_list|(
 name|serversock
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1998,6 +2076,11 @@ literal|1
 operator|)
 condition|)
 block|{
+specifier|extern
+name|void
+name|setcommandmode
+parameter_list|()
+function_decl|;
 operator|(
 name|void
 operator|)
@@ -2016,6 +2099,9 @@ argument_list|()
 expr_stmt|;
 comment|/* In case child_died sneaked in */
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2359,7 +2445,6 @@ parameter_list|()
 block|{
 name|union
 name|wait
-modifier|*
 name|status
 decl_stmt|;
 specifier|register
@@ -2378,6 +2463,11 @@ name|status
 argument_list|,
 name|WNOHANG
 argument_list|,
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)
@@ -2398,6 +2488,16 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+specifier|extern
+name|void
+name|setconnmode
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
+name|ConnectScreen
+parameter_list|()
+function_decl|;
 name|shell_active
 operator|=
 literal|0
@@ -2540,6 +2640,12 @@ modifier|*
 name|mktemp
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
 comment|/* First, create verification file. */
 do|do
 block|{
@@ -2609,6 +2715,11 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|==
@@ -2654,6 +2765,10 @@ name|key
 argument_list|,
 literal|"%lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ikey
 argument_list|)
 expr_stmt|;
@@ -2773,6 +2888,11 @@ name|bind
 argument_list|(
 name|serversock
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|server
 argument_list|,
@@ -2803,6 +2923,11 @@ name|getsockname
 argument_list|(
 name|serversock
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|server
 argument_list|,
@@ -2906,7 +3031,7 @@ argument_list|(
 name|sockNAME
 argument_list|)
 argument_list|,
-literal|":%d"
+literal|":%u"
 argument_list|,
 name|ntohs
 argument_list|(
