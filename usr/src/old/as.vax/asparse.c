@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.18 %G%"
+literal|"@(#)asparse.c 4.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1907,13 +1907,6 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|passno
-operator|==
-literal|1
-condition|)
-block|{
 name|dotp
 operator|->
 name|e_xvalue
@@ -1922,8 +1915,12 @@ name|fill_rep
 operator|*
 name|fill_size
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|passno
+operator|==
+literal|2
+condition|)
 block|{
 while|while
 condition|(
