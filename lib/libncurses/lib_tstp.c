@@ -112,6 +112,17 @@ name|sa_flags
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SA_RESTART
+name|act
+operator|.
+name|sa_flags
+operator||=
+name|SA_RESTART
+expr_stmt|;
+endif|#
+directive|endif
 name|sigaction
 argument_list|(
 name|SIGTSTP
