@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	8.3 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NFS_NQNFS_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NFS_NQNFS_H_
+end_define
 
 begin_comment
 comment|/*  * Definitions for NQNFS (Not Quite NFS) cache consistency protocol.  */
@@ -146,8 +158,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NQNFS_VER1
-value|1
+name|NQNFS_VER3
+value|3
 end_define
 
 begin_define
@@ -164,6 +176,23 @@ end_comment
 begin_comment
 comment|/*  * Definitions used for saving the "last lease expires" time in Non-volatile  * RAM on the server. The default definitions below assume that NOVRAM is not  * available.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HASNVRAM
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HASNVRAM
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -519,54 +548,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flag bits for flags argument to nqsrv_getlease.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NQL_READ
-value|LEASE_READ
-end_define
-
-begin_comment
-comment|/* Read Request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NQL_WRITE
-value|LEASE_WRITE
-end_define
-
-begin_comment
-comment|/* Write Request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NQL_CHECK
-value|0x4
-end_define
-
-begin_comment
-comment|/* Check for lease */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NQL_NOVAL
-value|0xffffffff
-end_define
-
-begin_comment
-comment|/* Invalid */
-end_comment
-
-begin_comment
 comment|/*  * Special value for slp for local server calls.  */
 end_comment
 
@@ -591,7 +572,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|(void) nqsrv_getlease((v),&nfsd->nd_duration, \ 		 ((nfsd->nd_nqlflag != 0&& nfsd->nd_nqlflag != NQL_NOVAL) ? nfsd->nd_nqlflag : \ 		 ((l) | NQL_CHECK)), \ 		 nfsd, nam,&cache,&frev, cred)
+value|(void) nqsrv_getlease((v),&nfsd->nd_duration, \ 		 ((nfsd->nd_flag& ND_LEASE) ? (nfsd->nd_flag& ND_LEASE) : \ 		 ((l) | ND_CHECK)), \ 		 slp, procp, nfsd->nd_nam,&cache,&frev, cred)
 end_define
 
 begin_comment
@@ -610,7 +591,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|((time.tv_sec> (n)->n_expiry&& \  VFSTONFS((v)->v_mount)->nm_timeouts< VFSTONFS((v)->v_mount)->nm_deadthresh) \   || ((f) == NQL_WRITE&& ((n)->n_flag& NQNFSWRITE) == 0))
+value|((time.tv_sec> (n)->n_expiry&& \  VFSTONFS((v)->v_mount)->nm_timeouts< VFSTONFS((v)->v_mount)->nm_deadthresh) \   || ((f) == ND_WRITE&& ((n)->n_flag& NQNFSWRITE) == 0))
 end_define
 
 begin_define
@@ -623,7 +604,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|((time.tv_sec<= VTONFS(v)->n_expiry || \   VFSTONFS((v)->v_mount)->nm_timeouts>= VFSTONFS((v)->v_mount)->nm_deadthresh) \&& (VTONFS(v)->n_flag& NQNFSNONCACHE) == 0&& \    ((f) == NQL_READ || (VTONFS(v)->n_flag& NQNFSWRITE)))
+value|((time.tv_sec<= VTONFS(v)->n_expiry || \   VFSTONFS((v)->v_mount)->nm_timeouts>= VFSTONFS((v)->v_mount)->nm_deadthresh) \&& (VTONFS(v)->n_flag& NQNFSNONCACHE) == 0&& \    ((f) == ND_READ || (VTONFS(v)->n_flag& NQNFSWRITE)))
 end_define
 
 begin_define
@@ -636,7 +617,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(time.tv_sec> VTONFS(v)->n_expiry ? \ 		 ((VTONFS(v)->n_flag& NQNFSEVICTED) ? 0 : nqnfs_piggy[p]) : \ 		 (((time.tv_sec + NQ_RENEWAL)> VTONFS(v)->n_expiry&& \ 		   nqnfs_piggy[p]) ? \ 		   ((VTONFS(v)->n_flag& NQNFSWRITE) ? \ 		    NQL_WRITE : nqnfs_piggy[p]) : 0))
+value|(time.tv_sec> VTONFS(v)->n_expiry ? \ 		 ((VTONFS(v)->n_flag& NQNFSEVICTED) ? 0 : nqnfs_piggy[p]) : \ 		 (((time.tv_sec + NQ_RENEWAL)> VTONFS(v)->n_expiry&& \ 		   nqnfs_piggy[p]) ? \ 		   ((VTONFS(v)->n_flag& NQNFSWRITE) ? \ 		    ND_WRITE : nqnfs_piggy[p]) : 0))
 end_define
 
 begin_comment
@@ -646,7 +627,6 @@ end_comment
 begin_macro
 name|CIRCLEQ_HEAD
 argument_list|(
-argument|nqleases
 argument_list|,
 argument|nqlease
 argument_list|)
@@ -708,12 +688,174 @@ name|NQNFS_TRYLATER
 value|501
 end_define
 
-begin_define
-define|#
-directive|define
-name|NQNFS_AUTHERR
-value|502
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|nqnfs_lease_updatetime
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nqsrv_cmpnam
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfssvc_sock
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|nqhost
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nqsrv_getlease
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|nfssvc_sock
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|u_quad_t
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nqnfs_getlease
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nqnfs_callback
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsmount
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nqnfs_clientd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsmount
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
+name|nfsd_cargs
+operator|*
+operator|,
+name|int
+operator|,
+name|caddr_t
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrtt.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrtt.h	8.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NFS_NFSRTT_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NFS_NFSRTT_H_
+end_define
 
 begin_comment
 comment|/*  * Definitions for performance monitor.  * The client and server logging are turned on by setting the global  * constant "nfsrtton" to 1.  */
@@ -128,6 +140,17 @@ begin_comment
 comment|/* Rpc request dropped, due to recent reply */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DRT_NFSV3
+value|0x10
+end_define
+
+begin_comment
+comment|/* Rpc used NFS Version 3 */
+end_comment
+
 begin_comment
 comment|/*  * Server log structure  * NB: ipadr == INADDR_ANY indicates a client using a non IP protocol.  *	(ISO perhaps?)  */
 end_comment
@@ -173,6 +196,11 @@ struct|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	8.3 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NFS_NFSMOUNT_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NFS_NFSMOUNT_H_
+end_define
 
 begin_comment
 comment|/*  * Mount structure.  * One allocated on every NFS mount.  * Holds NFS specific information for mount.  */
@@ -25,10 +37,17 @@ name|int
 name|nm_numgrps
 decl_stmt|;
 comment|/* Max. size of groupslist */
-name|nfsv2fh_t
+name|u_char
 name|nm_fh
+index|[
+name|NFSX_V3FHMAX
+index|]
 decl_stmt|;
 comment|/* File handle of root dir */
+name|int
+name|nm_fhsize
+decl_stmt|;
+comment|/* Size of root file handle */
 name|struct
 name|socket
 modifier|*
@@ -99,6 +118,10 @@ name|nm_wsize
 decl_stmt|;
 comment|/* Max size of write rpc */
 name|int
+name|nm_readdirsize
+decl_stmt|;
+comment|/* Size of a readdir rpc */
+name|int
 name|nm_readahead
 decl_stmt|;
 comment|/* Num. of blocks to readahead */
@@ -108,13 +131,12 @@ decl_stmt|;
 comment|/* Term (sec) for NQNFS lease */
 name|CIRCLEQ_HEAD
 argument_list|(
-argument|nfsnodes
 argument_list|,
 argument|nfsnode
 argument_list|)
 name|nm_timerhead
 expr_stmt|;
-comment|/* Lease timer queue */
+comment|/* Head of lease timer queue */
 name|struct
 name|vnode
 modifier|*
@@ -138,6 +160,47 @@ modifier|*
 name|nm_authstr
 decl_stmt|;
 comment|/* Authenticator string */
+name|char
+modifier|*
+name|nm_verfstr
+decl_stmt|;
+comment|/* and the verifier */
+name|int
+name|nm_verflen
+decl_stmt|;
+name|u_char
+name|nm_verf
+index|[
+name|NFSX_V3WRITEVERF
+index|]
+decl_stmt|;
+comment|/* V3 write verifier */
+name|NFSKERBKEY_T
+name|nm_key
+decl_stmt|;
+comment|/* and the session key */
+name|int
+name|nm_numuids
+decl_stmt|;
+comment|/* Number of nfsuid mappings */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|nfsuid
+argument_list|)
+name|nm_uidlruhead
+expr_stmt|;
+comment|/* Lists of nfsuid mappings */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|nfsuid
+argument_list|)
+name|nm_uidhashtbl
+index|[
+name|NFS_MUIDHASHSIZ
+index|]
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -427,6 +490,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
