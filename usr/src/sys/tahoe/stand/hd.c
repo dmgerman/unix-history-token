@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Stand alone driver for the HDC controller  */
+comment|/*  * Stand alone driver for the HDC controller  *  *	@(#)hd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -12,86 +12,112 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../uts/machine/ml/mtpr.h"
+file|"machine/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/vnode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/ufs/inode.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/ufs/fs.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/vbavar.h"
+file|"tahoevba/dsk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/ioctl.h"
+file|"tahoevba/dskio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/dsk.h"
+file|"tahoevba/hdc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../uts/machine/sys/dskio.h"
+file|"saio.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../uts/machine/sys/hdc.h"
-end_include
+begin_define
+define|#
+directive|define
+name|NHD
+value|4
+end_define
 
-begin_include
-include|#
-directive|include
-file|"../stand/saio.h"
-end_include
+begin_define
+define|#
+directive|define
+name|NDRIVE
+value|8
+end_define
+
+begin_comment
+comment|/* drives per controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDSLAVE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) % NDRIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDCTLR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) / NDRIVE)
+end_define
 
 begin_define
 define|#
@@ -105,6 +131,17 @@ end_define
 
 begin_comment
 comment|/* standalone io to an hdc register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HID_HDC
+value|0x01
+end_define
+
+begin_comment
+comment|/* hvme_id for HDC */
 end_comment
 
 begin_comment
@@ -344,39 +381,47 @@ name|int
 name|i
 decl_stmt|;
 comment|/* temp                             */
+name|long
+name|junk
+decl_stmt|;
+comment|/* badaddr will write junk here     */
 name|hdc_regs_type
 modifier|*
 name|ctlr_addr
 decl_stmt|;
 comment|/* hdc i/o registers                */
-name|int
-name|junk
-decl_stmt|;
-comment|/* badaddr will write junk here     */
 name|par
 operator|=
 name|io
 operator|->
-name|i_part
+name|i_boff
 expr_stmt|;
+comment|/* io->i_part; */
 name|bus
 operator|=
-name|io
-operator|->
-name|i_bus
+literal|0
 expr_stmt|;
+comment|/* io->i_bus; */
 name|ctlr
 operator|=
+name|HDCTLR
+argument_list|(
 name|io
 operator|->
-name|i_ctlr
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_ctlr; */
 name|drive
 operator|=
+name|HDSLAVE
+argument_list|(
 name|io
 operator|->
-name|i_drive
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_drive; */
 name|hu
 operator|=
 operator|&
@@ -413,19 +458,21 @@ comment|/* 	 * Validate the device specification 	 */
 if|if
 condition|(
 name|ctlr
-operator|<
-literal|1
-operator|||
-name|ctlr
-operator|>
+operator|>=
 name|HDC_MAXCTLR
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"invalid controller number\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|drive
@@ -448,7 +495,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -470,14 +517,17 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
-name|io
-operator|->
-name|i_ctlr_addr
+name|ctlr_addr
 operator|=
+operator|(
+name|hdc_regs_type
+operator|*
+operator|)
+operator|(
 name|bus
 operator|==
 literal|0
@@ -501,17 +551,9 @@ operator||
 name|HDC_MID
 operator|<<
 literal|16
-expr_stmt|;
-name|ctlr_addr
-operator|=
-operator|(
-name|hdc_regs_type
-operator|*
 operator|)
-name|io
-operator|->
-name|i_ctlr_addr
 expr_stmt|;
+comment|/* ctlr_addr = (hdc_regs_type *) io->i_ctlr_addr; */
 comment|/* 	 * Init drive structure. 	 */
 name|hu
 operator|->
@@ -526,9 +568,13 @@ operator|=
 name|ctlr_addr
 expr_stmt|;
 comment|/* 	 * Insure that this is an hdc, then reset the hdc. 	 */
+name|junk
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|badaddr
+name|wbadaddr
 argument_list|(
 operator|&
 name|ctlr_addr
@@ -541,12 +587,22 @@ operator|&
 name|junk
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"hd%d: %x: invalid csr\n"
+argument_list|,
+name|ctlr
+argument_list|,
+name|ctlr_addr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
+block|}
 name|HDREG
 argument_list|(
 name|soft_reset_reg
@@ -585,9 +641,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|PADC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -639,7 +695,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -667,7 +723,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -747,7 +803,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 name|hu
@@ -959,7 +1015,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -1164,11 +1220,18 @@ name|length
 operator|==
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"hdc:  null partition\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 else|else
 block|{
 name|hu
@@ -1224,7 +1287,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -1314,22 +1377,29 @@ decl_stmt|;
 comment|/* the drive number                 */
 name|bus
 operator|=
-name|io
-operator|->
-name|i_bus
+literal|0
 expr_stmt|;
+comment|/* io->i_bus; */
 name|ctlr
 operator|=
+name|HDCTLR
+argument_list|(
 name|io
 operator|->
-name|i_ctlr
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_ctlr; */
 name|drive
 operator|=
+name|HDSLAVE
+argument_list|(
 name|io
 operator|->
-name|i_drive
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_drive; */
 name|hu
 operator|=
 operator|&
@@ -1360,7 +1430,7 @@ if|if
 condition|(
 name|io
 operator|->
-name|i_part
+name|i_boff
 operator|==
 name|HDC_DEFPART
 condition|)
@@ -1391,7 +1461,7 @@ name|partition
 index|[
 name|io
 operator|->
-name|i_part
+name|i_boff
 index|]
 operator|.
 name|start
@@ -1404,7 +1474,7 @@ name|partition
 index|[
 name|io
 operator|->
-name|i_part
+name|i_boff
 index|]
 operator|.
 name|length
@@ -1436,7 +1506,7 @@ operator|)
 return|;
 name|bytes
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|io
 operator|->
@@ -1675,22 +1745,29 @@ decl_stmt|;
 comment|/* the drive number                 */
 name|bus
 operator|=
-name|io
-operator|->
-name|i_bus
+literal|0
 expr_stmt|;
+comment|/* io->i_bus; */
 name|ctlr
 operator|=
+name|HDCTLR
+argument_list|(
 name|io
 operator|->
-name|i_ctlr
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_ctlr; */
 name|drive
 operator|=
+name|HDSLAVE
+argument_list|(
 name|io
 operator|->
-name|i_drive
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_drive; */
 name|hu
 operator|=
 operator|&
@@ -2227,12 +2304,7 @@ name|format
 operator|=
 literal|1
 expr_stmt|;
-name|io
-operator|->
-name|i_part
-operator|=
-name|HDC_DEFPART
-expr_stmt|;
+comment|/* io->i_part = HDC_DEFPART; */
 name|io
 operator|->
 name|i_boff
@@ -2641,16 +2713,19 @@ name|ptr
 decl_stmt|;
 name|bus
 operator|=
-name|io
-operator|->
-name|i_bus
+literal|0
 expr_stmt|;
+comment|/* io->i_bus; */
 name|ctlr
 operator|=
+name|HDCTLR
+argument_list|(
 name|io
 operator|->
-name|i_ctlr
+name|i_unit
+argument_list|)
 expr_stmt|;
+comment|/* io->i_ctlr; */
 name|hc
 operator|=
 operator|&
@@ -2814,9 +2889,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|PADC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
