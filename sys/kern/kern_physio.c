@@ -389,7 +389,7 @@ goto|goto
 name|doerror
 goto|;
 block|}
-name|DEV_STRATEGY
+name|dev_strategy
 argument_list|(
 name|bp
 argument_list|)

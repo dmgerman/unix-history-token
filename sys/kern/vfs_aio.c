@@ -5380,7 +5380,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* Perform transfer. */
-name|DEV_STRATEGY
+name|dev_strategy
 argument_list|(
 name|bp
 argument_list|)

@@ -653,16 +653,6 @@ begin_comment
 comment|/* Number of bytes to dump. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEV_STRATEGY
-parameter_list|(
-name|bp
-parameter_list|)
-value|dev_strategy(bp)
-end_define
-
 begin_endif
 endif|#
 directive|endif
