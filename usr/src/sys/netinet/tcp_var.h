@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.3	81/11/15	*/
+comment|/*	tcp_var.h	4.4	81/11/16	*/
 end_comment
 
 begin_comment
@@ -790,16 +790,6 @@ comment|/* tcp initial send seq # */
 end_comment
 
 begin_decl_stmt
-name|int
-name|tcpconsdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to 1 traces on console */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|inpcb
 name|tcb
@@ -813,6 +803,16 @@ name|TCPDEBUG
 end_ifdef
 
 begin_decl_stmt
+name|int
+name|tcpconsdebug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set to 1 traces on console */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|tcp_debug
 name|tcp_debug
@@ -821,11 +821,6 @@ name|TDBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -836,6 +831,11 @@ end_decl_stmt
 begin_comment
 comment|/* rotating index into tcp_debug */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.c 4.3 81/11/14 */
+comment|/* ip_icmp.c 4.4 81/11/16 */
 end_comment
 
 begin_include
@@ -18,7 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/inaddr.h"
+file|"../h/protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/clock.h"
 end_include
 
 begin_include
@@ -80,7 +86,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|unsigned
 name|oiplen
 init|=
 name|oip
@@ -445,11 +451,9 @@ condition|)
 goto|goto
 name|free
 goto|;
-name|icmp_advise
+name|icmp_ctlinput
 argument_list|(
 name|ip
-argument_list|,
-name|icp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -485,13 +489,12 @@ name|icmp_type
 operator|=
 name|ICMP_TSTAMPREPLY
 expr_stmt|;
-name|ip_time
-argument_list|(
-operator|&
 name|icp
 operator|->
 name|icmp_rtime
-argument_list|)
+operator|=
+name|ip_time
+argument_list|()
 expr_stmt|;
 name|icp
 operator|->
@@ -632,8 +635,6 @@ begin_macro
 name|icmp_send
 argument_list|(
 argument|ip
-argument_list|,
-argument|icp
 argument_list|)
 end_macro
 
@@ -645,16 +646,16 @@ name|ip
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_block
+block|{
 name|struct
 name|icmp
 modifier|*
 name|icp
+init|=
+literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
+comment|/* XXX */
 name|icp
 operator|->
 name|icmp_cksum
@@ -679,7 +680,10 @@ comment|/* XXX */
 comment|/* what about ttl? */
 name|ip_output
 argument_list|(
+name|dtom
+argument_list|(
 name|ip
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -690,11 +694,9 @@ comment|/*  * Advise a higher level protocol of a problem reported by  * a gatew
 end_comment
 
 begin_macro
-name|icmp_advise
+name|icmp_ctlinput
 argument_list|(
 argument|ip
-argument_list|,
-argument|icp
 argument_list|)
 end_macro
 
@@ -706,18 +708,32 @@ name|ip
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|icmp
-modifier|*
-name|icp
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-comment|/* pass through protocol specific switch */
-comment|/* (*f)(ip, icp); */
+specifier|extern
+name|u_char
+name|ip_protox
+index|[]
+decl_stmt|;
+comment|/* XXX */
+operator|(
+operator|*
+name|protosw
+index|[
+name|ip_protox
+index|[
+name|ip
+operator|->
+name|ip_p
+index|]
+index|]
+operator|.
+name|pr_ctlinput
+operator|)
+operator|(
+name|ip
+operator|)
+expr_stmt|;
 block|}
 end_block
 
@@ -757,14 +773,49 @@ begin_block
 block|{  }
 end_block
 
-begin_macro
+begin_function
+name|n_time
 name|ip_time
+parameter_list|()
+block|{
+name|int
+name|s
+init|=
+name|spl6
 argument_list|()
-end_macro
-
-begin_block
-block|{  }
-end_block
+decl_stmt|;
+name|long
+name|t
+decl_stmt|;
+name|t
+operator|=
+operator|(
+name|time
+operator|%
+name|SECDAY
+operator|)
+operator|*
+literal|1000
+operator|+
+name|lbolt
+operator|*
+name|hz
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|htonl
+argument_list|(
+name|t
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

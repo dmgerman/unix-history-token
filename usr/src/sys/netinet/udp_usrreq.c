@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.4	81/11/15	*/
+comment|/*	udp_usrreq.c	4.5	81/11/16	*/
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"../h/socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/inaddr.h"
 end_include
 
 begin_include
@@ -153,8 +159,7 @@ name|u_short
 name|lport
 decl_stmt|,
 name|fport
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ulen
 decl_stmt|;
 name|ui
@@ -277,6 +282,9 @@ condition|(
 name|udpcksum
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|inet_cksum
 argument_list|(
 name|m
@@ -316,8 +324,11 @@ block|}
 block|}
 name|inp
 operator|=
-name|inpcb_lookup
+name|in_pcblookup
 argument_list|(
+operator|&
+name|udb
+argument_list|,
 operator|&
 name|ui
 operator|->
@@ -381,7 +392,7 @@ block|}
 end_block
 
 begin_macro
-name|udp_advise
+name|udp_ctlinput
 argument_list|(
 argument|m
 argument_list|)
@@ -404,6 +415,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|udp_output
@@ -443,6 +458,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|udp_usrreq
 argument_list|(
@@ -479,9 +498,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|in_addr
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 end_decl_stmt
@@ -522,7 +539,7 @@ operator|)
 return|;
 name|inp
 operator|=
-name|inpcb_alloc
+name|in_pcballoc
 argument_list|()
 expr_stmt|;
 if|if
@@ -560,14 +577,7 @@ operator|(
 name|ENOTCONN
 operator|)
 return|;
-name|sofree
-argument_list|(
-name|inp
-operator|->
-name|inp_socket
-argument_list|)
-expr_stmt|;
-name|udp_detach
+name|in_pcbfree
 argument_list|(
 name|inp
 argument_list|)
@@ -591,11 +601,11 @@ name|inp
 operator|->
 name|inp_fhost
 operator|=
-name|in_hmake
+name|in_hosteval
 argument_list|(
 operator|(
 expr|struct
-name|in_addr
+name|inaddr
 operator|*
 operator|)
 name|addr
@@ -639,7 +649,7 @@ operator|(
 name|ENOTCONN
 operator|)
 return|;
-name|h_free
+name|in_hostfree
 argument_list|(
 name|inp
 operator|->
@@ -659,14 +669,46 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PRU_FLUSH
+case|:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+case|case
+name|PRU_SHUTDOWN
+case|:
+name|socantsendmore
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PRU_SEND
 case|:
 if|#
 directive|if
 literal|0
-block|if (addr) { 			if (inp->inp_fhost) 				return (EISCONN); 			udp_output(addr->in_fhost, addr->in_fport, m); 		} else 			udp_output(inp->inp_fhost->h_addr, ip->inp_fport, m);
+block|if (addr) { 			if (inp->inp_fhost) 				return (EISCONN); 			udp_output(addr->in_fhost, addr->in_fport, m); 		} else
 endif|#
 directive|endif
+name|udp_output
+argument_list|(
+name|inp
+operator|->
+name|inp_fhost
+operator|->
+name|h_addr
+argument_list|,
+name|ip
+operator|->
+name|inp_fport
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PRU_ABORT

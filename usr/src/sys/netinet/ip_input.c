@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.13 81/11/15 */
+comment|/* ip_input.c 1.14 81/11/16 */
 end_comment
 
 begin_include
@@ -120,9 +120,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|int
-name|raw
 decl_stmt|;
 name|pr
 operator|=
@@ -293,12 +290,6 @@ specifier|register
 name|struct
 name|ipq
 modifier|*
-name|q
-decl_stmt|;
-specifier|register
-name|struct
-name|ipq
-modifier|*
 name|fp
 decl_stmt|;
 name|int
@@ -401,6 +392,9 @@ name|ip_len
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -512,8 +506,6 @@ condition|)
 name|ip_dooptions
 argument_list|(
 name|ip
-argument_list|,
-name|hlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -544,6 +536,8 @@ argument_list|(
 name|ip
 argument_list|,
 name|ICMP_TIMXCEED
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1340,6 +1334,9 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -1480,6 +1477,9 @@ operator|->
 name|prev
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -1714,8 +1714,6 @@ decl_stmt|,
 name|optlen
 decl_stmt|,
 name|cnt
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|ip_addr
@@ -1727,9 +1725,6 @@ name|struct
 name|ip_timestamp
 modifier|*
 name|ipt
-decl_stmt|;
-name|int
-name|x
 decl_stmt|;
 name|cp
 operator|=
@@ -2078,20 +2073,11 @@ literal|4
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|bad
 label|:
 comment|/* SHOULD FORCE ICMP MESSAGE */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 block|}
 end_block
 
@@ -2126,10 +2112,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|char
-modifier|*
-name|op
-decl_stmt|;
 name|int
 name|olen
 decl_stmt|;
@@ -2153,15 +2135,6 @@ argument_list|(
 expr|struct
 name|ip
 argument_list|)
-expr_stmt|;
-name|op
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|ip
-operator|+
-name|olen
 expr_stmt|;
 name|m
 operator|=
@@ -2201,6 +2174,9 @@ name|caddr_t
 operator|)
 name|ip
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|i
 argument_list|)
 expr_stmt|;

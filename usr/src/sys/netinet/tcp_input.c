@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.23 81/11/15 */
+comment|/* tcp_input.c 1.24 81/11/16 */
 end_comment
 
 begin_include
@@ -288,10 +288,10 @@ name|so
 decl_stmt|;
 name|int
 name|hlen
-decl_stmt|,
-name|tlen
 decl_stmt|;
 name|u_short
+name|tlen
+decl_stmt|,
 name|lport
 decl_stmt|,
 name|fport
@@ -374,7 +374,7 @@ name|ntohs
 argument_list|(
 name|n
 operator|->
-name|ti_dst
+name|ti_dport
 argument_list|)
 expr_stmt|;
 name|fport
@@ -383,7 +383,7 @@ name|ntohs
 argument_list|(
 name|n
 operator|->
-name|ti_src
+name|ti_sport
 argument_list|)
 expr_stmt|;
 comment|/* WONT BE POSSIBLE WHEN MBUFS ARE 256 BYTES */
@@ -464,7 +464,7 @@ block|}
 comment|/* 	 * Find tcb for message. 	 */
 name|inp
 operator|=
-name|inpcb_lookup
+name|in_pcblookup
 argument_list|(
 operator|&
 name|tcb
@@ -485,6 +485,22 @@ expr_stmt|;
 if|if
 condition|(
 name|inp
+operator|==
+literal|0
+condition|)
+goto|goto
+name|notwanted
+goto|;
+name|tp
+operator|=
+name|intotcpcb
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
 operator|==
 literal|0
 condition|)
@@ -529,6 +545,9 @@ name|ti_ackno
 operator|=
 name|ntohl
 argument_list|(
+operator|(
+name|n_long
+operator|)
 name|n
 operator|->
 name|ti_ackno
@@ -746,7 +765,7 @@ name|t_persist
 operator|=
 literal|0
 expr_stmt|;
-name|h_free
+name|in_hostfree
 argument_list|(
 name|inp
 operator|->
@@ -1024,7 +1043,7 @@ name|inp
 operator|->
 name|inp_lhost
 operator|=
-name|in_hmake
+name|in_hostalloc
 argument_list|(
 operator|&
 name|n
@@ -1467,6 +1486,9 @@ name|TC_WAITED_2_ML
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|tcp_sndctl
 argument_list|(
 name|tp
@@ -1637,6 +1659,9 @@ operator|&
 name|TH_FIN
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|tcp_sndctl
 argument_list|(
 name|tp
@@ -1876,6 +1901,10 @@ name|ti_ackno
 operator|=
 name|htonl
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|n
@@ -1886,6 +1915,7 @@ operator|+
 name|tlen
 operator|-
 name|hlen
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|n
@@ -2006,12 +2036,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 specifier|register
 name|struct
 name|tcpiphdr
@@ -2175,12 +2199,6 @@ operator|->
 name|snd_una
 condition|)
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|mn
-decl_stmt|;
 comment|/* 		 * Reflect newly acknowledged data. 		 */
 name|tp
 operator|->
@@ -2270,6 +2288,10 @@ name|so
 operator|->
 name|so_snd
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|->
 name|snd_una
@@ -2277,6 +2299,7 @@ operator|-
 name|tp
 operator|->
 name|snd_off
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tp
@@ -2438,9 +2461,6 @@ block|{
 specifier|register
 name|struct
 name|tcpiphdr
-modifier|*
-name|p
-decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
@@ -2659,7 +2679,7 @@ name|ti_len
 operator|-
 name|n
 operator|->
-name|th_seq
+name|ti_seq
 expr_stmt|;
 if|if
 condition|(
@@ -2899,7 +2919,10 @@ name|i
 expr_stmt|;
 name|m_adj
 argument_list|(
+name|dtom
+argument_list|(
 name|q
+argument_list|)
 argument_list|,
 operator|-
 name|i
@@ -3246,6 +3269,7 @@ argument_list|)
 expr_stmt|;
 name|sbappend
 argument_list|(
+operator|&
 name|so
 operator|->
 name|so_rcv

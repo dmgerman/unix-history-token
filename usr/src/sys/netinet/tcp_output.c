@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.12 81/11/15 */
+comment|/* tcp_output.c 4.13 81/11/16 */
 end_comment
 
 begin_include
@@ -261,21 +261,12 @@ argument_list|(
 name|tp
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 name|tcp_sndnull
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -299,6 +290,9 @@ argument_list|(
 name|TCP_SNDNULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -616,7 +610,7 @@ name|tp
 operator|->
 name|snd_lst
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|last
 argument_list|,
@@ -724,13 +718,17 @@ operator|)
 return|;
 name|m
 operator|=
-name|sb_copy
+name|sbcopy
 argument_list|(
 operator|&
 name|so
 operator|->
 name|so_snd
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|MAX
 argument_list|(
 name|tp
@@ -747,7 +745,12 @@ operator|-
 name|tp
 operator|->
 name|snd_off
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|->
 name|snd_lst
@@ -755,6 +758,7 @@ operator|-
 name|tp
 operator|->
 name|snd_off
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -867,6 +871,10 @@ name|tp
 argument_list|,
 name|flags
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|tp
 operator|->
 name|snd_lst
@@ -874,6 +882,7 @@ operator|-
 name|tp
 operator|->
 name|snd_nxt
+argument_list|)
 argument_list|,
 name|m
 argument_list|)
@@ -1434,6 +1443,17 @@ condition|)
 name|len
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"tcp_output"
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -1515,11 +1535,15 @@ name|ti_urp
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|tp
 operator|->
 name|snd_urp
 argument_list|)
 expr_stmt|;
+comment|/*XXX */
 name|t
 operator|->
 name|ti_win
@@ -1578,9 +1602,14 @@ name|ti_len
 operator|=
 name|htons
 argument_list|(
+call|(
+name|u_short
+call|)
+argument_list|(
 name|len
 operator|+
 name|TCPSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t

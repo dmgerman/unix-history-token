@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.2 81/11/15 */
+comment|/* in_systm.h 4.3 81/11/16 */
 end_comment
 
 begin_comment
@@ -129,13 +129,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|nnetpages
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|net_stat
 name|netstat
