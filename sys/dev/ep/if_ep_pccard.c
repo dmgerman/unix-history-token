@@ -370,6 +370,15 @@ operator|(
 literal|"3Com Etherlink III 3C589"
 operator|)
 return|;
+case|case
+literal|0x2056
+case|:
+comment|/* 3C562/3C563 */
+return|return
+operator|(
+literal|"3Com 3C562D/3C563D"
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -443,6 +452,10 @@ operator|(
 literal|1
 operator|)
 return|;
+case|case
+literal|0x2056
+case|:
+comment|/* 3C562D/3C563D */
 case|case
 literal|0x9058
 case|:
