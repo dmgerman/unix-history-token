@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.23 (Berkeley) %G%"
+literal|"@(#)rm.c	4.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -408,9 +414,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: %s nonexistent\n"
+literal|"rm: %s: %s\n"
 argument_list|,
 name|arg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errcode
@@ -538,9 +549,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: %s not changed\n"
+literal|"rm: %s not removed: %s\n"
 argument_list|,
 name|arg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errcode
@@ -578,9 +594,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: cannot read %s?\n"
+literal|"rm: cannot read %s: %s\n"
 argument_list|,
 name|arg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errcode
@@ -721,9 +742,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: cannot read %s?\n"
+literal|"rm: cannot reopen %s?: %s\n"
 argument_list|,
 name|arg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errcode
@@ -894,9 +920,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: %s not removed\n"
+literal|"rm: %s not removed: %s\n"
 argument_list|,
 name|arg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errcode
@@ -1020,18 +1051,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: %s: "
+literal|"rm: %s: %s\n"
 argument_list|,
 name|arg
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errcode
