@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.17	85/01/10	*/
+comment|/*	ufs_lookup.c	6.18	85/02/20	*/
 end_comment
 
 begin_include
@@ -396,6 +396,10 @@ name|int
 name|flag
 decl_stmt|;
 comment|/* op ie, LOOKUP, CREATE, or DELETE */
+name|off_t
+name|enduseful
+decl_stmt|;
+comment|/* pointer past last used dir slot */
 name|lockparent
 operator|=
 name|ndp
@@ -615,6 +619,12 @@ operator|)
 literal|0xc0000000
 expr_stmt|;
 comment|/* illegal */
+name|ndp
+operator|->
+name|ni_endoff
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * We come to dirloop to search a new directory. 	 * The directory must be locked so that it can be 	 * iput, and fs must be already set to dp->i_fs. 	 */
 name|dirloop
 label|:
@@ -1519,6 +1529,10 @@ argument_list|,
 name|DIRBLKSIZ
 argument_list|)
 expr_stmt|;
+name|enduseful
+operator|=
+literal|0
+expr_stmt|;
 name|searchloop
 label|:
 while|while
@@ -1866,6 +1880,18 @@ name|ep
 operator|->
 name|d_reclen
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|d_ino
+condition|)
+name|enduseful
+operator|=
+name|ndp
+operator|->
+name|ni_offset
+expr_stmt|;
 block|}
 comment|/* notfound: */
 comment|/* 	 * If we started in the middle of the directory and failed 	 * to find our target, we must check the beginning as well. 	 */
@@ -1956,6 +1982,12 @@ name|ni_count
 operator|=
 literal|0
 expr_stmt|;
+name|enduseful
+operator|=
+name|ndp
+operator|->
+name|ni_offset
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1971,7 +2003,32 @@ name|ni_count
 operator|=
 name|slotsize
 expr_stmt|;
+if|if
+condition|(
+name|enduseful
+operator|<
+name|slotoffset
+operator|+
+name|slotsize
+condition|)
+name|enduseful
+operator|=
+name|slotoffset
+operator|+
+name|slotsize
+expr_stmt|;
 block|}
+name|ndp
+operator|->
+name|ni_endoff
+operator|=
+name|roundup
+argument_list|(
+name|enduseful
+argument_list|,
+name|DIRBLKSIZ
+argument_list|)
+expr_stmt|;
 name|dp
 operator|->
 name|i_flag
@@ -3416,6 +3473,16 @@ decl_stmt|,
 modifier|*
 name|nep
 decl_stmt|;
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|dp
+init|=
+name|ndp
+operator|->
+name|ni_pdir
+decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -3501,9 +3568,7 @@ name|rdwri
 argument_list|(
 name|UIO_WRITE
 argument_list|,
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 argument_list|,
 operator|(
 name|caddr_t
@@ -3530,9 +3595,7 @@ argument_list|)
 expr_stmt|;
 name|iput
 argument_list|(
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3553,15 +3616,11 @@ name|ndp
 operator|->
 name|ni_count
 operator|>
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 operator|->
 name|i_size
 condition|)
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 operator|->
 name|i_size
 operator|=
@@ -3578,9 +3637,7 @@ name|bp
 operator|=
 name|blkatoff
 argument_list|(
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 argument_list|,
 name|ndp
 operator|->
@@ -3604,9 +3661,7 @@ condition|)
 block|{
 name|iput
 argument_list|(
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 argument_list|)
 expr_stmt|;
 return|return
@@ -3853,9 +3908,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|ndp
-operator|->
-name|ni_pdir
+name|dp
 operator|->
 name|i_flag
 operator||=
@@ -3863,11 +3916,32 @@ name|IUPD
 operator||
 name|ICHG
 expr_stmt|;
-name|iput
-argument_list|(
+if|if
+condition|(
 name|ndp
 operator|->
-name|ni_pdir
+name|ni_endoff
+operator|&&
+name|ndp
+operator|->
+name|ni_endoff
+operator|<
+name|dp
+operator|->
+name|i_size
+condition|)
+name|itrunc
+argument_list|(
+name|dp
+argument_list|,
+name|ndp
+operator|->
+name|ni_endoff
+argument_list|)
+expr_stmt|;
+name|iput
+argument_list|(
+name|dp
 argument_list|)
 expr_stmt|;
 return|return
