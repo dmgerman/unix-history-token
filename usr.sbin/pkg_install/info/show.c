@@ -698,6 +698,23 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PLIST_ORIGIN
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@comment ORIGIN:%s\n"
+else|:
+literal|"\tPackage origin: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|cleanup
 argument_list|(

@@ -1647,6 +1647,23 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PLIST_ORIGIN
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%ccomment ORIGIN:%s\n"
+argument_list|,
+name|CMD_CHAR
+argument_list|,
+name|plist
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|cleanup
 argument_list|(
