@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.25 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.24.1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3553,9 +3553,6 @@ name|nfnd
 decl_stmt|;
 name|char
 modifier|*
-name|buf
-decl_stmt|,
-modifier|*
 name|bufp
 decl_stmt|,
 modifier|*
@@ -3563,6 +3560,11 @@ name|gunique
 argument_list|()
 decl_stmt|,
 name|msg
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|buf
 decl_stmt|;
 specifier|static
 name|int
@@ -4384,6 +4386,10 @@ name|bufsize
 operator|=
 literal|0
 expr_stmt|;
+name|bufsize
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -4461,7 +4467,7 @@ argument_list|(
 name|fout
 argument_list|)
 argument_list|,
-name|bufp
+name|buf
 argument_list|,
 name|c
 argument_list|)
