@@ -113,9 +113,12 @@ name|MBOX_CHECK_FIRMWARE
 value|0x000e
 end_define
 
-begin_comment
-comment|/*   f */
-end_comment
+begin_define
+define|#
+directive|define
+name|MBOX_READ_RAM_WORD_EXTENDED
+value|0x000f
+end_define
 
 begin_define
 define|#
@@ -472,6 +475,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_FEATURE_FAST_POST
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_FEATURE_LVD_NOTIFY
 value|0x2
 end_define
@@ -479,8 +489,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_FEATURE_FAST_POST
-value|0x1
+name|FW_FEATURE_RIO_32BIT
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_FEATURE_RIO_16BIT
+value|0x8
 end_define
 
 begin_define
@@ -3041,16 +3058,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RIO_16BIT_DELAY
+name|ICBXOPT_RIO_16BIT_IOCB
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICBXOPT_RIO_32BIT_DELAY
+name|ICBXOPT_RIO_32BIT_IOCB
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_ENA_RDXFR_RDY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBZOPT_ENA_OOF
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* out of order frame handling */
+end_comment
 
 begin_comment
 comment|/* These 3 only apply to the 2300 */

@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_SDBLEV
-value|_IOWR(ISP_IOC, 0, int)
+value|_IOWR(ISP_IOC, 1, int)
 end_define
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|ISP_RESETHBA
-value|_IO(ISP_IOC, 1)
+value|_IO(ISP_IOC, 2)
 end_define
 
 begin_comment
@@ -51,8 +51,170 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISP_FC_RESCAN
-value|_IO(ISP_IOC, 2)
+name|ISP_RESCAN
+value|_IO(ISP_IOC, 3)
+end_define
+
+begin_comment
+comment|/*  * This ioctl performs a reset and then will set the adapter to the  * role that was passed in (the old role will be returned). It almost  * goes w/o saying: use with caution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_SETROLE
+value|_IOWR(ISP_IOC, 4, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_INITIATOR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_TARGET
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ROLE_BOTH
+value|(ISP_ROLE_TARGET|ISP_ROLE_INITIATOR)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_DEFAULT_ROLES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISP_DEFAULT_ROLES
+value|ISP_ROLE_BOTH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Get the current adapter role  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_GETROLE
+value|_IOR(ISP_IOC, 5), int
+end_define
+
+begin_comment
+comment|/*  * Get/Clear Stats  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_STATS_VERSION
+value|0
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|isp_stat_version
+decl_stmt|;
+name|u_int8_t
+name|isp_type
+decl_stmt|;
+comment|/* (ro) reflects chip type */
+name|u_int8_t
+name|isp_revision
+decl_stmt|;
+comment|/* (ro) reflects chip version */
+name|u_int8_t
+name|unused1
+decl_stmt|;
+name|u_int32_t
+name|unused2
+decl_stmt|;
+comment|/* 	 * Statistics Counters 	 */
+define|#
+directive|define
+name|ISP_NSTATS
+value|16
+define|#
+directive|define
+name|ISP_INTCNT
+value|0
+define|#
+directive|define
+name|ISP_INTBOGUS
+value|1
+define|#
+directive|define
+name|ISP_INTMBOXC
+value|2
+define|#
+directive|define
+name|ISP_INGOASYNC
+value|3
+define|#
+directive|define
+name|ISP_RSLTCCMPLT
+value|4
+define|#
+directive|define
+name|ISP_FPHCCMCPLT
+value|5
+define|#
+directive|define
+name|ISP_RSCCHIWAT
+value|6
+define|#
+directive|define
+name|ISP_FPCCHIWAT
+value|7
+name|u_int64_t
+name|isp_stats
+index|[
+name|ISP_NSTATS
+index|]
+decl_stmt|;
+block|}
+name|isp_stats_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ISP_GET_STATS
+value|_IOR(ISP_IOC, 6, isp_stats_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_CLR_STATS
+value|_IO(ISP_IOC, 7)
 end_define
 
 begin_comment
@@ -63,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|ISP_FC_LIP
-value|_IO(ISP_IOC, 3)
+value|_IO(ISP_IOC, 8)
 end_define
 
 begin_comment
@@ -96,7 +258,25 @@ begin_define
 define|#
 directive|define
 name|ISP_FC_GETDINFO
-value|_IOWR(ISP_IOC, 4, struct isp_fc_device)
+value|_IOWR(ISP_IOC, 9, struct isp_fc_device)
+end_define
+
+begin_comment
+comment|/*  * Get F/W crash dump  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_GET_FW_CRASH_DUMP
+value|_IO(ISP_IOC, 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FORCE_CRASH_DUMP
+value|_IO(ISP_IOC, 11)
 end_define
 
 end_unit
