@@ -318,6 +318,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|kaioinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|p_sched
 struct_decl|;
 end_struct_decl
@@ -2076,7 +2082,8 @@ modifier|*
 name|p_nlminfo
 decl_stmt|;
 comment|/* (?) Only used by/for lockd. */
-name|void
+name|struct
+name|kaioinfo
 modifier|*
 name|p_aioinfo
 decl_stmt|;
