@@ -5920,6 +5920,24 @@ argument_list|)
 expr_stmt|;
 comment|/* sanity check */
 block|}
+comment|/* 	 * Downgrading from writeable: clear the VM page flag 	 */
+if|if
+condition|(
+operator|(
+name|prot
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|!=
+name|VM_PROT_WRITE
+condition|)
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_WRITEABLE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
