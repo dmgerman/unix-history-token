@@ -245,7 +245,7 @@ comment|/* Next callout to be checked. */
 end_comment
 
 begin_comment
-comment|/*-  * Locked by callout_lock:  *   curr_callout    - If a callout is in progress, it is curr_callout.  *                     If curr_callout is non-NULL, threads waiting on  *                     callout_wait will be woken up as soon as the   *                     relevant callout completes.  *   wakeup_ctr      - Incremented every time a thread wants to wait  *                     for a callout to complete.  Modified only when  *                     curr_callout is non-NULL.  *   wakeup_needed   - If a thread is waiting on callout_wait, then  *                     wakeup_needed is nonzero.  Increased only when  *                     cutt_callout is non-NULL.  */
+comment|/**  * Locked by callout_lock:  *   curr_callout    - If a callout is in progress, it is curr_callout.  *                     If curr_callout is non-NULL, threads waiting on  *                     callout_wait will be woken up as soon as the   *                     relevant callout completes.  *   wakeup_ctr      - Incremented every time a thread wants to wait  *                     for a callout to complete.  Modified only when  *                     curr_callout is non-NULL.  *   wakeup_needed   - If a thread is waiting on callout_wait, then  *                     wakeup_needed is nonzero.  Increased only when  *                     cutt_callout is non-NULL.  */
 end_comment
 
 begin_decl_stmt
@@ -272,7 +272,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Locked by callout_wait_lock:  *   callout_wait    - If wakeup_needed is set, callout_wait will be  *                     triggered after the current callout finishes.  *   wakeup_done_ctr - Set to the current value of wakeup_ctr after  *                     callout_wait is triggered.  */
+comment|/**  * Locked by callout_wait_lock:  *   callout_wait    - If wakeup_needed is set, callout_wait will be  *                     triggered after the current callout finishes.  *   wakeup_done_ctr - Set to the current value of wakeup_ctr after  *                     callout_wait is triggered.  */
 end_comment
 
 begin_decl_stmt
