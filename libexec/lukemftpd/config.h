@@ -12,7 +12,7 @@ comment|/* config.h.in.  Generated automatically from configure.in by autoheader
 end_comment
 
 begin_comment
-comment|/* $Id: config.h.in,v 1.16 2002/05/23 02:42:55 lukem Exp $ */
+comment|/* $Id: config.h.in,v 1.6 2004/08/10 00:40:22 lukem Exp $ */
 end_comment
 
 begin_comment
@@ -283,6 +283,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the setegid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETEGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the seteuid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETEUID
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the setlogin function.  */
 end_comment
 
@@ -301,6 +323,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETPROCTITLE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setresgid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETRESGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setresuid function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETRESUID
 value|1
 end_define
 
@@ -391,6 +435,14 @@ directive|define
 name|HAVE_STRSEP
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the strsuftollx function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRSUFTOLLX */
+end_comment
 
 begin_comment
 comment|/* Define if you have the strtoll function.  */
@@ -824,6 +876,10 @@ end_define
 
 begin_comment
 comment|/* Define if `long long' is supported and sizeof(off_t)>= 8 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_WORKING_LONG_LONG */
 end_comment
 
 begin_define
