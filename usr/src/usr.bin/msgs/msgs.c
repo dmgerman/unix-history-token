@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.2 %G%"
+literal|"@(#)msgs.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3274,6 +3274,11 @@ operator|*
 name|in
 operator|==
 literal|':'
+operator|||
+operator|*
+name|in
+operator|==
+literal|'@'
 condition|)
 name|local
 operator|=
