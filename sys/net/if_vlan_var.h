@@ -86,12 +86,6 @@ argument|ifvlan
 argument_list|)
 name|ifv_list
 expr_stmt|;
-name|struct
-name|resource
-modifier|*
-name|r_unit
-decl_stmt|;
-comment|/* resource allocated for this unit */
 block|}
 struct|;
 end_struct

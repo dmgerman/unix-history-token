@@ -66,6 +66,17 @@ name|IF_NAMESIZE
 value|IFNAMSIZ
 end_define
 
+begin_define
+define|#
+directive|define
+name|IF_MAXUNIT
+value|0x7fff
+end_define
+
+begin_comment
+comment|/* ifp->if_unit is only 15 bits */
+end_comment
+
 begin_comment
 comment|/*  * Structure describing a `cloning' interface.  */
 end_comment
@@ -92,6 +103,20 @@ name|ifc_namelen
 decl_stmt|;
 comment|/* length of name */
 name|int
+name|ifc_maxunit
+decl_stmt|;
+comment|/* maximum unit number */
+name|unsigned
+name|char
+modifier|*
+name|ifc_units
+decl_stmt|;
+comment|/* bitmap to handle units */
+name|int
+name|ifc_bmlen
+decl_stmt|;
+comment|/* bitmap length */
+name|int
 function_decl|(
 modifier|*
 name|ifc_create
@@ -102,7 +127,6 @@ name|if_clone
 modifier|*
 parameter_list|,
 name|int
-modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -130,9 +154,11 @@ parameter_list|,
 name|create
 parameter_list|,
 name|destroy
+parameter_list|,
+name|maxunit
 parameter_list|)
 define|\
-value|{ { 0 }, name, sizeof(name) - 1, create, destroy }
+value|{ { 0 }, name, sizeof(name) - 1, maxunit, NULL, 0, create, destroy }
 end_define
 
 begin_comment

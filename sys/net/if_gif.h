@@ -220,12 +220,6 @@ name|encaptab
 modifier|*
 name|encap_cookie6
 decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|r_unit
-decl_stmt|;
-comment|/* resource allocated for this unit */
 name|void
 modifier|*
 name|gif_netgraph
