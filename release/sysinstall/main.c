@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pccard_conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/signal.h>
 end_include
 
@@ -225,15 +219,10 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PCCARD
 comment|/* Initialize PC-card */
 name|pccardInitialize
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()

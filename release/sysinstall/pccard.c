@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pccard_conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -32,12 +26,6 @@ include|#
 directive|include
 file|<pccard/cardinfo.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCCARD
-end_ifdef
 
 begin_decl_stmt
 name|int
@@ -273,6 +261,57 @@ block|{
 comment|/* It's not my job... */
 return|return;
 block|}
+name|sprintf
+argument_list|(
+name|card_device
+argument_list|,
+name|CARD_DEVICE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|card_device
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"Can't open PC-card controller %s.\n"
+argument_list|,
+name|card_device
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Found PC-card slot(s).\n"
+literal|"Use PC-card device as installation media?\n"
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -427,15 +466,6 @@ literal|"-i 11"
 expr_stmt|;
 break|break;
 block|}
-name|sprintf
-argument_list|(
-name|card_device
-argument_list|,
-name|CARD_DEVICE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|w
 operator|=
 name|savescr
@@ -579,15 +609,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCCARD */
-end_comment
 
 end_unit
 

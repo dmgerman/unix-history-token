@@ -5424,6 +5424,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* pccard.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|pccardInitialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* system.c */
 end_comment
 
