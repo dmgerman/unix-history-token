@@ -4955,7 +4955,7 @@ argument_list|)
 expr_stmt|;
 name|printk
 argument_list|(
-literal|"<%s>"
+literal|"snd2:<%s>"
 argument_list|,
 name|sb_dsp_operations
 operator|.

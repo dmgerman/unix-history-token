@@ -9614,7 +9614,7 @@ parameter_list|)
 block|{
 name|printk
 argument_list|(
-literal|"<Gravis UltraSound %dk>"
+literal|"snd4:<Gravis UltraSound %dk>"
 argument_list|,
 name|gus_mem_size
 operator|/

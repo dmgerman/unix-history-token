@@ -1042,7 +1042,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"<%s rev %d>"
+literal|"snd3:<%s rev %d>"
 argument_list|,
 name|pas_model_names
 index|[
