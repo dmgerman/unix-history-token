@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.38 (Berkeley) %G%"
+literal|"@(#)login.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2303,7 +2303,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/usr/ucb:/bin:/usr/bin:"
+name|_PATH_DEFPATH
 argument_list|,
 literal|0
 argument_list|)
