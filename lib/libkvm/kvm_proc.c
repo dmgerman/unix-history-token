@@ -1935,7 +1935,7 @@ if|if
 condition|(
 name|narg
 operator|>
-name|ARG_MAX
+literal|512
 operator|||
 name|addr
 operator|<
@@ -1950,6 +1950,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * kd->argv : work space for fetching the strings from the target  	 *            process's space, and is converted for returning to caller 	 */
 if|if
 condition|(
 name|kd
@@ -2086,6 +2087,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * kd->argspc : returned to user, this is where the kd->argv 	 *              arrays are left pointing to the collected strings. 	 */
 if|if
 condition|(
 name|kd
@@ -2130,6 +2132,7 @@ operator|=
 name|NBPG
 expr_stmt|;
 block|}
+comment|/* 	 * kd->argbuf : used to pull in pages from the target process. 	 *              the strings are copied out of here. 	 */
 if|if
 condition|(
 name|kd
@@ -2168,6 +2171,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* Pull in the target process'es argv vector */
 name|cc
 operator|=
 sizeof|sizeof
@@ -2206,6 +2210,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * ap : saved start address of string we're working on in kd->argspc 	 * np : pointer to next place to write in kd->argspc 	 * len: length of data in kd->argspc 	 * argv: pointer to the argv vector that we are hunting around the 	 *       target process space for, and converting to addresses in 	 *       our address space (kd->argspc). 	 */
 name|ap
 operator|=
 name|np
@@ -2224,7 +2229,7 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Loop over pages, filling in the argument vector. 	 */
+comment|/* 	 * Loop over pages, filling in the argument vector. 	 * Note that the argv strings could be pointing *anywhere* in 	 * the user address space and are no longer contiguous. 	 * Note that *argv is modified when we are going to fetch a string 	 * that crosses a page boundary.  We copy the next part of the string 	 * into to "np" and eventually convert the pointer. 	 */
 while|while
 condition|(
 name|argv
@@ -2241,6 +2246,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* get the address that the current argv string is on */
 name|addr
 operator|=
 operator|(
@@ -2256,6 +2262,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* is it the same page as the last one? */
 if|if
 condition|(
 name|addr
@@ -2292,6 +2299,7 @@ operator|=
 name|addr
 expr_stmt|;
 block|}
+comment|/* offset within the page... kd->argbuf */
 name|addr
 operator|=
 operator|(
@@ -2306,6 +2314,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* cp = start of string, cc = count of chars in this chunk */
 name|cp
 operator|=
 name|kd
@@ -2320,6 +2329,7 @@ name|NBPG
 operator|-
 name|addr
 expr_stmt|;
+comment|/* dont get more than asked for by user process */
 if|if
 condition|(
 name|maxcnt
@@ -2338,7 +2348,7 @@ name|maxcnt
 operator|-
 name|len
 expr_stmt|;
-empty_stmt|;
+comment|/* pointer to end of string if we found it in this page */
 name|ep
 operator|=
 name|memchr
@@ -2364,6 +2374,8 @@ name|cp
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 		 * at this point, cc is the count of the chars that we are 		 * going to retrieve this time. we may or may not have found 		 * the end of it.  (ep points to the null if the end is known) 		 */
+comment|/* will we exceed the malloc/realloced buffer? */
 if|if
 condition|(
 name|len
@@ -2472,6 +2484,8 @@ operator|+=
 name|off
 expr_stmt|;
 block|}
+comment|/* np = where to put the next part of the string in kd->argspc*/
+comment|/* np is kinda redundant.. could use "kd->argspc + len" */
 name|memcpy
 argument_list|(
 name|np
@@ -2485,10 +2499,12 @@ name|np
 operator|+=
 name|cc
 expr_stmt|;
+comment|/* inc counters */
 name|len
 operator|+=
 name|cc
 expr_stmt|;
+comment|/* 		 * if end of string found, set the *argv pointer to the 		 * saved beginning of string, and advance. argv points to 		 * somewhere in kd->argv..  This is initially relative 		 * to the target process, but when we close it off, we set 		 * it to point in our address space. 		 */
 if|if
 condition|(
 name|ep
@@ -2508,11 +2524,14 @@ name|np
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* update the address relative to the target process */
 operator|*
 name|argv
 operator|+=
 name|cc
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|maxcnt
