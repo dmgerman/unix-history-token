@@ -1321,6 +1321,9 @@ name|com
 operator|,
 name|speed_t
 name|speed
+operator|,
+name|int
+name|locked
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5435,6 +5438,8 @@ operator|->
 name|it_in
 operator|.
 name|c_ispeed
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -11352,6 +11357,8 @@ argument_list|,
 name|t
 operator|->
 name|c_ispeed
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -11787,6 +11794,8 @@ parameter_list|(
 name|com
 parameter_list|,
 name|speed
+parameter_list|,
+name|locked
 parameter_list|)
 name|struct
 name|com_s
@@ -11795,6 +11804,9 @@ name|com
 decl_stmt|;
 name|speed_t
 name|speed
+decl_stmt|;
+name|int
+name|locked
 decl_stmt|;
 block|{
 name|int
@@ -11945,6 +11957,11 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|locked
+condition|)
 name|COM_LOCK
 argument_list|()
 expr_stmt|;
@@ -12000,6 +12017,11 @@ name|ibufsize
 operator|/
 literal|4
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|locked
+condition|)
 name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
