@@ -32,6 +32,7 @@ name|pwd
 parameter_list|,
 name|pwok
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prompt
