@@ -3668,6 +3668,11 @@ operator|=
 name|malloc
 argument_list|(
 name|nfds
+operator|*
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -3687,6 +3692,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|nfds
+operator|*
+sizeof|sizeof
+argument_list|(
+name|fd_mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|FD_SET
