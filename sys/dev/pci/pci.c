@@ -3731,6 +3731,13 @@ literal|1
 case|:
 name|probe
 operator|.
+name|hose
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXXXX */
+name|probe
+operator|.
 name|bus
 operator|=
 name|io
@@ -3821,6 +3828,13 @@ case|:
 case|case
 literal|1
 case|:
+name|probe
+operator|.
+name|hose
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXXXX */
 name|probe
 operator|.
 name|bus
