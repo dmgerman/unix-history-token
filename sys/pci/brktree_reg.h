@@ -1408,6 +1408,9 @@ name|pllAddr
 decl_stmt|;
 name|u_char
 name|pllControl
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|u_char
 name|bandLimits
@@ -1418,9 +1421,10 @@ decl_stmt|;
 name|u_char
 name|bandAddrs
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
+comment|/* 3 first for the 3 TV  					       ** bands. Last for radio  					       ** band (0x00=NoRadio). 					       */
 block|}
 struct|;
 end_struct
@@ -1855,15 +1859,6 @@ name|u_short
 name|fps
 decl_stmt|;
 comment|/* frames per second */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|meteor_video
 name|video
