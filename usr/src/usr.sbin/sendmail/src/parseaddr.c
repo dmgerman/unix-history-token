@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.71
+literal|3.72
 operator|%
 name|G
 operator|%
@@ -3365,6 +3365,10 @@ argument|, name);
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* don't do anything if we are tagging it as special */
+argument|if ((senderaddress ? m->m_s_rwset : m->m_r_rwset)<
+literal|0
+argument|) 		return (name);
 comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
 argument|fancy = crackaddr(name);
 comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/

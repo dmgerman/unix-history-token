@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.107		%G%"
+literal|"@(#)sendmail.h	3.108		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,12 +524,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FULLSMTP
+name|M_LIMITS
 value|000400000L
 end_define
 
 begin_comment
-comment|/* must run full SMTP, inc. limits */
+comment|/* must enforce SMTP line limits */
 end_comment
 
 begin_define
@@ -552,6 +552,28 @@ end_define
 
 begin_comment
 comment|/* use CRLF instead of NL as EOLine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FROMPATH
+value|004000000L
+end_define
+
+begin_comment
+comment|/* use reverse-path in MAIL FROM: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_XDOT
+value|010000000L
+end_define
+
+begin_comment
+comment|/* use hidden-dot algorithm */
 end_comment
 
 begin_define

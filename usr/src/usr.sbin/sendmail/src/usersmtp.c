@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -171,7 +171,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. **		ctladdr -- controlling address for this mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. ** **	Side Effects: **		creates connection and sends initial protocol. */
+comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. ** **	Side Effects: **		creates connection and sends initial protocol. */
 end_comment
 
 begin_macro
@@ -180,8 +180,6 @@ argument_list|(
 argument|m
 argument_list|,
 argument|pvp
-argument_list|,
-argument|ctladdr
 argument_list|)
 end_macro
 
@@ -198,13 +196,6 @@ name|char
 modifier|*
 modifier|*
 name|pvp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ADDRESS
-modifier|*
-name|ctladdr
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +236,11 @@ name|m
 argument_list|,
 name|pvp
 argument_list|,
-name|ctladdr
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
 argument_list|,
 name|TRUE
 argument_list|,
@@ -302,7 +297,9 @@ comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -327,13 +324,17 @@ name|smtpmessage
 argument_list|(
 literal|"HELO %s"
 argument_list|,
+name|m
+argument_list|,
 name|HostName
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -393,12 +394,16 @@ comment|/* tell it to be verbose */
 name|smtpmessage
 argument_list|(
 literal|"VERB"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -415,12 +420,16 @@ comment|/* tell it we will be sending one transaction only */
 name|smtpmessage
 argument_list|(
 literal|"ONEX"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -467,7 +476,7 @@ operator|||
 operator|!
 name|bitset
 argument_list|(
-name|M_FULLSMTP
+name|M_FROMPATH
 argument_list|,
 name|m
 operator|->
@@ -478,6 +487,8 @@ block|{
 name|smtpmessage
 argument_list|(
 literal|"MAIL From:<%s>"
+argument_list|,
+name|m
 argument_list|,
 name|canonname
 argument_list|(
@@ -493,6 +504,8 @@ block|{
 name|smtpmessage
 argument_list|(
 literal|"MAIL From:<@%s%c%s>"
+argument_list|,
+name|m
 argument_list|,
 name|HostName
 argument_list|,
@@ -519,7 +532,9 @@ block|}
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -575,13 +590,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
+comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. **		m -- the mailer we are sending to. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
 end_comment
 
 begin_macro
 name|smtprcpt
 argument_list|(
 argument|to
+argument_list|,
+argument|m
 argument_list|)
 end_macro
 
@@ -589,6 +606,14 @@ begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|to
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|MAILER
+modifier|*
+name|m
 decl_stmt|;
 end_decl_stmt
 
@@ -608,6 +633,8 @@ name|smtpmessage
 argument_list|(
 literal|"RCPT To:<%s>"
 argument_list|,
+name|m
+argument_list|,
 name|canonname
 argument_list|(
 name|to
@@ -621,7 +648,9 @@ expr_stmt|;
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -704,11 +733,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPFINISH -- finish up sending all the SMTP protocol. ** **	Parameters: **		m -- mailer being sent to. **		e -- the envelope for this message. ** **	Returns: **		exit status corresponding to DATA command. ** **	Side Effects: **		none. */
+comment|/* **  SMTPDATA -- send the data and clean up the transaction. ** **	Parameters: **		m -- mailer being sent to. **		e -- the envelope for this message. ** **	Returns: **		exit status corresponding to DATA command. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
-name|smtpfinish
+name|smtpdata
 argument_list|(
 argument|m
 argument_list|,
@@ -738,16 +767,21 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
-comment|/* 	**  Send the data. 	**	Dot hiding is done here. 	*/
+comment|/* 	**  Send the data. 	**	First send the command and check that it is ok. 	**	Then send the data. 	**	Follow it up with a dot to terminate. 	**	Finally get the results of the transaction. 	*/
+comment|/* send the command and check ok to proceed */
 name|smtpmessage
 argument_list|(
 literal|"DATA"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -791,6 +825,7 @@ operator|(
 name|EX_PROTOCOL
 operator|)
 return|;
+comment|/* now output the actual message */
 call|(
 modifier|*
 name|e
@@ -803,15 +838,15 @@ argument_list|,
 name|m
 argument_list|,
 name|CurEnv
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|putline
 argument_list|(
+literal|"\n"
+argument_list|,
 name|SmtpOut
 argument_list|,
-literal|"\r\n"
+name|m
 argument_list|)
 expr_stmt|;
 call|(
@@ -825,22 +860,44 @@ name|SmtpOut
 argument_list|,
 name|m
 argument_list|,
-name|TRUE
-argument_list|,
 name|CurEnv
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
-name|smtpmessage
+comment|/* terminate the message */
+name|fprintf
 argument_list|(
-literal|"."
+name|SmtpOut
+argument_list|,
+literal|".%s\n"
+argument_list|,
+name|bitset
+argument_list|(
+name|M_CRLF
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|?
+literal|"\r"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
+name|nmessage
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|">>> ."
+argument_list|)
+expr_stmt|;
+comment|/* check for the results of the transaction */
 name|r
 operator|=
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -907,6 +964,8 @@ begin_macro
 name|smtpquit
 argument_list|(
 argument|name
+argument_list|,
+argument|m
 argument_list|)
 end_macro
 
@@ -914,6 +973,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|MAILER
+modifier|*
+name|m
 decl_stmt|;
 end_decl_stmt
 
@@ -940,13 +1007,17 @@ block|{
 name|smtpmessage
 argument_list|(
 literal|"QUIT"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|reply
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1009,12 +1080,14 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		none. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
+comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
 end_comment
 
 begin_macro
 name|reply
-argument_list|()
+argument_list|(
+argument|m
+argument_list|)
 end_macro
 
 begin_block
@@ -1152,6 +1225,8 @@ expr_stmt|;
 name|smtpquit
 argument_list|(
 literal|"reply error"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -1253,6 +1328,8 @@ comment|/* send the quit protocol */
 name|smtpquit
 argument_list|(
 literal|"SMTP Shutdown"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 name|SmtpClosing
@@ -1273,7 +1350,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPMESSAGE -- send message to server ** **	Parameters: **		f -- format **		a, b, c -- parameters ** **	Returns: **		none. ** **	Side Effects: **		writes message to SmtpOut. */
+comment|/* **  SMTPMESSAGE -- send message to server ** **	Parameters: **		f -- format **		m -- the mailer to control formatting. **		a, b, c -- parameters ** **	Returns: **		none. ** **	Side Effects: **		writes message to SmtpOut. */
 end_comment
 
 begin_comment
@@ -1284,6 +1361,8 @@ begin_macro
 name|smtpmessage
 argument_list|(
 argument|f
+argument_list|,
+argument|m
 argument_list|,
 argument|a
 argument_list|,
@@ -1297,6 +1376,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|f
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MAILER
+modifier|*
+name|m
 decl_stmt|;
 end_decl_stmt
 
@@ -1378,7 +1464,20 @@ name|fprintf
 argument_list|(
 name|SmtpOut
 argument_list|,
-literal|"%s\r\n"
+literal|"%s%s\n"
+argument_list|,
+name|bitset
+argument_list|(
+name|M_CRLF
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|?
+literal|"\r"
+else|:
+literal|""
 argument_list|,
 name|buf
 argument_list|)

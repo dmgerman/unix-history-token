@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.66
+literal|3.67
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.66
+literal|3.67
 operator|%
 name|G
 operator|%
@@ -192,6 +192,9 @@ specifier|register
 name|ADDRESS
 modifier|*
 name|q
+decl_stmt|;
+name|MAILER
+name|nullmailer
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
 name|tf
@@ -355,11 +358,7 @@ name|dfp
 argument_list|,
 name|ProgMailer
 argument_list|,
-name|FALSE
-argument_list|,
 name|e
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -614,8 +613,34 @@ block|}
 end_for
 
 begin_comment
-comment|/* 	**  Output headers for this message. 	**	Expand macros completely here.  Queue run will deal with 	**	everything as absolute headers. 	**		All headers that must be relative to the recipient 	**		can be cracked later. 	*/
+comment|/* 	**  Output headers for this message. 	**	Expand macros completely here.  Queue run will deal with 	**	everything as absolute headers. 	**		All headers that must be relative to the recipient 	**		can be cracked later. 	**	We set up a "null mailer" -- i.e., a mailer that will have 	**	no effect on the addresses as they are output. 	*/
 end_comment
+
+begin_expr_stmt
+name|bzero
+argument_list|(
+operator|&
+name|nullmailer
+argument_list|,
+sizeof|sizeof
+name|nullmailer
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|nullmailer
+operator|.
+name|m_r_rwset
+operator|=
+name|nullmailer
+operator|.
+name|m_s_rwset
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|define
@@ -783,13 +808,8 @@ operator|->
 name|e_flags
 argument_list|)
 argument_list|,
-operator|(
-name|MAILER
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|FALSE
+operator|&
+name|nullmailer
 argument_list|)
 expr_stmt|;
 block|}

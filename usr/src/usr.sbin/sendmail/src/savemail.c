@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.55
+literal|3.56
 operator|%
 name|G
 operator|%
@@ -1170,7 +1170,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. **		xdot -- if set, use the SMTP hidden dot algorithm. **		e -- the envelope we are working in. **		crlf -- set if we want CRLF's at the end of lines. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		fp -- the output file. **		m -- the mailer to output to. **		e -- the envelope we are working in. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_expr_stmt
@@ -1180,11 +1180,7 @@ name|fp
 operator|,
 name|m
 operator|,
-name|xdot
-operator|,
 name|e
-operator|,
-name|crlf
 operator|)
 specifier|register
 name|FILE
@@ -1203,22 +1199,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
-name|xdot
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|crlf
 decl_stmt|;
 end_decl_stmt
 
@@ -1234,18 +1218,6 @@ name|buf
 index|[
 name|MAXLINE
 index|]
-decl_stmt|;
-name|bool
-name|fullsmtp
-init|=
-name|bitset
-argument_list|(
-name|M_FULLSMTP
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -1349,9 +1321,7 @@ name|buf
 argument_list|,
 name|fp
 argument_list|,
-name|crlf
-argument_list|,
-name|fullsmtp
+name|m
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1396,11 +1366,22 @@ condition|(
 name|SendBody
 condition|)
 block|{
-name|fprintf
+name|putline
 argument_list|(
+literal|"\n"
+argument_list|,
 name|fp
 argument_list|,
-literal|"\n   ----- Unsent message follows -----\n"
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|"   ----- Unsent message follows -----\n"
+argument_list|,
+name|fp
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1420,15 +1401,15 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
-argument_list|,
-name|crlf
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|putline
 argument_list|(
+literal|"\n"
+argument_list|,
 name|fp
 argument_list|,
-literal|"\n"
+name|m
 argument_list|)
 expr_stmt|;
 name|putbody
@@ -1437,23 +1418,30 @@ name|fp
 argument_list|,
 name|m
 argument_list|,
-name|xdot
-argument_list|,
 name|e
 operator|->
 name|e_parent
-argument_list|,
-name|crlf
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|putline
 argument_list|(
+literal|"\n"
+argument_list|,
 name|fp
 argument_list|,
-literal|"\n  ----- Message header follows -----\n"
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|"  ----- Message header follows -----\n"
+argument_list|,
+name|fp
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1473,20 +1461,40 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
-argument_list|,
-name|crlf
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
-name|fprintf
+block|{
+name|putline
 argument_list|(
+literal|"\n"
+argument_list|,
 name|fp
 argument_list|,
-literal|"\n  ----- No message was collected -----\n\n"
+name|m
 argument_list|)
 expr_stmt|;
+name|putline
+argument_list|(
+literal|"  ----- No message was collected -----\n"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|"\n"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Cleanup and exit 	*/
 if|if
 condition|(

@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -1876,7 +1876,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		fp -- file to put it on. **		m -- mailer to use. **		e -- envelope to use. **		crlf -- if set, output CRLF on the end of lines. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		fp -- file to put it on. **		m -- mailer to use. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -1887,8 +1887,6 @@ argument_list|,
 name|m
 argument_list|,
 name|e
-argument_list|,
-name|crlf
 argument_list|)
 specifier|register
 name|FILE
@@ -1943,18 +1941,6 @@ name|obuf
 index|[
 name|MAXLINE
 index|]
-decl_stmt|;
-name|bool
-name|fullsmtp
-init|=
-name|bitset
-argument_list|(
-name|M_FULLSMTP
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -2111,8 +2097,6 @@ argument_list|,
 name|oldstyle
 argument_list|,
 name|m
-argument_list|,
-name|crlf
 argument_list|)
 expr_stmt|;
 block|}
@@ -2144,9 +2128,7 @@ name|obuf
 argument_list|,
 name|fp
 argument_list|,
-name|crlf
-argument_list|,
-name|fullsmtp
+name|m
 argument_list|)
 expr_stmt|;
 block|}
@@ -2158,7 +2140,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. **		crlf -- set if we want CRLF's on the end of lines. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_expr_stmt
@@ -2173,8 +2155,6 @@ argument_list|,
 name|oldstyle
 argument_list|,
 name|m
-argument_list|,
-name|crlf
 argument_list|)
 specifier|register
 name|HDR
@@ -2212,12 +2192,6 @@ name|m
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|bool
-name|crlf
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
 specifier|register
@@ -2227,11 +2201,6 @@ name|obp
 decl_stmt|;
 name|int
 name|opos
-decl_stmt|;
-name|bool
-name|fullsmtp
-init|=
-name|FALSE
 decl_stmt|;
 name|bool
 name|firstone
@@ -2271,25 +2240,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-operator|&&
-name|bitset
-argument_list|(
-name|M_FULLSMTP
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
-condition|)
-name|fullsmtp
-operator|=
-name|TRUE
-expr_stmt|;
 name|obp
 operator|=
 name|obuf
@@ -2534,12 +2484,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* translate the name to be relative */
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
 name|name
 operator|=
 name|remotename
@@ -2600,10 +2544,15 @@ operator|!
 name|firstone
 condition|)
 block|{
-operator|*
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
 name|obp
-operator|=
-literal|'\0'
+argument_list|,
+literal|",\n"
+argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
@@ -2611,34 +2560,7 @@ name|obuf
 argument_list|,
 name|fp
 argument_list|,
-name|crlf
-argument_list|,
-name|fullsmtp
-argument_list|)
-expr_stmt|;
-name|fputc
-argument_list|(
-literal|','
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|crlf
-condition|)
-name|fputc
-argument_list|(
-literal|'\r'
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|fputc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|fp
+name|m
 argument_list|)
 expr_stmt|;
 name|obp
@@ -2759,9 +2681,7 @@ name|obuf
 argument_list|,
 name|fp
 argument_list|,
-name|crlf
-argument_list|,
-name|fullsmtp
+name|m
 argument_list|)
 expr_stmt|;
 block|}
