@@ -437,6 +437,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEC_1000A
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dec_1000a_init
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dec_1000a_init
+value|platform_not_configured
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|cpuinit
@@ -560,8 +596,10 @@ literal|"???"
 argument_list|)
 block|,
 comment|/* 16: ??? */
-name|cpu_notsupp
+name|cpu_init
 argument_list|(
+name|dec_1000a_init
+argument_list|,
 literal|"ST_DEC_1000"
 argument_list|)
 block|,
@@ -624,8 +662,10 @@ literal|"DEC_EB164"
 argument_list|)
 block|,
 comment|/* 26: ST_EB164 */
-name|cpu_notsupp
+name|cpu_init
 argument_list|(
+name|dec_1000a_init
+argument_list|,
 literal|"ST_DEC_1000A"
 argument_list|)
 block|,
