@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -118,7 +118,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  */
+comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  */
 end_comment
 
 begin_define
@@ -126,6 +126,13 @@ define|#
 directive|define
 name|IPPORT_RESERVED
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPPORT_USERRESERVED
+value|5000
 end_define
 
 begin_comment
