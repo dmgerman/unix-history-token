@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prof.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -116,6 +116,33 @@ name|char
 operator|*
 operator|)
 literal|0xc0000000
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s_lowpc
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0x00000000
 decl_stmt|;
 end_decl_stmt
 
@@ -517,19 +544,40 @@ name|phdr
 argument_list|)
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * Profiling is what mcount checks to see if 	 * all the data structures are ready!!! 	 */
-name|profiling
-operator|=
-literal|0
-expr_stmt|;
-comment|/* patch by hand when you're ready */
-endif|#
-directive|endif
 block|}
 end_block
+
+begin_comment
+comment|/*  * Special, non-profiled versions  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|splhigh
+value|_splhigh
+end_define
+
+begin_define
+define|#
+directive|define
+name|splx
+value|_splx
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This routine is massaged so that it may be jsb'ed to on vax.  */
@@ -619,6 +667,46 @@ else|#
 directive|else
 empty_stmt|;
 comment|/* avoid label botch */
+ifdef|#
+directive|ifdef
+name|__GNUC__
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+name|Fix
+name|Me
+operator|!
+operator|!
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+name|Fix
+name|Me
+operator|!
+operator|!
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+comment|/* 	 * selfpc = pc pushed by mcount jsr, 	 * frompcindex = pc pushed by jsr into self. 	 * In GCC the caller's stack frame has already been built so we 	 * have to chase a6 to find caller's raddr.  This assumes that all 	 * routines we are profiling were built with GCC and that all 	 * profiled routines use link/unlk. 	 */
+asm|asm("movl a6@(4),%0" : "=r" (selfpc));
+asm|asm("movl a6@(0)@(4),%0" : "=r" (frompcindex));
+endif|#
+directive|endif
+else|#
+directive|else
 if|#
 directive|if
 name|defined
@@ -644,8 +732,26 @@ asm|asm("	movl -8(r11),r11");
 comment|/* frompcindex = 1 callf frame back */
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+asm|asm("	.text");
+comment|/* make sure we're in text space */
+asm|asm("	movl a6@(4),a5");
+comment|/* selfpc = pc pushed by mcount jsr */
+asm|asm("	movl a6@(8),a4");
+comment|/* frompcindex = pc pushed by jsr into 					   self, stack frame not yet built */
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* not __GNUC__ */
+endif|#
+directive|endif
+comment|/* not lint */
 comment|/* 	 * Insure that we cannot be recursively invoked. 	 * this requires that splhigh() and splx() below 	 * do NOT call mcount! 	 */
 name|s
 operator|=
