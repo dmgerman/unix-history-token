@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	6.2	84/06/10	*/
+comment|/*	trap.c	6.3	84/07/08	*/
 end_comment
 
 begin_include
@@ -1045,20 +1045,6 @@ operator|=
 name|u
 operator|.
 name|u_arg
-expr_stmt|;
-name|u
-operator|.
-name|u_dirp
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|u
-operator|.
-name|u_arg
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|u
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	6.1	83/07/29	*/
+comment|/*	vfs_vnops.c	6.2	84/07/08	*/
 end_comment
 
 begin_include
@@ -85,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/nami.h"
 end_include
 
 begin_comment
@@ -354,8 +348,13 @@ name|inode
 modifier|*
 name|owner
 parameter_list|(
+name|fname
+parameter_list|,
 name|follow
 parameter_list|)
+name|caddr_t
+name|fname
+decl_stmt|;
 name|int
 name|follow
 decl_stmt|;
@@ -366,15 +365,42 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+specifier|register
+name|struct
+name|nameidata
+modifier|*
+name|ndp
+init|=
+operator|&
+name|u
+operator|.
+name|u_nd
+decl_stmt|;
+name|ndp
+operator|->
+name|ni_nameiop
+operator|=
+name|LOOKUP
+operator||
+name|follow
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_segflg
+operator|=
+name|UIO_USERSPACE
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_dirp
+operator|=
+name|fname
+expr_stmt|;
 name|ip
 operator|=
 name|namei
 argument_list|(
-name|uchar
-argument_list|,
-name|LOOKUP
-argument_list|,
-name|follow
+name|ndp
 argument_list|)
 expr_stmt|;
 if|if

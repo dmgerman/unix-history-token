@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_acct.c	6.1	83/07/29	*/
+comment|/*	kern_acct.c	6.2	84/07/08	*/
 end_comment
 
 begin_include
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"../h/acct.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/nami.h"
 end_include
 
 begin_include
@@ -121,6 +115,17 @@ name|u
 operator|.
 name|u_ap
 struct|;
+specifier|register
+name|struct
+name|nameidata
+modifier|*
+name|ndp
+init|=
+operator|&
+name|u
+operator|.
+name|u_nd
+decl_stmt|;
 if|if
 condition|(
 name|suser
@@ -169,15 +174,33 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+name|ndp
+operator|->
+name|ni_nameiop
+operator|=
+name|LOOKUP
+operator||
+name|FOLLOW
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_segflg
+operator|=
+name|UIO_USERSPACE
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_dirp
+operator|=
+name|uap
+operator|->
+name|fname
+expr_stmt|;
 name|ip
 operator|=
 name|namei
 argument_list|(
-name|uchar
-argument_list|,
-name|LOOKUP
-argument_list|,
-literal|1
+name|ndp
 argument_list|)
 expr_stmt|;
 if|if
