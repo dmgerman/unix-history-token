@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.37	82/03/29	*/
+comment|/*	uipc_socket.c	4.38	82/04/01	*/
 end_comment
 
 begin_include
@@ -1173,30 +1173,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_CANTSENDMORE
-condition|)
-block|{
-name|psignal
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|,
-name|SIGPIPE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EPIPE
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|sosendallatonce
 argument_list|(
 name|so
@@ -1217,6 +1193,10 @@ operator|(
 name|EMSGSIZE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* NEED TO PREVENT BUSY WAITING IN SELECT FOR WRITING */
 if|if
 condition|(
 operator|(
@@ -1242,6 +1222,10 @@ operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+endif|#
+directive|endif
+name|restart
+label|:
 name|sblock
 argument_list|(
 operator|&
@@ -1257,13 +1241,37 @@ parameter_list|(
 name|errno
 parameter_list|)
 value|{ error = errno; splx(s); goto release; }
+name|again
+label|:
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-name|again
-label|:
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTSENDMORE
+condition|)
+block|{
+name|psignal
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|SIGPIPE
+argument_list|)
+expr_stmt|;
+name|snderr
+argument_list|(
+name|EPIPE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|so
@@ -1283,6 +1291,7 @@ name|so_error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* ??? */
 name|splx
 argument_list|(
 name|s
@@ -1357,6 +1366,10 @@ argument_list|,
 name|asa
 argument_list|)
 expr_stmt|;
+name|top
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1371,10 +1384,6 @@ goto|goto
 name|release
 goto|;
 block|}
-name|top
-operator|=
-literal|0
-expr_stmt|;
 name|mp
 operator|=
 operator|&
@@ -1462,7 +1471,7 @@ name|s
 argument_list|)
 expr_stmt|;
 goto|goto
-name|again
+name|restart
 goto|;
 block|}
 name|splx
@@ -1499,11 +1508,7 @@ name|error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|top
-argument_list|)
-expr_stmt|;
+comment|/* SIGPIPE? */
 goto|goto
 name|release
 goto|;
@@ -1627,11 +1632,6 @@ name|so_snd
 argument_list|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 goto|goto
 name|again
 goto|;
@@ -1643,6 +1643,15 @@ operator|&
 name|so
 operator|->
 name|so_snd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|top
+condition|)
+name|m_freem
+argument_list|(
+name|top
 argument_list|)
 expr_stmt|;
 return|return
