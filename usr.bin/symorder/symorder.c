@@ -950,6 +950,15 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|newtab
+argument_list|,
+literal|0
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|n
