@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_tun.c,v 1.14 1994/06/29 06:36:25 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have it's wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/select mode of  * operation though.  */
+comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have it's wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/poll mode of  * operation though.  */
 end_comment
 
 begin_include
@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -438,8 +438,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|tunselect
+name|d_poll_t
+name|tunpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -473,7 +473,7 @@ name|noreset
 block|,
 name|nodevtotty
 block|,
-name|tunselect
+name|tunpoll
 block|,
 name|nommap
 block|,
@@ -2926,19 +2926,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tunselect - the select interface, this is only useful on reads  * really. The write detect always returns true, write never blocks  * anyway, it either accepts the packet or drops it.  */
+comment|/*  * tunpoll - the poll interface, this is only useful on reads  * really. The write detect always returns true, write never blocks  * anyway, it either accepts the packet or drops it.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|tunselect
+name|tunpoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -2977,6 +2977,11 @@ name|tp
 operator|->
 name|tun_if
 decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -2984,7 +2989,7 @@ argument_list|()
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunselect\n"
+literal|"%s%d: tunpoll\n"
 argument_list|,
 name|ifp
 operator|->
@@ -2995,14 +3000,16 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|rw
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
 condition|)
-block|{
-case|case
-name|FREAD
-case|:
 if|if
 condition|(
 name|ifp
@@ -3014,14 +3021,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunselect q=%d\n"
+literal|"%s%d: tunpoll q=%d\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3038,41 +3040,22 @@ operator|.
 name|ifq_len
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-name|selrecord
-argument_list|(
-name|p
-argument_list|,
+name|revents
+operator||=
+name|events
 operator|&
-name|tp
-operator|->
-name|tun_rsel
-argument_list|)
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
 expr_stmt|;
-break|break;
-case|case
-name|FWRITE
-case|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+else|else
+block|{
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: tunselect waiting\n"
+literal|"%s%d: tunpoll waiting\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3083,8 +3066,46 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
+name|selrecord
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|tun_rsel
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLOUT
+operator||
+name|POLLWRNORM
+operator|)
+condition|)
+name|revents
+operator||=
+name|events
+operator|&
+operator|(
+name|POLLOUT
+operator||
+name|POLLWRNORM
+operator|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+operator|(
+name|revents
+operator|)
 return|;
 block|}
 end_function
