@@ -1821,6 +1821,7 @@ decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|attrname

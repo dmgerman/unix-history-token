@@ -1514,6 +1514,7 @@ operator|,
 name|int
 name|cmd
 operator|,
+specifier|const
 name|char
 operator|*
 name|attrname
@@ -2521,6 +2522,7 @@ operator|,
 name|int
 name|cmd
 operator|,
+specifier|const
 name|char
 operator|*
 name|attrname

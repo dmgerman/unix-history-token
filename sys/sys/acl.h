@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999 Robert N. M. Watson  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*   * Userland/kernel interface for Access Control Lists  *  * This code from the FreeBSD POSIX.1e implementation.  Not all of the ACL  * code is committed yet; in order to use the library routines listed  * below, you'll need to download libposix1e_acl from the POSIX.1e  * implementation page, or possibly update to a more recent version of  * FreeBSD, as the code may have been committed.  *  * The POSIX.1e implementation page may be reached at:  *   http://www.watson.org/fbsd-hardening/posix1e/  *  * However, all syscalls will pass through to appropriate VFS vnops, so  * file systems implementing the vnops are accessible through the syscalls.  */
+comment|/*   * Userland/kernel interface for Access Control Lists  *  * The POSIX.1e implementation page may be reached at:  *   http://www.watson.org/fbsd-hardening/posix1e/  */
 end_comment
 
 begin_ifndef
@@ -26,7 +26,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_ACL_ENTRIES
+name|ACL_MAX_ENTRIES
 value|32
 end_define
 
@@ -38,14 +38,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_ACL_PATH_MAX
-value|MAX_ACL_ENTRIES
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACL_MAX_ENTRIES
-value|MAX_ACL_ENTRIES
+value|ACL_MAX_ENTRIES
 end_define
 
 begin_typedef
@@ -106,7 +99,7 @@ name|struct
 name|acl_entry
 name|acl_entry
 index|[
-name|MAX_ACL_ENTRIES
+name|ACL_MAX_ENTRIES
 index|]
 decl_stmt|;
 block|}
@@ -310,6 +303,47 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+name|void
+name|generic_attr_to_posix1e_acl
+parameter_list|(
+name|struct
+name|acl
+modifier|*
+name|a_acl
+parameter_list|,
+name|struct
+name|vattr
+modifier|*
+name|vattr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|generic_vop_aclcheck
+parameter_list|(
+name|struct
+name|vop_aclcheck_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|generic_vop_getacl
+parameter_list|(
+name|struct
+name|vop_getacl_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|posix1e_acl_access
 parameter_list|(
@@ -335,47 +369,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|generic_attr_to_posix1e_acl
-parameter_list|(
-name|struct
-name|acl
-modifier|*
-name|a_acl
-parameter_list|,
-name|struct
-name|vattr
-modifier|*
-name|vattr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|generic_vop_getacl
-parameter_list|(
-name|struct
-name|vop_getacl_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|generic_vop_aclcheck
-parameter_list|(
-name|struct
-name|vop_aclcheck_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|posix1e_vop_aclcheck
 parameter_list|(
@@ -393,7 +386,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_comment
@@ -401,46 +394,9 @@ comment|/*  * Syscall interface -- use the library calls instead as the syscalls
 end_comment
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
-name|acl_syscall_get_file
-parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|acl_type_t
-name|type
-parameter_list|,
-name|struct
-name|acl
-modifier|*
-name|aclp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|acl_syscall_set_file
-parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|acl_type_t
-name|type
-parameter_list|,
-name|struct
-name|acl
-modifier|*
-name|aclp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|acl_syscall_get_fd
+name|__acl_aclcheck_fd
 parameter_list|(
 name|int
 name|filedes
@@ -458,10 +414,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_syscall_set_fd
+name|__acl_aclcheck_file
 parameter_list|(
-name|int
-name|filedes
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|,
 name|acl_type_t
 name|type
@@ -476,7 +434,20 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_syscall_delete_file
+name|__acl_delete_fd
+parameter_list|(
+name|int
+name|filedes
+parameter_list|,
+name|acl_type_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__acl_delete_file
 parameter_list|(
 specifier|const
 name|char
@@ -491,21 +462,27 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_syscall_delete_fd
+name|__acl_get_fd
 parameter_list|(
 name|int
 name|filedes
 parameter_list|,
 name|acl_type_t
 name|type
+parameter_list|,
+name|struct
+name|acl
+modifier|*
+name|aclp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|acl_syscall_aclcheck_file
+name|__acl_get_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -523,7 +500,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_syscall_aclcheck_fd
+name|__acl_set_fd
 parameter_list|(
 name|int
 name|filedes
@@ -539,17 +516,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * These are currently provided by libposix1e_acl, which is not shipped  * with the base distribution, but will be soon.  Some of these are  * from POSIX.1e-extensions.  *  * Not all POSIX.1e ACL functions are listed here yet, but more will  * be soon.  */
-end_comment
+begin_function_decl
+name|int
+name|__acl_set_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|acl_type_t
+name|type
+parameter_list|,
+name|struct
+name|acl
+modifier|*
+name|aclp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
+name|__END_DECLS
+comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  */
+name|__BEGIN_DECLS
 name|int
 name|acl_calc_mask
 parameter_list|(
 name|acl_t
 modifier|*
 name|acl_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|acl_delete_def_fd
+parameter_list|(
+name|int
+name|filedes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -568,10 +574,11 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_delete_def_fd
+name|acl_free
 parameter_list|(
-name|int
-name|filedes
+name|void
+modifier|*
+name|obj_p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -687,24 +694,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_valid_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path_p
-parameter_list|,
-name|acl_type_t
-name|type
-parameter_list|,
-name|acl_t
-name|acl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|acl_valid_fd
 parameter_list|(
 name|int
@@ -721,14 +710,25 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acl_free
+name|acl_valid_file
 parameter_list|(
-name|void
+specifier|const
+name|char
 modifier|*
-name|obj_p
+name|path_p
+parameter_list|,
+name|acl_type_t
+name|type
+parameter_list|,
+name|acl_t
+name|acl
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
@@ -736,7 +736,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif
@@ -745,7 +745,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_ACL_H */
+comment|/* !_SYS_ACL_H */
 end_comment
 
 end_unit
