@@ -1736,6 +1736,31 @@ value|0x7016
 end_define
 
 begin_comment
+comment|/*  * SiS 900 PCI revision codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_630E
+value|0x0081
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_630S
+value|0x0082
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_630EA1
+value|0x0083
+end_define
+
+begin_comment
 comment|/*  * NatSemi vendor ID  */
 end_comment
 
