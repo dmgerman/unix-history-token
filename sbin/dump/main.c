@@ -1874,6 +1874,9 @@ comment|/* Estimate number of tapes, assuming streaming stops at 			   the end o
 name|fetapes
 operator|=
 operator|(
+operator|(
+name|double
+operator|)
 name|tapesize
 comment|/* blocks */
 operator|*
@@ -1887,6 +1890,9 @@ name|density
 operator|)
 comment|/* 0.1" / byte " */
 operator|+
+operator|(
+name|double
+operator|)
 name|tapesize
 comment|/* blocks */
 operator|*
@@ -1928,6 +1934,9 @@ decl_stmt|;
 name|fetapes
 operator|=
 operator|(
+operator|(
+name|double
+operator|)
 name|tapesize
 comment|/* blocks */
 operator|*
@@ -1941,6 +1950,9 @@ name|density
 operator|)
 comment|/* 0.1" / byte " */
 operator|+
+operator|(
+name|double
+operator|)
 name|tapesize
 comment|/* blocks */
 operator|*
