@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * kpasswd_proto  *  * definitions for the kpasswd "protocol"  * (We hope this to be temporary until a real admin protocol is worked out)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAX_PW_LEN
-value|256
-end_define
-
 begin_struct
 struct|struct
 name|kpasswd_data
@@ -24,7 +17,7 @@ decl_stmt|;
 name|char
 name|secure_msg
 index|[
-name|MAX_PW_LEN
+name|_PASSWORD_LEN
 index|]
 decl_stmt|;
 block|}
@@ -38,13 +31,13 @@ block|{
 name|char
 name|pw
 index|[
-name|MAX_PW_LEN
+name|_PASSWORD_LEN
 index|]
 decl_stmt|;
 name|char
 name|secure_msg
 index|[
-name|MAX_PW_LEN
+name|_PASSWORD_LEN
 index|]
 decl_stmt|;
 block|}
