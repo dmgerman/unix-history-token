@@ -26,6 +26,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SEL_RPL_MASK
+value|3
+end_define
+
+begin_comment
+comment|/* requester priv level */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISPL
 parameter_list|(
 name|s
@@ -956,6 +967,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IDT_IO_INTS
+value|NRSVIDT
+end_define
+
+begin_comment
+comment|/* Base of IDT entries for I/O interrupts. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IDT_SYSCALL
 value|0x80
 end_define
@@ -1086,6 +1108,16 @@ name|struct
 name|gate_descriptor
 modifier|*
 name|idt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|region_descriptor
+name|r_gdt
+decl_stmt|,
+name|r_idt
 decl_stmt|;
 end_decl_stmt
 

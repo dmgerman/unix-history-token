@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_APICVAR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/segments.h>
+end_include
+
 begin_comment
 comment|/*  * Local&& I/O APIC variable definitions.  */
 end_comment
@@ -664,6 +670,10 @@ begin_function_decl
 name|void
 name|lapic_handle_intr
 parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|,
 name|struct
 name|intrframe
 name|frame

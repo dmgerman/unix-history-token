@@ -1447,7 +1447,8 @@ return|return
 name|ENXIO
 return|;
 return|return
-literal|0
+operator|-
+literal|100
 return|;
 block|}
 end_function

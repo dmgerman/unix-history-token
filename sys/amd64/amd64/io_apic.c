@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_atpic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_isa.h"
 end_include
 
@@ -119,6 +125,11 @@ directive|if
 name|defined
 argument_list|(
 name|DEV_ISA
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|DEV_ATPIC
 argument_list|)
 operator|&&
 operator|!

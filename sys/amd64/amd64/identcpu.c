@@ -80,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/segments.h>
 end_include
 
@@ -99,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|<amd64/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<amd64/isa/intr_machdep.h>
 end_include
 
 begin_comment

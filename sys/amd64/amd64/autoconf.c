@@ -177,12 +177,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<amd64/isa/icu.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -327,14 +321,9 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/* 	 * Activate the ICU's.  Note that we are explicitly at splhigh() 	 * at present as we have no way to disable stray PCI level triggered 	 * interrupts until the devices have had a driver attached.  This 	 * is particularly a problem when the interrupts are shared.  For 	 * example, if IRQ 10 is shared between a disk and network device 	 * and the disk device generates an interrupt, if we "activate" 	 * IRQ 10 when the network driver is set up, then we will get 	 * recursive interrupt 10's as nothing will know how to turn off 	 * the disk device's interrupt. 	 * 	 * Having the ICU's active means we can probe interrupt routing to 	 * see if a device causes the corresponding pending bit to be set. 	 * 	 * This is all rather inconvenient. 	 */
+comment|/* 	 * Enable interrupts on the processor.  The interrupts are still 	 * disabled in the interrupt controllers until interrupt handlers 	 * are registered. 	 */
 name|enable_intr
 argument_list|()
-expr_stmt|;
-name|INTREN
-argument_list|(
-name|IRQ_SLAVE
-argument_list|)
 expr_stmt|;
 comment|/* nexus0 is the top of the i386 device tree */
 name|device_add_child
@@ -365,10 +354,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is slightly misplaced. 	 */
-name|spl0
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

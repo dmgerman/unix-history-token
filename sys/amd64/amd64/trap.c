@@ -221,6 +221,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -230,22 +236,27 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<machine/tss.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<amd64/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<amd64/isa/intr_machdep.h>
 end_include
 
 begin_include
@@ -1928,6 +1939,32 @@ else|:
 literal|"kernel"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* two separate prints in case of a trap on an unmapped page */
+name|printf
+argument_list|(
+literal|"cpuid = %d; "
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"apic id = %02x\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|type
@@ -2294,6 +2331,32 @@ argument_list|(
 literal|"\nFatal double fault\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* two separate prints in case of a trap on an unmapped page */
+name|printf
+argument_list|(
+literal|"cpuid = %d; "
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"apic id = %02x\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|panic
 argument_list|(
 literal|"double fault"

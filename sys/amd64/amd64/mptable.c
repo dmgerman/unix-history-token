@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mptable_force_htt.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -171,31 +165,6 @@ begin_comment
 comment|/* Max number of I/O APIC's */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BIOS_BASE
-value|(0xe8000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIOS_SIZE
-value|(0x18000)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -209,11 +178,6 @@ directive|define
 name|BIOS_SIZE
 value|(0x10000)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1182,20 +1146,17 @@ block|{
 name|int
 name|x
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|segment
 decl_stmt|;
 name|u_int32_t
 name|target
 decl_stmt|;
 comment|/* see if EBDA exists */
-if|if
-condition|(
-operator|(
 name|segment
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 operator|*
 operator|(
@@ -1207,7 +1168,10 @@ name|KERNBASE
 operator|+
 literal|0x40e
 operator|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|segment
 operator|!=
 literal|0
 condition|)

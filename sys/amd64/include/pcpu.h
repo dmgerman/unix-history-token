@@ -32,9 +32,9 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	register_t pc_scratch_rsp;
+value|\ 	struct	pmap *pc_curpmap;					\ 	struct	amd64tss *pc_tssp;					\ 	register_t pc_rsp0;						\ 	register_t pc_scratch_rsp;
 comment|/* User %rsp in syscall */
-value|\ 	u_int   pc_acpi_id
+value|\ 	u_int	pc_apic_id;						\ 	u_int   pc_acpi_id
 end_define
 
 begin_comment

@@ -114,6 +114,7 @@ specifier|extern
 name|struct
 name|amd64tss
 name|common_tss
+index|[]
 decl_stmt|;
 end_decl_stmt
 

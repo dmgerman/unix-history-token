@@ -260,7 +260,6 @@ argument_list|,
 name|tsc_freq
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -271,6 +270,28 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are somehow synchronized.  Some hardware configurations do 	 * this, but we have no way of determining whether this is the 	 * case, so we do not use the TSC in multi-processor systems 	 * unless the user indicated (by setting kern.timecounter.smp_tsc 	 * to 1) that he believes that his TSCs are synchronized. 	 */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
+operator|!
+name|smp_tsc
+condition|)
+name|tsc_timecounter
+operator|.
+name|tc_quality
+operator|=
+operator|-
+literal|100
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tsc_freq

@@ -365,6 +365,35 @@ begin_comment
 comment|/* GPROF */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_comment
+comment|/*  * Convenience macros for declaring interrupt entry points.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDTVEC
+parameter_list|(
+name|name
+parameter_list|)
+value|ALIGN_TEXT; .globl __CONCAT(X,name); \ 			.type __CONCAT(X,name),@function; __CONCAT(X,name):
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

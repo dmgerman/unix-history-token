@@ -807,10 +807,11 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|u_long
+name|u_int
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
+comment|/* spare u_int here due to padding */
 name|struct
 name|pmap_statistics
 name|pm_stats

@@ -39,6 +39,13 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|basemem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|busdma_swi_pending
 decl_stmt|;
@@ -127,8 +134,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int
-name|basemem
+name|struct
+name|pcpu
+name|__pcpu
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +259,16 @@ name|is_physical_memory
 parameter_list|(
 name|vm_offset_t
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isa_nmi
+parameter_list|(
+name|int
+name|cd
 parameter_list|)
 function_decl|;
 end_function_decl
