@@ -3892,6 +3892,16 @@ name|VM_PROT_WRITE
 operator|)
 condition|)
 continue|continue;
+comment|/* 		** Dont include mmapped data in the coredump if MAP_NOCORE  		** is set in mmap(2). 		*/
+if|if
+condition|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_NOCOREDUMP
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(

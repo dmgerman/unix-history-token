@@ -198,6 +198,21 @@ begin_comment
 comment|/* page to but do not sync underlying file */
 end_comment
 
+begin_comment
+comment|/*  * Extended flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_NOCORE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* dont include these pages in a coredump */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -403,6 +418,28 @@ end_define
 
 begin_comment
 comment|/* revert to default flushing strategy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MADV_NOCORE
+value|8
+end_define
+
+begin_comment
+comment|/* do not include these pages in a core file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MADV_CORE
+value|9
+end_define
+
+begin_comment
+comment|/* revert to including pages in a core file */
 end_comment
 
 begin_comment

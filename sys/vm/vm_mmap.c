@@ -2511,7 +2511,7 @@ name|uap
 operator|->
 name|behav
 operator|>
-name|MADV_AUTOSYNC
+name|MADV_CORE
 condition|)
 return|return
 operator|(
@@ -4150,6 +4150,16 @@ condition|)
 name|docow
 operator||=
 name|MAP_DISABLE_SYNCER
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|MAP_NOCORE
+condition|)
+name|docow
+operator||=
+name|MAP_DISABLE_COREDUMP
 expr_stmt|;
 if|#
 directive|if

@@ -23,6 +23,13 @@ begin_comment
 comment|/*  *	Types defined:  *  *	vm_map_t		the high-level address map data structure.  *	vm_map_entry_t		an entry in an address map.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|u_int
+name|vm_eflags_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  *	Objects which live in maps may be either VM objects, or  *	another map (called a "sharing map") which denotes read-write  *	sharing with other maps.  */
 end_comment
@@ -88,7 +95,7 @@ name|vm_ooffset_t
 name|offset
 decl_stmt|;
 comment|/* offset into object */
-name|u_char
+name|vm_eflags_t
 name|eflags
 decl_stmt|;
 comment|/* map entry flags */
@@ -121,49 +128,49 @@ begin_define
 define|#
 directive|define
 name|MAP_ENTRY_NOSYNC
-value|0x1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_ENTRY_IS_SUB_MAP
-value|0x2
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_ENTRY_COW
-value|0x4
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_ENTRY_NEEDS_COPY
-value|0x8
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_ENTRY_NOFAULT
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_ENTRY_USER_WIRED
-value|0x20
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_ENTRY_BEHAV_NORMAL
-value|0x00
+value|0x0000
 end_define
 
 begin_comment
@@ -174,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|MAP_ENTRY_BEHAV_SEQUENTIAL
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -185,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|MAP_ENTRY_BEHAV_RANDOM
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
@@ -196,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|MAP_ENTRY_BEHAV_RESERVED
-value|0xC0
+value|0x00C0
 end_define
 
 begin_comment
@@ -207,8 +214,19 @@ begin_define
 define|#
 directive|define
 name|MAP_ENTRY_BEHAV_MASK
-value|0xC0
+value|0x00C0
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_NOCOREDUMP
+value|0x0400
+end_define
+
+begin_comment
+comment|/* don't include in a core */
+end_comment
 
 begin_function
 specifier|static
@@ -828,42 +846,49 @@ begin_define
 define|#
 directive|define
 name|MAP_UNUSED_01
-value|0x1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_COPY_ON_WRITE
-value|0x2
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_NOFAULT
-value|0x4
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_PREFAULT
-value|0x8
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_PREFAULT_PARTIAL
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAP_DISABLE_SYNCER
-value|0x20
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_DISABLE_COREDUMP
+value|0x0100
 end_define
 
 begin_comment
