@@ -795,7 +795,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"flastrategy(%p) %s %x, %d, %ld, %p)\n"
+literal|"flastrategy(%p) %s %x, %lld, %ld, %p)\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -810,6 +810,10 @@ name|bp
 operator|->
 name|bio_flags
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|bio_blkno
@@ -1002,7 +1006,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fla%d: %d = rwe(%p, %d, %d, %d, %ld, %p)\n"
+literal|"fla%d: %d = rwe(%p, %d, %d, %lld, %ld, %p)\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1014,6 +1018,10 @@ name|unit
 argument_list|,
 name|what
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|bio_pblkno
