@@ -526,7 +526,11 @@ value|get_time()
 end_define
 
 begin_comment
-comment|/*#define GET_TIME()	(lbolt)	/* Returns current time (1/HZ secs since boot) */
+comment|/*#define GET_TIME()	(lbolt)*/
+end_comment
+
+begin_comment
+comment|/* Returns current time (1/HZ secs since boot) */
 end_comment
 
 begin_comment
