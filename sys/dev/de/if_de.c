@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.82 1999/02/28 17:08:51 explorer Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.104 1999/05/03 09:36:29 dfr Exp $ */
+comment|/*	$Id: if_de.c,v 1.105 1999/05/09 17:06:49 peter Exp $ */
 end_comment
 
 begin_comment
@@ -464,7 +464,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci.h>
+file|"pci.h"
 end_include
 
 begin_if
