@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fpe.c	1.2	89/05/05	*/
+comment|/*	fpe.c	1.3	90/06/21	*/
 end_comment
 
 begin_include
@@ -412,6 +412,11 @@ decl_stmt|;
 block|}
 name|d_res
 union|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -523,7 +528,11 @@ operator|=
 name|DIV0_EXC
 expr_stmt|;
 comment|/* generate SIGILL - XXX */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 switch|switch
 condition|(
@@ -695,10 +704,8 @@ name|opcode
 operator|=
 name|OVF_EXC
 expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 operator|(
 name|hfs
 operator|&
@@ -708,8 +715,8 @@ condition|?
 name|EDOM
 else|:
 name|ERANGE
-expr_stmt|;
-return|return;
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -740,10 +747,8 @@ name|opcode
 operator|=
 name|UNDF_EXC
 expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 operator|(
 name|hfs
 operator|&
@@ -753,8 +758,8 @@ condition|?
 name|EDOM
 else|:
 name|ERANGE
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 block|}
 elseif|else
@@ -769,7 +774,11 @@ name|opcode
 operator|=
 name|DIV0_EXC
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -778,9 +787,7 @@ name|hfs
 operator|&
 name|HFS_DOM
 condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|EDOM
 expr_stmt|;
@@ -791,9 +798,7 @@ name|hfs
 operator|&
 name|HFS_RANGE
 condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ERANGE
 expr_stmt|;
@@ -895,6 +900,11 @@ name|opcode
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
