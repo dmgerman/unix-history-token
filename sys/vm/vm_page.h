@@ -598,12 +598,6 @@ name|PQ_L2_MASK
 value|(PQ_L2_SIZE - 1)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_define
 define|#
 directive|define
@@ -652,58 +646,6 @@ directive|define
 name|PQ_COUNT
 value|(4 + 2*PQ_L2_SIZE)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PQ_NONE
-value|PQ_COUNT
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_FREE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_INACTIVE
-value|PQ_L2_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_ACTIVE
-value|(1 +   PQ_L2_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_CACHE
-value|(2 +   PQ_L2_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_COUNT
-value|(2 + 2*PQ_L2_SIZE)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
