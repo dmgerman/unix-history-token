@@ -535,18 +535,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ffree
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|filedesc_to_leader
 modifier|*
