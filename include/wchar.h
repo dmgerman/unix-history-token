@@ -302,21 +302,79 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_function_decl
+name|size_t
+name|mbrlen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* XXX: not implemented */
-end_comment
+begin_function_decl
+name|size_t
+name|mbrtowc
+parameter_list|(
+name|wchar_t
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_endif
-unit|size_t	mbrlen(const char * __restrict, size_t, mbstate_t * __restrict); size_t	mbrtowc(wchar_t * __restrict, const char * __restrict, size_t, 	    mbstate_t * __restrict); int	mbsinit(const mbstate_t *); size_t	mbsrtowcs(wchar_t * __restrict, const char ** __restrict, size_t, 	    mbstate_t * __restrict);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|int
+name|mbsinit
+parameter_list|(
+specifier|const
+name|mbstate_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|mbsrtowcs
+parameter_list|(
+name|wchar_t
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|wint_t
@@ -351,21 +409,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX: not implemented */
-end_comment
-
-begin_endif
-unit|size_t	wcrtomb(char * __restrict, wchar_t, mbstate_t * __restrict);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|size_t
+name|wcrtomb
+parameter_list|(
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|wchar_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|wchar_t
@@ -573,21 +632,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX: not implemented */
-end_comment
-
-begin_endif
-unit|size_t	wcsrtombs(char * __restrict, const wchar_t ** __restrict, size_t, 	    mbstate_t * __restrict);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|size_t
+name|wcsrtombs
+parameter_list|(
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|size_t
