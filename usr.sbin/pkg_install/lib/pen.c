@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.4 1994/10/04 16:07:50 jkh Exp $"
+literal|"$Id: pen.c,v 1.5 1994/10/08 23:55:36 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +202,9 @@ name|stderr
 argument_list|,
 literal|"Projected package size: %d bytes, free space: %d bytes\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|min_free
