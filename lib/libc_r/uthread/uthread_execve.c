@@ -167,17 +167,16 @@ index|]
 operator|!=
 name|NULL
 operator|&&
-operator|!
 operator|(
-name|_thread_fd_table
-index|[
+name|_thread_fd_getflags
+argument_list|(
 name|i
-index|]
-operator|->
-name|flags
+argument_list|)
 operator|&
 name|O_NONBLOCK
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Get the current flags: */

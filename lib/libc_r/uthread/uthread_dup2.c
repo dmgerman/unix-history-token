@@ -205,19 +205,15 @@ block|}
 else|else
 block|{
 comment|/* 					 * Save the file open flags so that 					 * they can be checked later:  					 */
-name|_thread_fd_table
-index|[
+name|_thread_fd_setflags
+argument_list|(
 name|ret
-index|]
-operator|->
-name|flags
-operator|=
-name|_thread_fd_table
-index|[
+argument_list|,
+name|_thread_fd_getflags
+argument_list|(
 name|fd
-index|]
-operator|->
-name|flags
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
