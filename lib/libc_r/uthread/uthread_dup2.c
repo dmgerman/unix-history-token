@@ -145,9 +145,6 @@ literal|0
 condition|)
 block|{
 comment|/* Perform the 'dup2' syscall: */
-if|if
-condition|(
-operator|(
 name|ret
 operator|=
 name|__sys_dup2
@@ -156,13 +153,36 @@ name|fd
 argument_list|,
 name|newfd
 argument_list|)
-operator|)
-operator|<
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|>=
 literal|0
 condition|)
-block|{ 			}
-comment|/* Initialise the file descriptor table entry: */
-elseif|else
+block|{
+comment|/* 				 * If we are duplicating one of the standard 				 * file descriptors, update its flags in the 				 * table of pthread stdio descriptor flags. 				 */
+if|if
+condition|(
+name|ret
+operator|<
+literal|3
+condition|)
+block|{
+name|_pthread_stdio_flags
+index|[
+name|ret
+index|]
+operator|=
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+expr_stmt|;
+block|}
+comment|/* Initialise the file descriptor table entry */
 if|if
 condition|(
 name|_thread_fd_table_init
@@ -188,7 +208,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Save the file open flags so that they can 				 * be checked     later:  				 */
+comment|/* 					 * Save the file open flags so that 					 * they can be checked later:  					 */
 name|_thread_fd_table
 index|[
 name|ret
@@ -203,6 +223,7 @@ index|]
 operator|->
 name|flags
 expr_stmt|;
+block|}
 block|}
 comment|/* Unlock the file descriptor: */
 if|if
