@@ -133,6 +133,9 @@ operator|*
 name|q
 condition|)
 break|break;
+name|q
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
