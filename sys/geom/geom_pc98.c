@@ -309,7 +309,7 @@ return|;
 if|#
 directive|if
 literal|0
-comment|/* 	 * FreeBSD's boot0 IPL uses the name IPL1.  This test initially was 	 * based on that observation.  However, other boot loaders have use 	 * different names.  A likely good test would be to test if the first 	 * 4 bytes are a jump to location 11 (or greater?) as well as the next 	 * 7 bytes being printable or with trailing NUL's. 	 */
+comment|/* 	 * By convetion, it seems that the ipl program has a jump at location 	 * 0 to the real start of the boot loader.  By convetion, it appears 	 * that after this jump, there's a string, terminated by at last one, 	 * if not more, zeros, followed by the target of the jump.  FreeBSD's 	 * pc98 boot0 uses 'IPL1' followed by 3 zeros here, likely for 	 * compatibility with some older boot loader.  Linux98's boot loader 	 * appears to use 'Linux 98' followed by only two.  GRUB/98 appears to 	 * use 'GRUB/98 ' followed by none.  These last two appear to be 	 * ported from the ia32 versions, but appear to show similar 	 * convention.  Grub/98 has an additional NOP after the jmp, which 	 * isn't present in others. 	 * 	 * The following test was inspired by looking only at partitions 	 * with FreeBSD's boot0 (or one that it is compatible with).  As 	 * such, if failed when other IPL programs were used. 	 */
 block|if (sec[4] != 'I' || sec[5] != 'P' || sec[6] != 'L' || sec[7] != '1') 		return (EBUSY);
 endif|#
 directive|endif
