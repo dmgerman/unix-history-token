@@ -447,6 +447,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|yp_maplist
+parameter_list|(
+name|char
+modifier|*
+name|indomain
+parameter_list|,
+name|struct
+name|ypmaplist
+modifier|*
+modifier|*
+name|outmaplist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|yp_master
 parameter_list|(
 name|char
