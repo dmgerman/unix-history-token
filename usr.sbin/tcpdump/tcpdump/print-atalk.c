@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-atalk.c,v 1.36 94/06/20 19:44:34 leres Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-atalk.c,v 1.3 1995/09/22 17:24:50 wollman Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -479,31 +479,34 @@ decl_stmt|;
 name|u_short
 name|snet
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|lp = (struct LAP *)bp; 	bp += sizeof(*lp); 	length -= sizeof(*lp);
+else|#
+directive|else
+block|{
+specifier|static
+name|struct
+name|LAP
+name|lp_
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+name|lapDDP
+block|}
+decl_stmt|;
 name|lp
 operator|=
-operator|(
-expr|struct
-name|LAP
-operator|*
-operator|)
-name|bp
+operator|&
+name|lp_
 expr_stmt|;
-name|bp
-operator|+=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|lp
-argument_list|)
-expr_stmt|;
-name|length
-operator|-=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|lp
-argument_list|)
-expr_stmt|;
+block|}
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|lp
@@ -2871,7 +2874,7 @@ name|sprintf
 argument_list|(
 name|nambuf
 argument_list|,
-literal|"%s.%d"
+literal|"%s.%02x"
 argument_list|,
 name|tp2
 operator|->
@@ -2942,7 +2945,7 @@ name|sprintf
 argument_list|(
 name|nambuf
 argument_list|,
-literal|"%d.%d.%d"
+literal|"%02x.%02x.%02x"
 argument_list|,
 name|atnet
 operator|>>
@@ -2963,7 +2966,7 @@ name|sprintf
 argument_list|(
 name|nambuf
 argument_list|,
-literal|"%d.%d"
+literal|"%02x.%02x"
 argument_list|,
 name|atnet
 operator|>>
@@ -3086,7 +3089,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d"
+literal|"%02x"
 argument_list|,
 name|skt
 argument_list|)
@@ -3103,7 +3106,7 @@ name|tok2str
 argument_list|(
 name|skt2str
 argument_list|,
-literal|"%d"
+literal|"%02x"
 argument_list|,
 name|skt
 argument_list|)

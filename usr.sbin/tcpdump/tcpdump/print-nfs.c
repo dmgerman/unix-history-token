@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-nfs.c,v 1.41 94/06/12 14:35:15 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-nfs.c,v 1.4 1995/08/23 05:18:54 pst Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2622,6 +2622,33 @@ parameter_list|)
 value|if ((u_char *)(p)> ((u_char *)snapend) - l) return(0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199103
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|strerr
+value|strerror
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/*  * Not all systems have strerror().  */
 end_comment
@@ -2640,9 +2667,6 @@ specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 comment|/* Conflicts with declaration in<stdio.h> */
 specifier|extern
 name|char
@@ -2650,8 +2674,6 @@ modifier|*
 name|sys_errlist
 index|[]
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|errno
@@ -2673,6 +2695,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
