@@ -63,14 +63,14 @@ begin_define
 define|#
 directive|define
 name|GPLUSPLUS_INCLUDE_DIR
-value|PREFIX"/include/c++/3.3"
+value|PREFIX"/include/c++/3.4"
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPLUSPLUS_BACKWARD_INCLUDE_DIR
-value|PREFIX"/include/c++/3.3/backward"
+value|PREFIX"/include/c++/3.4/backward"
 end_define
 
 begin_define
@@ -117,16 +117,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TOOLDIR_BASE_PREFIX
-end_undef
-
-begin_comment
-comment|/* Old??  This is not documented. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
 name|STANDARD_BINDIR_PREFIX
 end_undef
 
@@ -139,6 +129,20 @@ define|#
 directive|define
 name|STANDARD_EXEC_PREFIX
 value|PREFIX"/libexec/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STANDARD_LIBEXEC_PREFIX
+value|PREFIX"/libexec/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOOLDIR_BASE_PREFIX
+value|PREFIX
 end_define
 
 begin_undef
@@ -162,31 +166,6 @@ begin_comment
 comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|STANDARD_STARTFILE_PREFIX
-value|PREFIX"/lib/"
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CROSS_COMPILE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CROSS_STARTFILE_PREFIX
-value|PREFIX"/lib/"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef
@@ -196,6 +175,20 @@ end_undef
 begin_comment
 comment|/* We don't need one for now. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_STARTFILE_PREFIX
+value|PREFIX"/lib/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_PREFIX_SPEC
+value|PREFIX"/lib/"
+end_define
 
 begin_comment
 comment|/* For the native system compiler, we actually build libgcc in a profiled    version.  So we should use it with -pg.  */
@@ -237,54 +230,6 @@ begin_define
 define|#
 directive|define
 name|bsd4_4
-end_define
-
-begin_comment
-comment|/* Dike out [stupid, IMHO] libiberty functions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|xmalloc_set_program_name
-parameter_list|(
-name|dummy
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xmalloc
-value|malloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|xcalloc
-value|calloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|xrealloc
-value|realloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|xstrdup
-value|strdup
-end_define
-
-begin_define
-define|#
-directive|define
-name|xstrerror
-value|strerror
 end_define
 
 begin_comment
