@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.9 %G%"
+literal|"@(#)fdec.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2757,7 +2757,7 @@ operator|.
 name|om_max
 argument_list|)
 expr_stmt|;
-comment|/* 	     *	and zero them if checking is on 	     *	by calling zframe( bytes of locals , highest local address ); 	     */
+comment|/* 	     *	and zero them if checking is on 	     *	by calling blkclr( bytes of locals , starting local address ); 	     */
 if|if
 condition|(
 name|opt
@@ -2798,7 +2798,7 @@ argument_list|,
 name|P2PTR
 argument_list|)
 argument_list|,
-literal|"_ZFRAME"
+literal|"_blkclr"
 argument_list|)
 expr_stmt|;
 name|putleaf
