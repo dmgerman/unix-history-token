@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.22 1999/01/22 19:38:39 wollman Exp $"
+literal|"$Id: newsyslog.c,v 1.24 1999/07/28 04:26:10 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1591,6 +1591,19 @@ operator|(
 name|group
 operator|=
 name|strchr
+argument_list|(
+name|q
+argument_list|,
+literal|':'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|||
+operator|(
+name|group
+operator|=
+name|strrchr
 argument_list|(
 name|q
 argument_list|,
