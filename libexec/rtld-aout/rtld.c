@@ -703,6 +703,14 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
+name|ld_ignore_missing_objects
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
 name|ld_library_path
 decl_stmt|;
 end_decl_stmt
@@ -4018,6 +4026,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ld_ignore_missing_objects
+condition|)
+block|{
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+comment|/* 			 * Call __dlerror() even it we're not going to use 			 * the message, in order to clear the saved message. 			 */
+name|msg
+operator|=
+name|__dlerror
+argument_list|()
+expr_stmt|;
+comment|/* Should never be NULL */
+if|if
+condition|(
+operator|!
+name|ld_suppress_warnings
+condition|)
+name|warnx
+argument_list|(
+literal|"warning: %s"
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 block|}
@@ -8301,6 +8339,14 @@ argument_list|,
 literal|1
 argument_list|,
 argument|&ld_preload
+argument_list|)
+name|L
+argument_list|(
+literal|"LD_IGNORE_MISSING_OBJECTS="
+argument_list|,
+literal|1
+argument_list|,
+argument|&ld_ignore_missing_objects
 argument_list|)
 name|L
 argument_list|(
