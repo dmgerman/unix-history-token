@@ -4534,14 +4534,26 @@ name|CBWSIGNATURE
 argument_list|)
 expr_stmt|;
 comment|/* We don't care what the initial value was, as long as the values are unique */
+name|USETDW
+argument_list|(
 name|sc
 operator|->
 name|cbw
 operator|.
 name|dCBWTag
-operator|++
+argument_list|,
+name|UGETDW
+argument_list|(
+name|sc
+operator|->
+name|cbw
+operator|.
+name|dCBWTag
+argument_list|)
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
-comment|/* Increase the tag number */
 name|USETDW
 argument_list|(
 name|sc
