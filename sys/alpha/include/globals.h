@@ -163,6 +163,13 @@ name|cpuid
 value|PCPU_GET(cpuno)
 end_define
 
+begin_define
+define|#
+directive|define
+name|witness_spin_check
+value|PCPU_GET(witness_spin_check)
+end_define
+
 begin_endif
 endif|#
 directive|endif
