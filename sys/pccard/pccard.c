@@ -134,24 +134,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pccard
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"pccard"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* The following might now be obsolete */
 end_comment
