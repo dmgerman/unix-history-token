@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsdtcp.c	4.3 (Berkeley) %G%"
+literal|"@(#)bsdtcp.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"../condevs.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSDTCP
-end_ifdef
 
 begin_include
 include|#
@@ -259,7 +253,9 @@ argument_list|)
 expr_stmt|;
 name|alarm
 argument_list|(
-literal|30
+name|MAXMSGTIME
+operator|*
+literal|2
 argument_list|)
 expr_stmt|;
 name|hisctladdr
@@ -523,12 +519,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|BSDTCP
-end_endif
 
 end_unit
 
