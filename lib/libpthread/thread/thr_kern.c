@@ -218,13 +218,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|KSE_STACKSIZE
-value|16384
-end_define
-
-begin_define
-define|#
-directive|define
 name|KSE_SET_MBOX
 parameter_list|(
 name|kse

@@ -36,6 +36,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|KSE_STACKSIZE
+value|16384
+end_define
+
+begin_define
+define|#
+directive|define
 name|THR_GETCONTEXT
 parameter_list|(
 name|ucp
