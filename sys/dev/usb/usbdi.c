@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.96 2002/02/11 15:11:49 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.99 2002/02/28 04:49:16 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -298,6 +298,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|Static
+name|int
+name|usbd_xfer_isread
+parameter_list|(
+name|usbd_xfer_handle
+name|xfer
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|Static
 name|int
@@ -310,7 +321,9 @@ end_decl_stmt
 begin_function
 name|void
 name|usbd_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|usbd_nbuses
 operator|++
@@ -321,25 +334,15 @@ end_function
 begin_function
 name|void
 name|usbd_finish
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|--
 name|usbd_nbuses
 expr_stmt|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|__inline
-name|int
-name|usbd_xfer_isread
-parameter_list|(
-name|usbd_xfer_handle
-name|xfer
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -5340,7 +5343,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|static struct timeval errinterval = { 0, 2500000 };
+block|static struct timeval errinterval = { 0, 250000 };
 comment|/* 0.25 s*/
 block|return (ratecheck(last,&errinterval));
 endif|#
