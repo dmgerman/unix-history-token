@@ -20,7 +20,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.6 2002/07/09 21:25:00 atatat Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.8 2002/08/13 20:15:06 atatat Exp $");
 endif|#
 directive|endif
 end_endif
@@ -47,13 +47,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/syslimits.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
