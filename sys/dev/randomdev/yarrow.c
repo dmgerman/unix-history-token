@@ -182,32 +182,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|random_set_wakeup
-parameter_list|(
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|random_set_wakeup_exit
-parameter_list|(
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Structure holding the entropy state */
 end_comment
