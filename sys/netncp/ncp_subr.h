@@ -389,6 +389,18 @@ name|ncp_debuglevel
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ncp_init

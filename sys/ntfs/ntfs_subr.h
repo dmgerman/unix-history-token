@@ -172,6 +172,24 @@ name|va_a_ialloc
 value|va_d.ialloc
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|componentname
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|fnode
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|int
 name|ntfs_procfixups

@@ -52,6 +52,30 @@ begin_comment
 comment|/* This is not main record */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|mount
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ntfsmount
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ntfs_vgetex

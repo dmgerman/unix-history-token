@@ -1013,6 +1013,12 @@ parameter_list|)
 value|(conn)->packet[(conn)->rqsize++]=x
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|ncp_buf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|void
