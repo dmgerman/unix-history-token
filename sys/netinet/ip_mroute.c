@@ -8871,9 +8871,14 @@ name|LOG_DEBUG
 argument_list|,
 literal|"phyint_send on vif %d err %d\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|vifp
 operator|-
 name|viftable
+argument_list|)
 argument_list|,
 name|error
 argument_list|)
