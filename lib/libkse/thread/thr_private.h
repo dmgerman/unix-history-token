@@ -829,7 +829,7 @@ begin_define
 define|#
 directive|define
 name|PTHREAD_STACK_GUARD
-value|4096
+value|PAGE_SIZE
 end_define
 
 begin_comment
@@ -1193,6 +1193,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|u_int64_t
+name|uniqueid
+decl_stmt|;
+comment|/* for gdb */
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|spinlock_t
 name|lock
