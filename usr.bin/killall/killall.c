@@ -1385,9 +1385,7 @@ index|[
 name|i
 index|]
 operator|.
-name|kp_proc
-operator|.
-name|p_pid
+name|ki_pid
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -1398,9 +1396,7 @@ index|[
 name|i
 index|]
 operator|.
-name|kp_proc
-operator|.
-name|p_comm
+name|ki_comm
 argument_list|,
 name|MAXCOMLEN
 argument_list|)
@@ -1419,9 +1415,7 @@ index|[
 name|i
 index|]
 operator|.
-name|kp_eproc
-operator|.
-name|e_tdev
+name|ki_tdev
 expr_stmt|;
 name|thisuid
 operator|=
@@ -1430,11 +1424,7 @@ index|[
 name|i
 index|]
 operator|.
-name|kp_eproc
-operator|.
-name|e_pcred
-operator|.
-name|p_ruid
+name|ki_ruid
 expr_stmt|;
 comment|/* real uid */
 name|matched
