@@ -1343,6 +1343,7 @@ name|_BM
 argument_list|(
 literal|6
 argument_list|)
+block|,
 comment|/* _7, _5, _6 */
 operator|-
 literal|1
@@ -2304,9 +2305,15 @@ operator|(
 name|tmp
 operator|>>
 operator|(
-literal|8
-operator|*
+operator|(
+name|size
+operator|-
 name|i
+operator|-
+literal|1
+operator|)
+operator|*
+literal|8
 operator|)
 operator|)
 operator|&
