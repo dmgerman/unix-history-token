@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.17 (Berkeley) %G%"
+literal|"@(#)devname.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -58,7 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -71,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
 end_include
 
 begin_function
@@ -147,21 +153,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"warning: %s: %s\n"
+literal|"warning: %s"
 argument_list|,
 name|_PATH_DEVDB
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|failure
@@ -179,10 +175,12 @@ literal|"??"
 operator|)
 return|;
 comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field.  Be 	 * sure to clear any padding that may be found in bkey. 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|bkey
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -234,7 +232,7 @@ operator|,
 operator|&
 name|data
 operator|,
-literal|0L
+literal|0
 operator|)
 condition|?
 literal|"??"
