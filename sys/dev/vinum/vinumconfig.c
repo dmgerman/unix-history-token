@@ -205,6 +205,24 @@ comment|/* don't recurse */
 name|int
 name|was_finishing
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_LOCKED
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* bug catcher */
+name|panic
+argument_list|(
+literal|"throw_rude_remark: called without config lock"
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
