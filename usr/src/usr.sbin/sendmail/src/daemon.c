@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.10
+literal|3.11
 operator|%
 name|G
 operator|%
@@ -75,7 +75,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.10
+literal|3.11
 operator|%
 name|G
 operator|%
@@ -204,6 +204,12 @@ name|s_addr
 operator|=
 literal|0
 expr_stmt|;
+name|SendmailAddress
+operator|.
+name|sin_port
+operator|=
+name|IPPORT_SMTP
+expr_stmt|;
 comment|/* 	**  Try to actually open the connection. 	*/
 ifdef|#
 directive|ifdef
@@ -271,13 +277,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		outfile -- a pointer to a place to put the outfile **			descriptor. **		infile -- ditto for infile. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
+comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		outfile -- a pointer to a place to put the outfile **			descriptor. **		infile -- ditto for infile. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
 name|makeconnection
 argument_list|(
 argument|host
+argument_list|,
+argument|port
 argument_list|,
 argument|outfile
 argument_list|,
@@ -289,6 +297,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|port
 decl_stmt|;
 end_decl_stmt
 
@@ -339,6 +353,22 @@ operator|(
 name|EX_NOHOST
 operator|)
 return|;
+if|if
+condition|(
+name|port
+operator|==
+literal|0
+condition|)
+name|port
+operator|=
+name|IPPORT_SMTP
+expr_stmt|;
+name|SendmailAddress
+operator|.
+name|sin_port
+operator|=
+name|port
+expr_stmt|;
 comment|/* 	**  Try to actually open the connection. 	*/
 ifdef|#
 directive|ifdef
