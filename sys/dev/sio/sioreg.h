@@ -437,6 +437,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|com_emr
+value|com_msr
+end_define
+
+begin_define
+define|#
+directive|define
 name|EMR_EXBUFF
 value|0x04
 end_define

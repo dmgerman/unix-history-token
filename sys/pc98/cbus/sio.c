@@ -504,28 +504,6 @@ parameter_list|)
 value|(((flags)& 0xff000000)>> 24)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|com_emr
-value|com_msr
-end_define
-
-begin_comment
-comment|/* Extension mode register for RSB-2000/3000 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
