@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_lnc_p.c,v 1.10 1999/05/10 22:39:37 paul Exp $  */
+comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_lnc_p.c,v 1.11 1999/07/03 20:17:04 peter Exp $  */
 end_comment
 
 begin_include
@@ -50,6 +50,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_PCNet_PCI
 value|0x20001022
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCHome_PCI
+value|0x20011022
 end_define
 
 begin_decl_stmt
@@ -171,6 +178,15 @@ case|:
 return|return
 operator|(
 literal|"PCNet/PCI Ethernet adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_PCHome_PCI
+case|:
+return|return
+operator|(
+literal|"PCHome/PCI Ethernet adapter"
 operator|)
 return|;
 break|break;

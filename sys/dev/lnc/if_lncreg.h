@@ -49,6 +49,34 @@ name|CSR89
 value|89
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCR49
+value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR32
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR33
+value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR34
+value|34
+end_define
+
 begin_comment
 comment|/* Control and Status Register Masks */
 end_comment
