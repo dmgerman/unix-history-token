@@ -5381,7 +5381,7 @@ argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|MP_WATCHDIG
+name|MP_WATCHDOG
 name|u_int
 name|cpuid
 init|=
