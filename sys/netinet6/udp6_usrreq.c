@@ -1689,6 +1689,11 @@ name|uh
 operator|.
 name|uh_dport
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|ip6cp
 operator|->
 name|ip6c_src
@@ -1721,7 +1726,6 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
 name|sa6_src
 argument_list|,
 literal|0
