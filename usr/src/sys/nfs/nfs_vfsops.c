@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -627,6 +627,11 @@ name|nfsmount
 modifier|*
 name|nmp
 decl_stmt|;
+name|struct
+name|nfsnode
+modifier|*
+name|np
+decl_stmt|;
 name|fsid_t
 name|tfsid
 decl_stmt|;
@@ -1053,6 +1058,36 @@ name|m_fsize
 operator|=
 name|CLBYTES
 expr_stmt|;
+comment|/* 	 * A reference count is needed on the nfsnode representing the 	 * remote root.  If this object is not persistent, then backward 	 * traversals of the mount point (i.e. "..") will not work if 	 * the nfsnode gets flushed out of the cache. Ufs does not have 	 * this problem, because one can identify root inodes by their 	 * number == ROOTINO (2). 	 */
+if|if
+condition|(
+name|error
+operator|=
+name|nfs_nget
+argument_list|(
+name|mp
+argument_list|,
+operator|&
+name|nmp
+operator|->
+name|nm_fh
+argument_list|,
+operator|&
+name|np
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+comment|/* 	 * Unlock it, but keep the reference count. 	 */
+name|nfs_unlock
+argument_list|(
+name|NFSTOV
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1129,6 +1164,11 @@ name|nfsreq
 modifier|*
 name|rep2
 decl_stmt|;
+name|struct
+name|nfsnode
+modifier|*
+name|np
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1173,7 +1213,47 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* 	 * Goes something like this.. 	 * - Call vflush() to clear out vnodes for this file system 	 * - Flush out lookup cache 	 * - Close the socket 	 * - Free up the data structures 	 */
+comment|/* 	 * Goes something like this.. 	 * - Decrement reference on the nfsnode representing remote root. 	 *   Must do this first, otherwise vflush will return EBUSY. 	 * - Call vflush() to clear out vnodes for this file system 	 * - Flush out lookup cache 	 * - Close the socket 	 * - Free up the data structures 	 */
+comment|/* 	 * We need to decrement the ref. count on the nfsnode representing 	 * the remote root.  See comment in mountnfs().  The VFS unmount() 	 * has done vput on this vnode, otherwise we would get deadlock! 	 */
+if|if
+condition|(
+name|error
+operator|=
+name|nfs_nget
+argument_list|(
+name|mp
+argument_list|,
+operator|&
+name|nmp
+operator|->
+name|nm_fh
+argument_list|,
+operator|&
+name|np
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 	 * Get rid of two reference counts, and unlock it on the second. 	 */
+name|vrele
+argument_list|(
+name|NFSTOV
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|NFSTOV
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
