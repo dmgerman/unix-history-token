@@ -812,6 +812,18 @@ literal|"DWL-120 Wireless adapter"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ATMEL
+block|,
+name|USB_PRODUCT_ATMEL_BW002
+block|,
+literal|0
+block|,
+literal|"Atmel"
+block|,
+literal|"BW002 Wireless adapter"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_AVISION
 block|,
 name|USB_PRODUCT_AVISION_1200U

@@ -4074,6 +4074,17 @@ begin_comment
 comment|/* DWL-120 Wireless adapter */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ATMEL_BW002
+value|0x7605
+end_define
+
+begin_comment
+comment|/* BW002 Wireless adapter */
+end_comment
+
 begin_comment
 comment|/* Avision products */
 end_comment
