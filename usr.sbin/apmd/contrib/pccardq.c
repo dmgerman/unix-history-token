@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: pccardq.c,v 1.2 1999/06/08 15:18:52 koie Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

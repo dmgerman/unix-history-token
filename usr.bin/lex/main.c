@@ -32,7 +32,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/lex/main.c,v 1.3 1996/06/19 20:47:29 nate Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

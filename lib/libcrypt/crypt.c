@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/lib/libcrypt/crypt.c,v 1.9 1999/01/23 08:27:36 markm Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * $Header: /src/NTP/REPOSITORY/v3/parse/clk_trimble.c,v 3.9 1994/02/02 17:45:27 kardel Exp $  *  * Trimble SV6 clock support  */
+comment|/*  * $FreeBSD$  *  * Trimble SV6 clock support  */
 end_comment
 
 begin_include
@@ -585,7 +585,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_TRIMTAIP) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * $Log: clk_trimble.c,v $  * Revision 3.9  1994/02/02  17:45:27  kardel  * rcs ids fixed  *  * Revision 3.7  1994/01/25  19:05:17  kardel  * 94/01/23 reconcilation  *  * Revision 3.6  1993/10/30  09:44:45  kardel  * conditional compilation flag cleanup  *  * Revision 3.5  1993/10/09  15:01:35  kardel  * file structure unified  *  * revision 3.4  * date: 1993/10/08 14:44:51;  author: kardel;  * trimble - initial working version  *  * revision 3.3  * date: 1993/10/03 19:10:50;  author: kardel;  * restructured I/O handling  *  * revision 3.2  * date: 1993/09/27 21:07:17;  author: kardel;  * Trimble alpha integration  *  * revision 3.1  * date: 1993/09/26 23:40:29;  author: kardel;  * new parse driver logic  *  */
+comment|/*  * History:  *  * $Log: clk_trimtaip.c,v $  * Revision 1.1.1.1  1994/09/29 23:01:31  wollman  * xntp 3.4e from Dave Mills @ UDel  *  * Revision 3.9  1994/02/02  17:45:27  kardel  * rcs ids fixed  *  * Revision 3.7  1994/01/25  19:05:17  kardel  * 94/01/23 reconcilation  *  * Revision 3.6  1993/10/30  09:44:45  kardel  * conditional compilation flag cleanup  *  * Revision 3.5  1993/10/09  15:01:35  kardel  * file structure unified  *  * revision 3.4  * date: 1993/10/08 14:44:51;  author: kardel;  * trimble - initial working version  *  * revision 3.3  * date: 1993/10/03 19:10:50;  author: kardel;  * restructured I/O handling  *  * revision 3.2  * date: 1993/09/27 21:07:17;  author: kardel;  * Trimble alpha integration  *  * revision 3.1  * date: 1993/09/26 23:40:29;  author: kardel;  * new parse driver logic  *  */
 end_comment
 
 end_unit

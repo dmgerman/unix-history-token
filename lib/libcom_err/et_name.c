@@ -45,7 +45,7 @@ name|char
 name|rcsid_et_name_c
 index|[]
 init|=
-literal|"$Header: et_name.c,v 1.7 89/01/01 06:14:56 raeburn Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

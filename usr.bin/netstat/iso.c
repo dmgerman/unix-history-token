@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Header: /home/ncvs/src/usr.bin/netstat/iso.c,v 1.1.1.1 1994/05/27 12:32:25 rgrimes Exp $  * $Source: /home/ncvs/src/usr.bin/netstat/iso.c,v $  */
+comment|/*  * $FreeBSD$  * $Source: /home/ncvs/src/usr.bin/netstat/iso.c,v $  */
 end_comment
 
 begin_comment

@@ -25,7 +25,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|static char rcsid[] = "$Header: /home/ncvs/src/secure/lib/libcrypt/crypt-md5.c,v 1.5 1999/01/23 08:26:01 markm Exp $";
+unit|static const char rcsid[] =   "$FreeBSD$";
 endif|#
 directive|endif
 end_endif
