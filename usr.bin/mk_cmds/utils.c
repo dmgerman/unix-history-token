@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -32,14 +32,6 @@ modifier|*
 name|output_file
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|int
-name|exit
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|char
