@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.16 (Berkeley) %G%"
+literal|"@(#)main.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -934,7 +934,7 @@ name|argv
 condition|)
 name|Punt
 argument_list|(
-literal|"Bogus argument in MainParseArgs"
+literal|"illegal (null) argument."
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1000,6 +1000,13 @@ operator|++
 name|line
 control|)
 empty_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|line
+condition|)
+return|return;
 name|argv
 operator|=
 name|brk_string
@@ -1053,6 +1060,9 @@ name|stat
 name|sb
 decl_stmt|;
 name|char
+modifier|*
+name|p
+decl_stmt|,
 modifier|*
 name|path
 decl_stmt|,
@@ -1563,6 +1573,22 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 comment|/* Install all the flags into the MAKE envariable. */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|Var_Value
+argument_list|(
+name|MAKEFLAGS
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+operator|)
+operator|&&
+operator|*
+name|p
+condition|)
 ifdef|#
 directive|ifdef
 name|POSIX
@@ -1570,12 +1596,9 @@ name|setenv
 argument_list|(
 literal|"MAKEFLAGS"
 argument_list|,
-name|Var_Value
-argument_list|(
-name|MAKEFLAGS
+name|p
 argument_list|,
-name|VAR_GLOBAL
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
 else|#
@@ -1584,12 +1607,9 @@ name|setenv
 argument_list|(
 literal|"MAKE"
 argument_list|,
-name|Var_Value
-argument_list|(
-name|MAKEFLAGS
+name|p
 argument_list|,
-name|VAR_GLOBAL
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2234,6 +2254,16 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"make: "
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
