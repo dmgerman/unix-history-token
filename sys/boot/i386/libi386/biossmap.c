@@ -411,18 +411,6 @@ argument_list|,
 name|smapbase
 argument_list|)
 expr_stmt|;
-comment|/* Temporary compatability with older development kernels */
-name|file_addmetadata
-argument_list|(
-name|kfp
-argument_list|,
-literal|0x0009
-argument_list|,
-name|len
-argument_list|,
-name|smapbase
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
