@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regcomp.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regcomp.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regcomp.c	5.2 (Berkeley) %G%"
+literal|"@(#)regcomp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,12 +164,6 @@ comment|/* -> ) ([0] unused) */
 block|}
 struct|;
 end_struct
-
-begin_include
-include|#
-directive|include
-file|"regcomp.ih"
-end_include
 
 begin_decl_stmt
 specifier|static
@@ -413,8 +407,632 @@ parameter_list|)
 value|(p->slen -= (n))
 end_define
 
+begin_decl_stmt
+specifier|static
+name|cset
+modifier|*
+name|allocset
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|bothcases
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|categorize
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+expr|struct
+name|re_guts
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|doemit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|sop
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dofwd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|sopno
+operator|,
+name|sop
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|doinsert
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|sop
+operator|,
+name|size_t
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|sopno
+name|dupl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|sopno
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|enlarge
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|findmust
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+expr|struct
+name|re_guts
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|freezeset
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|isinsets
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|re_guts
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|mcadd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+modifier|*
+name|mcfind
+name|__P
+argument_list|(
+operator|(
+name|cset
+operator|*
+operator|,
+name|u_int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mcin
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|,
+name|u_int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|mcinvert
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|mcsub
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|,
+name|u_int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|nonnewline
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ordinary
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+name|othercase
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_b_cclass
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+name|p_b_coll_elem
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_b_eclass
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+name|p_b_symbol
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_b_term
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|cset
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_bracket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_bre
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|p_count
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_ere
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|p_ere_exp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|p_simp_re
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|sopno
+name|pluscount
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+expr|struct
+name|re_guts
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|repeat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|sopno
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|samesets
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|re_guts
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|seterr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|stripsnug
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|parse
+operator|*
+operator|,
+expr|struct
+name|re_guts
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  - regcomp - interface for parser and compilation  = extern int regcomp(regex_t *preg, const char *pattern, int cflags);  = #define	REG_EXTENDED	001  = #define	REG_ICASE	002  = #define	REG_NOSUB	004  = #define	REG_NEWLINE	010  */
+comment|/*  - regcomp - interface for parser and compilation  */
 end_comment
 
 begin_function
@@ -885,7 +1503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(register struct parse *p, uchar stop);  */
+comment|/*  - p_ere - ERE parser top level, concatenation and alternation  */
 end_comment
 
 begin_function
@@ -903,7 +1521,7 @@ name|parse
 modifier|*
 name|p
 decl_stmt|;
-name|uchar
+name|u_int
 name|stop
 decl_stmt|;
 comment|/* character this ERE should end at */
@@ -1083,7 +1701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_ere_exp - parse one subERE, an atom possibly followed by a repetition op  == static void p_ere_exp(register struct parse *p);  */
+comment|/*  - p_ere_exp - parse one subERE, an atom possibly followed by a repetition op  */
 end_comment
 
 begin_function
@@ -1738,7 +2356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(register struct parse *p, register uchar end1, \  ==	register uchar end2);  * Giving end1 as '\0' essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  The  * only undesirable side effect is that '$' gets included as a character  * category in such cases.  This is fairly harmless; not worth fixing.  * The amount of lookahead needed to avoid this kludge is excessive,  * especially since things like "$*" appear to be legal. xxx  */
+comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  * Giving end1 as '\0' essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  The  * only undesirable side effect is that '$' gets included as a character  * category in such cases.  This is fairly harmless; not worth fixing.  * The amount of lookahead needed to avoid this kludge is excessive,  * especially since things like "$*" appear to be legal. xxx  */
 end_comment
 
 begin_function
@@ -1759,12 +2377,12 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 name|end1
 decl_stmt|;
 comment|/* first terminating character */
 specifier|register
-name|uchar
+name|u_int
 name|end2
 decl_stmt|;
 comment|/* second terminating character */
@@ -1886,7 +2504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_simp_re - parse a simple RE, an atom possibly followed by a repetition  == static int p_simp_re(register struct parse *p, int starordinary);  */
+comment|/*  - p_simp_re - parse a simple RE, an atom possibly followed by a repetition  */
 end_comment
 
 begin_function
@@ -2589,7 +3207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_count - parse a repetition count  == static int p_count(register struct parse *p);  */
+comment|/*  - p_count - parse a repetition count  */
 end_comment
 
 begin_function
@@ -2671,7 +3289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_bracket - parse a bracketed character list  == static void p_bracket(register struct parse *p);  *  * Note a significant property of this code:  if the allocset() did SETERROR,  * no set operations are done.  */
+comment|/*  - p_bracket - parse a bracketed character list  *  * Note a significant property of this code:  if the allocset() did SETERROR,  * no set operations are done.  */
 end_comment
 
 begin_function
@@ -2901,7 +3519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_term - parse one term of a bracketed character list  == static void p_b_term(register struct parse *p, register cset *cs);  */
+comment|/*  - p_b_term - parse one term of a bracketed character list  */
 end_comment
 
 begin_function
@@ -3233,7 +3851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_cclass - parse a character-class name and deal with it  == static void p_b_cclass(register struct parse *p, register cset *cs);  */
+comment|/*  - p_b_cclass - parse a character-class name and deal with it  */
 end_comment
 
 begin_function
@@ -3445,7 +4063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_eclass - parse an equivalence-class name and deal with it  == static void p_b_eclass(register struct parse *p, register cset *cs);  *  * This implementation is incomplete. xxx  */
+comment|/*  - p_b_eclass - parse an equivalence-class name and deal with it  *  * This implementation is incomplete. xxx  */
 end_comment
 
 begin_function
@@ -3493,7 +4111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_symbol - parse a character or [..]ed multicharacter collating symbol  == static uchar p_b_symbol(register struct parse *p);  */
+comment|/*  - p_b_symbol - parse a character or [..]ed multicharacter collating symbol  */
 end_comment
 
 begin_function
@@ -3578,7 +4196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_coll_elem - parse a collating-element name and look it up  == static uchar p_b_coll_elem(register struct parse *p, uchar endc);  */
+comment|/*  - p_b_coll_elem - parse a collating-element name and look it up  */
 end_comment
 
 begin_function
@@ -3597,7 +4215,7 @@ name|parse
 modifier|*
 name|p
 decl_stmt|;
-name|uchar
+name|u_int
 name|endc
 decl_stmt|;
 comment|/* name ended by endc,']' */
@@ -3752,7 +4370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - othercase - return the case counterpart of an alphabetic  == static uchar othercase(uchar ch);  */
+comment|/*  - othercase - return the case counterpart of an alphabetic  */
 end_comment
 
 begin_function
@@ -3762,7 +4380,7 @@ name|othercase
 parameter_list|(
 name|ch
 parameter_list|)
-name|uchar
+name|u_int
 name|ch
 decl_stmt|;
 block|{
@@ -3816,7 +4434,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - bothcases - emit a dualcase version of a character  == static void bothcases(register struct parse *p, uchar ch);  *  * Boy, is this implementation ever a kludge...  */
+comment|/*  - bothcases - emit a dualcase version of a character  *  * Boy, is this implementation ever a kludge...  */
 end_comment
 
 begin_function
@@ -3834,7 +4452,7 @@ name|parse
 modifier|*
 name|p
 decl_stmt|;
-name|uchar
+name|u_int
 name|ch
 decl_stmt|;
 block|{
@@ -3908,7 +4526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - ordinary - emit an ordinary character  == static void ordinary(register struct parse *p, register uchar ch);  */
+comment|/*  - ordinary - emit an ordinary character  */
 end_comment
 
 begin_function
@@ -3927,7 +4545,7 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 name|ch
 decl_stmt|;
 block|{
@@ -4001,7 +4619,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - nonnewline - emit REG_NEWLINE version of OANY  == static void nonnewline(register struct parse *p);  *  * Boy, is this implementation ever a kludge...  */
+comment|/*  - nonnewline - emit REG_NEWLINE version of OANY  *  * Boy, is this implementation ever a kludge...  */
 end_comment
 
 begin_function
@@ -4095,7 +4713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - repeat - generate code for a bounded repetition, recursively if needed  == static void repeat(register struct parse *p, sopno start, int from, int to);  */
+comment|/*  - repeat - generate code for a bounded repetition, recursively if needed  */
 end_comment
 
 begin_function
@@ -4458,7 +5076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - seterr - set an error condition  == static int seterr(register struct parse *p, int e);  */
+comment|/*  - seterr - set an error condition  */
 end_comment
 
 begin_function
@@ -4513,7 +5131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - allocset - allocate a set of characters for []  == static cset *allocset(register struct parse *p);  */
+comment|/*  - allocset - allocate a set of characters for []  */
 end_comment
 
 begin_function
@@ -4862,7 +5480,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - freezeset - final processing on a set of characters  == static int freezeset(register struct parse *p, register cset *cs);  *  * The main task here is merging identical sets.  This is usually a waste  * of time (although the hash code minimizes the overhead), but can win  * big if REG_ICASE is being used.  REG_ICASE, by the way, is why the hash  * is done using addition rather than xor -- all ASCII [aA] sets xor to  * the same value!  */
+comment|/*  - freezeset - final processing on a set of characters  *  * The main task here is merging identical sets.  This is usually a waste  * of time (although the hash code minimizes the overhead), but can win  * big if REG_ICASE is being used.  REG_ICASE, by the way, is why the hash  * is done using addition rather than xor -- all ASCII [aA] sets xor to  * the same value!  */
 end_comment
 
 begin_function
@@ -5085,7 +5703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcadd - add a collating element to a cset  == static void mcadd(register struct parse *p, register cset *cs, \  ==	register uchar *cp);  */
+comment|/*  - mcadd - add a collating element to a cset  */
 end_comment
 
 begin_function
@@ -5241,7 +5859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcsub - subtract a collating element from a cset  == static void mcsub(register struct parse *p, register cset *cs, \  ==	register uchar *cp);  */
+comment|/*  - mcsub - subtract a collating element from a cset  */
 end_comment
 
 begin_function
@@ -5267,7 +5885,7 @@ modifier|*
 name|cs
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 modifier|*
 name|cp
 decl_stmt|;
@@ -5410,7 +6028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcin - is a collating element in a cset?  == static int mcin(register struct parse *p, register cset *cs, \  ==	register uchar *cp);  */
+comment|/*  - mcin - is a collating element in a cset?  */
 end_comment
 
 begin_function
@@ -5436,7 +6054,7 @@ modifier|*
 name|cs
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 modifier|*
 name|cp
 decl_stmt|;
@@ -5457,7 +6075,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcfind - find a collating element in a cset  == static uchar *mcfind(register cset *cs, register uchar *cp);  */
+comment|/*  - mcfind - find a collating element in a cset  */
 end_comment
 
 begin_function
@@ -5476,7 +6094,7 @@ modifier|*
 name|cs
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 modifier|*
 name|cp
 decl_stmt|;
@@ -5558,7 +6176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - mcinvert - invert the list of collating elements in a cset  == static void mcinvert(register struct parse *p, register cset *cs);  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */
+comment|/*  - mcinvert - invert the list of collating elements in a cset  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */
 end_comment
 
 begin_function
@@ -5596,7 +6214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - isinsets - is this character in any sets?  == static int isinsets(register struct re_guts *g, uchar c);  */
+comment|/*  - isinsets - is this character in any sets?  */
 end_comment
 
 begin_function
@@ -5615,7 +6233,7 @@ name|re_guts
 modifier|*
 name|g
 decl_stmt|;
-name|uchar
+name|u_int
 name|c
 decl_stmt|;
 block|{
@@ -5694,7 +6312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - samesets - are these two characters in exactly the same sets?  == static int samesets(register struct re_guts *g, uchar c1, uchar c2);  */
+comment|/*  - samesets - are these two characters in exactly the same sets?  */
 end_comment
 
 begin_function
@@ -5716,11 +6334,11 @@ modifier|*
 name|g
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 name|c1
 decl_stmt|;
 specifier|register
-name|uchar
+name|u_int
 name|c2
 decl_stmt|;
 block|{
@@ -5802,7 +6420,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - categorize - sort out character categories  == static void categorize(struct parse *p, register struct re_guts *g);  */
+comment|/*  - categorize - sort out character categories  */
 end_comment
 
 begin_function
@@ -5950,7 +6568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dupl - emit a duplicate of a bunch of sops  == static sopno dupl(register struct parse *p, sopno start, sopno finish);  */
+comment|/*  - dupl - emit a duplicate of a bunch of sops  */
 end_comment
 
 begin_function
@@ -6095,7 +6713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - doemit - emit a strip operator  == static void doemit(register struct parse *p, sop op, size_t opnd);  *  * It might seem better to implement this as a macro with a function as  * hard-case backup, but it's just too big and messy unless there are  * some changes to the data structures.  Maybe later.  */
+comment|/*  - doemit - emit a strip operator  *  * It might seem better to implement this as a macro with a function as  * hard-case backup, but it's just too big and messy unless there are  * some changes to the data structures.  Maybe later.  */
 end_comment
 
 begin_function
@@ -6204,7 +6822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - doinsert - insert a sop into the strip  == static void doinsert(register struct parse *p, sop op, size_t opnd, sopno pos);  */
+comment|/*  - doinsert - insert a sop into the strip  */
 end_comment
 
 begin_function
@@ -6411,7 +7029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dofwd - complete a forward reference  == static void dofwd(register struct parse *p, sopno pos, sop value);  */
+comment|/*  - dofwd - complete a forward reference  */
 end_comment
 
 begin_function
@@ -6481,7 +7099,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - enlarge - enlarge the strip  == static void enlarge(register struct parse *p, sopno size);  */
+comment|/*  - enlarge - enlarge the strip  */
 end_comment
 
 begin_function
@@ -6568,7 +7186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - stripsnug - compact the strip  == static void stripsnug(register struct parse *p, register struct re_guts *g);  */
+comment|/*  - stripsnug - compact the strip  */
 end_comment
 
 begin_function
@@ -6656,7 +7274,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - findmust - fill in must and mlen with longest mandatory literal string  == static void findmust(register struct parse *p, register struct re_guts *g);  *  * This algorithm could do fancy things like analyzing the operands of |  * for common subsequences.  Someday.  This code is simple and finds most  * of the interesting cases.  *  * Note that must and mlen got initialized during setup.  */
+comment|/*  - findmust - fill in must and mlen with longest mandatory literal string  *  * This algorithm could do fancy things like analyzing the operands of |  * for common subsequences.  Someday.  This code is simple and finds most  * of the interesting cases.  *  * Note that must and mlen got initialized during setup.  */
 end_comment
 
 begin_function
@@ -7004,7 +7622,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - pluscount - count + nesting  == static sopno pluscount(register struct parse *p, register struct re_guts *g);  */
+comment|/*  - pluscount - count + nesting  */
 end_comment
 
 begin_function

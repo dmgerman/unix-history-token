@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)engine.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)engine.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -238,12 +238,6 @@ block|}
 struct|;
 end_struct
 
-begin_include
-include|#
-directive|include
-file|"engine.ih"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -353,8 +347,267 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|uchar
+modifier|*
+name|backref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|match
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|sopno
+operator|,
+name|sopno
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+modifier|*
+name|dissect
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|match
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|sopno
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|states
+name|expand
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|re_guts
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|states
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+modifier|*
+name|fast
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|match
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|sopno
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|matcher
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|re_guts
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|size_t
+operator|,
+name|regmatch_t
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uchar
+modifier|*
+name|slow
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|match
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|sopno
+operator|,
+name|sopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|states
+name|step
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|re_guts
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|states
+operator|,
+name|u_int
+operator|,
+name|states
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REDEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|at
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|match
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|uchar
+operator|*
+operator|,
+name|sopno
+operator|,
+name|stopno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pchar
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|print
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|match
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|states
+operator|,
+name|u_int
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  - matcher - the actual matching engine  == static int matcher(register struct re_guts *g, uchar *string, \  ==	size_t nmatch, regmatch_t pmatch[], int eflags);  */
+comment|/*  - matcher - the actual matching engine  */
 end_comment
 
 begin_function
@@ -1417,7 +1670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - dissect - figure out what matched what, no back references  == static uchar *dissect(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst);  */
+comment|/*  - dissect - figure out what matched what, no back references  */
 end_comment
 
 begin_function
@@ -2438,7 +2691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - backref - figure out what matched what, figuring in back references  == static uchar *backref(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst, sopno lev);  */
+comment|/*  - backref - figure out what matched what, figuring in back references  */
 end_comment
 
 begin_function
@@ -3689,7 +3942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - fast - step through the string at top speed  == static uchar *fast(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst);  */
+comment|/*  - fast - step through the string at top speed  */
 end_comment
 
 begin_function
@@ -4122,7 +4375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - slow - step through the string more deliberately  == static uchar *slow(register struct match *m, uchar *start, \  ==	uchar *stop, sopno startst, sopno stopst);  */
+comment|/*  - slow - step through the string more deliberately  */
 end_comment
 
 begin_function
@@ -4517,7 +4770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - expand - return set of states reachable from an initial set  == static states expand(register struct re_guts *g, int start, \  ==	int stop, register states st, int atbol, int ateol);  */
+comment|/*  - expand - return set of states reachable from an initial set  */
 end_comment
 
 begin_function
@@ -5060,7 +5313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - step - map set of states reachable before char to set reachable after  == static states step(register struct re_guts *g, int start, int stop, \  ==	register states bef, uchar ch, register states aft);  */
+comment|/*  - step - map set of states reachable before char to set reachable after  */
 end_comment
 
 begin_function
@@ -5099,7 +5352,7 @@ name|states
 name|bef
 decl_stmt|;
 comment|/* states reachable before */
-name|uchar
+name|u_int
 name|ch
 decl_stmt|;
 specifier|register
@@ -5644,7 +5897,7 @@ name|REDEBUG
 end_ifdef
 
 begin_comment
-comment|/*  - print - print a set of states  == #ifdef REDEBUG  == static void print(struct match *m, char *caption, states st, \  ==	uchar ch, FILE *d);  == #endif  */
+comment|/*  - print - print a set of states  */
 end_comment
 
 begin_function
@@ -5674,7 +5927,7 @@ decl_stmt|;
 name|states
 name|st
 decl_stmt|;
-name|uchar
+name|u_int
 name|ch
 decl_stmt|;
 name|FILE
@@ -5799,7 +6052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   - at - print current situation  == #ifdef REDEBUG  == static void at(struct match *m, char *title, uchar *start, uchar *stop, \  ==						sopno startst, stopno stopst);  == #endif  */
+comment|/*   - at - print current situation  */
 end_comment
 
 begin_function
@@ -5914,7 +6167,7 @@ comment|/* never again */
 end_comment
 
 begin_comment
-comment|/*  - pchar - make a character printable  == #ifdef REDEBUG  == static char *pchar(int ch);  == #endif  *  * Is this identical to regchar() over in debug.c?  Well, yes.  But a  * duplicate here avoids having a debugging-capable regexec.o tied to  * a matching debug.o, and this is convenient.  It all disappears in  * the non-debug compilation anyway, so it doesn't matter much.  */
+comment|/*  - pchar - make a character printable  *  * Is this identical to regchar() over in debug.c?  Well, yes.  But a  * duplicate here avoids having a debugging-capable regexec.o tied to  * a matching debug.o, and this is convenient.  It all disappears in  * the non-debug compilation anyway, so it doesn't matter much.  */
 end_comment
 
 begin_function

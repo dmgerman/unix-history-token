@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regexec.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regexec.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regexec.c	5.2 (Berkeley) %G%"
+literal|"@(#)regexec.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -693,7 +693,7 @@ file|"engine.c"
 end_include
 
 begin_comment
-comment|/*  - regexec - interface for matching  = extern int regexec(const regex_t *preg, const char *string, size_t nmatch, \  =					regmatch_t pmatch[], int eflags);  = #define	REG_NOTBOL	00001  = #define	REG_NOTEOL	00002  = #define	REG_STARTEND	00004  = #define	REG_TRACE	00400  = #define	REG_LARGE	01000  = #define	REG_BACKR	02000  *  * We put this here so we can exploit knowledge of the state representation  * when choosing which matcher to call.  Also, by this point the matchers  * have been prototyped.  */
+comment|/*  - regexec - interface for matching  *  * We put this here so we can exploit knowledge of the state representation  * when choosing which matcher to call.  Also, by this point the matchers  * have been prototyped.  */
 end_comment
 
 begin_function
