@@ -9,13 +9,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)cmdtab.c	8.1 (Berkeley) 6/6/93"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mode.h"
 end_include
 
 begin_decl_stmt
@@ -64,6 +75,8 @@ name|closepigs
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|CF_LOADAV
 block|}
 block|,
@@ -81,6 +94,8 @@ block|,
 name|openswap
 block|,
 name|closeswap
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -104,6 +119,8 @@ name|closembufs
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|CF_LOADAV
 block|}
 block|,
@@ -123,6 +140,8 @@ block|,
 name|closeiostat
 block|,
 name|cmdiostat
+block|,
+literal|0
 block|,
 name|CF_LOADAV
 block|}
@@ -145,6 +164,8 @@ block|,
 name|cmdkre
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -163,6 +184,30 @@ block|,
 name|closenetstat
 block|,
 name|cmdnetstat
+block|,
+literal|0
+block|,
+name|CF_LOADAV
+block|}
+block|,
+block|{
+literal|"icmp"
+block|,
+name|showicmp
+block|,
+name|fetchicmp
+block|,
+name|labelicmp
+block|,
+name|initicmp
+block|,
+name|openicmp
+block|,
+name|closeicmp
+block|,
+name|cmdmode
+block|,
+name|reseticmp
 block|,
 name|CF_LOADAV
 block|}

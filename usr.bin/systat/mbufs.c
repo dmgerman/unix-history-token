@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mbufs.c,v 1.5 1997/02/24 20:59:03 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -758,7 +764,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return;
+name|printw
+argument_list|(
+literal|"sysctl: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
