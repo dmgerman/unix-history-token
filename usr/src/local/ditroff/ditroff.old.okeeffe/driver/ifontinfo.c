@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"ifontinfo.c	1.5	(Berkeley)	85/02/26"
+literal|"ifontinfo.c	1.6	(Berkeley)	86/01/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -716,19 +716,6 @@ name|p_res
 operator|=
 name|rd2
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|.
-name|p_res
-operator|!=
-name|RES
-condition|)
-name|error
-argument_list|(
-literal|"wrong resolution in Font file."
-argument_list|)
 expr_stmt|;
 name|i
 operator|=
