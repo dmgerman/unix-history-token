@@ -475,7 +475,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOADER_NET_SUPPORT
+name|LOADER_NFS_SUPPORT
 operator|&
 name|nfs_fsops
 block|,
