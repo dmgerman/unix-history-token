@@ -4072,22 +4072,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_PHYS
-operator|)
-argument_list|,
-operator|(
-literal|"nwfs physio"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bp

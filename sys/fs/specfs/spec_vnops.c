@@ -3314,7 +3314,6 @@ name|b_iodone
 operator|=
 name|bdone
 expr_stmt|;
-comment|/* B_PHYS is not set, but it is nice to fill this in. */
 name|KASSERT
 argument_list|(
 name|bp
