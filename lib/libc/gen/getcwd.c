@@ -833,7 +833,7 @@ condition|(
 operator|(
 name|pt
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|pt
 argument_list|,
