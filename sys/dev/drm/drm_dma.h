@@ -255,7 +255,7 @@ index|[
 name|j
 index|]
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|DRM
 argument_list|(

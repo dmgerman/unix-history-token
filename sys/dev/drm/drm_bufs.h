@@ -1263,7 +1263,7 @@ index|[
 name|i
 index|]
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|DRM
 argument_list|(
@@ -2574,7 +2574,7 @@ if|if
 condition|(
 name|vaddr
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* Set count correctly so we free the proper amount. */
