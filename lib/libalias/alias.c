@@ -103,13 +103,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FTP_CONTROL_PORT_NUMBER
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
 name|IRC_CONTROL_PORT_NUMBER_1
 value|6667
 end_define
