@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.2 1995/05/30 05:41:38 rgrimes Exp $"
+literal|"$Id: svc_tcp.c,v 1.3 1995/10/22 14:51:38 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1258,13 +1258,13 @@ operator|&
 name|readfds
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL
