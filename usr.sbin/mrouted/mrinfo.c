@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mrinfo.c,v 1.9 1996/10/01 23:14:35 fenner Exp $"
+literal|"@(#) $Id: mrinfo.c,v 1.4.4.2 1996/11/12 18:18:03 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,6 +1716,15 @@ condition|(
 name|hp
 operator|==
 name|NULL
+operator|||
+name|hp
+operator|->
+name|h_length
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|target_addr
+argument_list|)
 condition|)
 block|{
 name|fprintf

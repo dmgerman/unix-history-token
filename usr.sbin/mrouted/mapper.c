@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.7 1996/10/01 23:14:34 fenner Exp $  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.3.4.2 1996/11/12 18:17:47 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -4291,6 +4291,15 @@ decl_stmt|;
 if|if
 condition|(
 name|e
+operator|&&
+name|e
+operator|->
+name|h_length
+operator|==
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
 condition|)
 name|memcpy
 argument_list|(
