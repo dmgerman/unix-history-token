@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixSock.c --  *  *	This file contains Unix-specific socket related code.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixSock.c 1.5 96/04/04 15:28:39  */
+comment|/*   * tclUnixSock.c --  *  *	This file contains Unix-specific socket related code.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixSock.c 1.6 96/08/08 08:48:51  */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_GetHostName --  *  *	Get the network name for this machine, in a system dependent way.  *  * Results:  *	A string containing the network name for this machine.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_GetHostName --  *  *	Get the network name for this machine, in a system dependent way.  *  * Results:  *	A string containing the network name for this machine, or  *	an empty string if we can't figure out the name.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -71,6 +71,9 @@ modifier|*
 name|Tcl_GetHostName
 parameter_list|()
 block|{
+ifndef|#
+directive|ifndef
+name|NO_UNAME
 name|struct
 name|utsname
 name|u
@@ -80,6 +83,8 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|hostnameInited
@@ -89,6 +94,9 @@ return|return
 name|hostname
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_UNAME
 if|if
 condition|(
 name|uname
@@ -147,12 +155,44 @@ return|return
 name|hostname
 return|;
 block|}
+else|#
+directive|else
+comment|/*      * Uname doesn't exist; try gethostname instead.      */
+if|if
+condition|(
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
+operator|>
+operator|-
+literal|1
+condition|)
+block|{
+name|hostnameInited
+operator|=
+literal|1
+expr_stmt|;
 return|return
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|hostname
+return|;
+block|}
+endif|#
+directive|endif
+name|hostname
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|hostname
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * panic.c --  *  *	Source code for the "panic" library procedure for Tcl;  *	individual applications will probably override this with  *	an application-specific panic procedure.  *  * Copyright (c) 1988-1993 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) panic.c 1.11 96/02/15 11:50:29  */
+comment|/*   * panic.c --  *  *	Source code for the "panic" library procedure for Tcl;  *	individual applications will probably override this with  *	an application-specific panic procedure.  *  * Copyright (c) 1988-1993 The Regents of the University of California.  * Copyright (c) 1994 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) panic.c 1.15 96/09/12 14:55:25  */
 end_comment
 
 begin_include
@@ -37,11 +37,71 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|panic
+value|panicDummy
+end_define
+
 begin_include
 include|#
 directive|include
 file|"tcl.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|panic
+end_undef
+
+begin_decl_stmt
+name|EXTERN
+name|void
+name|panic
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|char
+operator|*
+name|format
+operator|,
+name|char
+operator|*
+name|arg1
+operator|,
+name|char
+operator|*
+name|arg2
+operator|,
+name|char
+operator|*
+name|arg3
+operator|,
+name|char
+operator|*
+name|arg4
+operator|,
+name|char
+operator|*
+name|arg5
+operator|,
+name|char
+operator|*
+name|arg6
+operator|,
+name|char
+operator|*
+name|arg7
+operator|,
+name|char
+operator|*
+name|arg8
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The panicProc variable contains a pointer to an application  * specific panic procedure.  */

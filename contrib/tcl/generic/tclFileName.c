@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclFileName.c --  *  *	This file contains routines for converting file names betwen  *	native and network form.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFileName.c 1.23 96/04/19 12:34:28  */
+comment|/*   * tclFileName.c --  *  *	This file contains routines for converting file names betwen  *	native and network form.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFileName.c 1.28 97/05/14 13:23:48  */
 end_comment
 
 begin_include
@@ -272,6 +272,14 @@ operator|)
 name|winRootPatternPtr
 argument_list|)
 expr_stmt|;
+name|winRootPatternPtr
+operator|=
+operator|(
+name|regexp
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -289,7 +297,19 @@ operator|)
 name|macRootPatternPtr
 argument_list|)
 expr_stmt|;
+name|macRootPatternPtr
+operator|=
+operator|(
+name|regexp
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 block|}
+name|initialized
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -3085,7 +3105,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_TranslateFileName --  *  *	Converts a file name into a form usable by the native system  *	interfaces.  If the name starts with a tilde, it will produce  *	a name where the tilde and following characters have been  *	replaced by the home directory location for the named user.  *  * Results:  *	The result is a pointer to a static string containing  *	the new name.  If there was an error in processing the  *	name, then an error message is left in interp->result  *	and the return value is NULL.  The result will be stored  *	in bufferPtr; the caller must call Tcl_DStringFree(bufferPtr)  *	to free the name if the return value was not NULL.  *  * Side effects:  *	Information may be left in bufferPtr.  *  *---------------------------------------------------------------------- */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_TranslateFileName --  *  *	Converts a file name into a form usable by the native system  *	interfaces.  If the name starts with a tilde, it will produce  *	a name where the tilde and following characters have been  *	replaced by the home directory location for the named user.  *  * Results:  *	The result is a pointer to a static string containing  *	the new name.  If there was an error in processing the  *	name, then an error message is left in interp->result  *	and the return value is NULL.  The result will be stored  *	in bufferPtr; the caller must call Tcl_DStringFree(bufferPtr)  *	to free the name if the return value was not NULL.  *  * Side effects:  *	Information may be left in bufferPtr.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3507,6 +3527,37 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/*      * Back up to the first period in a series of contiguous dots.      * This is needed so foo..o will be split on the first dot.      */
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+operator|(
+name|p
+operator|>
+name|name
+operator|)
+operator|&&
+operator|*
+operator|(
+name|p
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'.'
+condition|)
+block|{
+name|p
+operator|--
+expr_stmt|;
+block|}
+block|}
 return|return
 name|p
 return|;
@@ -3897,12 +3948,6 @@ name|i
 operator|++
 control|)
 block|{
-name|head
-operator|=
-name|tail
-operator|=
-literal|""
-expr_stmt|;
 switch|switch
 condition|(
 name|tclPlatform
@@ -4535,8 +4580,6 @@ decl_stmt|;
 comment|/* The unexpanded remainder of the path. */
 block|{
 name|int
-name|level
-decl_stmt|,
 name|baseLength
 decl_stmt|,
 name|quoted
@@ -4560,6 +4603,9 @@ name|closeBrace
 decl_stmt|,
 modifier|*
 name|name
+decl_stmt|,
+modifier|*
+name|firstSpecialChar
 decl_stmt|,
 name|savedChar
 decl_stmt|;
@@ -4982,10 +5028,6 @@ name|closeBrace
 operator|=
 name|NULL
 expr_stmt|;
-name|level
-operator|=
-literal|0
-expr_stmt|;
 name|quoted
 operator|=
 literal|0
@@ -5098,16 +5140,14 @@ expr_stmt|;
 comment|/* Balanced braces. */
 break|break;
 block|}
-name|Tcl_ResetResult
+name|Tcl_SetResult
 argument_list|(
 name|interp
-argument_list|)
-expr_stmt|;
-name|interp
-operator|->
-name|result
-operator|=
+argument_list|,
 literal|"unmatched open-brace in file name"
+argument_list|,
+name|TCL_STATIC
+argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR
@@ -5122,16 +5162,14 @@ operator|==
 literal|'}'
 condition|)
 block|{
-name|Tcl_ResetResult
+name|Tcl_SetResult
 argument_list|(
 name|interp
-argument_list|)
-expr_stmt|;
-name|interp
-operator|->
-name|result
-operator|=
+argument_list|,
 literal|"unmatched close-brace in file name"
+argument_list|,
+name|TCL_STATIC
+argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR
@@ -5301,7 +5339,15 @@ return|return
 name|result
 return|;
 block|}
-comment|/*      * At this point, there are no more brace substitutions to perform on      * this path component.  The variable p is pointing at a quoted or      * unquoted directory separator or the end of the string.  So we need      * to check for special globbing characters in the current pattern.      */
+comment|/*      * At this point, there are no more brace substitutions to perform on      * this path component.  The variable p is pointing at a quoted or      * unquoted directory separator or the end of the string.  So we need      * to check for special globbing characters in the current pattern.      * We avoid modifying tail if p is pointing at the end of the string.      */
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
 name|savedChar
 operator|=
 operator|*
@@ -5312,23 +5358,40 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
+name|firstSpecialChar
+operator|=
 name|strpbrk
 argument_list|(
 name|tail
 argument_list|,
 literal|"*[]?\\"
 argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 operator|*
 name|p
 operator|=
 name|savedChar
 expr_stmt|;
+block|}
+else|else
+block|{
+name|firstSpecialChar
+operator|=
+name|strpbrk
+argument_list|(
+name|tail
+argument_list|,
+literal|"*[]?\\"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|firstSpecialChar
+operator|!=
+name|NULL
+condition|)
+block|{
 comment|/* 	 * Look for matching files in the current directory.  The 	 * implementation of this function is platform specific, but may 	 * recursively call TclDoGlob.  For each file that matches, it will 	 * add the match onto the interp->result, or call TclDoGlob if there 	 * are more characters to be processed. 	 */
 return|return
 name|TclMatchFiles
@@ -5345,11 +5408,6 @@ name|p
 argument_list|)
 return|;
 block|}
-operator|*
-name|p
-operator|=
-name|savedChar
-expr_stmt|;
 name|Tcl_DStringAppend
 argument_list|(
 name|headPtr

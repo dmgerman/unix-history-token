@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclLoadDld.c --  *  *	This procedure provides a version of the TclLoadFile that  *	works with the "dld_link" and "dld_get_func" library procedures  *	for dynamic loading.  It has been tested on Linux 1.1.95 and  *	dld-3.2.7.  This file probably isn't needed anymore, since it  *	makes more sense to use "dl_open" etc.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoadDld.c 1.4 96/02/15 11:58:46  */
+comment|/*   * tclLoadDld.c --  *  *	This procedure provides a version of the TclLoadFile that  *	works with the "dld_link" and "dld_get_func" library procedures  *	for dynamic loading.  It has been tested on Linux 1.1.95 and  *	dld-3.2.7.  This file probably isn't needed anymore, since it  *	makes more sense to use "dl_open" etc.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoadDld.c 1.5 97/05/14 13:24:22  */
 end_comment
 
 begin_include
@@ -123,11 +123,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|Tcl_SetResult
+argument_list|(
 name|interp
-operator|->
-name|result
-operator|=
+argument_list|,
 literal|"don't know name of application binary file, so can't initialize dynamic loader"
+argument_list|,
+name|TCL_STATIC
+argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR

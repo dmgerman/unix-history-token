@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclLoadNone.c --  *  *	This procedure provides a version of the TclLoadFile for use  *	in systems that don't support dynamic loading; it just returns  *	an error.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoadNone.c 1.5 96/02/15 11:43:01  */
+comment|/*   * tclLoadNone.c --  *  *	This procedure provides a version of the TclLoadFile for use  *	in systems that don't support dynamic loading; it just returns  *	an error.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoadNone.c 1.6 97/05/14 13:23:38  */
 end_comment
 
 begin_include
@@ -73,11 +73,14 @@ end_comment
 
 begin_block
 block|{
+name|Tcl_SetResult
+argument_list|(
 name|interp
-operator|->
-name|result
-operator|=
+argument_list|,
 literal|"dynamic loading is not currently available on this system"
+argument_list|,
+name|TCL_STATIC
+argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR

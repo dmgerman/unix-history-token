@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclPosixStr.c --  *  *	This file contains procedures that generate strings  *	corresponding to various POSIX-related codes, such  *	as errno and signals.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPosixStr.c 1.31 96/07/28 16:25:29  */
+comment|/*   * tclPosixStr.c --  *  *	This file contains procedures that generate strings  *	corresponding to various POSIX-related codes, such  *	as errno and signals.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPosixStr.c 1.32 96/10/10 10:09:42  */
 end_comment
 
 begin_include
@@ -2059,7 +2059,7 @@ case|case
 name|EBUSY
 case|:
 return|return
-literal|"mount device busy"
+literal|"file busy"
 return|;
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclEnv.c --  *  *	Tcl support for environment variables, including a setenv  *	procedure.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEnv.c 1.37 96/07/23 16:28:26  */
+comment|/*   * tclEnv.c --  *  *	Tcl support for environment variables, including a setenv  *	procedure.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEnv.c 1.43 97/05/21 17:10:56  */
 end_comment
 
 begin_comment
@@ -75,6 +75,8 @@ specifier|static
 name|EnvInterp
 modifier|*
 name|firstInterpPtr
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -234,8 +236,20 @@ name|EnvInterp
 modifier|*
 name|eiPtr
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|p2
+decl_stmt|;
+name|Tcl_DString
+name|ds
+decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|sz
 decl_stmt|;
 comment|/*      * First, initialize our environment-related information, if      * necessary.      */
 if|if
@@ -249,6 +263,13 @@ name|EnvInit
 argument_list|()
 expr_stmt|;
 block|}
+comment|/*      * Next, initialize the DString we are going to use for copying      * the names of the environment variables.      */
+name|Tcl_DStringInit
+argument_list|(
+operator|&
+name|ds
+argument_list|)
+expr_stmt|;
 comment|/*      * Next, add the interpreter to the list of those that we manage.      */
 name|eiPtr
 operator|=
@@ -310,13 +331,6 @@ name|i
 operator|++
 control|)
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|p2
-decl_stmt|;
 name|p
 operator|=
 name|environ
@@ -348,12 +362,43 @@ name|p2
 operator|++
 control|)
 block|{
-comment|/* Empty loop body. */
-block|}
+if|if
+condition|(
 operator|*
 name|p2
-operator|=
+operator|==
 literal|0
+condition|)
+block|{
+comment|/* 		 * This condition doesn't seem like it should ever happen, 		 * but it does seem to happen occasionally under some 		 * versions of Solaris; ignore the entry. 		 */
+goto|goto
+name|nextEntry
+goto|;
+block|}
+block|}
+name|sz
+operator|=
+name|p2
+operator|-
+name|p
+expr_stmt|;
+name|Tcl_DStringSetLength
+argument_list|(
+operator|&
+name|ds
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|Tcl_DStringAppend
+argument_list|(
+operator|&
+name|ds
+argument_list|,
+name|p
+argument_list|,
+name|sz
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -364,7 +409,11 @@ name|interp
 argument_list|,
 literal|"env"
 argument_list|,
-name|p
+name|Tcl_DStringValue
+argument_list|(
+operator|&
+name|ds
+argument_list|)
 argument_list|,
 name|p2
 operator|+
@@ -373,11 +422,9 @@ argument_list|,
 name|TCL_GLOBAL_ONLY
 argument_list|)
 expr_stmt|;
-operator|*
-name|p2
-operator|=
-literal|'='
-expr_stmt|;
+name|nextEntry
+label|:
+continue|continue;
 block|}
 name|Tcl_TraceVar2
 argument_list|(
@@ -403,6 +450,13 @@ operator|(
 name|ClientData
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/*      * Finally clean up the DString.      */
+name|Tcl_DStringFree
+argument_list|(
+operator|&
+name|ds
 argument_list|)
 expr_stmt|;
 block|}
@@ -1551,12 +1605,20 @@ name|char
 modifier|*
 modifier|*
 name|newEnviron
+decl_stmt|,
+modifier|*
+modifier|*
+name|oldEnviron
 decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|length
 decl_stmt|;
+name|oldEnviron
+operator|=
+name|environ
+expr_stmt|;
 if|if
 condition|(
 name|environSize
@@ -1687,7 +1749,7 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
-name|NULL
+name|oldEnviron
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1712,12 +1774,19 @@ parameter_list|)
 name|ClientData
 name|clientData
 decl_stmt|;
-comment|/* Not  used. */
+comment|/* Old environment pointer -- restore this. */
 block|{
 name|char
 modifier|*
 modifier|*
 name|p
+decl_stmt|;
+name|EnvInterp
+modifier|*
+name|eiPtr
+decl_stmt|,
+modifier|*
+name|nextPtr
 decl_stmt|;
 for|for
 control|(
@@ -1752,6 +1821,50 @@ argument_list|)
 expr_stmt|;
 comment|/*      * Note that we need to reset the environ global so the Borland C run-time      * doesn't choke on exit.      */
 name|environ
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|clientData
+expr_stmt|;
+name|environSize
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|eiPtr
+operator|=
+name|firstInterpPtr
+init|;
+name|eiPtr
+operator|!=
+name|NULL
+condition|;
+name|eiPtr
+operator|=
+name|nextPtr
+control|)
+block|{
+name|nextPtr
+operator|=
+name|eiPtr
+operator|->
+name|nextPtr
+expr_stmt|;
+name|ckfree
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|eiPtr
+argument_list|)
+expr_stmt|;
+block|}
+name|firstInterpPtr
 operator|=
 name|NULL
 expr_stmt|;
