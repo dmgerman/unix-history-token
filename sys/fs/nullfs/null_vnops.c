@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)null_vnops.c	8.6 (Berkeley) 5/27/95  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: null_vnops.c,v 1.11.2000.1 1996/09/17 14:32:31 peter Exp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)null_vnops.c	8.6 (Berkeley) 5/27/95  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: null_vnops.c,v 1.13 1997/02/10 02:13:30 dyson Exp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -120,6 +120,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|null_access
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_access_args
+operator|*
+name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|null_bypass
 name|__P
@@ -185,6 +201,38 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|null_lock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lock_args
+operator|*
+name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|null_lookup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lookup_args
+operator|*
+name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|null_print
 name|__P
 argument_list|(
@@ -217,12 +265,44 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|null_setattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_setattr_args
+operator|*
+name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|null_strategy
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|vop_strategy_args
+operator|*
+name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|null_unlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_unlock_args
 operator|*
 name|ap
 operator|)
@@ -966,7 +1046,7 @@ name|vap
 operator|->
 name|va_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 operator|||
@@ -974,7 +1054,7 @@ name|vap
 operator|->
 name|va_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 operator|||
@@ -1233,6 +1313,7 @@ comment|/*  * We need to process our own vnode lock and then clear the  * interl
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|null_lock
 parameter_list|(
@@ -1290,6 +1371,7 @@ comment|/*  * We need to process our own vnode unlock and then clear the  * inte
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|null_unlock
 parameter_list|(
@@ -1335,6 +1417,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|null_inactive
 parameter_list|(
