@@ -1067,7 +1067,7 @@ literal|'\0'
 expr_stmt|;
 name|path
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|arg
 argument_list|,

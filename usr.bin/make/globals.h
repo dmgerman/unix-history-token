@@ -49,6 +49,12 @@ name|IFile
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|Path
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The list of target names specified on the command line.  * Used to resolve #if make(...) statements  */
 end_comment
@@ -66,7 +72,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|Lst
+name|struct
+name|Path
 name|dirSearchPath
 decl_stmt|;
 end_decl_stmt
@@ -89,8 +96,21 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|Lst
+name|struct
+name|Path
 name|parseIncPath
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The system include path. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|Path
+name|sysIncPath
 decl_stmt|;
 end_decl_stmt
 
@@ -309,17 +329,6 @@ end_decl_stmt
 begin_comment
 comment|/* Do old-style variable substitution */
 end_comment
-
-begin_comment
-comment|/* The system include path. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|Lst
-name|sysIncPath
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

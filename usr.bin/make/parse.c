@@ -256,10 +256,11 @@ comment|/* list of directories for "..." includes */
 end_comment
 
 begin_decl_stmt
-name|Lst
+name|struct
+name|Path
 name|parseIncPath
 init|=
-name|Lst_Initializer
+name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|parseIncPath
 argument_list|)
@@ -271,10 +272,11 @@ comment|/* list of directories for<...> includes */
 end_comment
 
 begin_decl_stmt
-name|Lst
+name|struct
+name|Path
 name|sysIncPath
 init|=
-name|Lst_Initializer
+name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|sysIncPath
 argument_list|)
@@ -2287,7 +2289,8 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * .PATH<suffix> has to be handled specially. 		 * Call on the suffix module to give us a path to 		 * modify. 		 */
-name|Lst
+name|struct
+name|Path
 modifier|*
 name|path
 decl_stmt|;
@@ -2374,15 +2377,16 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Targets are to be sought only in the current directory, 		 * so create an empty path for the thing. Note we need to 		 * use Dir_Destroy in the destruction of the path as the 		 * Dir module could have added a directory to the path... 		 */
-name|Lst
+name|struct
+name|Path
 name|emptyPath
 init|=
-name|Lst_Initializer
+name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|emptyPath
 argument_list|)
 decl_stmt|;
-name|Dir_Expand
+name|Path_Expand
 argument_list|(
 name|line
 argument_list|,
@@ -2393,12 +2397,10 @@ operator|&
 name|curTargs
 argument_list|)
 expr_stmt|;
-name|Lst_Destroy
+name|Path_Clear
 argument_list|(
 operator|&
 name|emptyPath
-argument_list|,
-name|Dir_Destroy
 argument_list|)
 expr_stmt|;
 block|}
@@ -2818,7 +2820,7 @@ argument|ln
 argument_list|,
 argument|&paths
 argument_list|)
-name|Dir_ClearPath
+name|Path_Clear
 argument_list|(
 name|Lst_Datum
 argument_list|(
@@ -3019,7 +3021,7 @@ argument|ln
 argument_list|,
 argument|&paths
 argument_list|)
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 name|Lst_Datum
 argument_list|(
@@ -4155,7 +4157,7 @@ modifier|*
 name|dir
 parameter_list|)
 block|{
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 operator|&
 name|parseIncPath
@@ -4629,7 +4631,7 @@ argument_list|)
 expr_stmt|;
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|newName
 argument_list|,
@@ -4646,7 +4648,7 @@ condition|)
 block|{
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|newName
 argument_list|,
@@ -4696,7 +4698,7 @@ block|{
 comment|/* 	 * System makefile or makefile wasn't found in same directory as 	 * included makefile. Search for it first on the -I search path, 	 * then on the .PATH search path, if not found in a -I directory. 	 * XXX: Suffix specific? 	 */
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|file
 argument_list|,
@@ -4713,7 +4715,7 @@ condition|)
 block|{
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|file
 argument_list|,
@@ -4733,7 +4735,7 @@ block|{
 comment|/* 	 * Still haven't found the makefile. Look for it on the system 	 * path as a last resort. 	 */
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|file
 argument_list|,
@@ -5128,7 +5130,7 @@ expr_stmt|;
 comment|/*      * Now we know the file's name, we attempt to find the durn thing.      * Search for it first on the -I search path, then on the .PATH      * search path, if not found in a -I directory.      */
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|file
 argument_list|,
@@ -5145,7 +5147,7 @@ condition|)
 block|{
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|file
 argument_list|,
@@ -5164,7 +5166,7 @@ block|{
 comment|/* 	 * Still haven't found the makefile. Look for it on the system 	 * path as a last resort. 	 */
 name|fullname
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|file
 argument_list|,

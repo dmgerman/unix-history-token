@@ -832,7 +832,7 @@ argument_list|(
 name|sz
 argument_list|)
 expr_stmt|;
-name|Dir_Expand
+name|Path_Expand
 argument_list|(
 name|memName
 argument_list|,
@@ -3463,7 +3463,8 @@ name|GNode
 modifier|*
 name|gn
 parameter_list|,
-name|Lst
+name|struct
+name|Path
 modifier|*
 name|path
 parameter_list|)
@@ -3515,7 +3516,7 @@ name|gn
 operator|->
 name|path
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|libName
 argument_list|,

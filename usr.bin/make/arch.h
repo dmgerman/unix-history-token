@@ -33,6 +33,12 @@ name|Lst
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|Path
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|ReturnStatus
 name|Arch_ParseArchive
@@ -105,7 +111,7 @@ name|GNode
 modifier|*
 parameter_list|,
 name|struct
-name|Lst
+name|Path
 modifier|*
 parameter_list|)
 function_decl|;

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
 end_include
 
@@ -1218,7 +1224,7 @@ break|break;
 case|case
 literal|'m'
 case|:
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 operator|&
 name|sysIncPath
@@ -2537,7 +2543,7 @@ name|objdir
 operator|!=
 name|curdir
 condition|)
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 operator|&
 name|dirSearchPath
@@ -2679,7 +2685,7 @@ expr_stmt|;
 comment|/* 	 * If no user-supplied system path was given (through the -m option) 	 * add the directories from the DEFSYSPATH (more than one may be given 	 * as dir1:...:dirn) to the system include path. 	 */
 if|if
 condition|(
-name|Lst_IsEmpty
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|sysIncPath
@@ -2730,7 +2736,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 operator|&
 name|sysIncPath
@@ -2747,7 +2753,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 operator|&
 name|sysIncPath
@@ -2778,7 +2784,7 @@ name|LstNode
 modifier|*
 name|ln
 decl_stmt|;
-name|Dir_Expand
+name|Path_Expand
 argument_list|(
 name|PATH_DEFSYSMK
 argument_list|,
@@ -3062,7 +3068,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Add directory to search path */
-name|Dir_AddDir
+name|Path_AddDir
 argument_list|(
 operator|&
 name|dirSearchPath
@@ -3659,7 +3665,7 @@ directive|endif
 comment|/* look in -I and system include directories. */
 name|name
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|fname
 argument_list|,
@@ -3674,7 +3680,7 @@ name|name
 condition|)
 name|name
 operator|=
-name|Dir_FindFile
+name|Path_FindFile
 argument_list|(
 name|fname
 argument_list|,
