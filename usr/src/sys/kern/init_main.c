@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -922,7 +922,7 @@ expr_stmt|;
 name|swapinit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Now can look at time, having had a chance 	 * to verify the time from the file system. 	 */
+comment|/* 	 * Now can look at time, having had a chance to verify the time 	 * from the file system.  Reset p->p_rtime as it may have been 	 * munched in swtch() after the time got set. 	 */
 name|p
 operator|->
 name|p_stats
@@ -936,6 +936,20 @@ operator|=
 name|boottime
 operator|=
 name|time
+expr_stmt|;
+name|p
+operator|->
+name|p_rtime
+operator|.
+name|tv_sec
+operator|=
+name|p
+operator|->
+name|p_rtime
+operator|.
+name|tv_usec
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * make init process 	 */
 name|siginit
