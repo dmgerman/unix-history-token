@@ -2836,8 +2836,6 @@ name|bp
 argument_list|,
 operator|&
 name|i
-argument_list|,
-name|plen
 argument_list|)
 expr_stmt|;
 for|for
