@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.73 1997/05/27 04:09:01 fsmp Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.74 1997/05/27 19:24:36 fsmp Exp $  *  */
 end_comment
 
 begin_include
@@ -294,26 +294,34 @@ argument_list|)
 expr_stmt|;
 name|ln2size
 operator|=
-literal|32
+literal|0
 expr_stmt|;
+if|if
+condition|(
+name|testval
+operator|!=
+literal|0
+condition|)
+block|{
 while|while
 condition|(
 operator|(
 name|testval
 operator|&
-literal|0x80000000
+literal|1
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
 name|ln2size
-operator|--
+operator|++
 expr_stmt|;
 name|testval
-operator|<<=
+operator|>>=
 literal|1
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -417,34 +425,78 @@ name|map64
 init|=
 literal|0
 decl_stmt|;
-while|while
-condition|(
-name|maxmaps
-operator|>
+for|for
+control|(
+name|i
+operator|=
 literal|0
-operator|&&
+init|;
+name|i
+operator|<
+name|maxmaps
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|int
+name|reg
+init|=
+name|PCIR_MAPS
+operator|+
+name|i
+operator|*
+literal|4
+decl_stmt|;
+name|u_int32_t
+name|base
+decl_stmt|;
+name|u_int32_t
+name|ln2range
+decl_stmt|;
+name|base
+operator|=
 name|pci_cfgread
 argument_list|(
 name|cfg
 argument_list|,
-name|PCIR_MAPS
-operator|+
-operator|(
-name|maxmaps
-operator|-
-literal|1
-operator|)
-operator|*
-literal|4
+name|reg
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|ln2range
+operator|=
+name|pci_maprange
+argument_list|(
+name|base
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|base
+operator|==
+literal|0
+operator|||
+name|ln2range
 operator|==
 literal|0
 condition|)
 name|maxmaps
-operator|--
+operator|=
+name|i
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ln2range
+operator|>
+literal|32
+condition|)
+name|i
+operator|++
+expr_stmt|;
+block|}
 name|map
 operator|=
 name|malloc
@@ -635,24 +687,6 @@ expr_stmt|;
 name|map64
 operator|=
 literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|type
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * This indicates, that some config space register  			 * was mistaken to contain a map, while it in fact 			 * contains unrelated information! 			 * Ignore this map and all that might have been 			 * expected to follow ... 			 */
-name|maxmaps
-operator|=
-name|i
 expr_stmt|;
 block|}
 block|}
@@ -1870,9 +1904,6 @@ modifier|*
 name|cfg
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PCI_DEBUG
 if|if
 condition|(
 name|bootverbose
@@ -1883,7 +1914,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"new pci: vendor=0x%04x, dev=0x%04x, revid=0x%02x\n"
+literal|"found->\tvendor=0x%04x, dev=0x%04x, revid=0x%02x\n"
 argument_list|,
 name|cfg
 operator|->
@@ -1900,24 +1931,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t cmdreg=0x%04x, statreg=0x%04x, cachelnsz=%d (dwords)\n"
-argument_list|,
-name|cfg
-operator|->
-name|cmdreg
-argument_list|,
-name|cfg
-operator|->
-name|statreg
-argument_list|,
-name|cfg
-operator|->
-name|cachelnsz
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t class=%02x-%02x-%02x, hdrtype=0x%02x, mfdev=%d\n"
+literal|"\tclass=%02x-%02x-%02x, hdrtype=0x%02x, mfdev=%d\n"
 argument_list|,
 name|cfg
 operator|->
@@ -1940,9 +1954,29 @@ operator|->
 name|mfdev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_DEBUG
 name|printf
 argument_list|(
-literal|"\t lattimer=0x%02x (%d ns), mingnt=0x%02x (%d ns), maxlat=0x%02x (%d ns)\n"
+literal|"\tcmdreg=0x%04x, statreg=0x%04x, cachelnsz=%d (dwords)\n"
+argument_list|,
+name|cfg
+operator|->
+name|cmdreg
+argument_list|,
+name|cfg
+operator|->
+name|statreg
+argument_list|,
+name|cfg
+operator|->
+name|cachelnsz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tlattimer=0x%02x (%d ns), mingnt=0x%02x (%d ns), maxlat=0x%02x (%d ns)\n"
 argument_list|,
 name|cfg
 operator|->
@@ -1975,6 +2009,9 @@ operator|*
 literal|250
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCI_DEBUG */
 if|if
 condition|(
 name|cfg
@@ -1985,7 +2022,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t intpin=%c, irq=%d\n"
+literal|"\tintpin=%c, irq=%d\n"
 argument_list|,
 name|cfg
 operator|->
@@ -2030,7 +2067,7 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\t map[%d]: type %x, range %2d, base %08x, size %2d\n"
+literal|"\tmap[%d]: type %x, range %2d, base %08x, size %2d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2053,9 +2090,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* PCI_DEBUG */
 name|pci_drvattach
 argument_list|(
 name|cfg
