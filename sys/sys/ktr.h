@@ -374,7 +374,7 @@ begin_define
 define|#
 directive|define
 name|KTR_CRITICAL
-value|0010000000
+value|0x10000000
 end_define
 
 begin_comment
