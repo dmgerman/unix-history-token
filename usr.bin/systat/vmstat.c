@@ -361,7 +361,7 @@ decl_stmt|;
 name|long
 name|freevnodes
 decl_stmt|;
-name|long
+name|int
 name|numdirtybuffers
 decl_stmt|;
 block|}
