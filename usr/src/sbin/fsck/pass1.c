@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.12 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -790,6 +790,22 @@ operator|==
 name|IFDIR
 condition|)
 block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|di_size
+operator|==
+literal|0
+condition|)
+name|statemap
+index|[
+name|inumber
+index|]
+operator|=
+name|DCLEAR
+expr_stmt|;
+else|else
 name|statemap
 index|[
 name|inumber
