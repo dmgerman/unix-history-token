@@ -667,11 +667,17 @@ literal|"PXENV+"
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|pxenv_p
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* make sure the size is something we can handle */
 if|if
 condition|(
@@ -1305,7 +1311,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|pxenv_p
+name|pxe_p
 operator|!=
 name|NULL
 condition|)
@@ -1634,6 +1640,16 @@ operator|*
 operator|)
 name|scratch_buffer
 decl_stmt|;
+if|if
+condition|(
+name|pxe_p
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|bzero
 argument_list|(
 name|udpopen_p
