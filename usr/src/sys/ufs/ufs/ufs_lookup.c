@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	7.1.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4369,6 +4369,34 @@ literal|0
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SECSIZE
+name|bp
+operator|=
+name|bread
+argument_list|(
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
+name|bn
+argument_list|)
+argument_list|,
+name|bsize
+argument_list|,
+name|fs
+operator|->
+name|fs_dbsize
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|SECSIZE
 name|bp
 operator|=
 name|bread
@@ -4387,6 +4415,9 @@ argument_list|,
 name|bsize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|SECSIZE
 if|if
 condition|(
 name|bp

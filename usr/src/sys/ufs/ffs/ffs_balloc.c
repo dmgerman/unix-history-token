@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_balloc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_balloc.c	7.1.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -841,6 +841,39 @@ name|j
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|SECSIZE
+name|bp
+operator|=
+name|bread
+argument_list|(
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
+name|nb
+argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|fs
+operator|->
+name|fs_dbsize
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|SECSIZE
 name|bp
 operator|=
 name|bread
@@ -864,6 +897,9 @@ operator|->
 name|fs_bsize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|SECSIZE
 if|if
 condition|(
 name|bp
