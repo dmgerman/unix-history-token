@@ -7,6 +7,32 @@ begin_comment
 comment|/*  *  'nos_tun' program configure tunN interface as a point-to-point  *  connection with two "pseudo"-addresses between this host and  *  'target'.  *  *  It uses Ip-over-Ip incapsulation ( protocol number 94 - IPIP)  *  (known as NOS-incapsulation in CISCO-routers' terminology).  *  *  'nos_tun' can works with itself and CISCO-routers.  *  (It may also work with Linux 'nos_tun's, but  *  I have no Linux system here to test with).  *  *  BUGS (or features ?):  *  - you must specify ONE of the target host's addresses  *    ( nos_tun sends and accepts packets only to/from this  *      address )  *  - there can be only ONE tunnel between two hosts,  *    more precisely - between given host and (one of)  *    target hosts' address(es)  *    (and why do you want more ?)  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -96,32 +122,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/* Tunnel interface configuration stuff */
@@ -259,7 +259,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Unknown host %s\n"
+literal|"unknown host %s"
 argument_list|,
 name|addr
 argument_list|)
@@ -349,7 +349,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't open %s - %m"
+literal|"can't open %s - %m"
 argument_list|,
 name|devname
 argument_list|)
@@ -439,7 +439,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't open socket - %M"
+literal|"can't open socket - %M"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -537,7 +537,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad destination address:%s\n"
+literal|"bad destination address: %s"
 argument_list|,
 name|theiraddr
 argument_list|)
@@ -575,7 +575,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't set interface address - %m"
+literal|"can't set interface address - %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -602,7 +602,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't get interface flags - %m"
+literal|"can't get interface flags - %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -648,7 +648,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't set interface UP - %m"
+literal|"can't set interface UP - %m"
 argument_list|)
 expr_stmt|;
 name|stunc_return
@@ -688,7 +688,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Exiting"
+literal|"exiting"
 argument_list|)
 expr_stmt|;
 name|close
@@ -718,7 +718,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't open socket - %m"
+literal|"can't open socket - %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -745,7 +745,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't get interface flags - %m"
+literal|"can't get interface flags - %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -782,7 +782,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't set interface DOWN - %m"
+literal|"can't set interface DOWN - %m"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -854,7 +854,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't delete interface's addresses - %m"
+literal|"can't delete interface's addresses - %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1166,7 +1166,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't open socket - %m"
+literal|"can't open socket - %m"
 argument_list|)
 expr_stmt|;
 name|Finish
@@ -1198,7 +1198,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't connect to target - %m"
+literal|"can't connect to target - %m"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1323,7 +1323,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Interrupted select"
+literal|"interrupted select"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1349,7 +1349,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Timeout in select"
+literal|"timeout in select"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1483,7 +1483,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send - %m"
+literal|"can't send - %m"
 argument_list|)
 expr_stmt|;
 block|}
