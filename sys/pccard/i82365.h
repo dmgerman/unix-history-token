@@ -769,6 +769,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_INTR_ENA
+value|0x10
+end_define
+
+begin_comment
+comment|/* PCI CSC Interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_CARDTYPE
 value|0x20
 end_define
@@ -800,17 +811,6 @@ end_define
 
 begin_comment
 comment|/* Card reset 0 = Reset, 1 = Normal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_INTR_ENA
-value|0x10
-end_define
-
-begin_comment
-comment|/* PCI CSC Interrupt enable */
 end_comment
 
 begin_comment

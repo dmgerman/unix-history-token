@@ -2978,18 +2978,30 @@ name|slt
 operator|->
 name|cdata
 decl_stmt|;
+name|pcic_clrb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_INT_GEN
+argument_list|,
+literal|0xf
+operator||
+name|PCIC_CARDTYPE
+operator||
+name|PCIC_CARDRESET
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|putb
 argument_list|(
 name|sp
 argument_list|,
-name|PCIC_INT_GEN
+name|PCIC_POWER
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*	sp->putb(sp, PCIC_POWER, 0); */
 block|}
 end_function
 
