@@ -411,6 +411,14 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -2785,6 +2793,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|newkg
@@ -2794,6 +2808,12 @@ operator|>=
 name|ncpus
 condition|)
 block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -2852,12 +2872,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Make the new upcall available to the ksegrp. 	 * It may or may not use it, but it's available. 	 */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
