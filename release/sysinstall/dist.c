@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.35.2.16 1995/06/04 05:24:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.35.2.17 1995/06/04 05:27:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -944,6 +944,11 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|distReset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Dists
 operator|=
 name|_DIST_DEVELOPER
@@ -967,6 +972,11 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|distReset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Dists
 operator|=
 name|_DIST_DEVELOPER
@@ -995,6 +1005,11 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|distReset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Dists
 operator|=
 name|_DIST_DEVELOPER
@@ -1018,6 +1033,11 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|distReset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Dists
 operator|=
 name|_DIST_USER
@@ -1037,6 +1057,11 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|distReset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Dists
 operator|=
 name|_DIST_USER
@@ -1061,6 +1086,11 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|distReset
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Dists
 operator|=
 name|DIST_BIN
@@ -1088,10 +1118,17 @@ name|SrcDists
 operator|=
 name|DIST_SRC_ALL
 expr_stmt|;
-name|distSetXF86
-argument_list|(
-name|NULL
-argument_list|)
+name|XF86Dists
+operator|=
+name|DIST_XF86_ALL
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+name|DIST_XF86_SERVER_ALL
+expr_stmt|;
+name|XF86FontDists
+operator|=
+name|DIST_XF86_FONT_ALL
 expr_stmt|;
 return|return
 literal|0
@@ -1286,6 +1323,23 @@ name|i
 operator|++
 control|)
 block|{
+name|dist
+operator|=
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_name
+expr_stmt|;
+name|path
+operator|=
+name|parent
+condition|?
+name|parent
+else|:
+name|dist
+expr_stmt|;
 comment|/* If our bit isn't set, go to the next */
 if|if
 condition|(
@@ -1325,12 +1379,7 @@ name|status
 operator|=
 name|distExtract
 argument_list|(
-name|me
-index|[
-name|i
-index|]
-operator|.
-name|my_name
+name|dist
 argument_list|,
 name|me
 index|[
@@ -1340,40 +1389,10 @@ operator|.
 name|my_dist
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-condition|)
 goto|goto
 name|done
 goto|;
-else|else
-goto|goto
-name|punt
-goto|;
 block|}
-name|dist
-operator|=
-name|me
-index|[
-name|i
-index|]
-operator|.
-name|my_name
-expr_stmt|;
-name|path
-operator|=
-name|parent
-condition|?
-name|parent
-else|:
-name|me
-index|[
-name|i
-index|]
-operator|.
-name|my_name
-expr_stmt|;
 comment|/* First try to get the distribution as a single file */
 name|snprintf
 argument_list|(
@@ -1386,6 +1405,18 @@ argument_list|,
 name|path
 argument_list|,
 name|dist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Trying to get large piece: %s\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 comment|/* Set it as an "exploratory get" so that we don't loop unnecessarily on it */
@@ -1607,10 +1638,24 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Couldn't open attributes file: %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|numchunks
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1645,7 +1690,7 @@ name|buf
 argument_list|,
 literal|512
 argument_list|,
-literal|"%s/%s"
+literal|"%s/%s.aa"
 argument_list|,
 name|path
 argument_list|,
@@ -1654,13 +1699,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|numchunks
+name|isDebug
+argument_list|()
 condition|)
-name|strcat
+name|msgDebug
 argument_list|(
-name|buf
+literal|"Trying for single-piece: %s\n"
 argument_list|,
-literal|".aa"
+name|buf
 argument_list|)
 expr_stmt|;
 name|fd
@@ -1747,6 +1793,7 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* We have multiple chunks, go pick them up */
 name|mediaExtractDistBegin
 argument_list|(
 name|me
@@ -1821,6 +1868,22 @@ literal|26
 operator|)
 operator|+
 literal|'a'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"trying for piece %d of %d: %s\n"
+argument_list|,
+name|chunk
+argument_list|,
+name|numchunks
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 name|fd
@@ -2068,6 +2131,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 else|else
+block|{
 name|status
 operator|=
 name|msgYesNo
@@ -2086,6 +2150,29 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&&
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to clear all distributions in this group?"
+argument_list|)
+condition|)
+operator|*
+operator|(
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_mask
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 comment|/* Extract was successful, remove ourselves from further consideration */
 if|if

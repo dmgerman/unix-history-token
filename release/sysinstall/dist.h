@@ -414,6 +414,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_XF86_SERVER_ALL
+value|0x0FFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_XF86_FONTS
 value|0x1000
 end_define
@@ -451,6 +458,13 @@ define|#
 directive|define
 name|DIST_XF86_FONTS_SERVER
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_FONTS_ALL
+value|0x00FF
 end_define
 
 begin_define
