@@ -307,7 +307,7 @@ modifier|*
 name|nat
 decl_stmt|;
 block|{
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|,
 name|sum2
@@ -329,7 +329,7 @@ block|{
 name|sum2
 operator|=
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 name|ntohl
 argument_list|(
@@ -411,7 +411,7 @@ block|{
 name|sum1
 operator|=
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 name|aps
 operator|->
@@ -601,7 +601,7 @@ name|nat
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|,
 name|sum2
@@ -1409,7 +1409,7 @@ block|{
 name|sum2
 operator|=
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 name|ntohl
 argument_list|(
@@ -1480,7 +1480,7 @@ block|{
 name|sum1
 operator|=
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 name|aps
 operator|->
@@ -1506,7 +1506,7 @@ block|{
 name|sum1
 operator|=
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 name|aps
 operator|->

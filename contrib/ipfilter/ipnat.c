@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -238,6 +244,57 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+operator|!
+name|SOLARIS2
+end_if
+
+begin_define
+define|#
+directive|define
+name|STRERROR
+parameter_list|(
+name|x
+parameter_list|)
+value|sys_errlist[x]
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STRERROR
+parameter_list|(
+name|x
+parameter_list|)
+value|strerror(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -263,7 +320,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.0.2.21.2.1 1997/11/08 04:55:55 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.0.2.21.2.6 1998/05/23 19:07:02 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_32_t
 name|hostnum
 name|__P
 argument_list|(
@@ -334,7 +391,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_32_t
 name|hostmask
 name|__P
 argument_list|(
@@ -440,7 +497,7 @@ name|countbits
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -728,9 +785,21 @@ literal|1
 operator|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"open"
+name|stderr
+argument_list|,
+literal|"%s: open: %s\n"
+argument_list|,
+name|IPL_NAT
+argument_list|,
+name|STRERROR
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -803,11 +872,11 @@ name|countbits
 parameter_list|(
 name|ip
 parameter_list|)
-name|u_long
+name|u_32_t
 name|ip
 decl_stmt|;
 block|{
-name|u_long
+name|u_32_t
 name|ipn
 decl_stmt|;
 name|int
@@ -1297,8 +1366,6 @@ name|bits
 operator|=
 name|countbits
 argument_list|(
-name|ntohl
-argument_list|(
 name|np
 operator|->
 name|in_out
@@ -1307,7 +1374,6 @@ literal|1
 index|]
 operator|.
 name|s_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2321,7 +2387,7 @@ block|}
 end_block
 
 begin_function
-name|u_long
+name|u_32_t
 name|hostmask
 parameter_list|(
 name|msk
@@ -2337,7 +2403,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|u_long
+name|u_32_t
 name|mask
 decl_stmt|;
 if|if
@@ -2351,7 +2417,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 operator|-
 literal|1
@@ -2382,7 +2448,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|u_long
+name|u_32_t
 operator|)
 name|strtol
 argument_list|(
@@ -2446,7 +2512,7 @@ comment|/*  * returns an ip address as a long var as a result of either a DNS lo
 end_comment
 
 begin_function
-name|u_long
+name|u_32_t
 name|hostnum
 parameter_list|(
 name|host
@@ -2550,9 +2616,12 @@ literal|0
 return|;
 block|}
 return|return
+name|htonl
+argument_list|(
 name|np
 operator|->
 name|n_net
+argument_list|)
 return|;
 block|}
 return|return
@@ -4288,9 +4357,21 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: open: %s\n"
+argument_list|,
 name|file
+argument_list|,
+name|STRERROR
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit

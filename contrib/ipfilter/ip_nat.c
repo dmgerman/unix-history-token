@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 2.0.2.44.2.7 1997/12/02 13:54:27 darrenr Exp $"
+literal|"@(#)$Id: ip_nat.c,v 2.0.2.44.2.10 1998/05/23 19:05:29 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -768,7 +768,7 @@ name|u_short
 modifier|*
 name|sp
 decl_stmt|;
-name|u_long
+name|u_32_t
 name|n
 decl_stmt|;
 block|{
@@ -777,7 +777,7 @@ name|u_short
 name|sumshort
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|;
 if|if
@@ -867,7 +867,7 @@ name|u_short
 modifier|*
 name|sp
 decl_stmt|;
-name|u_long
+name|u_32_t
 name|n
 decl_stmt|;
 block|{
@@ -876,7 +876,7 @@ name|u_short
 name|sumshort
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|;
 if|if
@@ -2296,11 +2296,14 @@ name|in
 operator|.
 name|s_addr
 operator|=
+name|ntohl
+argument_list|(
 name|ill
 operator|->
 name|ill_ipif
 operator|->
 name|ipif_local_addr
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
@@ -2629,7 +2632,7 @@ name|direction
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|,
 name|sum2
@@ -4203,7 +4206,7 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|,
 name|sum2
@@ -5113,7 +5116,7 @@ modifier|*
 name|np
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_32_t
 name|ipa
 decl_stmt|;
 name|tcphdr_t
@@ -6752,7 +6755,7 @@ modifier|*
 name|nat
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_32_t
 name|sum1
 decl_stmt|,
 name|sum2

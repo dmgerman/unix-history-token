@@ -248,7 +248,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.0.2.11.2.1 1997/11/12 10:56:11 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.0.2.11.2.3 1998/05/23 19:20:32 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,7 +412,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_32_t
 name|tx_hostnum
 name|__P
 argument_list|(
@@ -447,7 +447,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_long
+name|u_32_t
 name|tx_hostnum
 parameter_list|(
 name|host
@@ -551,9 +551,12 @@ literal|0
 return|;
 block|}
 return|return
+name|htonl
+argument_list|(
 name|np
 operator|->
 name|n_net
+argument_list|)
 return|;
 block|}
 return|return
