@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_subr.c,v 1.3 1998/10/31 20:07:01 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_subr.c,v 1.4 1998/10/31 20:08:03 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: unisig_subr.c,v 1.3 1998/10/31 20:07:01 phk Exp $"
+literal|"@(#) $Id: unisig_subr.c,v 1.4 1998/10/31 20:08:03 phk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -223,12 +223,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set a cause code in an ATM attribute block  *  * Arguments:  *	aap	pointer to attribute block  *	cause	cause code  *  * Returns:  *	none  *  */
+comment|/*  * Set a User Location cause code in an ATM attribute block  *  * Arguments:  *	aap	pointer to attribute block  *	cause	cause code  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function
 name|void
-name|unisig_set_cause_attr
+name|unisig_cause_attr_from_user
 parameter_list|(
 name|aap
 parameter_list|,
@@ -242,6 +242,13 @@ name|int
 name|cause
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|cause
+operator|==
+name|T_ATM_ABSENT
+condition|)
+return|return;
 comment|/* 	 * Set the fields in the attribute block 	 */
 name|aap
 operator|->
@@ -300,6 +307,131 @@ operator|.
 name|v
 operator|.
 name|diagnostics
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set a cause code in an ATM attribute block from a Cause IE  *  * Arguments:  *	aap	pointer to attribute block  *	iep	pointer to Cause IE  *  * Returns:  *	none  *  */
+end_comment
+
+begin_function
+name|void
+name|unisig_cause_attr_from_ie
+parameter_list|(
+name|aap
+parameter_list|,
+name|iep
+parameter_list|)
+name|Atm_attributes
+modifier|*
+name|aap
+decl_stmt|;
+name|struct
+name|ie_generic
+modifier|*
+name|iep
+decl_stmt|;
+block|{
+comment|/* 	 * Set the fields in the attribute block 	 */
+name|aap
+operator|->
+name|cause
+operator|.
+name|tag
+operator|=
+name|T_ATM_PRESENT
+expr_stmt|;
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|coding_standard
+operator|=
+name|iep
+operator|->
+name|ie_coding
+expr_stmt|;
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|location
+operator|=
+name|iep
+operator|->
+name|ie_caus_loc
+expr_stmt|;
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|cause_value
+operator|=
+name|iep
+operator|->
+name|ie_caus_cause
+expr_stmt|;
+name|KM_ZERO
+argument_list|(
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|diagnostics
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|diagnostics
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|KM_COPY
+argument_list|(
+name|iep
+operator|->
+name|ie_caus_diagnostic
+argument_list|,
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|diagnostics
+argument_list|,
+name|MIN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|aap
+operator|->
+name|cause
+operator|.
+name|v
+operator|.
+name|diagnostics
+argument_list|)
+argument_list|,
+name|iep
+operator|->
+name|ie_caus_diag_len
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1177,7 +1309,7 @@ operator|==
 name|UNI_PVC_ACTIVE
 condition|)
 block|{
-name|unisig_set_cause_attr
+name|unisig_cause_attr_from_user
 argument_list|(
 operator|&
 name|uvp
