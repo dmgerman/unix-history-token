@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: $  */
+comment|/*-  * Copyright (C) 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: slice_device.c,v 1.1 1998/04/19 23:31:14 julian Exp $  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DIAGNOSTIC
+value|1
+end_define
 
 begin_include
 include|#
@@ -526,60 +533,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Macro to check that the unit number is valid Often this isn't needed as  * once the open() is performed, the unit number is pretty much safe.. The  * exception would be if we implemented devices that could "go away". in  * which case all these routines would be wise to check the number,  * DIAGNOSTIC or not.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECKUNIT
-parameter_list|()
-define|\
-value|do {
-comment|/* the do-while is a safe way to do this grouping */
-value|\ 	if (slice == NULL) { 					\ 		printf( __FUNCTION__ ": unit  not attached\n", unit);	\ 		panic ("slice");				\ 	}							\ } while (0)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CHECKUNIT_DIAG
-parameter_list|()
-value|CHECKUNIT()
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* DIAGNOSTIC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECKUNIT_DIAG
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DIAGNOSTIC */
-end_comment
-
 begin_function
 name|int
 name|slcdevioctl
@@ -618,9 +571,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|CHECKUNIT_DIAG
-argument_list|()
-expr_stmt|;
 name|RR
 expr_stmt|;
 comment|/* 	 * Look for only some generic "inherrited" ioctls that apply to all 	 * disk-like devices otherwise pass it down to the previous handler 	 */
@@ -839,14 +789,38 @@ argument_list|)
 decl_stmt|;
 name|RR
 expr_stmt|;
-name|CHECKUNIT_DIAG
-argument_list|()
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|FWRITE
+operator||
+name|FREAD
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sliceclose called with non 0 flags\n"
+argument_list|)
 expr_stmt|;
-name|sliceclose
+block|}
+endif|#
+directive|endif
+comment|/* 	 * Close is just an open for non-read/nonwrite in this context. 	 */
+name|sliceopen
 argument_list|(
 name|slice
 argument_list|,
-name|flags
+literal|0
 argument_list|,
 name|mode
 argument_list|,

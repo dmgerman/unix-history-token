@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.123 1998/04/17 22:37:10 des Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.124 1998/04/19 23:32:36 julian Exp $  */
 end_comment
 
 begin_include
@@ -110,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<sys/device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -813,12 +819,9 @@ begin_comment
 comment|/* downwards travelling open */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|sl_h_close_t
-name|sdsclose
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*static sl_h_close_t	sdsclose; */
+end_comment
 
 begin_comment
 comment|/* downwards travelling close */
@@ -863,8 +866,8 @@ block|,
 operator|&
 name|sdsopen
 block|,
-operator|&
-name|sdsclose
+comment|/*&sdsclose*/
+name|NULL
 block|,
 name|NULL
 block|,
@@ -5234,6 +5237,45 @@ name|sd
 operator|=
 name|private
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|FREAD
+operator||
+name|FWRITE
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|sdclose
+argument_list|(
+name|makedev
+argument_list|(
+literal|0
+argument_list|,
+name|sd
+operator|->
+name|mynor
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+operator|)
+return|;
+block|}
+else|else
+block|{
 return|return
 operator|(
 name|sdopen
@@ -5256,59 +5298,24 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|sdsclose
-parameter_list|(
-name|void
-modifier|*
-name|private
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|mode
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|struct
-name|scsi_data
-modifier|*
-name|sd
-decl_stmt|;
-name|sd
-operator|=
-name|private
-expr_stmt|;
-name|sdclose
-argument_list|(
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-name|sd
-operator|->
-name|mynor
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void sdsclose(void *private, int flags, int mode, struct proc *p) { 	struct scsi_data *sd;  	sd = private;  	sdclose(makedev(0,sd->mynor), 0 , 0, p); 	return; }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_function
 specifier|static

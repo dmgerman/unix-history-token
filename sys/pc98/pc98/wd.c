@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.47 1998/04/13 08:35:37 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.48 1998/04/20 13:51:34 kato Exp $  */
 end_comment
 
 begin_comment
@@ -144,6 +144,12 @@ begin_include
 include|#
 directive|include
 file|<sys/device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -1261,12 +1267,9 @@ begin_comment
 comment|/* downwards travelling open */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|sl_h_close_t
-name|wdsclose
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*static sl_h_close_t	wdsclose; */
+end_comment
 
 begin_comment
 comment|/* downwards travelling close */
@@ -1310,8 +1313,8 @@ block|,
 operator|&
 name|wdsopen
 block|,
-operator|&
-name|wdsclose
+comment|/*&wdsclose*/
+name|NULL
 block|,
 name|NULL
 block|,
@@ -3505,7 +3508,13 @@ operator|->
 name|ich
 argument_list|)
 expr_stmt|;
-name|wdsclose
+if|#
+directive|if
+literal|0
+block|wdsclose(du, 0, 0, curproc);
+else|#
+directive|else
+name|wdsopen
 argument_list|(
 name|du
 argument_list|,
@@ -3516,6 +3525,9 @@ argument_list|,
 name|curproc
 argument_list|)
 expr_stmt|;
+comment|/* open to 0 flags == close */
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
@@ -6053,26 +6065,36 @@ argument|splx(s); 	return;  }
 comment|/*  * Initialize a drive.  */
 argument|static int wdsopen(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du; 	register unsigned int lunit; 	int	error =
 literal|0
-argument|;  	du = private;
+argument|;  	du = private;  	if ((flags& (FREAD|FWRITE)) !=
+literal|0
+argument|) {
 comment|/* Finish flushing IRQs left over from wdattach(). */
 ifdef|#
 directive|ifdef
 name|CMD640
 argument|if (wdtab[du->dk_ctrlr_cmd640].b_active ==
 literal|2
-argument|) 		wdtab[du->dk_ctrlr_cmd640].b_active =
+argument|) 			wdtab[du->dk_ctrlr_cmd640].b_active =
 literal|0
 argument|;
 else|#
 directive|else
 argument|if (wdtab[du->dk_ctrlr].b_active ==
 literal|2
-argument|) 		wdtab[du->dk_ctrlr].b_active =
+argument|) 			wdtab[du->dk_ctrlr].b_active =
 literal|0
 argument|;
 endif|#
 directive|endif
-argument|du->dk_state = OPEN; 	du->dk_flags&= ~DKFL_BADSCAN;  	return (error); }  static void wdsclose(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du;  	du = private; 	du->dk_state = CLOSED; 	return; }  static int wdsioctl( void *private, int cmd, caddr_t addr, int flag, struct proc *p) { 	register struct disk *du; 	int	error;  	du = private;  	wdsleep(du->dk_ctrlr,
+argument|du->dk_state = OPEN; 		du->dk_flags&= ~DKFL_BADSCAN; 	} else { 		du->dk_state = CLOSED; 	} 	return (error); }
+if|#
+directive|if
+literal|0
+argument|static void wdsclose(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du;  	du = private; 	du->dk_state = CLOSED; 	return; }
+endif|#
+directive|endif
+comment|/* 0 */
+argument|static int wdsioctl( void *private, int cmd, caddr_t addr, int flag, struct proc *p) { 	register struct disk *du; 	int	error;  	du = private;  	wdsleep(du->dk_ctrlr,
 literal|"wdioct"
 argument|); 	switch (cmd) { 	case DIOCSBADSCAN: 		if (*(int *)addr) 			du->dk_flags |= DKFL_BADSCAN; 		else 			du->dk_flags&= ~DKFL_BADSCAN; 		return (
 literal|0

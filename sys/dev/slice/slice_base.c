@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: slice_base.c,v 1.1 1998/04/19 23:31:12 julian Exp $  */
+comment|/*-  * Copyright (C) 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: slice_base.c,v 1.2 1998/04/22 01:51:34 julian Exp $  */
 end_comment
 
 begin_include
@@ -2326,13 +2326,10 @@ name|flags
 operator||=
 name|sl_flags
 expr_stmt|;
-name|reject
-label|:
-name|unlockslice
-argument_list|(
-name|slice
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* it was basically a close */
 if|if
 condition|(
 operator|(
@@ -2340,130 +2337,15 @@ name|slice
 operator|->
 name|flags
 operator|&
-name|SLF_INVALID
+name|SLF_OPEN_STATE
 operator|)
 operator|==
-name|SLF_INVALID
+name|SLF_CLOSED
 condition|)
-name|error
-operator|=
-name|ENODEV
-expr_stmt|;
-comment|/* we've been zapped while down there! */
-name|sl_unref
-argument_list|(
-name|slice
-argument_list|)
-expr_stmt|;
-comment|/* lockslice gave us a ref.*/
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sliceclose
-parameter_list|(
-name|struct
-name|slice
-modifier|*
-name|slice
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|mode
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|enum
-name|slc_who
-name|who
-parameter_list|)
 block|{
 name|sh_p
 name|tp
 decl_stmt|;
-if|if
-condition|(
-name|slice
-operator|->
-name|flags
-operator|&
-name|SLF_INVALID
-condition|)
-return|return ;
-if|if
-condition|(
-name|lockslice
-argument_list|(
-name|slice
-argument_list|)
-condition|)
-return|return ;
-switch|switch
-condition|(
-name|who
-condition|)
-block|{
-case|case
-name|SLW_ABOVE
-case|:
-name|slice
-operator|->
-name|flags
-operator|&=
-operator|~
-name|SLF_OPEN_UP
-expr_stmt|;
-break|break;
-case|case
-name|SLW_DEVICE
-case|:
-switch|switch
-condition|(
-name|mode
-operator|&
-name|S_IFMT
-condition|)
-block|{
-case|case
-name|S_IFCHR
-case|:
-name|slice
-operator|->
-name|flags
-operator|&=
-operator|~
-name|SLF_OPEN_CHR
-expr_stmt|;
-break|break;
-case|case
-name|S_IFBLK
-case|:
-name|slice
-operator|->
-name|flags
-operator|&=
-operator|~
-name|SLF_OPEN_BLK
-expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"slice: bad open type"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * If we had an upper handler, ask it to check if it's still 		 * valid. it may decide to self destruct. 		 */
 if|if
 condition|(
@@ -2521,9 +2403,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-break|break;
 block|}
-comment|/* 	 * Last-close semantics strike again 	 * This may refine to a downgrade if we closed (say) the last writer 	 * but there are still readers. 	 * probably open/close should merge to one 'mode-change' function. 	 * (except for a vnode reference with no mode) 	 */
+endif|#
+directive|endif
+name|reject
+label|:
+name|unlockslice
+argument_list|(
+name|slice
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2531,44 +2420,60 @@ name|slice
 operator|->
 name|flags
 operator|&
-name|SLF_OPEN_STATE
+name|SLF_INVALID
 operator|)
 operator|==
-literal|0
+name|SLF_INVALID
 condition|)
-call|(
-modifier|*
-name|slice
-operator|->
-name|handler_down
-operator|->
-name|close
-call|)
-argument_list|(
-name|slice
-operator|->
-name|private_down
-argument_list|,
-name|flags
-argument_list|,
-name|mode
-argument_list|,
-name|p
-argument_list|)
+name|error
+operator|=
+name|ENODEV
 expr_stmt|;
-name|unlockslice
-argument_list|(
-name|slice
-argument_list|)
-expr_stmt|;
+comment|/* we've been zapped while down there! */
 name|sl_unref
 argument_list|(
 name|slice
 argument_list|)
 expr_stmt|;
-return|return ;
+comment|/* lockslice gave us a ref.*/
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|void sliceclose(struct slice *slice, int flags, int mode, 	struct proc * p, enum slc_who who) { 	sh_p	tp;  	if (slice->flags& SLF_INVALID)  		return ; 	if (lockslice(slice)) 		return ; 	switch (who) { 	case	SLW_ABOVE: 		slice->flags&= ~SLF_OPEN_UP; 		break; 	case	SLW_DEVICE: 		switch (mode& S_IFMT) { 		case S_IFCHR: 			slice->flags&= ~SLF_OPEN_CHR; 			break; 		case S_IFBLK: 			slice->flags&= ~SLF_OPEN_BLK; 			break; 		default: 			panic("slice: bad open type"); 		}
+comment|/* 		 * If we had an upper handler, ask it to check if it's still 		 * valid. it may decide to self destruct. 		 */
+end_comment
+
+begin_comment
+unit|if (slice->handler_up) { 			(*slice->handler_up->verify)(slice); 		}
+comment|/* 		 * If we don't have an upper handler, check if 		 * maybe there is now a suitable environment for one. 		 * We may end up with a different handler 		 * from what we had above. Maybe we should clear the hint? 		 * Maybe we should ask the lower one to re-issue the request? 		 */
+end_comment
+
+begin_comment
+unit|if (slice->handler_up == NULL) { 			if ((tp = slice_probeall(slice)) != NULL) { 				(*tp->constructor)(slice); 			} 		} 		break; 	}
+comment|/* 	 * Last-close semantics strike again 	 * This may refine to a downgrade if we closed (say) the last writer 	 * but there are still readers. 	 * probably open/close should merge to one 'mode-change' function. 	 * (except for a vnode reference with no mode) 	 */
+end_comment
+
+begin_endif
+unit|if ( (slice->flags& SLF_OPEN_STATE) == 0) 		(*slice->handler_down->close) (slice->private_down, 				      flags, mode, p); 	unlockslice(slice); 	sl_unref(slice); 	return ; }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_comment
 comment|/*  * control behaviour of slices WRT sharing:  * 2 = no sharing  * 1 = read on a device already mounted (or parent of) is ok. No writes.  * 0 = go ahead.. shoot yourself in the foot.  */
