@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -139,6 +139,10 @@ block|}
 name|ForceMail
 operator|=
 name|TRUE
+expr_stmt|;
+name|FatalErrors
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
