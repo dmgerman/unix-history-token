@@ -173,9 +173,6 @@ name|Elf_Off
 name|size
 decl_stmt|;
 name|int
-name|align
-decl_stmt|;
-name|int
 name|flags
 decl_stmt|;
 name|int
@@ -239,12 +236,6 @@ name|linker_file
 name|lf
 decl_stmt|;
 comment|/* Common fields */
-name|char
-name|pad0
-index|[
-literal|80
-index|]
-decl_stmt|;
 name|caddr_t
 name|address
 decl_stmt|;
@@ -303,12 +294,6 @@ name|long
 name|shstrcnt
 decl_stmt|;
 comment|/* number of bytes in string table */
-name|char
-name|pad2
-index|[
-literal|80
-index|]
-decl_stmt|;
 block|}
 typedef|*
 name|elf_file_t
@@ -2495,22 +2480,6 @@ index|[
 name|pb
 index|]
 operator|.
-name|align
-operator|=
-name|shdr
-index|[
-name|i
-index|]
-operator|.
-name|sh_addralign
-expr_stmt|;
-name|ef
-operator|->
-name|progtab
-index|[
-name|pb
-index|]
-operator|.
 name|sec
 operator|=
 name|i
@@ -3515,7 +3484,11 @@ name|rel
 operator|==
 name|NULL
 condition|)
-continue|continue;
+name|panic
+argument_list|(
+literal|"lost a reltab!"
+argument_list|)
+expr_stmt|;
 name|rellim
 operator|=
 name|rel
@@ -3672,7 +3645,11 @@ name|rela
 operator|==
 name|NULL
 condition|)
-continue|continue;
+name|panic
+argument_list|(
+literal|"lost a relatab!"
+argument_list|)
+expr_stmt|;
 name|relalim
 operator|=
 name|rela
@@ -4876,7 +4853,11 @@ name|rel
 operator|==
 name|NULL
 condition|)
-continue|continue;
+name|panic
+argument_list|(
+literal|"lost a reltab!"
+argument_list|)
+expr_stmt|;
 name|rellim
 operator|=
 name|rel
@@ -5005,7 +4986,11 @@ name|rela
 operator|==
 name|NULL
 condition|)
-continue|continue;
+name|panic
+argument_list|(
+literal|"lost a relatab!"
+argument_list|)
+expr_stmt|;
 name|relalim
 operator|=
 name|rela
