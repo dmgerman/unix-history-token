@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)echo.c	5.4 (Berkeley) %G%"
+literal|"@(#)echo.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,11 +70,8 @@ directive|include
 file|<string.h>
 end_include
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -86,8 +83,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|int
