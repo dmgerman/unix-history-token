@@ -1914,6 +1914,14 @@ expr_stmt|;
 undef|#
 directive|undef
 name|RANGEOF
+name|td2
+operator|->
+name|td_sigstk
+operator|=
+name|td
+operator|->
+name|td_sigstk
+expr_stmt|;
 comment|/* Set up the thread as an active thread (as if runnable). */
 name|ke2
 operator|->
@@ -2275,11 +2283,17 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-operator|(
-name|P_ALTSTACK
-operator||
 name|P_SUGID
-operator|)
+expr_stmt|;
+name|td2
+operator|->
+name|td_pflags
+operator||=
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_ALTSTACK
 expr_stmt|;
 name|SESS_LOCK
 argument_list|(

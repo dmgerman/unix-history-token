@@ -629,6 +629,10 @@ name|u_int
 name|td_generation
 decl_stmt|;
 comment|/* (k) Enable detection of preemption */
+name|stack_t
+name|td_sigstk
+decl_stmt|;
+comment|/* (k) Stack ptr and on-stack flag. */
 define|#
 directive|define
 name|td_endzero
@@ -1008,6 +1012,17 @@ end_define
 
 begin_comment
 comment|/* Snapshot copy-on-write in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_ALTSTACK
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Have alternate signal stack. */
 end_comment
 
 begin_define
@@ -2077,16 +2092,12 @@ comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
 name|p_endzero
-value|p_sigstk
+value|p_magic
 comment|/* The following fields are all copied upon creation in fork. */
 define|#
 directive|define
 name|p_startcopy
 value|p_endzero
-name|stack_t
-name|p_sigstk
-decl_stmt|;
-comment|/* (c) Stack ptr and on-stack flag. */
 name|u_int
 name|p_magic
 decl_stmt|;
@@ -2482,17 +2493,6 @@ end_define
 
 begin_comment
 comment|/* Process is in jail. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_ALTSTACK
-value|0x2000000
-end_define
-
-begin_comment
-comment|/* Have alternate signal stack. */
 end_comment
 
 begin_define
