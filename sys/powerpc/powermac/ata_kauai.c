@@ -142,11 +142,26 @@ name|ATA_KAUAI_REGOFFSET
 value|0x2000
 end_define
 
+begin_comment
+comment|/*  * Offset to alt-control register from base  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ATA_KAUAI_ALTOFFSET
-value|(ATA_KAUAI_REGOFFSET + 0x16)
+value|(ATA_KAUAI_REGOFFSET + 0x160)
+end_define
+
+begin_comment
+comment|/*  * Define the gap between registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_KAUAI_REGGAP
+value|16
 end_define
 
 begin_comment
@@ -552,7 +567,7 @@ argument_list|)
 expr_stmt|;
 name|rid
 operator|=
-literal|0
+name|PCIR_BARS
 expr_stmt|;
 name|mem
 operator|=
@@ -631,6 +646,8 @@ operator|.
 name|offset
 operator|=
 name|i
+operator|*
+name|ATA_KAUAI_REGGAP
 operator|+
 name|ATA_KAUAI_REGOFFSET
 expr_stmt|;
