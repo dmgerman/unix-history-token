@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.2 (Berkeley) %G%"
+literal|"@(#)field.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|</usr/src/include/pwd.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<chpass.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -981,7 +987,7 @@ name|pw
 operator|->
 name|pw_shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 return|return
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.3 (Berkeley) %G%"
+literal|"@(#)util.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|</usr/src/include/pwd.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -752,7 +758,7 @@ name|pw
 operator|->
 name|pw_shell
 else|:
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|)
 expr_stmt|;
 block|}
@@ -807,7 +813,7 @@ name|pw
 operator|->
 name|pw_shell
 else|:
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|)
 expr_stmt|;
 break|break;
