@@ -18370,6 +18370,14 @@ name|MNT_NOWAIT
 expr_stmt|;
 name|top
 label|:
+comment|/* 	 * We must wait for any I/O in progress to finish so that 	 * all potential buffers on the dirty list will be visible. 	 */
+name|drain_output
+argument_list|(
+name|vp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getdirtybuf
@@ -19082,15 +19090,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-comment|/* 	 * We must wait for any I/O in progress to finish so that 	 * all potential buffers on the dirty list will be visible. 	 * Once they are all there, proceed with the second pass 	 * which will wait for the I/O as per above. 	 */
-name|drain_output
-argument_list|(
-name|vp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * The brief unlock is to allow any pent up dependency 	 * processing to be done. 	 */
+comment|/* 	 * The brief unlock is to allow any pent up dependency 	 * processing to be done.  Then proceed with the second pass. 	 */
 if|if
 condition|(
 name|waitfor
@@ -19150,7 +19150,14 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are trying to sync a block device, some of its buffers may 	 * contain metadata that cannot be written until the contents of some 	 * partially written files have been written to disk. The only easy 	 * way to accomplish this is to sync the entire filesystem (luckily 	 * this happens rarely). 	 */
+comment|/* 	 * If we are trying to sync a block device, some of its buffers may 	 * contain metadata that cannot be written until the contents of some 	 * partially written files have been written to disk. The only easy 	 * way to accomplish this is to sync the entire filesystem (luckily 	 * this happens rarely). 	 * 	 * We must wait for any I/O in progress to finish so that 	 * all potential buffers on the dirty list will be visible. 	 */
+name|drain_output
+argument_list|(
+name|vp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vn_isdisk
