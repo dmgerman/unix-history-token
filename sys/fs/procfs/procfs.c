@@ -226,6 +226,21 @@ block|{
 comment|/* XXX inefficient, split into separate functions */
 if|if
 condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_SUGID
+condition|)
+name|vap
+operator|->
+name|va_mode
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|pn
