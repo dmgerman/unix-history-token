@@ -1117,14 +1117,14 @@ comment|/* recommended stack size */
 end_comment
 
 begin_comment
-comment|/* Have enough typedefs for this now.  XXX */
+comment|/*  * Forward declaration for __ucontext so that sigreturn can use it  * without having to include<ucontext.h>.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/ucontext.h>
-end_include
+begin_struct_decl
+struct_decl|struct
+name|__ucontext
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */

@@ -19,6 +19,12 @@ begin_comment
 comment|/*  * Signal frames, arguments passed to application signal handlers.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|osigframe
@@ -59,6 +65,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

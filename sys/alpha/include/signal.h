@@ -48,6 +48,16 @@ value|(1024 * 4)
 end_define
 
 begin_comment
+comment|/*  * Only the kernel should need these old type definitions.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
 comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  *  * Note that sc_regs[] and sc_fpregs[]+sc_fpcr are inline  * representations of 'struct reg' and 'struct fpreg', respectively.  */
 end_comment
 
@@ -148,6 +158,11 @@ comment|/* sc_fp_trap_pc, sc_fp_trigger_sum, sc_fp_trigger_inst */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The sequence of the fields should match those in  * mcontext_t. Keep them in sync!  */

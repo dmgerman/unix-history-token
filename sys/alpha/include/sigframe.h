@@ -16,6 +16,12 @@ name|_MACHINE_SIGFRAME_H_
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|osigframe
@@ -31,6 +37,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|sigframe
@@ -39,7 +50,8 @@ name|unsigned
 name|long
 name|__spare__
 decl_stmt|;
-name|ucontext_t
+name|struct
+name|__ucontext
 name|sf_uc
 decl_stmt|;
 name|siginfo_t

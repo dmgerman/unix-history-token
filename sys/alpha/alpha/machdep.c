@@ -248,6 +248,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -6589,7 +6595,7 @@ name|td
 parameter_list|,
 name|struct
 name|sigreturn_args
-comment|/* { 		ucontext_t *sigcntxp; 	} */
+comment|/* { 		const struct __ucontext *sigcntxp; 	} */
 modifier|*
 name|uap
 parameter_list|)

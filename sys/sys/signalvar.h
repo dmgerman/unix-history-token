@@ -79,6 +79,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Compatibility.  */
 end_comment
@@ -171,6 +177,15 @@ name|void
 modifier|*
 typedef|));
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* additional signal action values, used only temporarily/internally */
