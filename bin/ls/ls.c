@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.16 1997/08/07 22:28:23 steve Exp $"
+literal|"$Id: ls.c,v 1.17 1997/09/18 06:42:27 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +388,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_octal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show unprintables as \xxx */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_recursive
 decl_stmt|;
 end_decl_stmt
@@ -668,7 +678,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTWacdfgikloqrstu"
+literal|"1ACFLRTWabcdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -851,6 +861,10 @@ name|f_nonprint
 operator|=
 literal|1
 expr_stmt|;
+name|f_octal
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -890,6 +904,18 @@ case|:
 name|f_whiteout
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|f_octal
+operator|=
+literal|1
+expr_stmt|;
+name|f_nonprint
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -1710,6 +1736,36 @@ name|cur
 operator|->
 name|fts_namelen
 expr_stmt|;
+if|if
+condition|(
+name|f_octal
+condition|)
+block|{
+name|int
+name|t
+init|=
+name|len_octal
+argument_list|(
+name|cur
+operator|->
+name|fts_name
+argument_list|,
+name|cur
+operator|->
+name|fts_namelen
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|t
+operator|>
+name|maxlen
+condition|)
+name|maxlen
+operator|=
+name|t
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|needstats

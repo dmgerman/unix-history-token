@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.13 1997/08/07 15:33:48 steve Exp $"
+literal|"$Id: print.c,v 1.14 1997/08/07 22:28:24 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,6 +631,21 @@ operator|->
 name|st_mtime
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f_octal
+condition|)
+operator|(
+name|void
+operator|)
+name|prn_octal
+argument_list|(
+name|p
+operator|->
+name|fts_name
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -1169,6 +1184,15 @@ argument_list|)
 expr_stmt|;
 name|chcnt
 operator|+=
+name|f_octal
+condition|?
+name|prn_octal
+argument_list|(
+name|p
+operator|->
+name|fts_name
+argument_list|)
+else|:
 name|printf
 argument_list|(
 literal|"%s"
@@ -1662,6 +1686,29 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|f_octal
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" -> "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|prn_octal
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 operator|(
 name|void
 operator|)
