@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fio.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -90,6 +96,15 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
+if|if
+condition|(
+name|f__init
+operator|!=
+literal|1
+condition|)
+name|f_init
+argument_list|()
+expr_stmt|;
 name|err
 operator|=
 name|fstat

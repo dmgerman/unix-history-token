@@ -231,7 +231,14 @@ specifier|extern
 name|int
 name|G77_abort_0
 parameter_list|()
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+block|)
+decl_stmt|);
+end_decl_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -241,13 +248,16 @@ argument_list|,
 name|G77_Non_Y2K_Compliance_Message
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|G77_abort_0
 argument_list|()
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
