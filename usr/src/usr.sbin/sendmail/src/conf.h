@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -103,17 +103,6 @@ end_define
 
 begin_comment
 comment|/* maximum number of trusted users */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXUSERENVIRON
-value|40
-end_define
-
-begin_comment
-comment|/* max # of items in user environ */
 end_comment
 
 begin_define
