@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_execve.c,v 1.20 1994/03/26 12:24:27 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.2 1994/05/25 09:03:03 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1679,17 +1679,22 @@ name|vect_table_size
 decl_stmt|,
 name|string_table_size
 decl_stmt|;
+name|struct
+name|ps_strings
+modifier|*
+name|arginfo
+decl_stmt|;
 comment|/* 	 * Calculate string base and vector table pointers. 	 */
+name|arginfo
+operator|=
+name|PS_STRINGS
+expr_stmt|;
 name|destp
 operator|=
-call|(
-name|caddr_t
-call|)
-argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|USRSTACK
+name|arginfo
 operator|-
 name|roundup
 argument_list|(
@@ -1705,7 +1710,6 @@ sizeof|sizeof
 argument_list|(
 name|char
 operator|*
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1766,6 +1770,20 @@ name|iparams
 operator|->
 name|envc
 expr_stmt|;
+comment|/* 	 * Fill in "ps_strings" struct for ps, w, etc. 	 */
+name|arginfo
+operator|->
+name|ps_argvstr
+operator|=
+name|destp
+expr_stmt|;
+name|arginfo
+operator|->
+name|ps_nargvstr
+operator|=
+name|argc
+expr_stmt|;
+comment|/* 	 * Copy the arg strings and fill in vector table as we go. 	 */
 for|for
 control|(
 init|;
@@ -1806,6 +1824,19 @@ operator|)
 operator|=
 name|NULL
 expr_stmt|;
+name|arginfo
+operator|->
+name|ps_envstr
+operator|=
+name|destp
+expr_stmt|;
+name|arginfo
+operator|->
+name|ps_nenvstr
+operator|=
+name|envc
+expr_stmt|;
+comment|/* 	 * Copy the env strings and fill in vector table as we go. 	 */
 for|for
 control|(
 init|;
