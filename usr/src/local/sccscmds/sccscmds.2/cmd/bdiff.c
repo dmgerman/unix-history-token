@@ -11,7 +11,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)bdiff.c	4.4	%G%"
+literal|"@(#)bdiff.c	4.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|diff
 index|[]
 init|=
-literal|"/bin/diff"
+literal|"/usr/bin/diff"
 decl_stmt|;
 end_decl_stmt
 
