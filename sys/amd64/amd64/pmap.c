@@ -2679,13 +2679,23 @@ name|pte
 operator|=
 name|npte
 expr_stmt|;
-comment|/*if (opte)*/
+ifdef|#
+directive|ifdef
+name|SMP
+name|invlpg
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* XXX what about SMP? */
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2719,12 +2729,23 @@ name|pte
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|invlpg
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|invltlb_1pg
 argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* XXX what about SMP? */
+endif|#
+directive|endif
 block|}
 end_function
 
