@@ -6941,7 +6941,7 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 operator|+
 name|blkcount
 operator|)
@@ -6965,7 +6965,7 @@ literal|"I/O beyond end of unit (%u,%d> %u)\n"
 argument_list|,
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 argument_list|,
 name|blkcount
 argument_list|,
@@ -7010,7 +7010,7 @@ argument_list|,
 comment|/* target and length high 3 bits */
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 argument_list|,
 comment|/* physical block number */
 name|mc
@@ -7179,7 +7179,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(sc->mlx_dev, "  b_bcount %ld  blkcount %ld  b_blkno %d\n",  			  bp->b_bcount, bp->b_bcount / MLX_BLKSIZE, bp->b_blkno); 	    device_printf(sc->mlx_dev, "  %13D\n", mc->mc_mailbox, " ");
+block|device_printf(sc->mlx_dev, "  b_bcount %ld  blkcount %ld  b_pblkno %d\n",  			  bp->b_bcount, bp->b_bcount / MLX_BLKSIZE, bp->b_pblkno); 	    device_printf(sc->mlx_dev, "  %13D\n", mc->mc_mailbox, " ");
 endif|#
 directive|endif
 break|break;

@@ -3696,7 +3696,7 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 operator|+
 name|blkcount
 operator|)
@@ -3720,7 +3720,7 @@ literal|"I/O beyond end of unit (%u,%d> %u)\n"
 argument_list|,
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 argument_list|,
 name|blkcount
 argument_list|,
@@ -3759,7 +3759,7 @@ name|mb_lba
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 expr_stmt|;
 name|ac
 operator|->
