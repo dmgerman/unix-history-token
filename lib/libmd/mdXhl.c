@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.7 1996/07/24 20:55:38 phk Exp $  *  */
+comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.8 1996/10/25 06:48:12 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -175,6 +175,7 @@ name|char
 modifier|*
 name|MDXFile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename
