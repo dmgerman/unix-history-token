@@ -491,6 +491,26 @@ directive|include
 file|<machine/sigframe.h>
 end_include
 
+begin_comment
+comment|/* Sanity check for __curthread() */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|offsetof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|,
+name|pc_curthread
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|extern
 name|void
