@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/vm/RCS/vm_fault.c,v 1.2 92/01/21 21:58:17 william Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/vm/vm_fault.c,v 1.1.1.1 93/06/12 14:57:40 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,6 +300,13 @@ argument_list|)
 expr_stmt|;
 name|UNLOCK_THINGS
 expr_stmt|;
+name|thread_wakeup
+argument_list|(
+operator|&
+name|vm_pages_needed
+argument_list|)
+expr_stmt|;
+comment|/* XXX! -- what does this do? */
 name|thread_block
 argument_list|()
 expr_stmt|;
@@ -416,6 +423,13 @@ argument_list|)
 expr_stmt|;
 name|UNLOCK_THINGS
 expr_stmt|;
+name|thread_wakeup
+argument_list|(
+operator|&
+name|vm_pages_needed
+argument_list|)
+expr_stmt|;
+comment|/* XXX! -- what does this do? */
 name|thread_block
 argument_list|()
 expr_stmt|;
@@ -962,7 +976,7 @@ comment|/* 			 *	If another map is truly sharing this 			 *	page with us, we hav
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_deactivate
+name|vm_page_activate
 argument_list|(
 name|m
 argument_list|)
@@ -1219,6 +1233,13 @@ argument_list|)
 expr_stmt|;
 name|UNLOCK_THINGS
 expr_stmt|;
+name|thread_wakeup
+argument_list|(
+operator|&
+name|vm_pages_needed
+argument_list|)
+expr_stmt|;
+comment|/* XXX! -- what does this do? */
 name|thread_block
 argument_list|()
 expr_stmt|;
