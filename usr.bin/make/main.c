@@ -2173,7 +2173,7 @@ directive|ifndef
 name|MACHINE_ARCH
 name|machine_arch
 operator|=
-literal|"unknown"
+literal|"i386"
 expr_stmt|;
 else|#
 directive|else
