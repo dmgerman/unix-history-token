@@ -766,7 +766,18 @@ value|(MNT_UPDATE|MNT_DELEXPORT|MNT_RELOAD|MNT_FORCE)
 end_define
 
 begin_comment
-comment|/*  * Internal filesystem control flags stored in mnt_kern_flag.  *  * MNTK_UNMOUNT locks the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
+comment|/*  * Internal filesystem control flags stored in mnt_kern_flag.  *  * MNTK_UNMOUNT locks the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  *  * MNTK_UNMOUNTF permits filesystems to detect a forced unmount while  * dounmount() is still waiting to lock the mountpoint. This allows  * the filesystem to cancel operations that might otherwise deadlock  * with the unmount attempt (used by NFS).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_UNMOUNTF
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* forced unmount in progress */
 end_comment
 
 begin_define
