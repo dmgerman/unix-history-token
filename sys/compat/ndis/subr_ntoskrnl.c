@@ -4383,8 +4383,10 @@ index|]
 expr_stmt|;
 name|status
 operator|=
-name|disp
+name|MSCALL2
 argument_list|(
+name|disp
+argument_list|,
 name|dobj
 argument_list|,
 name|ip
@@ -4575,8 +4577,10 @@ name|isl_completionfunc
 expr_stmt|;
 name|status
 operator|=
-name|cf
+name|MSCALL3
 argument_list|(
+name|cf
+argument_list|,
 name|dobj
 argument_list|,
 name|ip

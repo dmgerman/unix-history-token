@@ -4055,6 +4055,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STATUS_PENDING
+value|0x00000103
+end_define
+
+begin_define
+define|#
+directive|define
 name|STATUS_INVALID_PARAMETER
 value|0xC000000D
 end_define
