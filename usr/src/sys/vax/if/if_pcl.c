@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_pcl.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_pcl.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -99,6 +99,23 @@ directive|include
 file|"../net/route.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BBNNET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INET
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -115,12 +132,6 @@ begin_include
 include|#
 directive|include
 file|"../netinet/ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../netinet/ip_var.h"
 end_include
 
 begin_include
@@ -2015,6 +2026,11 @@ argument_list|,
 name|len
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -2168,6 +2184,12 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2186,12 +2208,6 @@ name|ifp
 operator|->
 name|if_unit
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_UP
 expr_stmt|;
 break|break;
 default|default:

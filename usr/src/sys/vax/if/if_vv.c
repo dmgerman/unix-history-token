@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -91,6 +91,29 @@ directive|include
 file|"../net/route.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BBNNET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INET
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -115,11 +138,10 @@ directive|include
 file|"../netinet/ip.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../netinet/ip_var.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -173,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|VVMTU
-value|(1024)
+value|(1536)
 end_define
 
 begin_define
@@ -1800,6 +1822,8 @@ name|vv_header
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3196,6 +3220,11 @@ argument_list|,
 name|len
 argument_list|,
 name|off
+argument_list|,
+operator|&
+name|vs
+operator|->
+name|vs_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -3231,6 +3260,26 @@ condition|(
 name|off
 condition|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|ifp
+operator|=
+operator|*
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ifnet
+operator|*
+operator|*
+argument_list|)
+operator|)
+expr_stmt|;
 name|m
 operator|->
 name|m_off
@@ -3252,6 +3301,21 @@ sizeof|sizeof
 argument_list|(
 name|u_short
 argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ifnet
+operator|*
+operator|*
+argument_list|)
+operator|)
+operator|=
+name|ifp
 expr_stmt|;
 block|}
 comment|/* Keep track of source address of this packet */
@@ -4197,6 +4261,12 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4257,12 +4327,6 @@ operator|)
 return|;
 break|break;
 block|}
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_UP
-expr_stmt|;
 break|break;
 default|default:
 name|error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_en.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_en.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -91,6 +91,29 @@ directive|include
 file|"../net/route.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BBNNET
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INET
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -115,11 +138,10 @@ directive|include
 file|"../netinet/ip.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../netinet/ip_var.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2049,6 +2071,11 @@ argument_list|,
 name|len
 argument_list|,
 name|off
+argument_list|,
+operator|&
+name|es
+operator|->
+name|es_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -2065,6 +2092,26 @@ condition|(
 name|off
 condition|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|ifp
+operator|=
+operator|*
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ifnet
+operator|*
+operator|*
+argument_list|)
+operator|)
+expr_stmt|;
 name|m
 operator|->
 name|m_off
@@ -2086,6 +2133,21 @@ sizeof|sizeof
 argument_list|(
 name|u_short
 argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ifnet
+operator|*
+operator|*
+argument_list|)
+operator|)
+operator|=
+name|ifp
 expr_stmt|;
 block|}
 switch|switch
@@ -2803,8 +2865,13 @@ operator|)
 name|type
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|gotheader
 label|:
+endif|#
+directive|endif
 comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
 name|s
 operator|=
@@ -3085,6 +3152,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+break|break;
 block|}
 name|splx
 argument_list|(
