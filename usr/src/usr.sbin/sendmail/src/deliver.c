@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.93
+literal|3.94
 operator|%
 name|G
 operator|%
@@ -2191,6 +2191,12 @@ endif|#
 directive|endif
 endif|SMTP
 comment|/* 	**  Actually fork the mailer process. 	**	DOFORK is clever about retrying. 	*/
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
+comment|/* for debugging */
 name|DOFORK
 argument_list|(
 name|XFORK
@@ -5650,7 +5656,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\ncheckerrors: errorqueue:\n"
+literal|"\ncheckerrors: FatalErrors %d, errorqueue:\n"
 argument_list|)
 expr_stmt|;
 name|printaddr

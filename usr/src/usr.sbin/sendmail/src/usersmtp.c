@@ -39,7 +39,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -843,6 +843,12 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* arrange to time out the read */
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
+comment|/* for debugging */
 if|if
 condition|(
 name|setjmp

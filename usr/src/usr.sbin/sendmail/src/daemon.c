@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -550,6 +550,12 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
+comment|/* for debugging */
 if|if
 condition|(
 name|connect
