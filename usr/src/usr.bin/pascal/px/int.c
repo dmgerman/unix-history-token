@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)int.c 1.5 %G%"
+literal|"@(#)int.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,10 @@ decl_stmt|,
 modifier|*
 name|file
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 specifier|register
 name|long
 name|bytesread
@@ -166,6 +170,13 @@ name|_argc
 operator|-=
 literal|2
 expr_stmt|;
+name|name
+operator|=
+name|_argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -191,6 +202,13 @@ operator|++
 expr_stmt|;
 name|_argc
 operator|--
+expr_stmt|;
+name|name
+operator|=
+name|_argv
+index|[
+literal|0
+index|]
 expr_stmt|;
 block|}
 elseif|else
@@ -222,6 +240,13 @@ expr_stmt|;
 name|_argc
 operator|--
 expr_stmt|;
+name|name
+operator|=
+name|_argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -238,6 +263,10 @@ condition|)
 name|file
 operator|=
 literal|"obj"
+expr_stmt|;
+name|name
+operator|=
+name|file
 expr_stmt|;
 block|}
 comment|/* 	 * Process program header information 	 */
@@ -370,7 +399,7 @@ name|stderr
 argument_list|,
 literal|"%s is not a Pascal interpreter file\n"
 argument_list|,
-name|file
+name|name
 argument_list|)
 expr_stmt|;
 name|exit
@@ -394,7 +423,7 @@ name|stderr
 argument_list|,
 literal|"%s is obsolete and must be recompiled\n"
 argument_list|,
-name|file
+name|name
 argument_list|)
 expr_stmt|;
 name|exit
