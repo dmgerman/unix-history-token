@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)tree.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)tree.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -27,13 +27,6 @@ name|char
 name|STACK
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|STACKSIZE
-value|1024
-end_define
 
 begin_define
 define|#
@@ -75,9 +68,7 @@ end_define
 begin_decl_stmt
 name|STACK
 name|stack
-index|[
-name|STACKSIZE
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
