@@ -1154,9 +1154,6 @@ argument_list|,
 name|sigact
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD
 if|if
 condition|(
 name|sig
@@ -1174,8 +1171,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1361,18 +1356,6 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|BSD
-name|signal
-argument_list|(
-name|signo
-argument_list|,
-name|onsig
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|signo

@@ -86,12 +86,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -115,11 +109,6 @@ include|#
 directive|include
 file|<paths.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -422,27 +411,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|SYSV
-end_if
-
-begin_function_decl
-name|STATIC
-name|int
-name|onsigchild
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|STATIC
 name|pid_t
@@ -547,7 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Turn job control on and off.  *  * Note:  This code assumes that the third arg to ioctl is a character  * pointer, which is true on Berkeley systems but not System V.  Since  * System V doesn't have job control yet, this isn't a problem now.  */
+comment|/*  * Turn job control on and off.  */
 end_comment
 
 begin_decl_stmt
@@ -5053,39 +5021,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do a wait system call.  If job control is compiled in, we accept  * stopped processes.  If block is zero, we return a value of zero  * rather than blocking.  *  * System V doesn't have a non-blocking wait system call.  It does  * have a SIGCLD signal that is sent to a process when one of it's  * children dies.  The obvious way to use SIGCLD would be to install  * a handler for SIGCLD which simply bumped a counter when a SIGCLD  * was received, and have waitproc bump another counter when it got  * the status of a process.  Waitproc would then know that a wait  * system call would not block if the two counters were different.  * This approach doesn't work because if a process has children that  * have not been waited for, System V will send it a SIGCLD when it  * installs a signal handler for SIGCLD.  What this means is that when  * a child exits, the shell will be sent SIGCLD signals continuously  * until is runs out of stack space, unless it does a wait call before  * restoring the signal handler.  The code below takes advantage of  * this (mis)feature by installing a signal handler for SIGCLD and  * then checking to see whether it was called.  If there are any  * children to be waited for, it will be.  *  * If neither SYSV nor BSD is defined, we don't implement nonblocking  * waits at all.  In this case, the user will not be informed when  * a background process until the next time she runs a real program  * (as opposed to running a builtin command or just typing return),  * and the jobs command may give out of date information.  */
+comment|/*  * Do a wait system call.  If job control is compiled in, we accept  * stopped processes.  If block is zero, we return a value of zero  * rather than blocking.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSV
-end_ifdef
-
-begin_decl_stmt
-name|STATIC
-name|sig_atomic_t
-name|gotsigchild
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|STATIC
-name|int
-name|onsigchild
-parameter_list|()
-block|{
-name|gotsigchild
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|STATIC
@@ -5100,9 +5037,6 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|BSD
 name|int
 name|flags
 decl_stmt|;
@@ -5146,82 +5080,6 @@ operator|)
 name|NULL
 argument_list|)
 return|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|SYSV
-name|int
-function_decl|(
-modifier|*
-name|save
-function_decl|)
-parameter_list|()
-function_decl|;
-if|if
-condition|(
-name|block
-operator|==
-literal|0
-condition|)
-block|{
-name|gotsigchild
-operator|=
-literal|0
-expr_stmt|;
-name|save
-operator|=
-name|signal
-argument_list|(
-name|SIGCLD
-argument_list|,
-name|onsigchild
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGCLD
-argument_list|,
-name|save
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|gotsigchild
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-block|}
-return|return
-name|wait
-argument_list|(
-name|status
-argument_list|)
-return|;
-else|#
-directive|else
-if|if
-condition|(
-name|block
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|wait
-argument_list|(
-name|status
-argument_list|)
-return|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 block|}
 end_function
 

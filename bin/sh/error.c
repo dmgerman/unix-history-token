@@ -701,19 +701,6 @@ block|,
 literal|"text busy"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|SYSV
-block|{
-name|EAGAIN
-block|,
-name|E_EXEC
-block|,
-literal|"not enough memory"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|ENOMEM
 block|,
