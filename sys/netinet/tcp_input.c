@@ -614,6 +614,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_insecure_rst
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|insecure_rst
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_insecure_rst
+argument_list|,
+literal|0
+argument_list|,
+literal|"Follow the old (insecure) criteria for accepting RST packets."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -6465,6 +6495,10 @@ operator|!=
 name|th
 operator|->
 name|th_seq
+operator|&&
+name|tcp_insecure_rst
+operator|==
+literal|0
 condition|)
 block|{
 name|tcpstat
