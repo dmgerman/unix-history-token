@@ -840,7 +840,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|struct
@@ -1789,7 +1789,7 @@ name|slen
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2058,7 +2058,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|int
@@ -2477,7 +2477,7 @@ name|slen
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2583,7 +2583,7 @@ name|nsizes
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 init|=
 name|CIOCGSESSION
