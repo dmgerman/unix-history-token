@@ -45,7 +45,7 @@ comment|/* lint */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos5.c	5.4 (Berkeley) %G%"
+literal|"@(#)kerberos5.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
