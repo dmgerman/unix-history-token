@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_cons.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_cons.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -958,7 +958,7 @@ name|tp_incoming
 argument_list|(
 argument|lcp
 argument_list|,
-argument|m0
+argument|m
 argument_list|)
 end_macro
 
@@ -971,26 +971,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m0
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
-init|=
-name|m0
-operator|->
-name|m_next
 decl_stmt|;
-comment|/* m0 has calling sockaddr_x25 */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|isopcb
@@ -1022,12 +1012,7 @@ name|tp_incoming_pending
 argument_list|)
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|pk_clear
+name|pk_close
 argument_list|(
 name|lcp
 argument_list|)
@@ -1040,12 +1025,6 @@ name|tp_incoming_pending
 operator|.
 name|isop_next
 expr_stmt|;
-name|pk_output
-argument_list|(
-name|lcp
-argument_list|)
-expr_stmt|;
-comment|/* Confirms call */
 name|lcp
 operator|->
 name|lcd_upper
@@ -1061,6 +1040,14 @@ name|caddr_t
 operator|)
 name|isop
 expr_stmt|;
+name|lcp
+operator|->
+name|lcd_send
+argument_list|(
+name|lcp
+argument_list|)
+expr_stmt|;
+comment|/* Confirms call */
 name|isop
 operator|->
 name|isop_chan
@@ -1139,11 +1126,6 @@ operator|.
 name|len
 operator|-
 name|PKHEADERLN
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 block|}
@@ -1405,6 +1387,9 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_CCONN
@@ -1496,8 +1481,11 @@ name|pr_protocol
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-return|return
+if|if
+condition|(
 operator|(
+name|error
+operator|=
 name|make_partial_x25_packet
 argument_list|(
 name|isop
@@ -1506,7 +1494,12 @@ name|lcp
 argument_list|,
 name|m
 argument_list|)
-operator|||
+operator|)
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
 name|pk_connect
 argument_list|(
 name|lcp
@@ -1516,7 +1509,9 @@ name|lcp
 operator|->
 name|lcd_faddr
 argument_list|)
-operator|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_block
@@ -2001,7 +1996,7 @@ return|return
 literal|0
 return|;
 block|}
-name|MGET
+name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
@@ -2038,6 +2033,24 @@ operator|=
 name|ptr
 operator|++
 expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|=
+literal|0
+expr_stmt|;
+name|pk_build_facilities
+argument_list|(
+name|m
+argument_list|,
+operator|&
+name|lcp
+operator|->
+name|lcd_faddr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_CADDR
@@ -2065,6 +2078,19 @@ condition|)
 block|{
 operator|*
 name|ptr
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Marker to separate X.25 facitilies from CCITT ones */
+operator|*
+name|ptr
+operator|++
+operator|=
+literal|0x0f
+expr_stmt|;
+operator|*
+name|ptr
 operator|=
 literal|0xcb
 expr_stmt|;
@@ -2079,7 +2105,7 @@ comment|/* leave room for facil param len (in OCTETS + 1) */
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* leave room for the facil param len (in nibbles), 				* high two bits of which indicate full/partial NSAP 				*/
+comment|/* leave room for the facil param len (in nibbles), 				 * high two bits of which indicate full/partial NSAP 				 */
 name|len
 operator|=
 name|isop
@@ -2167,7 +2193,7 @@ comment|/* leave room for facil param len (in OCTETS + 1) */
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* leave room for the facil param len (in nibbles), 				* high two bits of which indicate full/partial NSAP 				*/
+comment|/* leave room for the facil param len (in nibbles), 				 * high two bits of which indicate full/partial NSAP 				 */
 name|len
 operator|=
 name|isop
@@ -2390,6 +2416,12 @@ condition|)
 return|return
 name|E_CO_PNA_LONG
 return|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
 name|m
 operator|->
 name|m_len
