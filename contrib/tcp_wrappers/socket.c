@@ -1014,9 +1014,9 @@ argument_list|,
 operator|&
 name|res0
 argument_list|)
+operator|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|freeaddrinfo
