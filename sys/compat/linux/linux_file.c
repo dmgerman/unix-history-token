@@ -882,7 +882,7 @@ name|result
 decl_stmt|;
 name|struct
 name|fcntl_args
-comment|/* { 	int fd; 	int cmd; 	int arg;     } */
+comment|/* { 	int fd; 	int cmd; 	long arg;     } */
 name|fcntl_args
 decl_stmt|;
 name|struct
@@ -893,6 +893,16 @@ name|struct
 name|flock
 modifier|*
 name|bsd_flock
+decl_stmt|;
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|fp
 decl_stmt|;
 name|caddr_t
 name|sg
@@ -926,8 +936,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): fcntl(%d, %08x, *)\n"
+literal|"Linux-emul(%ld): fcntl(%d, %08x, *)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -1511,6 +1524,55 @@ return|;
 case|case
 name|LINUX_F_SETOWN
 case|:
+comment|/* 	 * XXX some Linux applications depend on F_SETOWN having no 	 * significant effect for pipes (SIGIO is not delivered for 	 * pipes under Linux-2.2.35 at least). 	 */
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|args
+operator|->
+name|fd
+operator|>=
+name|fdp
+operator|->
+name|fd_nfiles
+operator|||
+operator|(
+name|fp
+operator|=
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|args
+operator|->
+name|fd
+index|]
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|EBADF
+return|;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_PIPE
+condition|)
+return|return
+name|EINVAL
+return|;
 name|fcntl_args
 operator|.
 name|cmd
