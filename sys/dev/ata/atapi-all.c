@@ -4513,6 +4513,11 @@ name|timeout
 init|=
 literal|0
 decl_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|timeout
