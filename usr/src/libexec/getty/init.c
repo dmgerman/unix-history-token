@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	4.1 (Berkeley) 83/07/06"
+literal|"@(#)init.c	4.2 (Berkeley) 83/07/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,7 +488,14 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* set hangup on close */
+comment|/* don't set hangup on close */
+block|{
+literal|"ub"
+block|,
+literal|0
+block|}
+block|,
+comment|/* unbuffered output */
 block|{
 literal|0
 block|}
