@@ -1423,7 +1423,7 @@ literal|15
 expr_stmt|;
 name|sc
 operator|->
-name|sc_extended_geometry
+name|sc_extended_geom
 operator|=
 literal|1
 expr_stmt|;
