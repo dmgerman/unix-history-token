@@ -11699,14 +11699,14 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
+name|RT_ADDREF
+argument_list|(
 name|opt
 operator|->
 name|ip6po_nextroute
 operator|.
 name|ro_rt
-operator|->
-name|rt_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(

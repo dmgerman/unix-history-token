@@ -1500,12 +1500,12 @@ operator|->
 name|ro_rt
 argument_list|)
 expr_stmt|;
+name|RT_ADDREF
+argument_list|(
 name|ro
 operator|->
 name|ro_rt
-operator|->
-name|rt_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(

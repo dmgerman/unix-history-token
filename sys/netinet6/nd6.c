@@ -3255,10 +3255,10 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+name|RT_REMREF
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Validation for the entry. 	 * Note that the check for rt_llinfo is necessary because a cloned 	 * route from a parent route that has the L flag (e.g. the default 	 * route to a p2p interface) may have the flag, too, while the 	 * destination is not actually a neighbor. 	 * XXX: we can't use rt->rt_ifp to check for the interface, since 	 *      it might be the loopback interface if the entry is for our 	 *      own address on a non-loopback interface. Instead, we should 	 *      use rt->rt_ifa->ifa_ifp, which would specify the REAL 	 *	interface. 	 */
 if|if
@@ -7121,10 +7121,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|RT_REMREF
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(

@@ -1380,10 +1380,10 @@ goto|goto
 name|bad
 goto|;
 comment|/* failed */
+name|RT_REMREF
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 comment|/* don't keep LL references */
 if|if

@@ -1815,10 +1815,10 @@ operator|.
 name|rmx_locks
 operator|)
 expr_stmt|;
+name|RT_REMREF
+argument_list|(
 name|saved_nrt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|saved_nrt
 operator|->
@@ -1968,10 +1968,10 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+name|RT_ADDREF
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|++
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(

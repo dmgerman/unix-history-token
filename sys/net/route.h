@@ -1241,13 +1241,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT_ADDREF
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {					\ 	RT_LOCK_ASSERT(_rt);					\ 	KASSERT((_rt)->rt_refcnt>= 0,				\ 		("negative refcnt %ld", (_rt)->rt_refcnt));	\ 	(_rt)->rt_refcnt++;					\ } while (0);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_REMREF
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {					\ 	RT_LOCK_ASSERT(_rt);					\ 	KASSERT((_rt)->rt_refcnt> 0,				\ 		("bogus refcnt %ld", (_rt)->rt_refcnt));	\ 	(_rt)->rt_refcnt--;					\ } while (0);
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTFREE_LOCKED
 parameter_list|(
 name|_rt
 parameter_list|)
-value|do {				\ 		if ((_rt)->rt_refcnt<= 1)		\ 			rtfree(_rt);			\ 		else {					\ 			(_rt)->rt_refcnt--;		\ 			RT_UNLOCK(_rt);			\ 		}					\
+value|do {					\ 		if ((_rt)->rt_refcnt<= 1)			\ 			rtfree(_rt);				\ 		else {						\ 			RT_REMREF(_rt);				\ 			RT_UNLOCK(_rt);				\ 		}						\
 comment|/* guard against invalid refs */
-value|\ 		_rt = 0;				\ 	} while (0)
+value|\ 		_rt = 0;					\ 	} while (0)
 end_define
 
 begin_define
@@ -1257,7 +1277,7 @@ name|RTFREE
 parameter_list|(
 name|_rt
 parameter_list|)
-value|do {				\ 		RT_LOCK(_rt);				\ 		RTFREE_LOCKED(_rt);			\ 	} while (0)
+value|do {					\ 		RT_LOCK(_rt);					\ 		RTFREE_LOCKED(_rt);				\ 	} while (0)
 end_define
 
 begin_decl_stmt

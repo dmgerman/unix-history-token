@@ -5119,10 +5119,10 @@ name|ISDYNCLONE
 block|}
 else|else
 block|{
+name|RT_REMREF
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(

@@ -1071,7 +1071,7 @@ name|RTCACHE_GET
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {					\ 	struct rtentry *rt;					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	if ((rt = (_ro)->ro_rt) != NULL) {			\ 		RT_LOCK(rt);					\ 		rt->rt_refcnt++;				\ 		RT_UNLOCK(rt);					\ 	}							\ 	RTCACHE_UNLOCK();					\ } while (0)
+value|do {					\ 	struct rtentry *rt;					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	if ((rt = (_ro)->ro_rt) != NULL) {			\ 		RT_LOCK(rt);					\ 		RT_ADDREF(rt);					\ 		RT_UNLOCK(rt);					\ 	}							\ 	RTCACHE_UNLOCK();					\ } while (0)
 end_define
 
 begin_comment

@@ -2205,10 +2205,10 @@ name|newrt
 argument_list|)
 expr_stmt|;
 comment|/* tell user process */
+name|RT_REMREF
+argument_list|(
 name|newrt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(
@@ -2428,10 +2428,10 @@ argument_list|,
 name|newrt
 argument_list|)
 expr_stmt|;
+name|RT_REMREF
+argument_list|(
 name|newrt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(
@@ -5997,10 +5997,10 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+name|RT_REMREF
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(

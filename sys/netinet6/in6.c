@@ -657,10 +657,10 @@ block|}
 else|else
 block|{
 comment|/* the cmd must be RTM_ADD here */
+name|RT_REMREF
+argument_list|(
 name|nrt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|RT_UNLOCK
 argument_list|(
