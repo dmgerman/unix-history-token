@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys_term.c,v 1.3 1997/12/08 07:41:12 charnier Exp $"
+literal|"$Id: sys_term.c,v 1.4 1998/01/22 00:04:57 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6468,10 +6468,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|long
-name|time
-parameter_list|()
-function_decl|;
 ifdef|#
 directive|ifdef
 name|NEWINIT
