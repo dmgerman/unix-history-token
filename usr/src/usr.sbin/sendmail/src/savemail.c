@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.13 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1373,6 +1373,28 @@ operator||=
 name|EF_RESPONSE
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|EF_OLDSTYLE
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|ee
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_OLDSTYLE
+expr_stmt|;
+end_if
 
 begin_expr_stmt
 name|ee
