@@ -1081,7 +1081,7 @@ name|PWAIT
 operator||
 name|PCATCH
 argument_list|,
-literal|"nfsidl"
+literal|"-"
 argument_list|,
 name|timo
 argument_list|)
