@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker.  *  * %sccs.include.redist.c%  *  *	@(#)if_we.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker.  *  * %sccs.include.redist.c%  *  *	@(#)if_we.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1777,6 +1777,11 @@ name|union
 name|we_interrupt
 name|weisr
 decl_stmt|;
+name|int
+name|nloops
+init|=
+literal|10
+decl_stmt|;
 name|unit
 operator|=
 literal|0
@@ -2032,9 +2037,27 @@ name|weisr
 operator|.
 name|is_byte
 condition|)
+block|{
+comment|/* 		 * I caught it looping forever here a couple of times, 		 * but I haven't had time to figure out why.  Just 		 * returning seems to be safe, and it does not appear 		 * to interfere with future packets.    - Pace 5/19/92 		 */
+if|if
+condition|(
+operator|--
+name|nloops
+operator|<=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"we0: weintr is looping\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 goto|goto
 name|loop
 goto|;
+block|}
 block|}
 end_block
 
