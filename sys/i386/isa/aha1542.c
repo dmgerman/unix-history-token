@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.53 1995/12/15 00:11:26 bde Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.54 1995/12/29 00:30:06 peter Exp $  */
 end_comment
 
 begin_comment
@@ -1525,6 +1525,10 @@ index|]
 decl_stmt|;
 comment|/* all the CCBs      */
 name|int
+name|unit
+decl_stmt|;
+comment|/* unit number */
+name|int
 name|aha_int
 decl_stmt|;
 comment|/* irq level        */
@@ -1599,8 +1603,10 @@ name|aha_bus_speed_check
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 name|int
 name|speed
@@ -1622,8 +1628,10 @@ name|aha_cmd
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 name|int
 name|icnt
@@ -1672,8 +1680,10 @@ name|aha_done
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 expr|struct
 name|aha_ccb
@@ -1712,8 +1722,10 @@ name|aha_free_ccb
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 expr|struct
 name|aha_ccb
@@ -1736,8 +1748,10 @@ name|aha_get_ccb
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 name|int
 name|flags
@@ -1753,8 +1767,10 @@ name|aha_init
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1783,8 +1799,10 @@ name|aha_poll
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 expr|struct
 name|scsi_xfer
@@ -1855,8 +1873,10 @@ name|aha_set_bus_speed
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1877,8 +1897,10 @@ name|board_rev
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|aha_data
+operator|*
+name|aha
 operator|,
 name|int
 name|type
@@ -2235,7 +2257,7 @@ comment|/*KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * aha_cmd(unit,icnt, ocnt,wait, retval, opcode, args)  * Activate Adapter command  *    icnt:   number of args (outbound bytes written after opcode)  *    ocnt:   number of expected returned bytes  *    wait:   number of seconds to wait for response  *    retval: buffer where to place returned bytes  *    opcode: opcode AHA_NOP, AHA_MBX_INIT, AHA_START_SCSI ...  *    args:   parameters  *  * Performs an adapter command through the ports. Not to be confused  * with a scsi command, which is read in via the dma.  One of the adapter  * commands tells it to read in a scsi command but that one is done  * separately.  This is only called during set-up.  */
+comment|/*  * aha_cmd(struct aha_data *aha,icnt, ocnt,wait, retval, opcode, args)  * Activate Adapter command  *    icnt:   number of args (outbound bytes written after opcode)  *    ocnt:   number of expected returned bytes  *    wait:   number of seconds to wait for response  *    retval: buffer where to place returned bytes  *    opcode: opcode AHA_NOP, AHA_MBX_INIT, AHA_START_SCSI ...  *    args:   parameters  *  * Performs an adapter command through the ports. Not to be confused  * with a scsi command, which is read in via the dma.  One of the adapter  * commands tells it to read in a scsi command but that one is done  * separately.  This is only called during set-up.  */
 end_comment
 
 begin_function
@@ -2243,7 +2265,7 @@ specifier|static
 name|int
 name|aha_cmd
 parameter_list|(
-name|unit
+name|aha
 parameter_list|,
 name|icnt
 parameter_list|,
@@ -2257,8 +2279,10 @@ name|opcode
 parameter_list|,
 name|args
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 decl_stmt|;
 name|int
 name|icnt
@@ -2280,16 +2304,6 @@ name|u_char
 name|args
 decl_stmt|;
 block|{
-name|struct
-name|aha_data
-modifier|*
-name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|unsigned
 modifier|*
 name|ic
@@ -2375,6 +2389,8 @@ name|printf
 argument_list|(
 literal|"aha%d: aha_cmd, host not idle(0x%x)\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|sts
@@ -2474,6 +2490,8 @@ name|printf
 argument_list|(
 literal|"aha%d: aha_cmd, cmd/data port full\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -2562,6 +2580,8 @@ name|printf
 argument_list|(
 literal|"aha%d: aha_cmd, cmd/data port empty %d\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|ocnt
@@ -2635,6 +2655,8 @@ name|printf
 argument_list|(
 literal|"aha%d: aha_cmd, host not finished(0x%x)\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|sts
@@ -2825,7 +2847,7 @@ if|if
 condition|(
 name|aha_init
 argument_list|(
-name|unit
+name|aha
 argument_list|)
 operator|!=
 literal|0
@@ -2954,6 +2976,14 @@ operator|=
 name|aha
 operator|->
 name|aha_scsi_dev
+expr_stmt|;
+name|aha
+operator|->
+name|sc_link
+operator|.
+name|adapter_softc
+operator|=
+name|aha
 expr_stmt|;
 name|aha
 operator|->
@@ -3446,7 +3476,7 @@ argument_list|)
 expr_stmt|;
 name|aha_done
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|ccb
 argument_list|)
@@ -3472,14 +3502,16 @@ specifier|static
 name|void
 name|aha_free_ccb
 parameter_list|(
-name|unit
+name|aha
 parameter_list|,
 name|ccb
 parameter_list|,
 name|flags
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 decl_stmt|;
 name|struct
 name|aha_ccb
@@ -3490,16 +3522,6 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|struct
-name|aha_data
-modifier|*
-name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|unsigned
 name|int
 name|opri
@@ -3589,27 +3611,19 @@ name|aha_ccb
 modifier|*
 name|aha_get_ccb
 parameter_list|(
-name|unit
+name|aha
 parameter_list|,
 name|flags
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
 block|{
-name|struct
-name|aha_data
-modifier|*
-name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|unsigned
 name|opri
 init|=
@@ -3902,12 +3916,14 @@ specifier|static
 name|void
 name|aha_done
 parameter_list|(
-name|unit
+name|aha
 parameter_list|,
 name|ccb
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 decl_stmt|;
 name|struct
 name|aha_ccb
@@ -3962,6 +3978,8 @@ name|printf
 argument_list|(
 literal|"aha%d: exiting but not in use!\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4208,6 +4226,8 @@ name|printf
 argument_list|(
 literal|"aha%d: "
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4278,6 +4298,8 @@ name|printf
 argument_list|(
 literal|"aha%d:target_stat%x\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|ccb
@@ -4302,7 +4324,7 @@ name|ITSDONE
 expr_stmt|;
 name|aha_free_ccb
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|ccb
 argument_list|,
@@ -4339,8 +4361,10 @@ name|char
 modifier|*
 name|board_rev
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 parameter_list|,
 name|int
 name|type
@@ -4412,6 +4436,8 @@ name|printf
 argument_list|(
 literal|"aha%d: Assuming type %02x is a new board.\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|type
@@ -4425,6 +4451,8 @@ name|printf
 argument_list|(
 literal|"aha%d: type %02x is an unknown board.\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|type
@@ -4446,22 +4474,14 @@ specifier|static
 name|int
 name|aha_init
 parameter_list|(
-name|unit
+name|aha
 parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
 name|struct
 name|aha_data
 modifier|*
 name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
 decl_stmt|;
+block|{
 name|char
 modifier|*
 name|desc
@@ -4599,7 +4619,7 @@ if|if
 condition|(
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|0
 argument_list|,
@@ -4622,6 +4642,8 @@ name|printf
 argument_list|(
 literal|"aha%d: not a REAL adaptec board, may cause warnings\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -4728,6 +4750,8 @@ name|printf
 argument_list|(
 literal|"aha%d: inquire %x, %x, %x, %x\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|inquire
@@ -4768,7 +4792,7 @@ name|desc
 operator|=
 name|board_rev
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|inquire
 operator|.
@@ -4780,6 +4804,8 @@ argument_list|(
 operator|(
 literal|"aha%d: Rev %02x (%s) V%c.%c"
 operator|,
+name|aha
+operator|->
 name|unit
 operator|,
 name|inquire
@@ -4830,7 +4856,7 @@ condition|)
 block|{
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|0
 argument_list|,
@@ -4854,6 +4880,8 @@ name|printf
 argument_list|(
 literal|"aha%d: extended bios flags %x\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|extbios
@@ -4873,7 +4901,7 @@ argument_list|)
 expr_stmt|;
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|2
 argument_list|,
@@ -4983,6 +5011,8 @@ argument_list|(
 operator|(
 literal|"aha%d: reading board settings, "
 operator|,
+name|aha
+operator|->
 name|unit
 operator|)
 argument_list|)
@@ -5005,7 +5035,7 @@ comment|/* for Bustek 545 */
 block|}
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|0
 argument_list|,
@@ -5130,6 +5160,8 @@ name|printf
 argument_list|(
 literal|"aha%d: illegal dma jumper setting\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -5222,6 +5254,8 @@ name|printf
 argument_list|(
 literal|"aha%d: illegal int jumper setting\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -5265,7 +5299,7 @@ expr_stmt|;
 comment|/* 	 * Change the bus on/off times to not clash with other dma users. 	 */
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|1
 argument_list|,
@@ -5282,7 +5316,7 @@ argument_list|)
 expr_stmt|;
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|1
 argument_list|,
@@ -5307,7 +5341,7 @@ operator|!
 operator|(
 name|aha_set_bus_speed
 argument_list|(
-name|unit
+name|aha
 argument_list|)
 operator|)
 condition|)
@@ -5346,7 +5380,7 @@ argument_list|)
 expr_stmt|;
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|4
 argument_list|,
@@ -5587,11 +5621,16 @@ argument_list|()
 expr_stmt|;
 name|aha_cmd
 argument_list|(
+operator|(
+expr|struct
+name|aha_data
+operator|*
+operator|)
 name|xs
 operator|->
 name|sc_link
 operator|->
-name|adapter_unit
+name|adapter_softc
 argument_list|,
 literal|2
 argument_list|,
@@ -5854,22 +5893,10 @@ name|xs
 operator|->
 name|sc_link
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|sc_link
-operator|->
-name|adapter_unit
-decl_stmt|;
 name|struct
 name|aha_data
 modifier|*
 name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
 decl_stmt|;
 name|struct
 name|aha_ccb
@@ -5905,6 +5932,17 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|aha
+operator|=
+operator|(
+expr|struct
+name|aha_data
+operator|*
+operator|)
+name|sc_link
+operator|->
+name|adapter_softc
+expr_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -5933,7 +5971,7 @@ name|ccb
 operator|=
 name|aha_get_ccb
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|flags
 argument_list|)
@@ -5966,6 +6004,8 @@ name|printf
 argument_list|(
 literal|"aha%d: MBO %02x and not %02x (free)\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|ccb
@@ -6010,17 +6050,11 @@ name|xs
 operator|->
 name|datalen
 condition|?
-name|ahadata
-index|[
-name|unit
-index|]
+name|aha
 operator|->
 name|sg_opcode
 else|:
-name|ahadata
-index|[
-name|unit
-index|]
+name|aha
 operator|->
 name|init_opcode
 operator|)
@@ -6594,6 +6628,8 @@ argument_list|(
 literal|"aha%d: DMA beyond"
 literal|" end Of ISA: 0x%x\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|thisphys
@@ -6607,7 +6643,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 name|aha_free_ccb
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|ccb
 argument_list|,
@@ -6763,6 +6799,8 @@ name|printf
 argument_list|(
 literal|"aha%d: aha_scsi_cmd, more than %d DMA segs\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|,
 name|AHA_NSEG
@@ -6776,7 +6814,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 name|aha_free_ccb
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|ccb
 argument_list|,
@@ -6795,6 +6833,8 @@ name|printf
 argument_list|(
 literal|"aha_scsi_cmd%d: Illegal CCB opcode.\n"
 argument_list|,
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6806,7 +6846,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 name|aha_free_ccb
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|ccb
 argument_list|,
@@ -6945,7 +6985,7 @@ return|return
 operator|(
 name|aha_poll
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|xs
 argument_list|,
@@ -6966,14 +7006,16 @@ specifier|static
 name|int
 name|aha_poll
 parameter_list|(
-name|unit
+name|aha
 parameter_list|,
 name|xs
 parameter_list|,
 name|ccb
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 decl_stmt|;
 name|struct
 name|scsi_xfer
@@ -6986,16 +7028,6 @@ modifier|*
 name|ccb
 decl_stmt|;
 block|{
-name|struct
-name|aha_data
-modifier|*
-name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|int
 name|count
 init|=
@@ -7029,6 +7061,8 @@ condition|)
 block|{
 name|ahaintr
 argument_list|(
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7107,6 +7141,8 @@ condition|)
 block|{
 name|ahaintr
 argument_list|(
+name|aha
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7251,10 +7287,12 @@ specifier|static
 name|int
 name|aha_set_bus_speed
 parameter_list|(
-name|unit
+name|aha
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|aha_data
+modifier|*
+name|aha
 decl_stmt|;
 block|{
 name|int
@@ -7267,16 +7305,6 @@ name|int
 name|retval
 decl_stmt|,
 name|retval2
-decl_stmt|;
-name|struct
-name|aha_data
-modifier|*
-name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
 decl_stmt|;
 name|lastworking
 operator|=
@@ -7296,7 +7324,7 @@ name|retval
 operator|=
 name|aha_bus_speed_check
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|speed
 argument_list|)
@@ -7381,7 +7409,7 @@ name|retval2
 operator|=
 name|aha_bus_speed_check
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|lastworking
 argument_list|)
@@ -7448,13 +7476,16 @@ specifier|static
 name|int
 name|aha_bus_speed_check
 parameter_list|(
-name|unit
+name|aha
 parameter_list|,
 name|speed
 parameter_list|)
+name|struct
+name|aha_data
+modifier|*
+name|aha
+decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|speed
 decl_stmt|;
 block|{
@@ -7481,16 +7512,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|struct
-name|aha_data
-modifier|*
-name|aha
-init|=
-name|ahadata
-index|[
-name|unit
-index|]
-decl_stmt|;
 comment|/* 	 * Check we have such an entry 	 */
 if|if
 condition|(
@@ -7507,7 +7528,7 @@ comment|/* illegal speed */
 comment|/* 	 * Set the dma-speed 	 */
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|1
 argument_list|,
@@ -7559,7 +7580,7 @@ argument_list|)
 expr_stmt|;
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|3
 argument_list|,
@@ -7598,7 +7619,7 @@ expr_stmt|;
 comment|/* 54 bytes transfered by test */
 name|aha_cmd
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 literal|3
 argument_list|,
@@ -7687,9 +7708,6 @@ operator|)
 name|arg1
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|s
 init|=
 name|splbio
@@ -7700,22 +7718,20 @@ name|aha_data
 modifier|*
 name|aha
 decl_stmt|;
-name|unit
+name|aha
 operator|=
+operator|(
+expr|struct
+name|aha_data
+operator|*
+operator|)
 name|ccb
 operator|->
 name|xfer
 operator|->
 name|sc_link
 operator|->
-name|adapter_unit
-expr_stmt|;
-name|aha
-operator|=
-name|ahadata
-index|[
-name|unit
-index|]
+name|adapter_softc
 expr_stmt|;
 name|sc_print_addr
 argument_list|(
@@ -7787,7 +7803,7 @@ name|AHA_ABORTED
 expr_stmt|;
 name|aha_done
 argument_list|(
-name|unit
+name|aha
 argument_list|,
 name|ccb
 argument_list|)

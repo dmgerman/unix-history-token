@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.14 1995/12/07 12:46:04 davidg Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.15 1995/12/10 13:39:10 phk Exp $  */
 end_comment
 
 begin_comment
@@ -2478,6 +2478,14 @@ name|z
 operator|->
 name|sc_link
 operator|.
+name|adapter_softc
+operator|=
+name|z
+expr_stmt|;
+name|z
+operator|->
+name|sc_link
+operator|.
 name|adapter
 operator|=
 operator|&
@@ -2694,14 +2702,6 @@ name|xs
 parameter_list|)
 block|{
 name|int
-name|unit
-init|=
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|adapter_unit
-decl_stmt|,
 name|flags
 init|=
 name|xs
@@ -2716,11 +2716,15 @@ name|adapter_t
 modifier|*
 name|z
 init|=
-operator|&
-name|seadata
-index|[
-name|unit
-index|]
+operator|(
+name|adapter_t
+operator|*
+operator|)
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_softc
 decl_stmt|;
 name|scb_t
 modifier|*
@@ -2774,7 +2778,11 @@ name|printf
 argument_list|(
 literal|"sea%d: already done?"
 argument_list|,
-name|unit
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -2799,7 +2807,11 @@ name|printf
 argument_list|(
 literal|"sea%d: not in use?"
 argument_list|,
-name|unit
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -2819,7 +2831,11 @@ name|printf
 argument_list|(
 literal|"sea%d: SCSI_RESET not implemented\n"
 argument_list|,
-name|unit
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -3074,7 +3090,11 @@ argument_list|(
 operator|(
 literal|"sea%d/%d/%d command queued\n"
 operator|,
-name|unit
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
 operator|,
 name|xs
 operator|->
@@ -3156,7 +3176,11 @@ argument_list|(
 operator|(
 literal|"sea%d/%d/%d command %s\n"
 operator|,
-name|unit
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
 operator|,
 name|xs
 operator|->
@@ -3334,26 +3358,21 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|int
-name|unit
+name|adapter_t
+modifier|*
+name|z
 init|=
+operator|(
+name|adapter_t
+operator|*
+operator|)
 name|scb
 operator|->
 name|xfer
 operator|->
 name|sc_link
 operator|->
-name|adapter_unit
-decl_stmt|;
-name|adapter_t
-modifier|*
-name|z
-init|=
-operator|&
-name|seadata
-index|[
-name|unit
-index|]
+name|adapter_softc
 decl_stmt|;
 name|int
 name|x
@@ -3378,7 +3397,13 @@ name|printf
 argument_list|(
 literal|"sea%d/%d/%d (%s%d) timed out\n"
 argument_list|,
-name|unit
+name|scb
+operator|->
+name|xfer
+operator|->
+name|sc_link
+operator|->
+name|adapter_unit
 argument_list|,
 name|scb
 operator|->
