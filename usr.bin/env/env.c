@@ -29,35 +29,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)env.c	8.3 (Berkeley) 4/2/94"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static const char sccsid[] = "@(#)env.c	8.3 (Berkeley) 4/2/94";
 endif|#
 directive|endif
 end_endif
@@ -66,10 +51,35 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -272,7 +282,13 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|1
+name|errno
+operator|==
+name|ENOENT
+condition|?
+literal|127
+else|:
+literal|126
 argument_list|,
 literal|"%s"
 argument_list|,
