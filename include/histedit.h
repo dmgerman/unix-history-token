@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: histedit.h,v 1.5 1997/04/11 17:52:45 christos Exp $	*/
+comment|/*	$NetBSD: histedit.h,v 1.15 2000/02/28 17:41:05 chopps Exp $	*/
 end_comment
 
 begin_comment
@@ -147,6 +147,13 @@ name|CC_REDISPLAY
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|CC_REFRESH_BEEP
+value|9
+end_define
+
 begin_comment
 comment|/*  * Initialization, cleanup, and resetting  */
 end_comment
@@ -160,6 +167,9 @@ argument_list|(
 operator|(
 specifier|const
 name|char
+operator|*
+operator|,
+name|FILE
 operator|*
 operator|,
 name|FILE
@@ -254,6 +264,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Beep!  */
+end_comment
+
+begin_function_decl
+name|void
+name|el_beep
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * High level function internals control  * Parses argc, argv array and executes builtin editline commands  */
 end_comment
 
@@ -292,6 +316,24 @@ operator|,
 name|int
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|el_get
+name|__P
+argument_list|(
+operator|(
+name|EditLine
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -426,6 +468,28 @@ begin_comment
 comment|/* , hist_fun_t, const char *);	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EL_EDITMODE
+value|11
+end_define
+
+begin_comment
+comment|/* , int);			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_RPROMPT
+value|12
+end_define
+
+begin_comment
+comment|/* , el_pfunc_t);		*/
+end_comment
+
 begin_comment
 comment|/*  * Source named file or $PWD/.editrc or $HOME/.editrc  */
 end_comment
@@ -464,36 +528,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|el_data_set
-name|__P
-argument_list|(
-operator|(
-name|EditLine
-operator|*
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-modifier|*
-name|el_data_get
-name|__P
-argument_list|(
-operator|(
-name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * User-defined function interface.  */
 end_comment
@@ -522,6 +556,7 @@ operator|(
 name|EditLine
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -605,14 +640,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|HistEvent
-modifier|*
+name|int
 name|history
 name|__P
 argument_list|(
 operator|(
 name|History
+operator|*
+operator|,
+name|HistEvent
 operator|*
 operator|,
 name|int
@@ -637,6 +673,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|H_SETSIZE
+value|1
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|H_EVENT
 value|1
 end_define
@@ -648,7 +695,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_FIRST
+name|H_GETSIZE
 value|2
 end_define
 
@@ -659,7 +706,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_LAST
+name|H_FIRST
 value|3
 end_define
 
@@ -670,7 +717,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_PREV
+name|H_LAST
 value|4
 end_define
 
@@ -681,7 +728,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_NEXT
+name|H_PREV
 value|5
 end_define
 
@@ -692,7 +739,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_CURR
+name|H_NEXT
 value|6
 end_define
 
@@ -703,30 +750,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_ADD
+name|H_CURR
+value|8
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_SET
 value|7
 end_define
 
 begin_comment
-comment|/* , const char*);	*/
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ADD
+value|9
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_ENTER
-value|8
+value|10
 end_define
 
 begin_comment
-comment|/* , const char*);	*/
+comment|/* , const char *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_APPEND
+value|11
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_END
-value|9
+value|12
 end_define
 
 begin_comment
@@ -737,50 +817,17 @@ begin_define
 define|#
 directive|define
 name|H_NEXT_STR
-value|10
+value|13
 end_define
 
 begin_comment
-comment|/* , const char*);	*/
+comment|/* , const char *);	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_PREV_STR
-value|11
-end_define
-
-begin_comment
-comment|/* , const char*);	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_NEXT_EVENT
-value|12
-end_define
-
-begin_comment
-comment|/* , const int);	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_PREV_EVENT
-value|13
-end_define
-
-begin_comment
-comment|/* , const int);	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H_LOAD
 value|14
 end_define
 
@@ -791,8 +838,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_SAVE
+name|H_NEXT_EVENT
 value|15
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_PREV_EVENT
+value|16
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_LOAD
+value|17
+end_define
+
+begin_comment
+comment|/* , const char *);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_SAVE
+value|18
 end_define
 
 begin_comment
@@ -803,7 +883,7 @@ begin_define
 define|#
 directive|define
 name|H_CLEAR
-value|16
+value|19
 end_define
 
 begin_comment
