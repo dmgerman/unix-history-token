@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<alpha/linux/linux_proto.h>
+file|<linux_proto.h>
 end_include
 
 begin_include
@@ -871,6 +871,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
 name|linux_sigset_t
 name|lmask
 decl_stmt|;
@@ -884,13 +887,12 @@ name|bsd
 decl_stmt|;
 name|caddr_t
 name|sg
-init|=
+decl_stmt|;
+name|sg
+operator|=
 name|stackgap_init
 argument_list|()
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
