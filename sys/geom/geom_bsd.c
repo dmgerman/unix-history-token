@@ -3916,7 +3916,7 @@ condition|(
 literal|0
 condition|)
 do|;
-comment|/* Success of failure, we can close our provider now. */
+comment|/* Success or failure, we can close our provider now. */
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
