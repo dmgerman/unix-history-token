@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.1	82/02/02	*/
+comment|/*	raw_pup.c	4.2	82/02/02	*/
 end_comment
 
 begin_include
@@ -71,7 +71,19 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|sockaddr_pup
-name|pupaddr
+name|pupsrc
+init|=
+block|{
+name|AF_PUP
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sockaddr_pup
+name|pupdst
 init|=
 block|{
 name|AF_PUP
@@ -140,7 +152,7 @@ name|pup
 operator|->
 name|pup_type
 expr_stmt|;
-name|pupaddr
+name|pupdst
 operator|.
 name|spup_addr
 operator|=
@@ -148,13 +160,26 @@ name|pup
 operator|->
 name|pup_daddr
 expr_stmt|;
+name|pupsrc
+operator|.
+name|spup_addr
+operator|=
+name|pup
+operator|->
+name|pup_saddr
+expr_stmt|;
 name|raw_input
 argument_list|(
 name|m
 argument_list|,
+operator|&
 name|pupproto
 argument_list|,
-name|pupaddr
+operator|&
+name|pupdst
+argument_list|,
+operator|&
+name|pupsrc
 argument_list|)
 expr_stmt|;
 block|}
