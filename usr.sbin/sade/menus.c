@@ -9081,7 +9081,7 @@ literal|"This host wishes to be an NIS client."
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configRpcBind
 block|,
 name|NULL
 block|,
@@ -9109,7 +9109,7 @@ literal|"This host wishes to be an NIS server."
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configRpcBind
 block|,
 name|NULL
 block|,
@@ -9317,7 +9317,7 @@ literal|"This machine wants to run the auto-mounter service"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configRpcBind
 block|,
 name|NULL
 block|,
@@ -9446,9 +9446,9 @@ literal|"pcnfsd"
 block|}
 block|,
 block|{
-literal|" portmap"
+literal|" rpcbind"
 block|,
-literal|"This machine wants to run the portmapper daemon"
+literal|"RPC port mapping daemon (formerly portmapper)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9456,7 +9456,35 @@ name|dmenuToggleVariable
 block|,
 name|NULL
 block|,
-literal|"portmap_enable=YES"
+literal|"rpcbind_enable=YES"
+block|}
+block|,
+block|{
+literal|" rpc.statd"
+block|,
+literal|"NFS status monitoring daemon"
+block|,
+name|dmenuVarCheck
+block|,
+name|configRpcBind
+block|,
+name|NULL
+block|,
+literal|"rpc_statd_enable=YES"
+block|}
+block|,
+block|{
+literal|" rpc.lockd"
+block|,
+literal|"NFS file locking daemon"
+block|,
+name|dmenuVarCheck
+block|,
+name|configRpcBind
+block|,
+name|NULL
+block|,
+literal|"rpc_lockd_enable=YES"
 block|}
 block|,
 block|{
