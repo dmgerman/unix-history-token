@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.46 1995/01/26 01:45:02 davidg Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.47 1995/01/26 21:06:40 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -925,7 +925,7 @@ comment|/*  * Wire a page table page  */
 end_comment
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|pmap_use_pt
 parameter_list|(
@@ -1069,7 +1069,17 @@ name|KPT_MIN_ADDRESS
 operator|)
 condition|)
 block|{
-name|vm_page_deactivate
+name|pmap_page_protect
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+name|VM_PROT_NONE
+argument_list|)
+expr_stmt|;
+name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
@@ -3092,8 +3102,8 @@ operator|<
 name|USRSTACK
 operator|||
 name|sva
-operator|>
-name|UPT_MAX_ADDRESS
+operator|>=
+name|KERNBASE
 operator|)
 operator|||
 operator|(
@@ -3403,8 +3413,8 @@ operator|<
 name|USRSTACK
 operator|||
 name|va
-operator|>
-name|UPT_MAX_ADDRESS
+operator|>=
+name|KERNBASE
 operator|)
 operator|||
 operator|(
@@ -3651,8 +3661,8 @@ operator|<
 name|USRSTACK
 operator|||
 name|va
-operator|>
-name|UPT_MAX_ADDRESS
+operator|>=
+name|KERNBASE
 operator|)
 operator|||
 operator|(
@@ -5174,18 +5184,18 @@ block|}
 if|if
 condition|(
 operator|(
-name|p
-operator|->
-name|bmapped
-operator|==
-literal|0
-operator|)
-operator|&&
 operator|(
 name|p
 operator|->
-name|busy
-operator|==
+name|flags
+operator|&
+operator|(
+name|PG_ACTIVE
+operator||
+name|PG_INACTIVE
+operator|)
+operator|)
+operator|!=
 literal|0
 operator|)
 operator|&&
@@ -5202,18 +5212,18 @@ name|VM_PAGE_BITS_ALL
 operator|)
 operator|&&
 operator|(
+name|p
+operator|->
+name|bmapped
+operator|==
+literal|0
+operator|)
+operator|&&
 operator|(
 name|p
 operator|->
-name|flags
-operator|&
-operator|(
-name|PG_ACTIVE
-operator||
-name|PG_INACTIVE
-operator|)
-operator|)
-operator|!=
+name|busy
+operator|==
 literal|0
 operator|)
 operator|&&
@@ -5299,6 +5309,22 @@ condition|(
 name|p
 operator|&&
 operator|(
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_ACTIVE
+operator||
+name|PG_INACTIVE
+operator|)
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
 name|p
 operator|->
 name|bmapped
@@ -5324,22 +5350,6 @@ name|VM_PAGE_BITS_ALL
 operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
-operator|)
-operator|&&
-operator|(
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-operator|(
-name|PG_ACTIVE
-operator||
-name|PG_INACTIVE
-operator|)
-operator|)
-operator|!=
-literal|0
 operator|)
 operator|&&
 operator|(
@@ -5426,17 +5436,17 @@ value|(PFBAK+PFFOR)
 end_define
 
 begin_comment
-unit|static int pmap_prefault_pageorder[] = { 	-NBPG, NBPG, -2 * NBPG, 2 * NBPG };  void pmap_prefault(pmap, addra, entry, object) 	pmap_t pmap; 	vm_offset_t addra; 	vm_map_entry_t entry; 	vm_object_t object; { 	int i; 	vm_offset_t starta, enda; 	vm_offset_t offset, addr; 	vm_page_t m; 	int pageorder_index;  	if (entry->object.vm_object != object) 		return;  	if (pmap !=&curproc->p_vmspace->vm_pmap) 		return;  	starta = addra - PFBAK * NBPG; 	if (starta< entry->start) { 		starta = entry->start; 	} else if (starta> addra) 		starta = 0;  	enda = addra + PFFOR * NBPG; 	if (enda> entry->end) 		enda = entry->end;  	for (i = 0; i< PAGEORDER_SIZE; i++) { 		vm_object_t lobject; 		pt_entry_t *pte;  		addr = addra + pmap_prefault_pageorder[i]; 		if (addr< starta || addr>= enda) 			continue;  		pte = vtopte(addr); 		if (*pte) 			continue;  		offset = (addr - entry->start) + entry->offset; 		lobject = object; 		for (m = vm_page_lookup(lobject, offset); 		    (!m&& lobject->shadow); 		    lobject = lobject->shadow) {  			offset += lobject->shadow_offset; 			m = vm_page_lookup(lobject->shadow, offset); 		}
+unit|static int pmap_prefault_pageorder[] = { 	-NBPG, NBPG, -2 * NBPG, 2 * NBPG };  void pmap_prefault(pmap, addra, entry, object) 	pmap_t pmap; 	vm_offset_t addra; 	vm_map_entry_t entry; 	vm_object_t object; { 	int i; 	vm_offset_t starta, enda; 	vm_offset_t offset, addr; 	vm_page_t m; 	int pageorder_index;  	if (entry->object.vm_object != object) 		return;  	if (pmap !=&curproc->p_vmspace->vm_pmap) 		return;  	starta = addra - PFBAK * NBPG; 	if (starta< entry->start) { 		starta = entry->start; 	} else if (starta> addra) 		starta = 0;  	enda = addra + PFFOR * NBPG; 	if (enda> entry->end) 		enda = entry->end;  	for (i = 0; i< PAGEORDER_SIZE; i++) { 		vm_object_t lobject; 		pt_entry_t *pte;  		addr = addra + pmap_prefault_pageorder[i]; 		if (addr< starta || addr>= enda) 			continue;  		pte = vtopte(addr); 		if (*pte) 			continue;  		offset = (addr - entry->start) + entry->offset; 		lobject = object; 		for (m = vm_page_lookup(lobject, offset); 		    (!m&& lobject->shadow&& !lobject->pager); 		    lobject = lobject->shadow) {  			offset += lobject->shadow_offset; 			m = vm_page_lookup(lobject->shadow, offset); 		}
 comment|/* 		 * give-up when a page is not in memory 		 */
 end_comment
 
 begin_comment
-unit|if (m == NULL) 			break;  		if ((m->bmapped == 0)&& 		    (m->busy == 0)&& 		    ((m->valid& VM_PAGE_BITS_ALL) == VM_PAGE_BITS_ALL)&& 		    ((m->flags& (PG_ACTIVE | PG_INACTIVE)) != 0)&& 		    (m->flags& (PG_CACHE | PG_BUSY | PG_FICTITIOUS)) == 0) {
+unit|if (m == NULL) 			break;  		if (((m->flags& (PG_CACHE | PG_ACTIVE | PG_INACTIVE)) != 0)&& 		    ((m->valid& VM_PAGE_BITS_ALL) == VM_PAGE_BITS_ALL)&& 		    (m->busy == 0)&& 			(m->bmapped == 0)&& 		    (m->flags& (PG_BUSY | PG_FICTITIOUS)) == 0) {
 comment|/* 			 * test results show that the system is faster when 			 * pages are activated. 			 */
 end_comment
 
 begin_endif
-unit|if ((m->flags& PG_ACTIVE) == 0) 				vm_page_activate(m); 			vm_page_hold(m); 			pmap_enter_quick(pmap, addr, VM_PAGE_TO_PHYS(m)); 			vm_page_unhold(m); 		} 	} }
+unit|if ((m->flags& PG_ACTIVE) == 0) { 				if( m->flags& PG_CACHE) 					vm_page_deactivate(m); 				else 					vm_page_activate(m); 			} 			vm_page_hold(m); 			pmap_enter_quick(pmap, addr, VM_PAGE_TO_PHYS(m)); 			vm_page_unhold(m); 		} 	} }
 endif|#
 directive|endif
 end_endif
@@ -6093,7 +6103,7 @@ name|pv
 operator|->
 name|pv_va
 operator|<
-name|UPT_MAX_ADDRESS
+name|KERNBASE
 condition|)
 block|{
 name|splx
