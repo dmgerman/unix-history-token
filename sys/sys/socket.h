@@ -2228,6 +2228,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Sendfile-specific flag(s)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SF_NODISKIO
+value|0x00000001
+end_define
+
 begin_endif
 endif|#
 directive|endif

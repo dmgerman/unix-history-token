@@ -8551,12 +8551,10 @@ block|}
 comment|/* 		 * If page is not valid for what we need, initiate I/O 		 */
 if|if
 condition|(
-operator|!
 name|pg
 operator|->
 name|valid
-operator|||
-operator|!
+operator|&&
 name|vm_page_is_valid
 argument_list|(
 name|pg
@@ -8566,6 +8564,29 @@ argument_list|,
 name|xfsize
 argument_list|)
 condition|)
+block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|SF_NODISKIO
+condition|)
+block|{
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+block|}
+else|else
 block|{
 name|int
 name|bsize
@@ -8689,6 +8710,12 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
+name|mbstat
+operator|.
+name|sf_iocnt
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -8701,7 +8728,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * See if anyone else might know about this page. 				 * If not and it is not valid, then free it. 				 */
+comment|/* 			 * See if anyone else might know about this page. 			 * If not and it is not valid, then free it. 			 */
 if|if
 condition|(
 name|pg
@@ -8768,20 +8795,6 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-block|}
-name|mbstat
-operator|.
-name|sf_iocnt
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
