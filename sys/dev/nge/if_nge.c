@@ -6798,7 +6798,7 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
-name|m
+name|m_head
 argument_list|)
 expr_stmt|;
 if|if
