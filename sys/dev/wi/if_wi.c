@@ -4416,7 +4416,7 @@ block|{
 define|#
 directive|define
 name|WI_INIT_TRIES
-value|5
+value|3
 name|int
 name|i
 decl_stmt|;
@@ -4494,12 +4494,19 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|sc_enabled
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|i
 operator|==
-name|WI_INIT_TRIES
+name|tries
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4509,6 +4516,8 @@ argument_list|,
 literal|"init failed\n"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -4534,12 +4543,6 @@ name|WI_RID_TICK_TIME
 argument_list|,
 literal|8
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_enabled
-operator|=
-literal|1
 expr_stmt|;
 return|return;
 block|}
