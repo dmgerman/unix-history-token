@@ -730,7 +730,7 @@ name|__warn_references
 argument_list|(
 name|f_prealloc
 argument_list|,
-literal|"warning: this program uses f_prealloc(), which is stupid."
+literal|"warning: this program uses f_prealloc(), which is not recommended."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
