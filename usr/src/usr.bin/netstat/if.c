@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.6 (Berkeley) %G%"
+literal|"@(#)if.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dflag
 decl_stmt|;
 end_decl_stmt
 
@@ -285,6 +292,17 @@ argument_list|(
 literal|" %s"
 argument_list|,
 literal|"Time"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+literal|"Drop"
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -921,6 +939,21 @@ operator|.
 name|if_timer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+name|printf
+argument_list|(
+literal|" %3d"
+argument_list|,
+name|ifnet
+operator|.
+name|if_snd
+operator|.
+name|ifq_drops
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
@@ -968,6 +1001,10 @@ name|int
 name|ift_co
 decl_stmt|;
 comment|/* collisions */
+name|int
+name|ift_dr
+decl_stmt|;
+comment|/* drops */
 block|}
 name|iftot
 index|[
@@ -1289,7 +1326,7 @@ name|banner
 label|:
 name|printf
 argument_list|(
-literal|"    input   %-6.6s    output       "
+literal|"   input    %-6.6s    output       "
 argument_list|,
 name|interesting
 operator|->
@@ -1304,11 +1341,22 @@ name|iftot
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|dflag
+condition|)
 name|printf
 argument_list|(
-literal|"     input  (Total)    output"
+literal|"      "
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"     input   (Total)    output"
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|ip
@@ -1355,6 +1403,12 @@ name|ift_co
 operator|=
 literal|0
 expr_stmt|;
+name|ip
+operator|->
+name|ift_dr
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|putchar
 argument_list|(
@@ -1378,6 +1432,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dflag
+condition|)
+name|printf
+argument_list|(
+literal|"%5.5s "
+argument_list|,
+literal|"drops"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|lastif
 operator|-
 name|iftot
@@ -1386,7 +1451,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%8.8s %5.5s %8.8s %5.5s %5.5s "
+literal|" %8.8s %5.5s %8.8s %5.5s %5.5s"
 argument_list|,
 literal|"packets"
 argument_list|,
@@ -1397,6 +1462,17 @@ argument_list|,
 literal|"errs"
 argument_list|,
 literal|"colls"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+name|printf
+argument_list|(
+literal|" %5.5s"
+argument_list|,
+literal|"drops"
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -1442,6 +1518,12 @@ expr_stmt|;
 name|sum
 operator|->
 name|ift_co
+operator|=
+literal|0
+expr_stmt|;
+name|sum
+operator|->
+name|ift_dr
 operator|=
 literal|0
 expr_stmt|;
@@ -1495,9 +1577,10 @@ name|ip
 operator|==
 name|interesting
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%8d %5d %8d %5d %5d "
+literal|"%8d %5d %8d %5d %5d"
 argument_list|,
 name|ifnet
 operator|.
@@ -1540,6 +1623,26 @@ operator|->
 name|ift_co
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+name|printf
+argument_list|(
+literal|" %5d"
+argument_list|,
+name|ifnet
+operator|.
+name|if_snd
+operator|.
+name|ifq_drops
+operator|-
+name|ip
+operator|->
+name|ift_dr
+argument_list|)
+expr_stmt|;
+block|}
 name|ip
 operator|->
 name|ift_ip
@@ -1580,6 +1683,16 @@ name|ifnet
 operator|.
 name|if_collisions
 expr_stmt|;
+name|ip
+operator|->
+name|ift_dr
+operator|=
+name|ifnet
+operator|.
+name|if_snd
+operator|.
+name|ifq_drops
+expr_stmt|;
 name|sum
 operator|->
 name|ift_ip
@@ -1619,6 +1732,14 @@ operator|+=
 name|ip
 operator|->
 name|ift_co
+expr_stmt|;
+name|sum
+operator|->
+name|ift_dr
+operator|+=
+name|ip
+operator|->
+name|ift_dr
 expr_stmt|;
 name|off
 operator|=
@@ -1638,9 +1759,10 @@ name|iftot
 operator|>
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%8d %5d %8d %5d %5d "
+literal|"  %8d %5d %8d %5d %5d"
 argument_list|,
 name|sum
 operator|->
@@ -1683,6 +1805,24 @@ operator|->
 name|ift_co
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+name|printf
+argument_list|(
+literal|" %5d"
+argument_list|,
+name|sum
+operator|->
+name|ift_dr
+operator|-
+name|total
+operator|->
+name|ift_dr
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|total
 operator|=

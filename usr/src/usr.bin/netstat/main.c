@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -840,6 +840,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|interval
 decl_stmt|;
 end_decl_stmt
@@ -941,7 +947,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AI:af:himnp:rstu"
+literal|"AI:af:himnp:drstu"
 argument_list|)
 operator|)
 operator|!=
@@ -1009,6 +1015,13 @@ case|case
 literal|'a'
 case|:
 name|aflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|dflag
 operator|++
 expr_stmt|;
 break|break;
