@@ -20140,11 +20140,7 @@ name|i
 index|]
 argument_list|)
 operator|+
-operator|(
-name|i
-operator|!=
-literal|0
-operator|)
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -20217,6 +20213,9 @@ name|message
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|MAXMSG
 argument_list|)
 operator|)
