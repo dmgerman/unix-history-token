@@ -236,6 +236,10 @@ define|\
 value|pci_write_config(DEV, REG, (					\ 		pci_read_config(DEV, REG, SIZE) MASK1) MASK2, SIZE)
 end_define
 
+begin_comment
+comment|/*  * XXX all the pcic code really doesn't belong here and needs to be  * XXX migrated to its own file, shared with the 16-bit code  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3027,6 +3031,13 @@ name|error
 operator|++
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -3429,6 +3440,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
