@@ -274,7 +274,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -302,6 +304,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|nextarg
@@ -368,25 +371,30 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|openguess
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|a
 index|[]
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|b
 index|[]
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|c
 index|[]
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|d
@@ -546,9 +554,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|load_scrnmap
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -568,6 +578,7 @@ decl_stmt|;
 name|scrmap_t
 name|scrnmap
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|a
@@ -581,6 +592,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|b
@@ -592,6 +604,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -605,6 +618,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|d
@@ -691,6 +705,9 @@ argument_list|,
 name|fd
 argument_list|)
 operator|!=
+operator|(
+name|unsigned
+operator|)
 name|size
 condition|)
 block|{
@@ -735,9 +752,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|load_default_scrnmap
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|scrmap_t
 name|scrnmap
@@ -795,9 +815,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_scrnmap
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -806,7 +829,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -851,7 +874,7 @@ block|{
 if|if
 condition|(
 name|i
-operator|>
+operator|!=
 literal|0
 operator|&&
 name|i
@@ -908,6 +931,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fsize
 parameter_list|(
@@ -959,13 +983,16 @@ value|((x).w * (x).h * 256 / 8)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|load_font
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1003,6 +1030,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|a
@@ -1016,6 +1044,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|b
@@ -1027,6 +1056,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -1040,6 +1070,7 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|d
@@ -1054,7 +1085,7 @@ name|NULL
 block|}
 decl_stmt|;
 name|vid_info_t
-name|info
+name|_info
 decl_stmt|;
 struct|struct
 name|sizeinfo
@@ -1107,13 +1138,13 @@ literal|0
 block|}
 block|}
 struct|;
-name|info
+name|_info
 operator|.
 name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|info
+name|_info
 argument_list|)
 expr_stmt|;
 if|if
@@ -1125,7 +1156,7 @@ argument_list|,
 name|CONS_GETINFO
 argument_list|,
 operator|&
-name|info
+name|_info
 argument_list|)
 operator|==
 operator|-
@@ -1150,7 +1181,7 @@ argument_list|)
 argument_list|,
 literal|"-8x%d"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|font_size
 argument_list|)
@@ -1509,6 +1540,9 @@ argument_list|,
 name|fd
 argument_list|)
 operator|!=
+operator|(
+name|unsigned
+operator|)
 name|size
 condition|)
 block|{
@@ -1564,6 +1598,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_screensaver_timeout
 parameter_list|(
@@ -1646,6 +1681,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_cursor_type
 parameter_list|(
@@ -1724,6 +1760,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|video_mode
 parameter_list|(
@@ -1737,12 +1774,13 @@ name|argv
 parameter_list|,
 name|int
 modifier|*
-name|index
+name|_index
 parameter_list|)
 block|{
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1931,6 +1969,8 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
 block|}
 block|, 	}
 struct|;
@@ -1979,7 +2019,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|index
+name|_index
 operator|<
 name|argc
 condition|)
@@ -2011,7 +2051,7 @@ argument_list|(
 name|argv
 index|[
 operator|*
-name|index
+name|_index
 index|]
 argument_list|,
 name|modes
@@ -2240,7 +2280,7 @@ block|}
 block|}
 operator|(
 operator|*
-name|index
+name|_index
 operator|)
 operator|++
 expr_stmt|;
@@ -2252,6 +2292,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_color_number
 parameter_list|(
@@ -2300,6 +2341,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_normal_colors
 parameter_list|(
@@ -2313,7 +2355,7 @@ name|argv
 parameter_list|,
 name|int
 modifier|*
-name|index
+name|_index
 parameter_list|)
 block|{
 name|int
@@ -2322,7 +2364,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|*
-name|index
+name|_index
 operator|<
 name|argc
 operator|&&
@@ -2334,7 +2376,7 @@ argument_list|(
 name|argv
 index|[
 operator|*
-name|index
+name|_index
 index|]
 argument_list|)
 operator|)
@@ -2345,7 +2387,7 @@ condition|)
 block|{
 operator|(
 operator|*
-name|index
+name|_index
 operator|)
 operator|++
 expr_stmt|;
@@ -2362,7 +2404,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|index
+name|_index
 operator|<
 name|argc
 operator|&&
@@ -2374,7 +2416,7 @@ argument_list|(
 name|argv
 index|[
 operator|*
-name|index
+name|_index
 index|]
 argument_list|)
 operator|)
@@ -2389,7 +2431,7 @@ condition|)
 block|{
 operator|(
 operator|*
-name|index
+name|_index
 operator|)
 operator|++
 expr_stmt|;
@@ -2409,6 +2451,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_reverse_colors
 parameter_list|(
@@ -2422,7 +2465,7 @@ name|argv
 parameter_list|,
 name|int
 modifier|*
-name|index
+name|_index
 parameter_list|)
 block|{
 name|int
@@ -2439,7 +2482,7 @@ name|argv
 index|[
 operator|*
 operator|(
-name|index
+name|_index
 operator|)
 operator|-
 literal|1
@@ -2464,7 +2507,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|index
+name|_index
 operator|<
 name|argc
 operator|&&
@@ -2476,7 +2519,7 @@ argument_list|(
 name|argv
 index|[
 operator|*
-name|index
+name|_index
 index|]
 argument_list|)
 operator|)
@@ -2491,7 +2534,7 @@ condition|)
 block|{
 operator|(
 operator|*
-name|index
+name|_index
 operator|)
 operator|++
 expr_stmt|;
@@ -2511,6 +2554,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_console
 parameter_list|(
@@ -2601,6 +2645,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_border_color
 parameter_list|(
@@ -2646,6 +2691,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_mouse_char
 parameter_list|(
@@ -2731,6 +2777,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_mouse
 parameter_list|(
@@ -2799,6 +2846,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_lockswitch
 parameter_list|(
@@ -2873,6 +2921,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|adapter_name
@@ -2887,6 +2936,7 @@ block|{
 name|int
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2992,6 +3042,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show_adapter_info
 parameter_list|(
@@ -3106,7 +3157,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    frame buffer window:0x%x, buffer size:0x%x\n"
+literal|"    frame buffer window:0x%zx, buffer size:0x%zx\n"
 argument_list|,
 name|ad
 operator|.
@@ -3119,7 +3170,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    window size:0x%x, origin:0x%x\n"
+literal|"    window size:0x%zx, origin:0x%x\n"
 argument_list|,
 name|ad
 operator|.
@@ -3153,7 +3204,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    reserved:0x%x\n"
+literal|"    reserved:0x%zx\n"
 argument_list|,
 name|ad
 operator|.
@@ -3164,6 +3215,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show_mode_info
 parameter_list|(
@@ -3172,7 +3224,7 @@ parameter_list|)
 block|{
 name|struct
 name|video_info
-name|info
+name|_info
 decl_stmt|;
 name|char
 name|buf
@@ -3212,7 +3264,7 @@ operator|++
 name|mode
 control|)
 block|{
-name|info
+name|_info
 operator|.
 name|vi_mode
 operator|=
@@ -3227,13 +3279,13 @@ argument_list|,
 name|CONS_MODEINFO
 argument_list|,
 operator|&
-name|info
+name|_info
 argument_list|)
 condition|)
 continue|continue;
 if|if
 condition|(
-name|info
+name|_info
 operator|.
 name|vi_mode
 operator|!=
@@ -3253,14 +3305,14 @@ name|printf
 argument_list|(
 literal|" 0x%08x"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_flags
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|info
+name|_info
 operator|.
 name|vi_flags
 operator|&
@@ -3282,19 +3334,19 @@ argument_list|)
 argument_list|,
 literal|"%dx%dx%d %d"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_width
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_height
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_depth
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_planes
 argument_list|)
@@ -3317,11 +3369,11 @@ argument_list|)
 argument_list|,
 literal|"%dx%d"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_width
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_height
 argument_list|)
@@ -3347,11 +3399,11 @@ argument_list|)
 argument_list|,
 literal|"%dx%d"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_cwidth
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_cheight
 argument_list|)
@@ -3365,16 +3417,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 0x%05x %2dk %2dk"
+literal|" 0x%05zx %2dk %2dk"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_window
 argument_list|,
 operator|(
 name|int
 operator|)
-name|info
+name|_info
 operator|.
 name|vi_window_size
 operator|/
@@ -3383,7 +3435,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|info
+name|_info
 operator|.
 name|vi_window_gran
 operator|/
@@ -3392,16 +3444,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 0x%08x %dk\n"
+literal|" 0x%08zx %dk\n"
 argument_list|,
-name|info
+name|_info
 operator|.
 name|vi_buffer
 argument_list|,
 operator|(
 name|int
 operator|)
-name|info
+name|_info
 operator|.
 name|vi_buffer_size
 operator|/
@@ -3413,6 +3465,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show_info
 parameter_list|(
@@ -3461,9 +3514,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|test_frame
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3580,6 +3636,7 @@ comment|/*  * Snapshot the video memory of that terminal, using the CONS_SCRSHOT
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dump_screen
 parameter_list|(
@@ -3594,15 +3651,15 @@ name|scrshot_t
 name|shot
 decl_stmt|;
 name|vid_info_t
-name|info
+name|_info
 decl_stmt|;
-name|info
+name|_info
 operator|.
 name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|info
+name|_info
 argument_list|)
 expr_stmt|;
 if|if
@@ -3614,7 +3671,7 @@ argument_list|,
 name|CONS_GETINFO
 argument_list|,
 operator|&
-name|info
+name|_info
 argument_list|)
 operator|==
 operator|-
@@ -3642,7 +3699,7 @@ name|shot
 operator|.
 name|xsize
 operator|=
-name|info
+name|_info
 operator|.
 name|mv_csz
 expr_stmt|;
@@ -3650,7 +3707,7 @@ name|shot
 operator|.
 name|ysize
 operator|=
-name|info
+name|_info
 operator|.
 name|mv_rsz
 expr_stmt|;
@@ -3664,7 +3721,7 @@ name|shot
 operator|.
 name|ysize
 operator|+=
-name|info
+name|_info
 operator|.
 name|mv_hsz
 expr_stmt|;
@@ -3941,6 +3998,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_history
 parameter_list|(
@@ -4004,9 +4062,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_history
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

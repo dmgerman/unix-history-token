@@ -139,6 +139,10 @@ name|temp
 argument_list|,
 literal|"begin %o %s"
 argument_list|,
+operator|(
+name|unsigned
+operator|*
+operator|)
 operator|&
 name|n
 argument_list|,
