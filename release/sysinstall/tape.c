@@ -111,6 +111,13 @@ operator|!
 name|tapeInitted
 condition|)
 block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|msgDebug
 argument_list|(
 literal|"Tape init routine called for %s (private dir is %s)\n"
@@ -238,6 +245,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FILE
@@ -246,6 +258,11 @@ operator|)
 name|IO_ERROR
 return|;
 block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 block|}
 name|sprintf
 argument_list|(
@@ -368,7 +385,7 @@ name|private
 argument_list|)
 condition|)
 block|{
-name|msgNotify
+name|msgDebug
 argument_list|(
 literal|"Cleaning up results of tape extract in %s.."
 argument_list|,

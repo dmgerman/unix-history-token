@@ -2696,6 +2696,9 @@ name|names
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

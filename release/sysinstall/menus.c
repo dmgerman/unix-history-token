@@ -4564,16 +4564,6 @@ block|,
 name|NULL
 block|,
 name|distSetEverything
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{
@@ -5208,16 +5198,6 @@ block|,
 name|NULL
 block|,
 name|setSrc
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{
@@ -5724,16 +5704,6 @@ block|,
 name|NULL
 block|,
 name|setX11Misc
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{
@@ -6091,16 +6061,6 @@ block|,
 name|NULL
 block|,
 name|setX11Fonts
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{
@@ -6295,16 +6255,6 @@ block|,
 name|NULL
 block|,
 name|setX11Servers
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{

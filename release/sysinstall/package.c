@@ -545,6 +545,13 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|sigpipe_caught
 operator|=
 name|FALSE
@@ -669,13 +676,6 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
 decl_stmt|;
 name|struct
 name|timeval

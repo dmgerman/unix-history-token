@@ -2222,6 +2222,9 @@ name|DITEM_SUCCESS
 operator||
 name|DITEM_REDRAW
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2264,6 +2267,8 @@ return|return
 name|i
 operator||
 name|DITEM_REDRAW
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2278,6 +2283,9 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2307,6 +2315,8 @@ name|DIST_PORTS
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -4583,15 +4593,15 @@ expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
-name|msgNotify
-argument_list|(
-literal|"Attempting to install all selected distributions.."
-argument_list|)
-expr_stmt|;
 name|w
 operator|=
 name|savescr
 argument_list|()
+expr_stmt|;
+name|msgNotify
+argument_list|(
+literal|"Attempting to install all selected distributions.."
+argument_list|)
 expr_stmt|;
 comment|/* Try for 3 times around the loop, then give up. */
 while|while

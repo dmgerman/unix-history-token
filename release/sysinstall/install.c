@@ -4213,6 +4213,9 @@ expr_stmt|;
 name|command_execute
 argument_list|()
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 return|;
