@@ -60,9 +60,7 @@ literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Always return no error. */
 return|return
@@ -102,9 +100,7 @@ literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function

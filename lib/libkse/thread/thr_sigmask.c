@@ -72,157 +72,16 @@ modifier|*
 name|oset
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
-name|sigset_t
-name|sigset
-decl_stmt|;
-name|int
-name|ret
-init|=
-literal|0
-decl_stmt|;
-comment|/* Check if the existing signal process mask is to be returned: */
-if|if
-condition|(
-name|oset
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Return the current mask: */
-operator|*
-name|oset
-operator|=
-name|curthread
-operator|->
-name|sigmask
-expr_stmt|;
-block|}
-comment|/* Check if a new signal set was provided by the caller: */
-if|if
-condition|(
-name|set
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Process according to what to do: */
-switch|switch
-condition|(
-name|how
-condition|)
-block|{
-comment|/* Block signals: */
-case|case
-name|SIG_BLOCK
-case|:
-comment|/* Add signals to the existing mask: */
-name|SIGSETOR
-argument_list|(
-name|curthread
-operator|->
-name|sigmask
-argument_list|,
-operator|*
-name|set
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* Unblock signals: */
-case|case
-name|SIG_UNBLOCK
-case|:
-comment|/* Clear signals from the existing mask: */
-name|SIGSETNAND
-argument_list|(
-name|curthread
-operator|->
-name|sigmask
-argument_list|,
-operator|*
-name|set
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* Set the signal process mask: */
-case|case
-name|SIG_SETMASK
-case|:
-comment|/* Set the new mask: */
-name|curthread
-operator|->
-name|sigmask
-operator|=
-operator|*
-name|set
-expr_stmt|;
-break|break;
-comment|/* Trap invalid actions: */
-default|default:
-comment|/* Return an invalid argument: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* Increment the sequence number: */
-name|curthread
-operator|->
-name|sigmask_seqno
-operator|++
-expr_stmt|;
-comment|/* 		 * Check if there are pending signals for the running 		 * thread or process that aren't blocked: 		 */
-name|sigset
-operator|=
-name|curthread
-operator|->
-name|sigpend
-expr_stmt|;
-name|SIGSETOR
-argument_list|(
-name|sigset
-argument_list|,
-name|_process_sigpending
-argument_list|)
-expr_stmt|;
-name|SIGSETNAND
-argument_list|(
-name|sigset
-argument_list|,
-name|curthread
-operator|->
-name|sigmask
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SIGNOTEMPTY
-argument_list|(
-name|sigset
-argument_list|)
-condition|)
-comment|/* 			 * Call the kernel scheduler which will safely 			 * install a signal frame for the running thread: 			 */
-name|_thread_kern_sched_sig
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* Return the completion status: */
 return|return
 operator|(
-name|ret
+name|sigprocmask
+argument_list|(
+name|how
+argument_list|,
+name|set
+argument_list|,
+name|oset
+argument_list|)
 operator|)
 return|;
 block|}

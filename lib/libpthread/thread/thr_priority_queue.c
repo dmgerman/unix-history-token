@@ -157,7 +157,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|PTHREAD_ASSERT((_thread_kern_in_sched != 0) ||	\ 	    ((_get_curthread())->sig_defer_count> 0) ||\ 	    (_sig_in_handler != 0), msg);
+value|PTHREAD_ASSERT((_thread_kern_in_sched != 0) ||	\ 	    ((_get_curthread())->sig_defer_count> 0), \ 	    msg);
 end_define
 
 begin_else

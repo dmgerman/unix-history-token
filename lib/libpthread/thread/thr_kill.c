@@ -48,82 +48,10 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-comment|/* Check for invalid signal numbers: */
-if|if
-condition|(
-name|sig
-operator|<
-literal|0
-operator|||
-name|sig
-operator|>=
-name|NSIG
-condition|)
-comment|/* Invalid signal: */
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* 	 * Ensure the thread is in the list of active threads, and the 	 * signal is valid (signal 0 specifies error checking only) and 	 * not being ignored: 	 */
-elseif|else
-if|if
-condition|(
-operator|(
-operator|(
-name|ret
-operator|=
-name|_find_thread
-argument_list|(
-name|pthread
-argument_list|)
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|sig
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|_thread_sigact
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_handler
-operator|!=
-name|SIG_IGN
-operator|)
-condition|)
-block|{
-comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
-name|_thread_kern_sig_defer
-argument_list|()
-expr_stmt|;
-name|_thread_sig_send
-argument_list|(
-name|pthread
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
-name|_thread_kern_sig_undefer
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* Return the completion status: */
+comment|/* 	 * All signals are unsupported. 	 */
 return|return
 operator|(
-name|ret
+name|EINVAL
 operator|)
 return|;
 block|}

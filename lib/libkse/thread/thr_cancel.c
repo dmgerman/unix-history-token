@@ -208,18 +208,6 @@ break|break;
 case|case
 name|PS_SPINBLOCK
 case|:
-case|case
-name|PS_FDR_WAIT
-case|:
-case|case
-name|PS_FDW_WAIT
-case|:
-case|case
-name|PS_POLL_WAIT
-case|:
-case|case
-name|PS_SELECT_WAIT
-case|:
 comment|/* Remove these threads from the work queue: */
 if|if
 condition|(
@@ -240,19 +228,10 @@ argument_list|)
 expr_stmt|;
 comment|/* Fall through: */
 case|case
-name|PS_SIGTHREAD
-case|:
-case|case
 name|PS_SLEEP_WAIT
 case|:
 case|case
 name|PS_WAIT_WAIT
-case|:
-case|case
-name|PS_SIGSUSPEND
-case|:
-case|case
-name|PS_SIGWAIT
 case|:
 comment|/* Interrupt and resume: */
 name|pthread
@@ -331,15 +310,6 @@ name|PS_MUTEX_WAIT
 case|:
 case|case
 name|PS_COND_WAIT
-case|:
-case|case
-name|PS_FDLR_WAIT
-case|:
-case|case
-name|PS_FDLW_WAIT
-case|:
-case|case
-name|PS_FILE_WAIT
 case|:
 comment|/* 				 * Threads in these states may be in queues. 				 * In order to preserve queue integrity, the 				 * cancelled thread must remove itself from the 				 * queue.  Mark the thread as interrupted and 				 * needing cancellation, and set the state to 				 * running.  When the thread resumes, it will 				 * remove itself from the queue and call the 				 * cancellation completion routine. 				 */
 name|pthread
