@@ -2606,7 +2606,7 @@ name|BITS2WORD
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)[0]<< 16 | (x)[3]<< 8 | (x)[2]
+value|((x)[0]<< 16 | (x)[3]<< 8 | (x)[2])
 name|u_int8_t
 name|pdb_hardaddr_bits
 index|[
