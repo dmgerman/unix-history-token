@@ -126,7 +126,7 @@ name|in
 operator|.
 name|flags
 operator|&
-name|ISDISK
+name|ISSEEK
 condition|)
 block|{
 name|errno
@@ -365,7 +365,7 @@ name|out
 operator|.
 name|flags
 operator|&
-name|ISDISK
+name|ISSEEK
 condition|)
 block|{
 name|errno

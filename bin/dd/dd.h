@@ -50,9 +50,9 @@ value|0x04
 comment|/* tape (not seekable) */
 define|#
 directive|define
-name|ISDISK
+name|ISSEEK
 value|0x08
-comment|/* disk (valid to seek on) */
+comment|/* valid to seek on */
 define|#
 directive|define
 name|NOREAD
