@@ -1131,6 +1131,17 @@ argument_list|,
 name|CB_SOCKET_STATE
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"debounced state is 0x%x\n"
+argument_list|,
+name|stat
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1242,6 +1253,24 @@ operator|->
 name|bsh
 argument_list|,
 name|CB_SOCKET_EVENT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|event
+operator|==
+literal|0
+condition|)
+return|return;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Event mask 0x%x\n"
+argument_list|,
+name|event
 argument_list|)
 expr_stmt|;
 if|if
