@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -268,33 +268,19 @@ name|fifo_reclaim
 value|((int (*) __P((struct  vop_reclaim_args *)))nullop)
 end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|fifo_lock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_lock_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|fifo_unlock
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_unlock_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
+end_define
 
 begin_decl_stmt
 name|int
@@ -335,7 +321,7 @@ begin_define
 define|#
 directive|define
 name|fifo_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+value|((int(*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_decl_stmt
