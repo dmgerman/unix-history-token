@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.43 1997/08/19 17:05:26 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.44 1997/08/22 11:34:05 peter Exp $ */
 end_comment
 
 begin_comment
@@ -47,9 +47,11 @@ directive|define
 name|PPP_COMPRESS
 end_define
 
-begin_comment
-comment|/* XXX option to cut size? */
-end_comment
+begin_define
+define|#
+directive|define
+name|PPP_FILTER
+end_define
 
 begin_include
 include|#
