@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"reboot.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../machine/reg.h"
 end_include
 
@@ -194,55 +200,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-ifndef|#
-directive|ifndef
-name|lint
-define|#
-directive|define
-name|initkey
-parameter_list|(
-name|which
-parameter_list|,
-name|p
-parameter_list|,
-name|index
-parameter_list|)
-define|\
-value|which
-comment|/**/
-value|_cache[index] = 1, which
-comment|/**/
-value|_cnt[index] = 1; \     p->p_
-comment|/**/
-value|which = index;
-name|initkey
-argument_list|(
-name|ckey
-argument_list|,
-name|p
-argument_list|,
-name|MAXCKEY
-argument_list|)
-expr_stmt|;
-name|initkey
-argument_list|(
-name|dkey
-argument_list|,
-name|p
-argument_list|,
-name|MAXDKEY
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|p
 operator|->
 name|p_p0br
@@ -554,7 +511,9 @@ name|mountfs
 argument_list|(
 name|rootdev
 argument_list|,
-literal|0
+name|boothowto
+operator|&
+name|RB_RDONLY
 argument_list|,
 operator|(
 expr|struct
@@ -672,19 +631,6 @@ name|enablertclock
 argument_list|()
 expr_stmt|;
 comment|/* enable realtime clock interrupts */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-name|clk_enable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* enable clock interrupt */
-endif|#
-directive|endif
 comment|/* 	 * make init process 	 */
 name|proc
 index|[
