@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_mxreg.h,v 1.14 1999/04/01 02:01:04 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_mxreg.h,v 1.16 1999/04/08 17:35:38 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -1663,19 +1663,15 @@ begin_struct
 struct|struct
 name|mx_desc
 block|{
-specifier|volatile
 name|u_int32_t
 name|mx_status
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|mx_ctl
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|mx_ptr1
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|mx_ptr2
 decl_stmt|;
@@ -2083,7 +2079,6 @@ begin_struct
 struct|struct
 name|mx_txdesc
 block|{
-specifier|volatile
 name|struct
 name|mx_desc
 name|mx_frag
@@ -2156,7 +2151,6 @@ begin_struct
 struct|struct
 name|mx_list_data
 block|{
-specifier|volatile
 name|struct
 name|mx_desc
 name|mx_rx_list
@@ -2164,7 +2158,6 @@ index|[
 name|MX_RX_LIST_CNT
 index|]
 decl_stmt|;
-specifier|volatile
 name|struct
 name|mx_txdesc
 name|mx_tx_list
@@ -2180,7 +2173,6 @@ begin_struct
 struct|struct
 name|mx_chain
 block|{
-specifier|volatile
 name|struct
 name|mx_txdesc
 modifier|*
@@ -2207,7 +2199,6 @@ begin_struct
 struct|struct
 name|mx_chain_onefrag
 block|{
-specifier|volatile
 name|struct
 name|mx_desc
 modifier|*
@@ -2583,6 +2574,28 @@ define|#
 directive|define
 name|MX_DEVICEID_987x5
 value|0x0531
+end_define
+
+begin_comment
+comment|/*  * Compex PCI vendor ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP_VENDORID
+value|0x11F6
+end_define
+
+begin_comment
+comment|/*  * Compex PMAC PCI device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP_DEVICEID_98713
+value|0x9881
 end_define
 
 begin_comment
