@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.84.1.1 (Berkeley) 2/18/96"
+literal|"@(#)util.c	8.84.1.2 (Berkeley) 3/4/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -3673,10 +3673,8 @@ name|l
 operator|!=
 literal|'\t'
 operator|&&
+operator|*
 name|l
-index|[
-literal|1
-index|]
 operator|!=
 literal|'\0'
 condition|)
