@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359.2.3 2002/09/26 23:03:39 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.359.2.4 2003/01/18 00:41:48 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -10934,6 +10934,8 @@ operator|=
 name|crackaddr
 argument_list|(
 name|name
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/

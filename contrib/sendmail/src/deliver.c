@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.940.2.10 2002/12/12 22:46:34 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.940.2.15 2003/02/07 17:57:43 ca Exp $"
 argument_list|)
 end_macro
 
@@ -24703,7 +24703,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"STARTTLS=client, error: connect failed=%d, SSL_error=%d, timedout=%d"
+literal|"STARTTLS=client, error: connect failed=%d, SSL_error=%d, timedout=%d, errno=%d"
 argument_list|,
 name|result
 argument_list|,
@@ -24713,6 +24713,8 @@ operator|(
 name|int
 operator|)
 name|timedout
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 if|if

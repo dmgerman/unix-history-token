@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.17 2002/12/09 16:46:18 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.21 2003/01/15 19:17:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6493,7 +6493,7 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"STARTTLS=server, error: accept failed=%d, SSL_error=%d, timedout=%d"
+literal|"STARTTLS=server, error: accept failed=%d, SSL_error=%d, timedout=%d, errno=%d"
 argument_list|,
 name|r
 argument_list|,
@@ -6503,6 +6503,8 @@ operator|(
 name|int
 operator|)
 name|timedout
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 if|if
@@ -10854,12 +10856,14 @@ literal|'#'
 condition|)
 block|{
 name|int
-name|wgrp
+name|i
+decl_stmt|,
+name|qgrp
 decl_stmt|;
 name|id
 operator|++
 expr_stmt|;
-name|wgrp
+name|qgrp
 operator|=
 name|name2qid
 argument_list|(
@@ -10871,7 +10875,7 @@ condition|(
 operator|!
 name|ISVALIDQGRP
 argument_list|(
-name|wgrp
+name|qgrp
 argument_list|)
 condition|)
 block|{
@@ -10884,15 +10888,62 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NumQueue
+operator|&&
+name|Queue
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+name|Queue
+index|[
+name|i
+index|]
+operator|->
+name|qg_nextrun
+operator|=
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|Queue
+index|[
+name|qgrp
+index|]
+operator|->
+name|qg_nextrun
+operator|=
+literal|0
+expr_stmt|;
 name|ok
 operator|=
 name|run_work_group
 argument_list|(
-name|wgrp
+name|Queue
+index|[
+name|qgrp
+index|]
+operator|->
+name|qg_wgrp
 argument_list|,
 name|RWG_FORK
 operator||
-name|RWG_RUNALL
+name|RWG_FORCE
 argument_list|)
 expr_stmt|;
 if|if
