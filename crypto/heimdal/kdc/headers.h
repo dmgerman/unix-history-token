@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/*   * $Id: headers.h,v 1.6 2000/02/06 06:04:36 assar Exp $   */
+comment|/*   * $Id: headers.h,v 1.6 2000/02/06 06:04:36 assar Exp $   * $FreeBSD$   */
 end_comment
 
 begin_ifndef
@@ -258,7 +258,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include

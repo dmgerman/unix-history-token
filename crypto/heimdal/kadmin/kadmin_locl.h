@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/*   * $Id: kadmin_locl.h,v 1.25 2000/02/06 05:16:35 assar Exp $  */
+comment|/*   * $Id: kadmin_locl.h,v 1.25 2000/02/06 05:16:35 assar Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -217,7 +217,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include

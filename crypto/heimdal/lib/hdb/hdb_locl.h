@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: hdb_locl.h,v 1.13 2000/02/06 05:17:05 assar Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -126,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include

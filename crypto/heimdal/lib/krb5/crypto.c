@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* RCSID("$FreeBSD$"); */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -5180,13 +5184,13 @@ block|{
 name|SHA1_CTX
 name|m
 decl_stmt|;
-name|SHA1Init
+name|SHA_Init
 argument_list|(
 operator|&
 name|m
 argument_list|)
 expr_stmt|;
-name|SHA1Update
+name|SHA_Update
 argument_list|(
 operator|&
 name|m
@@ -5196,7 +5200,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|SHA1Final
+name|SHA_Final
 argument_list|(
 name|C
 operator|->
