@@ -1217,6 +1217,9 @@ operator|->
 name|slotnum
 argument_list|)
 expr_stmt|;
+name|pccard_insert_beep
+argument_list|()
+expr_stmt|;
 comment|/* 	 *	Now start resetting the card. 	 */
 name|slt
 operator|->
@@ -1341,9 +1344,6 @@ name|hz
 operator|/
 literal|4
 argument_list|)
-expr_stmt|;
-name|pccard_insert_beep
-argument_list|()
 expr_stmt|;
 break|break;
 block|}
