@@ -1001,6 +1001,9 @@ name|struct
 name|kseq
 modifier|*
 name|kseq
+parameter_list|,
+name|int
+name|steal
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2084,6 +2087,8 @@ operator|=
 name|kseq_choose
 argument_list|(
 name|from
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|runq_remove
@@ -2127,6 +2132,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Pick the highest priority task we have and return it.   If steal is 1 we  * will return kses that have been denied slices due to their nice being too  * low.  In the future we should prohibit stealing interrupt threads as well.  */
+end_comment
+
 begin_function
 name|struct
 name|kse
@@ -2137,6 +2146,9 @@ name|struct
 name|kseq
 modifier|*
 name|kseq
+parameter_list|,
+name|int
+name|steal
 parameter_list|)
 block|{
 name|struct
@@ -2217,6 +2229,10 @@ condition|(
 name|ke
 operator|->
 name|ke_slice
+operator|==
+literal|0
+operator|&&
+name|steal
 operator|==
 literal|0
 condition|)
@@ -4413,7 +4429,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (kseq->ksq_load> 1&& (nke = kseq_choose(kseq)) != NULL) { 		if (sched_strict&& 		    nke->ke_thread->td_priority< td->td_priority) 			td->td_flags |= TDF_NEEDRESCHED; 		else if (nke->ke_thread->td_priority< 		    td->td_priority SCHED_PRIO_SLOP) 		     		if (nke->ke_thread->td_priority< td->td_priority) 			td->td_flags |= TDF_NEEDRESCHED; 	}
+block|if (kseq->ksq_load> 1&& (nke = kseq_choose(kseq, 0)) != NULL) { 		if (sched_strict&& 		    nke->ke_thread->td_priority< td->td_priority) 			td->td_flags |= TDF_NEEDRESCHED; 		else if (nke->ke_thread->td_priority< 		    td->td_priority SCHED_PRIO_SLOP) 		     		if (nke->ke_thread->td_priority< td->td_priority) 			td->td_flags |= TDF_NEEDRESCHED; 	}
 endif|#
 directive|endif
 comment|/* 	 * We used a tick charge it to the ksegrp so that we can compute our 	 * interactivity. 	 */
@@ -4732,6 +4748,8 @@ operator|=
 name|kseq_choose
 argument_list|(
 name|kseq
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -4804,6 +4822,8 @@ operator|=
 name|kseq_choose
 argument_list|(
 name|kseq
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
