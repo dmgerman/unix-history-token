@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.34	82/03/31	*/
+comment|/*	autoconf.c	4.35	82/04/11	*/
 end_comment
 
 begin_comment
@@ -1893,14 +1893,8 @@ name|uh_lastiv
 operator|=
 literal|0x200
 expr_stmt|;
-comment|/* THIS IS A CHEAT: USING THE FACT THAT UMEM and NEXI ARE SAME SIZE */
-name|nxaccess
+name|ubaaccess
 argument_list|(
-operator|(
-expr|struct
-name|nexus
-operator|*
-operator|)
 name|pumem
 argument_list|,
 name|memmap
@@ -1957,7 +1951,7 @@ name|ubaddr
 parameter_list|(
 name|off
 parameter_list|)
-value|(u_short *)((int)vumem + ((off)&0x1fff))
+value|(u_short *)((int)vumem + ((off)&0x3ffff))
 comment|/* 	 * Check each unibus mass storage controller. 	 * For each one which is potentially on this uba, 	 * see if it is really there, and if it is record it and 	 * then go looking for slaves. 	 */
 for|for
 control|(
@@ -2004,6 +1998,8 @@ operator|=
 name|ubaddr
 argument_list|(
 name|addr
+operator||
+literal|0x3e000
 argument_list|)
 expr_stmt|;
 if|if
@@ -2482,6 +2478,8 @@ operator|=
 name|ubaddr
 argument_list|(
 name|addr
+operator||
+literal|0x3e000
 argument_list|)
 expr_stmt|;
 if|if
@@ -2857,6 +2855,81 @@ init|=
 name|btop
 argument_list|(
 name|physa
+argument_list|)
+decl_stmt|;
+do|do
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|pte
+operator|++
+operator|=
+name|PG_V
+operator||
+name|PG_KW
+operator||
+name|v
+operator|++
+expr_stmt|;
+do|while
+condition|(
+operator|--
+name|i
+operator|>
+literal|0
+condition|)
+do|;
+name|mtpr
+argument_list|(
+name|TBIA
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ubaaccess
+argument_list|(
+argument|pumem
+argument_list|,
+argument|pte
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|caddr_t
+name|pumem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|pte
+modifier|*
+name|pte
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|i
+init|=
+literal|512
+decl_stmt|;
+specifier|register
+name|unsigned
+name|v
+init|=
+name|btop
+argument_list|(
+name|pumem
 argument_list|)
 decl_stmt|;
 do|do

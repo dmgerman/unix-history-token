@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.27	82/03/18	*/
+comment|/*	ubareg.h	4.28	82/04/11	*/
 end_comment
 
 begin_comment
@@ -940,7 +940,7 @@ begin_define
 define|#
 directive|define
 name|UMEM7ZZ
-value|((u_short *)(0xffe000))
+value|((u_short *)(0xfc0000))
 end_define
 
 begin_endif
@@ -961,7 +961,7 @@ name|UMEM750
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_short *)(0xffe000-(i)*0x40000))
+value|((u_short *)(0xfc0000-(i)*0x40000))
 end_define
 
 begin_endif
@@ -982,7 +982,7 @@ name|UMEM780
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_short *)(0x2013e000+(i)*0x40000))
+value|((u_short *)(0x20100000+(i)*0x40000))
 end_define
 
 begin_endif

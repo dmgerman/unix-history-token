@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.24	82/04/01	*/
+comment|/*	ubavar.h	4.25	82/04/11	*/
 end_comment
 
 begin_comment
@@ -500,7 +500,7 @@ name|pte
 name|UMEMmap
 index|[]
 index|[
-literal|16
+literal|512
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -515,7 +515,7 @@ name|char
 name|umem
 index|[]
 index|[
-literal|16
+literal|512
 operator|*
 name|NBPG
 index|]
