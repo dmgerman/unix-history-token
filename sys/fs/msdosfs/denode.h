@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.1 1994/09/19 15:41:38 dfr Exp $ */
+comment|/*	$Id: denode.h,v 1.2 1994/12/12 12:35:40 bde Exp $ */
 end_comment
 
 begin_comment
@@ -368,21 +368,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DE_UPDAT
-parameter_list|(
-name|dep
-parameter_list|,
-name|t
-parameter_list|,
-name|waitfor
-parameter_list|)
-define|\
-value|if ((dep)->de_flag& (DE_MODIFIED | DE_UPDATE)) \ 		(void) deupdat((dep), (t), (waitfor));
-end_define
-
-begin_define
-define|#
-directive|define
 name|DE_TIMES
 parameter_list|(
 name|dep
@@ -390,7 +375,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|if ((dep)->de_flag& DE_UPDATE) { \ 		struct timespec DE_TIMES_ts; \ 		(dep)->de_flag |= DE_MODIFIED; \ 		TIMEVAL_TO_TIMESPEC((t),&DE_TIMES_ts); \ 		unix2dostime(&DE_TIMES_ts,&(dep)->de_Date,&(dep)->de_Time); \ 		(dep)->de_flag&= ~DE_UPDATE; \ 	}
+value|if ((dep)->de_flag& DE_UPDATE) { \ 		if (!((dep)->de_Attributes& ATTR_DIRECTORY)) { \ 			struct timespec DE_TIMES_ts; \ 			(dep)->de_flag |= DE_MODIFIED; \ 			TIMEVAL_TO_TIMESPEC((t),&DE_TIMES_ts); \ 			unix2dostime(&DE_TIMES_ts,&(dep)->de_Date, \&(dep)->de_Time); \ 			(dep)->de_Attributes |= ATTR_ARCHIVE; \ 		} \ 		(dep)->de_flag&= ~DE_UPDATE; \ 	}
 end_define
 
 begin_comment

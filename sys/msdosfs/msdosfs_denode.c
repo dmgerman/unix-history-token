@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.4 1994/10/10 07:57:32 phk Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.5 1994/12/12 12:35:43 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1173,6 +1173,13 @@ name|de_flag
 operator|&
 name|DE_UPDATE
 condition|)
+block|{
+name|dep
+operator|->
+name|de_Attributes
+operator||=
+name|ATTR_ARCHIVE
+expr_stmt|;
 name|unix2dostime
 argument_list|(
 name|tp
@@ -1188,6 +1195,7 @@ operator|->
 name|de_Time
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * The mtime is now up to date.  The denode will be unmodifed soon. 	 */
 name|dep
 operator|->
@@ -2406,6 +2414,19 @@ operator|=
 name|SLOT_DELETED
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dep
+operator|->
+name|de_flag
+operator|&
+operator|(
+name|DE_MODIFIED
+operator||
+name|DE_UPDATE
+operator|)
+condition|)
+block|{
 name|TIMEVAL_TO_TIMESPEC
 argument_list|(
 operator|&
@@ -2415,7 +2436,7 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-name|DE_UPDAT
+name|deupdat
 argument_list|(
 name|dep
 argument_list|,
@@ -2425,6 +2446,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
