@@ -629,7 +629,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cmp [-l | s] file1 file2 [skip1 [skip2]]\n"
+literal|"usage: cmp [-l | -s] file1 file2 [skip1 [skip2]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
