@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.9 (Berkeley) %G%"
+literal|"@(#)ld.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1458,7 +1458,7 @@ name|error
 argument_list|(
 literal|1
 argument_list|,
-literal|"-u or -c: arg missing"
+literal|" -u or -e: arg missing"
 argument_list|)
 expr_stmt|;
 name|enter
