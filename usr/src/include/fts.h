@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -167,9 +167,9 @@ name|fts_path
 decl_stmt|;
 comment|/* root path */
 name|int
-name|fts_cderr
+name|fts_errno
 decl_stmt|;
-comment|/* chdir failed -- errno */
+comment|/* errno for this node */
 name|short
 name|fts_pathlen
 decl_stmt|;
@@ -225,6 +225,11 @@ directive|define
 name|FTS_F
 value|7
 comment|/* regular file */
+define|#
+directive|define
+name|FTS_INIT
+value|8
+comment|/* initialized only */
 define|#
 directive|define
 name|FTS_NS
