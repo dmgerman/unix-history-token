@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.5	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.6	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** show termcap entries ** ** where: **	-D	look for duplicate names and print termcap file **	-S	sort entries before display **	-T	trace (-DDEBUG only) **	-b	show bare entries **	-d	-D and stop **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Kevin Layer: modified for 4.1c and misc changes. ** Kevin Layer: added the printing of terminal capabilities **	in `human' readable form (like that in "man 5 termcap"). */
+comment|/* ** show termcap entries ** ** where: **	-D	look for duplicate names and print termcap file **	-S	sort entries before display **	-T	trace (-DDEBUG only) **	-U	print unknown capabilities **	-b	show bare entries **	-d	-D and stop **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Kevin Layer: modified for 4.1c and misc changes. ** Kevin Layer: added the printing of terminal capabilities **	in `human' readable form (like that in "man 5 termcap"). */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|NOCAPS
-value|97
+value|105
 end_define
 
 begin_struct
@@ -155,6 +155,10 @@ block|,
 literal|"bc"
 block|,
 literal|"Backspace if not ^H"
+block|,
+literal|"bl"
+block|,
+literal|"Audible Bell"
 block|,
 literal|"bs"
 block|,
@@ -372,6 +376,10 @@ literal|"ku"
 block|,
 literal|"Sent by up arrow key"
 block|,
+literal|"le"
+block|,
+literal|"Move left"
+block|,
 literal|"li"
 block|,
 literal|"Number of lines on screen or page"
@@ -384,13 +392,37 @@ literal|"ma"
 block|,
 literal|"Arrow key map, used by vi V2 only"
 block|,
+literal|"mb"
+block|,
+literal|"Enter blinking mode"
+block|,
+literal|"md"
+block|,
+literal|"Enter bold mode"
+block|,
+literal|"me"
+block|,
+literal|"Reset video attributes"
+block|,
+literal|"mh"
+block|,
+literal|"Enter halfbright mode"
+block|,
 literal|"mi"
 block|,
 literal|"Safe to move while in insert mode"
 block|,
+literal|"mk"
+block|,
+literal|"Enter protected mode"
+block|,
 literal|"ml"
 block|,
 literal|"Memory lock on above cursor."
+block|,
+literal|"mr"
+block|,
+literal|"Enter reverse video mode"
 block|,
 literal|"ms"
 block|,
@@ -597,6 +629,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|bflag
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Uflag
 init|=
 name|NO
 decl_stmt|;
@@ -861,6 +901,14 @@ case|case
 literal|'D'
 case|:
 name|dflag
+operator|=
+name|YES
+expr_stmt|;
+continue|continue;
+case|case
+literal|'U'
+case|:
+name|Uflag
 operator|=
 name|YES
 expr_stmt|;
@@ -2040,8 +2088,34 @@ operator|++
 control|)
 if|if
 condition|(
+name|Uflag
+condition|)
+block|{
+if|if
+condition|(
+name|unknowncap
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%3.3s\n"
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
 name|sflag
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%-45s %s\n"
@@ -2056,6 +2130,7 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|printf
@@ -2727,6 +2802,70 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|unknowncap
+argument_list|(
+argument|key
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|key
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|NOCAPS
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|key
+argument_list|,
+name|capList
+index|[
+name|i
+index|]
+operator|.
+name|cap
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 
