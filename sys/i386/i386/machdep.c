@@ -789,7 +789,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_physmem
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|""
 argument_list|)
@@ -852,7 +852,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_usermem
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|""
 argument_list|)
