@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdump.c,v 1.11 1997/07/16 06:49:49 charnier Exp $"
+literal|"$Id: kdump.c,v 1.12 1999/05/21 01:09:45 jmz Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,7 +1081,7 @@ operator|->
 name|ktr_narg
 expr_stmt|;
 specifier|register
-name|int
+name|register_t
 modifier|*
 name|ip
 decl_stmt|;
@@ -1134,23 +1134,13 @@ argument_list|)
 expr_stmt|;
 name|ip
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
 name|ktr
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ktr_syscall
-argument_list|)
-operator|)
+operator|->
+name|ktr_args
+index|[
+literal|0
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -1189,8 +1179,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"(%d"
+literal|"(%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1201,8 +1194,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"(%#x"
+literal|"(%#lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1248,8 +1244,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|",%d"
+literal|",%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1260,8 +1259,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|",%#x "
+literal|",%#lx "
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1320,8 +1322,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"(%d"
+literal|"(%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1352,10 +1357,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%c%d"
+literal|"%c%ld"
 argument_list|,
 name|c
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1366,10 +1374,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%c%#x"
+literal|"%c%#lx"
 argument_list|,
 name|c
 argument_list|,
+operator|(
+name|long
+operator|)
 operator|*
 name|ip
 argument_list|)
@@ -1423,7 +1434,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|register_t
 name|ret
 init|=
 name|ktr
@@ -1517,8 +1528,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"/%#x"
+literal|"/%#lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ret
 argument_list|)
 expr_stmt|;
@@ -1534,8 +1548,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ret
 argument_list|)
 expr_stmt|;
@@ -1545,8 +1562,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%#x"
+literal|"%#lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ret
 argument_list|)
 expr_stmt|;
@@ -2151,10 +2171,10 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"caught handler=0x%x mask=0x%x code=0x%x\n"
+literal|"caught handler=0x%lx mask=0x%x code=0x%x\n"
 argument_list|,
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|psig
 operator|->
