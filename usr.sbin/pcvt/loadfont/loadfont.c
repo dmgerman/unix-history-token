@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -394,38 +400,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|strcpy
+name|err
 argument_list|(
-name|buffer
+literal|1
 argument_list|,
-literal|"ERROR opening "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buffer
+literal|"ERROR opening %s"
 argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -459,18 +442,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl VGAGETSCREEN failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|screeninfo
@@ -591,33 +569,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|sprintf
+name|err
 argument_list|(
-name|buffer
+literal|1
 argument_list|,
 literal|"cannot open file %s for reading"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -634,33 +594,15 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|sprintf
+name|err
 argument_list|(
-name|buffer
+literal|1
 argument_list|,
 literal|"cannot fstat file %s"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|sbp
@@ -733,11 +675,11 @@ name|SIZ_25ROWS
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"error, file %s is no valid font file, size=%d\n"
+literal|"error, file %s is no valid font file, size=%d"
 argument_list|,
 name|argv
 index|[
@@ -747,11 +689,6 @@ argument_list|,
 name|sbp
 operator|->
 name|st_size
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -778,20 +715,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"error, malloc failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"error, malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -819,12 +749,11 @@ name|sbp
 operator|->
 name|st_size
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"error reading file %s, size = %d, read =  is no valid font file, size=%d\n"
+literal|"error reading file %s, size = %d, read = is no valid font file, size=%d"
 argument_list|,
 name|argv
 index|[
@@ -838,12 +767,6 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|loadfont
 argument_list|(
 name|chr_set
@@ -956,18 +879,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"loadfont - ioctl VGASETFONTATTR failed, error"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl VGASETFONTATTR failed, error"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1091,18 +1009,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"loadfont - ioctl VGALOADCHAR failed, error"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl VGALOADCHAR failed, error"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
@@ -1166,18 +1079,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"loadfont - ioctl VGAGETFONTATTR failed, error"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl VGAGETFONTATTR failed, error"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|" %d  "

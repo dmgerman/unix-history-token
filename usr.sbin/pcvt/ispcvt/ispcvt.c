@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -199,33 +205,13 @@ if|if
 condition|(
 name|verbose
 condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|strcpy
+name|warn
 argument_list|(
-name|buffer
-argument_list|,
-literal|"ERROR opening "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buffer
+literal|"ERROR opening %s"
 argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|1
@@ -260,9 +246,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"ispcvt - ioctl VGAPCVTID failed, error"
+literal|"ioctl VGAPCVTID failed, error"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -306,11 +292,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ispcvt - minor revision: expected %d, got %d\n"
+literal|"minor revision: expected %d, got %d"
 argument_list|,
 name|PCVTIDMINOR
 argument_list|,
@@ -333,11 +317,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ispcvt - major revision: expected %d, got %d\n"
+literal|"major revision: expected %d, got %d"
 argument_list|,
 name|PCVTIDMAJOR
 argument_list|,
@@ -360,11 +342,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ispcvt - name check: expected %s, got %s\n"
+literal|"name check: expected %s, got %s"
 argument_list|,
 name|PCVTIDNAME
 argument_list|,
@@ -385,11 +365,9 @@ condition|(
 name|verbose
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\nispcvt: kernel and utils match, driver name [%s], release [%1.1d.%02.2d]\n\n"
+literal|"\nkernel and utils match, driver name [%s], release [%1.1d.%02.2d]\n"
 argument_list|,
 name|pcvtid
 operator|.
@@ -440,9 +418,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"ispcvt - ioctl VGAPCVTINFO failed, error"
+literal|"ioctl VGAPCVTINFO failed, error"
 argument_list|)
 expr_stmt|;
 name|exit
