@@ -279,6 +279,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pal.h>
 end_include
 
@@ -1124,6 +1130,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ia64_mca_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
