@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.4 (Berkeley) %G%"
+literal|"@(#)temp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,21 +292,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|findmail
-argument_list|()
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|copy
-argument_list|(
-name|homedir
-argument_list|,
-name|mbox
-argument_list|)
-argument_list|,
-literal|"/mbox"
-argument_list|)
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|copy
@@ -338,24 +323,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uid = %d, user = %s, mailname = %s\n"
+literal|"uid = %d, user = %s\n"
 argument_list|,
 name|uid
 argument_list|,
 name|myname
-argument_list|,
-name|mailname
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"deadletter = %s, mailrc = %s, mbox = %s\n"
+literal|"deadletter = %s, mailrc = %s\n"
 argument_list|,
 name|deadletter
 argument_list|,
 name|mailrc
-argument_list|,
-name|mbox
 argument_list|)
 expr_stmt|;
 block|}

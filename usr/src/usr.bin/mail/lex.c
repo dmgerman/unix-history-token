@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.11 (Berkeley) %G%"
+literal|"@(#)lex.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,13 +95,6 @@ decl_stmt|;
 specifier|static
 name|int
 name|shudclob
-decl_stmt|;
-specifier|static
-name|char
-name|efile
-index|[
-literal|128
-index|]
 decl_stmt|;
 specifier|extern
 name|char
@@ -306,19 +299,6 @@ expr_stmt|;
 name|edit
 operator|=
 name|isedit
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|efile
-argument_list|,
-name|name
-argument_list|,
-literal|128
-argument_list|)
-expr_stmt|;
-name|editfile
-operator|=
-name|efile
 expr_stmt|;
 if|if
 condition|(

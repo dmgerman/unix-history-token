@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.6 (Berkeley) %G%"
+literal|"@(#)quit.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|id
+decl_stmt|;
+name|char
+modifier|*
+name|mbox
 decl_stmt|;
 comment|/* 	 * If we are read only, we can't do anything, 	 * so just return quickly. 	 */
 if|if
@@ -679,6 +683,13 @@ name|cream
 goto|;
 block|}
 comment|/* 	 * Create another temporary file and copy user's mbox file 	 * darin.  If there is no mbox, copy nothing. 	 * If he has specified "append" don't copy his mailbox, 	 * just copy saveable entries at the end. 	 */
+name|mbox
+operator|=
+name|expand
+argument_list|(
+literal|"&"
+argument_list|)
+expr_stmt|;
 name|mcount
 operator|=
 name|c
