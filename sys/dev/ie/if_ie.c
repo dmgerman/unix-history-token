@@ -9651,6 +9651,17 @@ operator||=
 name|IFF_RUNNING
 expr_stmt|;
 comment|/* tell higher levels 							 * we're here */
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_OACTIVE
+expr_stmt|;
 name|start_receiver
 argument_list|(
 name|sc
