@@ -3652,7 +3652,9 @@ literal|2
 expr_stmt|;
 name|timeout
 argument_list|(
-name|pcic_reset
+name|cinfo
+operator|.
+name|reset
 argument_list|,
 operator|(
 name|void
@@ -3689,7 +3691,9 @@ literal|3
 expr_stmt|;
 name|timeout
 argument_list|(
-name|pcic_reset
+name|cinfo
+operator|.
+name|reset
 argument_list|,
 operator|(
 name|void
@@ -3724,7 +3728,9 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-name|pcic_reset
+name|cinfo
+operator|.
+name|reset
 argument_list|,
 operator|(
 name|void
@@ -4131,7 +4137,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|pcic_disable
+name|cinfo
+operator|.
+name|disable
 argument_list|(
 name|sp
 operator|->
@@ -5293,7 +5301,9 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|pcic_io
+name|cinfo
+operator|.
+name|mapio
 argument_list|(
 name|devi
 operator|->
@@ -5382,7 +5392,9 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|pcic_memory
+name|cinfo
+operator|.
+name|mapmem
 argument_list|(
 name|devi
 operator|->
@@ -5493,7 +5505,9 @@ name|IODF_ACTIVE
 expr_stmt|;
 name|err
 operator|=
-name|pcic_io
+name|cinfo
+operator|.
+name|mapio
 argument_list|(
 name|devi
 operator|->
@@ -5549,7 +5563,9 @@ operator|)
 expr_stmt|;
 name|err
 operator|=
-name|pcic_memory
+name|cinfo
+operator|.
+name|mapmem
 argument_list|(
 name|devi
 operator|->
@@ -5700,7 +5716,9 @@ name|err
 operator|==
 literal|0
 condition|)
-name|pcic_mapirq
+name|cinfo
+operator|.
+name|mapirq
 argument_list|(
 name|devi
 operator|->
@@ -5766,7 +5784,9 @@ argument_list|(
 name|child
 argument_list|)
 decl_stmt|;
-name|pcic_mapirq
+name|cinfo
+operator|.
+name|mapirq
 argument_list|(
 name|devi
 operator|->
@@ -5892,7 +5912,9 @@ break|break;
 block|}
 name|err
 operator|=
-name|pcic_memory
+name|cinfo
+operator|.
+name|mapmem
 argument_list|(
 name|devi
 operator|->
@@ -6105,7 +6127,9 @@ expr_stmt|;
 comment|/* XXX BAD XXX */
 return|return
 operator|(
-name|pcic_memory
+name|cinfo
+operator|.
+name|mapmem
 argument_list|(
 name|devi
 operator|->
