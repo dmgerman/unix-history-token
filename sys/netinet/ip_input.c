@@ -7016,7 +7016,7 @@ literal|0
 block|,
 name|ENOPROTOOPT
 block|,
-name|ENETRESET
+name|ECONNREFUSED
 block|}
 decl_stmt|;
 end_decl_stmt
