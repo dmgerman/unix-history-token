@@ -3162,6 +3162,36 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|slot
+operator|==
+literal|0
+condition|)
+block|{
+name|device_t
+name|bdev
+decl_stmt|;
+comment|/* bridged - get slot from granparent */
+comment|/* note that this is broken for all but the most trival case */
+name|bdev
+operator|=
+name|device_get_parent
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|child
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|slot
+operator|=
+name|pci_get_slot
+argument_list|(
+name|bdev
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|mid
 operator|==
 literal|5
