@@ -4288,7 +4288,7 @@ literal|"fspath"
 expr_stmt|;
 name|iov
 index|[
-literal|1
+literal|2
 index|]
 operator|.
 name|iov_len
@@ -4316,7 +4316,7 @@ literal|"/mnt/dev"
 expr_stmt|;
 name|iov
 index|[
-literal|1
+literal|3
 index|]
 operator|.
 name|iov_len
