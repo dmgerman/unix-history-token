@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.15 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1069,8 +1069,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|++
 name|badblk
+operator|++
 operator|>=
 name|MAXBAD
 condition|)
@@ -1185,8 +1185,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|++
 name|dupblk
+operator|++
 operator|>=
 name|MAXDUP
 condition|)
