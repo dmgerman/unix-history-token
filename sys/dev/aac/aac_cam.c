@@ -1159,9 +1159,9 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_FLAGS_CAM_NORESET
 operator|)
 condition|)
 block|{
@@ -1678,9 +1678,9 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_FLAGS_CAM_NORESET
 operator|)
 condition|)
 block|{
@@ -2168,9 +2168,9 @@ operator|||
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_CAM_PASSONLY
+name|AAC_FLAGS_CAM_PASSONLY
 operator|)
 condition|)
 name|ccb
@@ -2666,11 +2666,9 @@ operator|!=
 name|ST_OK
 condition|)
 block|{
-name|device_printf
+name|debug
 argument_list|(
-name|sc
-operator|->
-name|aac_dev
+literal|1
 argument_list|,
 literal|"VM_Ioctl returned %d\n"
 argument_list|,

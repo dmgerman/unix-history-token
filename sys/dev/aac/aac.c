@@ -673,12 +673,15 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_fa_get_mailboxstatus
+name|aac_fa_get_mailbox
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -715,7 +718,7 @@ name|aac_fa_clear_istatus
 block|,
 name|aac_fa_set_mailbox
 block|,
-name|aac_fa_get_mailboxstatus
+name|aac_fa_get_mailbox
 block|,
 name|aac_fa_set_interrupts
 block|}
@@ -815,12 +818,15 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_sa_get_mailboxstatus
+name|aac_sa_get_mailbox
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -857,7 +863,7 @@ name|aac_sa_clear_istatus
 block|,
 name|aac_sa_set_mailbox
 block|,
-name|aac_sa_get_mailboxstatus
+name|aac_sa_get_mailbox
 block|,
 name|aac_sa_set_interrupts
 block|}
@@ -957,12 +963,15 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_rx_get_mailboxstatus
+name|aac_rx_get_mailbox
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -999,7 +1008,7 @@ name|aac_rx_clear_istatus
 block|,
 name|aac_rx_set_mailbox
 block|,
-name|aac_rx_get_mailboxstatus
+name|aac_rx_get_mailbox
 block|,
 name|aac_rx_set_interrupts
 block|}
@@ -1380,25 +1389,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Allocate command structures.  This must be done before aac_init() 	 * in order to work around a 2120/2200 bug. 	 */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|aac_alloc_commands
-argument_list|(
-name|sc
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* Init the sync fib lock */
 name|AAC_LOCK_INIT
 argument_list|(
@@ -1689,14 +1679,15 @@ expr_stmt|;
 comment|/* Register with CAM for the non-DASD devices */
 if|if
 condition|(
-operator|!
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_NOCAM
+name|AAC_FLAGS_ENABLE_CAM
 operator|)
+operator|!=
+literal|0
 condition|)
 name|aac_get_bus_info
 argument_list|(
@@ -5236,7 +5227,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Work around a bug in the 2120 and 2200 that cannot DMA commands 	 * below address 8192 in physical memory. 	 * XXX If the padding is not needed, can it be put to use instead 	 * of ignored? 	 */
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -5251,8 +5241,6 @@ name|sc
 operator|->
 name|aac_fibs
 argument_list|,
-literal|8192
-operator|+
 name|AAC_FIB_COUNT
 operator|*
 sizeof|sizeof
@@ -5268,36 +5256,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|aac_fibphys
-operator|<
-literal|8192
-condition|)
-block|{
-name|sc
-operator|->
-name|aac_fibs
-operator|+=
-operator|(
-literal|8192
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aac_fib
-argument_list|)
-operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|aac_fibphys
-operator|+=
-literal|8192
-expr_stmt|;
-block|}
 comment|/* initialise constant fields in the command structure */
 name|bzero
 argument_list|(
@@ -5937,10 +5895,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Retrieve the firmware version numbers.  Dell PERC2/QC cards with  * firmware version 1.x are not compatible with this driver.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5956,19 +5910,22 @@ name|u_int32_t
 name|major
 decl_stmt|,
 name|minor
+decl_stmt|,
+name|options
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Retrieve the firmware version numbers.  Dell PERC2/QC cards with 	 * firmware version 1.x are not compatible with this driver. 	 */
 if|if
 condition|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_PERC2QC
+name|AAC_FLAGS_PERC2QC
 condition|)
 block|{
 if|if
@@ -6010,13 +5967,11 @@ comment|/* These numbers are stored as ASCII! */
 name|major
 operator|=
 operator|(
-name|AAC_GETREG4
+name|AAC_GET_MAILBOX
 argument_list|(
 name|sc
 argument_list|,
-name|AAC_SA_MAILBOX
-operator|+
-literal|4
+literal|1
 argument_list|)
 operator|&
 literal|0xff
@@ -6027,13 +5982,11 @@ expr_stmt|;
 name|minor
 operator|=
 operator|(
-name|AAC_GETREG4
+name|AAC_GET_MAILBOX
 argument_list|(
 name|sc
 argument_list|,
-name|AAC_SA_MAILBOX
-operator|+
-literal|8
+literal|2
 argument_list|)
 operator|&
 literal|0xff
@@ -6068,6 +6021,95 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * Retrieve the capabilities/supported options word so we know what 	 * work-arounds to enable. 	 */
+if|if
+condition|(
+name|aac_sync_command
+argument_list|(
+name|sc
+argument_list|,
+name|AAC_MONKER_GETINFO
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"RequestAdapterInfo failed\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
+name|options
+operator|=
+name|AAC_GET_MAILBOX
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|supported_options
+operator|=
+name|options
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|AAC_SUPPORTED_4GB_WINDOW
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|AAC_FLAGS_NO4GB
+operator|)
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|flags
+operator||=
+name|AAC_FLAGS_4GB_WINDOW
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|&
+name|AAC_SUPPORTED_NONDASD
+condition|)
+name|sc
+operator|->
+name|flags
+operator||=
+name|AAC_FLAGS_ENABLE_CAM
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6101,6 +6143,9 @@ decl_stmt|;
 name|u_int8_t
 modifier|*
 name|qaddr
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -6205,7 +6250,11 @@ name|AAC_UP_AND_RUNNING
 operator|)
 condition|)
 do|;
-comment|/* 	 * Create DMA tag for the common structure and allocate it. 	 */
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+comment|/*  	 * Create DMA tag for mapping buffers into controller-addressable space.  	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -6231,6 +6280,157 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
+name|MAXBSIZE
+argument_list|,
+comment|/* maxsize */
+name|AAC_MAXSGENTRIES
+argument_list|,
+comment|/* nsegments */
+name|MAXBSIZE
+argument_list|,
+comment|/* maxsegsize */
+name|BUS_DMA_ALLOCNOW
+argument_list|,
+comment|/* flags */
+operator|&
+name|sc
+operator|->
+name|aac_buffer_dmat
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"can't allocate buffer DMA tag\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/*  	 * Create DMA tag for mapping FIBs into controller-addressable space..  	 */
+if|if
+condition|(
+name|bus_dma_tag_create
+argument_list|(
+name|sc
+operator|->
+name|aac_parent_dmat
+argument_list|,
+comment|/* parent */
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+comment|/* algnmnt, boundary */
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|AAC_FLAGS_4GB_WINDOW
+operator|)
+condition|?
+name|BUS_SPACE_MAXADDR_32BIT
+else|:
+literal|0x7fffffff
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|AAC_FIB_COUNT
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib
+argument_list|)
+argument_list|,
+comment|/* maxsize */
+literal|1
+argument_list|,
+comment|/* nsegments */
+name|AAC_FIB_COUNT
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib
+argument_list|)
+argument_list|,
+comment|/* maxsegsize */
+name|BUS_DMA_ALLOCNOW
+argument_list|,
+comment|/* flags */
+operator|&
+name|sc
+operator|->
+name|aac_fib_dmat
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"can't allocate FIB DMA tag\n"
+argument_list|)
+expr_stmt|;
+empty_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* 	 * Create DMA tag for the common structure and allocate it. 	 */
+if|if
+condition|(
+name|bus_dma_tag_create
+argument_list|(
+name|sc
+operator|->
+name|aac_parent_dmat
+argument_list|,
+comment|/* parent */
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+comment|/* algnmnt, boundary */
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|AAC_FLAGS_4GB_WINDOW
+operator|)
+condition|?
+name|BUS_SPACE_MAXADDR_32BIT
+else|:
+literal|0x7fffffff
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+literal|8192
+operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6244,7 +6444,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
 operator|&
@@ -6263,11 +6463,9 @@ argument_list|,
 literal|"can't allocate common structure DMA tag\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -6305,12 +6503,11 @@ argument_list|,
 literal|"can't allocate common structure\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
+comment|/* 	 * Work around a bug in the 2120 and 2200 that cannot DMA commands 	 * below address 8192 in physical memory. 	 * XXX If the padding is not needed, can it be put to use instead 	 * of ignored? 	 */
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -6325,6 +6522,8 @@ name|sc
 operator|->
 name|aac_common
 argument_list|,
+literal|8192
+operator|+
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -6340,6 +6539,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|aac_common_busaddr
+operator|<
+literal|8192
+condition|)
+block|{
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|sc
+operator|->
+name|aac_common
+operator|+=
+literal|8192
+expr_stmt|;
+name|sc
+operator|->
+name|aac_common_busaddr
+operator|+=
+literal|8192
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 name|sc
@@ -6355,6 +6580,19 @@ name|aac_common
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Allocate some FIBs and associated command structs */
+if|if
+condition|(
+name|aac_alloc_commands
+argument_list|(
+name|sc
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Fill in the init structure.  This tells the adapter about the 	 * physical location of various important shared data structures. 	 */
 name|ip
 operator|=
@@ -6965,15 +7203,23 @@ argument_list|,
 literal|"error establishing init structure\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EIO
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|out
+label|:
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -7076,7 +7322,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"timed out"
 argument_list|)
@@ -7112,9 +7358,11 @@ expr_stmt|;
 comment|/* get the command status */
 name|status
 operator|=
-name|AAC_GET_MAILBOXSTATUS
+name|AAC_GET_MAILBOX
 argument_list|(
 name|sc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9049,12 +9297,15 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|aac_sa_get_mailboxstatus
+name|aac_sa_get_mailbox
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 block|{
 name|debug_called
@@ -9069,6 +9320,12 @@ argument_list|(
 name|sc
 argument_list|,
 name|AAC_SA_MAILBOX
+operator|+
+operator|(
+name|mb
+operator|*
+literal|4
+operator|)
 argument_list|)
 operator|)
 return|;
@@ -9078,12 +9335,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|aac_rx_get_mailboxstatus
+name|aac_rx_get_mailbox
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 block|{
 name|debug_called
@@ -9098,6 +9358,12 @@ argument_list|(
 name|sc
 argument_list|,
 name|AAC_RX_MAILBOX
+operator|+
+operator|(
+name|mb
+operator|*
+literal|4
+operator|)
 argument_list|)
 operator|)
 return|;
@@ -9107,12 +9373,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|aac_fa_get_mailboxstatus
+name|aac_fa_get_mailbox
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 block|{
 name|int
@@ -9130,6 +9399,12 @@ argument_list|(
 name|sc
 argument_list|,
 name|AAC_FA_MAILBOX
+operator|+
+operator|(
+name|mb
+operator|*
+literal|4
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -9548,6 +9823,42 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+literal|1
+operator|||
+name|bootverbose
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"Supported Options=%b\n"
+argument_list|,
+name|sc
+operator|->
+name|supported_options
+argument_list|,
+literal|"\20"
+literal|"\1SNAPSHOT"
+literal|"\2CLUSTERS"
+literal|"\3WCACHE"
+literal|"\4DATA64"
+literal|"\5HOSTTIME"
+literal|"\6RAID50"
+literal|"\7WINDOW4GB"
+literal|"\10SCSIUPGD"
+literal|"\11SOFTERR"
+literal|"\12NORECOND"
+literal|"\13SGMAP64"
+literal|"\14ALARM"
+literal|"\15NONDASD"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -12125,11 +12436,9 @@ operator|!=
 name|ST_OK
 condition|)
 block|{
-name|device_printf
+name|debug
 argument_list|(
-name|sc
-operator|->
-name|aac_dev
+literal|1
 argument_list|,
 literal|"VM_Ioctl returned %d\n"
 argument_list|,

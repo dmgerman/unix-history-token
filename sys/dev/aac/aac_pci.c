@@ -288,7 +288,7 @@ literal|0x0001
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 2/Si"
 block|}
@@ -304,7 +304,7 @@ literal|0x0002
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -320,7 +320,7 @@ literal|0x0003
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Si"
 block|}
@@ -336,7 +336,7 @@ literal|0x00d0
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Si"
 block|}
@@ -352,7 +352,7 @@ literal|0x00d1
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -368,7 +368,7 @@ literal|0x00d9
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -384,7 +384,7 @@ literal|0x00cf
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -400,7 +400,7 @@ literal|0x0106
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -416,7 +416,7 @@ literal|0x011b
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -432,7 +432,7 @@ literal|0x0121
 block|,
 name|AAC_HWIF_I960RX
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -448,7 +448,7 @@ literal|0x0364
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Adaptec AAC-364"
 block|}
@@ -464,7 +464,7 @@ literal|0x0365
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"Adaptec SCSI RAID 5400S"
 block|}
@@ -480,9 +480,7 @@ literal|0x1364
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-name|AAC_QUIRK_NOCAM
-operator||
-name|AAC_QUIRK_PERC2QC
+name|AAC_FLAGS_PERC2QC
 block|,
 literal|"Dell PERC 2/QC"
 block|}
@@ -498,7 +496,7 @@ literal|0x10c2
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-name|AAC_QUIRK_NOCAM
+literal|0
 block|,
 literal|"HP NetRaid-4M"
 block|}
@@ -514,7 +512,7 @@ literal|0x0285
 block|,
 name|AAC_HWIF_I960RX
 block|,
-literal|0
+name|AAC_FLAGS_NO4GB
 block|,
 literal|"Adaptec SCSI RAID 2200S"
 block|}
@@ -530,7 +528,7 @@ literal|0x0287
 block|,
 name|AAC_HWIF_I960RX
 block|,
-literal|0
+name|AAC_FLAGS_NO4GB
 block|,
 literal|"Dell PERC 320/DC"
 block|}
@@ -546,7 +544,7 @@ literal|0x0286
 block|,
 name|AAC_HWIF_I960RX
 block|,
-literal|0
+name|AAC_FLAGS_NO4GB
 block|,
 literal|"Adaptec SCSI RAID 2120S"
 block|}
@@ -1065,7 +1063,7 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsize */
 name|AAC_MAXSGENTRIES
@@ -1074,7 +1072,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 operator|&
@@ -1093,130 +1091,6 @@ argument_list|,
 literal|"can't allocate parent DMA tag\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* 	 * Create DMA tag for mapping buffers into controller-addressable space. 	 */
-if|if
-condition|(
-name|bus_dma_tag_create
-argument_list|(
-name|sc
-operator|->
-name|aac_parent_dmat
-argument_list|,
-comment|/* parent */
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-comment|/* algnmnt, boundary */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* highaddr */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* filter, filterarg */
-name|MAXBSIZE
-argument_list|,
-name|AAC_MAXSGENTRIES
-argument_list|,
-comment|/* maxsize, nsegments */
-name|BUS_SPACE_MAXSIZE_32BIT
-argument_list|,
-comment|/* maxsegsize */
-literal|0
-argument_list|,
-comment|/* flags */
-operator|&
-name|sc
-operator|->
-name|aac_buffer_dmat
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"can't allocate buffer DMA tag\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* 	 * Create DMA tag for mapping FIBs into controller-addressable space.. 	 */
-if|if
-condition|(
-name|bus_dma_tag_create
-argument_list|(
-name|sc
-operator|->
-name|aac_parent_dmat
-argument_list|,
-comment|/* parent */
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-comment|/* algnmnt, boundary */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* lowaddr */
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/* highaddr */
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* filter, filterarg */
-literal|8192
-operator|+
-name|AAC_FIB_COUNT
-operator|*
-comment|/* XXX dma hack */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aac_fib
-argument_list|)
-argument_list|,
-literal|1
-argument_list|,
-comment|/* maxsize, nsegments */
-name|BUS_SPACE_MAXSIZE_32BIT
-argument_list|,
-comment|/* maxsegsize */
-literal|0
-argument_list|,
-comment|/* flags */
-operator|&
-name|sc
-operator|->
-name|aac_fib_dmat
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"can't allocate FIB DMA tag\n"
-argument_list|)
-expr_stmt|;
-empty_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1379,7 +1253,7 @@ block|}
 comment|/* Set up quirks */
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|=
 name|aac_identifiers
 index|[
