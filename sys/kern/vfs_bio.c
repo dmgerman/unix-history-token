@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.63 1995/09/09 18:10:14 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.64 1995/09/23 21:12:43 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -1771,6 +1771,11 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 name|int
 name|iototal
 init|=
@@ -1778,13 +1783,33 @@ name|bp
 operator|->
 name|b_bufsize
 decl_stmt|;
-name|foff
+name|vp
 operator|=
-literal|0
+name|bp
+operator|->
+name|b_vp
 expr_stmt|;
-name|obj
-operator|=
-literal|0
+if|if
+condition|(
+operator|!
+name|vp
+condition|)
+name|panic
+argument_list|(
+literal|"brelse: missing vp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vp
+operator|->
+name|v_mount
+condition|)
+name|panic
+argument_list|(
+literal|"brelse: missing mount info"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1793,24 +1818,20 @@ operator|->
 name|b_npages
 condition|)
 block|{
-if|if
-condition|(
-name|bp
+name|obj
+operator|=
+operator|(
+name|vm_object_t
+operator|)
+name|vp
 operator|->
-name|b_vp
-operator|&&
-name|bp
-operator|->
-name|b_vp
-operator|->
-name|v_mount
-condition|)
-block|{
+name|v_object
+expr_stmt|;
 name|foff
 operator|=
-name|bp
-operator|->
-name|b_vp
+name|trunc_page
+argument_list|(
+name|vp
 operator|->
 name|v_mount
 operator|->
@@ -1821,24 +1842,8 @@ operator|*
 name|bp
 operator|->
 name|b_lblkno
+argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 				 * vnode pointer has been ripped away -- 				 * probably file gone... 				 */
-name|foff
-operator|=
-name|bp
-operator|->
-name|b_pages
-index|[
-literal|0
-index|]
-operator|->
-name|offset
-expr_stmt|;
-block|}
-block|}
 for|for
 control|(
 name|i
@@ -1949,7 +1954,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 				 * Don't invalidate the page if the local machine has already 				 * modified it.  This is the lesser of two evils, and should 				 * be fixed. 				 */
+comment|/* 					 * Don't invalidate the page if the local machine has already 					 * modified it.  This is the lesser of two evils, and should 					 * be fixed. 					 */
 if|if
 condition|(
 name|bp
@@ -2012,6 +2017,7 @@ name|iototal
 operator|-=
 name|resid
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2087,12 +2093,35 @@ operator|~
 name|PG_WANTED
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|busy
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_BUSY
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
 name|vm_page_test_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 					 * if page isn't valid, no sense in keeping it around 					 */
+comment|/* 						 * if page isn't valid, no sense in keeping it around 						 */
 if|if
 condition|(
 name|m
@@ -2102,12 +2131,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
+name|vm_page_protect
 argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|VM_PROT_NONE
 argument_list|)
@@ -2117,7 +2143,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 					 * if page isn't dirty and hasn't been referenced by 					 * a process, then cache it 					 */
+comment|/* 						 * if page isn't dirty and hasn't been referenced by 						 * a process, then cache it 						 */
 block|}
 elseif|else
 if|if
@@ -2159,7 +2185,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 					 * otherwise activate it 					 */
+comment|/* 						 * otherwise activate it 						 */
 block|}
 elseif|else
 if|if
@@ -2186,6 +2212,7 @@ name|act_count
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
