@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.3 %G%"
+literal|"@(#)asparse.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,6 +343,14 @@ name|int
 name|space_value
 decl_stmt|;
 comment|/*how much .space needs*/
+name|int
+name|fill_rep
+decl_stmt|;
+comment|/*how many reps for .fill */
+name|int
+name|fill_size
+decl_stmt|;
+comment|/*how many bytes for .fill */
 name|int
 name|field_width
 decl_stmt|;
@@ -831,20 +839,28 @@ argument|break;
 ifdef|#
 directive|ifdef
 name|UNIX
-argument|case	IFILL:
-comment|/* .fill count, value */
-comment|/* fill count bytes with value */
-argument|shift; 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
+comment|/* 	 *	.fill rep, size, value 	 *	repeat rep times: fill size bytes with (truncated) value 	 *	size must be between 1 and 8 	 */
+argument|case	IFILL: 	shift; 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
 literal|"Fill repetition count not absolute"
-argument|); 	space_value = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
+argument|); 	fill_rep = locxp->e_xvalue; 	shiftover(CM); 	expr(locxp, val); 	if (locxp->e_xtype != XABS) 		yyerror(
+literal|"Fill size not absolute"
+argument|); 	fill_size = locxp->e_xvalue; 	if (fill_size<=
+literal|0
+argument||| fill_size>
+literal|8
+argument|) 		yyerror(
+literal|"Fill count not in in 1..8"
+argument|); 	shiftover(CM); 	expr(locxp, val); 	if (passno ==
+literal|2
+argument|&& locxp->e_xtype != XABS) 			yyerror(
 literal|"Fill value not absolute"
 argument|); 	flushfield(NBPW/
 literal|4
-argument|); 	while(space_value-->
+argument|); 	if (passno ==
+literal|1
+argument|) { 		locxp->e_xvalue += fill_rep * fill_size; 	} else { 		while(fill_rep-->
 literal|0
-argument|) 		outb(locxp->e_xvalue&
-literal|0xFF
-argument|); 	break;
+argument|) 			bwrite(&locxp->e_xvalue, fill_size, txtfil); 	} 	break;
 endif|#
 directive|endif
 endif|UNIX
