@@ -879,7 +879,7 @@ value|_IOWR('x', 77, struct bktr_msp_control)
 end_define
 
 begin_comment
-comment|/* MSP chip reset */
+comment|/* MSP chip read */
 end_comment
 
 begin_define
@@ -890,7 +890,7 @@ value|_IOWR('x', 78, struct bktr_msp_control)
 end_define
 
 begin_comment
-comment|/* MSP chip reset */
+comment|/* MSP chip write */
 end_comment
 
 begin_comment
