@@ -28,6 +28,25 @@ file|<isofs/cd9660/iso.h>
 end_include
 
 begin_comment
+comment|/*  * XXX: limited support for loading of Unicode  * conversion routine as a kld at a run-time.  * Should be removed when native Unicode kernel  * interfaces have been introduced.  */
+end_comment
+
+begin_function_decl
+name|u_char
+function_decl|(
+modifier|*
+name|cd9660_wchar2char
+function_decl|)
+parameter_list|(
+name|u_int32_t
+name|wchar
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Get one character out of an iso filename  * Obey joliet_level  * Return number of bytes consumed  */
 end_comment
 
@@ -105,6 +124,33 @@ name|isofn
 expr_stmt|;
 break|break;
 block|}
+comment|/* XXX: if Unicode conversion routine is loaded then use it */
+if|if
+condition|(
+name|cd9660_wchar2char
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|c
+operator|=
+name|cd9660_wchar2char
+argument_list|(
+operator|(
+operator|*
+operator|(
+name|isofn
+operator|-
+literal|1
+operator|)
+operator|<<
+literal|8
+operator|)
+operator||
+operator|*
+name|isofn
+argument_list|)
+expr_stmt|;
 return|return
 literal|2
 return|;
