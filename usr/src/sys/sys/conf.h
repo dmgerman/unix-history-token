@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	4.3	%G%	*/
+comment|/*	conf.h	4.4	%G%	*/
 end_comment
 
 begin_comment
@@ -40,10 +40,8 @@ name|d_dump
 function_decl|)
 parameter_list|()
 function_decl|;
-name|struct
-name|buf
-modifier|*
-name|d_tab
+name|int
+name|d_flags
 decl_stmt|;
 block|}
 name|bdevsw
