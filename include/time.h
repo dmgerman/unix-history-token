@@ -609,14 +609,17 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|struct
 name|tm
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
