@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *       Copyright (c) 1997 by Simon Shapiro  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  *       Copyright (c) 1997 by Simon Shapiro  *       All Rights Reserved  *  * This is a proprietary, unpublished source code.  No publishing, copying,  * distribution or use permission is granted to anyone.  *  * If you want to use this product in any way, please contact the author by  * sending email to shimon@i-connect.net  *  */
 end_comment
 
 begin_comment
@@ -8,19 +8,19 @@ comment|/*  *  dptpci.c:  Pseudo device drivers for DPT on PCI on FreeBSD   *  *
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.3 1998/02/10 17:36:41 eivind Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.36 1997/08/27 05:14:28 ShimonR Exp $"
 end_empty
 
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
+file|"opt_dpt.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_dpt.h"
+file|<pci.h>
 end_include
 
 begin_include
@@ -50,7 +50,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_message.h>
 end_include
 
 begin_include
@@ -68,13 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dpt.h>
+file|<dev/dpt/dpt.h>
 end_include
 
 begin_include
@@ -86,13 +110,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/dpt/dpt.h>
 end_include
 
 begin_define
@@ -141,7 +183,6 @@ comment|/* Function Prototypes */
 end_comment
 
 begin_function_decl
-specifier|static
 name|char
 modifier|*
 name|dpt_pci_probe
@@ -156,7 +197,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
 name|dpt_pci_attach
 parameter_list|(
@@ -170,7 +210,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|dpt_pci_shutdown
 parameter_list|(
@@ -182,14 +221,6 @@ name|bar
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cdevsw
-name|dpt_cdevsw
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -227,7 +258,6 @@ comment|/*  * Probe the PCI device.  * Some of this work will have to be duplica
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|dpt_pci_probe
@@ -545,7 +575,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|dpt_pci_attach
 parameter_list|(
@@ -747,107 +776,6 @@ name|dpt_perf_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|ndx
-operator|=
-literal|0
-init|;
-name|ndx
-operator|<
-literal|256
-condition|;
-name|ndx
-operator|++
-control|)
-name|dpt
-operator|->
-name|performance
-operator|.
-name|min_command_time
-index|[
-name|ndx
-index|]
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-name|dpt
-operator|->
-name|performance
-operator|.
-name|min_intr_time
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-name|dpt
-operator|->
-name|performance
-operator|.
-name|min_waiting_time
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-name|dpt
-operator|->
-name|performance
-operator|.
-name|min_submit_time
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-name|dpt
-operator|->
-name|performance
-operator|.
-name|min_complete_time
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-name|dpt
-operator|->
-name|performance
-operator|.
-name|min_eata_tries
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-for|for
-control|(
-name|ndx
-operator|=
-literal|0
-init|;
-name|ndx
-operator|<
-literal|10
-condition|;
-name|ndx
-operator|++
-control|)
-block|{
-name|dpt
-operator|->
-name|performance
-operator|.
-name|read_by_size_min_time
-index|[
-name|ndx
-index|]
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-name|dpt
-operator|->
-name|performance
-operator|.
-name|write_by_size_min_time
-index|[
-name|ndx
-index|]
-operator|=
-name|BIG_ENOUGH
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* DPT_MEASURE_PERFORMANCE */
@@ -863,7 +791,7 @@ name|handle_interrupts
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  								  * Do not set to 1 until all 								  * initialization is done  								  */
+comment|/*                                 * Do not set to 1 until all                                * initialization is done                                 */
 name|dpt
 operator|->
 name|v_membase
@@ -1237,6 +1165,32 @@ block|}
 endif|#
 directive|endif
 comment|/* !DPT_ALLOW_MEMIO */
+ifdef|#
+directive|ifdef
+name|DPT_USE_DPT_SWI
+if|if
+condition|(
+name|pci_map_int
+argument_list|(
+name|config_id
+argument_list|,
+name|dpt_intr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|dpt
+argument_list|,
+operator|&
+name|bio_imask
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|pci_map_int
@@ -1258,6 +1212,8 @@ operator|==
 literal|0
 condition|)
 block|{
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DPT_DEBUG_WARN
@@ -1849,7 +1805,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"dpt%d: %s type %x, model %s firmware %s, Protocol %s \n"
-literal|"      on port %x with %s cache.  LED = %s\n"
+literal|"      on port %x with %dMB %s cache.  LED = %s\n"
 argument_list|,
 name|dpt
 operator|->
@@ -1872,6 +1828,10 @@ argument_list|,
 name|dpt
 operator|->
 name|io_base
+argument_list|,
+name|dpt
+operator|->
+name|cache_size
 argument_list|,
 operator|(
 name|dpt
@@ -1917,16 +1877,6 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DPT_LOST_IRQ
-name|printf
-argument_list|(
-literal|"      Recover Lost Interrupts\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|DPT_VERIFY_HINTR
 name|printf
 argument_list|(
@@ -1941,6 +1891,16 @@ name|DPT_RESTRICTED_FREELIST
 name|printf
 argument_list|(
 literal|"      Restrict the Freelist Size\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DPT_TRACK_CCB_STATES
+name|printf
+argument_list|(
+literal|"      Precisely Track State Transitions\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2056,85 +2016,16 @@ endif|#
 directive|endif
 break|break;
 block|}
-comment|/* Attach SCSI devices */
 name|dpt_attach
 argument_list|(
 name|dpt
 argument_list|)
 expr_stmt|;
+block|}
 operator|++
 name|dpt_controllers_present
 expr_stmt|;
-comment|/* 	   * Now we create the DEVFS entry. 	   * This would be normally done from dpt_control.c, 	   * But since it appears to be called before we do here, 	   * We never get the entries made.        */
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|dpt
-operator|->
-name|devfs_data_token
-operator|=
-name|devfs_add_devswf
-argument_list|(
-operator|&
-name|dpt_cdevsw
-argument_list|,
-name|dpt
-operator|->
-name|unit
-argument_list|,
-name|DV_CHR
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"dpt%d"
-argument_list|,
-name|dpt
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|dpt
-operator|->
-name|devfs_ctl_token
-operator|=
-name|devfs_add_devswf
-argument_list|(
-operator|&
-name|dpt_cdevsw
-argument_list|,
-name|dpt
-operator|->
-name|unit
-operator||
-name|SCSI_CONTROL_MASK
-argument_list|,
-name|DV_CHR
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"dpt%d.ctl"
-argument_list|,
-name|dpt
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|dpt_pci_shutdown
 parameter_list|(
@@ -2168,11 +2059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* End of the DPT PCI part of the driver */
-end_comment
-
-begin_comment
-comment|/*  * Hello emacs, these are the  * Local Variables:  *  c-indent-level:               8  *  c-continued-statement-offset: 8  *  c-continued-brace-offset:     0  *  c-brace-offset:              -8  *  c-brace-imaginary-offset:     0  *  c-argdecl-indent:             8  *  c-label-offset:              -8  *  c++-hanging-braces:           1  *  c++-access-specifier-offset: -8  *  c++-empty-arglist-indent:     8  *  c++-friend-offset:            0  * End:  */
+comment|/* End of the DPT PCI part o f the driver */
 end_comment
 
 end_unit
