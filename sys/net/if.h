@@ -15,11 +15,22 @@ directive|define
 name|_NET_IF_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatibility.  (struct timeval ifi_lastchange)  */
@@ -76,6 +87,12 @@ end_define
 begin_comment
 comment|/* ifp->if_unit is only 15 bits */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Structure describing a `cloning' interface.  */
@@ -160,6 +177,11 @@ parameter_list|)
 define|\
 value|{ { 0 }, name, sizeof(name) - 1, maxunit, NULL, 0, create, destroy }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structure used to query names of interface cloners.  */
