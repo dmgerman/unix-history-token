@@ -105,6 +105,46 @@ name|SUBTYPE_EFI
 value|239
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OTHER_SLICE_VALUES
+define|\
+value|"Other popular values are 37218 for a\n"			\ 	"DOS FAT partition.\n\n"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OTHER_SLICE_VALUES
+define|\
+value|"Other popular values are 6 for a\n"				\ 	"DOS FAT partition, 131 for a Linux ext2fs partition, or\n"	\ 	"130 for a Linux swap partition.\n\n"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NON_FREEBSD_NOTE
+define|\
+value|"Note:  If you choose a non-FreeBSD partition type, it will not\n" \ 	"be formatted or otherwise prepared, it will simply reserve space\n" \ 	"for you to use another tool, such as DOS format, to later format\n" \ 	"and actually use the partition."
+end_define
+
 begin_comment
 comment|/* Where we start displaying chunk information on the screen */
 end_comment
@@ -1981,46 +2021,20 @@ argument_list|,
 name|SUBTYPE_FREEBSD
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 name|val
 operator|=
 name|msgGetInput
 argument_list|(
-name|tmp
+argument|tmp
 argument_list|,
 literal|"Enter type of partition to create:\n\n"
 literal|"Pressing Enter will choose the default, a native FreeBSD\n"
-literal|"slice (type 50324).  You can choose other types, 37218 for a\n"
-literal|"DOS partition, for example.\n\n"
-literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
-literal|"be formatted or otherwise prepared, it will simply reserve space\n"
-literal|"for you to use another tool, such as DOS FORMAT, to later format\n"
-literal|"and use the partition."
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|val
-operator|=
-name|msgGetInput
-argument_list|(
-name|tmp
+literal|"slice (type %u).  "
+argument|OTHER_SLICE_VALUES 			NON_FREEBSD_NOTE
 argument_list|,
-literal|"Enter type of partition to create:\n\n"
-literal|"Pressing Enter will choose the default, a native FreeBSD\n"
-literal|"slice (type 165).  You can choose other types, 6 for a\n"
-literal|"DOS partition or 131 for a Linux partition, for example.\n\n"
-literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
-literal|"be formatted or otherwise prepared, it will simply reserve space\n"
-literal|"for you to use another tool, such as DOS FORMAT, to later format\n"
-literal|"and use the partition."
+argument|SUBTYPE_FREEBSD
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PC98 */
 if|if
 condition|(
 name|val
@@ -2231,50 +2245,28 @@ name|tmp
 argument_list|,
 literal|"%d"
 argument_list|,
-name|SUBTYPE_FREEBSD
+name|chunk_info
+index|[
+name|current_chunk
+index|]
+operator|->
+name|subtype
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 name|val
 operator|=
 name|msgGetInput
 argument_list|(
-name|tmp
+argument|tmp
 argument_list|,
 literal|"New partition type:\n\n"
-literal|"Pressing Enter will choose the default, a native FreeBSD\n"
-literal|"slice (type 50324).  Other popular values are 37218 for\n"
-literal|"DOS FAT partition.\n\n"
-literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
-literal|"be formatted or otherwise prepared, it will simply reserve space\n"
-literal|"for you to use another tool, such as DOS format, to later format\n"
-literal|"and actually use the partition."
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|val
-operator|=
-name|msgGetInput
-argument_list|(
-name|tmp
+literal|"Pressing Enter will use the current type. To choose a native\n"
+literal|"FreeBSD slice enter %u.  "
+argument|OTHER_SLICE_VALUES 		    NON_FREEBSD_NOTE
 argument_list|,
-literal|"New partition type:\n\n"
-literal|"Pressing Enter will choose the default, a native FreeBSD\n"
-literal|"slice (type 165).  Other popular values are 6 for\n"
-literal|"DOS FAT partition, 131 for a Linux ext2fs partition or\n"
-literal|"130 for a Linux swap partition.\n\n"
-literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
-literal|"be formatted or otherwise prepared, it will simply reserve space\n"
-literal|"for you to use another tool, such as DOS format, to later format\n"
-literal|"and actually use the partition."
+argument|SUBTYPE_FREEBSD
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PC98 */
 if|if
 condition|(
 name|val
