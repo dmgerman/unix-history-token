@@ -24,14 +24,30 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
 file|<sys/ktr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/proc.h>
 end_include
+
+begin_comment
+comment|/* Needed for curproc. */
+end_comment
 
 begin_include
 include|#
@@ -241,14 +257,13 @@ begin_comment
 comment|/* Cookie for free mutex */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* XXX */
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
