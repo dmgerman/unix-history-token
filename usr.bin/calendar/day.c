@@ -1116,7 +1116,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Mktime: %d %d %d %s\n"
+literal|"Mktime: %d %d %s\n"
 argument_list|,
 operator|(
 name|int
@@ -1131,8 +1131,6 @@ operator|(
 name|int
 operator|)
 name|t
-argument_list|,
-name|len
 argument_list|,
 name|asctime
 argument_list|(
