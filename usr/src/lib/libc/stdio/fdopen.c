@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdopen.c	5.5 (Berkeley) %G%"
+literal|"@(#)fdopen.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

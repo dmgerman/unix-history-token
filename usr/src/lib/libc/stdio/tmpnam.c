@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmpnam.c	5.2 (Berkeley) %G%"
+literal|"@(#)tmpnam.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)perror.c	5.10 (Berkeley) %G%"
+literal|"@(#)perror.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
 end_include
 
@@ -64,24 +58,32 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|perror
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -112,6 +114,10 @@ name|v
 operator|->
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 expr_stmt|;
 name|v
@@ -196,7 +202,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.44 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_include
