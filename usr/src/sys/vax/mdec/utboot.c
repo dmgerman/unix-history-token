@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	utboot.c	4.1	83/02/16	*/
+comment|/*	utboot.c	4.2	83/02/20	*/
 end_comment
 
 begin_comment
@@ -649,7 +649,7 @@ name|rrec
 operator|:
 comment|/* pushl r0; movzbl $'r,r0; bsbw putc; movl (sp)+,r0; */
 name|jsb
-name|xtquiet
+name|utquiet
 name|movw
 name|$
 operator|-
@@ -705,7 +705,7 @@ argument_list|(
 argument|%rUT
 argument_list|)
 name|jsb
-name|xtquiet
+name|utquiet
 name|bisl2
 name|$BNE
 operator|,
@@ -827,7 +827,7 @@ name|r0
 operator|,
 name|$TXDB
 name|rsb
-name|xtquiet
+name|utquiet
 operator|:
 name|movw
 name|UTCS1
@@ -842,7 +842,7 @@ name|$UT_crdy
 operator|,
 name|r2
 operator|,
-name|xtquiet
+name|utquiet
 literal|1
 operator|:
 name|movw
