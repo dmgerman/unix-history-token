@@ -214,6 +214,12 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+name|SIGILL
 operator|)
 return|;
 block|}
@@ -409,6 +415,12 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+name|SIGILL
 operator|)
 return|;
 block|}

@@ -388,6 +388,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_MAX
+value|(T_KSTACK_FAULT + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_KERNEL
 value|64
 end_define
