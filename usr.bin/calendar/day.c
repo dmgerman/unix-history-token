@@ -324,7 +324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* convert Day[/Month][/Year] into unix time (since 1970)  * Day: tow digits, Month: two digits, Year: digits  */
+comment|/* convert Day[/Month][/Year] into unix time (since 1970)  * Day: two digits, Month: two digits, Year: digits  */
 end_comment
 
 begin_function
@@ -552,10 +552,28 @@ name|int
 name|isnow
 parameter_list|(
 name|endp
+parameter_list|,
+name|monthp
+parameter_list|,
+name|dayp
+parameter_list|,
+name|varp
 parameter_list|)
 name|char
 modifier|*
 name|endp
+decl_stmt|;
+name|int
+modifier|*
+name|monthp
+decl_stmt|;
+name|int
+modifier|*
+name|dayp
+decl_stmt|;
+name|int
+modifier|*
+name|varp
 decl_stmt|;
 block|{
 name|int
@@ -727,6 +745,11 @@ name|month
 operator|=
 name|v2
 expr_stmt|;
+operator|*
+name|varp
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* {Month} {Weekday,Day} ...  */
 else|else
@@ -744,6 +767,11 @@ condition|?
 name|v2
 else|:
 literal|1
+expr_stmt|;
+operator|*
+name|varp
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -773,6 +801,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|*
+name|varp
+operator|=
+literal|1
+expr_stmt|;
 comment|/* variable weekday, SundayLast, MondayFirst ... */
 if|if
 condition|(
@@ -988,6 +1021,11 @@ operator|%
 literal|7
 operator|)
 expr_stmt|;
+operator|*
+name|varp
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 if|#
@@ -1017,6 +1055,17 @@ operator|&
 name|F_EASTER
 operator|)
 condition|)
+block|{
+operator|*
+name|monthp
+operator|=
+name|month
+expr_stmt|;
+operator|*
+name|dayp
+operator|=
+name|day
+expr_stmt|;
 name|day
 operator|=
 name|cumdays
@@ -1026,6 +1075,53 @@ index|]
 operator|+
 name|day
 expr_stmt|;
+block|}
+else|else
+block|{
+for|for
+control|(
+name|v1
+operator|=
+literal|0
+init|;
+name|day
+operator|>
+name|cumdays
+index|[
+name|v1
+index|]
+condition|;
+name|v1
+operator|++
+control|)
+empty_stmt|;
+operator|*
+name|monthp
+operator|=
+name|v1
+operator|-
+literal|1
+expr_stmt|;
+operator|*
+name|dayp
+operator|=
+name|day
+operator|-
+name|cumdays
+index|[
+name|v1
+operator|-
+literal|1
+index|]
+operator|-
+literal|1
+expr_stmt|;
+operator|*
+name|varp
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* if today or today + offset days */
 if|if
 condition|(
