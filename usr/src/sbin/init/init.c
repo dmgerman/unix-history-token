@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.15 (Berkeley) %G%"
+literal|"@(#)init.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,6 +329,11 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
 end_if
 
 begin_function
@@ -369,6 +374,13 @@ decl_stmt|;
 block|{
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__GNUC__
+comment|/* insure proper semantics for setjmp/longjmp */
+specifier|static
+endif|#
+directive|endif
 name|int
 name|howto
 decl_stmt|,
@@ -376,6 +388,20 @@ name|oldhowto
 decl_stmt|,
 name|started
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+ifdef|#
+directive|ifdef
+name|hp300
+asm|asm("movl d7,%0" : "=rm" (howto));
+else|#
+directive|else
+asm|asm("movl r11,%0" : "=rm" (howto));
+endif|#
+directive|endif
+else|#
+directive|else
 if|#
 directive|if
 name|defined
@@ -386,6 +412,11 @@ operator|||
 name|defined
 argument_list|(
 name|tahoe
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp300
 argument_list|)
 name|howto
 operator|=
@@ -418,6 +449,10 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|howto
+operator|=
+literal|0
+expr_stmt|;
 name|cp
 operator|=
 operator|&
@@ -468,6 +503,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* !__GNUC__ */
 if|if
 condition|(
 name|getuid
@@ -833,8 +871,6 @@ argument_list|()
 block|{
 specifier|register
 name|i
-operator|,
-name|f
 expr_stmt|;
 name|acct
 argument_list|(
@@ -1062,8 +1098,6 @@ decl_stmt|;
 block|{
 specifier|register
 name|pid
-operator|,
-name|f
 expr_stmt|;
 name|int
 name|status
