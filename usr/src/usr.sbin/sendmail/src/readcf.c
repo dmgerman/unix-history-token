@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -1740,6 +1740,10 @@ name|backslash
 condition|)
 block|{
 comment|/* everything is roughly literal */
+name|backslash
+operator|=
+name|FALSE
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -1797,10 +1801,6 @@ operator|++
 operator|=
 operator|*
 name|p
-expr_stmt|;
-name|backslash
-operator|=
-name|FALSE
 expr_stmt|;
 block|}
 else|else

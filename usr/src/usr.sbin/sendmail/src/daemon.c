@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -937,19 +937,7 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|bind
-argument_list|(
-name|s
-argument_list|,
-operator|&
-name|SendmailAddress
-argument_list|,
-sizeof|sizeof
-name|SendmailAddress
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* bind(s,&SendmailAddress, sizeof SendmailAddress, 0); */
 if|if
 condition|(
 name|connect
