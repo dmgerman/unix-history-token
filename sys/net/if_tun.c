@@ -273,13 +273,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|ifqmaxlen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|d_open_t
 name|tunopen
 decl_stmt|;

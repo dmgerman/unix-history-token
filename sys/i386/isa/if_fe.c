@@ -4040,11 +4040,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|extern
-name|int
-name|ifqmaxlen
-decl_stmt|;
-comment|/* Don't be so shocked...  */
 name|sc
 operator|->
 name|sc_if

@@ -64,6 +64,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|sbc_major
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|Jazz16_detected
 decl_stmt|;
 end_decl_stmt
@@ -318,10 +325,6 @@ name|int
 name|retcode
 init|=
 literal|1
-decl_stmt|;
-specifier|extern
-name|int
-name|sbc_major
 decl_stmt|;
 comment|/*    * Detect the mixer by changing parameters of two volume channels. If the    * values read back match with the values written, the mixer is there (is    * it?)    */
 name|sb_setmixer

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.17 1995/05/30 08:02:27 rgrimes Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.18 1995/07/25 22:18:55 bde Exp $  */
 end_comment
 
 begin_include
@@ -434,6 +434,35 @@ argument_list|()
 decl_stmt|,
 name|ze_get_packet
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|ze_ring_to_mbuf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ze_softc
+operator|*
+name|sc
+operator|,
+name|char
+operator|*
+name|src
+operator|,
+expr|struct
+name|mbuf
+operator|*
+name|dst
+operator|,
+name|int
+name|total_len
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -4843,10 +4872,6 @@ modifier|*
 name|head
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|ze_ring_to_mbuf
-argument_list|()
 decl_stmt|;
 name|u_short
 name|off

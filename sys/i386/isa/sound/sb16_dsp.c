@@ -84,6 +84,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_minor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|sb16_dsp_ok
@@ -1920,12 +1934,6 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|sbc_major
-decl_stmt|,
-name|sbc_minor
-decl_stmt|;
 if|if
 condition|(
 name|sbc_major
@@ -2055,10 +2063,6 @@ name|struct
 name|address_info
 modifier|*
 name|sb_config
-decl_stmt|;
-specifier|extern
-name|int
-name|sbc_major
 decl_stmt|;
 if|if
 condition|(
