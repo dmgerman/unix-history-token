@@ -1,7 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1997 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft dependency code is derived from work done by Greg Ganger  * at the University of Michigan.  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft dependency software. For a license  * to use, redistribute or sell the soft dependency software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, or the University of Michigan  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses the this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_softdep.c	9.1 (McKusick) 7/9/97  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *	from: @(#)ffs_softdep.c	9.14 (McKusick) 1/15/98  */
 end_comment
+
+begin_comment
+comment|/*  * For now we want the safety net that the DIAGNOSTIC and DEBUG flags provide.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DIAGNOSTIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DIAGNOSTIC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -36,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -49,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcpu.h>
 end_include
 
 begin_include
@@ -155,7 +205,11 @@ name|vnode
 operator|*
 operator|,
 expr|struct
-name|pagedep
+name|mount
+operator|*
+operator|,
+expr|struct
+name|diraddhd
 operator|*
 operator|)
 argument_list|)
@@ -771,12 +825,22 @@ comment|/* NOT */
 name|DEBUG
 end_ifndef
 
-begin_decl_stmt
+begin_struct
 specifier|static
+struct|struct
+name|lockit
+block|{
 name|int
-name|lk
+name|lkt_spl
 decl_stmt|;
-end_decl_stmt
+block|}
+name|lk
+init|=
+block|{
+literal|0
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -785,7 +849,7 @@ name|ACQUIRE_LOCK
 parameter_list|(
 name|lk
 parameter_list|)
-value|*lk = splbio()
+value|(lk)->lkt_spl = splbio()
 end_define
 
 begin_define
@@ -795,7 +859,7 @@ name|FREE_LOCK
 parameter_list|(
 name|lk
 parameter_list|)
-value|splx(*lk)
+value|splx((lk)->lkt_spl)
 end_define
 
 begin_define
@@ -824,12 +888,6 @@ end_else
 begin_comment
 comment|/* DEBUG */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
 
 begin_struct
 specifier|static
@@ -1524,7 +1582,7 @@ name|head
 parameter_list|,
 name|item
 parameter_list|)
-value|do {	\ 	item->wk_state |= ONWORKLIST;		\ 	LIST_INSERT_HEAD(head, item, wk_list);	\ } while (0)
+value|do {	\ 	(item)->wk_state |= ONWORKLIST;		\ 	LIST_INSERT_HEAD(head, item, wk_list);	\ } while (0)
 end_define
 
 begin_define
@@ -1534,7 +1592,7 @@ name|WORKLIST_REMOVE
 parameter_list|(
 name|item
 parameter_list|)
-value|do {		\ 	item->wk_state&= ~ONWORKLIST;		\ 	LIST_REMOVE(item, wk_list);		\ } while (0)
+value|do {		\ 	(item)->wk_state&= ~ONWORKLIST;	\ 	LIST_REMOVE(item, wk_list);		\ } while (0)
 end_define
 
 begin_define
@@ -2393,17 +2451,32 @@ name|softdep_worklist_busy
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * If we are unmounting then it is an error to fail. If we 	 * are simply trying to downgrade to read-only, then filesystem 	 * activity can keep us busy forever, so we just fail with EBUSY. 	 */
 if|if
 condition|(
 name|loopcnt
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|oldmnt
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_UNMOUNT
+condition|)
 name|panic
 argument_list|(
 literal|"softdep_flushfiles: looping"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -2465,7 +2538,7 @@ parameter_list|,
 name|lbn
 parameter_list|)
 define|\
-value|(&pagedep_hashtbl[((((int)(mp))>> 13) + (inum) + (lbn))& pagedep_hash])
+value|(&pagedep_hashtbl[((((register_t)(mp))>> 13) + (inum) + (lbn))& \ 	    pagedep_hash])
 end_define
 
 begin_decl_stmt
@@ -2845,7 +2918,7 @@ parameter_list|,
 name|inum
 parameter_list|)
 define|\
-value|(&inodedep_hashtbl[((((int)(fs))>> 13) + (inum))& inodedep_hash])
+value|(&inodedep_hashtbl[((((register_t)(fs))>> 13) + (inum))& inodedep_hash])
 end_define
 
 begin_decl_stmt
@@ -3200,7 +3273,7 @@ parameter_list|,
 name|inum
 parameter_list|)
 define|\
-value|(&newblk_hashtbl[((((int)(fs))>> 13) + (inum))& newblk_hash])
+value|(&newblk_hashtbl[((((register_t)(fs))>> 13) + (inum))& newblk_hash])
 end_define
 
 begin_decl_stmt
@@ -3446,8 +3519,8 @@ operator|=
 name|hashinit
 argument_list|(
 name|desiredvnodes
-operator|*
-literal|2
+operator|/
+literal|10
 argument_list|,
 name|M_PAGEDEP
 argument_list|,
@@ -3472,6 +3545,8 @@ operator|=
 name|hashinit
 argument_list|(
 name|desiredvnodes
+operator|/
+literal|2
 argument_list|,
 name|M_INODEDEP
 argument_list|,
@@ -3495,9 +3570,7 @@ name|newblk_hashtbl
 operator|=
 name|hashinit
 argument_list|(
-name|desiredvnodes
-operator|/
-literal|10
+literal|64
 argument_list|,
 name|M_NEWBLK
 argument_list|,
@@ -7537,6 +7610,16 @@ operator|)
 operator|!=
 literal|0
 operator|||
+operator|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|ALLCOMPLETE
+operator|)
+operator|!=
+name|ALLCOMPLETE
+operator|||
 name|LIST_FIRST
 argument_list|(
 operator|&
@@ -7582,12 +7665,6 @@ operator|->
 name|id_nlinkdelta
 operator|!=
 literal|0
-operator|||
-name|inodedep
-operator|->
-name|id_buf
-operator|!=
-name|NULL
 operator|||
 name|inodedep
 operator|->
@@ -9090,6 +9167,8 @@ decl_stmt|;
 comment|/* size of directory entry */
 block|{
 name|int
+name|offset
+decl_stmt|,
 name|oldoffset
 decl_stmt|,
 name|newoffset
@@ -9126,6 +9205,19 @@ operator|->
 name|i_offset
 argument_list|)
 expr_stmt|;
+name|offset
+operator|=
+name|blkoff
+argument_list|(
+name|dp
+operator|->
+name|i_fs
+argument_list|,
+name|dp
+operator|->
+name|i_offset
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pagedep_lookup
@@ -9147,9 +9239,7 @@ name|done
 goto|;
 name|oldoffset
 operator|=
-name|dp
-operator|->
-name|i_offset
+name|offset
 operator|+
 operator|(
 name|oldloc
@@ -9159,9 +9249,7 @@ operator|)
 expr_stmt|;
 name|newoffset
 operator|=
-name|dp
-operator|->
-name|i_offset
+name|offset
 operator|+
 operator|(
 name|newloc
@@ -9382,16 +9470,12 @@ name|dirrem
 operator|->
 name|dm_pagedep
 expr_stmt|;
-name|LIST_INSERT_HEAD
+name|add_to_worklist
 argument_list|(
 operator|&
-name|pagedep
-operator|->
-name|pd_dirremhd
-argument_list|,
 name|dirrem
-argument_list|,
-name|dm_next
+operator|->
+name|dm_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -9706,6 +9790,9 @@ name|isrmdir
 decl_stmt|;
 comment|/* indicates if doing RMDIR */
 block|{
+name|int
+name|offset
+decl_stmt|;
 name|ufs_lbn_t
 name|lbn
 decl_stmt|;
@@ -9822,6 +9909,19 @@ operator|->
 name|i_offset
 argument_list|)
 expr_stmt|;
+name|offset
+operator|=
+name|blkoff
+argument_list|(
+name|dp
+operator|->
+name|i_fs
+argument_list|,
+name|dp
+operator|->
+name|i_offset
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pagedep_lookup
@@ -9870,9 +9970,7 @@ name|pd_diraddhd
 index|[
 name|DIRADDHASH
 argument_list|(
-name|dp
-operator|->
-name|i_offset
+name|offset
 argument_list|)
 index|]
 argument_list|)
@@ -9896,9 +9994,7 @@ name|dap
 operator|->
 name|da_offset
 operator|!=
-name|dp
-operator|->
-name|i_offset
+name|offset
 condition|)
 continue|continue;
 comment|/* 		 * Must be ATTACHED at this point, so just delete it. 		 */
@@ -10446,11 +10542,28 @@ name|ip
 operator|->
 name|i_effnlink
 condition|)
-name|panic
+block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|vprint
 argument_list|(
 literal|"handle_workitem_remove: bad file delta"
+argument_list|,
+name|vp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|ip
+operator|->
+name|i_effnlink
+operator|=
+name|ip
+operator|->
+name|i_nlink
+expr_stmt|;
+block|}
 name|ip
 operator|->
 name|i_flag
@@ -12708,15 +12821,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Try freeing the inodedep in case that was the last dependency. 	 */
-operator|(
-name|void
-operator|)
-name|free_inodedep
-argument_list|(
-name|inodedep
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -13957,16 +14061,6 @@ argument_list|(
 operator|&
 name|pagedep
 operator|->
-name|pd_dirremhd
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|pagedep
-operator|->
 name|pd_pendinghd
 argument_list|)
 operator|==
@@ -14846,7 +14940,7 @@ name|M_DIRADD
 condition|)
 name|panic
 argument_list|(
-literal|"softdep_fsync: Unexpcted type %s"
+literal|"softdep_fsync: Unexpected type %s"
 argument_list|,
 name|TYPENAME
 argument_list|(
@@ -15167,6 +15261,11 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
+name|pagedep
+modifier|*
+name|pagedep
+decl_stmt|;
+name|struct
 name|allocdirect
 modifier|*
 name|adp
@@ -15190,6 +15289,8 @@ modifier|*
 name|wk
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|error
 decl_stmt|,
 name|waitfor
@@ -15550,6 +15651,8 @@ break|break;
 case|case
 name|M_INDIRDEP
 case|:
+name|restart
+label|:
 for|for
 control|(
 name|aip
@@ -15599,32 +15702,20 @@ argument_list|(
 operator|&
 name|nbp
 argument_list|,
-name|waitfor
+name|MNT_WAIT
 argument_list|)
 operator|==
 literal|0
 condition|)
-break|break;
+goto|goto
+name|restart
+goto|;
 name|FREE_LOCK
 argument_list|(
 operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|waitfor
-operator|==
-name|MNT_NOWAIT
-condition|)
-block|{
-name|bawrite
-argument_list|(
-name|nbp
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -15656,7 +15747,9 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|restart
+goto|;
 block|}
 break|break;
 case|case
@@ -15710,6 +15803,43 @@ case|case
 name|M_PAGEDEP
 case|:
 comment|/* 			 * We are trying to sync a directory that may 			 * have dependencies on both its own metadata 			 * and/or dependencies on the inodes of any 			 * recently allocated files. We walk its diradd 			 * lists pushing out the associated inode. 			 */
+name|pagedep
+operator|=
+name|WK_PAGEDEP
+argument_list|(
+name|wk
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|DAHASHSZ
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|pagedep
+operator|->
+name|pd_diraddhd
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 name|error
@@ -15718,10 +15848,17 @@ name|flush_pagedep_deps
 argument_list|(
 name|vp
 argument_list|,
-name|WK_PAGEDEP
-argument_list|(
-name|wk
-argument_list|)
+name|pagedep
+operator|->
+name|pd_mnt
+argument_list|,
+operator|&
+name|pagedep
+operator|->
+name|pd_diraddhd
+index|[
+name|i
+index|]
 argument_list|)
 condition|)
 block|{
@@ -15741,6 +15878,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 break|break;
 default|default:
@@ -16341,7 +16479,9 @@ name|flush_pagedep_deps
 parameter_list|(
 name|pvp
 parameter_list|,
-name|pagedep
+name|mp
+parameter_list|,
+name|diraddhdp
 parameter_list|)
 name|struct
 name|vnode
@@ -16349,9 +16489,14 @@ modifier|*
 name|pvp
 decl_stmt|;
 name|struct
-name|pagedep
+name|mount
 modifier|*
-name|pagedep
+name|mp
+decl_stmt|;
+name|struct
+name|diraddhd
+modifier|*
+name|diraddhdp
 decl_stmt|;
 block|{
 name|struct
@@ -16362,6 +16507,16 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+name|struct
+name|inodedep
+modifier|*
+name|inodedep
+decl_stmt|;
+name|struct
+name|ufsmount
+modifier|*
+name|ump
+decl_stmt|;
 name|struct
 name|diradd
 modifier|*
@@ -16377,35 +16532,25 @@ modifier|*
 name|vp
 decl_stmt|;
 name|int
-name|i
+name|gotit
 decl_stmt|,
 name|error
+decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|bp
 decl_stmt|;
 name|ino_t
 name|inum
 decl_stmt|;
-for|for
-control|(
-name|i
+name|ump
 operator|=
-literal|0
-operator|,
-name|error
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|DAHASHSZ
-operator|&&
-name|error
-operator|==
-literal|0
-condition|;
-name|i
-operator|++
-control|)
-block|{
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -16413,20 +16558,14 @@ name|dap
 operator|=
 name|LIST_FIRST
 argument_list|(
-operator|&
-name|pagedep
-operator|->
-name|pd_diraddhd
-index|[
-name|i
-index|]
+name|diraddhdp
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Flush ourselves if this directory entry 			 * has a MKDIR_PARENT dependency. 			 */
+comment|/* 		 * Flush ourselves if this directory entry 		 * has a MKDIR_PARENT dependency. 		 */
 if|if
 condition|(
 name|dap
@@ -16470,20 +16609,14 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If that cleared dependencies, go on to next. 				 */
+comment|/* 			 * If that cleared dependencies, go on to next. 			 */
 if|if
 condition|(
 name|dap
 operator|!=
 name|LIST_FIRST
 argument_list|(
-operator|&
-name|pagedep
-operator|->
-name|pd_diraddhd
-index|[
-name|i
-index|]
+name|diraddhdp
 argument_list|)
 condition|)
 continue|continue;
@@ -16501,7 +16634,7 @@ literal|"flush_pagedep_deps: MKDIR"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Flush the file on which the directory entry depends. 			 */
+comment|/* 		 * Flush the file on which the directory entry depends. 		 * If the inode has already been pushed out of the cache, 		 * then all the block dependencies will have been flushed 		 * leaving only inode dependencies (e.g., bitmaps). Thus, 		 * we do a ufs_ihashget to check for the vnode in the cache. 		 * If it is there, we do a full flush. If it is no longer 		 * there we need only dispose of any remaining bitmap 		 * dependencies and write the inode to disk. 		 */
 name|inum
 operator|=
 name|dap
@@ -16517,24 +16650,213 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|error
+name|vp
 operator|=
-name|VFS_VGET
+name|ufs_ihashget
 argument_list|(
-name|pagedep
+name|ump
 operator|->
-name|pd_mnt
+name|um_dev
+argument_list|,
+name|inum
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inodedep_lookup
+argument_list|(
+name|ump
+operator|->
+name|um_fs
 argument_list|,
 name|inum
 argument_list|,
+literal|0
+argument_list|,
 operator|&
-name|vp
+name|inodedep
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|dap
+operator|==
+name|LIST_FIRST
+argument_list|(
+name|diraddhdp
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"flush_pagedep_deps: flush 1 failed"
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If the inode still has bitmap dependencies, 			 * push them to disk. 			 */
+if|if
+condition|(
+operator|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|DEPCOMPLETE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gotit
+operator|=
+name|getdirtybuf
+argument_list|(
+operator|&
+name|inodedep
+operator|->
+name|id_buf
+argument_list|,
+name|MNT_WAIT
+argument_list|)
+expr_stmt|;
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gotit
+operator|&&
+operator|(
+name|error
+operator|=
+name|VOP_BWRITE
+argument_list|(
+name|inodedep
+operator|->
+name|id_buf
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
 break|break;
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dap
+operator|!=
+name|LIST_FIRST
+argument_list|(
+name|diraddhdp
+argument_list|)
+condition|)
+continue|continue;
+comment|/* 			 * If the inode is still sitting in a buffer waiting 			 * to be written, push it to disk. 			 */
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bread
+argument_list|(
+name|ump
+operator|->
+name|um_devvp
+argument_list|,
+name|fsbtodb
+argument_list|(
+name|ump
+operator|->
+name|um_fs
+argument_list|,
+name|ino_to_fsba
+argument_list|(
+name|ump
+operator|->
+name|um_fs
+argument_list|,
+name|inum
+argument_list|)
+argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ump
+operator|->
+name|um_fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|NOCRED
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|VOP_BWRITE
+argument_list|(
+name|bp
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dap
+operator|==
+name|LIST_FIRST
+argument_list|(
+name|diraddhdp
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"flush_pagedep_deps: flush 2 failed"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|vp
@@ -16544,7 +16866,7 @@ operator|==
 name|VDIR
 condition|)
 block|{
-comment|/* 				 * A newly allocated directory must have its 				 * "." and ".." entries written out before its 				 * name can be committed in its parent. We do 				 * not want or need the full semantics of a 				 * synchronous VOP_FSYNC as that may end up 				 * here again, once for each directory level in 				 * the filesystem. Instead, we push the blocks 				 * and wait for them to clear. 				 */
+comment|/* 			 * A newly allocated directory must have its "." and 			 * ".." entries written out before its name can be 			 * committed in its parent. We do not want or need 			 * the full semantics of a synchronous VOP_FSYNC as 			 * that may end up here again, once for each directory 			 * level in the filesystem. Instead, we push the blocks 			 * and wait for them to clear. 			 */
 if|if
 condition|(
 name|error
@@ -16653,25 +16975,19 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* 			 * If we have failed to get rid of all the dependencies 			 * then something is seriously wrong. 			 */
+comment|/* 		 * If we have failed to get rid of all the dependencies 		 * then something is seriously wrong. 		 */
 if|if
 condition|(
 name|dap
 operator|==
 name|LIST_FIRST
 argument_list|(
-operator|&
-name|pagedep
-operator|->
-name|pd_diraddhd
-index|[
-name|i
-index|]
+name|diraddhdp
 argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"flush_pagedep_deps: flush failed"
+literal|"flush_pagedep_deps: flush 3 failed"
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
@@ -16680,7 +16996,6 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -16896,6 +17211,12 @@ operator|->
 name|b_error
 argument_list|)
 expr_stmt|;
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -16918,6 +17239,12 @@ argument_list|(
 name|wk
 argument_list|)
 expr_stmt|;
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|wk
@@ -16925,22 +17252,34 @@ operator|->
 name|wk_type
 condition|)
 block|{
-comment|/* 		 * XXX - should really clean up, but for now we will 		 * just leak memory and not worry about it. 		 */
+comment|/* 		 * XXX - should really clean up, but for now we will 		 * just leak memory and not worry about it. Also should 		 * mark the filesystem permanently dirty so that it will 		 * force fsck to be run (though this would best be done 		 * in the mainline code). 		 */
 case|case
 name|M_PAGEDEP
+case|:
+case|case
+name|M_INODEDEP
+case|:
+case|case
+name|M_BMSAFEMAP
+case|:
+case|case
+name|M_ALLOCDIRECT
 case|:
 case|case
 name|M_INDIRDEP
 case|:
 case|case
-name|M_INODEDEP
+name|M_ALLOCINDIR
+case|:
+case|case
+name|M_MKDIR
 case|:
 ifdef|#
 directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Lost %s\n"
+literal|"Lost type %s\n"
 argument_list|,
 name|TYPENAME
 argument_list|(
@@ -16956,11 +17295,33 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"softdep_deallocate_dependencies: bad type"
+literal|"%s: Unexpected type %s"
+argument_list|,
+literal|"softdep_deallocate_dependencies"
+argument_list|,
+name|TYPENAME
+argument_list|(
+name|wk
+operator|->
+name|wk_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
