@@ -1174,6 +1174,24 @@ name|NO_START_STOP
 block|}
 block|,
 block|{
+name|USB_VENDOR_MSYSTEMS
+block|,
+name|USB_PRODUCT_MSYSTEMS_DISKONKEY
+block|,
+name|RID_WILDCARD
+block|,
+name|UMASS_PROTO_SCSI
+operator||
+name|UMASS_PROTO_BBB
+block|,
+name|IGNORE_RESIDUE
+operator||
+name|NO_GETMAXLUN
+operator||
+name|RS_NO_CLEAR_UA
+block|}
+block|,
+block|{
 name|USB_VENDOR_OLYMPUS
 block|,
 name|USB_PRODUCT_OLYMPUS_C1
@@ -10463,9 +10481,15 @@ name|ccg
 operator|->
 name|cylinders
 operator|=
+operator|(
 name|ccg
 operator|->
 name|volume_size
+operator|+
+name|secs_per_cylinder
+operator|-
+literal|1
+operator|)
 operator|/
 name|secs_per_cylinder
 expr_stmt|;
@@ -11043,11 +11067,13 @@ case|:
 comment|/* Getting sense data always succeeds (apart from wire 		 * failures). 		 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|quirks
 operator|&
 name|RS_NO_CLEAR_UA
+operator|)
 operator|&&
 name|csio
 operator|->
@@ -11120,7 +11146,6 @@ operator|&
 name|RS_NO_CLEAR_UA
 operator|)
 operator|&&
-comment|/* XXX */
 operator|(
 name|csio
 operator|->
@@ -11149,7 +11174,7 @@ name|SSD_KEY_UNIT_ATTENTION
 operator|)
 condition|)
 block|{
-comment|/* Some devices do not clear the unit attention error 			 * on request sense. We insert a test unit ready 			 * command to make sure we clear the unit attention 			 * condition. 			 */
+comment|/* 			 * Some devices do not clear the unit attention error 			 * on request sense. We insert a test unit ready 			 * command to make sure we clear the unit attention 			 * condition, then allow the retry to proceed as 			 * usual. 			 */
 name|ccb
 operator|->
 name|ccb_h
@@ -11166,6 +11191,12 @@ name|scsi_status
 operator|=
 name|SCSI_STATUS_CHECK_COND
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DELAY(300000);
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 name|UDMASS_SCSI
@@ -11341,6 +11372,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * This completion code just handles the fact that we sent a test-unit-ready  * after having previously failed a READ CAPACITY with CHECK_COND.  Even  * though this command succeeded, we have to tell CAM to retry.  */
+end_comment
+
 begin_function
 name|Static
 name|void
@@ -11392,13 +11427,29 @@ name|status
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ccb->ccb_h.status = CAM_REQ_CMP;
+endif|#
+directive|endif
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|status
 operator|=
-name|CAM_REQ_CMP
+name|CAM_SCSI_STATUS_ERROR
+operator||
+name|CAM_AUTOSNS_VALID
+expr_stmt|;
+name|ccb
+operator|->
+name|csio
+operator|.
+name|scsi_status
+operator|=
+name|SCSI_STATUS_CHECK_COND
 expr_stmt|;
 name|xpt_done
 argument_list|(
