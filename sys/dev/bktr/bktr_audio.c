@@ -35,6 +35,38 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bootverbose
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -51,11 +83,84 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_memio.h>
+end_include
+
+begin_comment
+comment|/* for bus space */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/ioctl_meteor.h>
+end_include
+
+begin_comment
+comment|/* NetBSD location of .h files */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/ioctl_bt848.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/ioctl_meteor.h>
 end_include
+
+begin_comment
+comment|/* Traditional location of .h files */
+end_comment
 
 begin_include
 include|#
@@ -66,6 +171,11 @@ end_include
 begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -221,9 +331,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|bt848_ptr_t
-name|bt848
-decl_stmt|;
 name|u_long
 name|temp
 decl_stmt|;
@@ -396,12 +503,6 @@ operator|)
 return|;
 block|}
 comment|/* Proceed with the simpler audio multiplexer code for the majority 	 * of Bt848 cards. 	 */
-name|bt848
-operator|=
-name|bktr
-operator|->
-name|base
-expr_stmt|;
 comment|/* 	 * Leave the upper bits of the GPIO port alone in case they control 	 * something like the dbx or teletext chips.  This doesn't guarantee 	 * success, but follows the rule of least astonishment. 	 */
 if|if
 condition|(
@@ -452,9 +553,12 @@ name|audio_mux_select
 expr_stmt|;
 name|temp
 operator|=
-name|bt848
-operator|->
-name|gpio_data
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|)
 operator|&
 operator|~
 name|bktr
@@ -463,20 +567,18 @@ name|card
 operator|.
 name|gpio_mux_bits
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
 if|#
 directive|if
 name|defined
 argument_list|(
 name|AUDIOMUX_DISCOVER
 argument_list|)
-name|bt848
-operator|->
-name|gpio_data
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
 name|temp
 operator||
 operator|(
@@ -484,6 +586,7 @@ name|cmd
 operator|&
 literal|0xff
 operator|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -505,6 +608,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
 name|temp
 operator||
 name|bktr
@@ -515,6 +624,7 @@ name|audiomuxs
 index|[
 name|idx
 index|]
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1114,13 +1224,6 @@ name|int
 name|val
 parameter_list|)
 block|{
-name|bt848_ptr_t
-name|bt848
-init|=
-name|bktr
-operator|->
-name|base
-decl_stmt|;
 name|u_long
 name|data
 decl_stmt|,
@@ -1175,72 +1278,93 @@ break|break;
 default|default:
 return|return;
 block|}
-name|bt848
-operator|->
-name|gpio_out_en
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
 name|data
+argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_out_en
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|,
 name|outbits
+argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
 name|BCTV_BITS
 argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
 name|data
 operator|&
 operator|~
 name|BCTV_GPIO_WE
+argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
 name|BCTV_BITS
 argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
 name|data
+argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
 name|BCTV_BITS
 argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_data
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_DATA
+argument_list|,
 operator|~
 literal|0
+argument_list|)
 expr_stmt|;
-name|bt848
-operator|->
-name|gpio_out_en
-operator|=
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_GPIO_OUT_EN
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Not yet used int bctv_gpio_read( bktr_ptr_t bktr, int port ) {         bt848_ptr_t bt848 = bktr->base;         u_long data, outbits, ret;          port&= BCTV_GPIO_PORT_MASK;         switch (port) {         case 1:         case 3:                 data = ((port<< BCTV_GPIO_ADDR_SHIFT)& BCTV_GPIO_ADDR_MASK) |                        BCTV_GPIO_WE | BCTV_GPIO_OE;                 outbits = BCTV_GPIO_OUT_RMASK;                 break;         default:                 return( -1 );         }         bt848->gpio_out_en = 0;         bt848->gpio_data = data;         bt848->gpio_out_en = outbits;         DELAY(BCTV_BITS);         bt848->gpio_data = data& ~BCTV_GPIO_OE;         DELAY(BCTV_BITS);         ret = bt848->gpio_data;         DELAY(BCTV_BITS);         bt848->gpio_data = data;         DELAY(BCTV_BITS);         bt848->gpio_data = ~0;         bt848->gpio_out_en = 0;         return( (ret& BCTV_GPIO_VAL_MASK)>> BCTV_GPIO_VAL_SHIFT ); } */
+comment|/* Not yet used int bctv_gpio_read( bktr_ptr_t bktr, int port ) {         u_long data, outbits, ret;          port&= BCTV_GPIO_PORT_MASK;         switch (port) {         case 1:         case 3:                 data = ((port<< BCTV_GPIO_ADDR_SHIFT)& BCTV_GPIO_ADDR_MASK) |                        BCTV_GPIO_WE | BCTV_GPIO_OE;                 outbits = BCTV_GPIO_OUT_RMASK;                 break;         default:                 return( -1 );         }         OUTL(bktr, BKTR_GPIO_OUT_EN, 0);         OUTL(bktr, BKTR_GPIO_DATA, data);         OUTL(bktr, BKTR_GPIO_OUT_EN, outbits);         DELAY(BCTV_BITS);         OUTL(bktr, BKTR_GPIO_DATA, data& ~BCTV_GPIO_OE);         DELAY(BCTV_BITS);         ret = INL(bktr, BKTR_GPIO_DATA);         DELAY(BCTV_BITS);         OUTL(bktr, BKTR_GPIO_DATA, data);         DELAY(BCTV_BITS);         OUTL(bktr, BKTR_GPIO_DATA, ~0);         OUTL(bktr, BKTR_GPIO_OUT_EN, 0);         return( (ret& BCTV_GPIO_VAL_MASK)>> BCTV_GPIO_VAL_SHIFT ); } */
 end_comment
 
 begin_comment
@@ -1343,7 +1467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Configure the MSP chip to Auto-detect the audio format */
+comment|/* Configure the MSP chip to Auto-detect the audio format.  * For the MSP3430G, we use fast autodetect mode  * For the MSP3410/3415 there are two schemes for this  *  a) Fast autodetection - the chip is put into autodetect mode, and the function  *     returns immediatly. This works in most cases and is the Default Mode.  *  b) Slow mode. The function sets the MSP3410/3415 chip, then waits for feedback from   *     the chip and re-programs it if needed.  */
 end_comment
 
 begin_function
@@ -1354,6 +1478,20 @@ name|bktr_ptr_t
 name|bktr
 parameter_list|)
 block|{
+name|int
+name|auto_detect
+decl_stmt|,
+name|loops
+decl_stmt|;
+name|int
+name|stereo
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"MSP autodetect\n"
+argument_list|)
+expr_stmt|;
+comment|/* MSP3430G - countries with mono and DBX stereo */
 if|if
 condition|(
 name|strncmp
@@ -1370,7 +1508,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* For MSP3430G - countries with mono and DBX stereo */
 name|msp_dpl_write
 argument_list|(
 name|bktr
@@ -1453,9 +1590,43 @@ argument_list|)
 expr_stmt|;
 comment|/* Set volume to 0db gain */
 block|}
-else|else
+comment|/* MSP3410/MSP3415 - countries with mono, stereo using 2 FM channels and NICAM */
+comment|/* FAST sound scheme */
+if|if
+condition|(
+operator|(
+name|strncmp
+argument_list|(
+literal|"3430G"
+argument_list|,
+name|bktr
+operator|->
+name|msp_version_string
+argument_list|,
+literal|5
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|bktr
+operator|->
+name|slow_msp_audio
+operator|==
+literal|0
+operator|)
+condition|)
 block|{
-comment|/* For MSP3410 / 3415 - countries with mono, stereo using 2 FM channels        and NICAM */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"inside fast MSP autodetect code\n"
+argument_list|)
+expr_stmt|;
 name|msp_dpl_write
 argument_list|(
 name|bktr
@@ -1504,6 +1675,443 @@ literal|0x0001
 argument_list|)
 expr_stmt|;
 comment|/* Auto selection of NICAM/MONO mode */
+block|}
+comment|/* MSP3410/MSP3415 - European Countries where the fast MSP3410/3415 programming fails */
+comment|/* SLOW sound scheme */
+if|if
+condition|(
+operator|(
+name|strncmp
+argument_list|(
+literal|"3430G"
+argument_list|,
+name|bktr
+operator|->
+name|msp_version_string
+argument_list|,
+literal|5
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|bktr
+operator|->
+name|slow_msp_audio
+operator|==
+literal|1
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"inside slow MSP autodetect code\n"
+argument_list|)
+expr_stmt|;
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0x7300
+argument_list|)
+expr_stmt|;
+comment|/* Set volume to 0db gain */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x10
+argument_list|,
+literal|0x0020
+argument_list|,
+literal|0x0001
+argument_list|)
+expr_stmt|;
+comment|/* Enable Auto format detection */
+comment|/* wait for 0.5s max for terrestrial sound autodetection */
+name|loops
+operator|=
+literal|10
+expr_stmt|;
+do|do
+block|{
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+name|auto_detect
+operator|=
+name|msp_dpl_read
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x10
+argument_list|,
+literal|0x007e
+argument_list|)
+expr_stmt|;
+name|loops
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|auto_detect
+operator|>
+literal|0xff
+operator|&&
+name|loops
+operator|<
+literal|50
+condition|)
+do|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Result of autodetect after %dms: %d\n"
+argument_list|,
+name|loops
+operator|*
+literal|10
+argument_list|,
+name|auto_detect
+argument_list|)
+expr_stmt|;
+comment|/* Now set the audio baseband processing */
+switch|switch
+condition|(
+name|auto_detect
+condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* no TV sound standard detected */
+break|break;
+case|case
+literal|2
+case|:
+comment|/* M Dual FM */
+break|break;
+case|case
+literal|3
+case|:
+comment|/* B/G Dual FM; German stereo */
+comment|/* Read the stereo detection value from DSP reg 0x0018 */
+name|DELAY
+argument_list|(
+literal|20000
+argument_list|)
+expr_stmt|;
+name|stereo
+operator|=
+name|msp_dpl_read
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0018
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Stereo reg 0x18 a: %d\n"
+argument_list|,
+name|stereo
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20000
+argument_list|)
+expr_stmt|;
+name|stereo
+operator|=
+name|msp_dpl_read
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0018
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Stereo reg 0x18 b: %d\n"
+argument_list|,
+name|stereo
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20000
+argument_list|)
+expr_stmt|;
+name|stereo
+operator|=
+name|msp_dpl_read
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0018
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Stereo reg 0x18 c: %d\n"
+argument_list|,
+name|stereo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stereo
+operator|>
+literal|0x0100
+operator|&&
+name|stereo
+operator|<
+literal|0x8000
+condition|)
+block|{
+comment|/* Seems to be stereo */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0008
+argument_list|,
+literal|0x0020
+argument_list|)
+expr_stmt|;
+comment|/* Loudspeaker set stereo*/
+comment|/*           set spatial effect strength to 50% enlargement           set spatial effect mode b, stereo basewidth enlargment only         */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0005
+argument_list|,
+literal|0x3f28
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|stereo
+operator|>
+literal|0x8000
+condition|)
+block|{
+comment|/* bilingual mode */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Bilingual mode detected\n"
+argument_list|)
+expr_stmt|;
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0008
+argument_list|,
+literal|0x0000
+argument_list|)
+expr_stmt|;
+comment|/* Loudspeaker */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0005
+argument_list|,
+literal|0x0000
+argument_list|)
+expr_stmt|;
+comment|/* all spatial effects off */
+block|}
+else|else
+block|{
+comment|/* must be mono */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0008
+argument_list|,
+literal|0x0030
+argument_list|)
+expr_stmt|;
+comment|/* Loudspeaker */
+comment|/*           set spatial effect strength to 50% enlargement           set spatial effect mode a, stereo basewidth enlargment           and pseudo stereo effect with automatic high-pass filter         */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0005
+argument_list|,
+literal|0x3f08
+argument_list|)
+expr_stmt|;
+block|}
+if|#
+directive|if
+literal|0
+comment|/* The reset value for Channel matrix mode is FM/AM and SOUNDA/LEFT */
+comment|/* We would like STEREO instead val: 0x0020 */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x0008,0x0020);
+comment|/* Loudspeaker */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x0009,0x0020);
+comment|/* Headphone */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x000a,0x0020);
+comment|/* SCART1 */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x0041,0x0020);
+comment|/* SCART2 */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x000b,0x0020);
+comment|/* I2S */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x000c,0x0020);
+comment|/* Quasi-Peak Detector Source */
+block|msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x000e,0x0001);
+endif|#
+directive|endif
+break|break;
+case|case
+literal|8
+case|:
+comment|/* B/G FM NICAM */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|,
+literal|0x10
+argument_list|,
+literal|0x0021
+argument_list|,
+literal|0x0001
+argument_list|)
+expr_stmt|;
+comment|/* Auto selection of NICAM/MONO mode */
+break|break;
+case|case
+literal|9
+case|:
+comment|/* L_AM NICAM or D/K*/
+case|case
+literal|10
+case|:
+comment|/* i-FM NICAM */
+break|break;
+default|default:
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Unkown autodetection result value: %d\n"
+argument_list|,
+name|auto_detect
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* uncomment the following line to enable the MSP34xx 1Khz Tone Generator */
 comment|/* turn your speaker volume down low before trying this */
