@@ -484,6 +484,17 @@ begin_comment
 comment|/* ip forwarding */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip_doopts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* process or ignore IP options */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
