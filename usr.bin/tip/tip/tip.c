@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tip.c,v 1.2.2.3 1997/08/25 05:02:52 imp Exp $"
+literal|"$Id: tip.c,v 1.2.2.4 1997/09/01 01:48:25 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,7 +884,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf

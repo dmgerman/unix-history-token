@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vars.c,v 1.1.6.1 1997/08/20 07:06:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -925,9 +925,9 @@ block|,
 block|{
 name|NOSTR
 block|,
-name|NULL
+literal|0
 block|,
-name|NULL
+literal|0
 block|,
 name|NOSTR
 block|,

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: map.c,v 1.3.2.1 1997/08/20 07:19:21 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -513,7 +513,7 @@ condition|(
 operator|*
 name|arg
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 comment|/* Non-optional type. */
 goto|goto

@@ -54,7 +54,7 @@ name|char
 name|rcdif
 index|[]
 init|=
-literal|"$Id: tset.c,v 1.10.2.1 1997/08/20 07:19:30 charnier Exp $"
+literal|"$Id: tset.c,v 1.10.2.2 1997/08/29 05:30:03 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
