@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.3 1995/02/27 10:57:54 amurai Exp $  *   *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.4 1995/03/11 15:18:48 amurai Exp $  *   *  TODO:  */
 end_comment
 
 begin_include
@@ -813,6 +813,9 @@ argument_list|)
 operator|-
 name|uptime
 argument_list|)
+expr_stmt|;
+name|CloseModem
+argument_list|()
 expr_stmt|;
 name|LcpDown
 argument_list|()
@@ -1661,6 +1664,14 @@ argument_list|,
 name|VarDevice
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|uu_unlock
+argument_list|(
+name|uucplock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|modem
@@ -1762,12 +1773,21 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* This code gets around the problem of closing descriptor 0    * when it should not have been closed and closing descriptor 1    * when the telnet connection dies.  Since this program always    * opens a descriptor for the modem in auto and direct mode,    * having to dup the descriptor here is a fatal error.    *    * With the other changes I have made this should no longer happen.    * JC   */
 while|while
 condition|(
 name|modem
 operator|<
 literal|3
 condition|)
+block|{
+name|logprintf
+argument_list|(
+literal|"Duping modem fd %d\n"
+argument_list|,
+name|modem
+argument_list|)
+expr_stmt|;
 name|modem
 operator|=
 name|dup
@@ -1775,6 +1795,7 @@ argument_list|(
 name|modem
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*    * If we are working on tty device, change it's mode into    * the one desired for further operation. In this implementation,    * we assume that modem is configuted to use CTS/RTS flow control.    */
 name|dev_is_modem
 operator|=
@@ -2554,6 +2575,12 @@ name|ModemTimer
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+comment|/* ModemTimeout() may call DownConection() to close the modem      * resulting in modem == 0.     */
+if|if
+condition|(
+name|modem
+condition|)
+block|{
 name|tcflush
 argument_list|(
 name|modem
@@ -2571,6 +2598,7 @@ argument_list|(
 name|modem
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2652,6 +2680,13 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|modem
+operator|>=
+literal|3
+condition|)
+block|{
 name|close
 argument_list|(
 name|modem
@@ -2661,6 +2696,7 @@ name|modem
 operator|=
 literal|0
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
