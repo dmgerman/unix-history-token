@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6587,6 +6587,11 @@ name|u_int
 name|erradr
 decl_stmt|,
 name|chksyn
+decl_stmt|,
+name|physadr
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|erradr
 operator|=
@@ -6637,6 +6642,45 @@ name|KN02_ERR_VALID
 operator|)
 condition|)
 return|return;
+comment|/* extract the physical word address and compensate for pipelining */
+name|physadr
+operator|=
+name|erradr
+operator|&
+name|KN02_ERR_ADDRESS
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|erradr
+operator|&
+name|KN02_ERR_WRITE
+operator|)
+condition|)
+name|physadr
+operator|=
+operator|(
+name|physadr
+operator|&
+operator|~
+literal|0xfff
+operator|)
+operator||
+operator|(
+operator|(
+name|physadr
+operator|&
+literal|0xfff
+operator|)
+operator|-
+literal|5
+operator|)
+expr_stmt|;
+name|physadr
+operator|<<=
+literal|2
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s memory %s %s error at 0x%x\n"
@@ -6671,11 +6715,7 @@ literal|"ECC"
 else|:
 literal|"timeout"
 argument_list|,
-operator|(
-name|erradr
-operator|&
-name|KN02_ERR_ADDRESS
-operator|)
+name|physadr
 argument_list|)
 expr_stmt|;
 if|if
@@ -6707,6 +6747,45 @@ argument_list|,
 name|chksyn
 argument_list|)
 expr_stmt|;
+comment|/* check for a corrected, single bit, read error */
+if|if
+condition|(
+operator|!
+operator|(
+name|erradr
+operator|&
+name|KN02_ERR_WRITE
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|physadr
+operator|&
+literal|0x4
+condition|)
+block|{
+comment|/* check high word */
+if|if
+condition|(
+name|chksyn
+operator|&
+name|KN02_ECC_SNGHI
+condition|)
+return|return;
+block|}
+else|else
+block|{
+comment|/* check low word */
+if|if
+condition|(
+name|chksyn
+operator|&
+name|KN02_ECC_SNGLO
+condition|)
+return|return;
+block|}
+block|}
 block|}
 name|panic
 argument_list|(
