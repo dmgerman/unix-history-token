@@ -83,6 +83,42 @@ begin_comment
 comment|/* List of sub directories to look for under a given FTP server. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|ftp_dirs
+index|[]
+init|=
+block|{
+literal|"."
+block|,
+literal|"releases/pc98"
+block|,
+literal|"snapshots/pc98"
+block|,
+literal|"pub/FreeBSD"
+block|,
+literal|"pub/FreeBSD/releases/pc98"
+block|,
+literal|"pub/FreeBSD/snapshots/pc98"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -111,6 +147,11 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Brings up attached network device, if any - takes FTP device as arg */
