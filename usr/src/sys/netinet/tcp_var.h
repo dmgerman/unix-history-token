@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ modifier|*
 name|t_tcpopt
 decl_stmt|;
 comment|/* tcp options */
-name|short
+name|u_short
 name|t_maxseg
 decl_stmt|;
 comment|/* maximum segment size */
@@ -78,6 +78,11 @@ directive|define
 name|TF_NOOPT
 value|0x08
 comment|/* don't use tcp options */
+define|#
+directive|define
+name|TF_SENTFIN
+value|0x10
+comment|/* have sent FIN */
 name|struct
 name|tcpiphdr
 modifier|*
