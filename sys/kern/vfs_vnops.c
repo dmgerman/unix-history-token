@@ -1212,6 +1212,12 @@ name|flagp
 operator|=
 name|fmode
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
