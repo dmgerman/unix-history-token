@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.22 (Berkeley) %G%"
+literal|"@(#)rm.c	4.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,17 +83,13 @@ begin_comment
 comment|/* true if errors occured */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -342,12 +338,39 @@ comment|/* previous name for -r */
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
 decl_stmt|;
+name|cp
+operator|=
+name|rindex
+argument_list|(
+name|arg
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|cp
+operator|=
+name|arg
+expr_stmt|;
+else|else
+operator|++
+name|cp
+expr_stmt|;
 if|if
 condition|(
 name|isdot
 argument_list|(
-name|arg
+name|cp
 argument_list|)
 condition|)
 block|{
@@ -1101,6 +1124,11 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 name|n
 operator|=
 name|strlen
