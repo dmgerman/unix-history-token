@@ -101,20 +101,6 @@ value|TRAPF_PC(&(framep)->cf_tf)
 end_define
 
 begin_comment
-comment|/*  * Give a profiling tick to the current process when the user profiling  * buffer pages are invalid.  On the hp300, request an ast to send us  * through trap, marking the proc as needing a profiling tick.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|need_proftick
-parameter_list|(
-name|p
-parameter_list|)
-value|do {						\ 	mtx_lock_spin(&sched_lock);					\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston((p));							\ 	mtx_unlock_spin(&sched_lock);					\ } while (0)
-end_define
-
-begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */
 end_comment
 

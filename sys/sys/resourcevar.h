@@ -112,7 +112,7 @@ name|u_long
 name|pr_addr
 decl_stmt|;
 comment|/* temp storage for addr until AST */
-name|u_long
+name|u_int
 name|pr_ticks
 decl_stmt|;
 comment|/* temp storage for ticks until AST */

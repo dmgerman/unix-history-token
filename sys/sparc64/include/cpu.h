@@ -84,20 +84,6 @@ value|((p)->p_frame->tf_sp = (sp))
 end_define
 
 begin_comment
-comment|/*  * Arrange to handle pending profiling ticks before returning to user mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|need_proftick
-parameter_list|(
-name|p
-parameter_list|)
-value|do {						\ 	mtx_lock_spin(&sched_lock);					\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston(p);							\ 	mtx_unlock_spin(&sched_lock);					\ } while (0)
-end_define
-
-begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */
 end_comment
 

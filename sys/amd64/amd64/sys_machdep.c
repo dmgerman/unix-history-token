@@ -722,10 +722,11 @@ operator|=
 name|ext
 expr_stmt|;
 comment|/* switch to the new TSS after syscall completes */
-name|need_resched
-argument_list|(
 name|p
-argument_list|)
+operator|->
+name|p_sflag
+operator||=
+name|PS_NEEDRESCHED
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

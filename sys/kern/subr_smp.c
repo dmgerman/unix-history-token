@@ -604,10 +604,11 @@ operator|->
 name|gd_idleproc
 condition|)
 block|{
-name|need_resched
-argument_list|(
 name|p
-argument_list|)
+operator|->
+name|p_sflag
+operator||=
+name|PS_NEEDRESCHED
 expr_stmt|;
 name|map
 operator||=

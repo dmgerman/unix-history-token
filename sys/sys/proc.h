@@ -1438,74 +1438,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|need_resched
-parameter_list|(
-name|p
-parameter_list|)
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_NEEDRESCHED;					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|resched_wanted
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->p_sflag& PS_NEEDRESCHED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|clear_resched
-parameter_list|(
-name|p
-parameter_list|)
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag&= ~PS_NEEDRESCHED;				\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * Schedule an Asynchronous System Trap (AST) on return to user mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|aston
-parameter_list|(
-name|p
-parameter_list|)
-value|do {							\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_ASTPENDING;					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|astpending
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->p_sflag& PS_ASTPENDING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|astoff
-parameter_list|(
-name|p
-parameter_list|)
-value|do {							\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag&= ~PS_ASTPENDING;					\ } while (0)
-end_define
-
-begin_comment
 comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
 end_comment
 
@@ -1516,7 +1448,7 @@ name|signotify
 parameter_list|(
 name|p
 parameter_list|)
-value|aston(p)
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_ASTPENDING;					\ } while (0)
 end_define
 
 begin_comment
@@ -2610,7 +2542,7 @@ expr|struct
 name|trapframe
 operator|*
 operator|,
-name|u_quad_t
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -147,16 +147,6 @@ name|astpending
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|need_proftick
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->p_flag |= PS_OWEUPC, astpending = 1)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|char
