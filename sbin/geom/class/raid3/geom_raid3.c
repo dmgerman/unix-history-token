@@ -409,7 +409,7 @@ literal|"       %s configure [-adhnv] name\n"
 literal|"       %s rebuild [-v] name prov\n"
 literal|"       %s insert [-hv]<-n number> name prov\n"
 literal|"       %s remove [-v]<-n number> name\n"
-literal|"       %s stop [-fv] name\n"
+literal|"       %s stop [-fv] name [...]\n"
 argument_list|,
 name|comm
 argument_list|,
