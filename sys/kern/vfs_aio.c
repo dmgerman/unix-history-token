@@ -3954,27 +3954,19 @@ name|mycp
 operator|->
 name|p_vmspace
 expr_stmt|;
-if|if
-condition|(
-name|mycp
-operator|->
-name|p_textvp
-condition|)
-block|{
-name|vrele
+name|KASSERT
 argument_list|(
 name|mycp
 operator|->
 name|p_textvp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"kthread has a textvp"
+operator|)
 argument_list|)
 expr_stmt|;
-name|mycp
-operator|->
-name|p_textvp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* 	 * Allocate and ready the aio control info.  There is one aiop structure 	 * per daemon. 	 */
 name|aiop
 operator|=
@@ -4117,13 +4109,6 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
-expr_stmt|;
-comment|/* Mark special process type. */
-name|mycp
-operator|->
-name|p_flag
-operator||=
-name|P_SYSTEM
 expr_stmt|;
 comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * and creating too many daemons.) 	 */
 name|wakeup
