@@ -161,15 +161,6 @@ decl_stmt|;
 name|int
 name|privatemodes
 decl_stmt|;
-name|int
-name|active
-decl_stmt|;
-name|int
-name|tid
-decl_stmt|;
-name|int
-name|threadinfo
-decl_stmt|;
 name|void
 modifier|*
 name|userinfo
