@@ -5664,6 +5664,17 @@ if|if
 condition|(
 name|id
 operator|==
+literal|0x3500630e
+condition|)
+name|s
+operator|=
+literal|"CS4236B"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
 literal|0x3200630e
 condition|)
 name|s
@@ -6094,6 +6105,10 @@ case|case
 literal|0x3600630e
 case|:
 comment|/* CS4236 */
+case|case
+literal|0x3500630e
+case|:
+comment|/* CS4236B */
 name|tmp_d
 operator|.
 name|bd_id
