@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -41,10 +41,13 @@ end_include
 
 begin_decl_stmt
 name|int
-name|nulldev
+name|nullop
 argument_list|()
 decl_stmt|,
-name|nodev
+name|enxio
+argument_list|()
+decl_stmt|,
+name|enodev
 argument_list|()
 decl_stmt|,
 name|rawread
@@ -103,35 +106,35 @@ begin_define
 define|#
 directive|define
 name|hpopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|hpclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|hpstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|hpioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|hpdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -188,35 +191,35 @@ begin_define
 define|#
 directive|define
 name|htopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|htclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|htstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|htdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|htioctl
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -269,35 +272,35 @@ begin_define
 define|#
 directive|define
 name|rkopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rkstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rkintr
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rkdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rkreset
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -357,42 +360,42 @@ begin_define
 define|#
 directive|define
 name|tmopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -449,42 +452,42 @@ begin_define
 define|#
 directive|define
 name|tmscpopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmscpclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmscpstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmscpioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmscpdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tmscpreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -537,42 +540,42 @@ begin_define
 define|#
 directive|define
 name|tsopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tsclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tsstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tsioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tsdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tsreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -622,35 +625,35 @@ begin_define
 define|#
 directive|define
 name|mtopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtdump
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -710,42 +713,42 @@ begin_define
 define|#
 directive|define
 name|udaopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|udaclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|udastrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|udaioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|udareset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|udadump
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -799,21 +802,21 @@ begin_define
 define|#
 directive|define
 name|kdbopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kdbstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kdbdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -870,28 +873,28 @@ begin_define
 define|#
 directive|define
 name|upopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|upstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|upreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|updump
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -951,42 +954,42 @@ begin_define
 define|#
 directive|define
 name|utopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|utclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|utstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|utreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|utioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|utdump
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -1040,28 +1043,28 @@ begin_define
 define|#
 directive|define
 name|idcopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|idcstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|idcreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|idcdump
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -1112,21 +1115,21 @@ begin_define
 define|#
 directive|define
 name|tuopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tuclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|tustrategy
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -1182,49 +1185,49 @@ begin_define
 define|#
 directive|define
 name|rxopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rxstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rxclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rxread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rxwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rxreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|rxioctl
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -1274,35 +1277,35 @@ begin_define
 define|#
 directive|define
 name|uuopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|uustrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|uuclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|uureset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|uuioctl
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -1352,28 +1355,28 @@ begin_define
 define|#
 directive|define
 name|rlopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rlstrategy
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rlreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|rldump
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -1437,42 +1440,42 @@ begin_define
 define|#
 directive|define
 name|npopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|npclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|npread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|npwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|npreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|npioctl
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -1524,11 +1527,11 @@ block|,
 block|{
 name|upopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|upstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*2*/
 name|updump
@@ -1541,11 +1544,11 @@ block|,
 block|{
 name|rkopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|rkstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*3*/
 name|rkdump
@@ -1556,16 +1559,16 @@ literal|0
 block|}
 block|,
 block|{
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|swstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*4*/
-name|nodev
+name|enodev
 block|,
 literal|0
 block|,
@@ -1630,10 +1633,10 @@ name|tuclose
 block|,
 name|tustrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*8*/
-name|nodev
+name|enodev
 block|,
 literal|0
 block|,
@@ -1677,11 +1680,11 @@ block|,
 block|{
 name|idcopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|idcstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*11*/
 name|idcdump
@@ -1698,10 +1701,10 @@ name|rxclose
 block|,
 name|rxstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*12*/
-name|nodev
+name|enodev
 block|,
 literal|0
 block|,
@@ -1715,10 +1718,10 @@ name|uuclose
 block|,
 name|uustrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*13*/
-name|nodev
+name|enodev
 block|,
 literal|0
 block|,
@@ -1728,11 +1731,11 @@ block|,
 block|{
 name|rlopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|rlstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*14*/
 name|rldump
@@ -1762,11 +1765,11 @@ block|,
 block|{
 name|kdbopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|kdbstrategy
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*16*/
 name|kdbdump
@@ -1854,7 +1857,7 @@ begin_define
 define|#
 directive|define
 name|accreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -1898,21 +1901,21 @@ begin_define
 define|#
 directive|define
 name|ctopen
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctclose
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctwrite
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -1938,49 +1941,49 @@ begin_define
 define|#
 directive|define
 name|dhopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhstop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
@@ -2051,49 +2054,49 @@ begin_define
 define|#
 directive|define
 name|dmfopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmfclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmfread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmfwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmfioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmfstop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmfreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
@@ -2174,21 +2177,21 @@ begin_define
 define|#
 directive|define
 name|crlopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|crlclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|crlrw
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -2224,21 +2227,21 @@ begin_define
 define|#
 directive|define
 name|rx50open
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rx50close
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|rx50rw
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -2274,21 +2277,21 @@ begin_define
 define|#
 directive|define
 name|flopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|flclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|flrw
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -2314,49 +2317,49 @@ begin_define
 define|#
 directive|define
 name|dzopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dzclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dzread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dzwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dzioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dzstop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dzreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
@@ -2448,28 +2451,28 @@ begin_define
 define|#
 directive|define
 name|lpopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -2555,49 +2558,49 @@ begin_define
 define|#
 directive|define
 name|vaopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vaclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vawrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vaopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vaioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vareset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|vaselect
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -2650,42 +2653,42 @@ begin_define
 define|#
 directive|define
 name|vpopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vpclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vpwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vpioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vpreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|vpselect
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -2769,63 +2772,63 @@ begin_define
 define|#
 directive|define
 name|ptsopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptswrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptyioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
@@ -2839,14 +2842,14 @@ begin_define
 define|#
 directive|define
 name|ptcselect
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsstop
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -2896,35 +2899,35 @@ begin_define
 define|#
 directive|define
 name|lpaopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpaclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lparead
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpawrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpaioctl
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -2968,21 +2971,21 @@ begin_define
 define|#
 directive|define
 name|dnopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dnclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dnwrite
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -3035,42 +3038,42 @@ begin_define
 define|#
 directive|define
 name|ikopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ikclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ikread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ikwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ikioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ikreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -3123,49 +3126,49 @@ begin_define
 define|#
 directive|define
 name|psopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|pswrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -3212,28 +3215,28 @@ begin_define
 define|#
 directive|define
 name|adopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|adclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|adioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|adreset
-value|nulldev
+value|nullop
 end_define
 
 begin_endif
@@ -3297,49 +3300,49 @@ begin_define
 define|#
 directive|define
 name|dhuopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhuclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhuread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhuwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhuioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhustop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dhureset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
@@ -3396,35 +3399,35 @@ begin_define
 define|#
 directive|define
 name|vsopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vsclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vsioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vsreset
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|vsselect
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -3488,49 +3491,49 @@ begin_define
 define|#
 directive|define
 name|dmzopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmzclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmzread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmzwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmzioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmzstop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmzreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
@@ -3599,63 +3602,63 @@ begin_define
 define|#
 directive|define
 name|qvopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvstop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvselect
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qvcons_init
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -3717,63 +3720,63 @@ begin_define
 define|#
 directive|define
 name|qdopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdstop
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdreset
-value|nulldev
+value|nullop
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdselect
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|qdcons_init
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -3812,21 +3815,21 @@ begin_define
 define|#
 directive|define
 name|iiopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|iiclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|iiioctl
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -3881,35 +3884,35 @@ begin_define
 define|#
 directive|define
 name|dkopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dkclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dkread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dkwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dkioctl
-value|nodev
+value|enxio
 end_define
 
 begin_else
@@ -3959,42 +3962,42 @@ begin_define
 define|#
 directive|define
 name|dktopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dktclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dktread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dktwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dktioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dktstop
-value|nulldev
+value|nullop
 end_define
 
 begin_define
@@ -4096,42 +4099,42 @@ begin_define
 define|#
 directive|define
 name|kmcopen
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kmcclose
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kmcwrite
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kmcioctl
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kmcread
-value|nodev
+value|enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|kmcdclr
-value|nodev
+value|enxio
 end_define
 
 begin_endif
@@ -4193,16 +4196,16 @@ block|,
 comment|/*0*/
 name|cnioctl
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 operator|&
 name|cons
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4225,13 +4228,13 @@ name|dz_tty
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 name|syopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|syread
 block|,
@@ -4240,38 +4243,38 @@ block|,
 comment|/*2*/
 name|syioctl
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|syselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|mmrw
 block|,
 name|mmrw
 block|,
 comment|/*3*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|mmselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4286,15 +4289,15 @@ block|,
 comment|/*4*/
 name|hpioctl
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|hpstrategy
 block|,
@@ -4309,15 +4312,15 @@ block|,
 comment|/*5*/
 name|htioctl
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|htstrategy
 block|,
@@ -4325,14 +4328,14 @@ name|vpopen
 block|,
 name|vpclose
 block|,
-name|nodev
+name|enodev
 block|,
 name|vpwrite
 block|,
 comment|/*6*/
 name|vpioctl
 block|,
-name|nulldev
+name|nullop
 block|,
 name|vpreset
 block|,
@@ -4340,30 +4343,30 @@ name|NULL
 block|,
 name|vpselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|rawread
 block|,
 name|rawwrite
 block|,
 comment|/*7*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|swstrategy
 block|,
@@ -4376,17 +4379,17 @@ block|,
 name|flrw
 block|,
 comment|/*8*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4401,7 +4404,7 @@ block|,
 comment|/*9*/
 name|udaioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|udareset
 block|,
@@ -4409,7 +4412,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|udastrategy
 block|,
@@ -4417,14 +4420,14 @@ name|vaopen
 block|,
 name|vaclose
 block|,
-name|nodev
+name|enodev
 block|,
 name|vawrite
 block|,
 comment|/*10*/
 name|vaioctl
 block|,
-name|nulldev
+name|nullop
 block|,
 name|vareset
 block|,
@@ -4432,22 +4435,22 @@ name|NULL
 block|,
 name|vaselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 name|rkopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|rawread
 block|,
 name|rawwrite
 block|,
 comment|/*11*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|rkreset
 block|,
@@ -4455,7 +4458,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|rkstrategy
 block|,
@@ -4478,22 +4481,22 @@ name|dh11
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 name|upopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|rawread
 block|,
 name|rawwrite
 block|,
 comment|/*13*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|upreset
 block|,
@@ -4501,7 +4504,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|upstrategy
 block|,
@@ -4516,7 +4519,7 @@ block|,
 comment|/*14*/
 name|tmioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|tmreset
 block|,
@@ -4524,7 +4527,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|tmstrategy
 block|,
@@ -4532,14 +4535,14 @@ name|lpopen
 block|,
 name|lpclose
 block|,
-name|nodev
+name|enodev
 block|,
 name|lpwrite
 block|,
 comment|/*15*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|lpreset
 block|,
@@ -4547,7 +4550,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4562,7 +4565,7 @@ block|,
 comment|/*16*/
 name|tsioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|tsreset
 block|,
@@ -4570,7 +4573,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|tsstrategy
 block|,
@@ -4585,7 +4588,7 @@ block|,
 comment|/*17*/
 name|utioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|utreset
 block|,
@@ -4593,7 +4596,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|utstrategy
 block|,
@@ -4601,22 +4604,22 @@ name|ctopen
 block|,
 name|ctclose
 block|,
-name|nodev
+name|enodev
 block|,
 name|ctwrite
 block|,
 comment|/*18*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4631,15 +4634,15 @@ block|,
 comment|/*19*/
 name|mtioctl
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|mtstrategy
 block|,
@@ -4656,13 +4659,13 @@ name|ptyioctl
 block|,
 name|ptsstop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|pt_tty
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4677,15 +4680,15 @@ block|,
 comment|/*21*/
 name|ptyioctl
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|pt_tty
 block|,
 name|ptcselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4708,22 +4711,22 @@ name|dmf_tty
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 name|idcopen
 block|,
-name|nulldev
+name|nullop
 block|,
 name|rawread
 block|,
 name|rawwrite
 block|,
 comment|/*23*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|idcreset
 block|,
@@ -4731,7 +4734,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|idcstrategy
 block|,
@@ -4739,46 +4742,46 @@ name|dnopen
 block|,
 name|dnclose
 block|,
-name|nodev
+name|enodev
 block|,
 name|dnwrite
 block|,
 comment|/*24*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 comment|/* 25-29 reserved to local sites */
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*25*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4793,15 +4796,15 @@ block|,
 comment|/*26*/
 name|lpaioctl
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4816,7 +4819,7 @@ block|,
 comment|/*27*/
 name|psioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|psreset
 block|,
@@ -4824,30 +4827,30 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*28*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4855,14 +4858,14 @@ name|adopen
 block|,
 name|adclose
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*29*/
 name|adioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|adreset
 block|,
@@ -4870,7 +4873,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4885,7 +4888,7 @@ block|,
 comment|/*30*/
 name|rxioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|rxreset
 block|,
@@ -4893,7 +4896,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4908,7 +4911,7 @@ block|,
 comment|/*31*/
 name|ikioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|ikreset
 block|,
@@ -4916,22 +4919,22 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 name|rlopen
 block|,
-name|nodev
+name|enodev
 block|,
 name|rawread
 block|,
 name|rawwrite
 block|,
 comment|/*32*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|rlreset
 block|,
@@ -4939,7 +4942,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|rlstrategy
 block|,
@@ -4949,20 +4952,20 @@ name|logclose
 block|,
 name|logread
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*33*/
 name|logioctl
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|logselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4985,7 +4988,7 @@ name|dhu_tty
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -4998,17 +5001,17 @@ block|,
 name|crlrw
 block|,
 comment|/*35*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5016,14 +5019,14 @@ name|vsopen
 block|,
 name|vsclose
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*36*/
 name|vsioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|vsreset
 block|,
@@ -5031,7 +5034,7 @@ name|NULL
 block|,
 name|vsselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5054,7 +5057,7 @@ name|dmz_tty
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5069,7 +5072,7 @@ block|,
 comment|/*38*/
 name|tmscpioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|tmscpreset
 block|,
@@ -5077,7 +5080,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|tmscpstrategy
 block|,
@@ -5092,7 +5095,7 @@ block|,
 comment|/*39*/
 name|npioctl
 block|,
-name|nodev
+name|enodev
 block|,
 name|npreset
 block|,
@@ -5100,7 +5103,7 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5123,7 +5126,7 @@ name|NULL
 block|,
 name|qvselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5146,31 +5149,31 @@ name|NULL
 block|,
 name|qdselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 comment|/* 42-50 reserved to local sites */
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*42*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5178,22 +5181,22 @@ name|iiopen
 block|,
 name|iiclose
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 comment|/*43*/
 name|iiioctl
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5208,15 +5211,15 @@ block|,
 comment|/*44*/
 name|dkioctl
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5233,13 +5236,13 @@ name|dktioctl
 block|,
 name|dktstop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|dkt
 block|,
 name|ttselect
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5254,7 +5257,7 @@ block|,
 comment|/*46*/
 name|kmcioctl
 block|,
-name|nulldev
+name|nullop
 block|,
 name|kmcdclr
 block|,
@@ -5262,99 +5265,99 @@ name|NULL
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*47*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
-block|,
-name|NULL
-block|,
-name|nodev
-block|,
-name|nodev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|NULL
 block|,
-name|nodev
+name|enodev
+block|,
+name|enodev
+block|,
+name|enodev
+block|,
+name|enodev
 block|,
 comment|/*48*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
-block|,
-name|NULL
-block|,
-name|nodev
-block|,
-name|nodev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|NULL
 block|,
-name|nodev
+name|enodev
+block|,
+name|enodev
+block|,
+name|enodev
+block|,
+name|enodev
 block|,
 comment|/*49*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
-block|,
-name|NULL
-block|,
-name|nodev
-block|,
-name|nodev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|NULL
 block|,
-name|nodev
+name|enodev
+block|,
+name|enodev
+block|,
+name|enodev
+block|,
+name|enodev
 block|,
 comment|/*50*/
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
-name|nulldev
+name|nullop
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
@@ -5367,24 +5370,24 @@ block|,
 name|rx50rw
 block|,
 comment|/*51*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 literal|0
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
 comment|/* kdb50 ra */
 name|kdbopen
 block|,
-name|nulldev
+name|nullop
 comment|/*XXX*/
 block|,
 name|rawread
@@ -5392,40 +5395,40 @@ block|,
 name|rawwrite
 block|,
 comment|/*52*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nulldev
+name|nullop
 block|,
 literal|0
 block|,
 name|seltrue
 block|,
-name|nodev
+name|enodev
 block|,
 name|kdbstrategy
 block|,
 name|fdopen
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 comment|/*53*/
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|,
-name|nodev
+name|enodev
 block|,
-name|nodev
+name|enodev
 block|,
 name|NULL
 block|, }
