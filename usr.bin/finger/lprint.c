@@ -842,6 +842,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|w
+operator|->
+name|idletime
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|(
 name|delta
 operator|->
 name|tm_yday
@@ -853,6 +861,7 @@ operator|||
 name|delta
 operator|->
 name|tm_min
+operator|)
 condition|)
 block|{
 name|cpr

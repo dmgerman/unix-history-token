@@ -751,6 +751,26 @@ name|tm
 modifier|*
 name|delta
 decl_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|idletime
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"     "
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|delta
 operator|=
 name|gmtime
