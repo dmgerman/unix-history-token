@@ -609,7 +609,7 @@ name|policyfail
 operator|==
 literal|0
 operator|&&
-name|mac_check_socket_receive
+name|mac_check_socket_deliver
 argument_list|(
 name|last
 operator|->
@@ -779,7 +779,7 @@ directive|ifdef
 name|MAC
 if|if
 condition|(
-name|mac_check_socket_receive
+name|mac_check_socket_deliver
 argument_list|(
 name|last
 operator|->

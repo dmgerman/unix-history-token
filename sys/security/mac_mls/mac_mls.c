@@ -5917,7 +5917,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mac_mls_check_socket_receive
+name|mac_mls_check_socket_deliver
 parameter_list|(
 name|struct
 name|socket
@@ -9278,12 +9278,12 @@ name|mac_mls_check_proc_signal
 block|}
 block|,
 block|{
-name|MAC_CHECK_SOCKET_RECEIVE
+name|MAC_CHECK_SOCKET_DELIVER
 block|,
 operator|(
 name|macop_t
 operator|)
-name|mac_mls_check_socket_receive
+name|mac_mls_check_socket_deliver
 block|}
 block|,
 block|{

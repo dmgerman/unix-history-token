@@ -2997,7 +2997,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_socket_receive
+name|mac_check_socket_deliver
 argument_list|(
 name|so
 argument_list|,
