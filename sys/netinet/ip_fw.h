@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.38 1999/06/19 18:43:30 green Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.39 1999/07/28 22:22:57 green Exp $  */
 end_comment
 
 begin_ifndef
@@ -201,6 +201,14 @@ name|gid_t
 name|fw_gid
 decl_stmt|;
 comment|/* gid to match */
+name|int
+name|fw_logamount
+decl_stmt|;
+comment|/* amount to log */
+name|u_int64_t
+name|fw_loghighest
+decl_stmt|;
+comment|/* highest number packet to log */
 block|}
 struct|;
 end_struct
