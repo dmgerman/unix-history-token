@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)merge.c	8.1 (Berkeley) %G%"
+literal|"@(#)merge.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1546,10 +1546,10 @@ operator|||
 name|cmp
 argument_list|(
 name|f2
+operator|-
+name|size
 argument_list|,
 name|f2
-operator|+
-name|size
 argument_list|)
 operator|>
 literal|0
