@@ -544,6 +544,9 @@ define|#
 directive|define
 name|PCMCIA_PRODUCT_INVALID
 value|-1
+name|int16_t
+name|prodext
+decl_stmt|;
 name|u_int16_t
 name|error
 decl_stmt|;
@@ -1159,6 +1162,8 @@ name|PCCARD_IVAR_VENDOR
 block|,
 name|PCCARD_IVAR_PRODUCT
 block|,
+name|PCCARD_IVAR_PRODEXT
+block|,
 name|PCCARD_IVAR_FUNCTION_NUMBER
 block|,
 name|PCCARD_IVAR_VENDOR_STR
@@ -1221,6 +1226,17 @@ argument_list|,
 argument|PRODUCT
 argument_list|,
 argument|u_int32_t
+argument_list|)
+end_macro
+
+begin_macro
+name|PCCARD_ACCESSOR
+argument_list|(
+argument|prodext
+argument_list|,
+argument|PRODEXT
+argument_list|,
+argument|u_int16_t
 argument_list|)
 end_macro
 
