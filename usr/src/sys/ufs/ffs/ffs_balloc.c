@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -369,9 +369,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -736,9 +736,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 operator|*
 name|bpp
@@ -953,9 +953,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 block|}
 comment|/* 	 * Fetch through the indirect blocks, allocating as necessary. 	 */
@@ -1012,11 +1012,13 @@ return|;
 block|}
 name|bap
 operator|=
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
 expr_stmt|;
 name|nb
 operator|=

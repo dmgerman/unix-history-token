@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* direct addresses in inode */
+comment|/* Direct addresses in inode. */
 end_comment
 
 begin_define
@@ -37,7 +37,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* indirect addresses in inode */
+comment|/* Indirect addresses in inode. */
 end_comment
 
 begin_struct
@@ -47,11 +47,11 @@ block|{
 name|u_short
 name|di_mode
 decl_stmt|;
-comment|/*   0: mode and type of file */
+comment|/*   0: IFMT and permissions. */
 name|short
 name|di_nlink
 decl_stmt|;
-comment|/*   2: number of links to file */
+comment|/*   2: File link count. */
 union|union
 block|{
 name|u_short
@@ -60,74 +60,74 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*   4: ffs: old user and group ids */
+comment|/*   4: Ffs: old user and group ids. */
 name|ino_t
 name|inumber
 decl_stmt|;
-comment|/*   4: lfs: inode number */
+comment|/*   4: Lfs: inode number. */
 block|}
 name|di_u
 union|;
 name|u_quad_t
 name|di_size
 decl_stmt|;
-comment|/*   8: number of bytes in file */
+comment|/*   8: File byte count. */
 name|struct
 name|timespec
 name|di_atime
 decl_stmt|;
-comment|/*  16: time last accessed */
+comment|/*  16: Last access time. */
 name|struct
 name|timespec
 name|di_mtime
 decl_stmt|;
-comment|/*  24: time last modified */
+comment|/*  24: Last modified time. */
 name|struct
 name|timespec
 name|di_ctime
 decl_stmt|;
-comment|/*  32: last time inode changed */
+comment|/*  32: Last inode change time. */
 name|daddr_t
 name|di_db
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
-comment|/*  40: disk block addresses */
+comment|/*  40: Direct disk blocks. */
 name|daddr_t
 name|di_ib
 index|[
 name|NIADDR
 index|]
 decl_stmt|;
-comment|/*  88: indirect blocks */
+comment|/*  88: Indirect disk blocks. */
 name|u_long
 name|di_flags
 decl_stmt|;
-comment|/* 100: status flags */
+comment|/* 100: Status flags (chflags). */
 name|long
 name|di_blocks
 decl_stmt|;
-comment|/* 104: blocks actually held */
+comment|/* 104: Blocks actually held. */
 name|long
 name|di_gen
 decl_stmt|;
-comment|/* 108: generation number */
+comment|/* 108: Generation number. */
 name|u_long
 name|di_uid
 decl_stmt|;
-comment|/* 112: owner's user id */
+comment|/* 112: File owner. */
 name|u_long
 name|di_gid
 decl_stmt|;
-comment|/* 116: owner's group id */
+comment|/* 116: File group. */
 name|long
 name|di_spare
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* 120: reserved, currently unused */
+comment|/* 120: Reserved; currently unused */
 block|}
 struct|;
 end_struct
@@ -139,8 +139,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|di_ouid
-value|di_u.oldids[0]
+name|di_inumber
+value|di_u.inumber
 end_define
 
 begin_define
@@ -153,8 +153,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|di_inumber
-value|di_u.inumber
+name|di_ouid
+value|di_u.oldids[0]
 end_define
 
 begin_define
@@ -179,7 +179,77 @@ value|((NDADDR + NIADDR) * sizeof(daddr_t))
 end_define
 
 begin_comment
-comment|/* file modes */
+comment|/* File modes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEXEC
+value|0000100
+end_define
+
+begin_comment
+comment|/* Executable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWRITE
+value|0000200
+end_define
+
+begin_comment
+comment|/* Writeable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IREAD
+value|0000400
+end_define
+
+begin_comment
+comment|/* Readable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISVTX
+value|0001000
+end_define
+
+begin_comment
+comment|/* Sticky bit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISGID
+value|0002000
+end_define
+
+begin_comment
+comment|/* Set-gid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISUID
+value|0004000
+end_define
+
+begin_comment
+comment|/* Set-uid. */
+end_comment
+
+begin_comment
+comment|/* File types. */
 end_comment
 
 begin_define
@@ -190,7 +260,7 @@ value|0170000
 end_define
 
 begin_comment
-comment|/* mask of file type */
+comment|/* Mask of file type. */
 end_comment
 
 begin_define
@@ -201,7 +271,7 @@ value|0010000
 end_define
 
 begin_comment
-comment|/* named pipe (fifo) */
+comment|/* Named pipe (fifo). */
 end_comment
 
 begin_define
@@ -212,7 +282,7 @@ value|0020000
 end_define
 
 begin_comment
-comment|/* character special device */
+comment|/* Character device. */
 end_comment
 
 begin_define
@@ -223,7 +293,7 @@ value|0040000
 end_define
 
 begin_comment
-comment|/* directory */
+comment|/* Directory file. */
 end_comment
 
 begin_define
@@ -234,7 +304,7 @@ value|0060000
 end_define
 
 begin_comment
-comment|/* block special device */
+comment|/* Block device. */
 end_comment
 
 begin_define
@@ -245,7 +315,7 @@ value|0100000
 end_define
 
 begin_comment
-comment|/* regular file */
+comment|/* Regular file. */
 end_comment
 
 begin_define
@@ -256,7 +326,7 @@ value|0120000
 end_define
 
 begin_comment
-comment|/* symbolic link */
+comment|/* Symbolic link. */
 end_comment
 
 begin_define
@@ -267,73 +337,7 @@ value|0140000
 end_define
 
 begin_comment
-comment|/* UNIX domain socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISUID
-value|04000
-end_define
-
-begin_comment
-comment|/* set user identifier when exec'ing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISGID
-value|02000
-end_define
-
-begin_comment
-comment|/* set group identifier when exec'ing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISVTX
-value|01000
-end_define
-
-begin_comment
-comment|/* save execution information on exit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IREAD
-value|0400
-end_define
-
-begin_comment
-comment|/* read permission */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IWRITE
-value|0200
-end_define
-
-begin_comment
-comment|/* write permission */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEXEC
-value|0100
-end_define
-
-begin_comment
-comment|/* execute permission */
+comment|/* UNIX domain socket. */
 end_comment
 
 end_unit

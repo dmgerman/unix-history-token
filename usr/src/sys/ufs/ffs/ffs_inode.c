@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -152,7 +152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the access, modified, and inode change times as specified  * by the IACC, IUPD, and ICHG flags respectively. The IMOD flag  * is used to specify that the inode needs to be updated but that  * the times have already been set. The access and modified times  * are taken from the second and third parameters; the inode change  * time is always taken from the current time. If waitfor is set,  * then wait for the disk write of the inode to complete.  */
+comment|/*  * Update the access, modified, and inode change times as specified by the  * IACCESS, IUPDATE, and ICHANGE flags respectively. The IMODIFIED flag is  * used to specify that the inode needs to be updated but that the times have  * already been set. The access and modified times are taken from the second  * and third parameters; the inode change time is always taken from the current  * time. If waitfor is set, then wait for the disk write of the inode to  * complete.  */
 end_comment
 
 begin_function
@@ -223,13 +223,13 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IUPD
+name|IUPDATE
 operator||
-name|IACC
+name|IACCESS
 operator||
-name|ICHG
+name|ICHANGE
 operator||
-name|IMOD
+name|IMODIFIED
 operator|)
 expr_stmt|;
 return|return
@@ -246,13 +246,13 @@ operator|->
 name|i_flag
 operator|&
 operator|(
-name|IUPD
+name|IUPDATE
 operator||
-name|IACC
+name|IACCESS
 operator||
-name|ICHG
+name|ICHANGE
 operator||
-name|IMOD
+name|IMODIFIED
 operator|)
 operator|)
 operator|==
@@ -269,7 +269,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IACC
+name|IACCESS
 condition|)
 name|ip
 operator|->
@@ -289,7 +289,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IUPD
+name|IUPDATE
 condition|)
 block|{
 name|ip
@@ -316,7 +316,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ICHG
+name|ICHANGE
 condition|)
 name|ip
 operator|->
@@ -334,13 +334,13 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IUPD
+name|IUPDATE
 operator||
-name|IACC
+name|IACCESS
 operator||
-name|ICHG
+name|ICHANGE
 operator||
-name|IMOD
+name|IMODIFIED
 operator|)
 expr_stmt|;
 name|fs
@@ -435,11 +435,14 @@ return|;
 block|}
 name|dp
 operator|=
+operator|(
+expr|struct
+name|dinode
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_dino
+name|b_data
 operator|+
 name|itoo
 argument_list|(
@@ -721,9 +724,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -755,9 +758,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -927,9 +930,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -1053,11 +1056,13 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|offset
 argument_list|,
@@ -1259,9 +1264,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -1857,7 +1862,7 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2221,11 +2226,13 @@ return|;
 block|}
 name|bap
 operator|=
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
 expr_stmt|;
 name|MALLOC
 argument_list|(

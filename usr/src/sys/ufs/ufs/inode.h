@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|<ufs/ufs/dinode.h>
 end_include
 
 begin_comment
-comment|/*  * Theoretically, directories can be more than 2Gb in length,  * however, in practice this seems unlikely. So, we define  * the type doff_t as a long to keep down the cost of doing  * lookup on a 32-bit machine. If you are porting to a 64-bit  * architecture, you should make doff_t the same as off_t.  */
+comment|/*  * Theoretically, directories can be more than 2Gb in length, however, in  * practice this seems unlikely. So, we define the type doff_t as a long  * to keep down the cost of doing lookup on a 32-bit machine. If you are  * porting to a 64-bit architecture, you should make doff_t the same as off_t.  */
 end_comment
 
 begin_define
@@ -33,41 +33,41 @@ name|inode
 modifier|*
 name|i_next
 decl_stmt|;
-comment|/* hash chain forward */
+comment|/* Hash chain forward. */
 name|struct
 name|inode
 modifier|*
 modifier|*
 name|i_prev
 decl_stmt|;
-comment|/* hash chain back */
+comment|/* Hash chain back. */
 name|struct
 name|vnode
 modifier|*
 name|i_vnode
 decl_stmt|;
-comment|/* vnode associated with this inode */
+comment|/* Vnode associated with this inode. */
 name|struct
 name|vnode
 modifier|*
 name|i_devvp
 decl_stmt|;
-comment|/* vnode for block I/O */
+comment|/* Vnode for block I/O. */
 name|u_long
 name|i_flag
 decl_stmt|;
-comment|/* see below */
+comment|/* I* flags. */
 name|dev_t
 name|i_dev
 decl_stmt|;
-comment|/* device where inode resides */
+comment|/* Device associated with the inode. */
 name|ino_t
 name|i_number
 decl_stmt|;
-comment|/* the identity of the inode */
+comment|/* The identity of the inode. */
 union|union
 block|{
-comment|/* associated filesystem */
+comment|/* Associated filesystem. */
 name|struct
 name|fs
 modifier|*
@@ -99,115 +99,66 @@ index|[
 name|MAXQUOTAS
 index|]
 decl_stmt|;
-comment|/* pointer to dquot structures */
+comment|/* Dquot structures. */
 name|u_quad_t
 name|i_modrev
 decl_stmt|;
-comment|/* revision level for lease */
+comment|/* Revision level for lease. */
 name|struct
 name|lockf
 modifier|*
 name|i_lockf
 decl_stmt|;
-comment|/* head of byte-level lock list */
+comment|/* Head of byte-level lock list. */
 name|pid_t
 name|i_lockholder
 decl_stmt|;
-comment|/* DEBUG: holder of inode lock */
+comment|/* DEBUG: holder of inode lock. */
 name|pid_t
 name|i_lockwaiter
 decl_stmt|;
-comment|/* DEBUG: latest blocked for inode lock */
+comment|/* DEBUG: latest blocked for inode lock. */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
 name|long
 name|i_count
 decl_stmt|;
-comment|/* size of free slot in directory */
+comment|/* Size of free slot in directory. */
 name|doff_t
 name|i_endoff
 decl_stmt|;
-comment|/* end of useful stuff in directory */
+comment|/* End of useful stuff in directory. */
 name|doff_t
 name|i_diroff
 decl_stmt|;
-comment|/* offset in dir, where we found last entry */
+comment|/* Offset in dir, where we found last entry. */
 name|doff_t
 name|i_offset
 decl_stmt|;
-comment|/* offset of free space in directory */
+comment|/* Offset of free space in directory. */
 name|ino_t
 name|i_ino
 decl_stmt|;
-comment|/* inode number of found directory */
+comment|/* Inode number of found directory. */
 name|u_long
 name|i_reclen
 decl_stmt|;
-comment|/* size of found directory entry */
+comment|/* Size of found directory entry. */
 name|long
 name|i_spare
 index|[
 literal|11
 index|]
 decl_stmt|;
-comment|/* spares to round up to 128 bytes */
-comment|/* 	 * the on-disk dinode itself. 	 */
+comment|/* Spares to round up to 128 bytes. */
+comment|/* 	 * The on-disk dinode itself. 	 */
 name|struct
 name|dinode
 name|i_din
 decl_stmt|;
-comment|/* 128 bytes of the on-disk dinode */
+comment|/* 128 bytes of the on-disk dinode. */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|i_mode
-value|i_din.di_mode
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_nlink
-value|i_din.di_nlink
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_uid
-value|i_din.di_uid
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_gid
-value|i_din.di_gid
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_size
-value|i_din.di_size
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_db
-value|i_din.di_db
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_ib
-value|i_din.di_ib
-end_define
 
 begin_define
 define|#
@@ -219,8 +170,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|i_mtime
-value|i_din.di_mtime
+name|i_blocks
+value|i_din.di_blocks
 end_define
 
 begin_define
@@ -233,8 +184,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|i_blocks
-value|i_din.di_blocks
+name|i_db
+value|i_din.di_db
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_flags
+value|i_din.di_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_gen
+value|i_din.di_gen
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_gid
+value|i_din.di_gid
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_ib
+value|i_din.di_ib
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_mode
+value|i_din.di_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_mtime
+value|i_din.di_mtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_nlink
+value|i_din.di_nlink
 end_define
 
 begin_define
@@ -254,129 +254,129 @@ end_define
 begin_define
 define|#
 directive|define
-name|i_flags
-value|i_din.di_flags
+name|i_size
+value|i_din.di_size
 end_define
 
 begin_define
 define|#
 directive|define
-name|i_gen
-value|i_din.di_gen
+name|i_uid
+value|i_din.di_uid
 end_define
 
 begin_comment
-comment|/* flags */
+comment|/* These flags are kept in i_flag. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ILOCKED
+name|IACCESS
 value|0x0001
 end_define
 
 begin_comment
-comment|/* inode is locked */
+comment|/* Access time update request. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWANT
+name|ICHANGE
 value|0x0002
 end_define
 
 begin_comment
-comment|/* some process waiting on lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IRENAME
-value|0x0004
-end_define
-
-begin_comment
-comment|/* inode is being renamed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IUPD
-value|0x0010
-end_define
-
-begin_comment
-comment|/* file has been modified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IACC
-value|0x0020
-end_define
-
-begin_comment
-comment|/* inode access time to be updated */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICHG
-value|0x0040
-end_define
-
-begin_comment
-comment|/* inode has been changed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMOD
-value|0x0080
-end_define
-
-begin_comment
-comment|/* inode has been modified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISHLOCK
-value|0x0100
-end_define
-
-begin_comment
-comment|/* file has shared lock */
+comment|/* Inode change time update request. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IEXLOCK
-value|0x0200
+value|0x0004
 end_define
 
 begin_comment
-comment|/* file has exclusive lock */
+comment|/* File has exclusive lock. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILOCKED
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Inode lock. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ILWAIT
-value|0x0400
+value|0x0010
 end_define
 
 begin_comment
-comment|/* someone waiting on file lock */
+comment|/* Process waiting on file lock. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMODIFIED
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Inode has been modified. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRENAME
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Inode is being renamed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISHLOCK
+value|0x0080
+end_define
+
+begin_comment
+comment|/* File has shared lock. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IUPDATE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Modification time update request. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWANT
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Inode is wanted by a process. */
 end_comment
 
 begin_ifdef
@@ -396,15 +396,15 @@ block|{
 name|daddr_t
 name|in_lbn
 decl_stmt|;
-comment|/* logical block number */
+comment|/* Logical block number. */
 name|int
 name|in_off
 decl_stmt|;
-comment|/* offset in buffer */
+comment|/* Offset in buffer. */
 name|int
 name|in_exists
 decl_stmt|;
-comment|/* does this block exist yet */
+comment|/* Flag if the block exists. */
 block|}
 struct|;
 end_struct
@@ -444,7 +444,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime.ts_sec = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec; \ 			(ip)->i_modrev++; \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime.ts_sec = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
+value|{						\ 	if ((ip)->i_flag& (IUPDATE | IACCESS | ICHANGE)) {		\ 		(ip)->i_flag |= IMODIFIED;				\ 		if ((ip)->i_flag& IACCESS)				\ 			(ip)->i_atime.ts_sec = (t1)->tv_sec;		\ 		if ((ip)->i_flag& IUPDATE) {				\ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec;		\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& ICHANGE)				\ 			(ip)->i_ctime.ts_sec = time.tv_sec;		\ 		(ip)->i_flag&= ~(IACCESS | IUPDATE | ICHANGE);		\ 	}								\ }
 end_define
 
 begin_comment
@@ -458,19 +458,19 @@ block|{
 name|u_short
 name|ufid_len
 decl_stmt|;
-comment|/* length of structure */
+comment|/* Length of structure. */
 name|u_short
 name|ufid_pad
 decl_stmt|;
-comment|/* force long alignment */
+comment|/* Force long alignment. */
 name|ino_t
 name|ufid_ino
 decl_stmt|;
-comment|/* file number (ino) */
+comment|/* File number (ino). */
 name|long
 name|ufid_gen
 decl_stmt|;
-comment|/* generation number */
+comment|/* Generation number. */
 block|}
 struct|;
 end_struct
