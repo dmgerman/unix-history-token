@@ -57,6 +57,11 @@ name|u_int8_t
 modifier|*
 name|end
 decl_stmt|;
+name|struct
+name|ACPIsdt
+modifier|*
+name|dsdt
+decl_stmt|;
 name|acpi_load_dsdt
 argument_list|(
 name|file
@@ -68,14 +73,11 @@ operator|&
 name|end
 argument_list|)
 expr_stmt|;
-name|asl_dump_objectlist
+name|acpi_dump_dsdt
 argument_list|(
-operator|&
 name|dp
 argument_list|,
 name|end
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

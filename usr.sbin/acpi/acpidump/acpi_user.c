@@ -629,7 +629,6 @@ name|dumpfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Microsoft asl.exe generates 0x23 byte additional info. 	 * at the begining of the file, so just ignore it. 	 */
 if|if
 condition|(
 name|strncmp
@@ -644,15 +643,25 @@ operator|==
 literal|0
 condition|)
 block|{
+name|memcpy
+argument_list|(
+operator|&
+name|dsdt_header
+argument_list|,
+name|dp
+argument_list|,
+name|SIZEOF_SDT_HDR
+argument_list|)
+expr_stmt|;
 name|dp
 operator|+=
-literal|0x23
+name|SIZEOF_SDT_HDR
 expr_stmt|;
 name|sb
 operator|.
 name|st_size
 operator|-=
-literal|0x23
+name|SIZEOF_SDT_HDR
 expr_stmt|;
 block|}
 name|end

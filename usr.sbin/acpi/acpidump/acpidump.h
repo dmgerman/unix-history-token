@@ -625,10 +625,9 @@ begin_function_decl
 name|void
 name|aml_dump
 parameter_list|(
-name|u_int32_t
+name|struct
+name|ACPIsdt
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -662,11 +661,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|acpi_dump_dsdt
+parameter_list|(
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int8_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|aml_dumpfile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ACPIsdt
+name|dsdt_header
 decl_stmt|;
 end_decl_stmt
 

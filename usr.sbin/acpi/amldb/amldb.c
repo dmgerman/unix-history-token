@@ -345,7 +345,11 @@ name|env
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Microsoft asl.exe generates 0x23 byte additional info. 	 * at the begining of the file, so just ignore it.    	 */
+define|#
+directive|define
+name|SIZEOF_SDT_HDR
+value|36
+comment|/* struct size except body */
 if|if
 condition|(
 name|strncmp
@@ -366,7 +370,7 @@ name|dp
 operator|=
 name|code
 operator|+
-literal|0x23
+name|SIZEOF_SDT_HDR
 expr_stmt|;
 block|}
 else|else
