@@ -105,7 +105,7 @@ name|i
 operator|=
 name|sysctlbyname
 argument_list|(
-literal|"kern.intrcnt"
+literal|"hw.intrcnt"
 argument_list|,
 operator|&
 name|cnt
@@ -138,7 +138,7 @@ name|i
 operator|=
 name|sysctlbyname
 argument_list|(
-literal|"kern.intrnames"
+literal|"hw.intrnames"
 argument_list|,
 operator|&
 name|names
