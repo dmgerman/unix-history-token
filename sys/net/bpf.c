@@ -4988,7 +4988,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  Return 1 if it's time to wakeup a listener (buffer full),  * otherwise 0.  "copy" is the routine called to do the actual data  * transfer.  bcopy is passed in to copy contiguous chunks, while  * bpf_mcopy is passed in to copy mbuf chains.  In the latter case,  * pkt is really an mbuf.  */
+comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  "cpfn" is the routine called to do the actual data  * transfer.  bcopy is passed in to copy contiguous chunks, while  * bpf_mcopy is passed in to copy mbuf chains.  In the latter case,  * pkt is really an mbuf.  */
 end_comment
 
 begin_decl_stmt
