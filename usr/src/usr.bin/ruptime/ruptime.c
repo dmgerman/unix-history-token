@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.12 (Berkeley) 83/05/25"
+literal|"@(#)ruptime.c	4.13 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +250,8 @@ name|again
 label|:
 if|if
 condition|(
+name|argc
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -275,6 +277,8 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -301,6 +305,8 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -327,6 +333,8 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
