@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slc.c	5.6 (Berkeley) %G%"
+literal|"@(#)slc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,12 +114,10 @@ begin_comment
 comment|/*  * send_slc  *  * Write out the current special characters to the client.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|send_slc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -187,7 +185,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of send_slc */
@@ -197,12 +195,10 @@ begin_comment
 comment|/*  * default_slc  *  * Set pty special characters to all the defaults.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|default_slc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -324,7 +320,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of default_slc */
@@ -333,19 +329,20 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|LINEMODE
 end_endif
+
+begin_comment
+comment|/* LINEMODE */
+end_comment
 
 begin_comment
 comment|/*  * get_slc_defaults  *  * Initialize the slc mapping table.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|get_slc_defaults
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -424,7 +421,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of get_slc_defaults */
@@ -440,31 +437,26 @@ begin_comment
 comment|/*  * add_slc  *  * Add an slc triplet to the slc buffer.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|add_slc
-argument_list|(
+parameter_list|(
 name|func
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|,
+parameter_list|,
 name|val
-argument_list|)
+parameter_list|)
 specifier|register
-name|unsigned
 name|char
 name|func
-operator|,
+decl_stmt|,
 name|flag
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
+specifier|register
 name|cc_t
 name|val
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -473,6 +465,10 @@ operator|*
 name|slcptr
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|func
 operator|)
 operator|==
@@ -491,6 +487,10 @@ operator|*
 name|slcptr
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|flag
 operator|)
 operator|==
@@ -525,7 +525,7 @@ operator|=
 literal|0xff
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of add_slc */
@@ -535,18 +535,16 @@ begin_comment
 comment|/*  * start_slc  *  * Get ready to process incoming slc's and respond to them.  *  * The parameter getit is non-zero if it is necessary to grab a copy  * of the terminal control structures.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|start_slc
-argument_list|(
+parameter_list|(
 name|getit
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|getit
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|slcchange
 operator|=
@@ -588,7 +586,7 @@ operator|+
 literal|4
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of start_slc */
@@ -598,21 +596,19 @@ begin_comment
 comment|/*  * end_slc  *  * Finish up the slc negotiation.  If something to send, then send it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|end_slc
-argument_list|(
+parameter_list|(
 name|bufp
-argument_list|)
+parameter_list|)
 specifier|register
 name|unsigned
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|bufp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -645,7 +641,11 @@ literal|0
 operator|)
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -725,8 +725,13 @@ expr_stmt|;
 comment|/* force it out immediately */
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of end_slc */
@@ -736,31 +741,27 @@ begin_comment
 comment|/*  * process_slc  *  * Figure out what to do about the client's slc  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|process_slc
-argument_list|(
+parameter_list|(
 name|func
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|,
+parameter_list|,
 name|val
-argument_list|)
+parameter_list|)
 specifier|register
 name|unsigned
 name|char
 name|func
-operator|,
+decl_stmt|,
 name|flag
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
+specifier|register
 name|cc_t
 name|val
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -814,9 +815,7 @@ name|default_slc
 argument_list|()
 expr_stmt|;
 name|send_slc
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -828,9 +827,7 @@ name|SLC_VARIABLE
 condition|)
 block|{
 name|send_slc
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 return|return;
@@ -908,7 +905,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of process_slc */
@@ -918,31 +915,26 @@ begin_comment
 comment|/*  * change_slc  *  * Process a request to change one of our special characters.  * Compare client's request with what we are capable of supporting.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|change_slc
-argument_list|(
+parameter_list|(
 name|func
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|,
+parameter_list|,
 name|val
-argument_list|)
+parameter_list|)
 specifier|register
-name|unsigned
 name|char
 name|func
-operator|,
+decl_stmt|,
 name|flag
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
+specifier|register
 name|cc_t
 name|val
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1313,7 +1305,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of change_slc */
@@ -1351,12 +1343,10 @@ begin_comment
 comment|/*  * check_slc  *  * Check the special characters in use and notify the client if any have  * changed.  Only those characters that are capable of being changed are  * likely to have changed.  If a local change occurs, kick the support level  * and flags up to the defaults.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|check_slc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1556,7 +1546,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* check_slc */
@@ -1566,28 +1556,24 @@ begin_comment
 comment|/*  * do_opt_slc  *  * Process an slc option buffer.  Defer processing of incoming slc's  * until after the terminal state has been processed.  Save the first slc  * request that comes along, but discard all others.  *  * ptr points to the beginning of the buffer, len is the length.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|do_opt_slc
-argument_list|(
+parameter_list|(
 name|ptr
-argument_list|,
+parameter_list|,
 name|len
-argument_list|)
+parameter_list|)
 specifier|register
+name|unsigned
 name|char
-operator|*
+modifier|*
 name|ptr
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|unsigned
@@ -1600,25 +1586,15 @@ name|cc_t
 name|val
 decl_stmt|;
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|end
 init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|ptr
 operator|+
 name|len
-operator|)
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|terminit
@@ -1738,7 +1714,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of do_opt_slc */
@@ -1748,12 +1724,10 @@ begin_comment
 comment|/*  * deferslc  *  * Do slc stuff that was deferred.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|deferslc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1772,6 +1746,9 @@ argument_list|,
 name|def_slclen
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|end_slc
 argument_list|(
 literal|0
@@ -1797,7 +1774,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of deferslc */

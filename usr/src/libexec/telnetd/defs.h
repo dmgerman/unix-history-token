@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -73,14 +73,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|NO_GETTYTAB
+name|DIAGNOSTICS
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|UNICOS50
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|UNICOS5
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|DIAGNOSTICS
+name|UNICOS5
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -170,6 +190,12 @@ directive|define
 name|TELCMDS
 end_define
 
+begin_define
+define|#
+directive|define
+name|SLC_NAMES
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -227,6 +253,12 @@ end_endif
 begin_comment
 comment|/* CRAY */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_include
 include|#
@@ -291,6 +323,23 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -464,6 +513,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -510,12 +576,6 @@ ifdef|#
 directive|ifdef
 name|CRAY
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
 
 begin_ifdef
 ifdef|#

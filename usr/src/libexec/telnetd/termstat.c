@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.8 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,23 +38,7 @@ begin_comment
 comment|/*  * local variables  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINEMODE
-end_ifdef
-
 begin_decl_stmt
-specifier|static
-name|int
-name|_terminit
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|def_tspeed
 init|=
@@ -75,7 +59,6 @@ name|TIOCSWINSZ
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|int
 name|def_row
 init|=
@@ -92,11 +75,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINEMODE
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|_terminit
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
-endif|LINEMODE
 end_endif
+
+begin_comment
+comment|/* LINEMODE */
+end_comment
 
 begin_if
 if|#
@@ -139,17 +140,20 @@ begin_comment
 comment|/*  * localstat  *  * This function handles all management of linemode.  *  * Linemode allows the client to do the local editing of data  * and send only complete lines to the server.  Linemode state is  * based on the state of the pty driver.  If the pty is set for  * external processing, then we can use linemode.  Further, if we  * can use real linemode, then we can look at the edit control bits  * in the pty to determine what editing the client should do.  *  * Linemode support uses the following state flags to keep track of  * current and desired linemode state.  *	alwayslinemode : true if -l was specified on the telnetd  * 	command line.  It means to have linemode on as much as  *	possible.  *  * 	lmodetype: signifies whether the client can  *	handle real linemode, or if use of kludgeomatic linemode  *	is preferred.  It will be set to one of the following:  *		REAL_LINEMODE : use linemode option  *		KLUDGE_LINEMODE : use kludge linemode  *		NO_LINEMODE : client is ignorant of linemode  *  *	linemode, uselinemode : linemode is true if linemode  *	is currently on, uselinemode is the state that we wish  *	to be in.  If another function wishes to turn linemode  *	on or off, it sets or clears uselinemode.  *  *	editmode, useeditmode : like linemode/uselinemode, but  *	these contain the edit mode states (edit and trapsig).  *  * The state variables correspond to some of the state information  * in the pty.  *	linemode:  *		In real linemode, this corresponds to whether the pty  *		expects external processing of incoming data.  *		In kludge linemode, this more closely corresponds to the  *		whether normal processing is on or not.  (ICANON in  *		system V, or COOKED mode in BSD.)  *		If the -l option was specified (alwayslinemode), then  *		an attempt is made to force external processing on at  *		all times.  *  * The following heuristics are applied to determine linemode  * handling within the server.  *	1) Early on in starting up the server, an attempt is made  *	   to negotiate the linemode option.  If this succeeds  *	   then lmodetype is set to REAL_LINEMODE and all linemode  *	   processing occurs in the context of the linemode option.  *	2) If the attempt to negotiate the linemode option failed,  *	   then we try to use kludge linemode.  We test for this  *	   capability by sending "do Timing Mark".  If a positive  *	   response comes back, then we assume that the client  *	   understands kludge linemode (ech!) and the  *	   lmodetype flag is set to KLUDGE_LINEMODE.  *	3) Otherwise, linemode is not supported at all and  *	   lmodetype remains set to NO_LINEMODE (which happens  *	   to be 0 for convenience).  *	4) At any time a command arrives that implies a higher  *	   state of linemode support in the client, we move to that  *	   linemode support.  *  * A short explanation of kludge linemode is in order here.  *	1) The heuristic to determine support for kludge linemode  *	   is to send a do timing mark.  We assume that a client  *	   that supports timing marks also supports kludge linemode.  *	   A risky proposition at best.  *	2) Further negotiation of linemode is done by changing the  *	   the server's state regarding SGA.  If server will SGA,  *	   then linemode is off, if server won't SGA, then linemode  *	   is on.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|localstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|void
 name|netflush
 parameter_list|()
 function_decl|;
+name|int
+name|need_will_echo
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -169,7 +173,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|defined(CRAY2)&& defined(UNICOS5)
+comment|/* defined(CRAY2)&& defined(UNICOS5) */
 comment|/* 	 * Check for state of BINARY options. 	 */
 if|if
 condition|(
@@ -324,7 +328,7 @@ name|uselinemode
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Do echo mode handling as soon as we know what the 	 * linemode is going to be. 	 * If the pty has echo turned off, then tell the client that 	 * the server will echo.  If echo is on, then the server 	 * will echo if in character mode, but in linemode the 	 * client should do local echoing.  The state machine will 	 * not send anything if it is unnecessary, so don't worry 	 * about that here. 	 */
+comment|/* 	 * Do echo mode handling as soon as we know what the 	 * linemode is going to be. 	 * If the pty has echo turned off, then tell the client that 	 * the server will echo.  If echo is on, then the server 	 * will echo if in character mode, but in linemode the 	 * client should do local echoing.  The state machine will 	 * not send anything if it is unnecessary, so don't worry 	 * about that here. 	 * 	 * If we need to send the WILL ECHO (because echo is off), 	 * then delay that until after we have changed the MODE. 	 * This way, when the user is turning off both editing 	 * and echo, the client will get editing turned off first. 	 * This keeps the client from going into encryption mode 	 * and then right back out if it is doing auto-encryption 	 * when passwords are being typed. 	 */
 if|if
 condition|(
 name|uselinemode
@@ -343,12 +347,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|send_will
-argument_list|(
-name|TELOPT_ECHO
-argument_list|,
+name|need_will_echo
+operator|=
 literal|1
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If linemode is being turned off, send appropriate 	 * command and then we're all done. 	 */
@@ -369,6 +370,7 @@ name|lmodetype
 operator|==
 name|REAL_LINEMODE
 condition|)
+block|{
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
@@ -382,6 +384,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KLUDGELINEMODE
+block|}
 elseif|else
 if|if
 condition|(
@@ -399,6 +402,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
+name|send_will
+argument_list|(
+name|TELOPT_ECHO
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|linemode
 operator|=
 name|uselinemode
@@ -669,6 +679,9 @@ expr_stmt|;
 name|check_slc
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|end_slc
 argument_list|(
 literal|0
@@ -677,6 +690,17 @@ expr_stmt|;
 block|}
 name|done
 label|:
+if|if
+condition|(
+name|need_will_echo
+condition|)
+name|send_will
+argument_list|(
+name|TELOPT_ECHO
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Some things should be deferred until after the pty state has 	 * been set by the local process.  Do those things that have been 	 * deferred now.  This only happens once. 	 */
 if|if
 condition|(
@@ -701,7 +725,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of localstat */
@@ -720,26 +744,24 @@ begin_comment
 comment|/*  * clientstat  *  * Process linemode related requests from the client.  * Client can request a change to only one of linemode, editmode or slc's  * at a time, and if using kludge linemode, then only linemode may be  * affected.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|clientstat
-argument_list|(
+parameter_list|(
 name|code
-argument_list|,
+parameter_list|,
 name|parm1
-argument_list|,
+parameter_list|,
 name|parm2
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|code
-operator|,
+decl_stmt|,
 name|parm1
-operator|,
+decl_stmt|,
 name|parm2
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|void
 name|netflush
@@ -846,7 +868,6 @@ expr_stmt|;
 if|if
 condition|(
 name|tty_istrapsig
-argument_list|()
 condition|)
 name|useeditmode
 operator||=
@@ -953,6 +974,14 @@ name|editmode
 operator|)
 condition|)
 block|{
+comment|/* 			 * This check is for a timing problem.  If the 			 * state of the tty has changed (due to the user 			 * application) we need to process that info 			 * before we write in the state contained in the 			 * ack!!!  This gets out the new MODE request, 			 * and when the ack to that command comes back 			 * we'll set it and be in the right mode. 			 */
+if|if
+condition|(
+name|ack
+condition|)
+name|localstat
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|changed
@@ -1067,6 +1096,14 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
+name|def_col
+operator|=
+name|parm1
+expr_stmt|;
+name|def_row
+operator|=
+name|parm2
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LINEMODE
@@ -1078,17 +1115,7 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-block|{
-name|def_col
-operator|=
-name|parm1
-expr_stmt|;
-name|def_row
-operator|=
-name|parm2
-expr_stmt|;
 return|return;
-block|}
 endif|#
 directive|endif
 comment|/* LINEMODE */
@@ -1131,6 +1158,14 @@ case|case
 name|TELOPT_TSPEED
 case|:
 block|{
+name|def_tspeed
+operator|=
+name|parm1
+expr_stmt|;
+name|def_rspeed
+operator|=
+name|parm2
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LINEMODE
@@ -1142,29 +1177,19 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-block|{
-name|def_tspeed
-operator|=
-name|parm1
-expr_stmt|;
-name|def_rspeed
-operator|=
-name|parm2
-expr_stmt|;
 return|return;
-block|}
 endif|#
 directive|endif
 comment|/* LINEMODE */
-comment|/* 		 * Change terminal speed as requested by client. 		 */
-name|tty_tspeed
-argument_list|(
-name|parm1
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Change terminal speed as requested by client. 		 * We set the receive speed first, so that if we can't 		 * store seperate receive and transmit speeds, the transmit 		 * speed will take precedence. 		 */
 name|tty_rspeed
 argument_list|(
 name|parm2
+argument_list|)
+expr_stmt|;
+name|tty_tspeed
+argument_list|(
+name|parm1
 argument_list|)
 expr_stmt|;
 name|set_termbuf
@@ -1200,7 +1225,7 @@ name|netflush
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of clientstat */
@@ -1220,26 +1245,22 @@ name|UNICOS5
 argument_list|)
 end_if
 
-begin_macro
+begin_function
+name|void
 name|termstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|needtermstat
 operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|_termstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|needtermstat
 operator|=
@@ -1255,7 +1276,7 @@ name|rcv_ioctl
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1276,12 +1297,10 @@ begin_comment
 comment|/*  * defer_terminit  *  * Some things should not be done until after the login process has started  * and all the pty modes are set to what they are supposed to be.  This  * function is called when the pty state has been processed for the first time.   * It calls other functions that do things that were deferred in each module.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|defer_terminit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* 	 * local stuff that got deferred. 	 */
 if|if
@@ -1322,6 +1341,21 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ws
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ws
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ws
 operator|.
 name|ws_col
@@ -1359,7 +1393,7 @@ name|deferslc
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of defer_terminit */
