@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.117 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.112.1.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7547,11 +7547,31 @@ begin_comment
 comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|checkblk
 init|=
-literal|0
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug10
+init|=
+block|{
+literal|"checkblk"
+block|,
+operator|&
+name|checkblk
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -7767,10 +7787,6 @@ name|struct
 name|cluster_save
 modifier|*
 name|b_save
-init|=
-name|bp
-operator|->
-name|b_saveaddr
 decl_stmt|;
 name|int
 name|i
@@ -7778,6 +7794,17 @@ decl_stmt|;
 name|daddr_t
 name|bn
 decl_stmt|;
+name|b_save
+operator|=
+operator|(
+expr|struct
+name|cluster_save
+operator|*
+operator|)
+name|bp
+operator|->
+name|b_saveaddr
+expr_stmt|;
 for|for
 control|(
 name|i
