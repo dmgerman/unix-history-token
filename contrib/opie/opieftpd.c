@@ -2641,11 +2641,9 @@ argument|);
 if|#
 directive|if
 name|DOTITLE
-argument|sprintf(proctitle,
-literal|"%s: anonymous/%.*s"
-argument|, remotehost, 	    sizeof(proctitle) - sizeof(remotehost) - 	    sizeof(
-literal|": anonymous/"
-argument|), passwd);     setproctitle(proctitle);
+argument|snprintf(proctitle, sizeof(proctitle),
+literal|"%s: anonymous/%s"
+argument|, remotehost, 	passwd);     setproctitle(proctitle);
 endif|#
 directive|endif
 comment|/* DOTITLE */
@@ -2663,7 +2661,7 @@ argument|, pw->pw_name);
 if|#
 directive|if
 name|DOTITLE
-argument|sprintf(proctitle,
+argument|snprintf(proctitle, sizeof(proctitle),
 literal|"%s: %s"
 argument|, remotehost, pw->pw_name);     setproctitle(proctitle);
 endif|#
@@ -2685,9 +2683,7 @@ argument|)
 argument_list|,
 argument|closefunc = fclose;     st.st_size =
 literal|0
-argument|;   } else {     char line[BUFSIZ];      sprintf(line, cmd, name)
-argument_list|,
-argument|name = line;     fin = ftpd_popen(line,
+argument|;   } else {     char line[BUFSIZ];      snprintf(line, sizeof(line), cmd, name);     name = line;     fin = ftpd_popen(line,
 literal|"r"
 argument|)
 argument_list|,
@@ -2855,7 +2851,7 @@ argument|file_size = size;   byte_count =
 literal|0
 argument|;   if (size != (off_t) -
 literal|1
-argument|)     sprintf(sizebuf,
+argument|)     snprintf(sizebuf, sizeof(sizebuf),
 literal|" (%ld bytes)"
 argument|, size);   else     strcpy(sizebuf,
 literal|""
@@ -3044,7 +3040,7 @@ argument|); }  VOIDRET statfilecmd FUNCTION((filename), char *filename) {   char
 if|#
 directive|if
 name|HAVE_LS_G_FLAG
-argument|sprintf(line,
+argument|snprintf(line, sizeof(line),
 literal|"%s %s"
 argument|,
 literal|"/bin/ls -lgA"
@@ -3052,7 +3048,7 @@ argument|, filename);
 else|#
 directive|else
 comment|/* HAVE_LS_G_FLAG */
-argument|sprintf(line,
+argument|snprintf(line, sizeof(line),
 literal|"%s %s"
 argument|,
 literal|"/bin/ls -lA"
@@ -3256,11 +3252,15 @@ argument|);   else     ack(
 literal|"RNTO"
 argument|); }  static VOIDRET dolog FUNCTION((sin), struct sockaddr_in *sin) {   struct hostent *hp = gethostbyaddr((char *)&sin->sin_addr, 				     sizeof(struct in_addr), AF_INET);   time_t t
 argument_list|,
-argument|time();    if (hp)     strncpy(remotehost, hp->h_name, sizeof(remotehost));   else     strncpy(remotehost, inet_ntoa(sin->sin_addr), sizeof(remotehost));
+argument|time();    if (hp)     strncpy(remotehost, hp->h_name, sizeof(remotehost));   else     strncpy(remotehost, inet_ntoa(sin->sin_addr), sizeof(remotehost));   remotehost[sizeof(remotehost) -
+literal|1
+argument|] =
+literal|'\0'
+argument|;
 if|#
 directive|if
 name|DOTITLE
-argument|sprintf(proctitle,
+argument|snprintf(proctitle, sizeof(proctitle),
 literal|"%s: connected"
 argument|, remotehost);   setproctitle(proctitle);
 endif|#
@@ -3410,7 +3410,7 @@ argument|;   for (count =
 literal|1
 argument|; count<
 literal|100
-argument|; count++) {     sprintf(cp,
+argument|; count++) {     snprintf(cp, sizeof(new) - (cp - new),
 literal|"%d"
 argument|, count);     if (stat(new,&st)<
 literal|0
@@ -3498,7 +3498,7 @@ argument|] ==
 literal|'.'
 argument|&& 	  (strlen(dir->d_name) ==
 literal|2
-argument|)) 	continue;        sprintf(nbuf,
+argument|)) 	continue;        snprintf(nbuf, sizeof(nbuf),
 literal|"%s/%s"
 argument|, dirname, dir->d_name);
 comment|/* We have to do a stat to insure it's not a directory or special file. */
@@ -3563,7 +3563,7 @@ argument|VOIDRET setproctitle FUNCTION((fmt, a, b, c), char *fmt AND int a AND i
 argument_list|,
 argument|*bp
 argument_list|,
-argument|ch;   register int i;   char buf[BUFSIZ];    sprintf(buf, fmt, a, b, c);
+argument|ch;   register int i;   char buf[BUFSIZ];    snprintf(buf, sizeof(buf), fmt, a, b, c);
 comment|/* make ps print our process name */
 argument|p = Argv[
 literal|0
