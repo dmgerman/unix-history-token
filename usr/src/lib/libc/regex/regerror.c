@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regerror.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regerror.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regerror.c	8.2 (Berkeley) %G%"
+literal|"@(#)regerror.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,17 +106,20 @@ specifier|static
 name|char
 modifier|*
 name|regatoi
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|regex_t
-modifier|*
+operator|*
 name|preg
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|localbuf
-parameter_list|)
-function_decl|;
+operator|)
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
