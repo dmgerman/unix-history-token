@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.20 (Berkeley) %G%"
+literal|"@(#)startup.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,19 +620,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Use a minimum metric of one; 			 * treat the interface metric (default 0) 			 * as an increment to the hop count of one. 			 */
-name|ifs
-operator|.
-name|int_metric
-operator|=
-name|ifm
-operator|->
-name|ifm_data
-operator|.
-name|ifi_metric
-operator|+
-literal|1
-expr_stmt|;
 name|no_ipaddr
 operator|=
 literal|1
@@ -920,6 +907,17 @@ operator|*
 name|brdaddr
 expr_stmt|;
 block|}
+comment|/* 		 * Use a minimum metric of one; 		 * treat the interface metric (default 0) 		 * as an increment to the hop count of one. 		 */
+name|ifs
+operator|.
+name|int_metric
+operator|=
+name|ifam
+operator|->
+name|ifam_metric
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|netmask
