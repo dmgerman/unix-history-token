@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.8 (Berkeley) %G%"
+literal|"@(#)mount.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1282,6 +1282,12 @@ index|[
 literal|12
 index|]
 decl_stmt|;
+name|char
+name|mntpath
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|mntopts
@@ -1325,6 +1331,35 @@ condition|)
 name|flags
 operator||=
 name|MNT_FORCE
+expr_stmt|;
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|name
+argument_list|,
+name|mntpath
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|mntpath
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|name
+operator|=
+name|mntpath
 expr_stmt|;
 if|if
 condition|(
