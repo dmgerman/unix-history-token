@@ -586,7 +586,11 @@ init|=
 literal|0x4000
 block|,
 comment|/* we're reading config database from disk */
-comment|/* 0x8000 going begging */
+name|VF_FORCECONFIG
+init|=
+literal|0x8000
+block|,
+comment|/* configure drives even with different names */
 name|VF_NEWBORN
 init|=
 literal|0x10000
