@@ -81,6 +81,18 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_expr_stmt
 name|__warn_references
 argument_list|(
@@ -121,7 +133,19 @@ index|[]
 init|=
 literal|"warning: this program uses gets(), which is unsafe.\n"
 decl_stmt|;
-comment|/* Orientation set by getchar(). */
+name|FLOCKFILE
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
+name|ORIENT
+argument_list|(
+name|stdin
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -159,8 +183,10 @@ init|;
 operator|(
 name|c
 operator|=
-name|getchar
-argument_list|()
+name|__sgetc
+argument_list|(
+name|stdin
+argument_list|)
 operator|)
 operator|!=
 literal|'\n'
@@ -178,11 +204,18 @@ name|s
 operator|==
 name|buf
 condition|)
+block|{
+name|FUNLOCKFILE
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 else|else
 break|break;
 else|else
@@ -196,6 +229,11 @@ operator|*
 name|s
 operator|=
 literal|0
+expr_stmt|;
+name|FUNLOCKFILE
+argument_list|(
+name|stdin
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
