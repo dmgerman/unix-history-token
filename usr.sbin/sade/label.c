@@ -6389,8 +6389,6 @@ name|p
 decl_stmt|;
 name|u_long
 name|flags
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|i
@@ -6638,6 +6636,10 @@ name|Chunk
 modifier|*
 name|tmp
 decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6679,12 +6681,6 @@ argument_list|)
 condition|)
 name|flags
 operator||=
-name|CHUNK_IS_ROOT
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
 name|CHUNK_IS_ROOT
 expr_stmt|;
 block|}
