@@ -776,7 +776,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setfmac [-Rh] label path [...]\n"
+literal|"usage: setfmac [-Rh] label file ...\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -784,7 +784,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setfsmac [-evx] [-f specfile [...]] [-s specfile [...]] path [...]\n"
+literal|"usage: setfsmac [-ehvx] [-f specfile [...]] [-s specfile [...]] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
