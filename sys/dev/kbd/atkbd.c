@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: atkbd.c,v 1.8 1999/05/09 05:00:19 yokota Exp $  */
+comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: atkbd.c,v 1.9 1999/05/18 11:05:58 yokota Exp $  */
 end_comment
 
 begin_include
@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -101,30 +107,11 @@ directive|include
 file|<dev/kbd/atkbdcreg.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<isa/isareg.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|devclass_t
-name|atkbd_devclass
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -137,69 +124,12 @@ define|\
 value|((atkbd_softc_t *)devclass_get_softc(atkbd_devclass, unit))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __i386__ */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
-name|struct
-name|isa_driver
-name|atkbddriver
+name|devclass_t
+name|atkbd_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX: a kludge; see below */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|atkbd_softc_t
-modifier|*
-name|atkbd_softc
-index|[
-name|NATKBD
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ATKBD_SOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|(((unit)>= NATKBD) ? NULL : atkbd_softc[(unit)])
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __i386__ */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -296,33 +226,6 @@ end_endif
 begin_comment
 comment|/* KBD_INSTALL_CDEV */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_endif
-unit|atkbd_softc_t *atkbd_get_softc(int unit) { 	atkbd_softc_t *sc;  	if (unit>= sizeof(atkbd_softc)/sizeof(atkbd_softc[0])) 		return NULL; 	sc = atkbd_softc[unit]; 	if (sc == NULL) { 		sc = atkbd_softc[unit] 		   = malloc(sizeof(*sc), M_DEVBUF, M_NOWAIT); 		if (sc == NULL) 			return NULL; 		bzero(sc, sizeof(*sc)); 	} 	return sc; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __i386__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
