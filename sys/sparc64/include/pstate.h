@@ -162,6 +162,20 @@ name|PSTATE_KERNEL
 value|(PSTATE_NORMAL | PSTATE_IE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PSTATE_SECURE
+parameter_list|(
+name|pstate
+parameter_list|)
+value|(1)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
