@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.5 1995/05/31 23:08:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.6 1995/05/31 23:51:15 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -619,8 +619,12 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-specifier|static
 name|char
+name|extract
+index|[
+literal|64
+index|]
+decl_stmt|,
 modifier|*
 name|default_lang
 init|=
@@ -722,11 +726,24 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|extract
+argument_list|,
+literal|64
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|cp
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 name|vsystem
 argument_list|(
 literal|"cd /stand&& zcat help.tgz | cpio --format=tar -idv %s> /dev/null 2>&1"
 argument_list|,
-name|buf
+name|extract
 argument_list|)
 expr_stmt|;
 if|if
@@ -741,13 +758,9 @@ name|buf
 return|;
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
 name|cp
-argument_list|,
+operator|==
 name|default_lang
-argument_list|)
 condition|)
 break|break;
 name|cp
