@@ -77,9 +77,7 @@ return|return
 operator|(
 name|__maskrune
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -108,9 +106,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_A
 operator||
@@ -141,9 +137,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_A
 argument_list|)
@@ -171,9 +165,7 @@ block|{
 return|return
 operator|(
 operator|(
-operator|(
 name|c
-operator|)
 operator|&
 operator|~
 literal|0x7F
@@ -205,9 +197,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_B
 argument_list|)
@@ -236,9 +226,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_C
 argument_list|)
@@ -267,9 +255,7 @@ return|return
 operator|(
 name|__isctype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_D
 argument_list|)
@@ -298,9 +284,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_G
 argument_list|)
@@ -329,9 +313,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_X
 argument_list|)
@@ -360,9 +342,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_I
 argument_list|)
@@ -391,9 +371,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_L
 argument_list|)
@@ -422,9 +400,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_D
 argument_list|)
@@ -453,9 +429,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_Q
 argument_list|)
@@ -484,9 +458,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_R
 argument_list|)
@@ -515,9 +487,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_P
 argument_list|)
@@ -546,9 +516,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 literal|0xFFFFFF00L
 argument_list|)
@@ -577,9 +545,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_S
 argument_list|)
@@ -608,9 +574,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_T
 argument_list|)
@@ -639,9 +603,7 @@ return|return
 operator|(
 name|__istype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_U
 argument_list|)
@@ -670,9 +632,7 @@ return|return
 operator|(
 name|__isctype
 argument_list|(
-operator|(
 name|c
-operator|)
 argument_list|,
 name|_CTYPE_X
 argument_list|)
@@ -699,9 +659,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-operator|(
 name|c
-operator|)
 operator|&
 literal|0x7F
 operator|)
