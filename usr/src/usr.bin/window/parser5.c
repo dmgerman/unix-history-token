@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser5.c	3.1 84/01/12"
+literal|"@(#)parser5.c	3.2 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"parser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"var.h"
 end_include
 
 begin_comment
