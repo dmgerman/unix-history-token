@@ -4344,6 +4344,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Try to guess whether speeds are "encoded" (4.2BSD) or just numeric (4.4BSD).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|B4800
+operator|!=
+literal|4800
+end_if
+
+begin_define
+define|#
+directive|define
+name|DECODE_BAUD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
+end_ifdef
+
+begin_comment
 comment|/*  * A table of available terminal speeds  */
 end_comment
 
@@ -4468,6 +4497,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DECODE_BUAD */
+end_comment
+
 begin_function
 name|void
 name|tty_tspeed
@@ -4478,6 +4516,9 @@ name|int
 name|val
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
 specifier|register
 name|struct
 name|termspeeds
@@ -4521,6 +4562,20 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* DECODE_BUAD */
+name|cfsetospeed
+argument_list|(
+operator|&
+name|termbuf
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DECODE_BUAD */
 block|}
 end_function
 
@@ -4534,6 +4589,9 @@ name|int
 name|val
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
 specifier|register
 name|struct
 name|termspeeds
@@ -4577,6 +4635,20 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* DECODE_BAUD */
+name|cfsetispeed
+argument_list|(
+operator|&
+name|termbuf
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DECODE_BAUD */
 block|}
 end_function
 
