@@ -4208,6 +4208,28 @@ value|0x0003
 end_define
 
 begin_comment
+comment|/*  * Abocom vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_ABOCOM
+value|0x13d1
+end_define
+
+begin_comment
+comment|/*  * Abocom device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_FE2500
+value|0xAB02
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 

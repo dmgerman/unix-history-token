@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ee.columbia.edu>
 end_comment
 
 begin_comment
-comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  * Xircom X3201 (www.xircom.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  * Xircom X3201 (www.xircom.com)  * Abocom FE2500  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -424,6 +424,14 @@ block|,
 name|DC_DEVICEID_X3201
 block|,
 literal|"Xircom X3201 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_VENDORID_ABOCOM
+block|,
+name|DC_DEVICEID_FE2500
+block|,
+literal|"Abocom FE2500 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -8872,6 +8880,9 @@ expr_stmt|;
 break|break;
 case|case
 name|DC_DEVICEID_AN985
+case|:
+case|case
+name|DE_DEVICEID_FE2500
 case|:
 name|sc
 operator|->

@@ -2038,6 +2038,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT_DEVICEID_8138
+value|0x8138
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT_DEVICEID_8139
 value|0x8139
 end_define

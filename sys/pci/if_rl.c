@@ -262,6 +262,14 @@ literal|"RealTek 8139 10/100BaseTX"
 block|}
 block|,
 block|{
+name|RT_VENDORID
+block|,
+name|RT_DEVICEID_8138
+block|,
+literal|"RealTek 8139 10/100BaseTX CardBus"
+block|}
+block|,
+block|{
 name|ACCTON_VENDORID
 block|,
 name|ACCTON_DEVICEID_5030
@@ -3723,6 +3731,10 @@ operator|||
 name|rl_did
 operator|==
 name|ADDTRON_DEVICEID_8139
+operator|||
+name|rl_did
+operator|==
+name|RT_DEVICEID_8138
 condition|)
 name|sc
 operator|->
