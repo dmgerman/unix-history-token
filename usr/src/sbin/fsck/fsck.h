@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	5.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -386,7 +386,7 @@ name|int
 name|id_numfrags
 decl_stmt|;
 comment|/* number of frags contained in block */
-name|long
+name|quad_t
 name|id_filesize
 decl_stmt|;
 comment|/* for DATA nodes, the size of the directory */
