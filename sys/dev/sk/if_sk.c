@@ -5643,6 +5643,22 @@ name|SK_TX_RING_CNT
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 	 * Call MI attach routine. 	 */
+name|ether_ifattach
+argument_list|(
+name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
+argument_list|)
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sc_if
+operator|->
+name|sk_tick_ch
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do miibus setup. 	 */
 name|sk_init_xmac
 argument_list|(
@@ -5690,6 +5706,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
+argument_list|)
+expr_stmt|;
 name|SK_UNLOCK
 argument_list|(
 name|sc
@@ -5701,22 +5724,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Call MI attach routine. 	 */
-name|ether_ifattach
-argument_list|(
-name|ifp
-argument_list|,
-name|ETHER_BPF_SUPPORTED
-argument_list|)
-expr_stmt|;
-name|callout_handle_init
-argument_list|(
-operator|&
-name|sc_if
-operator|->
-name|sk_tick_ch
-argument_list|)
-expr_stmt|;
 name|SK_UNLOCK
 argument_list|(
 name|sc
