@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	6.1	83/07/29	*/
+comment|/*	uipc_mbuf.c	6.2	84/02/22	*/
 end_comment
 
 begin_include
@@ -814,9 +814,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|type
-decl_stmt|;
 if|if
 condition|(
 name|len
@@ -842,12 +839,6 @@ name|panic
 argument_list|(
 literal|"m_copy"
 argument_list|)
-expr_stmt|;
-name|type
-operator|=
-name|m
-operator|->
-name|m_type
 expr_stmt|;
 while|while
 condition|(
@@ -931,7 +922,9 @@ name|n
 argument_list|,
 name|M_WAIT
 argument_list|,
-name|type
+name|m
+operator|->
+name|m_type
 argument_list|)
 expr_stmt|;
 operator|*
