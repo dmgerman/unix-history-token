@@ -166,11 +166,11 @@ case|:
 block|{
 name|printf
 argument_list|(
-literal|"bktr_mem: memory holder unloaded\n"
+literal|"bktr_mem: memory holder cannot be unloaded\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|EBUSY
 return|;
 block|}
 default|default:
@@ -553,7 +553,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The load order is First so bktr_mem loads (and initialises) before bktr */
+comment|/* The load order is First and module type is Driver to make sure bktr_mem    loads (and initialises) before bktr when both are loaded together */
 end_comment
 
 begin_expr_stmt
@@ -563,7 +563,7 @@ name|bktr_mem
 argument_list|,
 name|bktr_mem_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_DRIVERS
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|)
