@@ -1133,7 +1133,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|matchsubj
+name|matchfield
 argument_list|(
 operator|*
 name|np
@@ -3172,7 +3172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * See if the given string matches inside the subject field of the  * given message.  For the purpose of the scan, we ignore case differences.  * If it does, return true.  The string search argument is assumed to  * have the form "/search-string."  If it is of the form "/," we use the  * previous search string.  */
+comment|/*  * See if the given substring is contained within the specified field. If  * 'searchheaders' is set, then the form '/x:y' will be accepted and matches  * any message with the substring 'y' in field 'x'. If 'x' is omitted or  * 'searchheaders' is not set, then the search matches any messages  * with the substring 'y' in the 'Subject'. The search is case insensitive.  *  * The form '/to:y' is a special case, and will match all messages  * containing the substring 'y' in the 'To', 'Cc', or 'Bcc' header  * fields. The search for 'to' is case sensitive, so that '/To:y' can  * be used to limit the search to just the 'To' field.  */
 end_comment
 
 begin_decl_stmt
@@ -3186,7 +3186,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|matchsubj
+name|matchfield
 parameter_list|(
 name|str
 parameter_list|,
@@ -3274,14 +3274,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Check for special case "/To:" */
+comment|/* Check for special case "/to:" */
 if|if
 condition|(
-name|strncasecmp
+name|strncmp
 argument_list|(
 name|str
 argument_list|,
-literal|"To:"
+literal|"to:"
 argument_list|,
 literal|3
 argument_list|)

@@ -1601,7 +1601,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|matchsubj
+name|matchfield
 parameter_list|(
 name|char
 modifier|*
