@@ -279,6 +279,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_IOMEGA
+value|0x059b
+end_define
+
+begin_comment
+comment|/* Iomega */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_BELKIN
 value|0x05ab
 end_define
@@ -784,6 +795,21 @@ end_define
 
 begin_comment
 comment|/* mouse 29UO */
+end_comment
+
+begin_comment
+comment|/* Iomega products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_IOMEGA_ZIP100
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Zip 100 */
 end_comment
 
 begin_comment

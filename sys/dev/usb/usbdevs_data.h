@@ -355,6 +355,18 @@ literal|"mouse 29UO"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_IOMEGA
+block|,
+name|USB_PRODUCT_IOMEGA_ZIP100
+block|,
+literal|0
+block|,
+literal|"Iomega"
+block|,
+literal|"Zip 100"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_BELKIN
 block|,
 name|USB_PRODUCT_BELKIN_F5U002
@@ -758,6 +770,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Agiler"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_IOMEGA
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Iomega"
 block|,
 name|NULL
 block|, 	}
