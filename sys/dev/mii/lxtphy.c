@@ -586,14 +586,6 @@ expr_stmt|;
 undef|#
 directive|undef
 name|ADD
-if|if
-condition|(
-name|sc
-operator|->
-name|mii_capabilities
-operator|&
-name|BMSR_MEDIAMASK
-condition|)
 name|mii_add_media
 argument_list|(
 name|mii

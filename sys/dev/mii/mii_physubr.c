@@ -959,6 +959,24 @@ name|sep
 init|=
 literal|""
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|bmsr
+operator|&
+name|BMSR_MEDIAMASK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no media present"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 define|#
 directive|define
 name|ADD

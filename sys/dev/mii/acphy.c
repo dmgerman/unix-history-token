@@ -488,14 +488,6 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|mii_capabilities
-operator|&
-name|BMSR_MEDIAMASK
-condition|)
 name|mii_add_media
 argument_list|(
 name|mii
