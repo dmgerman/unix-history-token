@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.47	83/05/12	*/
+comment|/*	ip_output.c	1.48	83/05/15	*/
 end_comment
 
 begin_include
@@ -69,11 +69,22 @@ directive|include
 file|"../netinet/ip_var.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../vax/mtpr.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
