@@ -105,7 +105,7 @@ parameter_list|)
 block|{
 asm|__asm __volatile("swp	%0, %1, [%2]"
 block|:
-literal|"=r"
+literal|"=&r"
 operator|(
 name|val
 operator|)
