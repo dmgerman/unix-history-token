@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.2 (Berkeley) %G%"
+literal|"@(#)strings.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +683,7 @@ name|oflg
 condition|)
 name|printf
 argument_list|(
-literal|"%07lo %s"
+literal|"%07ld %s"
 argument_list|,
 name|foff
 operator|-
