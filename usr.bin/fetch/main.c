@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.8 1996/07/05 00:06:36 jmz Exp $ */
+comment|/* $Id: main.c,v 1.9 1996/07/18 00:08:02 jkh Exp $ */
 end_comment
 
 begin_include
@@ -363,7 +363,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-D:HINPMV:Lqpr] [-o outputfile]<-f file -h host [-c dir]| URL>\n"
+literal|"usage: %s [-D:HINPMV:Lqmnpr] [-o outputfile]<-f file -h host [-c dir]| URL>\n"
 argument_list|,
 name|progname
 argument_list|)
