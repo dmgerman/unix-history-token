@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pbioio.h>
+file|<dev/pbio/pbioio.h>
 end_include
 
 begin_comment
