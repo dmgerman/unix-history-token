@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vfsops.c,v 1.4 1993/11/25 01:37:13 wollman Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vfsops.c,v 1.5 1993/12/19 02:07:58 ache Exp $  */
 end_comment
 
 begin_include
@@ -1436,17 +1436,12 @@ name|pm_ronly
 operator|=
 name|ronly
 expr_stmt|;
-if|if
-condition|(
-name|ronly
-operator|==
-literal|0
-condition|)
 name|pmp
 operator|->
 name|pm_fmod
 operator|=
-literal|1
+operator|!
+name|ronly
 expr_stmt|;
 name|mp
 operator|->
