@@ -1487,6 +1487,21 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Allow users to override quirks. */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.quirks"
+argument_list|,
+operator|&
+name|acpi_quirks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus heirarchy hangs  * off it.  */
 end_comment
 
@@ -1693,13 +1708,19 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Set up any quirks we have for this system. */
+if|if
+condition|(
+name|acpi_quirks
+operator|==
+literal|0
+condition|)
 name|acpi_table_quirks
 argument_list|(
 operator|&
 name|acpi_quirks
 argument_list|)
 expr_stmt|;
-comment|/* If the user manually set the disabled hint to 0, override any quirk. */
+comment|/* If the user manually set the disabled hint to 0, force-enable ACPI. */
 if|if
 condition|(
 name|resource_int_value
