@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	1.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	5.1 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -194,6 +194,68 @@ name|char
 name|cc_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_VDISABLE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* pick up VDISABLE definition, mayby */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VDISABLE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_VDISABLE
+value|VDISABLE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_POSIX_VDISABLE
+value|((unsigned char)'\377')
+end_define
 
 begin_endif
 endif|#
@@ -1042,6 +1104,13 @@ name|termForw2Char
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|cc_t
+name|termAytChar
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1140,6 +1209,13 @@ name|termForw2Charp
 value|(cc_t *)&termForw2Char
 end_define
 
+begin_define
+define|#
+directive|define
+name|termAytCharp
+value|(cc_t *)&termAytChar
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1221,12 +1297,12 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|VFLUSHO
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
 name|VDISCARD
@@ -1236,8 +1312,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|VFLUSHO
-value|VDISCARD
+name|VDISCARD
+value|VFLUSHO
 end_define
 
 begin_endif
@@ -1248,7 +1324,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VFLUSHO
+name|VDISCARD
 end_ifndef
 
 begin_decl_stmt
@@ -1267,7 +1343,7 @@ begin_define
 define|#
 directive|define
 name|termFlushChar
-value|new_tc.c_cc[VFLUSHO]
+value|new_tc.c_cc[VDISCARD]
 end_define
 
 begin_endif
@@ -1488,8 +1564,47 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CRAY
+name|VSTATUS
 end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|cc_t
+name|termAytChar
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|termAytChar
+value|new_tc.c_cc[VSTATUS]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CRAY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1587,6 +1702,13 @@ define|#
 directive|define
 name|termForw2Charp
 value|&termForw2Char
+end_define
+
+begin_define
+define|#
+directive|define
+name|termAytCharp
+value|&termAytChar
 end_define
 
 begin_else
@@ -1693,6 +1815,13 @@ begin_define
 define|#
 directive|define
 name|termForw2Charp
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|termAytCharp
 value|0
 end_define
 

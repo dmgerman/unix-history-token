@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ring.c	1.13 (Berkeley) %G%"
+literal|"@(#)ring.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
