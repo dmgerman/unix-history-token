@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1455,6 +1455,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|msgbuf
+operator|.
+name|msg_bufc
+index|[
+name|msgbuf
+operator|.
+name|msg_bufx
+operator|++
+index|]
+operator|=
+name|c
+expr_stmt|;
 if|if
 condition|(
 name|msgbuf
@@ -1474,18 +1486,6 @@ operator|.
 name|msg_bufx
 operator|=
 literal|0
-expr_stmt|;
-name|msgbuf
-operator|.
-name|msg_bufc
-index|[
-name|msgbuf
-operator|.
-name|msg_bufx
-operator|++
-index|]
-operator|=
-name|c
 expr_stmt|;
 block|}
 if|if
