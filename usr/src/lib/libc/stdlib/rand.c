@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,71 +24,85 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rand.c	5.2 (Berkeley) %G%"
+literal|"@(#)rand.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_decl_stmt
 specifier|static
-name|long
-name|randx
+name|u_long
+name|next
 init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|srand
-argument_list|(
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|unsigned
-name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|randx
-operator|=
-name|x
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
+begin_function
+name|int
 name|rand
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
 operator|(
-name|randx
+name|next
 operator|=
-name|randx
+name|next
 operator|*
 literal|1103515245
 operator|+
 literal|12345
 operator|)
-operator|&
-literal|0x7fffffff
+operator|%
+name|RAND_MAX
 operator|)
 return|;
 block|}
-end_block
+end_function
+
+begin_function
+name|void
+name|srand
+parameter_list|(
+name|seed
+parameter_list|)
+name|u_int
+name|seed
+decl_stmt|;
+block|{
+name|next
+operator|=
+name|seed
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
