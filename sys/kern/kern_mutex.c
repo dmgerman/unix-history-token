@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mutex_wake_all.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2413,6 +2419,18 @@ endif|#
 directive|endif
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|MUTEX_WAKE_ALL
+name|MPASS
+argument_list|(
+name|v
+operator|!=
+name|MTX_CONTESTED
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* 		 * The mutex was marked contested on release. This means that 		 * there are other threads blocked on it.  Grab ownership of 		 * it and propagate its priority to the current thread if 		 * necessary. 		 */
 if|if
 condition|(
@@ -2446,6 +2464,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 comment|/* 		 * If the mutex isn't already contested and a failure occurs 		 * setting the contested bit, the mutex was either released 		 * or the state of the MTX_RECURSED bit changed. 		 */
 if|if
 condition|(
@@ -3100,6 +3120,21 @@ argument_list|(
 name|ts
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MUTEX_WAKE_ALL
+name|turnstile_broadcast
+argument_list|(
+name|ts
+argument_list|)
+expr_stmt|;
+name|_release_lock_quick
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|turnstile_signal
@@ -3165,6 +3200,8 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|turnstile_unpend
 argument_list|(
 name|ts
