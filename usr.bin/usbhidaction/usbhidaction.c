@@ -142,6 +142,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pidfile
@@ -277,6 +278,7 @@ name|sighup
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|reparse
@@ -320,13 +322,16 @@ name|fp
 decl_stmt|,
 name|ch
 decl_stmt|,
-name|sz
-decl_stmt|,
 name|n
 decl_stmt|,
 name|val
 decl_stmt|,
 name|i
+decl_stmt|;
+name|size_t
+name|sz
+decl_stmt|,
+name|sz1
 decl_stmt|;
 name|int
 name|demon
@@ -606,6 +611,9 @@ argument_list|)
 expr_stmt|;
 name|sz
 operator|=
+operator|(
+name|size_t
+operator|)
 name|hid_report_size
 argument_list|(
 name|repd
@@ -621,7 +629,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"report size %d\n"
+literal|"report size %zu\n"
 argument_list|,
 name|sz
 argument_list|)
@@ -679,13 +687,14 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|sz
+name|sz1
 operator|=
 name|snprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|100
+sizeof|sizeof
+name|buf
 argument_list|,
 literal|"%d\n"
 argument_list|,
@@ -693,13 +702,25 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sz1
+operator|>
+sizeof|sizeof
+name|buf
+condition|)
+name|sz1
+operator|=
+sizeof|sizeof
+name|buf
+expr_stmt|;
 name|write
 argument_list|(
 name|fp
 argument_list|,
 name|buf
 argument_list|,
-name|sz
+name|sz1
 argument_list|)
 expr_stmt|;
 name|close
@@ -1185,7 +1206,7 @@ name|SIZE
 index|]
 decl_stmt|;
 name|char
-name|usage
+name|usbuf
 index|[
 name|SIZE
 index|]
@@ -1754,10 +1775,10 @@ control|)
 block|{
 name|snprintf
 argument_list|(
-name|usage
+name|usbuf
 argument_list|,
 sizeof|sizeof
-name|usage
+name|usbuf
 argument_list|,
 literal|"%s:%s"
 argument_list|,
@@ -1785,7 +1806,7 @@ name|printf
 argument_list|(
 literal|"usage %s\n"
 argument_list|,
-name|usage
+name|usbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1793,7 +1814,7 @@ condition|(
 operator|!
 name|strcasecmp
 argument_list|(
-name|usage
+name|usbuf
 argument_list|,
 name|name
 argument_list|)
@@ -1811,10 +1832,10 @@ condition|)
 block|{
 name|snprintf
 argument_list|(
-name|usage
+name|usbuf
 argument_list|,
 sizeof|sizeof
-name|usage
+name|usbuf
 argument_list|,
 literal|"%s.%s:%s"
 argument_list|,
@@ -1846,7 +1867,7 @@ name|printf
 argument_list|(
 literal|"usage %s\n"
 argument_list|,
-name|usage
+name|usbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1854,7 +1875,7 @@ condition|(
 operator|!
 name|strcasecmp
 argument_list|(
-name|usage
+name|usbuf
 argument_list|,
 name|name
 argument_list|)
