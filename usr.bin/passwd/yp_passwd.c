@@ -559,6 +559,9 @@ condition|(
 name|pw
 operator|->
 name|pw_passwd
+index|[
+literal|0
+index|]
 condition|)
 block|{
 name|char
@@ -616,6 +619,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|yppasswd
+operator|.
+name|oldpass
+operator|=
+literal|""
+expr_stmt|;
 if|if
 condition|(
 operator|(
