@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.11	82/01/13	*/
+comment|/*	socketvar.h	4.12	82/01/17	*/
 end_comment
 
 begin_comment
@@ -110,7 +110,6 @@ directive|define
 name|SB_COLL
 value|0x10
 comment|/* collision selecting */
-comment|/* need something for async wakeup */
 name|short
 name|so_timeo
 decl_stmt|;
@@ -124,6 +123,14 @@ name|sockaddr
 name|so_addr
 decl_stmt|;
 comment|/* socket address */
+name|short
+name|so_oobmark
+decl_stmt|;
+comment|/* chars to oob mark */
+name|short
+name|so_pgrp
+decl_stmt|;
+comment|/* pgrp for signals */
 block|}
 struct|;
 end_struct
@@ -207,6 +214,17 @@ end_define
 
 begin_comment
 comment|/* connections awaiting acceptance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_RCVATMARK
+value|0x80
+end_define
+
+begin_comment
+comment|/* at mark on input */
 end_comment
 
 begin_comment
