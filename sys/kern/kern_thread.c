@@ -1383,7 +1383,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* KSE-enabled processes only, please. */
+comment|/* Only UTS can do the syscall */
 if|if
 condition|(
 operator|!
@@ -1394,20 +1394,14 @@ name|p_flag
 operator|&
 name|P_KSES
 operator|)
-condition|)
-return|return
+operator|||
 operator|(
-name|EINVAL
-operator|)
-return|;
-comment|/* must be a bound thread */
-if|if
-condition|(
 name|td
 operator|->
-name|td_flags
-operator|&
-name|TDF_UNBOUND
+name|td_mailbox
+operator|!=
+name|NULL
+operator|)
 condition|)
 return|return
 operator|(
@@ -1571,7 +1565,7 @@ name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
-comment|/* 	 * Must be a bound thread. And kse must have a mailbox ready, 	 * if not, the kse can not generate an upcall. 	 */
+comment|/* 	 * kse must have a mailbox ready for upcall, and only UTS can 	 * do the syscall. 	 */
 if|if
 condition|(
 operator|!
@@ -1586,9 +1580,9 @@ operator|||
 operator|(
 name|td
 operator|->
-name|td_flags
-operator|&
-name|TDF_UNBOUND
+name|td_mailbox
+operator|!=
+name|NULL
 operator|)
 operator|||
 operator|(
@@ -5353,6 +5347,7 @@ name|td_standin
 operator|!=
 name|NULL
 condition|)
+block|{
 name|thread_stash
 argument_list|(
 name|td
@@ -5366,6 +5361,7 @@ name|td_standin
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
