@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"compat.h"
+file|<machine/endian.h>
 end_include
 
 begin_define

@@ -260,13 +260,13 @@ argument_list|)
 expr_stmt|;
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|dbtemp
 argument_list|,
 name|O_CREAT
 operator||
-name|O_WRONLY
+name|O_RDWR
 operator||
 name|O_EXCL
 argument_list|,
@@ -277,6 +277,8 @@ operator||
 name|S_IRGRP
 operator||
 name|S_IROTH
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)

@@ -713,13 +713,15 @@ argument_list|)
 expr_stmt|;
 name|aliasdb
 operator|=
-name|btree_open
+name|dbopen
 argument_list|(
 name|buf
 argument_list|,
 name|O_RDWR
 argument_list|,
 name|DBMMODE
+argument_list|,
+name|DB_BTREE
 argument_list|,
 literal|0
 argument_list|)
@@ -818,13 +820,15 @@ directive|ifdef
 name|USE_DB
 name|aliasdb
 operator|=
-name|btree_open
+name|dbopen
 argument_list|(
 name|buf
 argument_list|,
 name|O_RDWR
 argument_list|,
 name|DBMMODE
+argument_list|,
+name|DB_BTREE
 argument_list|,
 literal|0
 argument_list|)
@@ -1086,6 +1090,8 @@ operator|->
 name|sync
 argument_list|(
 name|aliasdb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1473,7 +1479,7 @@ argument_list|)
 expr_stmt|;
 name|aliasdb
 operator|=
-name|btree_open
+name|dbopen
 argument_list|(
 name|line
 argument_list|,
@@ -1482,6 +1488,8 @@ operator||
 name|O_CREAT
 argument_list|,
 name|DBMMODE
+argument_list|,
+name|DB_BTREE
 argument_list|,
 literal|0
 argument_list|)
@@ -2024,7 +2032,7 @@ argument_list|,
 operator|&
 name|content
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2159,7 +2167,7 @@ argument_list|,
 operator|&
 name|key
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* restore the old signal */

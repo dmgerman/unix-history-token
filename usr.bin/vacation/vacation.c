@@ -521,7 +521,7 @@ expr_stmt|;
 block|}
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|VDB
 argument_list|,
@@ -540,6 +540,8 @@ argument_list|,
 name|S_IRUSR
 operator||
 name|S_IWUSR
+argument_list|,
+name|DB_HASH
 argument_list|,
 operator|(
 name|HASHINFO
@@ -1589,7 +1591,7 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1671,7 +1673,7 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -195,13 +195,15 @@ if|if
 condition|(
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|_PATH_DEVDB
 argument_list|,
 name|O_RDONLY
 argument_list|,
 literal|0
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
