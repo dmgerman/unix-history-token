@@ -34,10 +34,6 @@ name|command
 decl_stmt|;
 comment|/* see below for valid METEORCAPFRM commands */
 name|short
-name|signal
-decl_stmt|;
-comment|/* signal to send to the user program, 				   when a buffer is full */
-name|short
 name|lowat
 decl_stmt|;
 comment|/* start transfer if< this number */
@@ -93,6 +89,14 @@ name|u_long
 name|frames_captured
 decl_stmt|;
 comment|/* count of frames captured since open */
+name|u_long
+name|even_fields_captured
+decl_stmt|;
+comment|/* count of even fields captured */
+name|u_long
+name|odd_fields_captured
+decl_stmt|;
+comment|/* count of odd fields captured */
 block|}
 struct|;
 end_struct
@@ -257,6 +261,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|METEORSFPS
+value|_IOW('x',11, unsigned short)
+end_define
+
+begin_comment
+comment|/* set fps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGFPS
+value|_IOR('x',11, unsigned short)
+end_define
+
+begin_comment
+comment|/* get fps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSSIGNAL
+value|_IOW('x', 12, unsigned int)
+end_define
+
+begin_comment
+comment|/* set signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGSIGNAL
+value|_IOR('x', 12, unsigned int)
+end_define
+
+begin_comment
+comment|/* get signal */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|METEOR_STATUS_ID_MASK
 value|0xf000
 end_define
@@ -416,6 +464,28 @@ begin_comment
 comment|/* stop capture N frames */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|METEOR_HALT_N_FRAMES
+value|0x0003
+end_define
+
+begin_comment
+comment|/* halt of capture N frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_CONT_N_FRAMES
+value|0x0004
+end_define
+
+begin_comment
+comment|/* continue after above halt */
+end_comment
+
 begin_comment
 comment|/* valid video input formats:  */
 end_comment
@@ -530,7 +600,7 @@ begin_define
 define|#
 directive|define
 name|METEOR_GEO_RGB16
-value|0x10000
+value|0x0010000
 end_define
 
 begin_comment
@@ -541,7 +611,7 @@ begin_define
 define|#
 directive|define
 name|METEOR_GEO_RGB24
-value|0x20000
+value|0x0020000
 end_define
 
 begin_comment
@@ -556,7 +626,7 @@ begin_define
 define|#
 directive|define
 name|METEOR_GEO_YUV_PACKED
-value|0x40000
+value|0x0040000
 end_define
 
 begin_comment
@@ -567,15 +637,73 @@ begin_define
 define|#
 directive|define
 name|METEOR_GEO_YUV_PLANER
-value|0x80000
+value|0x0080000
 end_define
 
 begin_comment
 comment|/* 4-2-2 YUV 16 bits planer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_UNSIGNED
+value|0x0400000
+end_define
+
 begin_comment
-comment|/* following structure is used to coordinate the syncronous */
+comment|/* unsigned uv outputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_EVEN_ONLY
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* set for even only field capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_ODD_ONLY
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* set for odd only field capture */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_YUV_422
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* 4-2-2 YUV in Y-U-V combined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_OUTPUT_MASK
+value|0x40f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_FIELD_MASK
+value|0x3000000
+end_define
+
+begin_comment
+comment|/* following structure is used to coordinate the synchronous */
 end_comment
 
 begin_struct
@@ -592,10 +720,6 @@ name|num_bufs
 decl_stmt|;
 comment|/* number of frames in buffer (1-32) */
 comment|/* user and kernel change these */
-name|int
-name|signal
-decl_stmt|;
-comment|/* signal raised to the user program, 				    on completion of frame capture */
 name|int
 name|lowat
 decl_stmt|;
