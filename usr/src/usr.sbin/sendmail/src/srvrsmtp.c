@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.51 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.52 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.51 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.52 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2388,6 +2388,20 @@ name|TRUE
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_sendmode
+operator|==
+name|SM_QUEUE
+condition|)
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_KEEPQUEUE
 expr_stmt|;
 block|}
 else|else
