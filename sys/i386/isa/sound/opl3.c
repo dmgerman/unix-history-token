@@ -4468,7 +4468,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"<Yamaha OPL-3 FM>"
+literal|"snd1:<Yamaha OPL-3 FM>"
 argument_list|)
 expr_stmt|;
 name|fm_model
@@ -4568,7 +4568,7 @@ else|else
 block|{
 name|printk
 argument_list|(
-literal|"<Yamaha 2-OP FM>"
+literal|"snd1:<Yamaha 2-OP FM>"
 argument_list|)
 expr_stmt|;
 name|fm_model

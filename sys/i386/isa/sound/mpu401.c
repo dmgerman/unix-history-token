@@ -882,7 +882,7 @@ argument_list|)
 expr_stmt|;
 name|printk
 argument_list|(
-literal|"<Roland MPU-401>"
+literal|"snd5:<Roland MPU-401>"
 argument_list|)
 expr_stmt|;
 name|my_dev
