@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.25 1999/04/24 20:14:01 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.26 1999/05/09 17:07:02 peter Exp $ */
 end_comment
 
 begin_comment
@@ -6422,125 +6422,17 @@ return|return;
 block|}
 end_function
 
-begin_function
-name|void
-name|dump_phy_regs
-parameter_list|(
-name|epic_softc_t
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"BMCR: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|DP83840_BMCR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"BMSR: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|DP83840_BMSR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ANAR: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|DP83840_ANAR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"LPAR: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|DP83840_LPAR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ANER: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|DP83840_ANER
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"MCTL: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|QS6612_MCTL
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"INTSTAT: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|QS6612_INTSTAT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"INTMASK: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|QS6612_INTMASK
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"BPCR: 0x%04x\n"
-argument_list|,
-name|PHY_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|QS6612_BPCR
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void dump_phy_regs(epic_softc_t *sc) {  	printf("BMCR: 0x%04x\n", PHY_READ_2(sc, DP83840_BMCR)); 	printf("BMSR: 0x%04x\n", PHY_READ_2(sc, DP83840_BMSR)); 	printf("ANAR: 0x%04x\n", PHY_READ_2(sc, DP83840_ANAR)); 	printf("LPAR: 0x%04x\n", PHY_READ_2(sc, DP83840_LPAR)); 	printf("ANER: 0x%04x\n", PHY_READ_2(sc, DP83840_ANER)); 	printf("MCTL: 0x%04x\n", PHY_READ_2(sc, QS6612_MCTL)); 	printf("INTSTAT: 0x%04x\n", PHY_READ_2(sc, QS6612_INTSTAT)); 	printf("INTMASK: 0x%04x\n", PHY_READ_2(sc, QS6612_INTMASK)); 	printf("BPCR: 0x%04x\n", PHY_READ_2(sc, QS6612_BPCR)); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Synopsis: Reset PHY and do PHY-special initialization:  */
