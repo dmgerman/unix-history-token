@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -295,6 +295,50 @@ name|int
 name|ndevs
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_42
+end_ifdef
+
+begin_comment
+comment|/*  * Old drive description table.  * still used by some drivers for now.  */
+end_comment
+
+begin_struct
+struct|struct
+name|st
+block|{
+name|short
+name|nsect
+decl_stmt|;
+comment|/* # sectors/track */
+name|short
+name|ntrak
+decl_stmt|;
+comment|/* # tracks/surfaces/heads */
+name|short
+name|nspc
+decl_stmt|;
+comment|/* # sectors/cylinder */
+name|short
+name|ncyl
+decl_stmt|;
+comment|/* # cylinders */
+name|short
+modifier|*
+name|off
+decl_stmt|;
+comment|/* partition offset table (cylinders) */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Request codes. Must be the same a F_XXX above  */
