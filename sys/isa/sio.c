@@ -227,17 +227,17 @@ directive|include
 file|<isa/ic/ns16550.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|"card.h"
 end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_if
 if|#
@@ -1061,6 +1061,16 @@ name|error_counts
 index|[
 name|CE_NTYPES
 index|]
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|irqres
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|ioportres
 decl_stmt|;
 comment|/* 	 * Data area for output buffers.  Someday we should build the output 	 * buffer queue without copying data. 	 */
 name|u_char
@@ -2263,32 +2273,16 @@ name|id_flags
 operator||=
 name|COM_C_NOPROBE
 expr_stmt|;
-comment|/* 	 * Probe the device. If a value is returned, the 	 * device was found at the location. 	 */
-if|if
-condition|(
-name|sioprobe
-argument_list|(
-operator|&
-name|devi
-operator|->
-name|isahd
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+comment|/* 	 * attach the device. 	 */
 if|if
 condition|(
 name|sioattach
 argument_list|(
-operator|&
 name|devi
 operator|->
 name|isahd
+operator|.
+name|id_device
 argument_list|)
 operator|==
 literal|0
@@ -3279,7 +3273,7 @@ comment|/* Set IIR_TXRDYBUG */
 block|}
 else|else
 block|{
-comment|/* Unknow, Just omit this chip.. XXX*/
+comment|/* Unknown, Just omit this chip.. XXX */
 name|result
 operator|=
 name|ENXIO
@@ -3968,16 +3962,6 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-name|int
-name|zero
-init|=
-literal|0
-decl_stmt|;
 name|u_int
 name|flags
 init|=
@@ -4063,6 +4047,12 @@ operator|->
 name|unit
 operator|=
 name|unit
+expr_stmt|;
+name|com
+operator|->
+name|ioportres
+operator|=
+name|port
 expr_stmt|;
 name|com
 operator|->
@@ -5103,12 +5093,8 @@ name|com
 operator|->
 name|flags
 operator|=
-name|isa_get_flags
-argument_list|(
-name|dev
-argument_list|)
+name|flags
 expr_stmt|;
-comment|/* Heritate id_flags for later */
 name|com
 operator|->
 name|pps
@@ -5127,7 +5113,13 @@ operator|->
 name|pps
 argument_list|)
 expr_stmt|;
-name|res
+name|rid
+operator|=
+literal|0
+expr_stmt|;
+name|com
+operator|->
+name|irqres
 operator|=
 name|bus_alloc_resource
 argument_list|(
@@ -5136,7 +5128,7 @@ argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|zero
+name|rid
 argument_list|,
 literal|0ul
 argument_list|,
@@ -5159,7 +5151,9 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|,
-name|res
+name|com
+operator|->
+name|irqres
 argument_list|,
 name|INTR_TYPE_TTY
 operator||
