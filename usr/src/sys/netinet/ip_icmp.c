@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.30	83/03/12	*/
+comment|/*	ip_icmp.c	4.31	83/05/01	*/
 end_comment
 
 begin_include
@@ -1050,9 +1050,7 @@ operator|&
 name|icmpdst
 argument_list|)
 expr_stmt|;
-goto|goto
-name|free
-goto|;
+return|return;
 default|default:
 goto|goto
 name|free
