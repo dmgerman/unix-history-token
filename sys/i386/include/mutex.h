@@ -544,7 +544,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	9f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	8f;							\ 	pushl	lck+MTX_SAVEINTR;					\ 9:	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf								\ 8:
+value|movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	9f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	8f;							\ 9:	pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf								\ 8:
 end_define
 
 begin_endif
