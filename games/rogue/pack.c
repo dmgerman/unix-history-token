@@ -1103,8 +1103,9 @@ name|object
 modifier|*
 name|obj
 decl_stmt|;
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|boolean
 name|ichars
 index|[

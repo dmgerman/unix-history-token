@@ -1164,27 +1164,22 @@ block|}
 block|}
 end_block
 
-begin_decl_stmt
+begin_function
 name|object
 modifier|*
 name|gr_monster
-argument_list|(
+parameter_list|(
 name|monster
-argument_list|,
+parameter_list|,
 name|mn
-argument_list|)
+parameter_list|)
 name|object
 modifier|*
 name|monster
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+name|int
 name|mn
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1298,7 +1293,7 @@ name|monster
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|mv_mons
@@ -1865,12 +1860,13 @@ argument|col
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|row
-operator|,
+decl_stmt|,
 name|col
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3015,10 +3011,11 @@ block|{
 name|short
 name|c
 decl_stmt|;
+name|int
 name|mrow
-operator|,
+decl_stmt|,
 name|mcol
-expr_stmt|;
+decl_stmt|;
 name|mrow
 operator|=
 name|monster
@@ -4062,12 +4059,13 @@ argument|col
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|row
-operator|,
+decl_stmt|,
 name|col
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4850,17 +4848,19 @@ argument|col
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|row
-operator|,
+decl_stmt|,
 name|col
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|retval
-expr_stmt|;
+decl_stmt|;
 name|retval
 operator|=
 operator|!

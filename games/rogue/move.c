@@ -1096,12 +1096,13 @@ argument|col
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|row
-operator|,
+decl_stmt|,
 name|col
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1214,12 +1215,13 @@ argument|dcol
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|drow
-operator|,
+decl_stmt|,
 name|dcol
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

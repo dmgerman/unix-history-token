@@ -802,8 +802,9 @@ end_macro
 
 begin_block
 block|{
+name|int
 name|ch
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -880,10 +881,11 @@ argument|stat_mask
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|stat_mask
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
