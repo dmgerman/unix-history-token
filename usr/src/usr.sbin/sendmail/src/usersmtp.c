@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.30 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.31 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.30 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.31 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1306,6 +1306,35 @@ name|m
 operator|->
 name|m_flags
 argument_list|)
+operator|||
+operator|!
+name|bitset
+argument_list|(
+name|EF_HAS8BIT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|||
+operator|(
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|e
+operator|->
+name|e_bodytype
+argument_list|,
+literal|"7bit"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* just pass it through */
@@ -1324,9 +1353,9 @@ operator|(
 name|e
 operator|->
 name|e_bodytype
-operator|==
+operator|!=
 name|NULL
-condition|?
+operator|||
 operator|!
 name|bitset
 argument_list|(
@@ -1334,17 +1363,6 @@ name|MM_PASS8BIT
 argument_list|,
 name|MimeMode
 argument_list|)
-else|:
-name|strcasecmp
-argument_list|(
-name|e
-operator|->
-name|e_bodytype
-argument_list|,
-literal|"7bit"
-argument_list|)
-operator|!=
-literal|0
 operator|)
 condition|)
 block|{
