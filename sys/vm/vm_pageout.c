@@ -2999,22 +2999,17 @@ operator|->
 name|dirty
 operator|==
 literal|0
-condition|)
-block|{
-name|vm_page_test_dirty
+operator|&&
+operator|!
+name|pmap_is_modified
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 comment|/* 			 * Avoid a race condition: Unless write access is 			 * removed from the page, another processor could 			 * modify it before all access is removed by the call 			 * to vm_page_cache() below.  If vm_page_cache() finds 			 * that the page has been modified when it removes all 			 * access, it panics because it cannot cache dirty 			 * pages.  In principle, we could eliminate just write 			 * access here rather than all access.  In the expected 			 * case, when there are no last instant modifications 			 * to the page, removing all access will be cheaper 			 * overall. 			 */
 if|if
 condition|(
-name|m
-operator|->
-name|dirty
-operator|==
-literal|0
-operator|&&
 operator|(
 name|m
 operator|->

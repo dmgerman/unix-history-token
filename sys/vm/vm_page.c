@@ -4050,7 +4050,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_test_dirty
+name|pmap_remove_all
 argument_list|(
 name|m
 argument_list|)
