@@ -854,6 +854,29 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Read the value of psr.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_psr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=psr;;" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Read the value of ar.k0.  */
 end_comment
 
