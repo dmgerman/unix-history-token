@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexec.c	4.6 83/03/19"
+literal|"@(#)rexec.c	4.7 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,11 +229,9 @@ name|s
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_STREAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -390,11 +388,9 @@ name|s2
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_STREAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
