@@ -131,7 +131,7 @@ argument_list|,
 operator|&
 name|_messages_locale_buf
 argument_list|,
-literal|"LC_MESSAGES/LC_MESSAGES"
+literal|"LC_MESSAGES"
 argument_list|,
 name|LCMESSAGES_SIZE_FULL
 argument_list|,
