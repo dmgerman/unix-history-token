@@ -1281,6 +1281,12 @@ name|MDP_STEP2
 operator|)
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|ptrace_clear_single_step
 argument_list|(
 name|p
@@ -1298,6 +1304,12 @@ name|FRAME_PC
 index|]
 operator|-=
 literal|4
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 name|ucode
