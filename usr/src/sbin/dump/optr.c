@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	8.1 (Berkeley) %G%"
+literal|"@(#)optr.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,6 +1892,10 @@ name|fstab
 modifier|*
 name|fs
 decl_stmt|;
+name|char
+modifier|*
+name|rn
+decl_stmt|;
 for|for
 control|(
 name|pf
@@ -1938,15 +1942,30 @@ name|key
 argument_list|)
 operator|==
 literal|0
-operator|||
-name|strcmp
-argument_list|(
+condition|)
+return|return
+operator|(
+name|fs
+operator|)
+return|;
+name|rn
+operator|=
 name|rawname
 argument_list|(
 name|fs
 operator|->
 name|fs_spec
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rn
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|rn
 argument_list|,
 name|key
 argument_list|)
