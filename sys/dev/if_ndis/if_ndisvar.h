@@ -221,12 +221,19 @@ modifier|*
 name|ndis_res_am
 decl_stmt|;
 comment|/* attribute mem (pccard) */
+name|int
+name|ndis_am_rid
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|ndis_res_cm
 decl_stmt|;
 comment|/* common mem (pccard) */
+name|struct
+name|resource_list
+name|ndis_rl
+decl_stmt|;
 name|int
 name|ndis_rescnt
 decl_stmt|;
