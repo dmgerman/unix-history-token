@@ -16,7 +16,7 @@ name|_MACHINE_ANSI_H_
 end_define
 
 begin_comment
-comment|/*  * Types which are fundamental to the implementation and must be declared  * in more than one standard header are defined here.  Standard headers  * then use:  *	#ifdef	_BSD_SIZE_T_  *	typedef	_BSD_SIZE_T_ size_t;  *	#undef	_BSD_SIZE_T_  *	#endif  */
+comment|/*  * Types which are fundamental to the implementation and must be declared  * in more than one standard header are defined here.  Standard headers  * then use:  *	#ifdef	_BSD_SIZE_T_  *	typedef	_BSD_SIZE_T_	size_t;  *	#undef	_BSD_SIZE_T_  *	#endif  */
 end_comment
 
 begin_define
@@ -39,6 +39,17 @@ end_define
 
 begin_comment
 comment|/* clock_gettime()... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_MBSTATE_T_
+value|__mbstate_t
+end_define
+
+begin_comment
+comment|/* mbstate_t */
 end_comment
 
 begin_define
@@ -81,6 +92,10 @@ name|_BSD_SOCKLEN_T_
 value|__uint32_t
 end_define
 
+begin_comment
+comment|/* socklen_t (duh) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -96,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|_BSD_TIME_T_
-value|long
+value|int
 end_define
 
 begin_comment
@@ -123,6 +138,17 @@ end_define
 
 begin_comment
 comment|/* wchar_t (see below) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_WINT_T_
+value|_BSD_CT_RUNE_T_
+end_define
+
+begin_comment
+comment|/* wint_t (see below) */
 end_comment
 
 begin_comment
@@ -174,7 +200,7 @@ comment|/* va_list */
 end_comment
 
 begin_comment
-comment|/*  * The rune type is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use _BSD_CT_RUNE_T_ instead of int.  By changing it  * here, you lose a bit of ANSI conformance, but your programs will still  * work.  */
+comment|/*  * The rune type above is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use _BSD_CT_RUNE_T_ instead of int.  By changing it  * here, you lose a bit of ANSI conformance, but your programs will still  * work.  *  * NOTE: rune_t is not covered by ANSI nor other standards, and should not  * be instantiated outside of lib/libc/locale.  Use wchar_t.  wchar_t and  * rune_t must be the same type.  Also wint_t must be no narrower than  * wchar_t, and should also be able to hold all members of the largest  * character set plus one extra value (WEOF). wint_t must be at least 16 bits.  */
 end_comment
 
 begin_comment
@@ -212,7 +238,7 @@ value|((size_t)(&((type *)0)->field))
 end_define
 
 begin_comment
-comment|/*  * Typedefs for especially magic types.  #define's wouldn't work in the  * __GNUC__ case, since __attribute__(()) only works in certain contexts.  * This is not in<machine/types.h>, since that has too much namespace  * pollution for inclusion in ANSI headers, yet we need __int64_t in at  * least<stdio.h>.  */
+comment|/*  * XXX this paragraph is very out of date.  * Typedefs for especially magic types.  #define's wouldn't work in the  * __GNUC__ case, since __attribute__(()) only works in certain contexts.  * This is not in<machine/types.h>, since that has too much namespace  * pollution for inclusion in ANSI headers, yet we need __int64_t in at  * least<stdio.h>.  */
 end_comment
 
 begin_ifdef
@@ -348,6 +374,29 @@ typedef|typedef
 name|unsigned
 name|int
 name|__uintptr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * mbstate_t is an opaque object to keep conversion state, during multibyte  * stream conversions.  The content must not be referenced by user programs.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|char
+name|__mbstate8
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|__int64_t
+name|_mbstateL
+decl_stmt|;
+comment|/* for alignment */
+block|}
+name|__mbstate_t
 typedef|;
 end_typedef
 
