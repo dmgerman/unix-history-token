@@ -162,6 +162,24 @@ value|0x0009
 end_define
 
 begin_comment
+comment|/*  * DEC vendor ID, Farallon device ID. Apparently, Farallon used  * the DEC vendor ID in their cards by mistake.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEC_VENDORID
+value|0x1011
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEC_DEVICEID_FARALLON_PN9000SX
+value|0x001a
+end_define
+
+begin_comment
 comment|/*  * Tigon configuration and control registers.  */
 end_comment
 

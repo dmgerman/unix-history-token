@@ -320,6 +320,14 @@ literal|"Silicon Graphics Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|DEC_VENDORID
+block|,
+name|DEC_DEVICEID_FARALLON_PN9000SX
+block|,
+literal|"Farallon PN9000SX Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
