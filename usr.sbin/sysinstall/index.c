@@ -3534,8 +3534,8 @@ condition|)
 return|return
 name|DITEM_SUCCESS
 return|;
-comment|/*      * What if the package is not available on the current media volume?      *      */
-if|if
+comment|/*      * Prompt user if the package is not available on the current volume.      */
+while|while
 condition|(
 name|id
 operator|->
@@ -3591,7 +3591,6 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
-comment|/* XXX, at this point we check to see if this is the 		 * correct disc, and if not, we loop */
 block|}
 else|else
 block|{
