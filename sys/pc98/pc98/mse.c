@@ -62,13 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mouse.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mouse.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -1553,7 +1559,7 @@ operator|==
 name|ENXIO
 condition|)
 return|return
-name|ENXIO
+name|error
 return|;
 name|sc
 operator|=
