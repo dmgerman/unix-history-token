@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cal.c	8.1 (Berkeley) %G%"
+literal|"@(#)cal.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1102,6 +1102,11 @@ name|col
 index|]
 argument_list|)
 expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|trim_trailing_spaces
 argument_list|(
 name|lineout
@@ -1399,6 +1404,11 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|trim_trailing_spaces
 argument_list|(
 name|lineout
@@ -1727,6 +1737,11 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|trim_trailing_spaces
 argument_list|(
 name|lineout
