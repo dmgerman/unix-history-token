@@ -199,7 +199,7 @@ name|MMNDEL
 block|,
 literal|"undelete"
 block|,
-name|undelete
+name|undelete_messages
 block|,
 name|P
 operator||
