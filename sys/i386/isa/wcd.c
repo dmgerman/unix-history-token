@@ -211,9 +211,9 @@ block|,
 name|wcdioctl
 block|,
 comment|/*19*/
-name|nxdump
+name|nodump
 block|,
-name|zerosize
+name|nopsize
 block|,
 literal|0
 block|,
