@@ -1410,6 +1410,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|fwmem_debug
+condition|)
 name|printf
 argument_list|(
 literal|"%s: err=%d\n"
@@ -1804,6 +1808,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|fwmem_debug
+condition|)
 name|printf
 argument_list|(
 literal|"%s: err=%d\n"
