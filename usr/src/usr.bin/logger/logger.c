@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.10 (Berkeley) %G%"
+literal|"@(#)logger.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:ip:t:"
+literal|"f:ip:st:"
 argument_list|)
 operator|)
 operator|!=
@@ -207,6 +207,15 @@ name|pencode
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* log to standard error */
+name|logflags
+operator||=
+name|LOG_PERROR
 expr_stmt|;
 break|break;
 case|case
