@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_utils.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_utils.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,11 +166,14 @@ return|;
 block|}
 else|else
 block|{
+comment|/* Use +1 in case the first record retrieved is 0 length. */
 if|if
 condition|(
 name|rl
 operator|->
 name|dsize
+operator|+
+literal|1
 operator|>
 name|t
 operator|->
@@ -191,6 +194,8 @@ argument_list|,
 name|rl
 operator|->
 name|dsize
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==
@@ -214,6 +219,8 @@ operator|=
 name|rl
 operator|->
 name|dsize
+operator|+
+literal|1
 expr_stmt|;
 block|}
 name|bcopy
