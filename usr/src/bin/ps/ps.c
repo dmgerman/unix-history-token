@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.9 (Berkeley) %G%"
+literal|"@(#)ps.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5587,7 +5587,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"   oo"
+literal|"   xx"
 argument_list|)
 expr_stmt|;
 else|else
@@ -5897,19 +5897,29 @@ literal|' '
 expr_stmt|;
 name|anom
 operator|=
+operator|(
 name|ap
 operator|->
 name|a_flag
 operator|&
-operator|(
-name|SANOM
-operator||
 name|SUANOM
 operator|)
 condition|?
 literal|'A'
 else|:
+operator|(
+operator|(
+name|ap
+operator|->
+name|a_flag
+operator|&
+name|SSEQL
+operator|)
+condition|?
+literal|'S'
+else|:
 literal|' '
+operator|)
 expr_stmt|;
 name|res
 index|[
