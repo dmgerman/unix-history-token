@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -97,7 +97,7 @@ name|SEGUPB
 parameter_list|(
 name|fs
 parameter_list|)
-value|(1<< (fs)->lfs_sushift);
+value|(1<< (fs)->lfs_sushift)
 end_define
 
 begin_define
@@ -108,7 +108,7 @@ parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|((fs)->lfs_nseg>> ((fs)->lfs_bshift - (fs)->lfs_sushift))
+value|(((fs)->lfs_nseg + SEGUPB(fs) - 1)>> (fs)->lfs_sushift)
 end_define
 
 begin_comment
