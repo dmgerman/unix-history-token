@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuencode.c	5.4 (Berkeley) %G%"
+literal|"@(#)uuencode.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,8 +140,10 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Usage: uuencode [infile] remotefile\n"
 argument_list|)
 expr_stmt|;
@@ -231,23 +233,22 @@ begin_comment
 comment|/*  * copy from in to out, encoding as you go along.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|encode
 argument_list|(
-argument|in
-argument_list|,
-argument|out
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
 name|in
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|out
+argument_list|)
+specifier|register
+name|FILE
+operator|*
+name|in
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
+specifier|register
 name|FILE
 modifier|*
 name|out
@@ -262,6 +263,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -276,13 +278,15 @@ block|{
 comment|/* 1 (up to) 45 character line */
 name|n
 operator|=
-name|fr
+name|fread
 argument_list|(
-name|in
-argument_list|,
 name|buf
 argument_list|,
+literal|1
+argument_list|,
 literal|45
+argument_list|,
+name|in
 argument_list|)
 expr_stmt|;
 name|putc
@@ -342,23 +346,22 @@ begin_comment
 comment|/*  * output one group of 3 bytes, pointed at by p, on file f.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|outdec
 argument_list|(
-argument|p
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
 name|p
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|f
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
+specifier|register
 name|FILE
 modifier|*
 name|f
@@ -367,6 +370,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|c1
 decl_stmt|,
@@ -480,85 +484,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* fr: like read but stdio */
-end_comment
-
-begin_function
-name|int
-name|fr
-parameter_list|(
-name|fd
-parameter_list|,
-name|buf
-parameter_list|,
-name|cnt
-parameter_list|)
-name|FILE
-modifier|*
-name|fd
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
-block|{
-name|int
-name|c
-decl_stmt|,
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|cnt
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|c
-operator|=
-name|getc
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-name|EOF
-condition|)
-return|return
-operator|(
-name|i
-operator|)
-return|;
-name|buf
-index|[
-name|i
-index|]
-operator|=
-name|c
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|cnt
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 
