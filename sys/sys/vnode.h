@@ -235,11 +235,11 @@ argument_list|)
 name|v_freelist
 expr_stmt|;
 comment|/* vnode freelist */
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
-name|v_mntvnodes
+name|v_nmntvnodes
 expr_stmt|;
 comment|/* vnodes for mount point */
 name|struct

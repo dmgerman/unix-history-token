@@ -1121,13 +1121,13 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|vp
 argument_list|,
-argument|&mp->mnt_vnodelist
+argument|&mp->mnt_nvnodelist
 argument_list|,
-argument|v_mntvnodes
+argument|v_nmntvnodes
 argument_list|)
 name|n
 operator|++

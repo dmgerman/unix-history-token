@@ -2333,11 +2333,13 @@ for|for
 control|(
 name|vp
 operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|mp
 operator|->
-name|mnt_vnodelist
-operator|.
-name|lh_first
+name|mnt_nvnodelist
+argument_list|)
 init|;
 name|vp
 operator|!=
@@ -2345,11 +2347,12 @@ name|NULL
 condition|;
 name|vp
 operator|=
+name|TAILQ_NEXT
+argument_list|(
 name|vp
-operator|->
-name|v_mntvnodes
-operator|.
-name|le_next
+argument_list|,
+name|v_nmntvnodes
+argument_list|)
 control|)
 block|{
 comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */

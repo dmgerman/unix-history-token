@@ -325,7 +325,7 @@ comment|/*  * Structure per mounted file system.  Each mounted file system has a
 end_comment
 
 begin_expr_stmt
-name|LIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|vnodelst
 argument_list|,
@@ -371,7 +371,7 @@ decl_stmt|;
 comment|/* syncer vnode */
 name|struct
 name|vnodelst
-name|mnt_vnodelist
+name|mnt_nvnodelist
 decl_stmt|;
 comment|/* list of vnodes this mount */
 name|struct
