@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Wolfgang Helbig  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ncal.c,v 1.1.1.1 1997/12/15 20:35:22 helbig Exp $	  */
+comment|/*-  * Copyright (c) 1997 Wolfgang Helbig  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ncal.c,v 1.2 1997/12/31 15:55:08 helbig Exp $	  */
 end_comment
 
 begin_include
@@ -179,6 +179,11 @@ name|date
 name|dt
 decl_stmt|;
 comment|/* Last day of Julian calendar */
+name|char
+modifier|*
+name|efmt
+decl_stmt|;
+comment|/* strftime format for printing date of easter */
 block|}
 name|switches
 index|[]
@@ -196,6 +201,40 @@ literal|11
 block|,
 literal|30
 block|}
+block|,
+literal|"%e %B %Y"
+block|}
+block|,
+block|{
+literal|"AT"
+block|,
+literal|"Austria"
+block|,
+block|{
+literal|1582
+block|,
+literal|10
+block|,
+literal|4
+block|}
+block|,
+literal|"%e. %B %Y"
+block|}
+block|,
+block|{
+literal|"AU"
+block|,
+literal|"Australia"
+block|,
+block|{
+literal|1752
+block|,
+literal|9
+block|,
+literal|2
+block|}
+block|,
+literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -210,6 +249,8 @@ literal|3
 block|,
 literal|18
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -224,6 +265,8 @@ literal|9
 block|,
 literal|2
 block|}
+block|,
+literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -238,6 +281,8 @@ literal|2
 block|,
 literal|28
 block|}
+block|,
+literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -252,6 +297,8 @@ literal|12
 block|,
 literal|18
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -266,6 +313,8 @@ literal|1
 block|,
 literal|6
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -280,6 +329,8 @@ literal|2
 block|,
 literal|18
 block|}
+block|,
+literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -294,6 +345,8 @@ literal|2
 block|,
 literal|18
 block|}
+block|,
+literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -308,6 +361,8 @@ literal|10
 block|,
 literal|4
 block|}
+block|,
+literal|"%e de %B de %Y"
 block|}
 block|,
 block|{
@@ -322,6 +377,8 @@ literal|12
 block|,
 literal|9
 block|}
+block|,
+literal|"%e. %B %Y"
 block|}
 block|,
 block|{
@@ -336,6 +393,8 @@ literal|9
 block|,
 literal|2
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -350,6 +409,8 @@ literal|3
 block|,
 literal|9
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -364,6 +425,8 @@ literal|10
 block|,
 literal|21
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -378,6 +441,8 @@ literal|11
 block|,
 literal|16
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -392,6 +457,8 @@ literal|10
 block|,
 literal|4
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -406,6 +473,8 @@ literal|12
 block|,
 literal|18
 block|}
+block|,
+literal|"%Y\x94N %B%e"
 block|}
 block|,
 block|{
@@ -420,6 +489,8 @@ literal|2
 block|,
 literal|1
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -434,6 +505,8 @@ literal|2
 block|,
 literal|1
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -448,6 +521,8 @@ literal|4
 block|,
 literal|30
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -462,6 +537,24 @@ literal|2
 block|,
 literal|18
 block|}
+block|,
+literal|"%e %B %Y"
+block|}
+block|,
+block|{
+literal|"PL"
+block|,
+literal|"Poland"
+block|,
+block|{
+literal|1582
+block|,
+literal|10
+block|,
+literal|4
+block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -476,6 +569,8 @@ literal|10
 block|,
 literal|4
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -490,6 +585,8 @@ literal|3
 block|,
 literal|4
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -504,6 +601,40 @@ literal|3
 block|,
 literal|4
 block|}
+block|,
+literal|"%e %B %Y"
+block|}
+block|,
+block|{
+literal|"SI"
+block|,
+literal|"Slovenia"
+block|,
+block|{
+literal|1919
+block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
+literal|"%e %B %Y"
+block|}
+block|,
+block|{
+literal|"SU"
+block|,
+literal|"USSR"
+block|,
+block|{
+literal|1920
+block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -518,6 +649,8 @@ literal|2
 block|,
 literal|17
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -532,6 +665,8 @@ literal|12
 block|,
 literal|18
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
 block|,
 block|{
@@ -546,6 +681,8 @@ literal|9
 block|,
 literal|2
 block|}
+block|,
+literal|"%B %e, %Y"
 block|}
 block|,
 block|{
@@ -560,10 +697,39 @@ literal|3
 block|,
 literal|4
 block|}
+block|,
+literal|"%e %B %Y"
 block|}
-block|, }
+block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|struct
+name|djswitch
+modifier|*
+name|dftswitch
+init|=
+name|switches
+operator|+
+sizeof|sizeof
+argument_list|(
+name|switches
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|djswitch
+argument_list|)
+operator|-
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default switch (should be "US") */
+end_comment
 
 begin_comment
 comment|/* Table used to print day of month and week numbers */
@@ -658,6 +824,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* switch date for backward compatibility */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|efmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* strftime format string for printeaster() */
 end_comment
 
 begin_function_decl
@@ -994,13 +1171,148 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* character pointer */
+name|char
+modifier|*
+name|locale
+decl_stmt|;
+comment|/* locale to get country code */
+comment|/* 	 * Use locale to determine the country code, 	 * and use the country code to determine the default 	 * switchdate and date format from the switches table. 	 */
+if|if
+condition|(
+operator|(
+name|locale
+operator|=
 name|setlocale
 argument_list|(
 name|LC_TIME
 argument_list|,
 literal|""
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|warn
+argument_list|(
+literal|"setlocale"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|locale
+operator|==
+name|NULL
+operator|||
+name|locale
+operator|==
+literal|"C"
+condition|)
+name|locale
+operator|=
+literal|"_US"
+expr_stmt|;
+name|q
+operator|=
+name|switches
+operator|+
+sizeof|sizeof
+argument_list|(
+name|switches
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|djswitch
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|switches
+init|;
+name|p
+operator|!=
+name|q
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|strstr
+argument_list|(
+name|locale
+argument_list|,
+name|p
+operator|->
+name|cc
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+operator|(
+name|cp
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'_'
+condition|)
+break|break;
+if|if
+condition|(
+name|p
+operator|==
+name|q
+condition|)
+block|{
+name|nswitch
+operator|=
+name|ndaysj
+argument_list|(
+operator|&
+name|dftswitch
+operator|->
+name|dt
+argument_list|)
+expr_stmt|;
+name|efmt
+operator|=
+name|dftswitch
+operator|->
+name|efmt
+expr_stmt|;
+block|}
+else|else
+block|{
+name|nswitch
+operator|=
+name|ndaysj
+argument_list|(
+operator|&
+name|p
+operator|->
+name|dt
+argument_list|)
+expr_stmt|;
+name|efmt
+operator|=
+name|p
+operator|->
+name|efmt
+expr_stmt|;
+name|dftswitch
+operator|=
+name|p
+expr_stmt|;
+block|}
 comment|/* 	 * Get the filename portion of argv[0] and set flag_backward if 	 * this program is called "cal". 	 */
 for|for
 control|(
@@ -1541,7 +1853,21 @@ comment|/* offset from left to right table entry on the same line */
 define|#
 directive|define
 name|FSTR
-value|"%s %-15s %4d-%02d-%02d"
+value|"%c%s %-15s%4d-%02d-%02d"
+define|#
+directive|define
+name|DFLT
+parameter_list|(
+name|p
+parameter_list|)
+value|((p) == dftswitch ? '*' : ' ')
+define|#
+directive|define
+name|FSTRARG
+parameter_list|(
+name|p
+parameter_list|)
+value|DFLT(p), (p)->cc, (p)->nm, (p)->dt.y, (p)->dt.m, (p)->dt.d
 name|n
 operator|=
 sizeof|sizeof
@@ -1584,7 +1910,6 @@ condition|;
 name|p
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
 name|FSTR
@@ -1592,80 +1917,19 @@ literal|"     "
 name|FSTR
 literal|"\n"
 argument_list|,
+name|FSTRARG
+argument_list|(
 name|p
-operator|->
-name|cc
+argument_list|)
 argument_list|,
-name|p
-operator|->
-name|nm
-argument_list|,
-name|p
-operator|->
-name|dt
-operator|.
-name|y
-argument_list|,
-name|p
-operator|->
-name|dt
-operator|.
-name|m
-argument_list|,
-name|p
-operator|->
-name|dt
-operator|.
-name|d
-argument_list|,
-operator|(
+name|FSTRARG
+argument_list|(
 name|p
 operator|+
 name|m
-operator|)
-operator|->
-name|cc
-argument_list|,
-operator|(
-name|p
-operator|+
-name|m
-operator|)
-operator|->
-name|nm
-argument_list|,
-operator|(
-name|p
-operator|+
-name|m
-operator|)
-operator|->
-name|dt
-operator|.
-name|y
-argument_list|,
-operator|(
-name|p
-operator|+
-name|m
-operator|)
-operator|->
-name|dt
-operator|.
-name|m
-argument_list|,
-operator|(
-name|p
-operator|+
-name|m
-operator|)
-operator|->
-name|dt
-operator|.
-name|d
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|m
@@ -1677,31 +1941,10 @@ argument_list|(
 name|FSTR
 literal|"\n"
 argument_list|,
+name|FSTRARG
+argument_list|(
 name|p
-operator|->
-name|cc
-argument_list|,
-name|p
-operator|->
-name|nm
-argument_list|,
-name|p
-operator|->
-name|dt
-operator|.
-name|y
-argument_list|,
-name|p
-operator|->
-name|dt
-operator|.
-name|m
-argument_list|,
-name|p
-operator|->
-name|dt
-operator|.
-name|d
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1727,6 +1970,16 @@ parameter_list|)
 block|{
 name|date
 name|dt
+decl_stmt|;
+name|struct
+name|tm
+name|tm
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|80
+index|]
 decl_stmt|;
 comment|/* force orthodox easter for years before 1583 */
 if|if
@@ -1773,21 +2026,67 @@ operator|&
 name|dt
 argument_list|)
 expr_stmt|;
-name|printf
+name|memset
 argument_list|(
-literal|"%04d-%02d-%02d\n"
+operator|&
+name|tm
 argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tm
+operator|.
+name|tm_year
+operator|=
 name|dt
 operator|.
 name|y
-argument_list|,
+operator|-
+literal|1900
+expr_stmt|;
+name|tm
+operator|.
+name|tm_mon
+operator|=
 name|dt
 operator|.
 name|m
-argument_list|,
+operator|-
+literal|1
+expr_stmt|;
+name|tm
+operator|.
+name|tm_mday
+operator|=
 name|dt
 operator|.
 name|d
+expr_stmt|;
+name|strftime
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|efmt
+argument_list|,
+operator|&
+name|tm
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
