@@ -5731,7 +5731,7 @@ name|ump
 operator|->
 name|um_dev
 expr_stmt|;
-comment|/* 	 * We do not lock vnode creation as it is beleived to be too 	 * expensive for such rare case as simultaneous creation of vnode 	 * for same ino by different processes. We just allow them to race 	 * and check later to decide who wins. Let the race begin! 	 */
+comment|/* 	 * We do not lock vnode creation as it is believed to be too 	 * expensive for such rare case as simultaneous creation of vnode 	 * for same ino by different processes. We just allow them to race 	 * and check later to decide who wins. Let the race begin! 	 */
 if|if
 condition|(
 operator|(
