@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.4 (Berkeley) %G%"
+literal|"@(#)util.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,13 +694,12 @@ decl_stmt|;
 specifier|static
 name|int
 name|opened
+decl_stmt|,
+name|fd
 decl_stmt|;
 name|struct
 name|lastlog
 name|ll
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|char
 name|doit
@@ -835,7 +834,15 @@ name|doit
 operator|=
 literal|1
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|ll
+operator|.
+name|ll_time
+operator|!=
+literal|0
+condition|)
 block|{
 comment|/* if last login is earlier than some current login */
 for|for
