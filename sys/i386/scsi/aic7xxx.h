@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.21 1996/01/30 22:56:41 mpp Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.22 1996/03/10 07:11:44 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -272,11 +272,12 @@ name|next_waiting
 decl_stmt|;
 comment|/* Used to thread SCBs awaiting 					 * selection 					 */
 comment|/*-----------------end of hardware supported fields----------------*/
-name|struct
-name|scb
-modifier|*
+name|SLIST_ENTRY
+argument_list|(
+argument|scb
+argument_list|)
 name|next
-decl_stmt|;
+expr_stmt|;
 comment|/* in free list */
 name|struct
 name|scsi_xfer
@@ -370,11 +371,13 @@ name|AHC_SCB_MAX
 index|]
 decl_stmt|;
 comment|/* Mirror boards scbarray */
-name|struct
-name|scb
-modifier|*
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
 name|free_scb
-decl_stmt|;
+expr_stmt|;
 name|int
 name|our_id
 decl_stmt|;
@@ -441,6 +444,9 @@ name|activescbs
 decl_stmt|;
 name|u_char
 name|maxscbs
+decl_stmt|;
+name|u_char
+name|qcntmask
 decl_stmt|;
 name|u_char
 name|unpause
@@ -515,47 +521,6 @@ end_decl_stmt
 begin_comment
 comment|/* Initialized in i386/scsi/aic7xxx.c */
 end_comment
-
-begin_comment
-comment|/*  * Since the sequencer can disable pausing in a critical section, we  * must loop until it actually stops.  * XXX Should add a timeout in here??  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PAUSE_SEQUENCER
-parameter_list|(
-name|ahc
-parameter_list|)
-define|\
-value|outb(HCNTRL + ahc->baseport, ahc->pause);   \ 				\         while ((inb(HCNTRL + ahc->baseport)& PAUSE) == 0)             \                         ;
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNPAUSE_SEQUENCER
-parameter_list|(
-name|ahc
-parameter_list|)
-define|\
-value|outb( HCNTRL + ahc->baseport, ahc->unpause )
-end_define
-
-begin_comment
-comment|/*  * Restart the sequencer program from address zero  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RESTART_SEQUENCER
-parameter_list|(
-name|ahc
-parameter_list|)
-define|\
-value|do {                                    \                         outb( SEQCTL + ahc->baseport, SEQRESET|FASTMODE );    \                 } while (inb(SEQADDR0 + ahc->baseport) != 0&&   \ 			 inb(SEQADDR1 + ahc->baseport != 0));     \                                                         \                 UNPAUSE_SEQUENCER(ahc);
-end_define
 
 begin_decl_stmt
 name|void
