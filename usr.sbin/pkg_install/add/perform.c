@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.13 1994/12/06 00:51:34 jkh Exp $"
+literal|"$Id: perform.c,v 1.14 1995/04/09 15:04:52 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,6 +631,21 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Package `%s' depends on `%s'"
+argument_list|,
+name|PkgName
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|Fake
 operator|&&
@@ -650,6 +665,15 @@ index|[
 literal|120
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|" which is not currently loaded"
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|tmp
@@ -677,13 +701,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Package `%s' depends on `%s':  Trying to load it.\n"
-argument_list|,
-name|PkgName
-argument_list|,
-name|p
-operator|->
-name|name
+literal|" but was found - loading:\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -727,7 +745,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Dependency `%s' loaded successfully.\n"
+literal|"\t`%s' loaded successfully.\n"
 argument_list|,
 name|p
 operator|->
@@ -739,9 +757,7 @@ else|else
 block|{
 name|whinge
 argument_list|(
-literal|"Package `%s' depends on missing package `%s'%s."
-argument_list|,
-name|PkgName
+literal|"and was not found%s."
 argument_list|,
 name|p
 operator|->
@@ -764,6 +780,16 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|" - already installed.\n"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

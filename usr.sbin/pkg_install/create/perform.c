@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.14 1994/12/06 00:51:37 jkh Exp $"
+literal|"$Id: perform.c,v 1.15 1995/04/09 15:05:00 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,20 @@ operator|=
 literal|"tgz"
 expr_stmt|;
 comment|/* Stick the dependencies, if any, at the top */
+if|if
+condition|(
+name|Pkgdeps
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Registering depends:"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|Pkgdeps
@@ -254,7 +268,28 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|".\n"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Slurp in the packing list */
 name|read_plist
