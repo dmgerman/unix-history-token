@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|TWE_DRIVER_VERSION_STRING
-value|"1.50.01.001"
+value|"1.50.01.002"
 end_define
 
 begin_ifdef
@@ -370,6 +370,12 @@ define|#
 directive|define
 name|TWE_STATE_FRZN
 value|(1<<4)
+comment|/* got EINPROGRESS */
+define|#
+directive|define
+name|TWE_STATE_CTLR_BUSY
+value|(1<<5)
+comment|/* controller cmd queue full */
 name|int
 name|twe_host_id
 decl_stmt|;
