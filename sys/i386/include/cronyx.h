@@ -2321,6 +2321,12 @@ name|CX_SPEED_DFLT
 value|9600
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_function_decl
 name|int
 name|cx_probe_board
@@ -2448,6 +2454,11 @@ name|div
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
