@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.8 (Berkeley) %G%"
+literal|"@(#)query.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +199,12 @@ sizeof|sizeof
 argument_list|(
 name|from
 argument_list|)
+decl_stmt|,
+name|size
+init|=
+literal|32
+operator|*
+literal|1024
 decl_stmt|;
 name|struct
 name|timeval
@@ -253,6 +259,32 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|size
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"setsockopt SO_RCVBUF"
+argument_list|)
+expr_stmt|;
 name|argv
 operator|++
 operator|,
@@ -464,6 +496,17 @@ name|count
 operator|--
 expr_stmt|;
 block|}
+name|exit
+argument_list|(
+name|count
+operator|>
+literal|0
+condition|?
+name|count
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1151,9 +1194,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t%s(%s), metric %d\n"
-argument_list|,
-name|name
+literal|"\t%-17s metric %2d name %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1165,13 +1206,15 @@ argument_list|,
 name|n
 operator|->
 name|rip_metric
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|printf
 argument_list|(
-literal|"\t%s, metric %d\n"
+literal|"\t%-17s metric %2d\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
