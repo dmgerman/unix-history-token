@@ -2239,13 +2239,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|stl_devsw_installed
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -4035,9 +4028,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stldevtotty(dev=%x)\n"
+literal|"stldevtotty(dev=%s)\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

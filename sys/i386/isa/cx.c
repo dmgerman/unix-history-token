@@ -6089,13 +6089,6 @@ literal|1
 operator|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cx_devsw_installed
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void

@@ -5152,9 +5152,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stlidevtotty(dev=%x)\n"
+literal|"stlidevtotty(dev=%s)\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

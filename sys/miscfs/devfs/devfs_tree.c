@@ -3157,9 +3157,6 @@ name|struct
 name|vnode
 modifier|*
 name|vn_p
-decl_stmt|,
-modifier|*
-name|nvp
 decl_stmt|;
 name|int
 name|error

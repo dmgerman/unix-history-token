@@ -205,6 +205,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ida_wait
+parameter_list|(
+name|struct
+name|ida_softc
+modifier|*
+name|ida
+parameter_list|,
+name|struct
+name|ida_qcb
+modifier|*
+name|qcb
+parameter_list|,
+name|int
+name|delay
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|ida_free
@@ -1966,6 +1987,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ida_wait
 parameter_list|(
