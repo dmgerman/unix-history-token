@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.23 1999/01/28 01:56:32 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.24 1999/02/26 21:28:12 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_define
@@ -73,16 +73,6 @@ end_define
 begin_comment
 comment|/* subtract from NS val for REJECT bit */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|addr2mask
-parameter_list|(
-name|addr
-parameter_list|)
-value|(			\   IN_CLASSA(addr) ?				\     htonl(IN_CLASSA_NET) :			\   IN_CLASSB(addr) ?				\     htonl(IN_CLASSB_NET) : htonl(IN_CLASSC_NET)	\ )
-end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -502,6 +492,18 @@ parameter_list|(
 name|struct
 name|ipcp
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|in_addr
+name|addr2mask
+parameter_list|(
+name|struct
+name|in_addr
 parameter_list|)
 function_decl|;
 end_function_decl

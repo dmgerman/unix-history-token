@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.71 1999/02/06 02:54:45 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.72 1999/02/26 21:28:11 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
 end_comment
 
 begin_include
@@ -1642,6 +1642,24 @@ operator|.
 name|width
 argument_list|)
 expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|", netmask %s\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ipcp
+operator|->
+name|cfg
+operator|.
+name|netmask
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ipcp
@@ -1656,7 +1674,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" (trigger with %s)"
+literal|" Trigger address: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1674,7 +1692,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"\n VJ compression:  %s (%d slots %s slot "
+literal|" VJ compression:  %s (%d slots %s slot "
 literal|"compression)\n"
 argument_list|,
 name|command_ShowNegval
@@ -3061,21 +3079,21 @@ control|)
 block|{
 if|if
 condition|(
-name|ntohl
-argument_list|(
 name|rp
 operator|->
 name|mask
 operator|.
 name|s_addr
-argument_list|)
 operator|==
 name|INADDR_BROADCAST
 condition|)
 continue|continue;
 name|n
 operator|=
+name|ntohl
+argument_list|(
 name|INADDR_BROADCAST
+argument_list|)
 operator|-
 name|ntohl
 argument_list|(
@@ -3215,25 +3233,11 @@ name|mask
 decl_stmt|,
 name|oaddr
 decl_stmt|;
-name|u_int32_t
-name|addr
-decl_stmt|;
-name|addr
-operator|=
-name|htonl
-argument_list|(
-name|myaddr
-operator|.
-name|s_addr
-argument_list|)
-expr_stmt|;
 name|mask
-operator|.
-name|s_addr
 operator|=
 name|addr2mask
 argument_list|(
-name|addr
+name|myaddr
 argument_list|)
 expr_stmt|;
 if|if
@@ -3251,8 +3255,6 @@ operator|!=
 name|INADDR_ANY
 operator|&&
 operator|(
-name|ntohl
-argument_list|(
 name|bundle
 operator|->
 name|ncp
@@ -3262,7 +3264,6 @@ operator|.
 name|ifmask
 operator|.
 name|s_addr
-argument_list|)
 operator|&
 name|mask
 operator|.
@@ -3277,8 +3278,6 @@ name|mask
 operator|.
 name|s_addr
 operator|=
-name|htonl
-argument_list|(
 name|bundle
 operator|->
 name|ncp
@@ -3288,7 +3287,6 @@ operator|.
 name|ifmask
 operator|.
 name|s_addr
-argument_list|)
 expr_stmt|;
 name|oaddr
 operator|.
@@ -7699,6 +7697,59 @@ literal|0
 return|;
 return|return
 literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|in_addr
+name|addr2mask
+parameter_list|(
+name|struct
+name|in_addr
+name|addr
+parameter_list|)
+block|{
+name|u_int32_t
+name|haddr
+init|=
+name|ntohl
+argument_list|(
+name|addr
+operator|.
+name|s_addr
+argument_list|)
+decl_stmt|;
+name|haddr
+operator|=
+name|IN_CLASSA
+argument_list|(
+name|haddr
+argument_list|)
+condition|?
+name|IN_CLASSA_NET
+else|:
+name|IN_CLASSB
+argument_list|(
+name|haddr
+argument_list|)
+condition|?
+name|IN_CLASSB_NET
+else|:
+name|IN_CLASSC_NET
+expr_stmt|;
+name|addr
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|haddr
+argument_list|)
+expr_stmt|;
+return|return
+name|addr
 return|;
 block|}
 end_function
