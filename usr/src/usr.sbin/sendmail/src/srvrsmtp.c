@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.22 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.23 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.22 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.23 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2307,7 +2307,7 @@ expr_stmt|;
 else|else
 name|message
 argument_list|(
-literal|"502 That's none of your business"
+literal|"502 Sorry, we do not allow this operation"
 argument_list|)
 expr_stmt|;
 ifdef|#
