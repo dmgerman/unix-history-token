@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_domain.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_domain.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -403,11 +403,21 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|pr
 operator|->
 name|pr_protocol
 operator|==
 name|protocol
+operator|)
+operator|&&
+operator|(
+name|pr
+operator|->
+name|pr_type
+operator|==
+name|type
+operator|)
 condition|)
 return|return
 operator|(
