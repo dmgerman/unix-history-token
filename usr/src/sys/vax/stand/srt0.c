@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -307,12 +307,28 @@ operator|#
 literal|3
 name|is
 literal|730
+operator|.
+name|word
+literal|6f
+operator|-
+literal|0b
+operator|#
+literal|4
+name|is
+literal|8600
 literal|5
 operator|:
 name|mtpr
 name|$0xf
 decl_stmt|,
 name|$MCESR
+name|brb
+decl|1f 6
+range|:
+name|mtpr
+name|$0
+decl_stmt|,
+name|$EHSR
 name|brb
 decl|1f 8
 range|:
