@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ufs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -168,6 +174,23 @@ include|#
 directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UFS_DIRHASH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dirhash.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -7545,6 +7568,25 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UFS_DIRHASH
+comment|/* Kill any active hash; i_effnlink == 0, so it will not come back. */
+if|if
+condition|(
+name|ip
+operator|->
+name|i_dirhash
+operator|!=
+name|NULL
+condition|)
+name|ufsdirhash_free
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|out
 label|:
 name|VN_KNOTE
