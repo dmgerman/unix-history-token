@@ -522,11 +522,6 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|sbuf_clear
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 name|g_waitfor_event
 argument_list|(
 name|g_conftxt
@@ -597,11 +592,6 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|sbuf_clear
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 name|g_waitfor_event
 argument_list|(
 name|g_confdot
@@ -670,11 +660,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|SBUF_AUTOEXTEND
-argument_list|)
-expr_stmt|;
-name|sbuf_clear
-argument_list|(
-name|sb
 argument_list|)
 expr_stmt|;
 name|g_waitfor_event

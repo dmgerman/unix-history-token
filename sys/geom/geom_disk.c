@@ -2025,11 +2025,6 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|sbuf_clear
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 name|g_waitfor_event
 argument_list|(
 name|g_kern_disks

@@ -2977,11 +2977,6 @@ argument_list|,
 name|SBUF_AUTOEXTEND
 argument_list|)
 expr_stmt|;
-name|sbuf_clear
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -3323,11 +3318,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|SBUF_AUTOEXTEND
-argument_list|)
-expr_stmt|;
-name|sbuf_clear
-argument_list|(
-name|sb
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
