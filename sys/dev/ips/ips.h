@@ -224,8 +224,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPS_NOWAIT_FLAG
-value|1
+name|IPS_STATIC_FLAG
+value|0x01
 end_define
 
 begin_comment
@@ -260,6 +260,13 @@ end_define
 begin_comment
 comment|/* can't reset card/card failure */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IPS_STATIC_BUSY
+value|0x08
+end_define
 
 begin_comment
 comment|/* max number of commands set to something low for now */
@@ -1756,6 +1763,12 @@ name|ips_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|bus_dma_tag_t
+name|data_dmatag
+decl_stmt|;
+name|bus_dmamap_t
+name|data_dmamap
+decl_stmt|;
 name|bus_dmamap_t
 name|command_dmamap
 decl_stmt|;
@@ -1767,10 +1780,6 @@ name|u_int32_t
 name|command_phys_addr
 decl_stmt|;
 comment|/*WARNING! must be changed if 64bit addressing ever used*/
-name|struct
-name|sema
-name|cmd_sema
-decl_stmt|;
 name|ips_cmd_status_t
 name|status
 decl_stmt|;
@@ -1780,12 +1789,6 @@ argument|ips_command
 argument_list|)
 name|next
 expr_stmt|;
-name|bus_dma_tag_t
-name|data_dmatag
-decl_stmt|;
-name|bus_dmamap_t
-name|data_dmamap
-decl_stmt|;
 name|void
 modifier|*
 name|data_buffer
@@ -1808,37 +1811,6 @@ parameter_list|)
 function_decl|;
 block|}
 name|ips_command_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|ips_wait_list
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|ips_wait_list
-argument_list|)
-name|next
-expr_stmt|;
-name|void
-modifier|*
-name|data
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|callback
-function_decl|)
-parameter_list|(
-name|ips_command_t
-modifier|*
-name|command
-parameter_list|)
-function_decl|;
-block|}
-name|ips_wait_list_t
 typedef|;
 end_typedef
 
@@ -1946,10 +1918,12 @@ name|u_int8_t
 name|used_commands
 decl_stmt|;
 name|ips_command_t
+modifier|*
 name|commandarray
-index|[
-name|IPS_MAX_CMD_NUM
-index|]
+decl_stmt|;
+name|ips_command_t
+modifier|*
+name|staticcmd
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -1958,14 +1932,6 @@ argument_list|,
 argument|ips_command
 argument_list|)
 name|free_cmd_list
-expr_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument|command_wait_list
-argument_list|,
-argument|ips_wait_list
-argument_list|)
-name|cmd_wait_list
 expr_stmt|;
 name|int
 function_decl|(
@@ -2015,6 +1981,10 @@ decl_stmt|;
 name|struct
 name|bio_queue_head
 name|queue
+decl_stmt|;
+name|struct
+name|sema
+name|cmd_sema
 decl_stmt|;
 block|}
 name|ips_softc_t
@@ -2164,19 +2134,10 @@ name|ips_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|callback
-function_decl|)
-parameter_list|(
 name|ips_command_t
 modifier|*
-parameter_list|)
-parameter_list|,
-name|void
 modifier|*
-name|data
+name|command
 parameter_list|,
 name|unsigned
 name|long

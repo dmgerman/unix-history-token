@@ -409,7 +409,7 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|dsc
@@ -421,6 +421,13 @@ argument_list|,
 name|iobuf
 argument_list|)
 expr_stmt|;
+name|ips_start_io_request
+argument_list|(
+name|dsc
+operator|->
+name|sc
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -429,13 +436,6 @@ operator|->
 name|sc
 operator|->
 name|queue_mtx
-argument_list|)
-expr_stmt|;
-name|ips_start_io_request
-argument_list|(
-name|dsc
-operator|->
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -732,7 +732,7 @@ name|ipsd_disk
 operator|->
 name|d_flags
 operator|=
-name|DISKFLAG_NEEDSGIANT
+literal|0
 expr_stmt|;
 name|disk_create
 argument_list|(
