@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.9 (Berkeley) %G%"
+literal|"@(#)util.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +240,7 @@ name|bp
 decl_stmt|,
 name|name
 index|[
-literal|256
+literal|1024
 index|]
 decl_stmt|;
 name|pn
@@ -541,7 +541,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-literal|256
+literal|1024
 index|]
 decl_stmt|;
 comment|/* why do we skip asterisks!?!? */
