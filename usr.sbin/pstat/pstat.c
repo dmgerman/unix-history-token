@@ -6167,6 +6167,16 @@ name|avail
 operator|-
 name|nfree
 expr_stmt|;
+name|free
+argument_list|(
+name|sw
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|perdev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|totalflag
