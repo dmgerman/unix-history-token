@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.1 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../btree/btree.h"
+file|"recno.h"
 end_include
 
 begin_function
@@ -183,6 +183,30 @@ condition|(
 name|openinfo
 condition|)
 block|{
+if|if
+condition|(
+name|openinfo
+operator|->
+name|flags
+operator|&
+operator|~
+operator|(
+name|R_FIXEDLEN
+operator||
+name|R_NOKEY
+operator||
+name|R_SNAPSHOT
+operator|)
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|btopeninfo
 operator|.
 name|flags
@@ -256,22 +280,10 @@ name|dbp
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|rfd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-comment|/* 	 * Some fields in the tree structure are recno specific.  Fill them 	 * in and make the btree structure look like a recno structure. 	 */
+goto|goto
+name|err
+goto|;
+comment|/* 	 * Some fields in the tree structure are recno specific.  Fill them 	 * in and make the btree structure look like a recno structure.  We 	 * don't change the bt_ovflsize value, it's close enough and slightly 	 * bigger. 	 */
 name|t
 operator|=
 name|dbp
@@ -650,6 +662,10 @@ operator|)
 return|;
 name|err
 label|:
+if|if
+condition|(
+name|dbp
+condition|)
 name|__bt_close
 argument_list|(
 name|dbp
