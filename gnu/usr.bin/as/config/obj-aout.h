@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.        GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.        You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
-end_comment
-
-begin_comment
-comment|/*  * $Id: obj-aout.h,v 1.1 1993/11/03 00:53:50 paul Exp $  */
+comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.        GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.        You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.     $Id: obj-aout.h,v 1.2 1993/11/30 20:57:40 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -52,9 +48,41 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* AOUT_MACHTYPE */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AOUT_VERSION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AOUT_VERSION
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AOUT_FLAGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AOUT_FLAGS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -73,6 +101,17 @@ name|N_TYPE_seg
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|N_REGISTER
+value|0x12
+end_define
+
+begin_comment
+comment|/* Fake register type */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -596,6 +635,274 @@ parameter_list|)
 value|(0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FREEBSD_AOUT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NETBSD_AOUT
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FREEBSD_AOUT
+argument_list|)
+end_if
+
+begin_comment
+comment|/* duplicate part of<sys/imgact_aout.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_GET_FLAGS
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|( (((h)->header.a_info)&0xffff)				\ 		? ((h)->header.a_info>> 26)& 0x3f )		\ 		: 0						\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_MACHTYPE
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|( (((h)->header.a_info)&0xffff)				\ 		? ((h)->header.a_info>>16 )& 0x3ff)		\ 		: 0						\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_MAGIC_NUMBER
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|( (((h)->header.a_info)&0xffff)				\ 		? ((h)->header.a_info& 0xffff)			\ 		: (ntohl(((h)->header.a_info))&0xffff)		\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_INFO
+parameter_list|(
+name|h
+parameter_list|,
+name|mag
+parameter_list|,
+name|mid
+parameter_list|,
+name|f
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|( (h)->header.a_info =					\ 	   htonl( (((f)&0x3f)<<26) | (((mid)&0x03ff)<<16) | (((mag)&0xffff)) ) )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_AOUT */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NETBSD_AOUT
+argument_list|)
+end_if
+
+begin_comment
+comment|/* SH*T, duplicate part of<a.out.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_GET_FLAGS
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|( (((h)->header.a_info)&0xffff0000)			\ 		? ((ntohl(((h)->header.a_info))>>26)&0x3f)	\ 		: 0						\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_MACHTYPE
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|( (((h)->header.a_info)&0xffff0000)			\ 		? ((ntohl(((h)->header.a_info))>>16)&0x3ff)	\ 		: 0						\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_MAGIC_NUMBER
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|( (((h)->header.a_info)&0xffff0000)			\ 		? (ntohl(((h)->header.a_info))&0xffff)		\ 		: ((h)->header.a_info& 0xffff)			\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_INFO
+parameter_list|(
+name|h
+parameter_list|,
+name|mag
+parameter_list|,
+name|mid
+parameter_list|,
+name|f
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|( (h)->header.a_info =					\ 	   htonl( (((f)&0x3f)<<26) | (((mid)&0x03ff)<<16) | (((mag)&0xffff)) ) )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETBSD_AOUT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_DYNAMIC
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|EX_PIC
+value|0x10
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|AOUT_FLAGS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|AOUT_FLAGS
+value|(flagseen['k'] ? EX_PIC : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_DYNAMIC
+parameter_list|(
+name|h
+parameter_list|)
+value|(H_GET_FLAGS(h)& EX_DYNAMIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_GET_VERSION
+parameter_list|(
+name|h
+parameter_list|)
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_DYNAMIC
+parameter_list|(
+name|h
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|H_SET_INFO(h, H_GET_MAGIC_NUMBER(h), H_GET_MACHTYPE(h),	\ 		   (v)?(H_GET_FLAGS(h)|0x20):(H_GET_FLAGS(h)&(~0x20)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_VERSION
+parameter_list|(
+name|h
+parameter_list|,
+name|v
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_MACHTYPE
+parameter_list|(
+name|h
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|H_SET_INFO(h, H_GET_MAGIC_NUMBER(h), (v), H_GET_FLAGS(h), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_MAGIC_NUMBER
+parameter_list|(
+name|h
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|H_SET_INFO(h, (v), H_GET_MACHTYPE(h), H_GET_FLAGS(h), 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(FREEBSD_AOUT || NETBSD_AOUT) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -645,7 +952,7 @@ name|h
 parameter_list|,
 name|v
 parameter_list|)
-value|((h)->header.a_info = (((v)<< 31) \ 							       | (H_GET_VERSION(h)<< 24) \ 							       | (H_GET_MACHTYPE(h)<< 16) \ 							       | (H_GET_MAGIC_NUMBER(h))))
+value|((h)->header.a_info = \ 						(((v)<< 31) \ 						| (H_GET_VERSION(h)<< 24) \ 						| (H_GET_MACHTYPE(h)<< 16) \ 						| (H_GET_MAGIC_NUMBER(h))))
 end_define
 
 begin_define
@@ -657,7 +964,7 @@ name|h
 parameter_list|,
 name|v
 parameter_list|)
-value|((h)->header.a_info = ((H_GET_DYNAMIC(h)<< 31) \ 							       | ((v)<< 24) \ 							       | (H_GET_MACHTYPE(h)<< 16) \ 							       | (H_GET_MAGIC_NUMBER(h))))
+value|((h)->header.a_info = \ 						((H_GET_DYNAMIC(h)<< 31) \ 						| ((v)<< 24) \ 						| (H_GET_MACHTYPE(h)<< 16) \ 						| (H_GET_MAGIC_NUMBER(h))))
 end_define
 
 begin_define
@@ -669,7 +976,7 @@ name|h
 parameter_list|,
 name|v
 parameter_list|)
-value|((h)->header.a_info = ((H_GET_DYNAMIC(h)<< 31) \ 							       | (H_GET_VERSION(h)<< 24) \ 							       | ((v)<< 16) \ 							       | (H_GET_MAGIC_NUMBER(h))))
+value|((h)->header.a_info = \ 						((H_GET_DYNAMIC(h)<< 31) \ 						| (H_GET_VERSION(h)<< 24) \ 						| ((v)<< 16) \ 						| (H_GET_MAGIC_NUMBER(h))))
 end_define
 
 begin_define
@@ -681,8 +988,35 @@ name|h
 parameter_list|,
 name|v
 parameter_list|)
-value|((h)->header.a_info = ((H_GET_DYNAMIC(h)<< 31) \ 							       | (H_GET_VERSION(h)<< 24) \ 							       | (H_GET_MACHTYPE(h)<< 16) \ 							       | ((v))))
+value|((h)->header.a_info = \ 						((H_GET_DYNAMIC(h)<< 31) \ 						| (H_GET_VERSION(h)<< 24) \ 						| (H_GET_MACHTYPE(h)<< 16) \ 						| ((v))))
 end_define
+
+begin_define
+define|#
+directive|define
+name|H_SET_INFO
+parameter_list|(
+name|h
+parameter_list|,
+name|mag
+parameter_list|,
+name|mid
+parameter_list|,
+name|f
+parameter_list|,
+name|v
+parameter_list|)
+value|((h)->header.a_info = \ 						((((f)==0x20)<< 31) \ 						| ((v)<< 24) \ 						| ((mid)<< 16) \ 						| ((mag))) )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_AOUT || NETBSD_AOUT */
+end_comment
 
 begin_define
 define|#

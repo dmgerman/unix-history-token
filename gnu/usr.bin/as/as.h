@@ -4,7 +4,7 @@ comment|/* as.h - global header file    Copyright (C) 1987, 1990, 1991, 1992 Fre
 end_comment
 
 begin_comment
-comment|/*  * $Id: as.h,v 1.3 1993/10/02 20:57:16 pk Exp $  */
+comment|/*  * $Id: as.h,v 1.2 1993/11/03 00:51:11 paul Exp $  */
 end_comment
 
 begin_define
@@ -152,6 +152,59 @@ end_endif
 
 begin_comment
 comment|/* __FILE__ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PARAMS
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+operator|!=
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|PARAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PARAMS
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*PARAMS */
 end_comment
 
 begin_comment
@@ -1260,10 +1313,12 @@ begin_function_decl
 name|void
 name|as_perror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|gripe
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1275,7 +1330,13 @@ begin_function_decl
 name|void
 name|as_where
 parameter_list|(
-name|void
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

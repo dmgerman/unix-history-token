@@ -4,7 +4,7 @@ comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 1992 Fr
 end_comment
 
 begin_comment
-comment|/*  * $Id: tc-i386.h,v 1.1 1993/10/02 20:59:21 pk Exp $  */
+comment|/*  * $Id: tc-i386.h,v 1.1 1993/11/03 00:54:25 paul Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,23 +20,12 @@ name|TC_I386
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
 name|AOUT_MACHTYPE
-value|100
+value|134
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -48,12 +37,6 @@ begin_define
 define|#
 directive|define
 name|LOCAL_LABELS_FB
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_LISTING
 end_define
 
 begin_define

@@ -4,7 +4,7 @@ comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright (C) 
 end_comment
 
 begin_comment
-comment|/*  * $Id: tc-sparc.h,v 1.1 1993/10/02 20:59:41 pk Exp $  */
+comment|/*  * $Id: tc-sparc.h,v 1.1 1993/11/03 00:54:54 paul Exp $  */
 end_comment
 
 begin_define
@@ -12,12 +12,6 @@ define|#
 directive|define
 name|TC_SPARC
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_LISTING
 end_define
 
 begin_define
@@ -35,59 +29,26 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OBJ_BOUT
+name|__NetBSD__
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|DEFAULT_MAGIC_NUMBER_FOR_OBJECT_FILE
-value|((0x103<< 16) | BMAGIC)
+name|AOUT_MACHTYPE
+value|138
 end_define
 
-begin_comment
-comment|/* Magic number for header */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OBJ_AOUT
+name|sun
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_MAGIC_NUMBER_FOR_OBJECT_FILE
-value|((0x103<< 16) | OMAGIC)
-end_define
-
-begin_comment
-comment|/* Magic number for header */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OBJ_AOUT */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OBJ_BOUT */
-end_comment
 
 begin_define
 define|#
@@ -95,6 +56,18 @@ directive|define
 name|AOUT_MACHTYPE
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|AOUT_VERSION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

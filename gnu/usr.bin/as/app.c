@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        Modified by Allen Wirfs-Brock, Instantiations Inc 2/90    */
+comment|/* This is the Assembler Pre-Processor    Copyright (C) 1987, 1990, 1991, 1992, 1994 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/* This is the Assembler Pre-Processor    Copyright (C) 1987 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Modified by Allen Wirfs-Brock, Instantiations Inc 2/90 */
 end_comment
 
 begin_comment
-comment|/* App, the assembler pre-processor.  This pre-processor strips out excess    spaces, turns single-quoted characters into a decimal constant, and turns    #<number><filename><garbage> into a .line<number>\n.app-file<filename> pair.    This needs better error-handling.    */
+comment|/* App, the assembler pre-processor.  This pre-processor strips out excess    spaces, turns single-quoted characters into a decimal constant, and turns    #<number><filename><garbage> into a .line<number>\n.file<filename>    pair.  This needs better error-handling.  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: app.c,v 1.3 1993/10/02 20:57:12 pk Exp $"
+literal|"$Id: app.c,v 1.2 1993/11/03 00:51:05 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,13 +56,13 @@ name|__STDC__
 operator|!=
 literal|1
 operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|const
+end_ifndef
 
 begin_define
 define|#
@@ -71,8 +71,13 @@ name|const
 end_define
 
 begin_comment
-comment|/* Nothing */
+comment|/* empty */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -91,42 +96,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|symbol_chars
 index|[]
 init|=
 literal|"$._ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* These will go in BSS if not defined elsewhere, producing empty strings. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|comment_chars
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|line_comment_chars
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|line_separator_chars
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +242,19 @@ parameter_list|)
 value|(lex[c] == LEX_IS_NEWLINE)
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|process_escape
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* FIXME-soon: The entire lexer/parser thingy should be    built statically at compile time rather than dynamically    each and every time the assembler is run.  xoxorich. */
 end_comment
@@ -316,6 +304,9 @@ index|]
 operator|=
 name|LEX_IS_STRINGQUOTE
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TC_HPPA
 name|lex
 index|[
 literal|'\''
@@ -323,6 +314,8 @@ index|]
 operator|=
 name|LEX_IS_ONECHAR_QUOTE
 expr_stmt|;
+endif|#
+directive|endif
 name|lex
 index|[
 literal|':'
@@ -330,7 +323,19 @@ index|]
 operator|=
 name|LEX_IS_COLON
 expr_stmt|;
-comment|/* Note that these override the previous defaults, e.g. if ';' 	   is a comment char, then it isn't a line separator.  */
+ifdef|#
+directive|ifdef
+name|SINGLE_QUOTE_STRINGS
+name|lex
+index|[
+literal|'\''
+index|]
+operator|=
+name|LEX_IS_STRINGQUOTE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Note that these override the previous defaults, e.g. if ';' is a      comment char, then it isn't a line separator.  */
 for|for
 control|(
 name|p
@@ -346,6 +351,10 @@ control|)
 block|{
 name|lex
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 index|]
@@ -354,29 +363,6 @@ name|LEX_IS_SYMBOL_COMPONENT
 expr_stmt|;
 block|}
 comment|/* declare symbol characters */
-for|for
-control|(
-name|p
-operator|=
-name|line_comment_chars
-init|;
-operator|*
-name|p
-condition|;
-name|p
-operator|++
-control|)
-block|{
-name|lex
-index|[
-operator|*
-name|p
-index|]
-operator|=
-name|LEX_IS_LINE_COMMENT_START
-expr_stmt|;
-block|}
-comment|/* declare line comment chars */
 for|for
 control|(
 name|p
@@ -392,6 +378,10 @@ control|)
 block|{
 name|lex
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 index|]
@@ -400,6 +390,33 @@ name|LEX_IS_COMMENT_START
 expr_stmt|;
 block|}
 comment|/* declare comment chars */
+for|for
+control|(
+name|p
+operator|=
+name|line_comment_chars
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+block|{
+name|lex
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|p
+index|]
+operator|=
+name|LEX_IS_LINE_COMMENT_START
+expr_stmt|;
+block|}
+comment|/* declare line comment chars */
 for|for
 control|(
 name|p
@@ -415,6 +432,10 @@ control|)
 block|{
 name|lex
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 index|]
@@ -442,7 +463,7 @@ operator|=
 name|LEX_IS_TWOCHAR_COMMENT_1ST
 expr_stmt|;
 block|}
-comment|/* FIXME-soon.  This is a bad hack but otherwise, we 	   can't do c-style comments when '/' is a line 	   comment char. xoxorich. */
+comment|/* FIXME-soon.  This is a bad hack but otherwise, we can't do      c-style comments when '/' is a line comment char. xoxorich. */
 if|if
 condition|(
 name|lex
@@ -712,10 +733,10 @@ name|out_string
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|out_buf
-argument_list|,
 name|saved
 operator|->
+name|out_buf
+argument_list|,
 name|out_buf
 argument_list|,
 sizeof|sizeof
@@ -804,10 +825,10 @@ name|out_string
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|saved
-operator|->
 name|out_buf
 argument_list|,
+name|saved
+operator|->
 name|out_buf
 argument_list|,
 sizeof|sizeof
@@ -852,6 +873,76 @@ begin_comment
 comment|/* app_pop() */
 end_comment
 
+begin_comment
+comment|/* @@ This assumes that \n&c are the same on host and target.  This is not    necessarily true.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|process_escape
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'b'
+case|:
+return|return
+literal|'\b'
+return|;
+case|case
+literal|'f'
+case|:
+return|return
+literal|'\f'
+return|;
+case|case
+literal|'n'
+case|:
+return|return
+literal|'\n'
+return|;
+case|case
+literal|'r'
+case|:
+return|return
+literal|'\r'
+return|;
+case|case
+literal|'t'
+case|:
+return|return
+literal|'\t'
+return|;
+case|case
+literal|'\''
+case|:
+return|return
+literal|'\''
+return|;
+case|case
+literal|'"'
+case|:
+return|return
+literal|'\"'
+return|;
+default|default:
+return|return
+name|ch
+return|;
+block|}
+block|}
+end_function
+
 begin_decl_stmt
 name|int
 name|do_scrub_next_char
@@ -881,12 +972,18 @@ end_function_decl
 
 begin_block
 block|{
-comment|/*State 0: beginning of normal line 	  1: After first whitespace on line (flush more white) 	  2: After first non-white (opcode) on line (keep 1white) 	  3: after second white on line (into operands) (flush white) 	  4: after putting out a .line, put out digits 	  5: parsing a string, then go to old-state 	  6: putting out \ escape in a "d string. 	  7: After putting out a .app-file, put out string. 	  8: After putting out a .app-file string, flush until newline. 	  -1: output string in out_string and go to the state in old_state 	  -2: flush text until a '*' '/' is seen, then go to state old_state 	  */
+comment|/*State 0: beginning of normal line 	  1: After first whitespace on line (flush more white) 	  2: After first non-white (opcode) on line (keep 1white) 	  3: after second white on line (into operands) (flush white) 	  4: after putting out a .line, put out digits 	  5: parsing a string, then go to old-state 	  6: putting out \ escape in a "d string. 	  7: After putting out a .appfile, put out string. 	  8: After putting out a .appfile string, flush until newline. 	  9: After seeing symbol char in state 3 (keep 1white after symchar) 	 10: After seeing whitespace in state 9 (keep white before symchar) 	 11: After seeing a symbol character in state 0 (eg a label definition) 	 -1: output string in out_string and go to the state in old_state 	 -2: flush text until a '*' '/' is seen, then go to state old_state 	  */
+comment|/* I added states 9 and 10 because the MIPS ECOFF assembler uses      constructs like ``.loc 1 20''.  This was turning into ``.loc      120''.  States 9 and 10 ensure that a space is never dropped in      between characters which could appear in a identifier.  Ian      Taylor, ian@cygnus.com.       I added state 11 so that something like "Lfoo add %r25,%r26,%r27" works      correctly on the PA (and any other target where colons are optional).      Jeff Law, law@cs.utah.edu.  */
 specifier|register
 name|int
 name|ch
 decl_stmt|,
 name|ch2
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|not_cpp_line
 init|=
 literal|0
 decl_stmt|;
@@ -1087,7 +1184,7 @@ argument_list|)
 expr_stmt|;
 name|out_string
 operator|=
-literal|"\n.app-file "
+literal|"\n\t.appfile "
 expr_stmt|;
 name|old_state
 operator|=
@@ -1124,6 +1221,10 @@ name|get
 call|)
 argument_list|()
 expr_stmt|;
+name|state
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|ch
 return|;
@@ -1142,9 +1243,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|lex
+index|[
 name|ch
+index|]
 operator|==
-literal|'"'
+name|LEX_IS_STRINGQUOTE
 condition|)
 block|{
 name|state
@@ -1152,9 +1256,12 @@ operator|=
 name|old_state
 expr_stmt|;
 return|return
-literal|'"'
+name|ch
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_STRING_ESCAPES
 elseif|else
 if|if
 condition|(
@@ -1171,6 +1278,8 @@ return|return
 name|ch
 return|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -1226,7 +1335,7 @@ condition|(
 name|ch
 condition|)
 block|{
-comment|/* This is neet.  Turn "string 			   more string" into "string\n  more string" 			   */
+comment|/* Handle strings broken across lines, by turning '\n' into 	     '\\' and 'n'.  */
 case|case
 literal|'\n'
 case|:
@@ -1275,6 +1384,12 @@ endif|#
 directive|endif
 comment|/* BACKSLASH_V */
 case|case
+literal|'x'
+case|:
+case|case
+literal|'X'
+case|:
+case|case
 literal|'0'
 case|:
 case|case
@@ -1299,9 +1414,17 @@ case|case
 literal|'7'
 case|:
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IGNORE_NONSTANDARD_ESCAPES
+argument_list|)
+operator||
+name|defined
+argument_list|(
 name|ONLY_STANDARD_ESCAPES
+argument_list|)
 default|default:
 name|as_warn
 argument_list|(
@@ -1384,7 +1507,7 @@ return|return
 name|ch
 return|;
 block|}
-comment|/* OK, we are somewhere in states 0 through 4 */
+comment|/* OK, we are somewhere in states 0 through 4 or 9 through 11 */
 comment|/* flushchar: */
 name|ch
 operator|=
@@ -1430,6 +1553,23 @@ case|case
 name|LEX_IS_WHITESPACE
 case|:
 do|do
+comment|/* Preserve a single whitespace character at the beginning of 	   a line.  */
+if|if
+condition|(
+name|state
+operator|==
+literal|0
+condition|)
+block|{
+name|state
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|ch
+return|;
+block|}
+else|else
 name|ch
 operator|=
 call|(
@@ -1487,9 +1627,61 @@ name|ch
 argument_list|)
 condition|)
 block|{
+comment|/* cpp never outputs a leading space before the #, so try to 	     avoid being confused.  */
+name|not_cpp_line
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|recycle
 goto|;
+block|}
+ifdef|#
+directive|ifdef
+name|MRI
+call|(
+modifier|*
+name|unget
+call|)
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+comment|/* Put back */
+return|return
+literal|' '
+return|;
+comment|/* Always return one space at start of line */
+endif|#
+directive|endif
+comment|/* If we're in state 2 or 11, we've seen a non-white character 	 followed by whitespace.  If the next character is ':', this 	 is whitespace after a label name which we *must* ignore.  */
+if|if
+condition|(
+operator|(
+name|state
+operator|==
+literal|2
+operator|||
+name|state
+operator|==
+literal|11
+operator|)
+operator|&&
+name|lex
+index|[
+name|ch
+index|]
+operator|==
+name|LEX_IS_COLON
+condition|)
+block|{
+name|state
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|ch
+return|;
 block|}
 switch|switch
 condition|(
@@ -1509,17 +1701,16 @@ comment|/* Punted leading sp */
 case|case
 literal|1
 case|:
-name|BAD_CASE
-argument_list|(
-name|state
-argument_list|)
-expr_stmt|;
-comment|/* We can't get here */
+comment|/* We can arrive here if we leave a leading whitespace character 	     at the beginning of a line.  */
+goto|goto
+name|recycle
+goto|;
 case|case
 literal|2
 case|:
 name|state
-operator|++
+operator|=
+literal|3
 expr_stmt|;
 call|(
 modifier|*
@@ -1540,6 +1731,39 @@ goto|goto
 name|recycle
 goto|;
 comment|/* Sp in operands */
+case|case
+literal|9
+case|:
+case|case
+literal|10
+case|:
+name|state
+operator|=
+literal|10
+expr_stmt|;
+comment|/* Sp after symbol char */
+goto|goto
+name|recycle
+goto|;
+case|case
+literal|11
+case|:
+name|state
+operator|=
+literal|1
+expr_stmt|;
+call|(
+modifier|*
+name|unget
+call|)
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+return|return
+literal|' '
+return|;
+comment|/* Sp after label definition.  */
 default|default:
 name|BAD_CASE
 argument_list|(
@@ -1703,6 +1927,20 @@ argument_list|(
 name|ch2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|==
+literal|9
+operator|||
+name|state
+operator|==
+literal|10
+condition|)
+name|state
+operator|=
+literal|3
+expr_stmt|;
 return|return
 name|ch
 return|;
@@ -1711,6 +1949,21 @@ break|break;
 case|case
 name|LEX_IS_STRINGQUOTE
 case|:
+if|if
+condition|(
+name|state
+operator|==
+literal|9
+operator|||
+name|state
+operator|==
+literal|10
+condition|)
+name|old_state
+operator|=
+literal|3
+expr_stmt|;
+else|else
 name|old_state
 operator|=
 name|state
@@ -1722,6 +1975,9 @@ expr_stmt|;
 return|return
 name|ch
 return|;
+ifndef|#
+directive|ifndef
+name|MRI
 ifndef|#
 directive|ifndef
 name|IEEE_STYLE
@@ -1745,12 +2001,35 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
-literal|"End-of-file after a one-character quote; \000 inserted"
+literal|"End-of-file after a one-character quote; \\000 inserted"
 argument_list|)
 expr_stmt|;
 name|ch
 operator|=
 literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ch
+operator|==
+literal|'\\'
+condition|)
+block|{
+name|ch
+operator|=
+call|(
+modifier|*
+name|get
+call|)
+argument_list|()
+expr_stmt|;
+name|ch
+operator|=
+name|process_escape
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
 block|}
 name|sprintf
@@ -1769,7 +2048,7 @@ operator|)
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* None of these 'x constants for us.  We want 'x'. 		 */
+comment|/* None of these 'x constants for us.  We want 'x'.  */
 if|if
 condition|(
 operator|(
@@ -1806,6 +2085,38 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|out_buf
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+return|return
+name|out_buf
+index|[
+literal|0
+index|]
+return|;
+block|}
+if|if
+condition|(
+name|state
+operator|==
+literal|9
+operator|||
+name|state
+operator|==
+literal|10
+condition|)
+name|old_state
+operator|=
+literal|3
+expr_stmt|;
+else|else
 name|old_state
 operator|=
 name|state
@@ -1826,9 +2137,26 @@ operator|++
 return|;
 endif|#
 directive|endif
+endif|#
+directive|endif
 case|case
 name|LEX_IS_COLON
 case|:
+if|if
+condition|(
+name|state
+operator|==
+literal|9
+operator|||
+name|state
+operator|==
+literal|10
+condition|)
+name|state
+operator|=
+literal|3
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|state
@@ -1837,7 +2165,7 @@ literal|3
 condition|)
 name|state
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 return|return
 name|ch
@@ -1880,21 +2208,19 @@ case|:
 if|if
 condition|(
 name|state
-operator|!=
+operator|==
 literal|0
 condition|)
-comment|/* Not at start of line, act normal */
-goto|goto
-name|de_fault
-goto|;
-comment|/* FIXME-someday: The two character comment stuff was badly 		   thought out.  On i386, we want '/' as line comment start 		   AND we want C style comments.  hence this hack.  The 		   whole lexical process should be reworked.  xoxorich.  */
+comment|/* Only comment at start of line.  */
+block|{
+comment|/* FIXME-someday: The two character comment stuff was badly 	     thought out.  On i386, we want '/' as line comment start 	     AND we want C style comments.  hence this hack.  The 	     whole lexical process should be reworked.  xoxorich.  */
 if|if
 condition|(
 name|ch
 operator|==
 literal|'/'
-operator|&&
-operator|(
+condition|)
+block|{
 name|ch2
 operator|=
 call|(
@@ -1902,7 +2228,10 @@ modifier|*
 name|get
 call|)
 argument_list|()
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ch2
 operator|==
 literal|'*'
 condition|)
@@ -1934,7 +2263,18 @@ name|ch2
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* bad hack */
+if|if
+condition|(
+name|ch
+operator|!=
+literal|'#'
+condition|)
+name|not_cpp_line
+operator|=
+literal|1
+expr_stmt|;
 do|do
 name|ch
 operator|=
@@ -1981,6 +2321,8 @@ operator|||
 name|ch
 operator|>
 literal|'9'
+operator|||
+name|not_cpp_line
 condition|)
 block|{
 comment|/* Non-numerics:  Eat whole comment line */
@@ -2043,13 +2385,30 @@ literal|1
 expr_stmt|;
 name|out_string
 operator|=
-literal|".line "
+literal|"\t.appline "
 expr_stmt|;
 return|return
 operator|*
 name|out_string
 operator|++
 return|;
+block|}
+comment|/* We have a line comment character which is not at the start of 	 a line.  If this is also a normal comment character, fall 	 through.  Otherwise treat it as a default character.  */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|comment_chars
+argument_list|,
+name|ch
+argument_list|)
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|de_fault
+goto|;
+comment|/* Fall through.  */
 case|case
 name|LEX_IS_COMMENT_START
 case|:
@@ -2093,6 +2452,44 @@ expr_stmt|;
 return|return
 literal|'\n'
 return|;
+case|case
+name|LEX_IS_SYMBOL_COMPONENT
+case|:
+if|if
+condition|(
+name|state
+operator|==
+literal|10
+condition|)
+block|{
+comment|/* This is a symbol character following another symbol 	     character, with whitespace in between.  We skipped the 	     whitespace earlier, so output it now.  */
+call|(
+modifier|*
+name|unget
+call|)
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+literal|3
+expr_stmt|;
+return|return
+literal|' '
+return|;
+block|}
+if|if
+condition|(
+name|state
+operator|==
+literal|3
+condition|)
+name|state
+operator|=
+literal|9
+expr_stmt|;
+comment|/* Fall through.  */
 default|default:
 name|de_fault
 label|:
@@ -2106,9 +2503,9 @@ condition|)
 block|{
 name|state
 operator|=
-literal|2
+literal|11
 expr_stmt|;
-comment|/* Now seeing opcode */
+comment|/* Now seeing label definition */
 return|return
 name|ch
 return|;
@@ -2126,6 +2523,47 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* Ditto */
+return|return
+name|ch
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|state
+operator|==
+literal|9
+condition|)
+block|{
+if|if
+condition|(
+name|lex
+index|[
+name|ch
+index|]
+operator|!=
+name|LEX_IS_SYMBOL_COMPONENT
+condition|)
+name|state
+operator|=
+literal|3
+expr_stmt|;
+return|return
+name|ch
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|state
+operator|==
+literal|10
+condition|)
+block|{
+name|state
+operator|=
+literal|3
+expr_stmt|;
 return|return
 name|ch
 return|;
@@ -2152,6 +2590,7 @@ name|TEST
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 name|comment_chars
 index|[]
@@ -2161,6 +2600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|line_comment_chars
 index|[]
@@ -2239,10 +2679,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
-end_comment
 
 begin_comment
 comment|/* end of app.c */

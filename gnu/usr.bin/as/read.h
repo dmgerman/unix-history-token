@@ -4,7 +4,7 @@ comment|/* read.h - of read.c     Copyright (C) 1986, 1990, 1992 Free Software F
 end_comment
 
 begin_comment
-comment|/*  * $Id: read.h,v 1.2 1993/11/03 00:52:16 paul Exp $  */
+comment|/*  * $Id: read.h,v 1.3 1993/11/30 20:55:45 jkh Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -203,6 +203,37 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* These are initialized by the CPU specific target files (tc-*.c).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|comment_chars
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|line_comment_chars
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|line_separator_chars
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -377,7 +408,16 @@ begin_function_decl
 name|void
 name|s_app_file
 parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
+name|s_app_line
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -696,6 +736,13 @@ end_function_decl
 begin_function_decl
 name|void
 name|s_app_file
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|s_app_line
 parameter_list|()
 function_decl|;
 end_function_decl

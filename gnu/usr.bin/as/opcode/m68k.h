@@ -29189,6 +29189,30 @@ block|,
 name|m68000up
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PIC
+block|{
+literal|"jbsr"
+block|,
+name|one
+argument_list|(
+literal|0060400
+argument_list|)
+block|,
+name|one
+argument_list|(
+literal|0177400
+argument_list|)
+block|,
+literal|"Bg  "
+block|,
+name|m68020up
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* PIC */
 block|{
 literal|"jra"
 block|,
@@ -29225,6 +29249,30 @@ block|,
 name|m68000up
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PIC
+block|{
+literal|"jra"
+block|,
+name|one
+argument_list|(
+literal|0060000
+argument_list|)
+block|,
+name|one
+argument_list|(
+literal|0177400
+argument_list|)
+block|,
+literal|"Bg  "
+block|,
+name|m68000up
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* PIC */
 block|{
 literal|"jhi"
 block|,

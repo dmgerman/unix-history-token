@@ -3,6 +3,19 @@ begin_comment
 comment|/* tc-ns32k.h -- Opcode table for National Semi 32k processor    Copyright (C) 1987, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_NS32K
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_NS32K
+value|1
+end_define
+
 begin_include
 include|#
 directive|include
@@ -12,7 +25,14 @@ end_include
 begin_define
 define|#
 directive|define
-name|NO_LISTING
+name|LOCAL_LABELS_FB
+end_define
+
+begin_define
+define|#
+directive|define
+name|AOUT_MACHTYPE
+value|137
 end_define
 
 begin_define
@@ -158,6 +178,9 @@ parameter_list|,
 comment|/* really bit_fixS */
 name|int
 name|bsr
+parameter_list|,
+name|int
+name|r_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -185,6 +208,15 @@ end_endif
 
 begin_comment
 comment|/* not __STDC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TC_NS32K */
 end_comment
 
 begin_comment

@@ -15,26 +15,11 @@ directive|include
 file|"obstack.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_LISTING
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|"aout/stab_gnu.h"
+file|<stab.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_LISTING */
-end_comment
 
 begin_comment
 comment|/* in: segT   out: N_TYPE bits */
@@ -103,74 +88,85 @@ block|{
 comment|/* N_TYPE == 0x1E = 32-2 */
 name|SEG_UNKNOWN
 block|,
-comment|/* N_UNDF == 0 */
 name|SEG_GOOF
 block|,
+comment|/* N_UNDF == 0 */
 name|SEG_ABSOLUTE
 block|,
-comment|/* N_ABS == 2 */
 name|SEG_GOOF
 block|,
+comment|/* N_ABS == 2 */
 name|SEG_TEXT
 block|,
-comment|/* N_TEXT == 4 */
 name|SEG_GOOF
 block|,
+comment|/* N_TEXT == 4 */
 name|SEG_DATA
 block|,
-comment|/* N_DATA == 6 */
 name|SEG_GOOF
 block|,
+comment|/* N_DATA == 6 */
 name|SEG_BSS
+block|,
+name|SEG_GOOF
 block|,
 comment|/* N_BSS == 8 */
 name|SEG_GOOF
 block|,
 name|SEG_GOOF
 block|,
+comment|/* N_INDR == 0xa */
 name|SEG_GOOF
 block|,
 name|SEG_GOOF
 block|,
+comment|/* 0xc */
 name|SEG_GOOF
 block|,
 name|SEG_GOOF
 block|,
+comment|/* 0xe */
 name|SEG_GOOF
 block|,
 name|SEG_GOOF
 block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
+comment|/* 0x10 */
 name|SEG_REGISTER
 block|,
-comment|/* dummy N_REGISTER for regs = 30 */
 name|SEG_GOOF
-block|, }
+block|,
+comment|/* 0x12 (dummy N_REGISTER) */
+name|SEG_GOOF
+block|,
+name|SEG_GOOF
+block|,
+comment|/* N_SETA == 0x14 */
+name|SEG_GOOF
+block|,
+name|SEG_GOOF
+block|,
+comment|/* N_SETT == 0x16 */
+name|SEG_GOOF
+block|,
+name|SEG_GOOF
+block|,
+comment|/* N_SETD == 0x18 */
+name|SEG_GOOF
+block|,
+name|SEG_GOOF
+block|,
+comment|/* N_SETB == 0x1a */
+name|SEG_GOOF
+block|,
+name|SEG_GOOF
+block|,
+comment|/* N_SETV == 0x1c */
+name|SEG_GOOF
+block|,
+name|SEG_GOOF
+block|,
+comment|/* N_WARNING == 0x1e */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -619,51 +615,112 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|OLD_GAS
+name|FREEBSD_AOUT
 argument_list|)
-operator|&&
+operator|||
 name|defined
 argument_list|(
-name|TC_I386
+name|NETBSD_AOUT
 argument_list|)
-comment|/* I think that this old behaviour was wrong, but this lets me compare to the     previous gas.  xoxorich.  */
-name|md_number_to_chars
-argument_list|(
+comment|/* `a_info' (magic, mid, flags) is in network byte-order */
+operator|(
 operator|*
 name|where
-argument_list|,
+operator|)
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|headers
 operator|->
 name|header
 operator|.
 name|a_info
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-operator|*
-name|where
-operator|+=
-literal|2
-expr_stmt|;
-name|md_number_to_chars
-argument_list|(
-operator|*
-name|where
-argument_list|,
+operator|)
+index|[
 literal|0
-argument_list|,
-literal|2
-argument_list|)
+index|]
 expr_stmt|;
+operator|(
 operator|*
 name|where
-operator|+=
+operator|)
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|headers
+operator|->
+name|header
+operator|.
+name|a_info
+operator|)
+index|[
+literal|1
+index|]
+expr_stmt|;
+operator|(
+operator|*
+name|where
+operator|)
+index|[
 literal|2
+index|]
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|headers
+operator|->
+name|header
+operator|.
+name|a_info
+operator|)
+index|[
+literal|2
+index|]
+expr_stmt|;
+operator|(
+operator|*
+name|where
+operator|)
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|headers
+operator|->
+name|header
+operator|.
+name|a_info
+operator|)
+index|[
+literal|3
+index|]
 expr_stmt|;
 else|#
 directive|else
-comment|/* not (TC_I386&& OLD_GAS) */
 name|md_number_to_chars
 argument_list|(
 operator|*
@@ -683,23 +740,22 @@ name|header
 operator|.
 name|a_info
 argument_list|)
-argument_list|)
-expr_stmt|;
-operator|*
-name|where
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|headers
-operator|->
-name|header
-operator|.
-name|a_info
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not (TC_I386&& OLD_GAS) */
+operator|*
+name|where
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|headers
+operator|->
+name|header
+operator|.
+name|a_info
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TE_HPUX
@@ -2380,10 +2436,12 @@ name|S_LOCAL_NAME
 argument_list|(
 name|symbolP
 argument_list|)
+operator|)
 ifdef|#
 directive|ifdef
 name|PIC
 operator|||
+operator|(
 name|flagseen
 index|[
 literal|'k'
@@ -2392,9 +2450,9 @@ operator|&&
 name|symbolP
 operator|->
 name|sy_forceout
+operator|)
 endif|#
 directive|endif
-operator|)
 operator|)
 operator|)
 ifdef|#
@@ -2831,32 +2889,17 @@ modifier|*
 name|headers
 decl_stmt|;
 block|{
-name|H_SET_DYNAMIC
-argument_list|(
-name|headers
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|H_SET_VERSION
-argument_list|(
-name|headers
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|H_SET_MACHTYPE
-argument_list|(
-name|headers
-argument_list|,
-name|AOUT_MACHTYPE
-argument_list|)
-expr_stmt|;
-name|H_SET_MAGIC_NUMBER
+name|H_SET_INFO
 argument_list|(
 name|headers
 argument_list|,
 name|DEFAULT_MAGIC_NUMBER_FOR_OBJECT_FILE
+argument_list|,
+name|AOUT_MACHTYPE
+argument_list|,
+name|AOUT_FLAGS
+argument_list|,
+name|AOUT_VERSION
 argument_list|)
 expr_stmt|;
 name|H_SET_ENTRY_POINT

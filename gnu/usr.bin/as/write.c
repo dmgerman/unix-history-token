@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.4 1993/12/12 17:01:24 jkh Exp $"
+literal|"$Id: write.c,v 1.5 1994/02/20 16:06:12 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1481,6 +1481,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NO_RELOC
 argument_list|)
 expr_stmt|;
 else|#
@@ -4025,6 +4027,30 @@ block|}
 endif|#
 directive|endif
 comment|/* TC_I960 */
+ifdef|#
+directive|ifdef
+name|PIC
+if|if
+condition|(
+name|flagseen
+index|[
+literal|'k'
+index|]
+operator|&&
+name|S_IS_EXTERNAL
+argument_list|(
+name|add_symbolP
+argument_list|)
+condition|)
+block|{
+name|as_bad
+argument_list|(
+literal|"Can't reduce difference of external symbols in PIC code"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|add_number
 operator|+=
 name|S_GET_VALUE
@@ -4269,6 +4295,15 @@ index|[
 literal|'k'
 index|]
 operator|||
+ifdef|#
+directive|ifdef
+name|TC_NS32K
+name|fixP
+operator|->
+name|fx_pcrel
+operator|||
+endif|#
+directive|endif
 operator|(
 name|fixP
 operator|->

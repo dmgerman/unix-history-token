@@ -4,7 +4,7 @@ comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 19
 end_comment
 
 begin_comment
-comment|/*  * $Id: struc-symbol.h,v 1.2 1993/11/03 00:52:18 paul Exp $  */
+comment|/*  * $Id: struc-symbol.h,v 1.3 1993/11/30 20:55:46 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -251,17 +251,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* subseg.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_REGISTER
-value|30
-end_define
-
-begin_comment
-comment|/* Fake N_TYPE value for SEG_REGISTER */
 end_comment
 
 begin_ifdef

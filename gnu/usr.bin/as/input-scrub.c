@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_scrub.c - Break up input buffers into whole numbers of lines.    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* input_scrub.c - Break up input buffers into whole numbers of lines.    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: input-scrub.c,v 1.3 1993/10/02 20:57:39 pk Exp $"
+literal|"$Id: input-scrub.c,v 1.2 1993/11/03 00:51:51 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*>= 0. Number of chars in partial line in buffer. */
+comment|/*>=0. Number of chars in partial line in buffer. */
 end_comment
 
 begin_decl_stmt
@@ -152,6 +152,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
 name|buffer_length
 decl_stmt|;
@@ -190,6 +191,7 @@ comment|/* We must track the physical file and line number for error messages. W
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|physical_input_file
@@ -197,6 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|logical_input_file
@@ -220,13 +223,15 @@ comment|/* A line ends in '\n' or eof. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|line_numberT
 name|physical_input_line
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|line_numberT
+specifier|static
+name|int
 name|logical_input_line
 decl_stmt|;
 end_decl_stmt
@@ -256,6 +261,7 @@ index|[
 name|AFTER_SIZE
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|buffer_length
 decl_stmt|;
@@ -270,7 +276,7 @@ decl_stmt|;
 name|line_numberT
 name|physical_input_line
 decl_stmt|;
-name|line_numberT
+name|int
 name|logical_input_line
 decl_stmt|;
 name|char
@@ -292,61 +298,63 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-operator|==
-literal|1
-end_if
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|input_scrub_push
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|saved_position
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|input_scrub_pop
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|as_1_char
-parameter_list|(
+name|PARAMS
+argument_list|(
+operator|(
 name|unsigned
 name|int
 name|c
-parameter_list|,
+operator|,
 name|FILE
-modifier|*
+operator|*
 name|stream
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|as_1_char
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not __STDC__ */
-end_comment
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Push the state of input reading and scrubbing so that we can #include.    The return value is a 'void *' (fudged for old compilers) to a save    area, which can be restored by passing it to input_scrub_pop(). */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|input_scrub_push
@@ -434,10 +442,10 @@ name|logical_input_line
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|save_source
-argument_list|,
 name|saved
 operator|->
+name|save_source
+argument_list|,
 name|save_source
 argument_list|,
 sizeof|sizeof
@@ -459,10 +467,55 @@ operator|=
 name|input_file_push
 argument_list|()
 expr_stmt|;
-name|input_scrub_begin
+name|input_file_begin
 argument_list|()
 expr_stmt|;
 comment|/* Reinitialize! */
+name|logical_input_line
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|logical_input_file
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|buffer_length
+operator|=
+name|input_file_buffer_size
+argument_list|()
+expr_stmt|;
+name|buffer_start
+operator|=
+name|xmalloc
+argument_list|(
+operator|(
+name|BEFORE_SIZE
+operator|+
+name|buffer_length
+operator|+
+name|buffer_length
+operator|+
+name|AFTER_SIZE
+operator|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|buffer_start
+argument_list|,
+name|BEFORE_STRING
+argument_list|,
+operator|(
+name|int
+operator|)
+name|BEFORE_SIZE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -480,6 +533,7 @@ comment|/* input_scrub_push() */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|input_scrub_pop
@@ -583,10 +637,10 @@ name|next_saved_file
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|saved
-operator|->
 name|save_source
 argument_list|,
+name|saved
+operator|->
 name|save_source
 argument_list|,
 sizeof|sizeof
@@ -659,10 +713,7 @@ name|buffer_start
 operator|=
 name|xmalloc
 argument_list|(
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
 name|BEFORE_SIZE
 operator|+
 name|buffer_length
@@ -670,7 +721,7 @@ operator|+
 name|buffer_length
 operator|+
 name|AFTER_SIZE
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -688,7 +739,8 @@ expr_stmt|;
 comment|/* Line number things. */
 name|logical_input_line
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|logical_input_file
 operator|=
@@ -872,191 +924,6 @@ name|buffer_start
 operator|+
 name|BEFORE_SIZE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DONTDEF
-if|if
-condition|(
-name|preprocess
-condition|)
-block|{
-if|if
-condition|(
-name|save_buffer
-condition|)
-block|{
-operator|*
-name|bufp
-operator|=
-name|save_buffer
-expr_stmt|;
-name|save_buffer
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|limit
-operator|=
-name|input_file_give_next_buffer
-argument_list|(
-name|buffer_start
-operator|+
-name|BEFORE_SIZE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|limit
-condition|)
-block|{
-name|partial_where
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|partial_size
-condition|)
-name|as_warn
-argument_list|(
-literal|"Partial line at end of file ignored"
-argument_list|)
-expr_stmt|;
-return|return
-name|partial_where
-return|;
-block|}
-if|if
-condition|(
-name|partial_size
-condition|)
-name|memcpy
-argument_list|(
-name|partial_where
-argument_list|,
-name|save_source
-argument_list|,
-operator|(
-name|int
-operator|)
-name|AFTER_SIZE
-argument_list|)
-expr_stmt|;
-name|do_scrub
-argument_list|(
-name|partial_where
-argument_list|,
-name|partial_size
-argument_list|,
-name|buffer_start
-operator|+
-name|BEFORE_SIZE
-argument_list|,
-name|limit
-operator|-
-operator|(
-name|buffer_start
-operator|+
-name|BEFORE_SIZE
-operator|)
-argument_list|,
-operator|&
-name|out_string
-argument_list|,
-operator|&
-name|out_length
-argument_list|)
-expr_stmt|;
-name|limit
-operator|=
-name|out_string
-operator|+
-name|out_length
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|limit
-init|;
-operator|*
-operator|--
-name|p
-operator|!=
-literal|'\n'
-condition|;
-control|)
-empty_stmt|;
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|<=
-name|buffer_start
-operator|+
-name|BEFORE_SIZE
-condition|)
-name|as_fatal
-argument_list|(
-literal|"Source line too long.  Please change file '%s' and re-make the assembler."
-argument_list|,
-name|__FILE__
-argument_list|)
-expr_stmt|;
-name|partial_where
-operator|=
-name|p
-expr_stmt|;
-name|partial_size
-operator|=
-name|limit
-operator|-
-name|p
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|save_source
-argument_list|,
-name|partial_where
-argument_list|,
-operator|(
-name|int
-operator|)
-name|AFTER_SIZE
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|partial_where
-argument_list|,
-name|AFTER_STRING
-argument_list|,
-operator|(
-name|int
-operator|)
-name|AFTER_SIZE
-argument_list|)
-expr_stmt|;
-name|save_buffer
-operator|=
-operator|*
-name|bufp
-expr_stmt|;
-operator|*
-name|bufp
-operator|=
-name|out_string
-expr_stmt|;
-return|return
-name|partial_where
-return|;
-block|}
-comment|/* We're not preprocessing.  Do the right thing */
-endif|#
-directive|endif
 if|if
 condition|(
 name|partial_size
@@ -1071,6 +938,7 @@ argument_list|,
 name|partial_where
 argument_list|,
 operator|(
+name|unsigned
 name|int
 operator|)
 name|partial_size
@@ -1084,9 +952,6 @@ name|BEFORE_SIZE
 argument_list|,
 name|save_source
 argument_list|,
-operator|(
-name|int
-operator|)
 name|AFTER_SIZE
 argument_list|)
 expr_stmt|;
@@ -1263,7 +1128,15 @@ block|{
 operator|++
 name|physical_input_line
 expr_stmt|;
-comment|/*  ++ logical_input_line; FIXME-now remove this. */
+if|if
+condition|(
+name|logical_input_line
+operator|>=
+literal|0
+condition|)
+operator|++
+name|logical_input_line
+expr_stmt|;
 block|}
 end_function
 
@@ -1271,7 +1144,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			new_logical_line()  *  * Tells us what the new logical line number and file are.  * If the line_number is<0, we don't change the current logical line number.  * If the fname is NULL, we don't change the current logical file name.  */
+comment|/*  *			new_logical_line()  *  * Tells us what the new logical line number and file are.  * If the line_number is -1, we don't change the current logical line  * number.  If it is -2, we decrement the logical line number (this is  * to support the .appfile pseudo-op inserted into the stream by  * do_scrub_next_char).  * If the fname is NULL, we don't change the current logical file name.  */
 end_comment
 
 begin_function
@@ -1308,13 +1181,25 @@ name|line_number
 operator|>=
 literal|0
 condition|)
-block|{
 name|logical_input_line
 operator|=
 name|line_number
 expr_stmt|;
-block|}
-comment|/* if we have a line number */
+elseif|else
+if|if
+condition|(
+name|line_number
+operator|==
+operator|-
+literal|2
+operator|&&
+name|logical_input_line
+operator|>
+literal|0
+condition|)
+operator|--
+name|logical_input_line
+expr_stmt|;
 block|}
 end_function
 
@@ -1326,72 +1211,110 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			a s _ w h e r e ()  *  * Write a line to stderr locating where we are in reading  * input source files.  * As a sop to the debugger of AS, pretty-print the offending line.  */
+comment|/*  *			a s _ w h e r e ()  *  * Return the current file name and line number.  * namep should be char * const *, but there are compilers which screw  * up declarations like that, and it's easier to avoid it.  */
 end_comment
 
 begin_function
 name|void
 name|as_where
-parameter_list|()
+parameter_list|(
+name|namep
+parameter_list|,
+name|linep
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|namep
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|linep
+decl_stmt|;
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|line_numberT
-name|line
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|myname
-decl_stmt|;
 if|if
 condition|(
 name|logical_input_file
+operator|!=
+name|NULL
 operator|&&
 operator|(
+name|linep
+operator|==
+name|NULL
+operator|||
 name|logical_input_line
-operator|>
+operator|>=
 literal|0
 operator|)
 condition|)
 block|{
-name|p
+operator|*
+name|namep
 operator|=
 name|logical_input_file
 expr_stmt|;
-name|line
+if|if
+condition|(
+name|linep
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|linep
 operator|=
 name|logical_input_line
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|physical_input_file
+operator|!=
+name|NULL
+condition|)
 block|{
-name|p
+operator|*
+name|namep
 operator|=
 name|physical_input_file
 expr_stmt|;
-name|line
+if|if
+condition|(
+name|linep
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|linep
 operator|=
 name|physical_input_line
 expr_stmt|;
 block|}
-comment|/* line number should match file name */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s:%u: "
-argument_list|,
-name|myname
-argument_list|,
-name|p
-argument_list|,
-name|line
-argument_list|)
+else|else
+block|{
+operator|*
+name|namep
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|"*unknown*"
 expr_stmt|;
-return|return;
+if|if
+condition|(
+name|linep
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|linep
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1441,7 +1364,7 @@ condition|;
 operator|--
 name|p
 control|)
-block|{ 	    }
+block|{     }
 operator|++
 name|p
 expr_stmt|;
@@ -1461,6 +1384,10 @@ comment|/* Assume ASCII. EBCDIC& other micro-computer char sets ignored. */
 comment|/* c = *p& 0xFF; JF unused */
 name|as_1_char
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|,
@@ -1545,10 +1472,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
-end_comment
 
 begin_comment
 comment|/* end of input_scrub.c */

@@ -10,14 +10,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TC_M68K
-value|1
+name|MID_M68K
+value|135
 end_define
 
 begin_define
 define|#
 directive|define
-name|NO_LISTING
+name|MID_M68K4K
+value|136
+end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|TC_M68K
+value|1
 end_define
 
 begin_ifdef
@@ -45,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|AOUT_MACHTYPE
-value|0x2
+value|MID_MACHINE
 end_define
 
 begin_define
