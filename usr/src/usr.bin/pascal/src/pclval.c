@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pclval.c 2.1 %G%"
+literal|"@(#)pclval.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_decl_stmt
@@ -686,13 +686,13 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|o
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -703,11 +703,11 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|)
 expr_stmt|;
 block|}
@@ -725,7 +725,7 @@ block|{
 comment|/* 					 * this is the indirection from 					 * the address of the pointer  					 * to the pointer itself. 					 * kirk sez: 					 * fnil doesn't want this. 					 * and does it itself for files 					 * since only it knows where the 					 * actual window is. 					 * but i have to do this for 					 * regular pointers. 					 */
 name|putop
 argument_list|(
-argument|P2UNARY P2MUL
+argument|PCCOM_UNARY PCC_MUL
 argument_list|,
 argument|p2type( p )
 argument_list|)
@@ -740,9 +740,9 @@ condition|)
 block|{
 name|putop
 argument_list|(
-name|P2CALL
+name|PCC_CALL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -751,9 +751,9 @@ else|else
 block|{
 name|putop
 argument_list|(
-name|P2CALL
+name|PCC_CALL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -805,13 +805,13 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|o
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -822,9 +822,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -997,13 +997,13 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|o
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -1014,9 +1014,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1029,7 +1029,7 @@ condition|)
 block|{
 name|putop
 argument_list|(
-argument|P2UNARY P2MUL
+argument|PCCOM_UNARY PCC_MUL
 argument_list|,
 argument|p2type( p -> type )
 argument_list|)
@@ -1534,19 +1534,19 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2FTN
+name|PCCTM_FTN
 operator||
-name|P2INT
+name|PCCT_INT
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 literal|"_NIL"
@@ -1558,19 +1558,19 @@ else|else
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2FTN
+name|PCCTM_FTN
 operator||
-name|P2INT
+name|PCCT_INT
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 literal|"_FNIL"

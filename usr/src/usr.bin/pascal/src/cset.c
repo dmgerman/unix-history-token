@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cset.c 2.1 %G%"
+literal|"@(#)cset.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_include
@@ -2205,15 +2205,15 @@ argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 argument_list|,
 name|labelname
 argument_list|)
@@ -2331,7 +2331,7 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|int
@@ -2342,7 +2342,7 @@ name|paircnt
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -2353,14 +2353,14 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|int
@@ -2371,7 +2371,7 @@ name|singcnt
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -2382,9 +2382,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 for|for
@@ -2445,9 +2445,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2468,9 +2468,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2490,9 +2490,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}

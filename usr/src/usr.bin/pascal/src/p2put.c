@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 2.1 %G%"
+literal|"@(#)p2put.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_include
@@ -75,24 +75,6 @@ include|#
 directive|include
 file|"tmps.h"
 end_include
-
-begin_comment
-comment|/*      *	mash into f77's format      *	lovely, isn't it?      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TOF77
-parameter_list|(
-name|fop
-parameter_list|,
-name|val
-parameter_list|,
-name|rest
-parameter_list|)
-value|( ( ( (rest)& 0177777 )<< 16 ) \ 					| ( ( (val)& 0377 )<< 8 )	 \ 					| ( (fop)& 0377 ) )
-end_define
 
 begin_escape
 end_escape
@@ -133,9 +115,9 @@ condition|)
 return|return;
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2FTEXT
+name|PCCF_FTEXT
 argument_list|,
 name|length
 argument_list|,
@@ -158,7 +140,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2FTEXT | %3d | 0	"
+literal|"PCCF_FTEXT | %3d | 0	"
 argument_list|,
 name|length
 argument_list|)
@@ -445,9 +427,9 @@ argument_list|)
 expr_stmt|;
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2FLBRAC
+name|PCCF_FLBRAC
 argument_list|,
 name|maxtempreg
 argument_list|,
@@ -475,7 +457,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2FLBRAC | %3d | %d	%d\n"
+literal|"PCCF_FLBRAC | %3d | %d	%d\n"
 argument_list|,
 name|maxtempreg
 argument_list|,
@@ -511,9 +493,9 @@ begin_block
 block|{
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2FRBRAC
+name|PCCF_FRBRAC
 argument_list|,
 literal|0
 argument_list|,
@@ -536,7 +518,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2FRBRAC |   0 | %d\n"
+literal|"PCCF_FRBRAC |   0 | %d\n"
 argument_list|,
 name|ftnno
 argument_list|)
@@ -560,7 +542,7 @@ begin_block
 block|{
 name|p2word
 argument_list|(
-name|P2FEOF
+name|PCCF_FEOF
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -578,7 +560,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2FEOF\n"
+literal|"PCCF_FEOF\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -638,9 +620,9 @@ expr_stmt|;
 block|}
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2FEXPR
+name|PCCF_FEXPR
 argument_list|,
 name|length
 argument_list|,
@@ -663,7 +645,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2FEXPR | %3d | %d	"
+literal|"PCCF_FEXPR | %3d | %d	"
 argument_list|,
 name|length
 argument_list|,
@@ -751,13 +733,13 @@ literal|"[putleaf]"
 argument_list|)
 expr_stmt|;
 case|case
-name|P2ICON
+name|PCC_ICON
 case|:
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|name
 operator|!=
@@ -787,7 +769,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2ICON | %3d | 0x%x	"
+literal|"PCC_ICON | %3d | 0x%x	"
 argument_list|,
 name|name
 operator|!=
@@ -819,13 +801,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|P2NAME
+name|PCC_NAME
 case|:
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 name|lval
 operator|!=
@@ -859,7 +841,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2NAME | %3d | 0x%x	"
+literal|"PCC_NAME | %3d | 0x%x	"
 argument_list|,
 name|lval
 operator|!=
@@ -891,13 +873,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|P2REG
+name|PCC_REG
 case|:
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
-name|P2REG
+name|PCC_REG
 argument_list|,
 name|rval
 argument_list|,
@@ -920,7 +902,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2REG | %3d | 0x%x\n"
+literal|"PCC_REG | %3d | 0x%x\n"
 argument_list|,
 name|rval
 argument_list|,
@@ -1033,7 +1015,7 @@ expr_stmt|;
 block|}
 name|putleaf
 argument_list|(
-name|P2REG
+name|PCC_REG
 argument_list|,
 literal|0
 argument_list|,
@@ -1102,7 +1084,7 @@ expr_stmt|;
 block|}
 name|putleaf
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 name|offset
 argument_list|,
@@ -1139,7 +1121,7 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-argument|P2UNARY P2MUL
+argument|PCCOM_UNARY PCC_MUL
 argument_list|,
 argument|type
 argument_list|)
@@ -1283,17 +1265,17 @@ expr_stmt|;
 block|}
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|offset
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|type
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 name|printname
@@ -1321,17 +1303,17 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2REG
+name|PCC_REG
 argument_list|,
 literal|0
 argument_list|,
 name|P2AP
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|type
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 operator|(
@@ -1346,7 +1328,7 @@ else|else
 block|{
 name|putleaf
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 operator|(
 name|level
@@ -1362,9 +1344,9 @@ name|AP_OFFSET
 argument_list|,
 literal|0
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|,
 name|DISPLAYNAME
 argument_list|)
@@ -1379,13 +1361,13 @@ expr_stmt|;
 block|}
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|offset
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -1396,11 +1378,11 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1416,17 +1398,17 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2REG
+name|PCC_REG
 argument_list|,
 literal|0
 argument_list|,
 name|P2FP
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|type
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 operator|(
@@ -1441,7 +1423,7 @@ else|else
 block|{
 name|putleaf
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 operator|(
 name|level
@@ -1457,9 +1439,9 @@ name|FP_OFFSET
 argument_list|,
 literal|0
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|,
 name|DISPLAYNAME
 argument_list|)
@@ -1474,14 +1456,14 @@ expr_stmt|;
 block|}
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|-
 name|offset
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -1492,11 +1474,11 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MINUS
+name|PCC_MINUS
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1512,17 +1494,17 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2REG
+name|PCC_REG
 argument_list|,
 literal|0
 argument_list|,
 name|P2FP
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|type
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 operator|(
@@ -1537,7 +1519,7 @@ else|else
 block|{
 name|putleaf
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 operator|(
 name|level
@@ -1553,9 +1535,9 @@ name|FP_OFFSET
 argument_list|,
 literal|0
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|,
 name|DISPLAYNAME
 argument_list|)
@@ -1570,24 +1552,24 @@ expr_stmt|;
 block|}
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MINUS
+name|PCC_MINUS
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1597,7 +1579,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	put out a floating point constant leaf node      *	the constant is declared in aligned data space      *	and a P2NAME leaf put out for it      */
+comment|/*      *	put out a floating point constant leaf node      *	the constant is declared in aligned data space      *	and a PCC_NAME leaf put out for it      */
 end_comment
 
 begin_macro
@@ -1706,13 +1688,13 @@ argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2DOUBLE
+name|PCCT_DOUBLE
 argument_list|,
 name|name
 argument_list|)
@@ -1968,15 +1950,15 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2NAME
+name|PCC_NAME
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2ARY
+name|PCCTM_ARY
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|,
 name|name
 argument_list|)
@@ -1986,15 +1968,15 @@ else|else
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 argument_list|,
 name|name
 argument_list|)
@@ -2074,7 +2056,7 @@ name|MAXQUALS
 condition|)
 block|{
 return|return
-name|P2UNDEF
+name|PCCT_UNDEF
 return|;
 block|}
 switch|switch
@@ -2107,7 +2089,7 @@ operator|)
 condition|)
 block|{
 return|return
-name|P2DOUBLE
+name|PCCT_DOUBLE
 return|;
 block|}
 switch|switch
@@ -2134,19 +2116,19 @@ case|case
 literal|1
 case|:
 return|return
-name|P2CHAR
+name|PCCT_CHAR
 return|;
 case|case
 literal|2
 case|:
 return|return
-name|P2SHORT
+name|PCCT_SHORT
 return|;
 case|case
 literal|4
 case|:
 return|return
-name|P2INT
+name|PCCT_INT
 return|;
 default|default:
 name|panic
@@ -2161,9 +2143,9 @@ name|STR
 case|:
 return|return
 operator|(
-name|P2ARY
+name|PCCTM_ARY
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 operator|)
 return|;
 case|case
@@ -2173,16 +2155,16 @@ case|case
 name|SET
 case|:
 return|return
-name|P2STRTY
+name|PCCT_STRTY
 return|;
 case|case
 name|FILET
 case|:
 return|return
 operator|(
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 operator|)
 return|;
 case|case
@@ -2218,9 +2200,9 @@ name|TNIL
 case|:
 return|return
 operator|(
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2UNDEF
+name|PCCT_UNDEF
 operator|)
 return|;
 case|case
@@ -2228,16 +2210,16 @@ name|TSTR
 case|:
 return|return
 operator|(
-name|P2ARY
+name|PCCTM_ARY
 operator||
-name|P2CHAR
+name|PCCT_CHAR
 operator|)
 return|;
 case|case
 name|TSET
 case|:
 return|return
-name|P2STRTY
+name|PCCT_STRTY
 return|;
 default|default :
 return|return
@@ -2261,7 +2243,7 @@ case|case
 name|PTR
 case|:
 return|return
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|typerecur
 argument_list|(
@@ -2274,14 +2256,14 @@ operator|+
 literal|1
 argument_list|)
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 return|;
 case|case
 name|ARRAY
 case|:
 return|return
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|typerecur
 argument_list|(
@@ -2294,7 +2276,7 @@ operator|+
 literal|1
 argument_list|)
 argument_list|,
-name|P2ARY
+name|PCCTM_ARY
 argument_list|)
 return|;
 case|case
@@ -2302,9 +2284,9 @@ name|FUNC
 case|:
 comment|/* 		     * functions are really pointers to functions 		     * which return their underlying type. 		     */
 return|return
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|typerecur
 argument_list|(
@@ -2317,10 +2299,10 @@ operator|+
 literal|2
 argument_list|)
 argument_list|,
-name|P2FTN
+name|PCCTM_FTN
 argument_list|)
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 return|;
 case|case
@@ -2328,16 +2310,16 @@ name|PROC
 case|:
 comment|/* 		     * procedures are pointers to functions  		     * which return integers (whether you look at them or not) 		     */
 return|return
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2INT
+name|PCCT_INT
 argument_list|,
-name|P2FTN
+name|PCCTM_FTN
 argument_list|)
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 return|;
 case|case
@@ -2349,9 +2331,9 @@ case|:
 comment|/* 		     *	formal procedures and functions are pointers 		     *	to structures which describe their environment. 		     */
 return|return
 operator|(
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 operator|)
 return|;
 default|default :
@@ -2395,9 +2377,9 @@ block|{
 specifier|extern
 name|char
 modifier|*
-name|p2opnames
-index|[]
-decl_stmt|;
+name|p2opname
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -2406,7 +2388,7 @@ condition|)
 return|return;
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
 name|op
 argument_list|,
@@ -2433,10 +2415,10 @@ name|stdout
 argument_list|,
 literal|"%s (%d) |   0 | 0x%x\n"
 argument_list|,
-name|p2opnames
-index|[
+name|p2opname
+argument_list|(
 name|op
-index|]
+argument_list|)
 argument_list|,
 name|op
 argument_list|,
@@ -2495,9 +2477,9 @@ block|{
 specifier|extern
 name|char
 modifier|*
-name|p2opnames
-index|[]
-decl_stmt|;
+name|p2opname
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -2506,7 +2488,7 @@ condition|)
 return|return;
 name|p2word
 argument_list|(
-name|TOF77
+name|PCCM_TRIPLE
 argument_list|(
 name|op
 argument_list|,
@@ -2543,10 +2525,10 @@ name|stdout
 argument_list|,
 literal|"%s (%d) |   0 | 0x%x	%d %d\n"
 argument_list|,
-name|p2opnames
-index|[
+name|p2opname
+argument_list|(
 name|op
-index|]
+argument_list|)
 argument_list|,
 name|op
 argument_list|,
@@ -2567,331 +2549,374 @@ begin_comment
 comment|/*      *	the string names of p2ops      */
 end_comment
 
-begin_decl_stmt
+begin_struct
+struct|struct
+name|p2op
+block|{
+name|int
+name|op
+decl_stmt|;
 name|char
 modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|p2op
 name|p2opnames
 index|[]
 init|=
 block|{
+name|PCC_ERROR
+block|,
+literal|"PCC_ERROR"
+block|,
+name|PCC_NAME
+block|,
+literal|"PCC_NAME"
+block|,
+name|PCC_STRING
+block|,
+literal|"PCC_STRING"
+block|,
+name|PCC_ICON
+block|,
+literal|"PCC_ICON"
+block|,
+name|PCC_FCON
+block|,
+literal|"PCC_FCON"
+block|,
+name|PCC_PLUS
+block|,
+literal|"PCC_PLUS"
+block|,
+name|PCC_MINUS
+block|,
+literal|"PCC_MINUS"
+block|,
+name|PCC_UMINUS
+block|,
+literal|"PCC_UMINUS"
+block|,
+name|PCC_MUL
+block|,
+literal|"PCC_MUL"
+block|,
+name|PCC_DEREF
+block|,
+literal|"PCC_DEREF"
+block|,
+name|PCC_AND
+block|,
+literal|"PCC_AND"
+block|,
+name|PCC_ADDROF
+block|,
+literal|"PCC_ADDROF"
+block|,
+name|PCC_OR
+block|,
+literal|"PCC_OR"
+block|,
+name|PCC_ER
+block|,
+literal|"PCC_ER"
+block|,
+name|PCC_QUEST
+block|,
+literal|"PCC_QUEST"
+block|,
+name|PCC_COLON
+block|,
+literal|"PCC_COLON"
+block|,
+name|PCC_ANDAND
+block|,
+literal|"PCC_ANDAND"
+block|,
+name|PCC_OROR
+block|,
+literal|"PCC_OROR"
+block|,
+name|PCC_CM
+block|,
+literal|"PCC_CM"
+block|,
+name|PCC_ASSIGN
+block|,
+literal|"PCC_ASSIGN"
+block|,
+name|PCC_COMOP
+block|,
+literal|"PCC_COMOP"
+block|,
+name|PCC_DIV
+block|,
+literal|"PCC_DIV"
+block|,
+name|PCC_MOD
+block|,
+literal|"PCC_MOD"
+block|,
+name|PCC_LS
+block|,
+literal|"PCC_LS"
+block|,
+name|PCC_RS
+block|,
+literal|"PCC_RS"
+block|,
+name|PCC_DOT
+block|,
+literal|"PCC_DOT"
+block|,
+name|PCC_STREF
+block|,
+literal|"PCC_STREF"
+block|,
+name|PCC_CALL
+block|,
+literal|"PCC_CALL"
+block|,
+name|PCC_UCALL
+block|,
+literal|"PCC_UCALL"
+block|,
+name|PCC_FORTCALL
+block|,
+literal|"PCC_FORTCALL"
+block|,
+name|PCC_UFORTCALL
+block|,
+literal|"PCC_UFORTCALL"
+block|,
+name|PCC_NOT
+block|,
+literal|"PCC_NOT"
+block|,
+name|PCC_COMPL
+block|,
+literal|"PCC_COMPL"
+block|,
+name|PCC_INCR
+block|,
+literal|"PCC_INCR"
+block|,
+name|PCC_DECR
+block|,
+literal|"PCC_DECR"
+block|,
+name|PCC_EQ
+block|,
+literal|"PCC_EQ"
+block|,
+name|PCC_NE
+block|,
+literal|"PCC_NE"
+block|,
+name|PCC_LE
+block|,
+literal|"PCC_LE"
+block|,
+name|PCC_LT
+block|,
+literal|"PCC_LT"
+block|,
+name|PCC_GE
+block|,
+literal|"PCC_GE"
+block|,
+name|PCC_GT
+block|,
+literal|"PCC_GT"
+block|,
+name|PCC_ULE
+block|,
+literal|"PCC_ULE"
+block|,
+name|PCC_ULT
+block|,
+literal|"PCC_ULT"
+block|,
+name|PCC_UGE
+block|,
+literal|"PCC_UGE"
+block|,
+name|PCC_UGT
+block|,
+literal|"PCC_UGT"
+block|,
+name|PCC_REG
+block|,
+literal|"PCC_REG"
+block|,
+name|PCC_OREG
+block|,
+literal|"PCC_OREG"
+block|,
+name|PCC_CCODES
+block|,
+literal|"PCC_CCODES"
+block|,
+name|PCC_FREE
+block|,
+literal|"PCC_FREE"
+block|,
+name|PCC_STASG
+block|,
+literal|"PCC_STASG"
+block|,
+name|PCC_STARG
+block|,
+literal|"PCC_STARG"
+block|,
+name|PCC_STCALL
+block|,
+literal|"PCC_STCALL"
+block|,
+name|PCC_USTCALL
+block|,
+literal|"PCC_USTCALL"
+block|,
+name|PCC_FLD
+block|,
+literal|"PCC_FLD"
+block|,
+name|PCC_SCONV
+block|,
+literal|"PCC_SCONV"
+block|,
+name|PCC_PCONV
+block|,
+literal|"PCC_PCONV"
+block|,
+name|PCC_PMCONV
+block|,
+literal|"PCC_PMCONV"
+block|,
+name|PCC_PVCONV
+block|,
+literal|"PCC_PVCONV"
+block|,
+name|PCC_FORCE
+block|,
+literal|"PCC_FORCE"
+block|,
+name|PCC_CBRANCH
+block|,
+literal|"PCC_CBRANCH"
+block|,
+name|PCC_INIT
+block|,
+literal|"PCC_INIT"
+block|,
+name|PCC_CAST
+block|,
+literal|"PCC_CAST"
+block|,
+operator|-
+literal|1
+block|,
 literal|""
-block|,
-literal|"P2UNDEFINED"
-block|,
-comment|/* 1 */
-literal|"P2NAME"
-block|,
-comment|/* 2 */
-literal|"P2STRING"
-block|,
-comment|/* 3 */
-literal|"P2ICON"
-block|,
-comment|/* 4 */
-literal|"P2FCON"
-block|,
-comment|/* 5 */
-literal|"P2PLUS"
-block|,
-comment|/* 6 */
-literal|""
-block|,
-literal|"P2MINUS"
-block|,
-comment|/* 8		also unary == P2NEG */
-literal|""
-block|,
-literal|"P2NEG"
-block|,
-literal|"P2MUL"
-block|,
-comment|/* 11		also unary == P2INDIRECT */
-literal|""
-block|,
-literal|"P2INDIRECT"
-block|,
-literal|"P2AND"
-block|,
-comment|/* 14		also unary == P2ADDROF */
-literal|""
-block|,
-literal|"P2ADDROF"
-block|,
-literal|"P2OR"
-block|,
-comment|/* 17 */
-literal|""
-block|,
-literal|"P2ER"
-block|,
-comment|/* 19 */
-literal|""
-block|,
-literal|"P2QUEST"
-block|,
-comment|/* 21 */
-literal|"P2COLON"
-block|,
-comment|/* 22 */
-literal|"P2ANDAND"
-block|,
-comment|/* 23 */
-literal|"P2OROR"
-block|,
-comment|/* 24 */
-literal|""
-block|,
-comment|/* 25 */
-literal|""
-block|,
-comment|/* 26 */
-literal|""
-block|,
-comment|/* 27 */
-literal|""
-block|,
-comment|/* 28 */
-literal|""
-block|,
-comment|/* 29 */
-literal|""
-block|,
-comment|/* 30 */
-literal|""
-block|,
-comment|/* 31 */
-literal|""
-block|,
-comment|/* 32 */
-literal|""
-block|,
-comment|/* 33 */
-literal|""
-block|,
-comment|/* 34 */
-literal|""
-block|,
-comment|/* 35 */
-literal|""
-block|,
-comment|/* 36 */
-literal|""
-block|,
-comment|/* 37 */
-literal|""
-block|,
-comment|/* 38 */
-literal|""
-block|,
-comment|/* 39 */
-literal|""
-block|,
-comment|/* 40 */
-literal|""
-block|,
-comment|/* 41 */
-literal|""
-block|,
-comment|/* 42 */
-literal|""
-block|,
-comment|/* 43 */
-literal|""
-block|,
-comment|/* 44 */
-literal|""
-block|,
-comment|/* 45 */
-literal|""
-block|,
-comment|/* 46 */
-literal|""
-block|,
-comment|/* 47 */
-literal|""
-block|,
-comment|/* 48 */
-literal|""
-block|,
-comment|/* 49 */
-literal|""
-block|,
-comment|/* 50 */
-literal|""
-block|,
-comment|/* 51 */
-literal|""
-block|,
-comment|/* 52 */
-literal|""
-block|,
-comment|/* 53 */
-literal|""
-block|,
-comment|/* 54 */
-literal|""
-block|,
-comment|/* 55 */
-literal|"P2LISTOP"
-block|,
-comment|/* 56 */
-literal|""
-block|,
-literal|"P2ASSIGN"
-block|,
-comment|/* 58 */
-literal|"P2COMOP"
-block|,
-comment|/* 59 */
-literal|"P2DIV"
-block|,
-comment|/* 60 */
-literal|""
-block|,
-literal|"P2MOD"
-block|,
-comment|/* 62 */
-literal|""
-block|,
-literal|"P2LS"
-block|,
-comment|/* 64 */
-literal|""
-block|,
-literal|"P2RS"
-block|,
-comment|/* 66 */
-literal|""
-block|,
-literal|"P2DOT"
-block|,
-comment|/* 68 */
-literal|"P2STREF"
-block|,
-comment|/* 69 */
-literal|"P2CALL"
-block|,
-comment|/* 70		also unary */
-literal|""
-block|,
-literal|"P2UNARYCALL"
-block|,
-literal|"P2FORTCALL"
-block|,
-comment|/* 73		also unary */
-literal|""
-block|,
-literal|"P2UNARYFORTCALL"
-block|,
-literal|"P2NOT"
-block|,
-comment|/* 76 */
-literal|"P2COMPL"
-block|,
-comment|/* 77 */
-literal|"P2INCR"
-block|,
-comment|/* 78 */
-literal|"P2DECR"
-block|,
-comment|/* 79 */
-literal|"P2EQ"
-block|,
-comment|/* 80 */
-literal|"P2NE"
-block|,
-comment|/* 81 */
-literal|"P2LE"
-block|,
-comment|/* 82 */
-literal|"P2LT"
-block|,
-comment|/* 83 */
-literal|"P2GE"
-block|,
-comment|/* 84 */
-literal|"P2GT"
-block|,
-comment|/* 85 */
-literal|"P2ULE"
-block|,
-comment|/* 86 */
-literal|"P2ULT"
-block|,
-comment|/* 87 */
-literal|"P2UGE"
-block|,
-comment|/* 88 */
-literal|"P2UGT"
-block|,
-comment|/* 89 */
-literal|"P2SETBIT"
-block|,
-comment|/* 90 */
-literal|"P2TESTBIT"
-block|,
-comment|/* 91 */
-literal|"P2RESETBIT"
-block|,
-comment|/* 92 */
-literal|"P2ARS"
-block|,
-comment|/* 93 */
-literal|"P2REG"
-block|,
-comment|/* 94 */
-literal|"P2OREG"
-block|,
-comment|/* 95 */
-literal|"P2CCODES"
-block|,
-comment|/* 96 */
-literal|"P2FREE"
-block|,
-comment|/* 97 */
-literal|"P2STASG"
-block|,
-comment|/* 98 */
-literal|"P2STARG"
-block|,
-comment|/* 99 */
-literal|"P2STCALL"
-block|,
-comment|/* 100		also unary */
-literal|""
-block|,
-literal|"P2UNARYSTCALL"
-block|,
-literal|"P2FLD"
-block|,
-comment|/* 103 */
-literal|"P2SCONV"
-block|,
-comment|/* 104 */
-literal|"P2PCONV"
-block|,
-comment|/* 105 */
-literal|"P2PMCONV"
-block|,
-comment|/* 106 */
-literal|"P2PVCONV"
-block|,
-comment|/* 107 */
-literal|"P2FORCE"
-block|,
-comment|/* 108 */
-literal|"P2CBRANCH"
-block|,
-comment|/* 109 */
-literal|"P2INIT"
-block|,
-comment|/* 110 */
-literal|"P2CAST"
-block|,
-comment|/* 111 */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|char
+modifier|*
+name|p2opname
+parameter_list|(
+name|op
+parameter_list|)
+specifier|register
+name|int
+name|op
+decl_stmt|;
+block|{
+specifier|static
+name|char
+modifier|*
+name|p2map
+index|[
+name|PCC_MAXOP
+operator|+
+literal|1
+index|]
+decl_stmt|;
+specifier|static
+name|bool
+name|mapready
+init|=
+name|FALSE
+decl_stmt|;
+specifier|register
+name|struct
+name|p2op
+modifier|*
+name|pp
+decl_stmt|;
+if|if
+condition|(
+name|mapready
+operator|==
+name|FALSE
+condition|)
+block|{
+for|for
+control|(
+name|pp
+operator|=
+name|p2opnames
+init|;
+name|pp
+operator|->
+name|op
+operator|>=
+literal|0
+condition|;
+name|pp
+operator|++
+control|)
+name|p2map
+index|[
+name|pp
+operator|->
+name|op
+index|]
+operator|=
+name|pp
+operator|->
+name|name
+expr_stmt|;
+name|mapready
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|p2map
+index|[
+name|op
+index|]
+condition|?
+name|p2map
+index|[
+name|op
+index|]
+else|:
+literal|"unknown"
+operator|)
+return|;
+block|}
+end_function
 
 begin_escape
 end_escape

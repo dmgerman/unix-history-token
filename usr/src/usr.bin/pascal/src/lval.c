@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 2.1 %G%"
+literal|"@(#)lval.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_endif
@@ -1717,7 +1717,7 @@ argument_list|(
 name|ap
 argument_list|)
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2121,7 +2121,7 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|int
@@ -2130,7 +2130,7 @@ name|sub
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -2141,9 +2141,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|p2type
 argument_list|(
@@ -2152,7 +2152,7 @@ operator|->
 name|type
 argument_list|)
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2219,9 +2219,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MINUS
+name|PCC_MINUS
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 comment|/* 			 *	and multiply by the width of the elements 			 */
@@ -2265,9 +2265,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MUL
+name|PCC_MUL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2287,7 +2287,7 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|int
@@ -2301,7 +2301,7 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -2312,9 +2312,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MINUS
+name|PCC_MINUS
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2328,13 +2328,13 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|w
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -2345,9 +2345,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MUL
+name|PCC_MUL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2355,9 +2355,9 @@ block|}
 comment|/* 			 *	and add it to the base address 			 */
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|p2type
 argument_list|(
@@ -2366,7 +2366,7 @@ operator|->
 name|type
 argument_list|)
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|)
 expr_stmt|;

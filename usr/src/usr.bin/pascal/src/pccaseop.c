@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 2.2 %G%"
+literal|"@(#)pccaseop.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_include
@@ -104,7 +104,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*      *	the P2FORCE operator puts its operand into a register.      *	these to keep from thinking of it as r0 all over.      */
+comment|/*      *	the PCC_FORCE operator puts its operand into a register.      *	these to keep from thinking of it as r0 all over.      */
 end_comment
 
 begin_ifdef
@@ -428,7 +428,7 @@ name|exprnlp
 operator|->
 name|extra_flags
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 operator|(
@@ -455,21 +455,21 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2ASSIGN
+name|PCC_ASSIGN
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2FORCE
+name|PCC_FORCE
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putdot
@@ -900,19 +900,19 @@ argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2FTN
+name|PCCTM_FTN
 operator||
-name|P2INT
+name|PCCT_INT
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 literal|"_CASERNG"
@@ -939,14 +939,14 @@ name|exprnlp
 operator|->
 name|extra_flags
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2CALL
+name|PCC_CALL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putdot

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 2.2 %G%"
+literal|"@(#)var.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|"pc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pcops.h"
 end_include
 
 begin_endif

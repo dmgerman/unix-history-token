@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 2.1 %G%"
+literal|"@(#)stat.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_include
@@ -758,18 +758,18 @@ argument_list|)
 argument_list|,
 name|NGLOBAL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -780,9 +780,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-argument|P2ASG P2PLUS
+argument|PCCOM_ASG PCC_PLUS
 argument_list|,
-argument|P2INT
+argument|PCCT_INT
 argument_list|)
 empty_stmt|;
 name|putdot
@@ -879,19 +879,19 @@ condition|)
 block|{
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2FTN
+name|PCCTM_FTN
 operator||
-name|P2INT
+name|PCCT_INT
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 literal|"_LINO"
@@ -899,9 +899,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-argument|P2UNARY P2CALL
+argument|PCCOM_UNARY PCC_CALL
 argument_list|,
-argument|P2INT
+argument|PCCT_INT
 argument_list|)
 empty_stmt|;
 name|putdot
@@ -924,18 +924,18 @@ literal|0
 argument_list|,
 name|NGLOBAL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -946,9 +946,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-argument|P2ASG P2PLUS
+argument|PCCOM_ASG PCC_PLUS
 argument_list|,
-argument|P2INT
+argument|PCCT_INT
 argument_list|)
 empty_stmt|;
 name|putdot
@@ -1069,9 +1069,9 @@ name|tempnlp
 operator|->
 name|extra_flags
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1187,11 +1187,11 @@ directive|ifdef
 name|PC
 name|putop
 argument_list|(
-name|P2ASSIGN
+name|PCC_ASSIGN
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 argument_list|)
 expr_stmt|;
 name|putdot
@@ -2193,7 +2193,7 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2ASSIGN
+name|PCC_ASSIGN
 argument_list|,
 name|p2type
 argument_list|(
@@ -2214,7 +2214,7 @@ name|TPTR
 case|:
 name|putop
 argument_list|(
-name|P2ASSIGN
+name|PCC_ASSIGN
 argument_list|,
 name|p2type
 argument_list|(
@@ -2248,7 +2248,7 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2ASSIGN
+name|PCC_ASSIGN
 argument_list|,
 name|p2type
 argument_list|(
@@ -2267,16 +2267,16 @@ break|break;
 default|default:
 name|putstrop
 argument_list|(
-name|P2STASG
+name|PCC_STASG
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
 name|p2type
 argument_list|(
 name|p
 argument_list|)
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 operator|(
@@ -2369,19 +2369,19 @@ name|NLNIL
 return|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2FTN
+name|PCCTM_FTN
 operator||
-name|P2INT
+name|PCCT_INT
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 argument_list|)
 argument_list|,
 literal|"_blkcpy"
@@ -2437,9 +2437,9 @@ name|NLNIL
 return|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 comment|/* upper bound */
@@ -2530,30 +2530,30 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MINUS
+name|PCC_MINUS
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 comment|/* add one */
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2PLUS
+name|PCC_PLUS
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 comment|/* and multiply by the width */
@@ -2601,23 +2601,23 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2MUL
+name|PCC_MUL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2CALL
+name|PCC_CALL
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putdot
@@ -2803,13 +2803,13 @@ argument_list|()
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|l1
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -2820,9 +2820,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2CBRANCH
+name|PCC_CBRANCH
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putdot
@@ -3120,7 +3120,7 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|int
@@ -3129,7 +3129,7 @@ name|l2
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -3140,9 +3140,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2CBRANCH
+name|PCC_CBRANCH
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putdot
@@ -3345,13 +3345,13 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|l
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -3362,9 +3362,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2CBRANCH
+name|PCC_CBRANCH
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putdot

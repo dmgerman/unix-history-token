@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 2.1 %G%"
+literal|"@(#)flvalue.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_endif
@@ -454,23 +454,23 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2PTR
+name|PCCTM_PTR
 argument_list|,
-name|ADDTYPE
+name|PCCM_ADDTYPE
 argument_list|(
-name|P2FTN
+name|PCCTM_FTN
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 argument_list|)
 argument_list|)
 argument_list|,
@@ -506,7 +506,7 @@ argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
@@ -522,13 +522,13 @@ argument_list|)
 expr_stmt|;
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|bn
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -539,9 +539,9 @@ argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putLV
@@ -565,23 +565,23 @@ name|tempnlp
 operator|->
 name|extra_flags
 argument_list|,
-name|P2STRTY
+name|PCCT_STRTY
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2LISTOP
+name|PCC_CM
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 name|putop
 argument_list|(
-name|P2CALL
+name|PCC_CALL
 argument_list|,
-name|P2PTR
+name|PCCTM_PTR
 operator||
-name|P2STRTY
+name|PCCT_STRTY
 argument_list|)
 expr_stmt|;
 endif|#

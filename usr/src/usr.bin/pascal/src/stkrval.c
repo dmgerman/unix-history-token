@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stkrval.c 2.1 %G%"
+literal|"@(#)stkrval.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"pcops.h"
+file|<pcc.h>
 end_include
 
 begin_endif
@@ -219,13 +219,13 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -386,7 +386,7 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -560,7 +560,7 @@ condition|)
 block|{
 name|putop
 argument_list|(
-argument|P2UNARY P2MUL
+argument|PCCOM_UNARY PCC_MUL
 argument_list|,
 argument|p2type( q )
 argument_list|)
@@ -582,7 +582,7 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -856,7 +856,7 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|p
 operator|->
@@ -867,7 +867,7 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -1117,7 +1117,7 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1325,7 +1325,7 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1494,7 +1494,7 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1670,7 +1670,7 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|short
@@ -1679,7 +1679,7 @@ name|l
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -1722,7 +1722,7 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 operator|(
 name|int
@@ -1731,7 +1731,7 @@ name|l
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
@@ -1852,7 +1852,7 @@ directive|ifdef
 name|PC
 name|putleaf
 argument_list|(
-name|P2ICON
+name|PCC_ICON
 argument_list|,
 name|cp
 index|[
@@ -1861,7 +1861,7 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
-name|P2INT
+name|PCCT_INT
 argument_list|,
 operator|(
 name|char
