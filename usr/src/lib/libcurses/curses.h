@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.11 */
+comment|/* @(#)curses.h	1.12 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -66,36 +66,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|_SUBWIN
-value|01
-end_define
-
-begin_define
-define|#
-directive|define
 name|_ENDLINE
-value|02
+value|001
 end_define
 
 begin_define
 define|#
 directive|define
 name|_FULLWIN
-value|04
+value|002
 end_define
 
 begin_define
 define|#
 directive|define
 name|_SCROLLWIN
-value|010
+value|004
 end_define
 
 begin_define
 define|#
 directive|define
 name|_FLUSH
-value|020
+value|010
 end_define
 
 begin_define
@@ -344,6 +337,14 @@ decl_stmt|;
 name|short
 modifier|*
 name|_lastch
+decl_stmt|;
+name|struct
+name|_win_st
+modifier|*
+name|_nextp
+decl_stmt|,
+modifier|*
+name|_orig
 decl_stmt|;
 block|}
 struct|;

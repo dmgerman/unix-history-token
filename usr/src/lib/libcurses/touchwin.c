@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * make it look like the whole window has been changed.  *  * %G% (Berkeley) @(#)touchwin.c	1.1  */
+comment|/*  * make it look like the whole window has been changed.  *  * %G% (Berkeley) @(#)touchwin.c	1.2  */
 end_comment
 
 begin_macro
@@ -23,6 +23,61 @@ modifier|*
 name|win
 decl_stmt|;
 end_decl_stmt
+
+begin_block
+block|{
+name|reg
+name|WINDOW
+modifier|*
+name|wp
+decl_stmt|;
+name|do_touch
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|wp
+operator|=
+name|win
+operator|->
+name|_nextp
+init|;
+name|wp
+operator|!=
+name|win
+condition|;
+name|wp
+operator|=
+name|wp
+operator|->
+name|_nextp
+control|)
+name|do_touch
+argument_list|(
+name|wp
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * do_touch:  *	Touch the window  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|do_touch
+argument_list|(
+argument|win
+argument_list|)
+name|reg
+name|WINDOW
+operator|*
+name|win
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

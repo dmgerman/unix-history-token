@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * allocate space for and set up defaults for a new window  *  * %G% (Berkeley) @(#)newwin.c	1.5  */
+comment|/*  * allocate space for and set up defaults for a new window  *  * %G% (Berkeley) @(#)newwin.c	1.6  */
 end_comment
 
 begin_include
@@ -279,6 +279,12 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+name|win
+operator|->
+name|_nextp
+operator|=
+name|win
+expr_stmt|;
 return|return
 name|win
 return|;
@@ -418,6 +424,9 @@ operator|->
 name|_begx
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -425,6 +434,39 @@ argument_list|,
 literal|"returning ERR (1)\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"SUBWIN(begx = %d, begy = %d,maxx = %d, maxy = %d, nl = %d, nc = %d, by = %d, bx = %d)\n"
+argument_list|,
+name|orig
+operator|->
+name|_begx
+argument_list|,
+name|orig
+operator|->
+name|_begy
+argument_list|,
+name|orig
+operator|->
+name|_maxx
+argument_list|,
+name|orig
+operator|->
+name|_maxy
+argument_list|,
+name|nl
+argument_list|,
+name|nc
+argument_list|,
+name|by
+argument_list|,
+name|bx
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ERR
 return|;
@@ -546,9 +588,23 @@ index|]
 expr_stmt|;
 name|win
 operator|->
-name|_flags
+name|_nextp
 operator|=
-name|_SUBWIN
+name|orig
+operator|->
+name|_nextp
+expr_stmt|;
+name|orig
+operator|->
+name|_nextp
+operator|=
+name|win
+expr_stmt|;
+name|win
+operator|->
+name|_orig
+operator|=
+name|orig
 expr_stmt|;
 return|return
 name|win
