@@ -1837,23 +1837,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|int
-name|_kse_isthreaded
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|__isthreaded
-operator|!=
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * This is called when the first thread (other than the initial  * thread) is created.  */
 end_comment
@@ -2710,11 +2693,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|KSE_SET_SWITCH
+argument_list|(
 name|curkse
-operator|->
-name|k_switch
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 name|_thread_enter_uts
 argument_list|(
@@ -2916,6 +2898,8 @@ name|k_curthread
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|(
 name|curkse
 operator|->
@@ -2925,6 +2909,7 @@ name|KF_INITIALIZED
 operator|)
 operator|==
 literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* Setup this KSEs specific data. */
@@ -3733,6 +3718,8 @@ expr_stmt|;
 comment|/* Check for first time initialization: */
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 operator|(
 name|curkse
 operator|->
@@ -3742,6 +3729,7 @@ name|KF_INITIALIZED
 operator|)
 operator|==
 literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* Setup this KSEs specific data. */
@@ -3773,11 +3761,11 @@ expr_stmt|;
 comment|/* If this is an upcall; take the scheduler lock. */
 if|if
 condition|(
+operator|!
+name|KSE_IS_SWITCH
+argument_list|(
 name|curkse
-operator|->
-name|k_switch
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|KSE_SCHED_LOCK
 argument_list|(
@@ -3788,18 +3776,11 @@ operator|->
 name|k_kseg
 argument_list|)
 expr_stmt|;
+else|else
+name|KSE_CLEAR_SWITCH
+argument_list|(
 name|curkse
-operator|->
-name|k_switch
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Now that the scheduler lock is held, get the current 	 * thread.  The KSE's current thread cannot be safely 	 * examined without the lock because it could have returned 	 * as completed on another KSE.  See kse_check_completed(). 	 */
-name|curthread
-operator|=
-name|curkse
-operator|->
-name|k_curthread
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3822,6 +3803,13 @@ name|kg_idle_kses
 operator|--
 expr_stmt|;
 block|}
+comment|/* 	 * Now that the scheduler lock is held, get the current 	 * thread.  The KSE's current thread cannot be safely 	 * examined without the lock because it could have returned 	 * as completed on another KSE.  See kse_check_completed(). 	 */
+name|curthread
+operator|=
+name|curkse
+operator|->
+name|k_curthread
+expr_stmt|;
 comment|/* 	 * If the current thread was completed in another KSE, then 	 * it will be in the run queue.  Don't mark it as being blocked. 	 */
 if|if
 condition|(
@@ -9774,12 +9762,6 @@ literal|0
 expr_stmt|;
 name|kse
 operator|->
-name|k_idle
-operator|=
-literal|0
-expr_stmt|;
-name|kse
-operator|->
 name|k_error
 operator|=
 literal|0
@@ -9787,18 +9769,6 @@ expr_stmt|;
 name|kse
 operator|->
 name|k_cpu
-operator|=
-literal|0
-expr_stmt|;
-name|kse
-operator|->
-name|k_done
-operator|=
-literal|0
-expr_stmt|;
-name|kse
-operator|->
-name|k_switch
 operator|=
 literal|0
 expr_stmt|;

@@ -217,6 +217,12 @@ name|DBG_SIG
 value|0x0002
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PTHREADS_INVARIANTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -228,6 +234,27 @@ name|msg
 parameter_list|)
 value|do {	\ 	if (!(cond))			\ 		PANIC(msg);		\ } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|THR_ASSERT
+parameter_list|(
+name|cond
+parameter_list|,
+name|msg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * State change macro without scheduling queue change:  */
@@ -518,10 +545,17 @@ define|#
 directive|define
 name|KF_TERMINATED
 value|0x0004
-name|int
-name|k_idle
-decl_stmt|;
+comment|/* kse is terminated */
+define|#
+directive|define
+name|KF_IDLE
+value|0x0008
 comment|/* kse is idle */
+define|#
+directive|define
+name|KF_SWITCH
+value|0x0010
+comment|/* thread switch in UTS */
 name|int
 name|k_error
 decl_stmt|;
@@ -531,20 +565,72 @@ name|k_cpu
 decl_stmt|;
 comment|/* CPU ID when bound */
 name|int
-name|k_done
-decl_stmt|;
-comment|/* this KSE is done */
-name|int
-name|k_switch
-decl_stmt|;
-comment|/* thread switch in UTS */
-name|int
 name|k_sigseqno
 decl_stmt|;
 comment|/* signal buffered count */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KSE_SET_IDLE
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_flags |= KF_IDLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_CLEAR_IDLE
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_flags&= ~KF_IDLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_IS_IDLE
+parameter_list|(
+name|kse
+parameter_list|)
+value|(((kse)->k_flags& KF_IDLE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_SET_SWITCH
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_flags |= KF_SWITCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_CLEAR_SWITCH
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_flags&= ~KF_SWITCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_IS_SWITCH
+parameter_list|(
+name|kse
+parameter_list|)
+value|(((kse)->k_flags& KF_SWITCH) != 0)
+end_define
 
 begin_comment
 comment|/*  * Each KSE group contains one or more KSEs in which threads can run.  * At least for now, there is one scheduling queue per KSE group; KSEs  * within the same KSE group compete for threads from the same scheduling  * queue.  A scope system thread has one KSE in one KSE group; the group  * does not use its scheduling queue.  */
@@ -777,36 +863,6 @@ parameter_list|(
 name|kse
 parameter_list|)
 value|kse_wakeup(&(kse)->k_kcb->kcb_kmbx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSE_SET_IDLE
-parameter_list|(
-name|kse
-parameter_list|)
-value|((kse)->k_idle = 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSE_CLEAR_IDLE
-parameter_list|(
-name|kse
-parameter_list|)
-value|((kse)->k_idle = 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSE_IS_IDLE
-parameter_list|(
-name|kse
-parameter_list|)
-value|((kse)->k_idle != 0)
 end_define
 
 begin_comment
@@ -1754,9 +1810,6 @@ comment|/* thread blocked in kernel */
 name|int
 name|need_switchout
 decl_stmt|;
-name|int
-name|need_wakeup
-decl_stmt|;
 comment|/* 	 * Used for tracking delivery of signal handlers. 	 */
 name|struct
 name|pthread_sigframe
@@ -2312,6 +2365,32 @@ name|thrd
 parameter_list|)
 value|(((thrd)->flags& THR_FLAGS_EXITING) != 0)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__isthreaded
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|_kse_isthreaded
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__isthreaded
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Global variables for the pthread kernel.  */
@@ -3780,7 +3859,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_thr_enter_cancellation_point
+name|_thr_cancel_enter
 parameter_list|(
 name|struct
 name|pthread
@@ -3791,11 +3870,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 parameter_list|(
 name|struct
 name|pthread
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

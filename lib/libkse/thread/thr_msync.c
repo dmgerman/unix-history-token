@@ -64,7 +64,7 @@ name|int
 name|ret
 decl_stmt|;
 comment|/* 	 * XXX This is quite pointless unless we know how to get the 	 * file descriptor associated with the memory, and lock it for 	 * write. The only real use of this wrapper is to guarantee 	 * a cancellation point, as per the standard. sigh. 	 */
-name|_thr_enter_cancellation_point
+name|_thr_cancel_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -80,9 +80,11 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

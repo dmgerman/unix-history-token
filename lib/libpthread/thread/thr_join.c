@@ -64,7 +64,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|_thr_enter_cancellation_point
+name|_thr_cancel_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -84,9 +84,11 @@ name|THR_MAGIC
 condition|)
 block|{
 comment|/* Invalid thread: */
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -104,9 +106,11 @@ name|curthread
 condition|)
 block|{
 comment|/* Avoid a deadlock condition: */
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -136,9 +140,11 @@ literal|0
 condition|)
 block|{
 comment|/* Return an error: */
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -506,9 +512,11 @@ name|ret
 expr_stmt|;
 block|}
 block|}
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Return the completion status: */

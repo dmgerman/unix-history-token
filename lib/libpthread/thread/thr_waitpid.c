@@ -78,7 +78,7 @@ decl_stmt|;
 name|pid_t
 name|ret
 decl_stmt|;
-name|_thr_enter_cancellation_point
+name|_thr_cancel_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -94,9 +94,11 @@ argument_list|,
 name|options
 argument_list|)
 expr_stmt|;
-name|_thr_leave_cancellation_point
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

@@ -89,7 +89,7 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|_thr_enter_cancellation_point
+name|_thr_cancel_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -136,9 +136,17 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|_thr_leave_cancellation_point
+comment|/* 	 * To avoid possible file handle leak,  	 * only check cancellation point if it is failure 	 */
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
+argument_list|,
+operator|(
+name|ret
+operator|==
+operator|-
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
