@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.23.1.2 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7402,7 +7402,10 @@ name|DefaultCharSet
 operator|=
 name|newstr
 argument_list|(
+name|denlstring
+argument_list|(
 name|val
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
