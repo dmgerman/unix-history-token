@@ -1078,7 +1078,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%c%c%8d%8d%8d%7s"
+literal|"%c%c%8lu%8lu%8lu%7s"
 argument_list|,
 name|fup
 operator|->
@@ -1124,6 +1124,10 @@ literal|'+'
 else|:
 literal|'-'
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|fup
@@ -1134,7 +1138,12 @@ name|dqb_curblocks
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|fup
@@ -1145,7 +1154,12 @@ name|dqb_bsoftlimit
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dbtob
 argument_list|(
 name|fup
@@ -1156,6 +1170,7 @@ name|dqb_bhardlimit
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
 argument_list|,
 name|fup
 operator|->
@@ -1189,7 +1204,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %6d%6d%6d%7s\n"
+literal|"  %6lu%6lu%6lu%7s\n"
 argument_list|,
 name|fup
 operator|->
@@ -1863,7 +1878,7 @@ name|fup
 operator|->
 name|fu_name
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|id
 argument_list|)
@@ -1966,7 +1981,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ddays"
+literal|"%lddays"
 argument_list|,
 operator|(
 name|hours
@@ -1994,7 +2009,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d:%d"
+literal|"%2ld:%ld"
 argument_list|,
 name|minutes
 operator|/
@@ -2015,7 +2030,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d"
+literal|"%2ld"
 argument_list|,
 name|minutes
 argument_list|)
