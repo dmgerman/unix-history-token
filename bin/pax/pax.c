@@ -423,17 +423,6 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|ltmfrmt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -v locale time format (if any) */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
 name|argv0
 decl_stmt|;
 end_decl_stmt
@@ -839,14 +828,6 @@ name|reslimit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Handle posix locale 	 * 	 * set user defines time printing format for -v option 	 */
-name|ltmfrmt
-operator|=
-name|getenv
-argument_list|(
-literal|"LC_TIME"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * signal handling to reset stored directory times and modes. Since 	 * we deal with broken pipes via failed writes we ignore it. We also 	 * deal with any file size limit thorugh failed writes. Cpu time 	 * limits are caught and a cleanup is forced. 	 */
 if|if
 condition|(
