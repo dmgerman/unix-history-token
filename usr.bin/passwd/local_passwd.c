@@ -290,6 +290,11 @@ name|min_length
 init|=
 literal|6
 decl_stmt|;
+name|int
+name|force_mix_case
+init|=
+literal|1
+decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -388,7 +393,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
-comment|/* 	 * Determine minimum password length and next password change date. 	 * Note that even for NIS passwords, login_cap is still used. 	 */
+comment|/* 	 * Determine minimum password length, next password change date, 	 * and whether or not to force mixed case passwords. 	 * Note that even for NIS passwords, login_cap is still used. 	 */
 if|if
 condition|(
 operator|(
@@ -459,6 +464,18 @@ operator|+
 name|period
 expr_stmt|;
 block|}
+comment|/* mixpasswordcase capability */
+name|force_mix_case
+operator|=
+name|login_getcapbool
+argument_list|(
+name|lc
+argument_list|,
+literal|"mixpasswordcase"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|login_close
 argument_list|(
 name|lc
@@ -548,6 +565,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|force_mix_case
+condition|)
+block|{
 for|for
 control|(
 name|t
@@ -594,6 +616,7 @@ literal|"Please don't use an all-lower case password.\nUnusual capitalization, c
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 operator|(
 name|void
