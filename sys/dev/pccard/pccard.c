@@ -3082,8 +3082,7 @@ operator||
 name|PCCARD_CCR_OPTION_ADDR_DECODE
 operator|)
 expr_stmt|;
-comment|/* 		 * XXX Need to enable PCCARD_CCR_OPTION_IRQ_ENABLE if 		 * XXX we have an interrupt handler, but we don't know that 		 * XXX at this point. 		 */
-comment|/*		reg |= PCCARD_CCR_OPTION_IREQ_ENABLE;*/
+comment|/* PCCARD_CCR_OPTION_IRQ_ENABLE set elsewhere as needed */
 block|}
 name|pccard_ccr_write
 argument_list|(
@@ -5635,6 +5634,7 @@ decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
+comment|/* 	 * If we go to resetting a card, we may need a null interrupt hanlder 	 * to work (since the system may call it before the device can 	 * establish an ISR) due to interrupt sharing at a higher level. 	 */
 if|if
 condition|(
 name|pf
@@ -5648,6 +5648,7 @@ argument_list|(
 literal|"Null interrupt handler?\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX The CCR_STATUS register bits used here are  	 * only valid for multi function cards. 	 */
 name|reg
 operator|=
 name|pccard_ccr_read
@@ -5789,6 +5790,7 @@ operator||
 name|PCCARD_CCR_OPTION_IREQ_ENABLE
 argument_list|)
 expr_stmt|;
+comment|/*  	 * XXX Don't use TTY type for our interrupt handler.  It makes 	 * the spl masks wrong on -stable.  Instead, we should use the type 	 * that was requested of us. 	 */
 name|bus_setup_intr
 argument_list|(
 name|dev
