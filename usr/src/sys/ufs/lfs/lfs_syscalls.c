@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -155,6 +155,11 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
+name|struct
 name|lfs
 modifier|*
 name|fs
@@ -168,6 +173,9 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+name|ino_t
+name|lastino
 decl_stmt|;
 name|daddr_t
 name|daddr
@@ -278,7 +286,16 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Mark blocks/inodes dirty.  For blocks, we get the vnode, and check 	 * to see if the modified or disk address is newer than the cleaner 	 * thinks.  If so, we're done.  Otherwise, we get the block, from core 	 * if we have it, otherwise from the cleaner, and write it.  Note that 	 * errors are mostly ignored.  If we can't get the info, the block is 	 * probably not all that useful, and hopefully subsequent calls from 	 * the cleaner will fix everything. 	 */
+comment|/* 	 * Mark blocks/inodes dirty.  Note that errors are mostly ignored.  If 	 * we can't get the info, the block is probably not all that useful, 	 * and hopefully subsequent calls from the cleaner will fix everything. 	 */
+name|fs
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mntp
+argument_list|)
+operator|->
+name|um_lfs
+expr_stmt|;
 name|bsize
 operator|=
 name|VFSTOUFS
@@ -292,6 +309,9 @@ name|lfs_bsize
 expr_stmt|;
 for|for
 control|(
+name|lastino
+operator|=
+name|LFS_UNUSED_INUM
 init|;
 name|cnt
 operator|--
@@ -300,6 +320,55 @@ operator|++
 name|blkp
 control|)
 block|{
+comment|/* 		 * Get the IFILE entry (only once) and see if the file still 		 * exists. 		 */
+if|if
+condition|(
+name|lastino
+operator|!=
+name|blkp
+operator|->
+name|bi_inode
+condition|)
+block|{
+name|lastino
+operator|=
+name|blkp
+operator|->
+name|bi_inode
+expr_stmt|;
+name|LFS_IENTRY
+argument_list|(
+name|ifp
+argument_list|,
+name|fs
+argument_list|,
+name|blkp
+operator|->
+name|bi_inode
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|daddr
+operator|=
+name|ifp
+operator|->
+name|if_daddr
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|daddr
+operator|==
+name|LFS_UNUSED_DADDR
+condition|)
+continue|continue;
+block|}
+comment|/* 		 * Get the vnode/inode.  If the inode modification time is 		 * earlier than the segment in which the block was found then 		 * they have to be valid, skip other checks. 		 */
 if|if
 condition|(
 name|lfs_vget
@@ -313,18 +382,29 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
-operator|||
+condition|)
+continue|continue;
+name|ip
+operator|=
 name|VTOI
 argument_list|(
 name|vp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
 operator|->
 name|i_mtime
-operator|>=
+operator|>
 name|blkp
 operator|->
 name|bi_segcreate
-operator|||
+condition|)
+block|{
+comment|/* Check to see if the block has been replaced. */
+if|if
+condition|(
 name|lfs_bmap
 argument_list|(
 name|vp
@@ -338,7 +418,10 @@ argument_list|,
 operator|&
 name|daddr
 argument_list|)
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
 name|daddr
 operator|!=
 name|blkp
@@ -346,6 +429,8 @@ operator|->
 name|bi_daddr
 condition|)
 continue|continue;
+block|}
+comment|/* Get the block (from core or the cleaner) and write it. */
 name|bp
 operator|=
 name|getblk
@@ -409,11 +494,6 @@ operator|)
 return|;
 block|}
 name|lfs_bwrite
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-name|brelse
 argument_list|(
 name|bp
 argument_list|)
@@ -482,15 +562,6 @@ name|error
 operator|)
 return|;
 block|}
-name|fs
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|mntp
-argument_list|)
-operator|->
-name|um_lfs
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -520,10 +591,8 @@ name|ifp
 operator|->
 name|if_daddr
 expr_stmt|;
-name|LFS_IRELEASE
+name|brelse
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -583,7 +652,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * lfs_bmapv:  *  * This will fill in the current disk address for arrays of inodes and blocks.  *  *  0 on success  * -1/errno is return on error.  */
+comment|/*  * lfs_bmapv:  *  * This will fill in the current disk address for arrays of blocks.  *  *  0 on success  * -1/errno is return on error.  */
 end_comment
 
 begin_decl_stmt
@@ -972,10 +1041,8 @@ name|LFS_SBPAD
 else|:
 literal|0
 expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -998,10 +1065,8 @@ name|cip
 operator|->
 name|dirty
 expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
