@@ -854,7 +854,10 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|pirqreg
 operator|=
