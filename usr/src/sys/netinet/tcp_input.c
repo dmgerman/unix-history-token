@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.19 81/11/04 */
+comment|/* tcp_input.c 1.20 81/11/07 */
 end_comment
 
 begin_include
@@ -940,6 +940,9 @@ operator|&=
 operator|~
 name|TC_NET_KEEP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KPROF
 name|acounts
 index|[
 name|tp
@@ -951,6 +954,8 @@ name|INRECV
 index|]
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
