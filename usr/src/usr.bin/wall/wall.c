@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.3 (Berkeley) %G%"
+literal|"@(#)wall.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,6 +385,9 @@ name|ut_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|mesg

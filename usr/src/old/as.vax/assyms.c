@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assyms.c	5.1 (Berkeley) %G%"
+literal|"@(#)assyms.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1802,6 +1802,9 @@ literal|"ilsym"
 operator|)
 return|;
 default|default:
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tagbuff

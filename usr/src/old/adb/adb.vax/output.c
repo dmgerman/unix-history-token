@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.5 %G%"
+literal|"@(#)output.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -945,6 +945,9 @@ name|vax
 name|dptr
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s
@@ -1909,6 +1912,9 @@ operator|-
 name|lxy
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cp1

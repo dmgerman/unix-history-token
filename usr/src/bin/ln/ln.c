@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c 4.6 %G%"
+literal|"@(#)ln.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,9 @@ else|else
 name|tail
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|name

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	4.4 (Berkeley) 87/05/21"
+literal|"@(#)misc.c	4.5 (Berkeley) 87/10/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -1310,6 +1310,9 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -1413,6 +1416,9 @@ specifier|extern
 name|int
 name|yylineno
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

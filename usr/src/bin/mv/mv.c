@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mv.c	5.4 (Berkeley) %G%"
+literal|"@(#)mv.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,14 +146,6 @@ parameter_list|)
 define|\
 value|(((st).st_mode&S_IFMT) == S_IFCHR || ((st).st_mode&S_IFMT) == S_IFBLK)
 end_define
-
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|char
@@ -504,6 +496,9 @@ literal|1
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|target
@@ -1504,6 +1499,9 @@ operator|+
 literal|10
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -1550,6 +1548,9 @@ operator|+
 literal|20
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

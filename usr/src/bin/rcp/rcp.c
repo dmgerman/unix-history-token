@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.8 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,10 +148,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
 argument_list|()
 decl_stmt|;
 end_decl_stmt

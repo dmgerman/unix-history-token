@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	1.1 (Berkeley) %G%"
+literal|"@(#)output.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -781,6 +781,9 @@ case|:
 name|dptr
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s

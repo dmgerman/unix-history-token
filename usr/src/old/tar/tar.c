@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.9 (Berkeley) %G%"
+literal|"@(#)tar.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -555,14 +555,6 @@ begin_function_decl
 name|char
 modifier|*
 name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1418,6 +1410,9 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -2310,6 +2305,9 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -2338,6 +2336,9 @@ name|dblock
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|newparent
@@ -2667,6 +2668,9 @@ operator|.
 name|linkname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -2680,6 +2684,9 @@ argument_list|,
 literal|0L
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -2869,6 +2876,9 @@ name|linkflag
 operator|=
 literal|'1'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -3026,6 +3036,9 @@ argument_list|,
 name|blocks
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -4992,6 +5005,9 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -5009,6 +5025,9 @@ operator|&
 literal|07777
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -5024,6 +5043,9 @@ operator|->
 name|st_uid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -5039,6 +5061,9 @@ operator|->
 name|st_gid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock
@@ -5054,6 +5079,9 @@ operator|->
 name|st_size
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dblock

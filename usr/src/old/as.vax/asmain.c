@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c	5.2 (Berkeley) %G%"
+literal|"@(#)asmain.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 5.2"
+value|"VAX/UNIX Assembler V%G% 5.3"
 end_define
 
 begin_comment
@@ -1671,6 +1671,9 @@ name|FILE
 modifier|*
 name|file
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tname

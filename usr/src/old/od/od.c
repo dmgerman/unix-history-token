@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.12 (Berkeley) %G%"
+literal|"@(#)od.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3062,6 +3062,9 @@ operator|==
 literal|0x8000
 condition|)
 comment|/* Vax illegal f.p. */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|fbuf
@@ -3100,6 +3103,9 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|fbuf
@@ -3180,6 +3186,9 @@ operator|==
 literal|0x8000
 condition|)
 comment|/* Vax illegal f.p. form */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|fbuf
@@ -3197,6 +3206,9 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|fbuf

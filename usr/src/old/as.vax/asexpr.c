@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asexpr.c	5.3 (Berkeley) %G%"
+literal|"@(#)asexpr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2541,6 +2541,9 @@ operator|<=
 name|LASTTOKEN
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

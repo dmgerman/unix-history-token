@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)du.c	4.11 (Berkeley) %G%"
+literal|"@(#)du.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,10 +128,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
 argument_list|()
 decl_stmt|;
 end_decl_stmt

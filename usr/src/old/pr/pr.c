@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.6 (Berkeley) %G%"
+literal|"@(#)pr.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,12 +809,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
 name|struct
 name|stat
 name|sbuf
@@ -1172,6 +1166,9 @@ name|line
 operator|=
 literal|2
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|linebuf
@@ -1193,6 +1190,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|linebuf

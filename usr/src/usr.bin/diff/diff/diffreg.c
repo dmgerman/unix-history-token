@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.16 %G%"
+literal|"@(#)diffreg.c 4.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2407,6 +2407,9 @@ else|else
 name|tail
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

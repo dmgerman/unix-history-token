@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.14 %G%"
+literal|"@(#)cc.c 4.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1031,6 +1031,9 @@ name|pflag
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tmp0

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tran.c	4.4 %G%"
+literal|"@(#)tran.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1465,6 +1465,9 @@ name|vp
 operator|->
 name|fval
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s
@@ -1477,6 +1480,9 @@ name|fval
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s

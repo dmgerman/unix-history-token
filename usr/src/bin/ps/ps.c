@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.10 (Berkeley) %G%"
+literal|"@(#)ps.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4101,6 +4101,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|hdr
@@ -4161,6 +4164,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|hdr

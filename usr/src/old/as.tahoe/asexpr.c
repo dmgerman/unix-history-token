@@ -2460,6 +2460,9 @@ operator|<=
 name|LASTTOKEN
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf

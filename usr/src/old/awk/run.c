@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)run.c	4.6 %G%"
+literal|"@(#)run.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2334,6 +2334,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|p
@@ -2402,6 +2405,9 @@ name|flag
 operator|==
 literal|1
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|p
@@ -2418,6 +2424,9 @@ name|flag
 operator|==
 literal|2
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|p
@@ -2437,6 +2446,9 @@ name|flag
 operator|==
 literal|3
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|p
@@ -2456,6 +2468,9 @@ name|flag
 operator|==
 literal|4
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|p
@@ -3943,6 +3958,9 @@ name|s
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|num
@@ -4068,6 +4086,9 @@ name|s
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|num

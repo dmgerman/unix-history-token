@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)diffdir.c	4.10 (Berkeley) %G%"
+literal|"@(#)diffdir.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1951,6 +1951,9 @@ condition|(
 name|wantpr
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|etitle
