@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.82 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.83 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4855,6 +4855,9 @@ name|ufs_dirbad
 argument_list|(
 name|xp
 argument_list|,
+operator|(
+name|doff_t
+operator|)
 literal|12
 argument_list|,
 literal|"rename: mangled dir"
