@@ -78,13 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/eisa/eisa_busreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/eisa/eisa_busvar.h>
+file|<dev/eisa/eisaconf.h>
 end_include
 
 begin_include
@@ -441,6 +435,8 @@ argument_list|,
 name|iobase
 argument_list|,
 name|EP_EISA_IOSIZE
+argument_list|,
+name|RESVADDR_NONE
 argument_list|)
 expr_stmt|;
 name|eisa_add_iospace
@@ -450,6 +446,8 @@ argument_list|,
 name|port
 argument_list|,
 name|EP_IOSIZE
+argument_list|,
+name|RESVADDR_NONE
 argument_list|)
 expr_stmt|;
 name|conf
@@ -577,7 +575,7 @@ name|EISA_TRIGGER_EDGE
 expr_stmt|;
 break|break;
 block|}
-name|eisa_add_irq
+name|eisa_add_intr
 argument_list|(
 name|dev
 argument_list|,
