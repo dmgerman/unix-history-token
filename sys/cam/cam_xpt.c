@@ -20232,6 +20232,8 @@ name|target
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|phl
 decl_stmt|;
 comment|/* 			 * If we already probed lun 0 successfully, or 			 * we have additional configured luns on this 			 * target that might have "gone away", go onto 			 * the next lun. 			 */
 name|target
@@ -20243,6 +20245,11 @@ operator|.
 name|path
 operator|->
 name|target
+expr_stmt|;
+comment|/* 			 * We may touch devices that we don't 			 * hold references too, so ensure they 			 * don't disappear out from under us. 			 * The target above is referenced by the 			 * path in the request ccb. 			 */
+name|phl
+operator|=
+literal|0
 expr_stmt|;
 name|s
 operator|=
@@ -20265,6 +20272,25 @@ name|device
 operator|!=
 name|NULL
 condition|)
+block|{
+name|phl
+operator|=
+name|device
+operator|->
+name|quirk
+operator|->
+name|quirks
+operator|&
+name|CAM_QUIRK_HILUNS
+expr_stmt|;
+if|if
+condition|(
+name|device
+operator|->
+name|lun_id
+operator|==
+literal|0
+condition|)
 name|device
 operator|=
 name|TAILQ_NEXT
@@ -20274,6 +20300,7 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -20294,7 +20321,6 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* Try the next lun */
 if|if
 condition|(
 name|lun_id
@@ -20305,15 +20331,7 @@ operator|-
 literal|1
 operator|)
 operator|||
-operator|(
-name|device
-operator|->
-name|quirk
-operator|->
-name|quirks
-operator|&
-name|CAM_QUIRK_HILUNS
-operator|)
+name|phl
 condition|)
 name|lun_id
 operator|++
