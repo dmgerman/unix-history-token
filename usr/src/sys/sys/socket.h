@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.6	81/11/18	*/
+comment|/*	socket.h	4.7	81/11/21	*/
 end_comment
 
 begin_comment
@@ -252,29 +252,6 @@ literal|14
 index|]
 decl_stmt|;
 comment|/* up to 14 bytes of direct address */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sockaddri
-block|{
-name|short
-name|sai_family
-decl_stmt|;
-name|short
-name|sai_length
-decl_stmt|;
-name|caddr_t
-name|sai_addr
-decl_stmt|;
-name|char
-name|sai_ddata
-index|[
-literal|8
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
