@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.7 (Berkeley) %G%"
+literal|"@(#)process.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2925,20 +2925,28 @@ name|void
 name|cfclose
 parameter_list|(
 name|cp
+parameter_list|,
+name|end
 parameter_list|)
 specifier|register
 name|struct
 name|s_command
 modifier|*
 name|cp
+decl_stmt|,
+decl|*
+name|end
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 for|for
 control|(
 init|;
 name|cp
 operator|!=
-name|NULL
+name|end
 condition|;
 name|cp
 operator|=
@@ -3071,12 +3079,16 @@ operator|->
 name|u
 operator|.
 name|c
+argument_list|,
+name|cp
+operator|->
+name|next
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

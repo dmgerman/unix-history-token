@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compile.c	5.4 (Berkeley) %G%"
+literal|"@(#)compile.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,10 @@ name|fixuplabel
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|s_command
+operator|*
+operator|,
 expr|struct
 name|s_command
 operator|*
@@ -606,6 +610,8 @@ argument_list|(
 name|prog
 argument_list|,
 name|prog
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|appends
@@ -3406,6 +3412,8 @@ parameter_list|(
 name|root
 parameter_list|,
 name|cp
+parameter_list|,
+name|end
 parameter_list|)
 name|struct
 name|s_command
@@ -3414,6 +3422,9 @@ name|root
 decl_stmt|,
 decl|*
 name|cp
+decl_stmt|,
+modifier|*
+name|end
 decl_stmt|;
 end_function
 
@@ -3428,6 +3439,8 @@ for|for
 control|(
 init|;
 name|cp
+operator|!=
+name|end
 condition|;
 name|cp
 operator|=
@@ -3555,6 +3568,10 @@ operator|->
 name|u
 operator|.
 name|c
+argument_list|,
+name|cp
+operator|->
+name|next
 argument_list|)
 expr_stmt|;
 break|break;

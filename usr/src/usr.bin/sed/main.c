@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,8 @@ expr_stmt|;
 name|cfclose
 argument_list|(
 name|prog
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
