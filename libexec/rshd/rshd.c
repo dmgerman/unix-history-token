@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -414,22 +420,6 @@ operator|(
 expr|union
 name|sockunion
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|error
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1739,16 +1729,14 @@ argument_list|,
 literal|"getsockname: %m"
 argument_list|)
 expr_stmt|;
-name|error
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"rlogind: getsockname: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* XXX */
 block|}
 name|authopts
 operator|=
@@ -1873,14 +1861,11 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Login incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1918,14 +1903,11 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Login incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1963,14 +1945,11 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Login incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2008,14 +1987,11 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Login incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2143,14 +2119,11 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Login incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2199,18 +2172,15 @@ name|NULL
 condition|)
 name|errorstr
 operator|=
-literal|"Login incorrect.\n"
+literal|"Login incorrect."
 expr_stmt|;
-name|error
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 name|errorstr
 argument_list|,
 name|fromhost
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2307,18 +2277,15 @@ name|NULL
 condition|)
 name|errorstr
 operator|=
-literal|"Login incorrect.\n"
+literal|"Login incorrect."
 expr_stmt|;
-name|error
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 name|errorstr
 argument_list|,
 name|fromhost
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2395,14 +2362,11 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"No remote home directory.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|0
+argument_list|,
+literal|"No remote home directory."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2491,14 +2455,11 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Login incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2515,18 +2476,13 @@ name|NULL
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Logins not available right now\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Logins not available right now"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|#
 directive|if
@@ -2685,18 +2641,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Can't make pipe.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Can't make pipe."
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|CRYPT
@@ -2714,18 +2665,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Can't make 2nd pipe.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Can't make 2nd pipe."
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pipe
@@ -2735,18 +2681,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Can't make 3rd pipe.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Can't make 3rd pipe."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -2762,18 +2703,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Can't fork; try again.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Can't fork; try again."
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pid
@@ -3644,18 +3580,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"Can't fork; try again.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Can't fork; try again."
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pid
@@ -3931,177 +3862,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Report error to client.  Note: can't be used until second socket has  * connected to client, or older clients will hang waiting for that  * connection first.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|void
-if|#
-directive|if
-name|__STDC__
-name|error
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|fmt
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|error
-argument_list|(
-name|fmt
-argument_list|,
-name|va_alist
-argument_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|char
-modifier|*
-name|bp
-decl_stmt|,
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|bp
-operator|=
-name|buf
-expr_stmt|;
-if|if
-condition|(
-name|sent_null
-operator|==
-literal|0
-condition|)
-block|{
-operator|*
-name|bp
-operator|++
-operator|=
-literal|1
-expr_stmt|;
-name|len
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|len
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vsnprintf
-argument_list|(
-name|bp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|buf
-argument_list|,
-name|len
-operator|+
-name|strlen
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_function
 name|void
 name|getstr
@@ -4159,27 +3919,15 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-if|if
-condition|(
-operator|--
-name|cnt
-operator|==
-literal|0
-condition|)
-block|{
-name|error
+name|errx
 argument_list|(
-literal|"%s too long\n"
+literal|1
+argument_list|,
+literal|"%s too long"
 argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
