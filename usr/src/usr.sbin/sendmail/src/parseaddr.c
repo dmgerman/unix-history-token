@@ -23,12 +23,34 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	2.1	%G%"
+literal|"@(#)parseaddr.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  PARSE -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	addrq header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none ** **	Called By: **		main **		sendto **		alias **		savemail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DELIMCHARS
+value|"()<>@!.,;:\\\""
+end_define
+
+begin_comment
+comment|/* word delimiters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPACESUB
+value|('.'|0200)
+end_define
+
+begin_comment
+comment|/* substitution for<lwsp> */
 end_comment
 
 begin_function
@@ -968,6 +990,9 @@ decl_stmt|;
 name|bool
 name|bslashmode
 decl_stmt|;
+name|bool
+name|delimmode
+decl_stmt|;
 name|int
 name|cmntcnt
 decl_stmt|;
@@ -989,6 +1014,10 @@ name|any
 parameter_list|()
 function_decl|;
 name|space
+operator|=
+name|FALSE
+expr_stmt|;
+name|delimmode
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1135,6 +1164,33 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+if|if
+condition|(
+name|cmntcnt
+operator|>
+literal|0
+condition|)
+continue|continue;
+elseif|else
+if|if
+condition|(
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+operator|(
+name|space
+operator|||
+name|delimmode
+operator|)
+condition|)
+continue|continue;
 elseif|else
 if|if
 condition|(
@@ -1145,6 +1201,14 @@ condition|)
 block|{
 name|brccnt
 operator|++
+expr_stmt|;
+name|delimmode
+operator|=
+name|TRUE
+expr_stmt|;
+name|space
+operator|=
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -1207,7 +1271,7 @@ block|}
 comment|/* 		**  Turn "at" into "@", 		**	but only if "at" is a word. 		**	By the way, I violate the ARPANET RFC-733 		**	standard here, by assuming that 'space' delimits 		**	atoms.  I assume that is just a mistake, since 		**	it violates the spirit of the semantics 		**	of the document..... 		*/
 if|if
 condition|(
-name|space
+name|delimmode
 operator|&&
 operator|(
 name|c
@@ -1243,7 +1307,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|"()<>@,;:\\\""
+name|DELIMCHARS
 argument_list|)
 operator|||
 name|p
@@ -1263,28 +1327,35 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|delimmode
+operator|=
+name|any
+argument_list|(
+name|c
+argument_list|,
+name|DELIMCHARS
+argument_list|)
+condition|)
+name|space
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* skip blanks */
 if|if
 condition|(
-operator|(
-operator|(
+operator|!
+name|isascii
+argument_list|(
 name|c
-operator|&
-literal|0200
-operator|)
-operator|!=
-literal|0
+argument_list|)
 operator|||
 operator|!
 name|isspace
 argument_list|(
 name|c
 argument_list|)
-operator|)
-operator|&&
-name|cmntcnt
-operator|<=
-literal|0
 condition|)
 block|{
 if|if
@@ -1292,6 +1363,8 @@ condition|(
 name|q
 operator|>=
 name|buflim
+operator|-
+literal|1
 condition|)
 block|{
 name|usrerr
@@ -1305,6 +1378,16 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|space
+condition|)
+operator|*
+name|q
+operator|++
+operator|=
+name|SPACESUB
+expr_stmt|;
 operator|*
 name|q
 operator|++
