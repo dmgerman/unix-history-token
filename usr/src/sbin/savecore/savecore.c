@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.9 (Berkeley) 82/10/24"
+literal|"@(#)savecore.c	4.10 (Berkeley) 83/02/21"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * savecore  */
@@ -75,6 +86,12 @@ parameter_list|)
 value|(!strcmp(a,b))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -84,6 +101,26 @@ name|number
 parameter_list|)
 value|((number)&0x7fffffff)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ok
+parameter_list|(
+name|number
+parameter_list|)
+value|(number)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -125,10 +162,10 @@ block|}
 block|,
 define|#
 directive|define
-name|X_PHYSMEM
+name|X_DUMPSIZE
 value|3
 block|{
-literal|"_physmem"
+literal|"_dumpsize"
 block|}
 block|,
 define|#
@@ -149,48 +186,18 @@ block|}
 block|,
 define|#
 directive|define
-name|X_DOADUMP
+name|X_DUMPMAG
 value|6
 block|{
-literal|"_doadump"
-block|}
-block|,
-define|#
-directive|define
-name|X_DOADUMP
-value|6
-block|{
-literal|"_doadump"
+literal|"_dumpmag"
 block|}
 block|,
 block|{
-literal|0
+literal|""
 block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  *	this magic number is found in the kernel at label "doadump"  *  *	It is derived as follows:  *  *		doadump:	nop			01  *				nop			01  *				bicl2 $...		ca  *							8f  *  *	Thus, it is likely to be moderately stable, even across  *	operating system releases.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUMPMAG
-value|0x8fca0101
-end_define
-
-begin_comment
-comment|/*  *	this magic number is found in the kernel at label "doadump"  *  *	It is derived as follows:  *  *		doadump:	nop			01  *				nop			01  *				bicl2 $...		ca  *							8f  *  *	Thus, it is likely to be moderately stable, even across  *	operating system releases.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUMPMAG
-value|0x8fca0101
-end_define
 
 begin_decl_stmt
 name|char
@@ -261,12 +268,22 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|physmem
+name|dumpsize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* amount of memory in machine */
+comment|/* amount of memory dumped */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dumpmag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* magic number in dump */
 end_comment
 
 begin_decl_stmt
@@ -473,7 +490,7 @@ name|ok
 argument_list|(
 name|nl
 index|[
-name|X_DOADUMP
+name|X_DUMPMAG
 index|]
 operator|.
 name|n_value
@@ -507,7 +524,7 @@ return|return
 operator|(
 name|word
 operator|==
-name|DUMPMAG
+name|dumpmag
 operator|)
 return|;
 block|}
@@ -552,7 +569,7 @@ name|ok
 argument_list|(
 name|nl
 index|[
-name|X_DOADUMP
+name|X_DUMPMAG
 index|]
 operator|.
 name|n_value
@@ -693,7 +710,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't find device %d,%d\n"
+literal|"savecore: Can't find device %d,%d\n"
 argument_list|,
 name|major
 argument_list|(
@@ -760,7 +777,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: dumpdev not in namelist\n"
+literal|"savecore: /vmunix: dumpdev not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -788,7 +805,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: dumplo not in namelist\n"
+literal|"savecore: /vmunix: dumplo not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -816,7 +833,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: time not in namelist\n"
+literal|"savecore: /vmunix: time not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -832,7 +849,7 @@ if|if
 condition|(
 name|nl
 index|[
-name|X_PHYSMEM
+name|X_DUMPSIZE
 index|]
 operator|.
 name|n_value
@@ -844,7 +861,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: physmem not in namelist\n"
+literal|"savecore: /vmunix: dumpsize not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -872,7 +889,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: version not in namelist\n"
+literal|"savecore: /vmunix: version not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -900,7 +917,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: panicstr not in namelist\n"
+literal|"savecore: /vmunix: panicstr not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -916,7 +933,7 @@ if|if
 condition|(
 name|nl
 index|[
-name|X_DOADUMP
+name|X_DUMPMAG
 index|]
 operator|.
 name|n_value
@@ -928,35 +945,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/vmunix: doadump not in namelist\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|nl
-index|[
-name|X_DOADUMP
-index|]
-operator|.
-name|n_value
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"/vmunix: doadump not in namelist\n"
+literal|"savecore: /vmunix: dumpmag not in namelist\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1012,7 +1001,9 @@ operator|&
 name|dumpdev
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dumpdev
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1050,7 +1041,9 @@ operator|&
 name|dumplo
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|dumplo
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1065,7 +1058,7 @@ name|long
 operator|)
 name|nl
 index|[
-name|X_PHYSMEM
+name|X_DUMPSIZE
 index|]
 operator|.
 name|n_value
@@ -1085,10 +1078,52 @@ name|char
 operator|*
 operator|)
 operator|&
-name|physmem
+name|dumpsize
 argument_list|,
 sizeof|sizeof
-name|physmem
+argument_list|(
+name|dumpsize
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|Lseek
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_DUMPMAG
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|Read
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dumpmag
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dumpmag
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1133,7 +1168,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't fdopen kmem\n"
+literal|"savecore: Couldn't fdopen kmem\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1296,7 +1331,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: vmunix version mismatch:\n\t%sand\n\t%s"
+literal|"savecore: Warning: vmunix version mismatch:\n\t%sand\n\t%s"
 argument_list|,
 name|vers
 argument_list|,
@@ -1499,21 +1534,11 @@ name|dumptime
 operator|==
 literal|0
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"dump time is 0\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
 end_if
 
 begin_expr_stmt
@@ -1552,14 +1577,18 @@ literal|"Dump time is unreasonable\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_if
 
 begin_return
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 end_return
 
@@ -1633,7 +1662,9 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 end_block
@@ -1771,7 +1802,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Dump omitted, not enough space on device\n"
+literal|"savecore: Dump omitted, not enough space on device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1869,7 +1900,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -1891,7 +1924,9 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|fclose
@@ -1900,10 +1935,12 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|atoi
 argument_list|(
 name|lin
 argument_list|)
+operator|)
 return|;
 block|}
 end_block
@@ -2051,14 +2088,14 @@ literal|"Saving %d bytes of image in vmcore.%d\n"
 argument_list|,
 name|NBPG
 operator|*
-name|physmem
+name|dumpsize
 argument_list|,
 name|bounds
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|physmem
+name|dumpsize
 operator|>
 literal|0
 condition|)
@@ -2072,13 +2109,13 @@ argument_list|,
 name|cp
 argument_list|,
 operator|(
-name|physmem
+name|dumpsize
 operator|>
 literal|32
 condition|?
 literal|32
 else|:
-name|physmem
+name|dumpsize
 operator|)
 operator|*
 name|NBPG
@@ -2093,7 +2130,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|physmem
+name|dumpsize
 operator|-=
 name|n
 operator|/
