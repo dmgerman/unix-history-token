@@ -22,7 +22,7 @@ modifier|*
 specifier|const
 name|version_string
 init|=
-literal|"3.2.1 [FreeBSD] 20020901 (prerelease)"
+literal|"3.2.1 [FreeBSD] 20020916 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 
