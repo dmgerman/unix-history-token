@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -14,6 +14,12 @@ include|#
 directive|include
 file|<sys/mount.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFS
+end_ifdef
 
 begin_include
 include|#
@@ -36,6 +42,11 @@ init|=
 name|ffs_mountroot
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * These define the root filesystem and device.  */
@@ -61,6 +72,12 @@ begin_comment
 comment|/*  * Set up the filesystem operations for vnodes.  * The types are defined in mount.h.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FFS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -68,6 +85,11 @@ name|vfsops
 name|ufs_vfsops
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -137,10 +159,19 @@ block|{
 name|NULL
 block|,
 comment|/* 0 = MOUNT_NONE */
+ifdef|#
+directive|ifdef
+name|FFS
 operator|&
 name|ufs_vfsops
 block|,
 comment|/* 1 = MOUNT_UFS */
+else|#
+directive|else
+name|NULL
+block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NFS
