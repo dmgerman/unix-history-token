@@ -856,6 +856,9 @@ case|:
 case|case
 literal|0x80
 case|:
+case|case
+literal|0xa0
+case|:
 name|strcat
 argument_list|(
 name|cpu_model
