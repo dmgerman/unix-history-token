@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	8.1 (Berkeley) %G%"
+literal|"@(#)str.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1264,11 +1264,15 @@ operator|*
 name|s
 operator|->
 name|str
+operator|++
 expr_stmt|;
 if|if
 condition|(
 name|stopval
 operator|<
+operator|(
+name|u_char
+operator|)
 name|s
 operator|->
 name|lastch
