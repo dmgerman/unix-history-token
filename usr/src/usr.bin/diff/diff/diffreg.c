@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.6 %G%"
+literal|"@(#)diffreg.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,11 +421,6 @@ argument_list|(
 name|file1
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|f1
-argument_list|)
-expr_stmt|;
 name|done
 argument_list|()
 expr_stmt|;
@@ -461,11 +456,6 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|f1
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|f2
 argument_list|)
 expr_stmt|;
 name|done
