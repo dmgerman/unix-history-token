@@ -9490,6 +9490,13 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
