@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.40 (Berkeley) %G%"
+literal|"@(#)fts.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1595,7 +1595,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* If reached the top, load the paths for the next root. */
+comment|/* 		 * If reached the top, return to the original directory, and 		 * load the paths for the next root. 		 */
 if|if
 condition|(
 name|p
@@ -1605,6 +1605,35 @@ operator|==
 name|FTS_ROOTLEVEL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+operator|&&
+name|FCHDIR
+argument_list|(
+name|sp
+argument_list|,
+name|sp
+operator|->
+name|fts_rfd
+argument_list|)
+condition|)
+block|{
+name|SET
+argument_list|(
+name|FTS_STOP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|fts_load
 argument_list|(
 name|sp
@@ -2505,6 +2534,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * If we're going to need to stat anything or we want to descend 	 * and stay in the directory, chdir.  If this fails we keep going, 	 * but set a flag so we don't chdir after the post-order visit. 	 * We won't be able to stat anything, but we can still return the 	 * names themselves.  Note, that since fts_read won't be able to 	 * chdir into the directory, it will have to return different path 	 * names than before, i.e. "a/b" instead of "b".  Since the node 	 * has already been visited in pre-order, have to wait until the 	 * post-order visit to return the error.  There is a special case 	 * here, if there was nothing to stat then it's not an error to 	 * not be able to stat.  This is all fairly nasty.  If a program 	 * needed sorted entries or stat information, they had better be 	 * checking FTS_NS on the returned nodes. 	 */
+name|cderrno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|nlinks
@@ -2556,16 +2589,10 @@ name|errno
 expr_stmt|;
 block|}
 else|else
-block|{
 name|descend
 operator|=
 literal|1
 expr_stmt|;
-name|cderrno
-operator|=
-literal|0
-expr_stmt|;
-block|}
 else|else
 name|descend
 operator|=
