@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.23	81/12/12	*/
+comment|/*	tcp_output.c	4.24	81/12/20	*/
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"../net/tcpip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/tcp_debug.h"
 end_include
 
 begin_include
@@ -952,6 +958,34 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * Trace. 	 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_socket
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+condition|)
+name|tcp_trace
+argument_list|(
+name|TA_OUTPUT
+argument_list|,
+name|tp
+operator|->
+name|t_state
+argument_list|,
+name|tp
+argument_list|,
+name|ti
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level. 	 */
 operator|(
 operator|(
