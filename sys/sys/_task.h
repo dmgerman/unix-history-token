@@ -15,23 +15,6 @@ directive|define
 name|_SYS__TASK_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"no user-servicable parts inside"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
