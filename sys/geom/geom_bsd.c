@@ -2399,15 +2399,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|gsp
-operator|->
-name|frontstuff
-operator|=
-literal|16
-operator|*
-name|secsize
-expr_stmt|;
-comment|/* XXX */
 name|ms
 operator|->
 name|labeloffset

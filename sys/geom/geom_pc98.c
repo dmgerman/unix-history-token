@@ -1772,14 +1772,6 @@ operator|<
 literal|512
 condition|)
 break|break;
-name|gsp
-operator|->
-name|frontstuff
-operator|=
-name|sectorsize
-operator|*
-name|fwsectors
-expr_stmt|;
 name|buf
 operator|=
 name|g_read_data

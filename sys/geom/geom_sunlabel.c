@@ -826,16 +826,6 @@ operator|<
 literal|512
 condition|)
 break|break;
-name|gsp
-operator|->
-name|frontstuff
-operator|=
-literal|16
-operator|*
-name|ms
-operator|->
-name|sectorsize
-expr_stmt|;
 name|mediasize
 operator|=
 name|cp

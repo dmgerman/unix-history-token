@@ -789,13 +789,6 @@ operator|!=
 literal|512
 condition|)
 break|break;
-comment|/* 		 * Reserve the driver record. XXX Should the partition 		 * map be included ? 		 */
-name|gsp
-operator|->
-name|frontstuff
-operator|=
-name|sectorsize
-expr_stmt|;
 name|buf
 operator|=
 name|g_read_data

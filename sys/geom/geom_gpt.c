@@ -808,16 +808,6 @@ operator|&
 name|error
 argument_list|)
 expr_stmt|;
-name|gsp
-operator|->
-name|frontstuff
-operator|=
-name|hdr
-operator|->
-name|hdr_lba_start
-operator|*
-name|secsz
-expr_stmt|;
 for|for
 control|(
 name|i
