@@ -1509,11 +1509,9 @@ specifier|static
 name|u_quad_t
 name|decode_comp_t
 parameter_list|(
-name|comp
-parameter_list|)
 name|comp_t
 name|comp
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_quad_t
 name|rv
