@@ -103,8 +103,47 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ktrace.h"
 end_include
+
+begin_function
+name|void
+name|noktrace
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ktrace: ktrace not enabled in kernel,to use ktrace\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"you need to add a line \"options KTRACE\" to your kernel\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|main
@@ -181,6 +220,14 @@ expr_stmt|;
 name|tracefile
 operator|=
 name|DEF_TRACEFILE
+expr_stmt|;
+comment|/* set up a signal handler for SIGSYS, this indicates that ktrace 	is not enabled in the kernel */
+name|signal
+argument_list|(
+name|SIGSYS
+argument_list|,
+name|noktrace
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
