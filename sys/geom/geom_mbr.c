@@ -537,6 +537,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+literal|0
+operator|&&
 name|bootverbose
 condition|)
 name|g_mbr_print
@@ -2102,6 +2104,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+literal|0
+operator|&&
 name|bootverbose
 condition|)
 block|{
