@@ -95,6 +95,12 @@ directive|include
 file|<sys/sx.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_comment
 comment|/*  * INVERSE_ESTCPU_WEIGHT is only suitable for statclock() frequencies in  * the range 100-256 Hz (approximately).  */
 end_comment
