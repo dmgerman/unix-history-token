@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266.4.4 2003/01/18 00:41:48 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.5 2003/03/12 22:42:52 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -3241,6 +3241,36 @@ operator|=
 name|TOC_NONURGENT
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_QUEUERETURN_DSN
+comment|/* If no timeoutclass picked and it's a DSN, use that timeoutclass */
+if|if
+condition|(
+name|e
+operator|->
+name|e_timeoutclass
+operator|==
+name|TOC_NORMAL
+operator|&&
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_timeoutclass
+operator|=
+name|TOC_DSN
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUERETURN_DSN */
 comment|/* date message originated */
 name|p
 operator|=
