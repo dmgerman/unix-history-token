@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: nit.c,v 1.15.2.3 1999/02/23 22:09:54 mellon Exp $ Copyright (c) 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: nit.c,v 1.15.2.4 1999/03/29 22:07:14 mellon Exp $ Copyright (c) 1996 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1609,6 +1609,24 @@ begin_function
 name|int
 name|can_unicast_without_arp
 parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|can_receive_unicast_unconfigured
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|ip
+decl_stmt|;
 block|{
 return|return
 literal|1

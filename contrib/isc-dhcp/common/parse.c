@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.2.2.3 1998/12/22 22:43:22 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: parse.c,v 1.2.2.4 1999/03/29 22:18:53 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,13 +682,6 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|val
-decl_stmt|;
-name|int
-name|token
-decl_stmt|;
 name|addr
 operator|->
 name|len

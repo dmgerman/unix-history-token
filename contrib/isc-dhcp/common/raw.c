@@ -23,7 +23,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: raw.c,v 1.11.2.2 1999/02/23 22:09:54 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: raw.c,v 1.11.2.3 1999/04/06 16:00:24 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,7 +275,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|ssize_t
 name|send_packet
 parameter_list|(
 name|interface
@@ -329,7 +329,7 @@ name|unsigned
 name|char
 name|buf
 index|[
-literal|256
+literal|1500
 index|]
 decl_stmt|;
 name|int
@@ -381,62 +381,70 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Fire it off */
-name|iov
-index|[
-literal|0
-index|]
-operator|.
-name|iov_base
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-name|iov
-index|[
-literal|0
-index|]
-operator|.
-name|iov_len
-operator|=
+if|if
+condition|(
+name|len
+operator|+
 name|bufp
+operator|>
+sizeof|sizeof
+name|buf
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"send_packet: packet too large (%s)"
+argument_list|,
+name|len
+operator|+
+name|bufp
+argument_list|)
 expr_stmt|;
-name|iov
-index|[
-literal|1
-index|]
-operator|.
-name|iov_base
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
+return|return;
+block|}
+name|memcpy
+argument_list|(
+name|buf
+operator|+
+name|bufp
+argument_list|,
 name|raw
+argument_list|,
+name|len
+argument_list|)
 expr_stmt|;
-name|iov
-index|[
-literal|1
-index|]
-operator|.
-name|iov_len
-operator|=
+name|bufp
+operator|+=
 name|len
 expr_stmt|;
 name|result
 operator|=
-name|writev
+name|sendto
 argument_list|(
 name|interface
 operator|->
 name|wfdesc
 argument_list|,
-name|iov
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
 argument_list|,
-literal|2
+name|bufp
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|to
+argument_list|,
+sizeof|sizeof
+expr|*
+name|to
 argument_list|)
 expr_stmt|;
 if|if
@@ -456,13 +464,45 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|can_unicast_without_arp
+parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|maybe_setup_fallback
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|void
+name|if_reinitialize_send
+parameter_list|(
+name|info
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|info
+decl_stmt|;
+block|{ }
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_SOCKET_SEND */
+comment|/* USE_RAW_SEND */
 end_comment
 
 end_unit
