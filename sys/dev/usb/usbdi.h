@@ -1777,18 +1777,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|usbd_devname
-parameter_list|(
-name|bdevice
-modifier|*
-name|bdev
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|bus_print_child_t
 name|usbd_print_child

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.298 1999/02/05 11:52:11 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.299 1999/03/10 10:36:53 yokota Exp $  */
 end_comment
 
 begin_include
@@ -10558,51 +10558,22 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|struct
-name|isa_device
-modifier|*
-name|dvp
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct isa_device *dvp;
 comment|/*      * Take control if we are the highest priority enabled display device.      */
-name|dvp
-operator|=
-name|find_display
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dvp
-operator|==
-name|NULL
-operator|||
-name|dvp
-operator|->
-name|id_driver
-operator|!=
-operator|&
-name|scdriver
-condition|)
-block|{
-name|cp
-operator|->
-name|cn_pri
-operator|=
-name|CN_DEAD
-expr_stmt|;
-return|return;
-block|}
+block|dvp = find_display();     if (dvp == NULL || dvp->id_driver !=&scdriver) { 	cp->cn_pri = CN_DEAD; 	return;     }      if (!scvidprobe(dvp->id_unit, dvp->id_flags, TRUE)) { 	cp->cn_pri = CN_DEAD; 	return;     }     sckbdprobe(dvp->id_unit, dvp->id_flags, TRUE);
+else|#
+directive|else
 if|if
 condition|(
 operator|!
 name|scvidprobe
 argument_list|(
-name|dvp
-operator|->
-name|id_unit
+literal|0
 argument_list|,
-name|dvp
-operator|->
-name|id_flags
+literal|0
 argument_list|,
 name|TRUE
 argument_list|)
@@ -10618,17 +10589,15 @@ return|return;
 block|}
 name|sckbdprobe
 argument_list|(
-name|dvp
-operator|->
-name|id_unit
+literal|0
 argument_list|,
-name|dvp
-operator|->
-name|id_flags
+literal|0
 argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* initialize required fields */
 name|cp
 operator|->

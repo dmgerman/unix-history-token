@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cia.c,v 1.14 1998/12/04 22:54:42 archie Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cia.c,v 1.15 1999/03/28 17:52:17 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -2400,6 +2406,13 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
+name|bus_print_child
+argument_list|,
+name|bus_generic_print_child
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_alloc_resource
 argument_list|,
 name|pci_alloc_resource
@@ -2637,18 +2650,21 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"2117x PCI adapter"
+literal|"2117x Core Logic chipset"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
 name|pci_init_resources
 argument_list|()
 expr_stmt|;
+name|isa_init_intr
+argument_list|()
+expr_stmt|;
 name|device_add_child
 argument_list|(
 name|dev
 argument_list|,
-literal|"isa"
+literal|"pcib"
 argument_list|,
 literal|0
 argument_list|,
@@ -2670,16 +2686,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|cia_softc
-modifier|*
-name|sc
-init|=
-name|CIA_SOFTC
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -2689,12 +2695,6 @@ name|pass
 decl_stmt|;
 name|cia_init
 argument_list|()
-expr_stmt|;
-name|chipset
-operator|.
-name|intrdev
-operator|=
-name|dev
 expr_stmt|;
 name|name
 operator|=
@@ -3004,6 +3004,20 @@ name|platform
 operator|.
 name|pci_intr_enable
 argument_list|(
+name|irq
+operator|->
+name|r_start
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|child
+argument_list|,
+literal|"interrupting at CIA irq %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
 name|irq
 operator|->
 name|r_start

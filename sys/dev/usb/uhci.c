@@ -98,6 +98,26 @@ directive|include
 file|<sys/select.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/bus_pio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1389,7 +1409,7 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|outw((sc)->sc_iobase + (r), (x))
+value|bus_space_write_2((sc)->iot, (sc)->ioh, (r), (x))
 end_define
 
 begin_define
@@ -1403,7 +1423,7 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|outl((sc)->sc_iobase + (r), (x))
+value|bus_space_write_4((sc)->iot, (sc)->ioh, (r), (x))
 end_define
 
 begin_define
@@ -1415,7 +1435,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|inb((sc)->sc_iobase + (r))
+value|bus_space_read_1((sc)->iot, (sc)->ioh, (r))
 end_define
 
 begin_define
@@ -1427,7 +1447,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|inw((sc)->sc_iobase + (r))
+value|bus_space_read_2((sc)->iot, (sc)->ioh, (r))
 end_define
 
 begin_define
@@ -1439,7 +1459,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|inl((sc)->sc_iobase + (r))
+value|bus_space_read_4((sc)->iot, (sc)->ioh, (r))
 end_define
 
 begin_endif

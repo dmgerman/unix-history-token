@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: prom.c,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -89,7 +89,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|prom_poll
 parameter_list|(

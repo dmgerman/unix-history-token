@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rman.h,v 1.1 1998/10/29 01:48:30 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -90,6 +90,14 @@ modifier|*
 name|r_virtual
 decl_stmt|;
 comment|/* virtual address of this resource */
+name|bus_space_tag_t
+name|r_bustag
+decl_stmt|;
+comment|/* bus_space tag */
+name|bus_space_handle_t
+name|r_bushandle
+decl_stmt|;
+comment|/* bus_space handle */
 name|struct
 name|device
 modifier|*
@@ -377,6 +385,36 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|rman_get_start
+parameter_list|(
+name|r
+parameter_list|)
+value|((r)->r_start)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rman_get_end
+parameter_list|(
+name|r
+parameter_list|)
+value|((r)->r_end)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rman_get_flags
+parameter_list|(
+name|r
+parameter_list|)
+value|((r)->r_flags)
+end_define
+
+begin_define
+define|#
+directive|define
 name|rman_set_virtual
 parameter_list|(
 name|r
@@ -394,6 +432,50 @@ parameter_list|(
 name|r
 parameter_list|)
 value|((r)->r_virtual)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rman_set_bustag
+parameter_list|(
+name|r
+parameter_list|,
+name|t
+parameter_list|)
+value|((r)->r_bustag = (t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rman_get_bustag
+parameter_list|(
+name|r
+parameter_list|)
+value|((r)->r_bustag)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rman_set_bushandle
+parameter_list|(
+name|r
+parameter_list|,
+name|h
+parameter_list|)
+value|((r)->r_bushandle = (h))
+end_define
+
+begin_define
+define|#
+directive|define
+name|rman_get_bushandle
+parameter_list|(
+name|r
+parameter_list|)
+value|((r)->r_bushandle)
 end_define
 
 begin_decl_stmt

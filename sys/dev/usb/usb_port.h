@@ -269,7 +269,7 @@ name|USBDEVNAME
 parameter_list|(
 name|bdev
 parameter_list|)
-value|usbd_devname(&bdev)
+value|device_get_nameunit(bdev)
 end_define
 
 begin_comment

@@ -141,8 +141,11 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|int
-name|sc_iobase
+name|bus_space_tag_t
+name|iot
+decl_stmt|;
+name|bus_space_handle_t
+name|ioh
 decl_stmt|;
 endif|#
 directive|endif

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.8 1999/01/12 00:27:43 eivind Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $Id: if_cs.c,v 1.9 1999/01/28 01:59:53 dillon Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment
@@ -5996,11 +5996,6 @@ name|int
 name|drq
 decl_stmt|;
 name|struct
-name|isa_device
-modifier|*
-name|dvp
-decl_stmt|;
-name|struct
 name|cs_softc
 modifier|*
 name|sc
@@ -6132,31 +6127,12 @@ operator|=
 operator|&
 name|csdriver
 expr_stmt|;
-name|dvp
-operator|=
-name|find_isadev
-argument_list|(
-name|isa_devtab_net
-argument_list|,
-operator|&
-name|csdriver
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dvp
-operator|!=
-name|NULL
-condition|)
 name|dev
 operator|->
 name|id_id
 operator|=
-name|dvp
-operator|->
-name|id_id
+name|isa_compat_nextid
+argument_list|()
 expr_stmt|;
 block|}
 if|if

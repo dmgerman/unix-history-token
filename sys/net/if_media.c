@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.c,v 1.1 1997/03/17 02:55:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.c,v 1.5 1998/02/06 12:13:48 eivind Exp $ */
+comment|/*	$Id: if_media.c,v 1.6 1998/02/09 06:09:54 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -187,6 +187,66 @@ name|ifm_status
 operator|=
 name|status_callback
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ifmedia_removeall
+parameter_list|(
+name|ifm
+parameter_list|)
+name|struct
+name|ifmedia
+modifier|*
+name|ifm
+decl_stmt|;
+block|{
+name|struct
+name|ifmedia_entry
+modifier|*
+name|entry
+decl_stmt|;
+for|for
+control|(
+name|entry
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|ifm
+operator|->
+name|ifm_list
+argument_list|)
+init|;
+name|entry
+condition|;
+name|entry
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|ifm
+operator|->
+name|ifm_list
+argument_list|)
+control|)
+block|{
+name|LIST_REMOVE
+argument_list|(
+name|entry
+argument_list|,
+name|ifm_list
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|entry
+argument_list|,
+name|M_IFADDR
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.65 1999/01/08 16:29:59 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.66 1999/03/28 23:28:18 dt Exp $  */
 end_comment
 
 begin_include
@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -56,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -63,6 +75,18 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_ifdef
@@ -161,6 +185,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/specialreg.h>
 end_include
 
@@ -199,12 +229,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
 begin_comment
 comment|/*  * 387 and 287 Numeric Coprocessor Extension (NPX) Driver.  */
 end_comment
@@ -233,16 +257,6 @@ directive|define
 name|NPX_DISABLE_I586_OPTIMIZED_COPYIO
 value|(1<< 2)
 end_define
-
-begin_comment
-comment|/* XXX - should be in header file. */
-end_comment
-
-begin_decl_stmt
-name|ointhand2_t
-name|npxintr
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -513,14 +527,25 @@ end_typedef
 begin_decl_stmt
 specifier|static
 name|int
-name|npxattach
+name|npx_attach
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|isa_device
+name|device_t
+name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|npx_intr
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|*
-name|dvp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -529,14 +554,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|npxprobe
+name|npx_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|isa_device
-operator|*
-name|dvp
+name|device_t
+name|dev
 operator|)
 argument_list|)
 decl_stmt|;
@@ -545,14 +568,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|npxprobe1
+name|npx_probe1
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|isa_device
-operator|*
-name|dvp
+name|device_t
+name|dev
 operator|)
 argument_list|)
 decl_stmt|;
@@ -601,21 +622,6 @@ end_endif
 begin_comment
 comment|/* I586_CPU */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|isa_driver
-name|npxdriver
-init|=
-block|{
-name|npxprobe
-block|,
-name|npxattach
-block|,
-literal|"npx"
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -766,23 +772,22 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|npxprobe
+name|npx_probe
 parameter_list|(
-name|dvp
+name|dev
 parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|dvp
+name|device_t
+name|dev
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
+comment|/*#ifdef SMP*/
+if|#
+directive|if
+literal|1
 return|return
-name|npxprobe1
+name|npx_probe1
 argument_list|(
-name|dvp
+name|dev
 argument_list|)
 return|;
 else|#
@@ -813,14 +818,7 @@ name|npx_intrno
 operator|=
 name|NRSVIDT
 operator|+
-name|ffs
-argument_list|(
-name|dvp
-operator|->
-name|id_irq
-argument_list|)
-operator|-
-literal|1
+literal|13
 expr_stmt|;
 name|save_eflags
 operator|=
@@ -869,13 +867,7 @@ operator|+
 literal|1
 argument_list|,
 operator|~
-operator|(
 name|IRQ_SLAVE
-operator||
-name|dvp
-operator|->
-name|id_irq
-operator|)
 argument_list|)
 expr_stmt|;
 name|outb
@@ -886,11 +878,13 @@ literal|1
 argument_list|,
 operator|~
 operator|(
-name|dvp
-operator|->
-name|id_irq
-operator|>>
+literal|1
+operator|<<
+operator|(
+literal|13
+operator|-
 literal|8
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -942,9 +936,9 @@ argument_list|()
 expr_stmt|;
 name|result
 operator|=
-name|npxprobe1
+name|npx_probe1
 argument_list|(
-name|dvp
+name|dev
 argument_list|)
 expr_stmt|;
 name|disable_intr
@@ -1001,14 +995,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|npxprobe1
+name|npx_probe1
 parameter_list|(
-name|dvp
+name|dev
 parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|dvp
+name|device_t
+name|dev
 decl_stmt|;
 block|{
 ifndef|#
@@ -1058,9 +1050,10 @@ comment|/* 	 * Finish resetting the coprocessor, if any.  If there is an error 	
 name|fninit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
+comment|/*#ifdef SMP*/
+if|#
+directive|if
+literal|1
 comment|/* 	 * Exception 16 MUST work for SMP. 	 */
 name|npx_irq13
 operator|=
@@ -1074,23 +1067,28 @@ name|npx_exists
 operator|=
 literal|1
 expr_stmt|;
-name|dvp
-operator|->
-name|id_irq
-operator|=
-literal|0
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"math processor"
+argument_list|)
 expr_stmt|;
-comment|/* zap the interrupt */
-comment|/* 	 * special return value to flag that we do not 	 * actually use any I/O registers 	 */
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 else|#
 directive|else
-comment|/* SMP */
+comment|/* !SMP */
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"math processor"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Don't use fwait here because it might hang. 	 * Don't use fnop here because it usually hangs if there is no FPU. 	 */
 name|DELAY
 argument_list|(
@@ -1217,18 +1215,9 @@ name|npx_ex16
 operator|=
 literal|1
 expr_stmt|;
-name|dvp
-operator|->
-name|id_irq
-operator|=
-literal|0
-expr_stmt|;
-comment|/* zap the interrupt */
-comment|/* 				 * special return value to flag that we do not 				 * actually use any I/O registers 				 */
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -1239,6 +1228,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|rid
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|r
+decl_stmt|;
+name|void
+modifier|*
+name|intr
+decl_stmt|;
 comment|/* 				 * Bad, we are stuck with IRQ13. 				 */
 name|npx_irq13
 operator|=
@@ -1247,13 +1248,116 @@ expr_stmt|;
 comment|/* 				 * npxattach would be too late to set npx0_imask. 				 */
 name|npx0_imask
 operator||=
-name|dvp
-operator|->
-name|id_irq
+operator|(
+literal|1
+operator|<<
+literal|13
+operator|)
+expr_stmt|;
+comment|/* 				 * We allocate these resources permanently, 				 * so there is no need to keep track of them. 				 */
+name|rid
+operator|=
+literal|0
+expr_stmt|;
+name|r
+operator|=
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+name|IO_NPX
+argument_list|,
+name|IO_NPX
+argument_list|,
+name|IO_NPXSIZE
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"npx: can't get ports"
+argument_list|)
+expr_stmt|;
+name|rid
+operator|=
+literal|0
+expr_stmt|;
+name|r
+operator|=
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+literal|13
+argument_list|,
+literal|13
+argument_list|,
+literal|1
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"npx: can't get IRQ"
+argument_list|)
+expr_stmt|;
+name|BUS_SETUP_INTR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|r
+argument_list|,
+name|npx_intr
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|intr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|intr
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"npx: can't create intr"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|IO_NPXSIZE
+literal|0
 operator|)
 return|;
 block|}
@@ -1261,17 +1365,9 @@ comment|/* 			 * Worse, even IRQ13 is broken.  Use emulator. 			 */
 block|}
 block|}
 comment|/* 	 * Probe failed, but we want to get to npxattach to initialize the 	 * emulator and say that it has been installed.  XXX handle devices 	 * that aren't really devices better. 	 */
-name|dvp
-operator|->
-name|id_irq
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * special return value to flag that we do not 	 * actually use any I/O registers 	 */
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 endif|#
@@ -1286,38 +1382,35 @@ end_comment
 
 begin_function
 name|int
-name|npxattach
+name|npx_attach
 parameter_list|(
-name|dvp
+name|dev
 parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|dvp
+name|device_t
+name|dev
 decl_stmt|;
 block|{
-name|dvp
-operator|->
-name|id_ointr
-operator|=
-name|npxintr
+name|int
+name|flags
+decl_stmt|;
+name|device_print_prettyname
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
-comment|/* The caller has printed "irq 13" for the npx_irq13 case. */
 if|if
 condition|(
-operator|!
 name|npx_irq13
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npx%d: "
-argument_list|,
-name|dvp
-operator|->
-name|id_unit
+literal|"using IRQ 13 interface\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|npx_ex16
@@ -1383,6 +1476,26 @@ directive|ifdef
 name|I586_CPU
 if|if
 condition|(
+name|resource_int_value
+argument_list|(
+literal|"npx"
+argument_list|,
+literal|0
+argument_list|,
+literal|"flags"
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|cpu_class
 operator|==
 name|CPUCLASS_586
@@ -1412,9 +1525,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|dvp
-operator|->
-name|id_flags
+name|flags
 operator|&
 name|NPX_DISABLE_I586_OPTIMIZED_BCOPY
 operator|)
@@ -1433,9 +1544,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|dvp
-operator|->
-name|id_flags
+name|flags
 operator|&
 name|NPX_DISABLE_I586_OPTIMIZED_BZERO
 operator|)
@@ -1448,9 +1557,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|dvp
-operator|->
-name|id_flags
+name|flags
 operator|&
 name|NPX_DISABLE_I586_OPTIMIZED_COPYIO
 operator|)
@@ -1470,7 +1577,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 comment|/* XXX unused */
@@ -1634,12 +1741,13 @@ end_comment
 
 begin_function
 name|void
-name|npxintr
+name|npx_intr
 parameter_list|(
-name|unit
+name|dummy
 parameter_list|)
-name|int
-name|unit
+name|void
+modifier|*
+name|dummy
 decl_stmt|;
 block|{
 name|int
@@ -1730,7 +1838,7 @@ name|intrframe
 operator|*
 operator|)
 operator|&
-name|unit
+name|dummy
 expr_stmt|;
 comment|/* XXX */
 if|if
@@ -2307,6 +2415,113 @@ end_endif
 begin_comment
 comment|/* I586_CPU */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|device_method_t
+name|npx_methods
+index|[]
+init|=
+block|{
+comment|/* Device interface */
+name|DEVMETHOD
+argument_list|(
+name|device_probe
+argument_list|,
+name|npx_probe
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|npx_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|bus_generic_detach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_shutdown
+argument_list|,
+name|bus_generic_shutdown
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_suspend
+argument_list|,
+name|bus_generic_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|bus_generic_resume
+argument_list|)
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|npx_driver
+init|=
+block|{
+literal|"npx"
+block|,
+name|npx_methods
+block|,
+name|DRIVER_TYPE_MISC
+block|,
+literal|1
+block|,
+comment|/* no softc */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|npx_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * We prefer to attach to the root nexus so that the usual case (exception 16)  * doesn't describe the processor as being `on isa'.  */
+end_comment
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|npx
+argument_list|,
+name|nexus
+argument_list|,
+name|npx_driver
+argument_list|,
+name|npx_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

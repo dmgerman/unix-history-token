@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.5 1999/03/28 18:57:18 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.6 1999/04/10 18:53:35 sos Exp $  */
 end_comment
 
 begin_include
@@ -101,11 +101,22 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/smp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -118,6 +129,12 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_include
 include|#
@@ -136,6 +153,22 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<isa/isareg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -218,6 +251,11 @@ directive|if
 name|NISA
 operator|>
 literal|0
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 end_if
 
 begin_function_decl
@@ -347,6 +385,19 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|struct
 name|isa_driver
@@ -361,14 +412,6 @@ literal|"ata"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-end_if
 
 begin_function
 specifier|static
@@ -633,6 +676,18 @@ literal|0x522910b9
 case|:
 return|return
 literal|"AcerLabs Aladdin IDE controller"
+return|;
+case|case
+literal|0x06401095
+case|:
+return|return
+literal|"CMD 640 IDE controller"
+return|;
+case|case
+literal|0x06461095
+case|:
+return|return
+literal|"CMD 646 IDE controller"
 return|;
 if|#
 directive|if
@@ -1110,6 +1165,9 @@ name|iobase_1
 operator|==
 name|IO_WD1
 condition|)
+ifdef|#
+directive|ifdef
+name|__i386__
 name|register_intr
 argument_list|(
 name|irq1
@@ -1133,6 +1191,26 @@ argument_list|,
 name|lun
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|alpha_platform_setup_ide_intr
+argument_list|(
+literal|0
+argument_list|,
+name|ataintr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
+name|lun
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 block|{
 if|if
@@ -1152,6 +1230,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|lun
 argument_list|,
@@ -1173,6 +1254,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|lun
 argument_list|,
@@ -1225,6 +1309,9 @@ name|iobase_2
 operator|==
 name|IO_WD2
 condition|)
+ifdef|#
+directive|ifdef
+name|__i386__
 name|register_intr
 argument_list|(
 name|irq2
@@ -1248,6 +1335,26 @@ argument_list|,
 name|lun
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|alpha_platform_setup_ide_intr
+argument_list|(
+literal|1
+argument_list|,
+name|ataintr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
+name|lun
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 block|{
 if|if
@@ -1268,6 +1375,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|lun
 argument_list|,
@@ -2336,6 +2446,19 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
+name|outb
+argument_list|(
+name|scp
+operator|->
+name|ioaddr
+operator|+
+name|ATA_DRIVE
+argument_list|,
+name|ATA_D_IBM
+operator||
+name|ATA_MASTER
+argument_list|)
+expr_stmt|;
 return|return
 name|ATA_IOSIZE
 return|;
@@ -3095,7 +3218,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ata_command: timeout waiting for interrupt"
+literal|"ata_command: timeout waiting for interrupt\n"
 argument_list|)
 expr_stmt|;
 name|scp

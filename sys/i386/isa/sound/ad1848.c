@@ -649,6 +649,18 @@ parameter_list|(
 name|unit
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+comment|/* this isn't ideal but should work */
+name|ad1848_interrupt
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 specifier|static
 name|short
 name|unit_to_irq
@@ -761,6 +773,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.h,v 1.3 1997/03/26 01:19:27 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.h,v 1.3 1999/02/20 11:17:59 julian Exp $ */
+comment|/*	$Id: if_media.h,v 1.5 1999/03/07 04:39:25 wpaul Exp $ */
 end_comment
 
 begin_comment
@@ -180,6 +180,25 @@ name|change_callback
 operator|,
 name|ifm_stat_cb_t
 name|status_callback
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Remove all mediums from a struct ifmedia.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|ifmedia_removeall
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifmedia
+operator|*
+name|ifm
 operator|)
 argument_list|)
 decl_stmt|;
