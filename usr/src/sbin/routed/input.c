@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.8 (Berkeley) %G%"
+literal|"@(#)input.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,10 +477,30 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
+name|ifp
+operator|=
 name|if_iflookup
 argument_list|(
 name|from
 argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+operator|(
+name|IFF_BROADCAST
+operator||
+name|IFF_POINTOPOINT
+operator||
+name|IFF_REMOTE
+operator|)
+operator|)
 operator|==
 literal|0
 condition|)
@@ -660,13 +680,33 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-elseif|else
+comment|/* 		 * "Authenticate" router from which message originated. 		 * We accept routing packets from routers directly connected 		 * via broadcast or point-to-point networks, 		 * and from those listed in /etc/gateways. 		 */
 if|if
 condition|(
+operator|(
+name|ifp
+operator|=
 name|if_iflookup
 argument_list|(
 name|from
 argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+operator|(
+name|IFF_BROADCAST
+operator||
+name|IFF_POINTOPOINT
+operator||
+name|IFF_REMOTE
+operator|)
+operator|)
 operator|==
 literal|0
 condition|)
