@@ -835,27 +835,6 @@ argument_list|(
 name|ENOENT
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: pfind() returning incompletely allocated processes 		 * is probably a bug.  Or, at least, we should check the 		 * process state, not the ucred pointer.  Work around for 		 * now by checking that to avoid a possible NULL pointer 		 * dereference. 		 */
-if|if
-condition|(
-name|proc
-operator|->
-name|p_ucred
-operator|==
-name|NULL
-condition|)
-block|{
-name|PROC_UNLOCK
-argument_list|(
-name|proc
-argument_list|)
-expr_stmt|;
-name|PFS_RETURN
-argument_list|(
-name|ENOENT
-argument_list|)
-expr_stmt|;
-block|}
 name|vap
 operator|->
 name|va_uid
