@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.44 (McKusick) 1/9/00  * $FreeBSD$  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.45 (McKusick) 1/9/00  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -3095,6 +3095,8 @@ name|matchfs
 decl_stmt|;
 name|int
 name|matchcnt
+decl_stmt|,
+name|loopcount
 decl_stmt|;
 comment|/* 	 * Record the process identifier of our caller so that we can give 	 * this process preferential treatment in request_cleanup below. 	 */
 name|filesys_syncer
@@ -3187,6 +3189,10 @@ argument_list|(
 operator|&
 name|lk
 argument_list|)
+expr_stmt|;
+name|loopcount
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -3407,6 +3413,19 @@ name|proc_waiting
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * We do not generally want to stop for buffer space, but if 		 * we are really being a buffer hog, we will stop and wait. 		 */
+if|if
+condition|(
+name|loopcount
+operator|++
+operator|%
+literal|128
+operator|==
+literal|0
+condition|)
+name|bwillwrite
+argument_list|()
+expr_stmt|;
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -7473,17 +7492,6 @@ begin_comment
 comment|/*  * Block de-allocation dependencies.  *   * When blocks are de-allocated, the on-disk pointers must be nullified before  * the blocks are made available for use by other files.  (The true  * requirement is that old pointers must be nullified before new on-disk  * pointers are set.  We chose this slightly more stringent requirement to  * reduce complexity.) Our implementation handles this dependency by updating  * the inode (or indirect block) appropriately but delaying the actual block  * de-allocation (i.e., freemap and free space count manipulation) until  * after the updated versions reach stable storage.  After the disk is  * updated, the blocks can be safely de-allocated whenever it is convenient.  * This implementation handles only the common case of reducing a file's  * length to zero. Other cases are handled by the conventional synchronous  * write approach.  *  * The ffs implementation with which we worked double-checks  * the state of the block pointers and file size as it reduces  * a file's length.  Some of this code is replicated here in our  * soft updates implementation.  The freeblks->fb_chkcnt field is  * used to transfer a part of this information to the procedure  * that eventually de-allocates the blocks.  *  * This routine should be called from the routine that shortens  * a file's length, before the inode's size or block pointers  * are modified. It will save the block pointer information for  * later release and zero the inode so that the calling routine  * can release it.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|long
-name|num_freeblks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of freeblks allocated */
-end_comment
-
 begin_function
 name|void
 name|softdep_setup_freeblocks
@@ -7554,34 +7562,6 @@ name|panic
 argument_list|(
 literal|"softde_setup_freeblocks: non-zero length"
 argument_list|)
-expr_stmt|;
-comment|/* 	 * If we are over our limit, try to improve the situation. 	 */
-if|if
-condition|(
-name|num_freeblks
-operator|>
-name|max_softdeps
-operator|/
-literal|2
-operator|&&
-name|speedup_syncer
-argument_list|()
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|request_cleanup
-argument_list|(
-name|FLUSH_REMOVE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|num_freeblks
-operator|+=
-literal|1
 expr_stmt|;
 name|MALLOC
 argument_list|(
@@ -8626,17 +8606,6 @@ begin_comment
 comment|/*  * Prepare an inode to be freed. The actual free operation is not  * done until the zero'ed inode has been written to disk.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|long
-name|num_freefile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of freefile allocated */
-end_comment
-
 begin_function
 name|void
 name|softdep_freefile
@@ -8679,35 +8648,7 @@ name|freefile
 modifier|*
 name|freefile
 decl_stmt|;
-comment|/* 	 * If we are over our limit, try to improve the situation. 	 */
-if|if
-condition|(
-name|num_freefile
-operator|>
-name|max_softdeps
-operator|/
-literal|2
-operator|&&
-name|speedup_syncer
-argument_list|()
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|request_cleanup
-argument_list|(
-name|FLUSH_REMOVE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * This sets up the inode de-allocation dependency. 	 */
-name|num_freefile
-operator|+=
-literal|1
-expr_stmt|;
 name|MALLOC
 argument_list|(
 name|freefile
@@ -9382,10 +9323,6 @@ name|freeblks
 argument_list|,
 name|D_FREEBLKS
 argument_list|)
-expr_stmt|;
-name|num_freeblks
-operator|-=
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -11148,6 +11085,17 @@ begin_comment
 comment|/*  * Allocate a new dirrem if appropriate and return it along with  * its associated pagedep. Called without a lock, returns with lock.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|long
+name|num_dirrem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of dirrem allocated */
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -11218,6 +11166,34 @@ name|panic
 argument_list|(
 literal|"newdirrem: whiteout"
 argument_list|)
+expr_stmt|;
+comment|/* 	 * If we are over our limit, try to improve the situation. 	 * Limiting the number of dirrem structures will also limit 	 * the number of freefile and freeblks structures. 	 */
+if|if
+condition|(
+name|num_dirrem
+operator|>
+name|max_softdeps
+operator|/
+literal|2
+operator|&&
+name|speedup_syncer
+argument_list|()
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|request_cleanup
+argument_list|(
+name|FLUSH_REMOVE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|num_dirrem
+operator|+=
+literal|1
 expr_stmt|;
 name|MALLOC
 argument_list|(
@@ -12087,6 +12063,10 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|num_dirrem
+operator|-=
+literal|1
+expr_stmt|;
 name|WORKITEM_FREE
 argument_list|(
 name|dirrem
@@ -12171,6 +12151,10 @@ name|vput
 argument_list|(
 name|vp
 argument_list|)
+expr_stmt|;
+name|num_dirrem
+operator|-=
+literal|1
 expr_stmt|;
 name|WORKITEM_FREE
 argument_list|(
@@ -12388,10 +12372,6 @@ name|freefile
 argument_list|,
 name|D_FREEFILE
 argument_list|)
-expr_stmt|;
-name|num_freefile
-operator|-=
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -19321,7 +19301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush out a directory with at least one removal dependency in an effort  * to reduce the number of freefile and freeblks dependency structures.  */
+comment|/*  * Flush out a directory with at least one removal dependency in an effort to  * reduce the number of dirrem, freefile, and freeblks dependency structures.  */
 end_comment
 
 begin_function
