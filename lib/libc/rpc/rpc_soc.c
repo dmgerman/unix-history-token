@@ -1401,6 +1401,7 @@ name|outproc
 parameter_list|,
 name|out
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|host
