@@ -152,12 +152,7 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%08.8_ax  \" 8/1 \"%02x \" \"  \""
-argument_list|)
-expr_stmt|;
-name|add
-argument_list|(
-literal|" 8/1 \"%02x \" "
+literal|"\"%08.8_ax  \" 8/1 \"%02x \" \"  \" 8/1 \"%02x \" "
 argument_list|)
 expr_stmt|;
 name|add
@@ -226,12 +221,7 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"\"%08.8_ax  \" 8/1 \"%02x \" \"  \""
-argument_list|)
-expr_stmt|;
-name|add
-argument_list|(
-literal|" 8/1 \"%02x \" "
+literal|"\"%08.8_ax  \" 8/1 \"%02x \" \"  \" 8/1 \"%02x \" "
 argument_list|)
 expr_stmt|;
 name|add
