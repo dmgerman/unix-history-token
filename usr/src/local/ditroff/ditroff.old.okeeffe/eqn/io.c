@@ -26,6 +26,12 @@ begin_comment
 comment|/* huge for Chris's graphics language */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEVDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -36,6 +42,11 @@ end_define
 begin_comment
 comment|/* place to find "dev" directory */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
