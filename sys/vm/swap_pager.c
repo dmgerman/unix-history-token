@@ -8566,10 +8566,8 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
-name|VOP_STRATEGY
+name|bstrategy
 argument_list|(
-name|vp2
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

@@ -3628,6 +3628,13 @@ operator|.
 name|bv_hd
 argument_list|)
 expr_stmt|;
+name|bo
+operator|->
+name|bo_ops
+operator|=
+operator|&
+name|buf_ops_bio
+expr_stmt|;
 name|vp
 operator|->
 name|v_type

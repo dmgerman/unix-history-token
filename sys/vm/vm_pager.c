@@ -1007,13 +1007,6 @@ name|b_magic
 operator|=
 name|B_MAGIC_BIO
 expr_stmt|;
-name|bp
-operator|->
-name|b_op
-operator|=
-operator|&
-name|buf_ops_bio
-expr_stmt|;
 name|BUF_LOCK
 argument_list|(
 name|bp
