@@ -21,6 +21,24 @@ directive|include
 file|"alpha/tm-alpha.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S0_REGNUM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S0_REGNUM
+value|(T7_REGNUM+1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Number of traps that happen between exec'ing the shell to run an    inferior, and when we finally get to the inferior code.  This is 2    on FreeBSD and most implementations.  */
 end_comment
