@@ -5983,8 +5983,7 @@ name|OPTSET
 parameter_list|(
 name|bit
 parameter_list|)
-define|\
-value|if (optval) \ 		inp->inp_flags |= bit; \ 	else \ 		inp->inp_flags&= ~bit;
+value|do {						\ 	INP_LOCK(inp);							\ 	if (optval)							\ 		inp->inp_flags |= bit;					\ 	else								\ 		inp->inp_flags&= ~bit;					\ 	INP_UNLOCK(inp);						\ } while (0)
 case|case
 name|IP_RECVOPTS
 case|:
@@ -6108,6 +6107,11 @@ condition|(
 name|error
 condition|)
 break|break;
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|optval
@@ -6180,6 +6184,11 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 break|break;
 if|#
 directive|if
