@@ -410,10 +410,15 @@ name|dev
 operator|.
 name|nchtab
 expr_stmt|;
+comment|/* "unsigned" so very large files will work properly */
 name|filebase
 operator|=
 name|setbrk
 argument_list|(
+operator|(
+name|unsigned
+name|short
+operator|)
 name|dev
 operator|.
 name|filesize
