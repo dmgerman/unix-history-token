@@ -1946,7 +1946,7 @@ name|ncyls
 operator|=
 name|lp
 operator|->
-name|d_secpercyl
+name|d_ncylinders
 expr_stmt|;
 else|#
 directive|else
