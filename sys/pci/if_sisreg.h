@@ -1502,6 +1502,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIS_CRC_SIZE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIS_LASTDESC
 parameter_list|(
 name|x
@@ -1538,7 +1545,7 @@ name|SIS_RXBYTES
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->sis_ctl& SIS_CMDSTS_BUFLEN)
+value|(((x)->sis_ctl& SIS_CMDSTS_BUFLEN) - SIS_CRC_SIZE)
 end_define
 
 begin_define
