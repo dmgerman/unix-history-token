@@ -5110,6 +5110,29 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	pmap_is_prefaultable:  *  *	Return whether or not the specified virtual address is elgible  *	for prefault.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|pmap_is_prefaultable
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|addr
+parameter_list|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|pmap_clear_reference
@@ -6207,44 +6230,6 @@ name|pmap
 parameter_list|)
 block|{
 comment|/* XXX: Remove this stub when no longer called */
-block|}
-end_function
-
-begin_function
-name|void
-name|pmap_prefault
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_map_entry_t
-name|entry
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_prefault: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 

@@ -6239,24 +6239,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|pmap_prefault
-parameter_list|(
-name|pmap_t
-name|pm
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_map_entry_t
-name|entry
-parameter_list|)
-block|{
-comment|/* XXX */
-block|}
-end_function
-
 begin_comment
 comment|/*  * Change the wiring attribute for a map/virtual-address pair.  * The mapping must already exist in the pmap.  */
 end_comment
@@ -8314,6 +8296,29 @@ name|TRUE
 operator|)
 return|;
 block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	pmap_is_prefaultable:  *  *	Return whether or not the specified virtual address is elgible  *	for prefault.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|pmap_is_prefaultable
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|addr
+parameter_list|)
+block|{
 return|return
 operator|(
 name|FALSE
