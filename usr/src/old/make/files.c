@@ -5,9 +5,15 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.21 (Berkeley) 90/03/26"
+literal|"@(#)files.c	4.21 (Berkeley) 91/02/01"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
