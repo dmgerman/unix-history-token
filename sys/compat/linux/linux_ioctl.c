@@ -655,9 +655,9 @@ name|int
 name|linux_ioctl_nvidia
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -670,7 +670,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
