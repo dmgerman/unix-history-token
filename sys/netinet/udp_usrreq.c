@@ -2414,6 +2414,16 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
+comment|/* 		 * Only call in_pcbnotify if the src port number != 0, as we  		 * treat 0 as a wildcard in src/sys/in_pbc.c:in_pcbnotify() 		 * 		 * It's sufficient to check for src|local port, as we'll have no  		 * sessions with src|local port == 0 		 * 		 * Without this a attacker sending ICMP messages, where the attached     		 * IP header (+ 8 bytes) has the address and port numbers == 0, would 		 * have the ICMP message applied to all sessions. 		 */
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_sport
+operator|==
+literal|0
+condition|)
+return|return;
 name|in_pcbnotify
 argument_list|(
 operator|&
