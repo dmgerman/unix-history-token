@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.36 1999/01/29 22:59:43 dillon Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.37 1999/05/09 16:04:09 peter Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip".  This saves diskspace, but wastes cpu-cycles and VM.  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -138,6 +138,9 @@ name|a_out
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|int
+name|gotheader
 decl_stmt|;
 name|int
 name|where
@@ -499,6 +502,17 @@ operator|&
 name|infl
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The unzipped file may not even have been long enough to contain 	 * a header giving Flush() a chance to return error.  Check for this. 	 */
+if|if
+condition|(
+operator|!
+name|igz
+operator|.
+name|gotheader
+condition|)
+return|return
+name|ENOEXEC
+return|;
 if|if
 condition|(
 operator|!
@@ -1583,6 +1597,12 @@ operator|->
 name|a_out
 condition|)
 block|{
+name|gz
+operator|->
+name|gotheader
+operator|=
+literal|1
+expr_stmt|;
 name|i
 operator|=
 name|do_aout_hdr
