@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.3 (Berkeley) %G%"
+literal|"@(#)df.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -760,6 +760,12 @@ name|printf
 argument_list|(
 literal|"\t%5.0f%%"
 argument_list|,
+name|blocks
+operator|==
+literal|0
+condition|?
+literal|0.0
+else|:
 operator|(
 name|double
 operator|)
@@ -809,6 +815,12 @@ name|sblock
 operator|.
 name|s_tinode
 argument_list|,
+name|inodes
+operator|==
+literal|0
+condition|?
+literal|0.0
+else|:
 operator|(
 name|double
 operator|)

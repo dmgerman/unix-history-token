@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.5 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3425,11 +3425,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfcode\t%.1x\n"
+literal|"code\t%.1x\n"
 argument_list|,
 name|U
 operator|.
-name|u_cfcode
+name|u_code
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4117,9 +4117,9 @@ name|free
 decl_stmt|;
 specifier|register
 name|struct
-name|map
+name|mapent
 modifier|*
-name|mp
+name|me
 decl_stmt|;
 specifier|register
 name|struct
@@ -4269,24 +4269,38 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|mp
+name|me
 operator|=
+operator|(
+expr|struct
+name|mapent
+operator|*
+operator|)
+operator|(
 name|swapmap
+operator|+
+literal|1
+operator|)
 init|;
-name|mp
+name|me
 operator|<
+operator|(
+expr|struct
+name|mapent
+operator|*
+operator|)
 operator|&
 name|swapmap
 index|[
 name|nswapmap
 index|]
 condition|;
-name|mp
+name|me
 operator|++
 control|)
 name|free
 operator|+=
-name|mp
+name|me
 operator|->
 name|m_size
 expr_stmt|;
@@ -4470,7 +4484,7 @@ name|pp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* a DMMAX block goes to argmap */
+comment|/* a DMMAX/2 block goes to argmap */
 if|if
 condition|(
 name|totflg
@@ -4519,6 +4533,8 @@ operator|(
 name|nswap
 operator|-
 name|DMMAX
+operator|/
+literal|2
 operator|-
 operator|(
 name|used

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.3 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -815,7 +815,7 @@ expr_stmt|;
 comment|/* s1 = z; */
 name|printf
 argument_list|(
-literal|"\  Procs     Memory            Page        Swap  %s %s %s %s  Faults          Cpu\n\  R B W   AVM  FRE  RE AT PI PO FR  DE  SR I O  %-2d %-2d %-2d %-2d  IN  SY  CS US SY ID\n\ "
+literal|"\  procs     memory            page        swap  %s %s %s %s  faults          cpu\n\  r b w   avm  fre  re at pi po fr  de  sr i o  %-2d %-2d %-2d %-2d  in  sy  cs us sy id\n\ "
 argument_list|,
 name|dr_name
 index|[
