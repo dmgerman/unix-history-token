@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|n
 specifier|static
 name|int
 name|dellave
@@ -603,15 +602,6 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|display
-argument_list|)
-expr_stmt|;
-name|sigtstpdfl
-operator|=
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|suspend
 argument_list|)
 expr_stmt|;
 name|display
