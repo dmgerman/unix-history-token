@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.5 1998/08/24 17:51:38 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xl.c,v 1.46 1998/08/31 15:10:22 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_xl.c,v 1.5 1998/08/24 17:51:38 wpaul Exp $"
+literal|"$Id: if_xl.c,v 1.46 1998/08/31 15:10:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7059,6 +7059,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|xl_newbuf
 argument_list|(
 name|sc
@@ -7071,7 +7073,14 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
+operator|==
+name|ENOBUFS
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 if|if
 condition|(
 name|i
@@ -7235,7 +7244,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xl%d: no memory for rx list"
+literal|"xl%d: no memory for rx list -- packet dropped!\n"
 argument_list|,
 name|sc
 operator|->
@@ -7269,7 +7278,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xl%d: no memory for rx list"
+literal|"xl%d: no memory for rx list -- packet dropped!\n"
 argument_list|,
 name|sc
 operator|->
@@ -7420,6 +7429,16 @@ name|xl_cdata
 operator|.
 name|xl_rx_head
 expr_stmt|;
+name|sc
+operator|->
+name|xl_cdata
+operator|.
+name|xl_rx_head
+operator|=
+name|cur_rx
+operator|->
+name|xl_next
+expr_stmt|;
 comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 	 	 * comes up in the ring. 		 */
 if|if
 condition|(
@@ -7440,16 +7459,6 @@ operator|->
 name|xl_status
 operator|=
 literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|xl_cdata
-operator|.
-name|xl_rx_head
-operator|=
-name|cur_rx
-operator|->
-name|xl_next
 expr_stmt|;
 continue|continue;
 block|}
@@ -7486,29 +7495,9 @@ name|xl_status
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
-name|xl_cdata
-operator|.
-name|xl_rx_head
-operator|=
-name|cur_rx
-operator|->
-name|xl_next
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* No errors; receive the packet. */
-name|sc
-operator|->
-name|xl_cdata
-operator|.
-name|xl_rx_head
-operator|=
-name|cur_rx
-operator|->
-name|xl_next
-expr_stmt|;
 name|m
 operator|=
 name|cur_rx
@@ -7525,13 +7514,34 @@ name|xl_status
 operator|&
 name|XL_RXSTAT_LENMASK
 expr_stmt|;
+comment|/* 		 * Try to conjure up a new mbuf cluster. If that 		 * fails, it means we have an out of memory condition and 		 * should leave the buffer in place and continue. This will 		 * result in a lost packet, but there's little else we 		 * can do in this situation. 		 */
+if|if
+condition|(
 name|xl_newbuf
 argument_list|(
 name|sc
 argument_list|,
 name|cur_rx
 argument_list|)
+operator|==
+name|ENOBUFS
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_ierrors
+operator|++
 expr_stmt|;
+name|cur_rx
+operator|->
+name|xl_ptr
+operator|->
+name|xl_status
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
 name|eh
 operator|=
 name|mtod
@@ -9513,15 +9523,23 @@ name|xl_list_rx_init
 argument_list|(
 name|sc
 argument_list|)
+operator|==
+name|ENOBUFS
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xl%d: failed to set up rx lists\n"
+literal|"xl%d: initialization failed: no "
+literal|"memory for rx buffers\n"
 argument_list|,
 name|sc
 operator|->
 name|xl_unit
+argument_list|)
+expr_stmt|;
+name|xl_stop
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
