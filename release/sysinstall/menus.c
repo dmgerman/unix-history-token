@@ -1,7 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $FreeBSD$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -589,8 +611,8 @@ block|,
 literal|"Glossary of functions"
 block|,
 literal|"This menu contains an alphabetized index of the top level functions in\n"
-literal|"this program (sysinstall).  Invoke an option by pressing [ENTER].\n"
-literal|"Leave the index page by selecting Cancel [TAB-ENTER]."
+literal|"this program (sysinstall).  Invoke an option by pressing [SPACE] or\n"
+literal|"[ENTER].  To exit, use [TAB] to move to the Cancel button."
 block|,
 literal|"Use PageUp or PageDown to move through this menu faster!"
 block|,
@@ -1517,7 +1539,7 @@ literal|"Welcome to the FreeBSD installation and configuration tool.  Please\n"
 comment|/* prompt */
 literal|"select one of the options below by using the arrow keys or typing the\n"
 literal|"first character of the option name you're interested in.  Invoke an\n"
-literal|"option by pressing [ENTER] or [TAB-ENTER] to exit the installation."
+literal|"option with [SPACE] or [ENTER].  To exit, use [TAB] to move to Exit."
 block|,
 literal|"Press F1 for Installation Guide"
 block|,
@@ -4030,8 +4052,8 @@ literal|"These select what we consider to be the most reasonable defaults for th
 literal|"type of system in question.  If you would prefer to pick and choose the\n"
 literal|"list of distributions yourself, simply select \"Custom\".  You can also\n"
 literal|"pick a canned distribution set and then fine-tune it with the Custom item.\n\n"
-literal|"Choose an item by pressing [SPACE]. When you are finished, choose the Exit\n"
-literal|"item or press [ENTER]."
+literal|"Choose an item by pressing [SPACE] or [ENTER].  When finished, choose the\n"
+literal|"Exit item or move to the Exit button with [TAB]."
 block|,
 literal|"Press F1 for more information on these options."
 block|,
@@ -4804,7 +4826,7 @@ block|,
 literal|"Select the sub-components of src you wish to install."
 block|,
 literal|"Please check off those portions of the FreeBSD source tree\n"
-literal|"you wish to install (remember to use SPACE, not ENTER!)."
+literal|"you wish to install."
 block|,
 name|NULL
 block|,
@@ -7123,7 +7145,7 @@ literal|"this operation.  If you are attempting to install a boot partition\n"
 literal|"on a drive other than the first one or have multiple operating\n"
 literal|"systems on your machine, you will have the option to install a boot\n"
 literal|"manager later.  To select a drive, use the arrow keys to move to it\n"
-literal|"and press [SPACE].  To de-select it, press [SPACE] again.\n\n"
+literal|"and press [SPACE] or [ENTER].  To de-select it, press it again.\n\n"
 literal|"Select OK or Cancel to leave this menu."
 block|,
 literal|"Press F1 for important information regarding disk geometry!"
@@ -7761,8 +7783,8 @@ block|,
 literal|"Startup Services Menu"
 block|,
 literal|"This menu allows you to configure various aspects of your system's\n"
-literal|"startup configuration.  Remember to use SPACE to select items!  The\n"
-literal|"RETURN key will leave this menu (as with all checkbox menus)."
+literal|"startup configuration.  Use [SPACE] or [ENTER] to select items, and\n"
+literal|"[TAB] to move to the buttons.  Select Exit to leave this menu."
 block|,
 name|NULL
 block|,
