@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys.c	4.6	82/07/15	*/
+comment|/*	sys.c	4.7	82/12/22	*/
 end_comment
 
 begin_include
@@ -1712,19 +1712,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|count
-operator|%
-name|DEV_BSIZE
-condition|)
-name|printf
-argument_list|(
-literal|"count=%d?\n"
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
 name|file
 operator|->
 name|i_cc
@@ -1974,19 +1961,6 @@ operator|-
 literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|count
-operator|%
-name|DEV_BSIZE
-condition|)
-name|printf
-argument_list|(
-literal|"count=%d?\n"
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
 name|file
 operator|->
 name|i_cc
