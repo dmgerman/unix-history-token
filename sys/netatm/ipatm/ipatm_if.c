@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -158,6 +170,19 @@ include|#
 directive|include
 file|<netatm/ipatm/ipatm_serv.h>
 end_include
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IPATM_NIF
+argument_list|,
+literal|"ipatm nif"
+argument_list|,
+literal|"IP/ATM network interfaces"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Local functions  */
@@ -273,26 +298,21 @@ block|}
 comment|/* 		 * Get a new interface block 		 */
 name|inp
 operator|=
-name|uma_zalloc
+name|malloc
 argument_list|(
-name|ipatm_nif_zone
+sizeof|sizeof
+argument_list|(
+operator|*
+name|inp
+argument_list|)
+argument_list|,
+name|M_IPATM_NIF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-block|{
-name|err
-operator|=
-name|ENOMEM
-expr_stmt|;
-break|break;
-block|}
 name|inp
 operator|->
 name|inf_nif
@@ -421,11 +441,11 @@ argument_list|,
 name|inf_next
 argument_list|)
 expr_stmt|;
-name|uma_zfree
+name|free
 argument_list|(
-name|ipatm_nif_zone
-argument_list|,
 name|inp
+argument_list|,
+name|M_IPATM_NIF
 argument_list|)
 expr_stmt|;
 break|break;
