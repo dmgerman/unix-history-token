@@ -1112,6 +1112,54 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ata_dmastate
+block|{
+name|bus_dma_tag_t
+name|ddmatag
+decl_stmt|;
+comment|/* data DMA tag */
+name|bus_dmamap_t
+name|ddmamap
+decl_stmt|;
+comment|/* data DMA map */
+name|bus_dma_tag_t
+name|cdmatag
+decl_stmt|;
+comment|/* control DMA tag */
+name|bus_dmamap_t
+name|cdmamap
+decl_stmt|;
+comment|/* control DMA map */
+name|struct
+name|ata_dmaentry
+modifier|*
+name|dmatab
+decl_stmt|;
+comment|/* DMA transfer table */
+name|bus_addr_t
+name|mdmatab
+decl_stmt|;
+comment|/* bus address of dmatab */
+name|int
+name|flags
+decl_stmt|;
+comment|/* debugging */
+define|#
+directive|define
+name|ATA_DS_ACTIVE
+value|0x01
+comment|/* debugging */
+define|#
+directive|define
+name|ATA_DS_READ
+value|0x02
+comment|/* transaction is a read */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* structure describing an ATA/ATAPI device */
 end_comment
@@ -1181,6 +1229,11 @@ modifier|*
 name|result
 decl_stmt|;
 comment|/* misc data */
+name|struct
+name|ata_dmastate
+name|dmastate
+decl_stmt|;
+comment|/* dma state */
 block|}
 struct|;
 end_struct
@@ -1221,6 +1274,10 @@ modifier|*
 name|r_bmio
 decl_stmt|;
 comment|/* bmio addr resource handle */
+name|bus_dma_tag_t
+name|dmatag
+decl_stmt|;
+comment|/* parent dma tag */
 name|struct
 name|resource
 modifier|*
@@ -1720,15 +1777,34 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-modifier|*
+name|int
 name|ata_dmaalloc
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_dmafree
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_dmafreetags
 parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1738,10 +1814,8 @@ name|void
 name|ata_dmainit
 parameter_list|(
 name|struct
-name|ata_channel
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -1757,18 +1831,12 @@ name|int
 name|ata_dmasetup
 parameter_list|(
 name|struct
-name|ata_channel
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|ata_dmaentry
+name|ata_device
 modifier|*
 parameter_list|,
 name|caddr_t
 parameter_list|,
-name|int
+name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1778,13 +1846,7 @@ name|void
 name|ata_dmastart
 parameter_list|(
 name|struct
-name|ata_channel
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|ata_dmaentry
+name|ata_device
 modifier|*
 parameter_list|,
 name|int
@@ -1808,7 +1870,7 @@ name|int
 name|ata_dmadone
 parameter_list|(
 name|struct
-name|ata_channel
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1931,6 +1993,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_INSW_STRM
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_read_multi_stream_2(rman_get_bustag((res)), \ 			 	      rman_get_bushandle((res)), \ 				      (offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_INSL
 parameter_list|(
 name|res
@@ -1943,6 +2022,23 @@ name|count
 parameter_list|)
 define|\
 value|bus_space_read_multi_4(rman_get_bustag((res)), \ 			       rman_get_bushandle((res)), \ 			       (offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_INSL_STRM
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_read_multi_stream_4(rman_get_bustag((res)), \ 			 	      rman_get_bushandle((res)), \ 				      (offset), (addr), (count))
 end_define
 
 begin_define
@@ -2010,6 +2106,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_OUTSW_STRM
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_write_multi_stream_2(rman_get_bustag((res)), \ 			 	       rman_get_bushandle((res)), \ 				       (offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_OUTSL
 parameter_list|(
 name|res
@@ -2022,6 +2135,23 @@ name|count
 parameter_list|)
 define|\
 value|bus_space_write_multi_4(rman_get_bustag((res)), \ 				rman_get_bushandle((res)), \ 				(offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTSL_STRM
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_write_multi_stream_4(rman_get_bustag((res)), \ 			 	       rman_get_bushandle((res)), \ 				       (offset), (addr), (count))
 end_define
 
 end_unit

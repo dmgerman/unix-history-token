@@ -1457,6 +1457,11 @@ name|devices
 operator|=
 literal|0
 expr_stmt|;
+name|ata_dmafreetags
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -8224,12 +8229,6 @@ expr_stmt|;
 name|ata_dmainit
 argument_list|(
 name|atadev
-operator|->
-name|channel
-argument_list|,
-name|atadev
-operator|->
-name|unit
 argument_list|,
 name|pmode
 argument_list|,

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1463,7 +1469,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -1487,6 +1493,46 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|ATA_ENABLE_BUSMASTER
+if|if
+condition|(
+operator|!
+operator|(
+name|cmd
+operator|&
+name|PCIM_CMD_BUSMASTEREN
+operator|)
+condition|)
+block|{
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+name|cmd
+operator||
+name|PCIM_CMD_BUSMASTEREN
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* is busmastering supported ? */
 if|if
 condition|(
@@ -1664,7 +1710,7 @@ operator|<
 literal|2
 condition|)
 block|{
-comment|/* HPT 366 */
+comment|/* HPT366 */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -1691,6 +1737,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|5
+condition|)
+block|{
+comment|/* HPT368/370 */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -1775,6 +1832,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+comment|/* FALLTHROUGH */
 case|case
 literal|0x00051103
 case|:
@@ -2149,6 +2208,22 @@ condition|?
 literal|0x03
 else|:
 literal|0x02
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x06461095
+case|:
+comment|/* CMD 646 enable interrupts, set DMA read mode */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x71
+argument_list|,
+literal|0x01
 argument_list|,
 literal|1
 argument_list|)
@@ -2936,10 +3011,7 @@ literal|2
 expr_stmt|;
 name|end
 operator|=
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
+name|start
 operator|+
 name|ATA_ALTIOSIZE
 operator|-
