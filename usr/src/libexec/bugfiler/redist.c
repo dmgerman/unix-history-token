@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.2 (Berkeley) 87/04/11"
+literal|"@(#)redist.c	5.3 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,14 +432,6 @@ operator|)
 name|pclose
 argument_list|(
 name|pf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|dfp
 argument_list|)
 expr_stmt|;
 block|}
