@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.7 %G%"
+literal|"@(#)newfs.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,13 +45,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<stdio.h>
 end_include
 
 begin_include
