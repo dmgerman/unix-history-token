@@ -31,11 +31,35 @@ directive|include
 file|<machine/pci_cfgreg.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_include
 include|#
 directive|include
 file|<dev/pci/pcireg.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<pci/pcireg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ACPICA's rather gung-ho approach to hardware resource ownership is a little  * troublesome insofar as there is no easy way for us to know in advance   * exactly which I/O resources it's going to want to use.  *   * In order to deal with this, we ignore resource ownership entirely, and simply  * use the native I/O space accessor functionality.  This is Evil, but it works.  *  * XXX use an intermediate #define for the tag/handle  */

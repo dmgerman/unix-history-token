@@ -104,11 +104,35 @@ directive|include
 file|<machine/pc/bios.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<i386/apm/apm.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<i386/bios/apm.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static

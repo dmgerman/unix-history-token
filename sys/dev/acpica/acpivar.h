@@ -58,6 +58,26 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_typedef
+typedef|typedef
+name|vm_offset_t
+name|vm_paddr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|acpi_softc
@@ -1861,6 +1881,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1892,6 +1920,11 @@ define|#
 directive|define
 name|ACPI_USE_THREADS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
