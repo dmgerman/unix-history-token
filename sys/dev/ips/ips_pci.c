@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Adaptec Inc.  * All rights reserved.  *  * Written by: David Jeffery  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 Adaptec Inc.  * All rights reserved.  *  * Written by: David Jeffery  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -182,9 +168,16 @@ name|ips_softc_t
 modifier|*
 name|sc
 decl_stmt|;
+name|int
+name|tval
+decl_stmt|;
+name|tval
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|resource_disabled
+name|resource_int_value
 argument_list|(
 name|device_get_name
 argument_list|(
@@ -195,7 +188,16 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+literal|"disabled"
+argument_list|,
+operator|&
+name|tval
 argument_list|)
+operator|==
+literal|0
+operator|&&
+name|tval
 condition|)
 block|{
 name|device_printf
@@ -444,7 +446,7 @@ name|sc
 operator|->
 name|iores
 operator|=
-name|bus_alloc_resource_any
+name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
@@ -456,6 +458,13 @@ operator|&
 name|sc
 operator|->
 name|rid
+argument_list|,
+literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -499,7 +508,7 @@ name|sc
 operator|->
 name|iores
 operator|=
-name|bus_alloc_resource_any
+name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
@@ -511,6 +520,13 @@ operator|&
 name|sc
 operator|->
 name|rid
+argument_list|,
+literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -575,7 +591,7 @@ name|sc
 operator|->
 name|irqres
 operator|=
-name|bus_alloc_resource_any
+name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
@@ -585,6 +601,13 @@ operator|&
 name|sc
 operator|->
 name|irqrid
+argument_list|,
+literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||
@@ -677,13 +700,6 @@ argument_list|,
 comment|/* flags     */
 literal|0
 argument_list|,
-comment|/* lockfunc  */
-name|busdma_lock_mutex
-argument_list|,
-comment|/* lockarg   */
-operator|&
-name|Giant
-argument_list|,
 operator|&
 name|sc
 operator|->
@@ -718,21 +734,7 @@ name|ich_arg
 operator|=
 name|sc
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|queue_mtx
-argument_list|,
-literal|"IPS bioqueue lock"
-argument_list|,
-name|MTX_DEF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|bioq_init
+name|bufq_init
 argument_list|(
 operator|&
 name|sc
@@ -1002,18 +1004,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|bioq_flush
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|queue
-argument_list|,
-name|NULL
-argument_list|,
-name|ENXIO
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX */
+block|bioq_flush(&sc->queue, NULL, ENXIO);
+endif|#
+directive|endif
 block|}
 return|return
 literal|0

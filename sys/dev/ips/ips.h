@@ -54,25 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sema.h>
 end_include
 
 begin_include
@@ -108,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
+file|<pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<pci/pcivar.h>
 end_include
 
 begin_expr_stmt
@@ -1116,7 +1104,7 @@ name|ips_read_request
 parameter_list|(
 name|iobuf
 parameter_list|)
-value|((iobuf)->bio_cmd == BIO_READ)
+value|((iobuf)->b_flags& B_READ)
 end_define
 
 begin_define
@@ -1767,10 +1755,6 @@ name|u_int32_t
 name|command_phys_addr
 decl_stmt|;
 comment|/*WARNING! must be changed if 64bit addressing ever used*/
-name|struct
-name|sema
-name|cmd_sema
-decl_stmt|;
 name|ips_cmd_status_t
 name|status
 decl_stmt|;
@@ -1898,9 +1882,7 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
-name|struct
-name|cdev
-modifier|*
+name|dev_t
 name|device_file
 decl_stmt|;
 name|struct
@@ -2009,11 +1991,7 @@ modifier|*
 name|copper_queue
 decl_stmt|;
 name|struct
-name|mtx
-name|queue_mtx
-decl_stmt|;
-name|struct
-name|bio_queue_head
+name|buf_queue_head
 name|queue
 decl_stmt|;
 block|}
@@ -2056,7 +2034,7 @@ name|void
 name|ipsd_finish
 parameter_list|(
 name|struct
-name|bio
+name|buf
 modifier|*
 name|iobuf
 parameter_list|)

@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Written by: David Jeffery  * Copyright (c) 2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Written by: David Jeffery  * Copyright (c) 2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
@@ -81,36 +67,35 @@ name|cdevsw
 name|ips_cdevsw
 init|=
 block|{
-operator|.
-name|d_version
-operator|=
-name|D_VERSION
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-operator|.
-name|d_open
-operator|=
 name|ips_open
 block|,
-operator|.
-name|d_close
-operator|=
 name|ips_close
 block|,
-operator|.
-name|d_ioctl
-operator|=
+name|noread
+block|,
+name|nowrite
+block|,
 name|ips_ioctl
 block|,
-operator|.
-name|d_name
-operator|=
+name|nopoll
+block|,
+name|nommap
+block|,
+name|nostrategy
+block|,
 literal|"ips"
-block|, }
+block|,
+literal|175
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -163,9 +148,7 @@ specifier|static
 name|int
 name|ips_open
 parameter_list|(
-name|struct
-name|cdev
-modifier|*
+name|dev_t
 name|dev
 parameter_list|,
 name|int
@@ -175,9 +158,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|ips_softc_t
@@ -205,9 +188,7 @@ specifier|static
 name|int
 name|ips_close
 parameter_list|(
-name|struct
-name|cdev
-modifier|*
+name|dev_t
 name|dev
 parameter_list|,
 name|int
@@ -217,9 +198,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|ips_softc_t
@@ -248,9 +229,7 @@ specifier|static
 name|int
 name|ips_ioctl
 parameter_list|(
-name|struct
-name|cdev
-modifier|*
+name|dev_t
 name|dev
 parameter_list|,
 name|u_long
@@ -263,9 +242,9 @@ name|int32_t
 name|flags
 parameter_list|,
 name|struct
-name|thread
+name|proc
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|ips_softc_t
@@ -413,14 +392,6 @@ name|commandarray
 index|[
 name|i
 index|]
-expr_stmt|;
-name|sema_destroy
-argument_list|(
-operator|&
-name|command
-operator|->
-name|cmd_sema
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -630,18 +601,6 @@ goto|goto
 name|error
 goto|;
 block|}
-name|sema_init
-argument_list|(
-operator|&
-name|command
-operator|->
-name|cmd_sema
-argument_list|,
-literal|0
-argument_list|,
-literal|"IPS Command Semaphore"
-argument_list|)
-expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1257,23 +1216,6 @@ name|mask
 operator|=
 name|splbio
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|sema_value
-argument_list|(
-operator|&
-name|command
-operator|->
-name|cmd_sema
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"ips: command returned non-zero semaphore"
-argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -1987,13 +1929,6 @@ argument_list|,
 comment|/* flags     */
 literal|0
 argument_list|,
-comment|/* lockfunc  */
-name|busdma_lock_mutex
-argument_list|,
-comment|/* lockarg   */
-operator|&
-name|Giant
-argument_list|,
 operator|&
 name|sc
 operator|->
@@ -2054,13 +1989,6 @@ name|IPS_MAX_IOBUF_SIZE
 argument_list|,
 comment|/* flags     */
 literal|0
-argument_list|,
-comment|/* lockfunc  */
-name|busdma_lock_mutex
-argument_list|,
-comment|/* lockarg   */
-operator|&
-name|Giant
 argument_list|,
 operator|&
 name|sc
@@ -3251,13 +3179,6 @@ argument_list|)
 argument_list|,
 comment|/* flags     */
 literal|0
-argument_list|,
-comment|/* lockfunc  */
-name|busdma_lock_mutex
-argument_list|,
-comment|/* lockarg   */
-operator|&
-name|Giant
 argument_list|,
 operator|&
 name|dmatag
