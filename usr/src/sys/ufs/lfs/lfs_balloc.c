@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1146,6 +1146,17 @@ name|ip
 operator|->
 name|i_blocks
 operator|+=
+name|btodb
+argument_list|(
+name|fs
+operator|->
+name|lfs_bsize
+argument_list|)
+expr_stmt|;
+name|fs
+operator|->
+name|lfs_bfree
+operator|-=
 name|btodb
 argument_list|(
 name|fs
