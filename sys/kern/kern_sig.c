@@ -1744,6 +1744,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1785,6 +1789,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|actp
 operator|=
 operator|(
@@ -1840,11 +1850,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|error
 operator|=
@@ -1888,6 +1896,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1937,6 +1953,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2033,6 +2053,12 @@ name|osa
 else|:
 name|NULL
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nsap
@@ -2059,11 +2085,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|nsap
 operator|->
 name|sa_handler
@@ -2162,6 +2186,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2936,6 +2968,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2961,6 +2997,15 @@ block|{
 name|sigset_t
 name|siglist
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2977,8 +3022,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|&
@@ -2993,6 +3044,10 @@ argument_list|(
 name|sigset_t
 argument_list|)
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -3031,6 +3086,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -3053,6 +3112,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3075,6 +3140,12 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -3143,6 +3214,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3316,6 +3391,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|do_sigaction
@@ -3331,6 +3412,12 @@ argument_list|,
 name|osap
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -3441,6 +3528,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|osigblock
@@ -3478,6 +3569,12 @@ argument_list|(
 name|set
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3511,6 +3608,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3540,6 +3643,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3577,6 +3684,12 @@ argument_list|(
 name|set
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3608,6 +3721,12 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -3654,6 +3773,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3718,6 +3841,12 @@ name|error
 operator|)
 return|;
 comment|/* 	 * When returning from sigsuspend, we want 	 * the old mask to be restored after the 	 * signal handler has finished.  Thus, we 	 * save it here and mark the sigacts structure 	 * to indicate this. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3786,6 +3915,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* always return EINTR rather than ERESTART... */
 return|return
 operator|(
@@ -3828,6 +3963,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -3860,6 +3999,12 @@ name|sigacts
 modifier|*
 name|ps
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3940,6 +4085,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* always return EINTR rather than ERESTART... */
 return|return
 operator|(
@@ -4002,6 +4153,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -4031,7 +4186,15 @@ name|ss
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -4095,11 +4258,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -4133,11 +4294,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4185,9 +4344,17 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -4230,6 +4397,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -4257,10 +4428,19 @@ name|stack_t
 name|ss
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|oonstack
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|oonstack
 operator|=
 name|sigonstack
@@ -4343,11 +4523,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -4362,11 +4540,15 @@ if|if
 condition|(
 name|oonstack
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4390,11 +4572,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 operator|(
@@ -4408,11 +4588,15 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|!
@@ -4437,11 +4621,15 @@ name|p_sysent
 operator|->
 name|sv_minsigstksz
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4486,9 +4674,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -4814,6 +5010,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -4844,6 +5044,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -4860,6 +5065,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -4885,11 +5096,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ESRCH
-operator|)
-return|;
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|p_cansignal
@@ -4909,12 +5122,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|uap
@@ -4935,12 +5149,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
+block|}
+else|else
+block|{
 switch|switch
 condition|(
 name|uap
@@ -4953,8 +5169,8 @@ operator|-
 literal|1
 case|:
 comment|/* broadcast signal */
-return|return
-operator|(
+name|error
+operator|=
 name|killpg1
 argument_list|(
 name|cp
@@ -4967,14 +5183,14 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|0
 case|:
 comment|/* signal own process group */
-return|return
-operator|(
+name|error
+operator|=
 name|killpg1
 argument_list|(
 name|cp
@@ -4987,12 +5203,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 default|default:
 comment|/* negative explicit process group */
-return|return
-operator|(
+name|error
+operator|=
 name|killpg1
 argument_list|(
 name|cp
@@ -5008,10 +5224,21 @@ name|pid
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
-block|}
-comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -5055,6 +5282,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5078,6 +5309,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -5094,8 +5328,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|killpg1
 argument_list|(
 name|p
@@ -5110,6 +5350,16 @@ name|pgid
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -8528,6 +8778,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -8550,6 +8804,12 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -8565,6 +8825,12 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return

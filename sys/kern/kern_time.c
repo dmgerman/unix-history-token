@@ -487,6 +487,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -529,10 +533,22 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|nanotime
 argument_list|(
 operator|&
 name|ats
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -588,6 +604,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -621,6 +641,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -634,11 +660,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 name|SCARG
@@ -650,11 +674,15 @@ argument_list|)
 operator|!=
 name|CLOCK_REALTIME
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -681,11 +709,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 name|ats
@@ -700,11 +726,15 @@ name|tv_nsec
 operator|>=
 literal|1000000000
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 comment|/* XXX Don't convert nsec->usec and back */
 name|TIMESPEC_TO_TIMEVAL
 argument_list|(
@@ -715,9 +745,6 @@ operator|&
 name|ats
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|settime
@@ -725,16 +752,18 @@ argument_list|(
 operator|&
 name|atv
 argument_list|)
-operator|)
-condition|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
-operator|)
-return|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -1151,6 +1180,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*   * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1181,8 +1214,6 @@ name|rqt
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|error2
 decl_stmt|;
 name|error
 operator|=
@@ -1213,6 +1244,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SCARG
@@ -1222,6 +1259,7 @@ argument_list|,
 name|rmtp
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1245,11 +1283,16 @@ argument_list|,
 name|VM_PROT_WRITE
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EFAULT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
+block|}
 name|error
 operator|=
 name|nanosleep1
@@ -1275,6 +1318,9 @@ name|rmtp
 argument_list|)
 condition|)
 block|{
+name|int
+name|error2
+decl_stmt|;
 name|error2
 operator|=
 name|copyout
@@ -1300,12 +1346,19 @@ condition|(
 name|error2
 condition|)
 comment|/* XXX shouldn't happen, did useracc() above */
-return|return
-operator|(
+name|error
+operator|=
 name|error2
-operator|)
-return|;
+expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1344,6 +1397,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1376,6 +1433,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -1416,11 +1479,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -1428,6 +1491,7 @@ name|uap
 operator|->
 name|tzp
 condition|)
+block|{
 name|error
 operator|=
 name|copyout
@@ -1449,6 +1513,15 @@ sizeof|sizeof
 argument_list|(
 name|tz
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -1489,6 +1562,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1521,7 +1598,15 @@ name|atz
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1533,11 +1618,9 @@ name|p
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 comment|/* Verify all parameters before changing time. */
 if|if
 condition|(
@@ -1573,11 +1656,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 name|atv
@@ -1592,11 +1675,15 @@ name|tv_usec
 operator|>=
 literal|1000000
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -1629,11 +1716,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 name|uap
@@ -1650,11 +1737,9 @@ name|atv
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 name|uap
@@ -1665,9 +1750,17 @@ name|tz
 operator|=
 name|atz
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -1736,6 +1829,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1776,6 +1873,12 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1787,14 +1890,9 @@ name|p
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-if|if
-condition|(
-operator|(
+goto|goto
+name|done2
+goto|;
 name|error
 operator|=
 name|copyin
@@ -1818,13 +1916,14 @@ expr|struct
 name|timeval
 argument_list|)
 argument_list|)
-operator|)
-condition|)
-return|return
-operator|(
+expr_stmt|;
+if|if
+condition|(
 name|error
-operator|)
-return|;
+condition|)
+goto|goto
+name|done2
+goto|;
 comment|/* 	 * Compute the total correction and the rate at which to apply it. 	 * Round the adjustment down to a whole multiple of the per-tick 	 * delta, so that after some number of incremental changes in 	 * hardclock(), tickdelta will become zero, lest the correction 	 * overshoot and start taking us away from the desired final time. 	 */
 name|ndelta
 operator|=
@@ -1957,9 +2056,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -1997,6 +2104,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2031,6 +2142,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|uap
@@ -2044,6 +2158,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splclock
@@ -2121,6 +2241,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|aitv
 operator|=
 name|p
@@ -2134,13 +2255,14 @@ operator|->
 name|which
 index|]
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -2162,6 +2284,16 @@ expr|struct
 name|itimerval
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -2196,6 +2328,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2239,6 +2375,8 @@ name|int
 name|s
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2292,6 +2430,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2320,22 +2464,26 @@ name|uap
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 name|itvp
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 name|itimerfix
@@ -2346,11 +2494,15 @@ operator|.
 name|it_value
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2362,6 +2514,7 @@ operator|.
 name|it_value
 argument_list|)
 condition|)
+block|{
 name|timevalclear
 argument_list|(
 operator|&
@@ -2370,6 +2523,7 @@ operator|.
 name|it_interval
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2381,11 +2535,15 @@ operator|.
 name|it_interval
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|s
 operator|=
 name|splclock
@@ -2476,6 +2634,7 @@ name|aitv
 expr_stmt|;
 block|}
 else|else
+block|{
 name|p
 operator|->
 name|p_stats
@@ -2489,14 +2648,23 @@ index|]
 operator|=
 name|aitv
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
