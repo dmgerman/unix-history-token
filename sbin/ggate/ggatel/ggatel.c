@@ -664,6 +664,10 @@ name|g_gate_openflags
 argument_list|(
 name|flags
 argument_list|)
+operator||
+name|O_DIRECT
+operator||
+name|O_FSYNC
 argument_list|)
 expr_stmt|;
 if|if
