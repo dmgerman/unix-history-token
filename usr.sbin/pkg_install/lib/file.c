@@ -2315,7 +2315,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"tar %s %s %s"
+literal|"tar %s '%s' %s"
 argument_list|,
 name|args
 argument_list|,
