@@ -423,7 +423,7 @@ begin_struct
 struct|struct
 name|fxp_ident
 block|{
-name|u_int16_t
+name|uint16_t
 name|devid
 decl_stmt|;
 name|int16_t
@@ -913,7 +913,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|statack
 parameter_list|,
 name|int
@@ -1089,7 +1089,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|fxp_eeprom_getword
 parameter_list|(
 name|struct
@@ -1119,7 +1119,7 @@ parameter_list|,
 name|int
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|data
 parameter_list|)
 function_decl|;
@@ -1373,7 +1373,7 @@ modifier|*
 name|sc
 parameter_list|,
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|status
 parameter_list|,
@@ -1686,7 +1686,7 @@ modifier|*
 name|sc
 parameter_list|,
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|status
 parameter_list|,
@@ -1774,10 +1774,10 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|devid
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|revid
 decl_stmt|;
 name|struct
@@ -1894,7 +1894,7 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 decl_stmt|;
@@ -1964,10 +1964,10 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|data
 decl_stmt|,
 name|myea
@@ -2720,7 +2720,7 @@ literal|0x02
 condition|)
 block|{
 comment|/* STB enable */
-name|u_int16_t
+name|uint16_t
 name|cksum
 decl_stmt|;
 name|int
@@ -5008,7 +5008,7 @@ name|sc
 operator|->
 name|sc_if
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|pci_command
 decl_stmt|;
 name|int
@@ -5211,7 +5211,7 @@ name|int
 name|length
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|reg
 decl_stmt|;
 name|int
@@ -5308,7 +5308,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|fxp_eeprom_getword
 parameter_list|(
 name|struct
@@ -5323,7 +5323,7 @@ name|int
 name|autosize
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|reg
 decl_stmt|,
 name|data
@@ -5574,7 +5574,7 @@ parameter_list|,
 name|int
 name|offset
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|data
 parameter_list|)
 block|{
@@ -6849,7 +6849,7 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|statack
 decl_stmt|;
 name|FXP_LOCK
@@ -6918,7 +6918,7 @@ operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|tmp
 decl_stmt|;
 name|tmp
@@ -7034,7 +7034,7 @@ name|sc
 operator|->
 name|sc_if
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|statack
 decl_stmt|;
 name|FXP_LOCK
@@ -7354,7 +7354,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|statack
 parameter_list|,
 name|int
@@ -11677,42 +11677,42 @@ expr_stmt|;
 return|return;
 block|}
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fxp_ucode_d101a
 index|[]
 init|=
 name|D101_A_RCVBUNDLE_UCODE
 decl_stmt|;
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fxp_ucode_d101b0
 index|[]
 init|=
 name|D101_B0_RCVBUNDLE_UCODE
 decl_stmt|;
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fxp_ucode_d101ma
 index|[]
 init|=
 name|D101M_B_RCVBUNDLE_UCODE
 decl_stmt|;
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fxp_ucode_d101s
 index|[]
 init|=
 name|D101S_RCVBUNDLE_UCODE
 decl_stmt|;
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fxp_ucode_d102
 index|[]
 init|=
 name|D102_B_RCVBUNDLE_UCODE
 decl_stmt|;
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fxp_ucode_d102c
 index|[]
 init|=
@@ -11724,14 +11724,14 @@ name|UCODE
 parameter_list|(
 name|x
 parameter_list|)
-value|x, sizeof(x)/sizeof(u_int32_t)
+value|x, sizeof(x)/sizeof(uint32_t)
 struct|struct
 name|ucode
 block|{
-name|u_int32_t
+name|uint32_t
 name|revision
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ucode
 decl_stmt|;
@@ -11975,7 +11975,7 @@ name|int_delay_offset
 condition|)
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -12009,7 +12009,7 @@ name|bundle_max_offset
 condition|)
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&

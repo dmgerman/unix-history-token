@@ -296,7 +296,7 @@ decl_stmt|;
 name|bus_dmamap_t
 name|rx_map
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rx_addr
 decl_stmt|;
 block|}
@@ -381,7 +381,7 @@ name|fxp_cb_tx
 modifier|*
 name|cbl_list
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cbl_addr
 decl_stmt|;
 name|bus_dma_tag_t
@@ -492,7 +492,7 @@ modifier|*
 name|fxp_stats
 decl_stmt|;
 comment|/* Pointer to interface stats */
-name|u_int32_t
+name|uint32_t
 name|stats_addr
 decl_stmt|;
 comment|/* DMA address of the stats structure */
@@ -511,7 +511,7 @@ modifier|*
 name|mcsp
 decl_stmt|;
 comment|/* Pointer to mcast setup descriptor */
-name|u_int32_t
+name|uint32_t
 name|mcs_addr
 decl_stmt|;
 comment|/* DMA address of the multicast cmd */
@@ -559,29 +559,29 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|saved_maps
 index|[
 literal|5
 index|]
 decl_stmt|;
 comment|/* pci data */
-name|u_int32_t
+name|uint32_t
 name|saved_biosaddr
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|saved_intline
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|saved_cachelnsz
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|saved_lattimer
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rfa_size
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tx_cmd
 decl_stmt|;
 block|}
