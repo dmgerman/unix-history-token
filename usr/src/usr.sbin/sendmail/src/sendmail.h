@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.78		%G%"
+literal|"@(#)sendmail.h	3.79		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,9 @@ directive|endif
 endif|LOG
 end_endif
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/* **  Configuration constants. **	There shouldn't be much need to change these.... */
 end_comment
@@ -167,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|MAXATOM
-value|30
+value|100
 end_define
 
 begin_comment
@@ -194,18 +197,6 @@ end_define
 
 begin_comment
 comment|/* substitution for<lwsp> */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|Arpa_Info
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the message number for Arpanet info */
 end_comment
 
 begin_escape
@@ -2182,6 +2173,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Message-Id: for this message */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|Arpa_Info
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the message number for Arpanet info */
 end_comment
 
 begin_decl_stmt
