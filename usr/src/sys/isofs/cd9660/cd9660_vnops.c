@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2874,6 +2874,11 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
 name|u_short
 name|symlen
 decl_stmt|;
@@ -2901,6 +2906,12 @@ operator|=
 name|ip
 operator|->
 name|i_mnt
+expr_stmt|;
+name|uio
+operator|=
+name|ap
+operator|->
+name|a_uio
 expr_stmt|;
 if|if
 condition|(
@@ -3030,6 +3041,23 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Now get a buffer 	 * Abuse a namei buffer for now. 	 */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_SYSSPACE
+condition|)
+name|symname
+operator|=
+name|uio
+operator|->
+name|uio_iov
+operator|->
+name|iov_base
+expr_stmt|;
+else|else
 name|MALLOC
 argument_list|(
 name|symname
@@ -3062,6 +3090,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|!=
+name|UIO_SYSSPACE
+condition|)
 name|FREE
 argument_list|(
 name|symname
@@ -3087,6 +3123,15 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * return with the symbolic name to caller's. 	 */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|!=
+name|UIO_SYSSPACE
+condition|)
+block|{
 name|error
 operator|=
 name|uiomove
@@ -3095,9 +3140,7 @@ name|symname
 argument_list|,
 name|symlen
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -3110,6 +3153,34 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+name|uio
+operator|->
+name|uio_resid
+operator|-=
+name|symlen
+expr_stmt|;
+name|uio
+operator|->
+name|uio_iov
+operator|->
+name|iov_base
+operator|+=
+name|symlen
+expr_stmt|;
+name|uio
+operator|->
+name|uio_iov
+operator|->
+name|iov_len
+operator|-=
+name|symlen
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
