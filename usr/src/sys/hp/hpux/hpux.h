@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.1 90/07/09$  *  *	@(#)hpux.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.18 91/02/09$  *  *	@(#)hpux.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -192,6 +192,17 @@ define|#
 directive|define
 name|HPUXTIOCCONS
 value|_IO('t', 104)
+end_define
+
+begin_comment
+comment|/* non-blocking IO--doesn't interfere with O_NDELAY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXFIOSNBIO
+value|_IOW('f', 126, int)
 end_define
 
 begin_comment
