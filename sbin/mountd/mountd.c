@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "@(#)mountd.c	8.15 (Berkeley) 5/1/95"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mountd.c	8.15 (Berkeley) 5/1/95";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -45,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.30 1998/06/15 15:43:13 joerg Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,25 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
 end_include
 
 begin_include
@@ -98,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
 end_include
 
 begin_include
@@ -122,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|<rpc/pmap_clnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_prot.h>
 end_include
 
 begin_ifdef
@@ -197,6 +176,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1155,6 +1140,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|xdr_dir
 name|__P
@@ -1638,17 +1636,8 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: mountd [-d] [-l] [-r] [-n] [export_file]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -1737,11 +1726,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Getting export list.\n"
+literal|"getting export list"
 argument_list|)
 expr_stmt|;
 name|get_exportlist
@@ -1751,11 +1738,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Getting mount list.\n"
+literal|"getting mount list"
 argument_list|)
 expr_stmt|;
 name|get_mountlist
@@ -1765,11 +1750,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Here we go.\n"
+literal|"here we go"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1979,7 +1962,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't create socket"
+literal|"can't create socket"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2042,7 +2025,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register mount"
+literal|"can't register mount"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2086,7 +2069,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't register mount"
+literal|"can't register mount"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2102,7 +2085,28 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Mountd died"
+literal|"mountd died"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mountd [-2] [-d] [-l] [-n] [-r] [export_file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2278,7 +2282,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2410,7 +2414,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"mount request from %s for non existant path %s"
+literal|"mount request from %s for non existent path %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2424,11 +2428,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"stat failed on %s\n"
+literal|"stat failed on %s"
 argument_list|,
 name|dirpath
 argument_list|)
@@ -2567,7 +2569,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 name|sigprocmask
@@ -2652,7 +2654,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't get fh for %s"
+literal|"can't get fh for %s"
 argument_list|,
 name|dirpath
 argument_list|)
@@ -2677,7 +2679,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 name|sigprocmask
@@ -2712,7 +2714,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2767,11 +2769,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Mount successfull.\n"
+literal|"mount successful"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2836,7 +2836,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 name|sigprocmask
@@ -2872,7 +2872,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2977,7 +2977,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 name|hp
@@ -3090,7 +3090,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 name|hp
@@ -3181,7 +3181,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't send reply"
+literal|"can't send reply"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4479,7 +4479,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't delete exports for %s"
+literal|"can't delete exports for %s"
 argument_list|,
 name|fsp
 operator|->
@@ -4512,7 +4512,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't open %s"
+literal|"can't open %s"
 argument_list|,
 name|exname
 argument_list|)
@@ -4542,11 +4542,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Got line %s\n"
+literal|"got line %s"
 argument_list|,
 name|line
 argument_list|)
@@ -4678,11 +4676,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"doing opt %s\n"
+literal|"doing opt %s"
 argument_list|,
 name|cp
 argument_list|)
@@ -4774,7 +4770,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dirs must be first"
+literal|"dirs must be first"
 argument_list|)
 expr_stmt|;
 name|getexp_err
@@ -4927,11 +4923,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Making new ep fs=0x%x,0x%x\n"
+literal|"making new ep fs=0x%x,0x%x"
 argument_list|,
 name|fsb
 operator|.
@@ -4958,11 +4952,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Found ep fs=0x%x,0x%x\n"
+literal|"found ep fs=0x%x,0x%x"
 argument_list|,
 name|fsb
 operator|.
@@ -5117,7 +5109,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Null hostname in netgroup %s, skipping"
+literal|"null hostname in netgroup %s, skipping"
 argument_list|,
 name|cp
 argument_list|)
@@ -5146,7 +5138,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad host %s in netgroup %s, skipping"
+literal|"bad host %s in netgroup %s, skipping"
 argument_list|,
 name|hst
 argument_list|,
@@ -5178,7 +5170,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad host %s, skipping"
+literal|"bad host %s, skipping"
 argument_list|,
 name|cp
 argument_list|)
@@ -5276,11 +5268,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Adding a default entry\n"
+literal|"adding a default entry"
 argument_list|)
 expr_stmt|;
 comment|/* add a default group and make the grp list NULL */
@@ -5816,7 +5806,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad exports list line %s"
+literal|"bad exports list line %s"
 argument_list|,
 name|line
 argument_list|)
@@ -6000,6 +5990,20 @@ argument_list|)
 operator|+
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|==
+operator|(
+expr|struct
+name|dirlist
+operator|*
+operator|)
+name|NULL
+condition|)
+name|out_of_mem
+argument_list|()
 expr_stmt|;
 name|dp
 operator|->
@@ -6225,7 +6229,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Loop throught the directories adding them to the tree. 		 */
+comment|/* 		 * Loop through the directories adding them to the tree. 		 */
 while|while
 condition|(
 name|dp
@@ -7085,6 +7089,7 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cpoptend
 operator|=
 name|strchr
@@ -7093,6 +7098,7 @@ name|cpopt
 argument_list|,
 literal|','
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -7103,6 +7109,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cpoptarg
 operator|=
 name|strchr
@@ -7111,6 +7118,7 @@ name|cpopt
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cpoptarg
@@ -7123,6 +7131,7 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|cpoptarg
 operator|=
 name|strchr
@@ -7131,6 +7140,7 @@ name|cpopt
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cpoptarg
@@ -7370,7 +7380,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad mask: %s"
+literal|"bad mask: %s"
 argument_list|,
 name|cpoptarg
 argument_list|)
@@ -7426,7 +7436,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Network/host conflict"
+literal|"network/host conflict"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7457,7 +7467,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad net: %s"
+literal|"bad net: %s"
 argument_list|,
 name|cpoptarg
 argument_list|)
@@ -7605,7 +7615,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad iso addr: %s"
+literal|"bad iso addr: %s"
 argument_list|,
 name|cpoptarg
 argument_list|)
@@ -7638,7 +7648,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad opt %s"
+literal|"bad opt %s"
 argument_list|,
 name|cpopt
 argument_list|)
@@ -7833,7 +7843,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Inet_addr failed for %s"
+literal|"inet_addr failed for %s"
 argument_list|,
 name|cp
 argument_list|)
@@ -7932,7 +7942,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Gethostbyname failed for %s"
+literal|"gethostbyname failed for %s"
 argument_list|,
 name|cp
 argument_list|)
@@ -8269,11 +8279,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"got host %s\n"
+literal|"got host %s"
 argument_list|,
 name|hp
 operator|->
@@ -8695,7 +8703,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Out of memory"
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -9280,7 +9288,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Bad grouptype"
+literal|"bad grouptype"
 argument_list|)
 expr_stmt|;
 if|if
@@ -9356,7 +9364,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't change attributes for %s.\n"
+literal|"can't change attributes for %s"
 argument_list|,
 name|dirp
 argument_list|)
@@ -9378,7 +9386,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Could not remount %s: %m"
+literal|"could not remount %s: %m"
 argument_list|,
 name|dirp
 argument_list|)
@@ -9433,18 +9441,16 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mnt unsucc\n"
+literal|"mnt unsucc"
 argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't export %s"
+literal|"can't export %s"
 argument_list|,
 name|dirp
 argument_list|)
@@ -9590,7 +9596,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Due to arbritrary subnet masks, you don't know how many 		 * bits to shift the address to make it into a network, 		 * however you do know how to make a network address into 		 * a host with host == 0 and then compare them. 		 * (What a pest) 		 */
+comment|/* 		 * Due to arbitrary subnet masks, you don't know how many 		 * bits to shift the address to make it into a network, 		 * however you do know how to make a network address into 		 * a host with host == 0 and then compare them. 		 * (What a pest) 		 */
 if|if
 condition|(
 operator|!
@@ -9604,10 +9610,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|np
 operator|=
 name|getnetent
 argument_list|()
+operator|)
 condition|)
 block|{
 name|inetaddr2
@@ -10020,7 +10028,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Exports line too long"
+literal|"exports line too long"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -10105,7 +10113,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* 	 * Set up the unpriviledged user. 	 */
+comment|/* 	 * Set up the unprivileged user. 	 */
 name|cr
 operator|->
 name|cr_ref
@@ -10206,7 +10214,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Unknown user: %s"
+literal|"unknown user: %s"
 argument_list|,
 name|name
 argument_list|)
@@ -10249,7 +10257,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Too many groups"
+literal|"too many groups"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Convert from int's to gid_t's and compress out duplicate 		 */
@@ -10346,7 +10354,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Unknown user: %s"
+literal|"unknown user: %s"
 argument_list|,
 name|name
 argument_list|)
@@ -10437,7 +10445,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Unknown group: %s"
+literal|"unknown group: %s"
 argument_list|,
 name|name
 argument_list|)
@@ -10481,7 +10489,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Too many groups"
+literal|"too many groups"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10522,9 +10530,6 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
-name|len
-decl_stmt|;
 name|char
 name|str
 index|[
@@ -10555,7 +10560,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't open %s"
+literal|"can't open %s"
 argument_list|,
 name|_PATH_RMOUNTLIST
 argument_list|)
@@ -10631,6 +10636,20 @@ operator|*
 name|mlp
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mlp
+operator|==
+operator|(
+expr|struct
+name|mountlist
+operator|*
+operator|)
+name|NULL
+condition|)
+name|out_of_mem
+argument_list|()
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -10856,7 +10875,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't update %s"
+literal|"can't update %s"
 argument_list|,
 name|_PATH_RMOUNTLIST
 argument_list|)
@@ -11002,6 +11021,20 @@ name|mlp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mlp
+operator|==
+operator|(
+expr|struct
+name|mountlist
+operator|*
+operator|)
+name|NULL
+condition|)
+name|out_of_mem
+argument_list|()
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|mlp
@@ -11078,7 +11111,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't update %s"
+literal|"can't update %s"
 argument_list|,
 name|_PATH_RMOUNTLIST
 argument_list|)
