@@ -865,6 +865,8 @@ name|report
 argument_list|(
 name|LOG_INFO
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
