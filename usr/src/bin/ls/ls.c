@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.69 (Berkeley) %G%"
+literal|"@(#)ls.c	5.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,6 +1127,9 @@ specifier|register
 name|FTSENT
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|chp
 decl_stmt|;
 name|int
 name|ch_options
@@ -1317,22 +1320,30 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|display
-argument_list|(
-name|p
-argument_list|,
+name|chp
+operator|=
 name|fts_children
 argument_list|(
 name|ftsp
 argument_list|,
 name|ch_options
 argument_list|)
+expr_stmt|;
+name|display
+argument_list|(
+name|p
+argument_list|,
+name|chp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|f_recursive
+operator|&&
+name|chp
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
