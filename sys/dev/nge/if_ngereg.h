@@ -3433,6 +3433,14 @@ name|struct
 name|ifmedia
 name|nge_ifmedia
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|int
+name|rxcycles
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
