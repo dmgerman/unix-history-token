@@ -3,15 +3,35 @@ begin_comment
 comment|/*	kgclock.c	4.4	83/05/30	*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KGCLOCK
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"kg.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NKG
+operator|>
+literal|0
+end_if
 
 begin_comment
-comment|/* kl-11 as profiling clock */
+comment|/*  * KL-11 as profiling clock  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/psl.h"
+end_include
 
 begin_include
 include|#
@@ -28,13 +48,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/pte.h"
+file|"../h/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"../h/time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
@@ -42,20 +68,6 @@ include|#
 directive|include
 file|"../vaxuba/ubavar.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"../machine/psl.h"
-end_include
-
-begin_decl_stmt
-name|int
-name|phz
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -309,18 +321,12 @@ specifier|register
 name|int
 name|k
 decl_stmt|;
-specifier|extern
-name|time_t
-name|time
-decl_stmt|;
 specifier|static
-name|time_t
+name|long
 name|otime
-init|=
-literal|0
 decl_stmt|;
 specifier|static
-name|time_t
+name|long
 name|calibrate
 decl_stmt|;
 name|klbase
@@ -347,6 +353,8 @@ block|{
 name|otime
 operator|=
 name|time
+operator|.
+name|tv_sec
 operator|+
 literal|1
 expr_stmt|;
@@ -358,6 +366,8 @@ block|}
 if|if
 condition|(
 name|time
+operator|.
+name|tv_sec
 operator|>=
 name|otime
 condition|)
@@ -367,6 +377,8 @@ expr_stmt|;
 if|if
 condition|(
 name|time
+operator|.
+name|tv_sec
 operator|>=
 name|otime
 operator|+
@@ -400,7 +412,6 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|KGCLOCK
 end_endif
 
 end_unit
