@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.4 (Berkeley) 4/16/94  * $Id: mfs_vfsops.c,v 1.14 1995/11/09 08:14:26 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.4 (Berkeley) 4/16/94  * $Id: mfs_vfsops.c,v 1.15 1995/11/28 02:15:29 peter Exp $  */
 end_comment
 
 begin_include
@@ -230,116 +230,42 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * This is called early in boot to set the base address and size  * of the mini-root.  *  * XXX THIS IS A DESIGN ERROR; THIS CODE SHOULD BE MOVED INTO  * XXX THE ROOT MOUNT CODE IN "mfs_mount"!!!  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MFS_ROOT
+end_ifdef
 
-begin_function
-name|int
-name|mfs_initminiroot
-parameter_list|(
-name|base
-parameter_list|)
-name|caddr_t
-name|base
-decl_stmt|;
-block|{
-name|struct
-name|fs
-modifier|*
-name|fs
-init|=
-operator|(
-expr|struct
-name|fs
+begin_decl_stmt
+name|u_char
+name|mfs_root
+index|[
+name|MFS_ROOT
 operator|*
-operator|)
-operator|(
-name|base
-operator|+
-name|SBOFF
-operator|)
-decl_stmt|;
-comment|/* check for valid super block */
-if|if
-condition|(
-name|fs
-operator|->
-name|fs_magic
-operator|!=
-name|FS_MAGIC
-operator|||
-name|fs
-operator|->
-name|fs_bsize
-operator|>
-name|MAXBSIZE
-operator|||
-name|fs
-operator|->
-name|fs_bsize
-operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fs
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|mountroot
-operator|=
-name|vfs_mountroot
-expr_stmt|;
-comment|/* XXX goes away*/
-name|mountrootvfsops
-operator|=
-operator|&
-name|mfs_vfsops
-expr_stmt|;
-name|mfs_rootbase
-operator|=
-name|base
-expr_stmt|;
-name|mfs_rootsize
-operator|=
-name|fs
-operator|->
-name|fs_fsize
-operator|*
-name|fs
-operator|->
-name|fs_size
-expr_stmt|;
-name|rootdev
-operator|=
-name|makedev
-argument_list|(
-literal|255
-argument_list|,
-name|mfs_minor
-operator|++
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"rootfs is %ld Kbyte compiled in MFS\n"
-argument_list|,
-name|mfs_rootsize
-operator|/
 literal|1024
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|mfs_rootsize
-operator|)
-return|;
-block|}
-end_function
+index|]
+init|=
+literal|"MFS Filesystem goes here"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+name|end_mfs_root
+index|[]
+init|=
+literal|"MFS Filesystem had better STOP here"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MFS_ROOT */
+end_comment
 
 begin_comment
 comment|/*  * mfs_mount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	NULL (flag for root mount!!!)  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  */
@@ -430,6 +356,88 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 *** 		 * Mounting root file system 		 *** 		 */
+ifdef|#
+directive|ifdef
+name|MFS_ROOT
+comment|/* Location of MFS/FFS superblock */
+name|fs
+operator|=
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|)
+operator|(
+name|mfs_root
+operator|+
+name|SBOFF
+operator|)
+expr_stmt|;
+comment|/* recheck for valid super block */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_magic
+operator|!=
+name|FS_MAGIC
+operator|||
+name|fs
+operator|->
+name|fs_bsize
+operator|>
+name|MAXBSIZE
+operator|||
+name|fs
+operator|->
+name|fs_bsize
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|fs
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"MFS image is invalid!!"
+argument_list|)
+expr_stmt|;
+block|}
+name|mfs_rootbase
+operator|=
+name|mfs_root
+expr_stmt|;
+name|mfs_rootsize
+operator|=
+name|fs
+operator|->
+name|fs_fsize
+operator|*
+name|fs
+operator|->
+name|fs_size
+expr_stmt|;
+name|rootdev
+operator|=
+name|makedev
+argument_list|(
+literal|255
+argument_list|,
+name|mfs_minor
+operator|++
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rootfs is %ld Kbyte compiled in MFS\n"
+argument_list|,
+name|mfs_rootsize
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
 comment|/* Get vnode for root device*/
 if|if
 condition|(
@@ -556,6 +564,17 @@ goto|goto
 name|dostatfs
 goto|;
 comment|/* success*/
+else|#
+directive|else
+comment|/* you loose */
+name|panic
+argument_list|(
+literal|"mfs_mount: mount MFS as root: not configured!"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MFS_ROOT */
 block|}
 comment|/* 	 *** 	 * Mounting non-root file system or updating a file system 	 *** 	 */
 comment|/* copy in user arguments*/
