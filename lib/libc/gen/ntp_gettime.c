@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ntp_gettime.c,v 1.1 1994/09/18 20:29:46 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ end_include
 
 begin_function
 name|int
-name|gethostname
+name|ntp_gettime
 parameter_list|(
 name|struct
 name|ntptimeval
