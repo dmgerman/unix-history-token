@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -464,6 +464,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|sp
+operator|->
+name|vp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|lastino
 operator|=
@@ -471,6 +477,22 @@ name|blkp
 operator|->
 name|bi_inode
 expr_stmt|;
+if|if
+condition|(
+name|blkp
+operator|->
+name|bi_inode
+operator|==
+name|LFS_IFILE_INUM
+condition|)
+name|v_daddr
+operator|=
+name|fs
+operator|->
+name|lfs_idaddr
+expr_stmt|;
+else|else
+block|{
 name|LFS_IENTRY
 argument_list|(
 name|ifp
@@ -495,6 +517,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|v_daddr
@@ -588,20 +611,8 @@ operator|==
 name|LFS_UNUSED_LBN
 condition|)
 continue|continue;
-comment|/* 		 * If change time later than segment create time, see if the 		 * block has been replaced. 		 */
 if|if
 condition|(
-name|ip
-operator|->
-name|i_ctime
-operator|.
-name|ts_sec
-operator|>
-name|blkp
-operator|->
-name|bi_segcreate
-operator|&&
-operator|(
 name|VOP_BMAP
 argument_list|(
 name|vp
@@ -621,7 +632,6 @@ operator|!=
 name|blkp
 operator|->
 name|bi_daddr
-operator|)
 condition|)
 continue|continue;
 comment|/* 		 * If we got to here, then we are keeping the block.  If it 		 * is an indirect block, we want to actually put it in the 		 * buffer cache so that it can be updated in the finish_meta 		 * section.  If it's not, we need to allocate a fake buffer 		 * so that writeseg can perform the copyin and write the buffer. 		 */
@@ -1090,6 +1100,15 @@ control|)
 block|{
 if|if
 condition|(
+name|blkp
+operator|->
+name|bi_lbn
+operator|==
+name|LFS_UNUSED_LBN
+condition|)
+continue|continue;
+if|if
+condition|(
 name|VFS_VGET
 argument_list|(
 name|mntp
@@ -1356,27 +1375,6 @@ name|su_flags
 operator|&=
 operator|~
 name|SEGUSE_DIRTY
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"segclean: segment %d has %d bytes %d sums %d ninos\n"
-argument_list|,
-name|uap
-operator|->
-name|segment
-argument_list|,
-name|sup
-operator|->
-name|su_nbytes
-argument_list|,
-name|sup
-operator|->
-name|su_nsums
-argument_list|,
-name|sup
-operator|->
-name|su_ninos
-argument_list|)
 expr_stmt|;
 operator|(
 name|void
