@@ -869,19 +869,12 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_set_short
-argument_list|(
-operator|&
-operator|(
 name|m
-operator|)
 operator|->
 name|flags
-argument_list|,
+operator||=
 name|bits
-argument_list|)
 expr_stmt|;
-comment|/* m->flags |= bits; */
 block|}
 end_function
 
@@ -899,19 +892,13 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_clear_short
-argument_list|(
-operator|&
-operator|(
 name|m
-operator|)
 operator|->
 name|flags
-argument_list|,
+operator|&=
+operator|~
 name|bits
-argument_list|)
 expr_stmt|;
-comment|/* m->flags&= ~bits; */
 block|}
 end_function
 
@@ -1041,17 +1028,10 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_add_char
-argument_list|(
-operator|&
-operator|(
 name|m
-operator|)
 operator|->
 name|busy
-argument_list|,
-literal|1
-argument_list|)
+operator|++
 expr_stmt|;
 block|}
 end_function
@@ -1066,17 +1046,10 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_subtract_char
-argument_list|(
-operator|&
-operator|(
 name|m
-operator|)
 operator|->
 name|busy
-argument_list|,
-literal|1
-argument_list|)
+operator|--
 expr_stmt|;
 if|if
 condition|(

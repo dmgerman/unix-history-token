@@ -25,12 +25,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
 begin_enum
 enum|enum
 name|obj_type

@@ -46,12 +46,6 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
 begin_comment
 comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  *  *	The 'valid' and 'dirty' fields are distinct.  A page may have dirty  *	bits set without having associated valid bits set.  This is used by  *	NFS to implement piecemeal writes.  */
 end_comment
