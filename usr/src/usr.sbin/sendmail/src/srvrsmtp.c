@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.31 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.32 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.31 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.32 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +426,14 @@ name|skipword
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|RealUserName
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1360,6 +1368,51 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* check for possible spoofing */
+if|if
+condition|(
+name|RealUid
+operator|!=
+literal|0
+operator|&&
+name|OpMode
+operator|==
+name|MD_SMTP
+operator|&&
+operator|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|!=
+name|LocalMailer
+operator|&&
+name|strcmp
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_user
+argument_list|,
+name|RealUserName
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"%s owned process doing -bs"
+argument_list|,
+name|RealUserName
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* now parse ESMTP arguments */
 name|msize
 operator|=

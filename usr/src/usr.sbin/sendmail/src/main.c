@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.50 (Berkeley) %G%"
+literal|"@(#)main.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3235,25 +3235,6 @@ comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
 name|NULL
-expr_stmt|;
-break|break;
-case|case
-name|MD_SMTP
-case|:
-if|if
-condition|(
-name|RealUid
-operator|!=
-literal|0
-condition|)
-name|auth_warning
-argument_list|(
-name|CurEnv
-argument_list|,
-literal|"%s owned process doing -bs"
-argument_list|,
-name|RealUserName
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
