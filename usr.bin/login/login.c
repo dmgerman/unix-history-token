@@ -592,6 +592,20 @@ name|DEFAULT_RETRIES
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_PROMPT
+value|"login: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PASSWD_PROMPT
+value|"Password:"
+end_define
+
 begin_comment
 comment|/*  * This bounds the time given to login.  Not a define so it can  * be patched on machines where it's too small.  */
 end_comment
@@ -643,10 +657,16 @@ modifier|*
 name|hostname
 decl_stmt|,
 modifier|*
-name|username
+name|passwd_prompt
+decl_stmt|,
+modifier|*
+name|prompt
 decl_stmt|,
 modifier|*
 name|tty
+decl_stmt|,
+modifier|*
+name|username
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,6 +1285,32 @@ operator|=
 name|login_getclass
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+name|prompt
+operator|=
+name|login_getcapstr
+argument_list|(
+name|lc
+argument_list|,
+literal|"prompt"
+argument_list|,
+name|DEFAULT_PROMPT
+argument_list|,
+name|DEFAULT_PROMPT
+argument_list|)
+expr_stmt|;
+name|passwd_prompt
+operator|=
+name|login_getcapstr
+argument_list|(
+name|lc
+argument_list|,
+literal|"passwd_prompt"
+argument_list|,
+name|DEFAULT_PASSWD_PROMPT
+argument_list|,
+name|DEFAULT_PASSWD_PROMPT
 argument_list|)
 expr_stmt|;
 name|retries
@@ -3392,7 +3438,7 @@ name|p
 operator|=
 name|getpass
 argument_list|(
-literal|"Password:"
+name|passwd_prompt
 argument_list|)
 expr_stmt|;
 name|ep
@@ -4142,7 +4188,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"login: "
+name|prompt
 argument_list|)
 expr_stmt|;
 for|for
