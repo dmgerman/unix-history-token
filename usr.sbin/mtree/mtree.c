@@ -615,7 +615,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mtree [-cdeiLnrUux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"usage: mtree [-LUcdeinrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
 literal|"\t[-X excludes]\n"
 argument_list|)
 expr_stmt|;
