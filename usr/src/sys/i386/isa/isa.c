@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -868,28 +868,6 @@ comment|/* stuff needed for virtual to physical calculations */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|char
-name|Sysbase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|sbase
-init|=
-operator|(
-name|unsigned
-name|long
-operator|)
-operator|&
-name|Sysbase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|buf
 modifier|*
@@ -908,7 +886,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* XXX temporary */
+comment|/* XXX temporary crud */
 end_comment
 
 begin_macro
@@ -929,19 +907,9 @@ begin_block
 block|{
 if|if
 condition|(
-operator|(
 name|x
 operator|>=
-name|sbase
-operator|)
-operator|&
-operator|(
-name|x
-operator|<
-name|sbase
-operator|+
-literal|0x800000
-operator|)
+name|KERNBASE
 condition|)
 return|return
 literal|1
