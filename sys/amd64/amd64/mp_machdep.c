@@ -659,7 +659,7 @@ block|{
 if|if
 condition|(
 name|apic_id
-operator|>
+operator|>=
 name|MAXCPU
 condition|)
 block|{
@@ -670,6 +670,8 @@ argument_list|,
 name|apic_id
 argument_list|,
 name|MAXCPU
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
