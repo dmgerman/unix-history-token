@@ -3317,7 +3317,7 @@ name|free
 argument_list|(
 name|ata_delayed_attach
 argument_list|,
-name|M_ATA
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 name|ata_delayed_attach
