@@ -1577,26 +1577,6 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
-literal|"ze"
-block|,
-literal|"IBM/National Semiconductor PCMCIA Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"zp"
-block|,
-literal|"3COM PCMCIA Etherlink III Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
 literal|"dc"
 block|,
 literal|"DEC/Intel 21143 or clone Ethernet adapter"
