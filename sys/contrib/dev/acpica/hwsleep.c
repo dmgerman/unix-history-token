@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_include
@@ -33,28 +33,14 @@ value|ACPI_HARDWARE
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"hwsleep"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-specifier|static
-name|UINT8
-name|SleepTypeA
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|UINT8
-name|SleepTypeB
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - Physical address of ACPI real mode  *                                    entry point.  *  * RETURN:      AE_OK or AE_ERROR  *  * DESCRIPTION: Access function for dFirmwareWakingVector field in FACS  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - Physical address of ACPI real mode  *                                    entry point.  *  * RETURN:      Status  *  * DESCRIPTION: Access function for dFirmwareWakingVector field in FACS  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -65,29 +51,16 @@ name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|)
 block|{
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiSetFirmwareWakingVector"
 argument_list|)
 expr_stmt|;
-comment|/* Make sure that we have an FACS */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_FACS
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_ACPI_TABLES
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set the vector */
 if|if
 condition|(
-name|AcpiGbl_FACS
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|VectorWidth
 operator|==
 literal|32
@@ -98,8 +71,8 @@ operator|(
 name|UINT32
 operator|*
 operator|)
-name|AcpiGbl_FACS
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|FirmwareWakingVector
 operator|=
 operator|(
@@ -111,8 +84,8 @@ block|}
 else|else
 block|{
 operator|*
-name|AcpiGbl_FACS
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|FirmwareWakingVector
 operator|=
 name|PhysicalAddress
@@ -127,7 +100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareWakingVector  *  * PARAMETERS:  *PhysicalAddress    - Output buffer where contents of  *                                    the FirmwareWakingVector field of  *                                    the FACS will be stored.  *  * RETURN:      Status  *  * DESCRIPTION: Access function for dFirmwareWakingVector field in FACS  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiGetFirmwareWakingVector  *  * PARAMETERS:  *PhysicalAddress    - Output buffer where contents of  *                                    the FirmwareWakingVector field of  *                                    the FACS will be stored.  *  * RETURN:      Status  *  * DESCRIPTION: Access function for FirmwareWakingVector field in FACS  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -139,7 +112,7 @@ modifier|*
 name|PhysicalAddress
 parameter_list|)
 block|{
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiGetFirmwareWakingVector"
 argument_list|)
@@ -156,24 +129,11 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Make sure that we have an FACS */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_FACS
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_ACPI_TABLES
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Get the vector */
 if|if
 condition|(
-name|AcpiGbl_FACS
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|VectorWidth
 operator|==
 literal|32
@@ -187,8 +147,8 @@ operator|(
 name|UINT32
 operator|*
 operator|)
-name|AcpiGbl_FACS
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|FirmwareWakingVector
 expr_stmt|;
 block|}
@@ -198,8 +158,8 @@ operator|*
 name|PhysicalAddress
 operator|=
 operator|*
-name|AcpiGbl_FACS
-operator|->
+name|AcpiGbl_CommonFACS
+operator|.
 name|FirmwareWakingVector
 expr_stmt|;
 block|}
@@ -232,7 +192,7 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|Arg
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEnterSleepStatePrep"
 argument_list|)
@@ -240,21 +200,20 @@ expr_stmt|;
 comment|/*      * _PSW methods could be run here to enable wake-on keyboard, LAN, etc.      */
 name|Status
 operator|=
-name|AcpiHwObtainSleepTypeRegisterData
+name|AcpiHwGetSleepTypeData
 argument_list|(
 name|SleepState
 argument_list|,
 operator|&
-name|SleepTypeA
+name|AcpiGbl_SleepTypeA
 argument_list|,
 operator|&
-name|SleepTypeB
+name|AcpiGbl_SleepTypeB
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
@@ -266,20 +225,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* run the _PTS and _GTS methods */
-name|MEMSET
-argument_list|(
-operator|&
-name|ArgList
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ArgList
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Setup parameter object */
 name|ArgList
 operator|.
 name|Count
@@ -292,19 +238,6 @@ name|Pointer
 operator|=
 operator|&
 name|Arg
-expr_stmt|;
-name|MEMSET
-argument_list|(
-operator|&
-name|Arg
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Arg
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|Arg
 operator|.
@@ -320,6 +253,9 @@ name|Value
 operator|=
 name|SleepState
 expr_stmt|;
+comment|/* Run the _PTS and _GTS methods */
+name|Status
+operator|=
 name|AcpiEvaluateObject
 argument_list|(
 name|NULL
@@ -332,6 +268,26 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
 name|AcpiEvaluateObject
 argument_list|(
 name|NULL
@@ -344,6 +300,24 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -370,10 +344,18 @@ decl_stmt|;
 name|UINT16
 name|PM1BControl
 decl_stmt|;
+name|ACPI_BIT_REGISTER_INFO
+modifier|*
+name|SleepTypeRegInfo
+decl_stmt|;
+name|ACPI_BIT_REGISTER_INFO
+modifier|*
+name|SleepEnableRegInfo
+decl_stmt|;
 name|UINT32
 name|Retry
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEnterSleepState"
 argument_list|)
@@ -381,54 +363,67 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|SleepTypeA
+name|AcpiGbl_SleepTypeA
 operator|>
 name|ACPI_SLEEP_TYPE_MAX
 operator|)
 operator|||
 operator|(
-name|SleepTypeB
+name|AcpiGbl_SleepTypeB
 operator|>
 name|ACPI_SLEEP_TYPE_MAX
 operator|)
 condition|)
 block|{
-name|REPORT_ERROR
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
 literal|"Sleep values out of range: A=%x B=%x\n"
 operator|,
-name|SleepTypeA
+name|AcpiGbl_SleepTypeA
 operator|,
-name|SleepTypeB
+name|AcpiGbl_SleepTypeB
 operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_ERROR
+name|AE_AML_OPERAND_VALUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* clear wake status */
-name|AcpiHwRegisterBitAccess
+name|SleepTypeRegInfo
+operator|=
+name|AcpiHwGetBitRegisterInfo
 argument_list|(
-name|ACPI_WRITE
-argument_list|,
-name|ACPI_MTX_LOCK
-argument_list|,
-name|WAK_STS
+name|ACPI_BITREG_SLEEP_TYPE_A
+argument_list|)
+expr_stmt|;
+name|SleepEnableRegInfo
+operator|=
+name|AcpiHwGetBitRegisterInfo
+argument_list|(
+name|ACPI_BITREG_SLEEP_ENABLE
+argument_list|)
+expr_stmt|;
+comment|/* Clear wake status */
+name|AcpiHwBitRegisterWrite
+argument_list|(
+name|ACPI_BITREG_WAKE_STATUS
 argument_list|,
 literal|1
+argument_list|,
+name|ACPI_MTX_LOCK
 argument_list|)
 expr_stmt|;
 name|AcpiHwClearAcpiStatus
 argument_list|()
 expr_stmt|;
-comment|/* disable arbitration here? */
+comment|/* TBD: Disable arbitration here? */
 name|AcpiHwDisableNonWakeupGpes
 argument_list|()
 expr_stmt|;
+comment|/* Get current value of PM1A control */
 name|PM1AControl
 operator|=
 operator|(
@@ -438,7 +433,7 @@ name|AcpiHwRegisterRead
 argument_list|(
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1_CONTROL
+name|ACPI_REGISTER_PM1_CONTROL
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -452,49 +447,51 @@ name|SleepState
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* mask off SLP_EN and SLP_TYP fields */
+comment|/* Clear SLP_EN and SLP_TYP fields */
 name|PM1AControl
 operator|&=
 operator|~
 operator|(
-name|SLP_TYPE_X_MASK
+name|SleepTypeRegInfo
+operator|->
+name|AccessBitMask
 operator||
-name|SLP_EN_MASK
+name|SleepEnableRegInfo
+operator|->
+name|AccessBitMask
 operator|)
 expr_stmt|;
 name|PM1BControl
 operator|=
 name|PM1AControl
 expr_stmt|;
-comment|/* mask in SLP_TYP */
+comment|/* Insert SLP_TYP bits */
 name|PM1AControl
 operator||=
 operator|(
-name|SleepTypeA
+name|AcpiGbl_SleepTypeA
 operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_TYPE_X_MASK
-argument_list|)
+name|SleepTypeRegInfo
+operator|->
+name|BitPosition
 operator|)
 expr_stmt|;
 name|PM1BControl
 operator||=
 operator|(
-name|SleepTypeB
+name|AcpiGbl_SleepTypeB
 operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_TYPE_X_MASK
-argument_list|)
+name|SleepTypeRegInfo
+operator|->
+name|BitPosition
 operator|)
 expr_stmt|;
-comment|/* write #1: fill in SLP_TYP data */
+comment|/* Write #1: fill in SLP_TYP data */
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1A_CONTROL
+name|ACPI_REGISTER_PM1A_CONTROL
 argument_list|,
 name|PM1AControl
 argument_list|)
@@ -503,40 +500,30 @@ name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1B_CONTROL
+name|ACPI_REGISTER_PM1B_CONTROL
 argument_list|,
 name|PM1BControl
 argument_list|)
 expr_stmt|;
-comment|/* mask in SLP_EN */
+comment|/* Insert SLP_ENABLE bit */
 name|PM1AControl
 operator||=
-operator|(
-literal|1
-operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_EN_MASK
-argument_list|)
-operator|)
+name|SleepEnableRegInfo
+operator|->
+name|AccessBitMask
 expr_stmt|;
 name|PM1BControl
 operator||=
-operator|(
-literal|1
-operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_EN_MASK
-argument_list|)
-operator|)
+name|SleepEnableRegInfo
+operator|->
+name|AccessBitMask
 expr_stmt|;
-comment|/* write #2: SLP_TYP + SLP_EN */
+comment|/* Write #2: SLP_TYP + SLP_EN */
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1A_CONTROL
+name|ACPI_REGISTER_PM1A_CONTROL
 argument_list|,
 name|PM1AControl
 argument_list|)
@@ -545,7 +532,7 @@ name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1B_CONTROL
+name|ACPI_REGISTER_PM1B_CONTROL
 argument_list|,
 name|PM1BControl
 argument_list|)
@@ -567,21 +554,16 @@ name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1_CONTROL
+name|ACPI_REGISTER_PM1_CONTROL
 argument_list|,
-operator|(
-literal|1
-operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_EN_MASK
-argument_list|)
-operator|)
+name|SleepEnableRegInfo
+operator|->
+name|AccessBitMask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* wait until we enter sleep state */
-comment|/* spin until we wake */
+comment|/* Wait until we enter sleep state */
+comment|/* Spin until we wake */
 name|Retry
 operator|=
 literal|1000
@@ -589,17 +571,15 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|AcpiHwRegisterBitAccess
+name|AcpiHwBitRegisterRead
 argument_list|(
-name|ACPI_READ
+name|ACPI_BITREG_WAKE_STATUS
 argument_list|,
 name|ACPI_MTX_LOCK
-argument_list|,
-name|WAK_STS
 argument_list|)
 condition|)
 block|{
-comment|/*          * Some BIOSes don't set WAK_STS at all,          * give up waiting for wakeup if we time out.          */
+comment|/* 	 * Some BIOSes don't set WAK_STS at all, 	 * give up waiting for wakeup if we time out. 	 */
 if|if
 condition|(
 name|Retry
@@ -638,29 +618,20 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|Arg
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiLeaveSleepState"
 argument_list|)
 expr_stmt|;
 comment|/* Ensure EnterSleepStatePrep -> EnterSleepState ordering */
-name|SleepTypeA
+name|AcpiGbl_SleepTypeA
 operator|=
 name|ACPI_SLEEP_TYPE_INVALID
 expr_stmt|;
-name|MEMSET
-argument_list|(
-operator|&
-name|ArgList
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ArgList
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Setup parameter object */
 name|ArgList
 operator|.
 name|Count
@@ -673,19 +644,6 @@ name|Pointer
 operator|=
 operator|&
 name|Arg
-expr_stmt|;
-name|MEMSET
-argument_list|(
-operator|&
-name|Arg
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Arg
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|Arg
 operator|.
@@ -701,6 +659,9 @@ name|Value
 operator|=
 name|SleepState
 expr_stmt|;
+comment|/* Ignore any errors from these methods */
+name|Status
+operator|=
 name|AcpiEvaluateObject
 argument_list|(
 name|NULL
@@ -713,6 +674,33 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method _BFS failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
 name|AcpiEvaluateObject
 argument_list|(
 name|NULL
@@ -725,6 +713,31 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method _WAK failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* _WAK returns stuff - do we want to look at it? */
 name|AcpiHwEnableNonWakeupGpes
 argument_list|()

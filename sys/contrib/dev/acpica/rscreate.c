@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 38 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 53 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -45,7 +45,7 @@ value|ACPI_RESOURCES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"rscreate"
 argument_list|)
@@ -63,13 +63,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ByteStreamBuffer
 parameter_list|,
-name|UINT8
+name|ACPI_BUFFER
 modifier|*
 name|OutputBuffer
-parameter_list|,
-name|UINT32
-modifier|*
-name|OutputBufferLength
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -79,7 +75,7 @@ name|UINT8
 modifier|*
 name|ByteStreamStart
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|ListSizeNeeded
 init|=
 literal|0
@@ -87,7 +83,7 @@ decl_stmt|;
 name|UINT32
 name|ByteStreamBufferLength
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsCreateResourceList"
 argument_list|)
@@ -160,37 +156,31 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Is caller buffer large enough?      */
-if|if
-condition|(
-name|ListSizeNeeded
-operator|>
-operator|*
-name|OutputBufferLength
-condition|)
-block|{
-operator|*
-name|OutputBufferLength
+comment|/* Validate/Allocate/Clear caller buffer */
+name|Status
 operator|=
-name|ListSizeNeeded
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BUFFER_OVERFLOW
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Zero out the return buffer before proceeding      */
-name|MEMSET
+name|AcpiUtInitializeBuffer
 argument_list|(
 name|OutputBuffer
 argument_list|,
-literal|0x00
-argument_list|,
-operator|*
-name|OutputBufferLength
+name|ListSizeNeeded
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Do the conversion */
 name|Status
 operator|=
 name|AcpiRsByteStreamToList
@@ -199,8 +189,9 @@ name|ByteStreamStart
 argument_list|,
 name|ByteStreamBufferLength
 argument_list|,
-operator|&
 name|OutputBuffer
+operator|->
+name|Pointer
 argument_list|)
 expr_stmt|;
 if|if
@@ -222,16 +213,17 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"OutputBuffer = %p\n"
+literal|"OutputBuffer %p Length %X\n"
 operator|,
 name|OutputBuffer
+operator|->
+name|Pointer
+operator|,
+name|OutputBuffer
+operator|->
+name|Length
 operator|)
 argument_list|)
-expr_stmt|;
-operator|*
-name|OutputBufferLength
-operator|=
-name|ListSizeNeeded
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -242,7 +234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                        package  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBufferLength will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreatePciRoutingTable  *  * PARAMETERS:  PackageObject           - Pointer to an ACPI_OPERAND_OBJECT  *                                        package  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the ACPI_OPERAND_OBJECT  package and creates a  *              linked list of PCI interrupt descriptions  *  * NOTE: It is the caller's responsibility to ensure that the start of the  * output buffer is aligned properly (if necessary).  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -253,20 +245,14 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|PackageObject
 parameter_list|,
-name|UINT8
+name|ACPI_BUFFER
 modifier|*
 name|OutputBuffer
-parameter_list|,
-name|UINT32
-modifier|*
-name|OutputBufferLength
 parameter_list|)
 block|{
 name|UINT8
 modifier|*
 name|Buffer
-init|=
-name|OutputBuffer
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -288,7 +274,7 @@ name|PackageElement
 init|=
 name|NULL
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|BufferSizeNeeded
 init|=
 literal|0
@@ -303,7 +289,7 @@ name|Index
 init|=
 literal|0
 decl_stmt|;
-name|PCI_ROUTING_TABLE
+name|ACPI_PCI_ROUTING_TABLE
 modifier|*
 name|UserPrt
 init|=
@@ -316,12 +302,16 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_BUFFER
+name|PathBuffer
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsCreatePciRoutingTable"
 argument_list|)
 expr_stmt|;
-comment|/*      * Params already validated, so we don't re-validate here      */
+comment|/* Params already validated, so we don't re-validate here */
+comment|/*      * Get the required buffer length      */
 name|Status
 operator|=
 name|AcpiRsCalculatePciRoutingTableLength
@@ -334,8 +324,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
@@ -358,38 +347,31 @@ name|BufferSizeNeeded
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Is caller buffer large enough? */
-if|if
-condition|(
-name|BufferSizeNeeded
-operator|>
-operator|*
-name|OutputBufferLength
-condition|)
-block|{
-operator|*
-name|OutputBufferLength
+comment|/* Validate/Allocate/Clear caller buffer */
+name|Status
 operator|=
-name|BufferSizeNeeded
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BUFFER_OVERFLOW
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Zero out the return buffer before proceeding      */
-name|MEMSET
+name|AcpiUtInitializeBuffer
 argument_list|(
 name|OutputBuffer
 argument_list|,
-literal|0x00
-argument_list|,
-operator|*
-name|OutputBufferLength
+name|BufferSizeNeeded
 argument_list|)
 expr_stmt|;
-comment|/*      * Loop through the ACPI_INTERNAL_OBJECTS - Each object should      * contain a UINT32 Address, a UINT8 Pin, a Name and a UINT8      * SourceIndex.      */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Loop through the ACPI_INTERNAL_OBJECTS - Each object should contain an      * ACPI_INTEGER Address, a UINT8 Pin, a Name and a UINT8 SourceIndex.      */
 name|TopObjectList
 operator|=
 name|PackageObject
@@ -406,22 +388,19 @@ name|Package
 operator|.
 name|Count
 expr_stmt|;
+name|Buffer
+operator|=
+name|OutputBuffer
+operator|->
+name|Pointer
+expr_stmt|;
 name|UserPrt
 operator|=
 operator|(
-name|PCI_ROUTING_TABLE
+name|ACPI_PCI_ROUTING_TABLE
 operator|*
 operator|)
 name|Buffer
-expr_stmt|;
-name|Buffer
-operator|=
-name|ROUND_PTR_UP_TO_8
-argument_list|(
-name|Buffer
-argument_list|,
-name|UINT8
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -447,12 +426,12 @@ expr_stmt|;
 name|UserPrt
 operator|=
 operator|(
-name|PCI_ROUTING_TABLE
+name|ACPI_PCI_ROUTING_TABLE
 operator|*
 operator|)
 name|Buffer
 expr_stmt|;
-comment|/*          * Fill in the Length field with the information we          * have at this point.          * The minus four is to subtract the size of the          * UINT8 Source[4] member because it is added below.          */
+comment|/*          * Fill in the Length field with the information we have at this point.          * The minus four is to subtract the size of the UINT8 Source[4] member          * because it is added below.          */
 name|UserPrt
 operator|->
 name|Length
@@ -460,7 +439,7 @@ operator|=
 operator|(
 sizeof|sizeof
 argument_list|(
-name|PCI_ROUTING_TABLE
+name|ACPI_PCI_ROUTING_TABLE
 argument_list|)
 operator|-
 literal|4
@@ -472,7 +451,7 @@ operator|=
 operator|*
 name|TopObjectList
 expr_stmt|;
-comment|/*          * The SubObjectList will now point to an array of          * the four IRQ elements: Address, Pin, Source and          * SourceIndex          */
+comment|/*          * The SubObjectList will now point to an array of the four IRQ          * elements: Address, Pin, Source and SourceIndex          */
 name|SubObjectList
 operator|=
 name|PackageElement
@@ -672,10 +651,13 @@ operator|.
 name|Node
 expr_stmt|;
 comment|/* Use *remaining* length of the buffer as max for pathname */
-name|BufferSizeNeeded
+name|PathBuffer
+operator|.
+name|Length
 operator|=
-operator|*
-name|OutputBufferLength
+name|OutputBuffer
+operator|->
+name|Length
 operator|-
 call|(
 name|UINT32
@@ -689,8 +671,22 @@ name|UserPrt
 operator|->
 name|Source
 operator|-
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|OutputBuffer
+operator|->
+name|Pointer
 argument_list|)
+expr_stmt|;
+name|PathBuffer
+operator|.
+name|Pointer
+operator|=
+name|UserPrt
+operator|->
+name|Source
 expr_stmt|;
 name|Status
 operator|=
@@ -703,18 +699,14 @@ operator|)
 name|Node
 argument_list|,
 operator|&
-name|BufferSizeNeeded
-argument_list|,
-name|UserPrt
-operator|->
-name|Source
+name|PathBuffer
 argument_list|)
 expr_stmt|;
 name|UserPrt
 operator|->
 name|Length
 operator|+=
-name|STRLEN
+name|ACPI_STRLEN
 argument_list|(
 name|UserPrt
 operator|->
@@ -728,7 +720,7 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|STRCPY
+name|ACPI_STRCPY
 argument_list|(
 name|UserPrt
 operator|->
@@ -744,7 +736,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-comment|/*              * Add to the Length field the length of the string              */
+comment|/* Add to the Length field the length of the string */
 name|UserPrt
 operator|->
 name|Length
@@ -762,8 +754,7 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-comment|/*              * If this is a number, then the Source Name              * is NULL, since the entire buffer was zeroed              * out, we can leave this alone.              */
-comment|/*              * Add to the Length field the length of              * the UINT32 NULL              */
+comment|/*              * If this is a number, then the Source Name is NULL, since the              * entire buffer was zeroed out, we can leave this alone.              *              * Add to the Length field the length of the UINT32 NULL              */
 name|UserPrt
 operator|->
 name|Length
@@ -801,14 +792,13 @@ argument_list|(
 name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 comment|/* Now align the current length */
 name|UserPrt
 operator|->
 name|Length
 operator|=
-name|ROUND_UP_TO_64BITS
+name|ACPI_ROUND_UP_TO_64BITS
 argument_list|(
 name|UserPrt
 operator|->
@@ -879,20 +869,25 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Point to the next ACPI_OPERAND_OBJECT          */
+comment|/* Point to the next ACPI_OPERAND_OBJECT */
 name|TopObjectList
 operator|++
 expr_stmt|;
 block|}
-comment|/*      * Report the amount of buffer used      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"OutputBuffer = %p\n"
+literal|"OutputBuffer %p Length %X\n"
 operator|,
 name|OutputBuffer
+operator|->
+name|Pointer
+operator|,
+name|OutputBuffer
+operator|->
+name|Length
 operator|)
 argument_list|)
 expr_stmt|;
@@ -905,7 +900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateByteStream  *  * PARAMETERS:  LinkedListBuffer        - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's buffer  *              OutputBufferLength      - Size of OutputBuffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBufferLength will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the linked list of device resources and  *              creates a bytestream to be used as input for the  *              _SRS control method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateByteStream  *  * PARAMETERS:  LinkedListBuffer        - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the linked list of device resources and  *              creates a bytestream to be used as input for the  *              _SRS control method.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -916,24 +911,20 @@ name|ACPI_RESOURCE
 modifier|*
 name|LinkedListBuffer
 parameter_list|,
-name|UINT8
+name|ACPI_BUFFER
 modifier|*
 name|OutputBuffer
-parameter_list|,
-name|UINT32
-modifier|*
-name|OutputBufferLength
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|ByteStreamSizeNeeded
 init|=
 literal|0
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsCreateByteStream"
 argument_list|)
@@ -990,37 +981,31 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Is caller buffer large enough?      */
-if|if
-condition|(
-name|ByteStreamSizeNeeded
-operator|>
-operator|*
-name|OutputBufferLength
-condition|)
-block|{
-operator|*
-name|OutputBufferLength
+comment|/* Validate/Allocate/Clear caller buffer */
+name|Status
 operator|=
-name|ByteStreamSizeNeeded
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BUFFER_OVERFLOW
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Zero out the return buffer before proceeding      */
-name|MEMSET
+name|AcpiUtInitializeBuffer
 argument_list|(
 name|OutputBuffer
 argument_list|,
-literal|0x00
-argument_list|,
-operator|*
-name|OutputBufferLength
+name|ByteStreamSizeNeeded
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Do the conversion */
 name|Status
 operator|=
 name|AcpiRsListToByteStream
@@ -1029,8 +1014,9 @@ name|LinkedListBuffer
 argument_list|,
 name|ByteStreamSizeNeeded
 argument_list|,
-operator|&
 name|OutputBuffer
+operator|->
+name|Pointer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1052,9 +1038,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"OutputBuffer = %p\n"
+literal|"OutputBuffer %p Length %X\n"
 operator|,
 name|OutputBuffer
+operator|->
+name|Pointer
+operator|,
+name|OutputBuffer
+operator|->
+name|Length
 operator|)
 argument_list|)
 expr_stmt|;
