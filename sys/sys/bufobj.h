@@ -144,6 +144,30 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|BO_STRATEGY
+parameter_list|(
+name|bo
+parameter_list|,
+name|bp
+parameter_list|)
+value|((bo)->bo_ops->bop_strategy((bo), (bp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_WRITE
+parameter_list|(
+name|bo
+parameter_list|,
+name|bp
+parameter_list|)
+value|((bo)->bo_ops->bop_write((bp)))
+end_define
+
 begin_struct
 struct|struct
 name|bufobj

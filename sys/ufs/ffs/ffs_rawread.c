@@ -1218,13 +1218,7 @@ condition|)
 return|return
 name|EFAULT
 return|;
-name|dp
-operator|->
-name|v_bufobj
-operator|.
-name|bo_ops
-operator|->
-name|bop_strategy
+name|BO_STRATEGY
 argument_list|(
 operator|&
 name|dp

@@ -7786,11 +7786,7 @@ name|de_pmp
 operator|->
 name|pm_bo
 expr_stmt|;
-name|bo
-operator|->
-name|bo_ops
-operator|->
-name|bop_strategy
+name|BO_STRATEGY
 argument_list|(
 name|bo
 argument_list|,
