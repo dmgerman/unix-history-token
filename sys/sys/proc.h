@@ -63,11 +63,22 @@ directive|include
 file|<sys/signal.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-end_ifndef
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -385,7 +396,11 @@ value|p_limit->pl_rlimit
 name|int
 name|p_flag
 decl_stmt|;
-comment|/* (c/j) P_* flags. */
+comment|/* (c) P_* flags. */
+name|int
+name|p_sflag
+decl_stmt|;
+comment|/* (j) PS_* flags. */
 name|int
 name|p_intr_nesting_level
 decl_stmt|;
@@ -508,19 +523,19 @@ comment|/* (h?/k?) Alarm timer. */
 name|u_int64_t
 name|p_runtime
 decl_stmt|;
-comment|/* (c) Real time in microsec. */
+comment|/* (j) Real time in microsec. */
 name|u_int64_t
 name|p_uu
 decl_stmt|;
-comment|/* (c) Previous user time in microsec. */
+comment|/* (j) Previous user time in microsec. */
 name|u_int64_t
 name|p_su
 decl_stmt|;
-comment|/* (c) Previous system time in microsec. */
+comment|/* (j) Previous system time in microsec. */
 name|u_int64_t
 name|p_iu
 decl_stmt|;
-comment|/* (c) Previous interrupt time in microsec. */
+comment|/* (j) Previous interrupt time in microsec. */
 name|u_int64_t
 name|p_uticks
 decl_stmt|;
@@ -637,7 +652,7 @@ name|struct
 name|klist
 name|p_klist
 decl_stmt|;
-comment|/* (c?) Knotes attached to this process. */
+comment|/* (c) Knotes attached to this process. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -703,7 +718,7 @@ comment|/* (j) Priority before propagation. */
 name|char
 name|p_nice
 decl_stmt|;
-comment|/* (j/k?) Process "nice" value. */
+comment|/* (j?/k?) Process "nice" value. */
 name|char
 name|p_comm
 index|[
@@ -933,12 +948,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_INMEM
+name|P_KTHREAD
 value|0x00004
 end_define
 
 begin_comment
-comment|/* Loaded into memory. */
+comment|/* Kernel thread. */
 end_comment
 
 begin_define
@@ -966,34 +981,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_PROFIL
-value|0x00020
-end_define
-
-begin_comment
-comment|/* Has started profiling. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_SELECT
 value|0x00040
 end_define
 
 begin_comment
 comment|/* Selecting; wakeup/waiting danger. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_SINTR
-value|0x00080
-end_define
-
-begin_comment
-comment|/* Sleep is interruptible. */
 end_comment
 
 begin_define
@@ -1016,17 +1009,6 @@ end_define
 
 begin_comment
 comment|/* System proc: no sigs, stats or swapping. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_TIMEOUT
-value|0x00400
-end_define
-
-begin_comment
-comment|/* Timing out during sleep. */
 end_comment
 
 begin_define
@@ -1073,63 +1055,8 @@ begin_comment
 comment|/* Process called exec. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|P_ALRMPEND
-value|0x08000
-end_define
-
-begin_comment
-comment|/* Pending SIGVTALRM needs to be posted. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_PROFPEND
-value|0x10000
-end_define
-
-begin_comment
-comment|/* Pending SIGPROF needs to be posted. */
-end_comment
-
 begin_comment
 comment|/* Should be moved to machine-dependent areas. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_OWEUPC
-value|0x20000
-end_define
-
-begin_comment
-comment|/* Owe process an addupc() call at next ast. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_SWAPPING
-value|0x40000
-end_define
-
-begin_comment
-comment|/* Process is being swapped. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_SWAPINREQ
-value|0x80000
-end_define
-
-begin_comment
-comment|/* Swapin request due to wakeup. */
 end_comment
 
 begin_define
@@ -1198,15 +1125,118 @@ begin_comment
 comment|/* Have alternate signal stack. */
 end_comment
 
+begin_comment
+comment|/* These flags are kept in p_sflag and are protected with sched_lock. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|P_CVWAITQ
-value|0x8000000
+name|PS_INMEM
+value|0x00001
 end_define
 
 begin_comment
-comment|/* proces is on a cv_waitq (not slpq) */
+comment|/* Loaded into memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_OWEUPC
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Owe process an addupc() call at next ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_PROFIL
+value|0x00004
+end_define
+
+begin_comment
+comment|/* Has started profiling. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_SINTR
+value|0x00008
+end_define
+
+begin_comment
+comment|/* Sleep is interruptible. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_TIMEOUT
+value|0x00010
+end_define
+
+begin_comment
+comment|/* Timing out during sleep. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_ALRMPEND
+value|0x00020
+end_define
+
+begin_comment
+comment|/* Pending SIGVTALRM needs to be posted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_PROFPEND
+value|0x00040
+end_define
+
+begin_comment
+comment|/* Pending SIGPROF needs to be posted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_CVWAITQ
+value|0x00080
+end_define
+
+begin_comment
+comment|/* Proces is on a cv_waitq (not slpq). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_SWAPINREQ
+value|0x00100
+end_define
+
+begin_comment
+comment|/* Swapin request due to wakeup. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_SWAPPING
+value|0x00200
+end_define
+
+begin_comment
+comment|/* Process is being swapped. */
 end_comment
 
 begin_define
@@ -1579,7 +1609,7 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {						\ 	if ((p)->p_stops& (e)) {					\ 		mtx_enter(&Giant, MTX_DEF);				\ 		stopevent((p), (e), (v));				\ 		mtx_exit(&Giant, MTX_DEF);				\ 	}								\ } while (0)
+value|do {						\ 	PROC_LOCK(p);							\ 	if ((p)->p_stops& (e)) {					\ 		stopevent((p), (e), (v));				\ 	}								\ 	PROC_UNLOCK(p);							\ } while (0)
 end_define
 
 begin_comment
@@ -1700,7 +1730,7 @@ name|PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK(p);							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0) {	\ 		PROC_UNLOCK(p);						\ 		faultin(p);						\ 	} else								\ 		PROC_UNLOCK(p);						\ } while (0)
+value|do {							\ 	PROC_LOCK(p);							\ 	if ((p)->p_lock++ == 0)						\ 		faultin(p);						\ 	PROC_UNLOCK(p);							\ } while (0)
 end_define
 
 begin_define
@@ -2091,6 +2121,24 @@ begin_decl_stmt
 name|struct
 name|proc
 modifier|*
+name|zpfind
+name|__P
+argument_list|(
+operator|(
+name|pid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Find zombie process by id. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
 name|chooseproc
 name|__P
 argument_list|(
@@ -2175,6 +2223,51 @@ operator|,
 expr|struct
 name|proc
 operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fork_exit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|(
+name|void
+operator|*
+operator|,
+expr|struct
+name|trapframe
+operator|*
+operator|)
+operator|,
+name|void
+operator|*
+operator|,
+expr|struct
+name|trapframe
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fork_return
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|trapframe
 operator|*
 operator|)
 argument_list|)
@@ -2503,6 +2596,26 @@ operator|(
 expr|struct
 name|proc
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|userret
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|trapframe
+operator|*
+operator|,
+name|u_quad_t
 operator|)
 argument_list|)
 decl_stmt|;
