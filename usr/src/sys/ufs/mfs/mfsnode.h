@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -232,6 +232,13 @@ define|#
 directive|define
 name|mfs_islocked
 value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_pathconf
+value|((int (*) __P((struct  vop_pathconf_args *)))mfs_badop)
 end_define
 
 begin_define
