@@ -2706,19 +2706,185 @@ value|0xfc
 end_define
 
 begin_comment
-comment|/*  * PLL config register   */
+comment|/*  * PLL config register  *  * This register is present only on 7954/7955/7956 parts. It must be  * programmed according to the bus interface method used by the h/w.  * Note that the parts require a stable clock.  Since the PCI clock  * may vary the reference clock must usually be used.  To avoid  * overclocking the core logic, setup must be done carefully, refer  * to the driver for details.  The exact multiplier required varies  * by part and system configuration; refer to the Hifn documentation.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HIFN_PLL_7956
-value|0x00001d19
+name|HIFN_PLL_REF_SEL
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* 7956 PLL config value */
+comment|/* REF/HBI clk selection */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_BP
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* bypass (used during setup) */
+end_comment
+
+begin_comment
+comment|/* bit 2 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_PK_CLK_SEL
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* public key clk select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_PE_CLK_SEL
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* packet engine clk select */
+end_comment
+
+begin_comment
+comment|/* bits 5-9 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_MBSET
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* must be set to 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND
+value|0x00003800
+end_define
+
+begin_comment
+comment|/* Fpll_ref multiplier select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_SHIFT
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_2
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* 2x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_4
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* 4x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_6
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* 6x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_8
+value|0x00001800
+end_define
+
+begin_comment
+comment|/* 8x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_10
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* 10x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_ND_12
+value|0x00002800
+end_define
+
+begin_comment
+comment|/* 12x */
+end_comment
+
+begin_comment
+comment|/* bits 14-15 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_IS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* charge pump current select */
+end_comment
+
+begin_comment
+comment|/* bits 17-31 reserved */
+end_comment
+
+begin_comment
+comment|/*  * Board configuration specifies only these bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_CONFIG
+value|(HIFN_PLL_IS|HIFN_PLL_ND|HIFN_PLL_REF_SEL)
+end_define
 
 begin_comment
 comment|/*********************************************************************  * Structs for board commands   *  *********************************************************************/
