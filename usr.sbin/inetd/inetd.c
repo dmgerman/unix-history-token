@@ -4049,7 +4049,9 @@ name|pwd
 operator|->
 name|pw_uid
 argument_list|,
-name|LOGIN_SETALL
+name|LOGIN_SETRESOURCES
+operator||
+name|LOGIN_SETPRIORITY
 argument_list|)
 operator|!=
 literal|0
