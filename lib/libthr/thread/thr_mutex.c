@@ -4386,8 +4386,6 @@ name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put this thread on the mutex's list of waiting threads. 	 * The lock on the thread ensures atomic (as far as other 	 * threads are concerned) setting of the thread state with 	 * it's status on the mutex queue. 	 */
-do|do
-block|{
 name|mutex_queue_enq
 argument_list|(
 name|mutexp
@@ -4395,6 +4393,8 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|PTHREAD_SET_STATE
 argument_list|(
 name|curthread
