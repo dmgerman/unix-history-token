@@ -534,19 +534,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* User interface functions */
+end_comment
+
+begin_function_decl
+name|int
+name|OF_interpret
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
 literal|0
 end_if
-
-begin_comment
-comment|/* User interface functions */
-end_comment
-
-begin_comment
-comment|/* OF_interpret */
-end_comment
 
 begin_endif
 unit|void 		*OF_set_callback(void *); void		OF_set_symbol_lookup(void *, void *);
