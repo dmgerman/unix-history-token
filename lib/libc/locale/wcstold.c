@@ -67,9 +67,6 @@ name|buf
 decl_stmt|,
 modifier|*
 name|end
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 specifier|const
 name|wchar_t
@@ -77,8 +74,6 @@ modifier|*
 name|wcp
 decl_stmt|;
 name|size_t
-name|clen
-decl_stmt|,
 name|len
 decl_stmt|;
 while|while

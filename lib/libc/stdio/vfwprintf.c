@@ -671,12 +671,7 @@ name|__siov
 name|iov
 decl_stmt|;
 name|size_t
-name|i
-decl_stmt|,
 name|len
-decl_stmt|;
-name|int
-name|ret
 decl_stmt|;
 if|if
 condition|(

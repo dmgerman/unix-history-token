@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mac.h>
 end_include
 
@@ -602,9 +608,6 @@ argument_list|)
 condition|)
 block|{
 name|char
-modifier|*
-name|arg
-decl_stmt|,
 modifier|*
 name|comment
 decl_stmt|,
