@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	displayq.c	4.1	83/04/29	*/
+comment|/*	displayq.c	4.2	83/05/13	*/
 end_comment
 
 begin_comment
@@ -259,10 +259,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|name
-operator|=
-literal|"displayq"
-expr_stmt|;
 name|lflag
 operator|=
 name|format
@@ -346,7 +342,7 @@ name|NULL
 condition|)
 name|RP
 operator|=
-name|printer
+name|DEFLP
 expr_stmt|;
 if|if
 condition|(
@@ -754,12 +750,9 @@ name|nitems
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|LP
-operator|&&
 name|stat
 argument_list|(
-name|LP
+name|LO
 argument_list|,
 operator|&
 name|statb
@@ -772,22 +765,20 @@ name|statb
 operator|.
 name|st_mode
 operator|&
-literal|0777
+literal|0100
 operator|)
-operator|==
-literal|0
 condition|)
-name|status
+name|printf
 argument_list|(
-literal|"Warning: %s is down"
+literal|"Warning: %s is down\n"
 argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
 else|else
-name|status
+name|printf
 argument_list|(
-literal|"Warning: no daemon present"
+literal|"Warning: no daemon present\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -854,8 +845,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * Now, examine the control files and print out the jobs to 	 * be done for each user. 	 */
+comment|/* 		 * Print the status file to show what the daemon is doing. 		 */
 if|if
 condition|(
 name|sendtorem
@@ -934,6 +924,8 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Now, examine the control files and print out the jobs to 	 * be done for each user. 	 */
 if|if
 condition|(
 operator|!
