@@ -999,6 +999,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Enable restoring all the registers, even the ones that are nominally  * read-only.  If this causes problems for you, please report them to  * imp@freebsd.org and remove this line in your local tree.  The problems  * would be seen if the device is transitioning from D3 to D0 or has ever  * made that transition under FreeBSD this boot.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_RESTORE_EXTRA
+end_define
+
+begin_comment
 comment|/* Find a device_t by bus/slot/function */
 end_comment
 
@@ -9131,6 +9141,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_RESTORE_EXTRA
 name|pci_write_config
 argument_list|(
 name|dev
@@ -9191,6 +9204,8 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pci_write_config
 argument_list|(
 name|dev
@@ -9296,6 +9311,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_RESTORE_EXTRA
 name|pci_write_config
 argument_list|(
 name|dev
@@ -9341,6 +9359,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pci_write_config
 argument_list|(
 name|dev
