@@ -1276,13 +1276,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * UNIX Domain Sockets 	 */
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
+comment|/* 	 * UNIX Domain Sockets 	{ NULL, NULL }, 	 */
 comment|/* 	 * UDP/IP 	 */
 block|{
 literal|"udp"
@@ -1338,6 +1332,12 @@ literal|"slip sc_mtx"
 block|,
 operator|&
 name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 comment|/* 	 * spin locks 	 */
