@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.134 1995/07/28 11:21:03 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.135 1995/07/29 11:38:52 bde Exp $  */
 end_comment
 
 begin_include
@@ -3658,50 +3658,17 @@ name|__dead
 name|void
 name|boot
 parameter_list|(
-name|arghowto
+name|howto
 parameter_list|)
 name|int
-name|arghowto
-decl_stmt|;
-block|{
-specifier|register
-name|long
-name|dummy
-decl_stmt|;
-comment|/* r12 is reserved */
-specifier|register
-name|int
 name|howto
 decl_stmt|;
-comment|/* r11 == how to boot */
-specifier|register
-name|int
-name|devtype
-decl_stmt|;
-comment|/* r10 == major of root dev */
+block|{
 if|if
 condition|(
+operator|!
 name|cold
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hit reset please"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-empty_stmt|;
-block|}
-name|howto
-operator|=
-name|arghowto
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|(
 name|howto
 operator|&
@@ -3869,13 +3836,6 @@ block|}
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|devtype
-operator|=
-name|major
-argument_list|(
-name|rootdev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|howto
@@ -3911,6 +3871,12 @@ operator|&
 name|RB_DUMP
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+block|{
 name|savectx
 argument_list|(
 operator|&
@@ -3929,6 +3895,7 @@ expr_stmt|;
 name|dumpsys
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|PANIC_REBOOT_WAIT_TIME
@@ -3959,6 +3926,8 @@ control|(
 name|loop
 operator|=
 name|PANIC_REBOOT_WAIT_TIME
+operator|*
+literal|10
 init|;
 name|loop
 operator|>
@@ -3972,10 +3941,10 @@ name|DELAY
 argument_list|(
 literal|1000
 operator|*
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
-comment|/* one second */
+comment|/* 1/10th second */
 if|if
 condition|(
 name|cncheckc
@@ -4011,28 +3980,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|lint
-name|dummy
-operator|=
-literal|0
-expr_stmt|;
-name|dummy
-operator|=
-name|dummy
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"howto %d, devtype %d\n"
-argument_list|,
-name|arghowto
-argument_list|,
-name|devtype
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|die
 label|:
 name|printf
