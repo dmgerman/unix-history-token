@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -207,6 +213,12 @@ directive|include
 file|<utmp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PAM
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -219,11 +231,10 @@ directive|include
 file|<security/pam_misc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -258,6 +269,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|auth_traditional
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -316,6 +340,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|refused
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|rootterm
 name|__P
@@ -356,27 +401,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|refused
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 specifier|const
 name|char
 modifier|*
@@ -399,6 +423,19 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -485,32 +522,6 @@ end_endif
 begin_comment
 comment|/* NO_PAM */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|auth_traditional
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|usage
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -3329,7 +3340,7 @@ comment|/* 	 * Login shells have a leading '-' in front of argv[0] 	 */
 if|if
 condition|(
 operator|(
-name|size_t
+name|u_int
 operator|)
 name|snprintf
 argument_list|(
@@ -3416,9 +3427,7 @@ begin_function
 specifier|static
 name|int
 name|auth_traditional
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|rval
@@ -3544,9 +3553,7 @@ begin_function
 specifier|static
 name|int
 name|auth_pam
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 specifier|const
 name|char
@@ -3941,9 +3948,7 @@ begin_function
 specifier|static
 name|int
 name|export_pam_environment
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -4150,9 +4155,7 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -4179,9 +4182,7 @@ end_comment
 begin_function
 name|void
 name|getloginname
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|ch

@@ -34,13 +34,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -52,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -64,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -150,6 +150,23 @@ end_define
 begin_decl_stmt
 specifier|static
 name|int
+name|from_match
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|list_match
 name|__P
 argument_list|(
@@ -179,27 +196,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|user_match
+name|netgroup_match
 name|__P
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|from_match
-name|__P
-argument_list|(
-operator|(
 name|char
 operator|*
 operator|,
@@ -230,13 +233,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|netgroup_match
+name|user_match
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
 name|char
 operator|*
 operator|,
