@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|NG_CISCO_STATS_TYPE_INFO
-value|{			\ 	{							\ 	  { "seqRetries",&ng_parse_int32_type	},	\ 	  { "keepAlivePeriod",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	{							\ 	  { "seqRetries",&ng_parse_uint32_type	},	\ 	  { "keepAlivePeriod",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_endif

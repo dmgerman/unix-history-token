@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|NG_BPF_HOOKSTAT_TYPE_INFO
-value|{			\ 	{							\ 	  { "recvFrames",&ng_parse_int64_type	},	\ 	  { "recvOctets",&ng_parse_int64_type	},	\ 	  { "recvMatchFrames",&ng_parse_int64_type	},	\ 	  { "recvMatchOctets",&ng_parse_int64_type	},	\ 	  { "xmitFrames",&ng_parse_int64_type	},	\ 	  { "xmitOctets",&ng_parse_int64_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	{							\ 	  { "recvFrames",&ng_parse_uint64_type	},	\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvMatchFrames",&ng_parse_uint64_type	},	\ 	  { "recvMatchOctets",&ng_parse_uint64_type	},	\ 	  { "xmitFrames",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment

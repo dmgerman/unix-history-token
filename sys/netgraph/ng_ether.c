@@ -420,7 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Parse type for an Ethernet address. Slightly better than an array of    six int8's would be the more common colon-separated hex byte format. */
+comment|/* Parse type for an Ethernet address. Slightly better than an array of    six hint8's would be the more common colon-separated hex byte format. */
 end_comment
 
 begin_decl_stmt
@@ -432,7 +432,7 @@ name|ng_ether_enaddr_type_info
 init|=
 block|{
 operator|&
-name|ng_parse_int8_type
+name|ng_parse_hint8_type
 block|,
 name|ETHER_ADDR_LEN
 block|}

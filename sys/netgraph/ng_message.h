@@ -159,7 +159,7 @@ name|NG_GENERIC_NG_MESG_INFO
 parameter_list|(
 name|dtype
 parameter_list|)
-value|{			\ 	{							\ 	  { "version",&ng_parse_int8_type	},	\ 	  { "spare",&ng_parse_int8_type	},	\ 	  { "arglen",&ng_parse_int16_type	},	\ 	  { "flags",&ng_parse_int32_type	},	\ 	  { "token",&ng_parse_int32_type	},	\ 	  { "typecookie",&ng_parse_int32_type	},	\ 	  { "cmd",&ng_parse_int32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	{							\ 	  { "version",&ng_parse_uint8_type	},	\ 	  { "spare",&ng_parse_uint8_type	},	\ 	  { "arglen",&ng_parse_uint16_type	},	\ 	  { "flags",&ng_parse_hint32_type	},	\ 	  { "token",&ng_parse_uint32_type	},	\ 	  { "typecookie",&ng_parse_uint32_type	},	\ 	  { "cmd",&ng_parse_uint32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
@@ -598,7 +598,7 @@ define|#
 directive|define
 name|NG_GENERIC_NODEINFO_INFO
 parameter_list|()
-value|{			\ 	{							\ 	  { "name",&ng_parse_nodebuf_type	},	\ 	  { "type",&ng_parse_typebuf_type	},	\ 	  { "id",&ng_parse_int32_type	},	\ 	  { "hooks",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	{							\ 	  { "name",&ng_parse_nodebuf_type	},	\ 	  { "type",&ng_parse_typebuf_type	},	\ 	  { "id",&ng_parse_hint32_type	},	\ 	  { "hooks",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
@@ -719,7 +719,7 @@ name|NG_GENERIC_LISTNODES_INFO
 parameter_list|(
 name|niarraytype
 parameter_list|)
-value|{		\ 	{							\ 	  { "numnames",&ng_parse_int32_type	},	\ 	  { "nodeinfo",		(niarraytype)		},	\ 	  { NULL },						\ 	}							\ }
+value|{		\ 	{							\ 	  { "numnames",&ng_parse_uint32_type	},	\ 	  { "nodeinfo",		(niarraytype)		},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
@@ -756,7 +756,7 @@ define|#
 directive|define
 name|NG_GENERIC_TYPEINFO_INFO
 parameter_list|()
-value|{		\ 	{							\ 	  { "typename",&ng_parse_typebuf_type	},	\ 	  { "typeinfo",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{		\ 	{							\ 	  { "typename",&ng_parse_typebuf_type	},	\ 	  { "numnodes",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_struct
@@ -788,7 +788,7 @@ name|NG_GENERIC_TYPELIST_INFO
 parameter_list|(
 name|tiarraytype
 parameter_list|)
-value|{		\ 	{							\ 	  { "numtypes",&ng_parse_int32_type	},	\ 	  { "typeinfo",		(tiarraytype)		},	\ 	  { NULL },						\ 	}							\ }
+value|{		\ 	{							\ 	  { "numtypes",&ng_parse_uint32_type	},	\ 	  { "typeinfo",		(tiarraytype)		},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment

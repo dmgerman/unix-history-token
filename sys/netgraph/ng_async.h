@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|NG_ASYNC_STATS_TYPE_INFO
-value|{			\ 	{							\ 	  { "syncOctets",&ng_parse_int32_type	},	\ 	  { "syncFrames",&ng_parse_int32_type	},	\ 	  { "syncOverflows",&ng_parse_int32_type	},	\ 	  { "asyncOctets",&ng_parse_int32_type	},	\ 	  { "asyncFrames",&ng_parse_int32_type	},	\ 	  { "asyncRunts",&ng_parse_int32_type	},	\ 	  { "asyncOverflows",&ng_parse_int32_type	},	\ 	  { "asyncBadCheckSums",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	{							\ 	  { "syncOctets",&ng_parse_uint32_type	},	\ 	  { "syncFrames",&ng_parse_uint32_type	},	\ 	  { "syncOverflows",&ng_parse_uint32_type	},	\ 	  { "asyncOctets",&ng_parse_uint32_type	},	\ 	  { "asyncFrames",&ng_parse_uint32_type	},	\ 	  { "asyncRunts",&ng_parse_uint32_type	},	\ 	  { "asyncOverflows",&ng_parse_uint32_type	},	\ 	  { "asyncBadCheckSums",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment
@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|NG_ASYNC_CONFIG_TYPE_INFO
-value|{			\ 	{							\ 	  { "enabled",&ng_parse_int8_type	},	\ 	  { "amru",&ng_parse_int16_type	},	\ 	  { "smru",&ng_parse_int16_type	},	\ 	  { "accm",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	{							\ 	  { "enabled",&ng_parse_int8_type	},	\ 	  { "amru",&ng_parse_uint16_type	},	\ 	  { "smru",&ng_parse_uint16_type	},	\ 	  { "accm",&ng_parse_hint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_comment

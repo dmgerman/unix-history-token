@@ -97,11 +97,11 @@ begin_struct
 struct|struct
 name|ngxxxstat
 block|{
-name|u_int
+name|u_int32_t
 name|packets_in
 decl_stmt|;
 comment|/* packets in from downstream */
-name|u_int
+name|u_int32_t
 name|packets_out
 decl_stmt|;
 comment|/* packets out towards downstream */
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|NG_XXX_STATS_TYPE_INFO
-value|{				\ 	{							\ 	  { "packets_in",&ng_parse_int32_type	},	\ 	  { "packets_out",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	{							\ 	  { "packets_in",&ng_parse_uint32_type	},	\ 	  { "packets_out",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
 end_define
 
 begin_endif
