@@ -1342,12 +1342,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_expr_stmt
 name|__BEGIN_DECLS
 specifier|extern
@@ -1361,38 +1355,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_function_decl
 name|__END_DECLS
 define|#
 directive|define
 name|rpc_createerr
 value|(*(__rpc_createerr()))
-else|#
-directive|else
-specifier|extern
-expr|struct
-name|rpc_createerr
-name|rpc_createerr
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _THREAD_SAFE */
-end_comment
-
-begin_comment
 comment|/*  * The simplified interface:  * enum clnt_stat  * rpc_call(host, prognum, versnum, procnum, inproc, in, outproc, out, nettype)  *	const char *host;  *	const rpcprog_t prognum;  *	const rpcvers_t versnum;  *	const rpcproc_t procnum;  *	const xdrproc_t inproc, outproc;  *	const char *in;  *	char *out;  *	const char *nettype;  */
-end_comment
-
-begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
-name|enum
+type|enum
 name|clnt_stat
 name|rpc_call
 parameter_list|(
