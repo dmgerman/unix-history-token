@@ -34,7 +34,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*  * Macros to manipulate AGP mode words.  */
+comment|/*  * Macros to manipulate AGP mode words.  *  * SBA = Sideband Address Port  * FW  = Fast Writes  */
 end_comment
 
 begin_define
