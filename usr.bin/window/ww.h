@@ -1303,7 +1303,7 @@ define|#
 directive|define
 name|wwgetc
 parameter_list|()
-value|(wwibp< wwibq ? *wwibp++& 0x7f : -1)
+value|(wwibp< wwibq ? *wwibp++& 0xff : -1)
 end_define
 
 begin_define
@@ -1311,7 +1311,7 @@ define|#
 directive|define
 name|wwpeekc
 parameter_list|()
-value|(wwibp< wwibq ? *wwibp& 0x7f : -1)
+value|(wwibp< wwibq ? *wwibp& 0xff : -1)
 end_define
 
 begin_define
