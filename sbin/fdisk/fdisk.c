@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2319,7 +2325,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    start %lu, size %lu (%qd Meg), flag %x%s\n"
+literal|"    start %lu, size %lu (%ju Meg), flag %x%s\n"
 argument_list|,
 operator|(
 name|u_long
@@ -2335,6 +2341,9 @@ name|partp
 operator|->
 name|dp_size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|part_mb
 argument_list|,
 name|partp
@@ -2659,6 +2668,10 @@ expr_stmt|;
 operator|*
 operator|(
 name|uint16_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -4162,6 +4175,10 @@ condition|(
 operator|*
 operator|(
 name|uint16_t
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
