@@ -806,11 +806,11 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%"
-name|PRIu64
-literal|"x/%"
-name|PRIu64
-literal|"x %.8s "
+literal|"0x%"
+name|PRIx64
+literal|"/0x%"
+name|PRIx64
+literal|" %.8s "
 argument_list|,
 name|mrd
 index|[
