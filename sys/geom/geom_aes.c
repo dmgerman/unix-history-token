@@ -1518,6 +1518,9 @@ name|buf
 operator|=
 name|NULL
 expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -1852,6 +1855,9 @@ literal|24
 expr_stmt|;
 block|}
 block|}
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|pp
 operator|=
 name|g_new_providerf
@@ -1878,8 +1884,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|buf

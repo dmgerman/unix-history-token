@@ -858,6 +858,9 @@ continue|continue;
 name|npart
 operator|++
 expr_stmt|;
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|pp2
 operator|=
 name|g_slice_addslice
@@ -896,6 +899,9 @@ literal|'a'
 operator|+
 name|i
 argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 name|g_error_provider
 argument_list|(

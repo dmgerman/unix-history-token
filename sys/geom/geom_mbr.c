@@ -1175,6 +1175,9 @@ index|]
 operator|.
 name|dp_typ
 expr_stmt|;
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|pp2
 operator|=
 name|g_slice_addslice
@@ -1221,6 +1224,9 @@ name|i
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -2000,6 +2006,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|pp2
 operator|=
 name|g_slice_addslice
@@ -2068,6 +2077,9 @@ name|slice
 operator|+
 literal|5
 argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 name|ms
 operator|->

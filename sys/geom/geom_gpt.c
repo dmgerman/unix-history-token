@@ -951,6 +951,9 @@ literal|'s'
 else|:
 literal|'p'
 expr_stmt|;
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -992,6 +995,9 @@ name|i
 operator|+
 literal|1
 argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 name|npart
 operator|++
