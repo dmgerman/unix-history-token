@@ -467,6 +467,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|bioq_insert_head
+parameter_list|(
+name|struct
+name|bio_queue_head
+modifier|*
+name|head
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|bioq_insert_tail
 parameter_list|(
 name|struct
