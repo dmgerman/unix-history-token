@@ -2322,6 +2322,11 @@ name|__alpha__
 if|if
 condition|(
 operator|!
+name|cold
+condition|)
+if|if
+condition|(
+operator|!
 name|kernacc
 argument_list|(
 operator|(
