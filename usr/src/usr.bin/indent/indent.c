@@ -1,13 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	4.1	(Berkeley)	%G%"
+literal|"@(#)indent.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/*  			  Copyright (C) 1976 				by the 			  Board of Trustees 				of the 			University of Illinois  			 All rights reserved   NAME: 	indent main program  FUNCTION: 	This is the main program of the indent program.  Indent will take a C 	program source and reformat it into a semi-reasonable form.  ALGORITHM: 	The routine lexi scans tokens and passes them back one at a time to the 	main routine.  The subroutine parse takes care of much of the work of 	figuring indentation level.    	1) Call lexi 	2) Enter a monster switch statement on the code returned by lexi.  If  	   the indentation level for the line yet to be printed should be  	   changed, set the variable ind_level.  If the indentation level for 	   the following line should be changed, set the variable i_l_follow.  PARAMETERS: 	None  RETURNS: 	Nothing  GLOBALS: 	be_save = 	break_comma 	bp_save = 	btype_2 = 	code_lines 	com_ind = 	com_lines 	dec_nest = 	decl_com_ind = 	decl_on_line = 	i_l_follow = 	in_decl = 	ind_level = 	ind_size = 	ind_stmt = 	last_u_d = 	leave_comma = 	line_no = 	ljust_decl = 	max_col = 	out_coms 	out_lines 	p_l_follow = 	paren_level = 	pcase = 	sc_end = 	unindent_displace = 	use_ff = 	verbose =  CALLS: 	atoi (lib) 	cmp 	creat (lib) 	dump_line 	eqin 	fill_buffer 	lexi 	open (lib) 	parse 	pr_comment 	printf (lib) 	seek (lib) 	time (lib)  CALLED BY: 	No one (main routine)  HISTORY: 	November 1976	D A Willcox of CAC	Initial coding 	12/9/76		D A Willcox of CAC	Fixed defaults for decl_com_ind 						to be 8 less than com_ind if  						left justifying declarations 	12/9/76		D A Willcox of CAC	Fixed processing of nested<c>?<s>:<s> constructs 	1/7/77		D A Willcox of CAC	Added check for overwrite of 						input file 						Added code to handle -br and -bl 						parameters

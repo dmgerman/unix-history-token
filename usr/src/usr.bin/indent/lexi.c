@@ -1,13 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	4.1	(Berkeley)	%G%"
+literal|"@(#)lexi.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/*  			  Copyright (C) 1976 				by the 			  Board of Trustees 				of the 			University of Illinois  			 All rights reserved   NAME: 	lexi  FUNCTION: 	This is the token scanner for indent  ALGORITHM: 	1) Strip off intervening blanks and/or tabs. 	2) If it is an alphanumeric token, move it to the token buffer "token". 	   Check if it is a special reserved word that indent will want to 	   know about. 	3) Non-alphanumeric tokens are handled with a big switch statement.  A 	   flag is kept to remember if the last token was a "unary delimiter", 	   which forces a following operator to be unary as opposed to binary.  PARAMETERS: 	None  RETURNS: 	An integer code indicating the type of token scanned.  GLOBALS: 	buf_ptr = 	had_eof 	last_u_d =	Set to true iff this token is a "unary delimiter"  CALLS: 	fill_buffer 	printf (lib)  CALLED BY: 	main  NOTES: 	Start of comment is passed back so that the comment can be scanned by 	pr_comment.  	Strings and character literals are returned just like identifiers.  HISTORY: 	initial coding 	November 1976	D A Willcox of CAC 	1/7/77		D A Willcox of CAC	Fix to provide proper handling 						of "int a -1;"  */

@@ -1,13 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	4.1	(Berkeley)	%G%"
+literal|"@(#)pr_comment.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/*  			  Copyright (C) 1976 				by the 			  Board of Trustees 				of the 			University of Illinois  			 All rights reserved   NAME: 	pr_comment  FUNCTION: 	This routine takes care of scanning and printing comments.  ALGORITHM: 	1) Decide where the comment should be aligned, and if lines should 	   be broken. 	2) If lines should not be broken and filled, just copy up to end of 	   comment. 	3) If lines should be filled, then scan thru input_buffer copying 	   characters to com_buf.  Remember where the last blank, tab, or 	   newline was.  When line is filled, print up to last blank and  	   continue copying.  PARAMETERS: 	None  RETURNS: 	Nothing  GLOBALS: 	combuf = 	s_com 	e_com =  	buf_ptr = 	buf_end  	bl_line 	col_1 	com_col = 	com_ind 	decl_com_ind 	decl_on_line 	had_eof 	ind_level 	ind_size 	line_no = 	max_col 	out_com =	Count number of comments 	unindent_displace 	use_ff =  CALLS: 	count_spaces 	dump_line 	fill_buffer 	printf		(lib)  CALLED BY: 	main  HISTORY: 	November 1976	D A Willcox of CAC	Initial coding 	12/6/76		D A Willcox of CAC	Modification to handle  						UNIX-style comments  */
