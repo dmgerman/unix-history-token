@@ -172,21 +172,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mail: can't open %s\n"
-argument_list|,
-name|linebuf
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't open %s"
+argument_list|,
+name|linebuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -813,7 +805,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"temporary file seek"
+literal|"Temporary file seek"
 argument_list|)
 expr_stmt|;
 block|}
