@@ -1309,7 +1309,7 @@ decl_stmt|;
 comment|/* XXX actually varargs. */
 name|struct
 name|msgsys_args
-comment|/* { 		u_int	which; 		int	a2; 		int	a3; 		int	a4; 		int	a5; 		int	a6; 	} */
+comment|/* { 		int	which; 		int	a2; 		int	a3; 		int	a4; 		int	a5; 		int	a6; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1336,6 +1336,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|uap
+operator|->
+name|which
+operator|<
+literal|0
+operator|||
 name|uap
 operator|->
 name|which

@@ -4091,7 +4091,7 @@ decl_stmt|;
 comment|/* XXX actually varargs. */
 name|struct
 name|shmsys_args
-comment|/* { 		u_int	which; 		int	a2; 		int	a3; 		int	a4; 	} */
+comment|/* { 		int	which; 		int	a2; 		int	a3; 		int	a4; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -4118,6 +4118,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|uap
+operator|->
+name|which
+operator|<
+literal|0
+operator|||
 name|uap
 operator|->
 name|which
