@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.67 2003/08/21 17:39:56 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.68 2003/08/21 17:49:50 imp Exp   */
 end_comment
 
 begin_comment
@@ -428,6 +428,17 @@ end_define
 
 begin_comment
 comment|/* Compaq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_PARALON
+value|0x0183
+end_define
+
+begin_comment
+comment|/* Paralon Technologies Inc */
 end_comment
 
 begin_define
