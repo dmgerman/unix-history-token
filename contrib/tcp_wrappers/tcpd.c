@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * General front end for stream and datagram IP services. This program logs   * the remote host name and then invokes the real daemon. For example,   * install as /usr/etc/{tftpd,fingerd,telnetd,ftpd,rlogind,rshd,rexecd},   * after saving the real daemons in the directory specified with the   * REAL_DAEMON_DIR macro. This arrangement requires that the network daemons   * are started by inetd or something similar. Connections and diagnostics   * are logged through syslog(3).   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
+comment|/*   * General front end for stream and datagram IP services. This program logs   * the remote host name and then invokes the real daemon. For example,   * install as /usr/etc/{tftpd,fingerd,telnetd,ftpd,rlogind,rshd,rexecd},   * after saving the real daemons in the directory specified with the   * REAL_DAEMON_DIR macro. This arrangement requires that the network daemons   * are started by inetd or something similar. Connections and diagnostics   * are logged through syslog(3).   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   *   * $FreeBSD$   */
 end_comment
 
 begin_ifndef
@@ -370,6 +370,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Report request and invoke the real daemon program. */
+ifdef|#
+directive|ifdef
+name|INET6
+name|syslog
+argument_list|(
+name|allow_severity
+argument_list|,
+literal|"connect from %s (%s)"
+argument_list|,
+name|eval_client
+argument_list|(
+operator|&
+name|request
+argument_list|)
+argument_list|,
+name|eval_hostaddr
+argument_list|(
+name|request
+operator|.
+name|client
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|syslog
 argument_list|(
 name|allow_severity
@@ -383,6 +408,8 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|closelog
 argument_list|()
 expr_stmt|;

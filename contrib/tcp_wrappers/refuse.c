@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * refuse() reports a refused connection, and takes the consequences: in   * case of a datagram-oriented service, the unread datagram is taken from   * the input queue (or inetd would see the same datagram again and again);   * the program is terminated.   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
+comment|/*   * refuse() reports a refused connection, and takes the consequences: in   * case of a datagram-oriented service, the unread datagram is taken from   * the input queue (or inetd would see the same datagram again and again);   * the program is terminated.   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   *   * $FreeBSD$   */
 end_comment
 
 begin_ifndef
@@ -66,6 +66,30 @@ modifier|*
 name|request
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
+name|syslog
+argument_list|(
+name|deny_severity
+argument_list|,
+literal|"refused connect from %s (%s)"
+argument_list|,
+name|eval_client
+argument_list|(
+name|request
+argument_list|)
+argument_list|,
+name|eval_hostaddr
+argument_list|(
+name|request
+operator|->
+name|client
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|syslog
 argument_list|(
 name|deny_severity
@@ -78,6 +102,8 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|clean_exit
 argument_list|(
 name|request

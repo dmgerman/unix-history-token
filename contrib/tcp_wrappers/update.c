@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Routines for controlled update/initialization of request structures.   *    * request_init() initializes its argument. Pointers and string-valued members   * are initialized to zero, to indicate that no lookup has been attempted.   *    * request_set() adds information to an already initialized request structure.   *    * Both functions take a variable-length name-value list.   *    * Diagnostics are reported through syslog(3).   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
+comment|/*   * Routines for controlled update/initialization of request structures.   *    * request_init() initializes its argument. Pointers and string-valued members   * are initialized to zero, to indicate that no lookup has been attempted.   *    * request_set() adds information to an already initialized request structure.   *    * Both functions take a variable-length name-value list.   *    * Diagnostics are reported through syslog(3).   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   *   * $FreeBSD$   */
 end_comment
 
 begin_ifndef
@@ -145,6 +145,26 @@ continue|continue;
 case|case
 name|RQ_CLIENT_SIN
 case|:
+ifdef|#
+directive|ifdef
+name|INET6
+name|request
+operator|->
+name|client
+operator|->
+name|sin
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+expr|struct
+name|sockaddr
+operator|*
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|request
 operator|->
 name|client
@@ -160,10 +180,32 @@ name|sockaddr_in
 operator|*
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 case|case
 name|RQ_SERVER_SIN
 case|:
+ifdef|#
+directive|ifdef
+name|INET6
+name|request
+operator|->
+name|server
+operator|->
+name|sin
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+expr|struct
+name|sockaddr
+operator|*
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|request
 operator|->
 name|server
@@ -179,6 +221,8 @@ name|sockaddr_in
 operator|*
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 comment|/* 	     * All other fields are strings with the same maximal length. 	     */
 case|case

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * @(#) tcpd.h 1.5 96/03/19 16:22:24   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
+comment|/*   * @(#) tcpd.h 1.5 96/03/19 16:22:24   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   *   * $FreeBSD$   */
 end_comment
 
 begin_comment
@@ -36,12 +36,25 @@ name|STRING_LENGTH
 index|]
 decl_stmt|;
 comment|/* access via eval_hostaddr(host) */
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|sockaddr
+modifier|*
+name|sin
+decl_stmt|;
+comment|/* socket address or 0 */
+else|#
+directive|else
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
 comment|/* socket address or 0 */
+endif|#
+directive|endif
 name|struct
 name|t_unitdata
 modifier|*
