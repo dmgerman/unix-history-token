@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rshd.c,v 1.9.2.5 1998/02/18 11:52:20 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2701,7 +2701,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Permission denied.\n"
+literal|"Login incorrect.\n"
 argument_list|)
 expr_stmt|;
 name|exit
