@@ -56,6 +56,16 @@ name|HAVE_CHFLAGS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARCHIVE_STAT_MTIME_NANOS
+parameter_list|(
+name|st
+parameter_list|)
+value|(st)->st_mtimespec.tv_nsec
+end_define
+
 begin_if
 if|#
 directive|if
@@ -188,6 +198,17 @@ directive|ifdef
 name|LINUX
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_FILE_OFFSET_BITS
+value|64
+end_define
+
+begin_comment
+comment|/* For a 64-bit off_t */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -236,26 +257,49 @@ name|HAVE_GETOPT_LONG
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|st_atimespec
-value|st_atim
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_STAT_TIMESPEC
+end_ifdef
+
+begin_comment
+comment|/* Fetch the nanosecond portion of the timestamp from a struct stat pointer. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|st_mtimespec
-value|st_mtim
+name|ARCHIVE_STAT_MTIME_NANOS
+parameter_list|(
+name|pstat
+parameter_list|)
+value|(pstat)->st_mtim.tv_nsec
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* High-res timestamps aren't available, so just use stubs here. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|st_ctimespec
-value|st_ctim
+name|ARCHIVE_STAT_MTIME_NANOS
+parameter_list|(
+name|pstat
+parameter_list|)
+value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
