@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.2"
+literal|"@(#)main.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,34 +68,9 @@ name|arge
 decl_stmt|;
 block|{
 name|int
-name|sigfdie
-argument_list|()
-decl_stmt|,
-name|sigidie
-argument_list|()
-decl_stmt|,
-name|sigqdie
-argument_list|()
-decl_stmt|,
-name|sigindie
-argument_list|()
-decl_stmt|,
-name|sigtdie
-argument_list|()
-decl_stmt|;
-name|int
-name|sigildie
-argument_list|()
-decl_stmt|,
-name|sigedie
-argument_list|()
-decl_stmt|,
-name|sigbdie
-argument_list|()
-decl_stmt|,
-name|sigsdie
-argument_list|()
-decl_stmt|;
+name|sigdie
+parameter_list|()
+function_decl|;
 name|long
 name|int
 argument_list|(
@@ -116,7 +91,7 @@ name|signal
 argument_list|(
 name|SIGFPE
 argument_list|,
-name|sigfdie
+name|sigdie
 argument_list|)
 expr_stmt|;
 comment|/* ignore underflow, enable overflow */
@@ -124,7 +99,7 @@ name|signal
 argument_list|(
 name|SIGIOT
 argument_list|,
-name|sigidie
+name|sigdie
 argument_list|)
 expr_stmt|;
 if|if
@@ -135,7 +110,7 @@ name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|sigqdie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -155,7 +130,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|sigindie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -175,7 +150,7 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|sigtdie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -195,7 +170,7 @@ name|signal
 argument_list|(
 name|SIGILL
 argument_list|,
-name|sigildie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -215,7 +190,7 @@ name|signal
 argument_list|(
 name|SIGEMT
 argument_list|,
-name|sigedie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -235,7 +210,7 @@ name|signal
 argument_list|(
 name|SIGBUS
 argument_list|,
-name|sigbdie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -255,7 +230,7 @@ name|signal
 argument_list|(
 name|SIGSEGV
 argument_list|,
-name|sigsdie
+name|sigdie
 argument_list|)
 operator|!=
 name|SIG_DFL
@@ -290,123 +265,150 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
-name|sigfdie
-argument_list|()
+begin_struct
+struct|struct
+name|action
 block|{
-name|sigdie
-argument_list|(
-literal|"Floating Exception"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigidie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"IOT Trap"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigqdie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"Quit signal"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigindie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"Interrupt!"
-argument_list|,
-literal|0
-argument_list|)
-block|; }
-specifier|static
-name|sigtdie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"Killed"
-argument_list|,
-literal|0
-argument_list|)
-block|; }
-specifier|static
-name|sigildie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"Illegal instruction"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigedie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"EMT trap"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigbdie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"Bus error"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigsdie
-argument_list|()
-block|{
-name|sigdie
-argument_list|(
-literal|"Segmentation violation"
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-specifier|static
-name|sigdie
-argument_list|(
-name|s
-argument_list|,
-name|core
-argument_list|)
-specifier|register
 name|char
-operator|*
-name|s
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|mesg
+decl_stmt|;
+name|int
+name|core
+decl_stmt|;
+block|}
+name|sig_act
+index|[
+literal|16
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGHUP  */
+block|{
+literal|"Interrupt!"
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGINT  */
+block|{
+literal|"Quit!"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGQUIT */
+block|{
+literal|"Illegal instruction"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGILL  */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGTRAP */
+block|{
+literal|"IOT Trap"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGIOT  */
+block|{
+literal|"EMT trap"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGEMT  */
+block|{
+literal|"Floating Point Exception"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGFPE  */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGKILL */
+block|{
+literal|"Bus error"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGBUS  */
+block|{
+literal|"Segmentation violation"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGSEGV */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGSYS  */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGPIPE */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGALRM */
+block|{
+literal|"Terminated"
+block|,
+literal|0
+block|}
+block|,
+comment|/* SIGTERM */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* unassigned */
+block|}
+struct|;
+end_struct
+
+begin_macro
+name|sigdie
+argument_list|(
+argument|s
+argument_list|)
+end_macro
 
 begin_decl_stmt
 name|int
-name|core
+name|s
 decl_stmt|;
 end_decl_stmt
 
@@ -417,10 +419,30 @@ name|unit
 name|units
 index|[]
 decl_stmt|;
+specifier|register
+name|struct
+name|action
+modifier|*
+name|act
+init|=
+operator|&
+name|sig_act
+index|[
+name|s
+operator|-
+literal|1
+index|]
+decl_stmt|;
 comment|/* clear buffers, then print error message */
 name|f_exit
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|act
+operator|->
+name|mesg
+condition|)
 name|fprintf
 argument_list|(
 name|units
@@ -432,7 +454,9 @@ name|ufd
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|s
+name|act
+operator|->
+name|mesg
 argument_list|)
 expr_stmt|;
 name|_cleanup
@@ -440,6 +464,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|act
+operator|->
 name|core
 condition|)
 block|{
@@ -448,17 +474,16 @@ name|signal
 argument_list|(
 name|SIGIOT
 argument_list|,
-literal|0
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
 block|}
-else|else
 name|exit
 argument_list|(
-literal|1
+name|s
 argument_list|)
 expr_stmt|;
 block|}
