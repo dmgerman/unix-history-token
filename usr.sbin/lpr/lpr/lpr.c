@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id$\n"
+literal|"\n$Id: lpr.c,v 1.7 1996/05/11 19:00:55 joerg Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -2398,6 +2398,13 @@ operator|++
 operator|)
 operator|!=
 literal|'\0'
+operator|&&
+name|len
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 condition|)
 block|{
 operator|*
