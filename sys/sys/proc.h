@@ -344,7 +344,31 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|ke_sched
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kg_sched
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|nlminfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|p_sched
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|td_sched
 struct_decl|;
 end_struct_decl
 
@@ -685,6 +709,12 @@ name|mdthread
 name|td_md
 decl_stmt|;
 comment|/* (k) Any machine-dependent fields. */
+name|struct
+name|td_sched
+modifier|*
+name|td_sched
+decl_stmt|;
+comment|/* Scheduler specific data */
 block|}
 struct|;
 end_struct
@@ -1351,6 +1381,12 @@ value|ke_dummy
 name|u_char
 name|ke_dummy
 decl_stmt|;
+name|struct
+name|ke_sched
+modifier|*
+name|ke_sched
+decl_stmt|;
+comment|/* Scheduler specific data */
 block|}
 struct|;
 end_struct
@@ -1603,6 +1639,12 @@ name|int
 name|kg_kses
 decl_stmt|;
 comment|/* Num KSEs in group. */
+name|struct
+name|kg_sched
+modifier|*
+name|kg_sched
+decl_stmt|;
+comment|/* Scheduler specific data */
 block|}
 struct|;
 end_struct
@@ -1990,6 +2032,12 @@ name|label
 name|p_label
 decl_stmt|;
 comment|/* process (not subject) MAC label */
+name|struct
+name|p_sched
+modifier|*
+name|p_sched
+decl_stmt|;
+comment|/* Scheduler specific data */
 block|}
 struct|;
 end_struct

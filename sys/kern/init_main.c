@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -1144,6 +1150,30 @@ name|kg
 operator|=
 operator|&
 name|ksegrp0
+expr_stmt|;
+name|ke
+operator|->
+name|ke_sched
+operator|=
+name|kse0_sched
+expr_stmt|;
+name|kg
+operator|->
+name|kg_sched
+operator|=
+name|ksegrp0_sched
+expr_stmt|;
+name|p
+operator|->
+name|p_sched
+operator|=
+name|proc0_sched
+expr_stmt|;
+name|td
+operator|->
+name|td_sched
+operator|=
+name|thread0_sched
 expr_stmt|;
 comment|/* 	 * Initialize magic number. 	 */
 name|p
