@@ -98,7 +98,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Replace RLIM_INFINITY with -1 in the string 		 */
+comment|/* 		 * Replace RLIM_INFINITY with -1 in the string 		 */
 comment|/* 		 * current limit 		 */
 if|if
 condition|(

@@ -235,7 +235,7 @@ name|p_pid
 else|:
 literal|0
 expr_stmt|;
-comment|/* comm pid ppid pgid sid maj,min ctty,sldr start ut st wmsg                                  euid ruid rgid,egid,groups[1 .. NGROUPS] */
+comment|/* comm pid ppid pgid sid maj,min ctty,sldr start ut st wmsg 				euid ruid rgid,egid,groups[1 .. NGROUPS] */
 name|pc
 operator|=
 name|p
@@ -639,7 +639,7 @@ operator|->
 name|cr_rgid
 argument_list|)
 expr_stmt|;
-comment|/* egid (cr->cr_svgid) is equal to cr_ngroups[0]  	   see also getegid(2) in /sys/kern/kern_prot.c */
+comment|/* egid (cr->cr_svgid) is equal to cr_ngroups[0] 	   see also getegid(2) in /sys/kern/kern_prot.c */
 for|for
 control|(
 name|i

@@ -853,7 +853,7 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX for CTL_WAIT below ? */
 break|break;
-comment|/* 	 * Step.  Let the target process execute a single instruction. 	 * What does it mean to single step a threaded program?  	 */
+comment|/* 	 * Step.  Let the target process execute a single instruction. 	 * What does it mean to single step a threaded program? 	 */
 case|case
 name|PROCFS_CTL_STEP
 case|:

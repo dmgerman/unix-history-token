@@ -63,6 +63,8 @@ decl_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 operator|&&
 name|p
 operator|->
@@ -74,7 +76,6 @@ name|p_sysent
 operator|->
 name|sv_name
 condition|)
-block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -86,9 +87,7 @@ operator|->
 name|sv_name
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -96,7 +95,6 @@ argument_list|,
 name|none
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_putc
 argument_list|(
 name|sb
