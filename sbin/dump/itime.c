@@ -324,7 +324,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"cannot read %s: %s\n"
+literal|"WARNING: cannot read %s: %s\n"
 argument_list|,
 name|dumpdates
 argument_list|,
@@ -363,7 +363,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"cannot create %s: %s\n"
+literal|"WARNING: cannot create %s: %s\n"
 argument_list|,
 name|dumpdates
 argument_list|,
