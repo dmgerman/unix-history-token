@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c 1.5 %G%"
+literal|"@(#)pc3.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/src/new/pc0/pstab.h"
+file|"pstab.h"
 end_include
 
 begin_include
