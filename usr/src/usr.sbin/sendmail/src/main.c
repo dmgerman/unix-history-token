@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.156
+literal|3.157
 operator|%
 name|G
 operator|%
@@ -2601,6 +2601,19 @@ endif|#
 directive|endif
 endif|LOG
 end_endif
+
+begin_if
+if|if
+condition|(
+name|ExitStat
+operator|==
+name|EX_TEMPFAIL
+condition|)
+name|ExitStat
+operator|=
+name|EX_OK
+expr_stmt|;
+end_if
 
 begin_expr_stmt
 name|exit

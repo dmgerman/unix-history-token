@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.116		%G%"
+literal|"@(#)sendmail.h	3.117		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2493,7 +2493,7 @@ name|setstat
 parameter_list|(
 name|s
 parameter_list|)
-value|{ if (ExitStat == EX_OK) ExitStat = s; }
+value|{ \ 				if (ExitStat == EX_OK || ExitStat == EX_TEMPFAIL) \ 					ExitStat = s; \ 			}
 end_define
 
 begin_comment
