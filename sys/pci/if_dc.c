@@ -13782,6 +13782,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable interrupts. 	 */
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+comment|/* 	 * ... but only if we are not polling, and make sure they are off in 	 * the case of polling. Some cards (e.g. fxp) turn interrupts on 	 * after a reset. 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_ipending
+operator|&
+name|IFF_POLLING
+condition|)
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DC_IMR
+argument_list|,
+literal|0x00000000
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|CSR_WRITE_4
 argument_list|(
 name|sc

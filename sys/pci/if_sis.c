@@ -7407,17 +7407,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
+comment|/* 	 * ... only enable interrupts if we are not polling, make sure 	 * they are off otherwise. 	 */
 if|if
 condition|(
-operator|!
-operator|(
 name|ifp
 operator|->
 name|if_ipending
 operator|&
 name|IFF_POLLING
-operator|)
 condition|)
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|SIS_IER
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */

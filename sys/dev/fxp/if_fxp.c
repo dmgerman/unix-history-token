@@ -7537,6 +7537,31 @@ operator|~
 name|IFF_OACTIVE
 expr_stmt|;
 comment|/* 	 * Enable interrupts. 	 */
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+comment|/* 	 * ... but only do that if we are not polling. And because (presumably) 	 * the default is interrupts on, we need to disable them explicitly! 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_ipending
+operator|&
+name|IFF_POLLING
+condition|)
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_INTRCNTL
+argument_list|,
+name|FXP_SCB_INTR_DISABLE
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
