@@ -3616,6 +3616,12 @@ name|vnops
 expr_stmt|;
 name|fp
 operator|->
+name|f_seqcount
+operator|=
+literal|1
+expr_stmt|;
+name|fp
+operator|->
 name|f_type
 operator|=
 operator|(

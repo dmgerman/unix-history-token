@@ -5367,12 +5367,6 @@ argument_list|()
 expr_stmt|;
 name|fp
 operator|->
-name|f_gcflag
-operator|=
-literal|0
-expr_stmt|;
-name|fp
-operator|->
 name|f_count
 operator|=
 literal|1
@@ -5394,12 +5388,6 @@ name|f_ops
 operator|=
 operator|&
 name|badfileops
-expr_stmt|;
-name|fp
-operator|->
-name|f_seqcount
-operator|=
-literal|1
 expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
