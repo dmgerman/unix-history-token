@@ -62,7 +62,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uuidgen [-1] [-n count]\n"
+literal|"usage: uuidgen [-1] [-n count] [-o filename]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -86,6 +86,10 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|uuid_t
 modifier|*
 name|store
@@ -112,6 +116,11 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* no count yet */
+name|fp
+operator|=
+name|stdout
+expr_stmt|;
+comment|/* default output file */
 name|iterate
 operator|=
 literal|0
@@ -128,7 +137,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1n:"
+literal|"1n:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -185,6 +194,45 @@ literal|1
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+if|if
+condition|(
+name|fp
+operator|!=
+name|stdout
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"multiple output files not allowed"
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|optarg
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fopen"
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -335,8 +383,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|p
@@ -351,6 +401,17 @@ block|}
 name|free
 argument_list|(
 name|store
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|!=
+name|stdout
+condition|)
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
