@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.7 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -983,6 +983,21 @@ decl_stmt|;
 name|fd_set
 name|readable
 decl_stmt|;
+if|if
+condition|(
+name|nsock
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sigblock
+argument_list|(
+name|SIGBLOCK
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|nsock
@@ -994,6 +1009,15 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|readable
 operator|=
 name|allsock
@@ -3940,7 +3964,9 @@ name|i
 decl_stmt|;
 name|setproctitle
 argument_list|(
-literal|"echo"
+name|sep
+operator|->
+name|se_service
 argument_list|,
 name|s
 argument_list|)
@@ -4135,7 +4161,9 @@ index|]
 decl_stmt|;
 name|setproctitle
 argument_list|(
-literal|"discard"
+name|sep
+operator|->
+name|se_service
 argument_list|,
 name|s
 argument_list|)
@@ -4366,7 +4394,9 @@ name|dp
 decl_stmt|;
 name|setproctitle
 argument_list|(
-literal|"discard"
+name|sep
+operator|->
+name|se_service
 argument_list|,
 name|s
 argument_list|)
