@@ -313,7 +313,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-qtv] [-k kernel]\n"
+literal|"usage: %s [-qtv]\n"
 argument_list|,
 name|title
 argument_list|)
@@ -435,7 +435,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"qtvk:"
+literal|"qtv"
 argument_list|)
 operator|)
 operator|!=
@@ -463,14 +463,6 @@ name|TRUE
 expr_stmt|;
 comment|/* In test mode we want to be verbose */
 case|case
-literal|'k'
-case|:
-name|kernel
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
 literal|'v'
 case|:
 name|verbose
@@ -496,11 +488,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|kernel
-condition|)
 name|kernel
 operator|=
 name|getbootfile
