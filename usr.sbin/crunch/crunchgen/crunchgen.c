@@ -4597,7 +4597,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"LIBS="
+literal|"LIBS+="
 argument_list|)
 expr_stmt|;
 name|output_strlst
