@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -598,11 +598,11 @@ name|S_ISFIFO
 parameter_list|(
 name|m
 parameter_list|)
-value|((m& 0170000) == 0010000)
+value|((m& 0170000) == 0100000 || \ 			 (m& 0170000) == 0140000)
 end_define
 
 begin_comment
-comment|/* fifo */
+comment|/* fifo or socket */
 end_comment
 
 begin_ifndef
@@ -632,11 +632,11 @@ name|S_ISSOCK
 parameter_list|(
 name|m
 parameter_list|)
-value|((m& 0170000) == 0140000)
+value|((m& 0170000) == 0100000 || \ 			 (m& 0170000) == 0140000)
 end_define
 
 begin_comment
-comment|/* socket */
+comment|/* fifo or socket */
 end_comment
 
 begin_endif
@@ -650,16 +650,16 @@ directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
 
-begin_comment
-comment|/* 0777 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ACCESSPERMS
 value|(S_IRWXU|S_IRWXG|S_IRWXO)
 end_define
+
+begin_comment
+comment|/* 0777 */
+end_comment
 
 begin_comment
 comment|/* 7777 */
