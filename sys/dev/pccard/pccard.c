@@ -3859,42 +3859,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX These functions are needed, but not like this XXX */
-end_comment
-
-begin_comment
-unit|int pccard_io_map(struct pccard_function *pf, int width, bus_addr_t offset,     bus_size_t size, struct pccard_io_handle *pcihp, int *windowp) { 	int reg;  	if (pccard_chip_io_map(pf->sc->pct, pf->sc->pch, width, offset, size, 	    pcihp, windowp)) 		return (1);
-comment|/* 	 * XXX in the multifunction multi-iospace-per-function case, this 	 * needs to cooperate with io_alloc to make sure that the spaces 	 * don't overlap, and that the ccr's are set correctly 	 */
-end_comment
-
-begin_comment
-unit|if (pccard_mfc(pf->sc)) { 		long tmp, iosize;  		if (pf->pf_mfc_iomax == 0) { 			pf->pf_mfc_iobase = pcihp->addr + offset; 			pf->pf_mfc_iomax = pf->pf_mfc_iobase + size; 		} else {
-comment|/* this makes the assumption that nothing overlaps */
-end_comment
-
-begin_comment
-unit|if (pf->pf_mfc_iobase> pcihp->addr + offset) 				pf->pf_mfc_iobase = pcihp->addr + offset; 			if (pf->pf_mfc_iomax< pcihp->addr + offset + size) 				pf->pf_mfc_iomax = pcihp->addr + offset + size; 		}  		tmp = pf->pf_mfc_iomax - pf->pf_mfc_iobase;
-comment|/* round up to nearest (2^n)-1 */
-end_comment
-
-begin_comment
-unit|for (iosize = 1; iosize>= tmp; iosize<<= 1) 			; 		iosize--;  		pccard_ccr_write(pf, PCCARD_CCR_IOBASE0, 		    pf->pf_mfc_iobase& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE1, 		    (pf->pf_mfc_iobase>> 8)& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE2, 0); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE3, 0);  		pccard_ccr_write(pf, PCCARD_CCR_IOSIZE, iosize);  		reg = pccard_ccr_read(pf, PCCARD_CCR_OPTION); 		reg |= PCCARD_CCR_OPTION_ADDR_DECODE; 		pccard_ccr_write(pf, PCCARD_CCR_OPTION, reg); 	} 	return (0); }  void pccard_io_unmap(struct pccard_function *pf, int window) {  	pccard_chip_io_unmap(pf->sc->pct, pf->sc->pch, window);
-comment|/* XXX Anything for multi-function cards? */
-end_comment
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * simulate the old "probe" routine.  In the new world order, the driver  * needs to grab devices while in the old they were assigned to the device by  * the pccardd process.  These symbols are exported to the upper layers.  */
 end_comment
@@ -5949,22 +5913,25 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COOKIE_FOR_WARNER
 name|int
 name|reg
 decl_stmt|;
+name|int
+name|doisr
+init|=
+literal|1
+decl_stmt|;
+comment|/* 	 * MFC cards know if they interrupted, so we have to ack the 	 * interrupt and call the ISR.  Non-MFC cards don't have these 	 * bits, so they always get called.  Many non-MFC cards have 	 * this bit set always upon read, but some do not. 	 * 	 * We always ack the interrupt, even if there's no ISR 	 * for the card.  This is done on the theory that acking 	 * the interrupt will pacify the card enough to keep an 	 * interrupt storm from happening.  Of course this won't 	 * help in the non-MFC case. 	 */
 if|if
 condition|(
+name|pccard_mfc
+argument_list|(
 name|pf
 operator|->
-name|intr_handler
-operator|==
-name|NULL
+name|sc
+argument_list|)
 condition|)
-return|return;
-comment|/* 	 * XXX The CCR_STATUS register bits used here are  	 * only valid for multi function cards. 	 */
+block|{
 name|reg
 operator|=
 name|pccard_ccr_read
@@ -5980,7 +5947,6 @@ name|reg
 operator|&
 name|PCCARD_CCR_STATUS_INTR
 condition|)
-block|{
 name|pccard_ccr_write
 argument_list|(
 name|pf
@@ -5993,27 +5959,22 @@ operator|~
 name|PCCARD_CCR_STATUS_INTR
 argument_list|)
 expr_stmt|;
-name|pf
-operator|->
-name|intr_handler
-argument_list|(
-name|pf
-operator|->
-name|intr_handler_arg
-argument_list|)
+else|else
+name|doisr
+operator|=
+literal|0
 expr_stmt|;
 block|}
-else|#
-directive|else
 if|if
 condition|(
 name|pf
 operator|->
 name|intr_handler
-operator|==
+operator|!=
 name|NULL
+operator|&&
+name|doisr
 condition|)
-return|return;
 name|pf
 operator|->
 name|intr_handler
@@ -6023,8 +5984,6 @@ operator|->
 name|intr_handler_arg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
