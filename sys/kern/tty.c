@@ -1489,6 +1489,42 @@ operator|->
 name|t_rawq
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NSNP
+operator|>
+literal|0
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|,
+name|TS_SNOOP
+argument_list|)
+operator|&&
+name|tp
+operator|->
+name|t_sc
+operator|!=
+name|NULL
+condition|)
+name|snpdown
+argument_list|(
+operator|(
+expr|struct
+name|snoop
+operator|*
+operator|)
+name|tp
+operator|->
+name|t_sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|tp
 operator|->
 name|t_gen
@@ -1549,10 +1585,6 @@ parameter_list|)
 define|\
 value|((c) == '\n' || (((c) == cc[VEOF] ||				\ 	(c) == cc[VEOL] || (c) == cc[VEOL2])&& (c) != _POSIX_VDISABLE))
 end_define
-
-begin_comment
-comment|/*-  * TODO:  *	o Fix races for sending the start char in ttyflush().  *	o Handle inter-byte timeout for "MIN> 0, TIME> 0" in ttselect().  *	  With luck, there will be MIN chars before select() returns().  *	o Handle CLOCAL consistently for ptys.  Perhaps disallow setting it.  *	o Don't allow input in TS_ZOMBIE case.  It would be visible through  *	  FIONREAD.  *	o Do the new sio locking stuff here and use it to avoid special  *	  case for EXTPROC?  *	o Lock PENDIN too?  *	o Move EXTPROC and/or PENDIN to t_state?  *	o Wrap most of ttioctl in spltty/splx.  *	o Implement TIOCNOTTY or remove it from<sys/ioctl.h>.  */
-end_comment
 
 begin_comment
 comment|/*  * Process input of a single character received on a tty.  */
@@ -5792,32 +5824,6 @@ condition|)
 break|break;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|error
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_outq
-operator|.
-name|c_cc
-operator|||
-name|ISSET
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|,
-name|TS_BUSY
-argument_list|)
-operator|)
-condition|)
-name|error
-operator|=
-name|EIO
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -6374,16 +6380,9 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|(
 name|flag
 operator|&
 name|IO_NDELAY
-operator|)
-operator|||
-name|ttywflush
-argument_list|(
-name|tp
-argument_list|)
 condition|)
 name|ttyflush
 argument_list|(
@@ -6392,6 +6391,12 @@ argument_list|,
 name|FREAD
 operator||
 name|FWRITE
+argument_list|)
+expr_stmt|;
+else|else
+name|ttywflush
+argument_list|(
+name|tp
 argument_list|)
 expr_stmt|;
 return|return
@@ -10861,11 +10866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX this is usable but not useful or used.  ttselect() requires an array  * of tty structs.  Most tty drivers have ifdefs for using ttymalloc() but  * assume a different interface.  */
-end_comment
-
-begin_comment
-comment|/*  * Allocate a tty struct.  Clists in the struct will be allocated by  * ttyopen().  */
+comment|/*  * Allocate a tty structure and its associated buffers.  */
 end_comment
 
 begin_function
@@ -10880,13 +10881,19 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|tp
-operator|=
-name|malloc
+name|MALLOC
 argument_list|(
-sizeof|sizeof
-expr|*
 name|tp
+argument_list|,
+expr|struct
+name|tty
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tty
+argument_list|)
 argument_list|,
 name|M_TTYS
 argument_list|,
@@ -10902,6 +10909,45 @@ expr|*
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/*          * Initialize or restore a cblock allocation policy suitable for          * the standard line discipline.          */
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_canq
+argument_list|,
+name|TTYHOG
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|TTMAXHIWAT
+operator|+
+literal|200
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|,
+name|TTYHOG
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|tp
@@ -10910,29 +10956,55 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* XXX not yet usable: session leader holds a ref (see kern_exit.c). */
+comment|/*  * Free a tty structure and its buffers.  */
 end_comment
 
-begin_comment
-comment|/*  * Free a tty struct.  Clists in the struct should have been freed by  * ttyclose().  */
-end_comment
-
-begin_endif
-unit|void ttyfree(tp) 	struct tty *tp; {         free(tp, M_TTYS); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
+begin_function
+name|void
+name|ttyfree
+parameter_list|(
+name|tp
+parameter_list|)
+name|struct
+name|tty
+modifier|*
+name|tp
+decl_stmt|;
+block|{
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_canq
+argument_list|)
+expr_stmt|;
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|tp
+argument_list|,
+name|M_TTYS
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
