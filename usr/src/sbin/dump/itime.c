@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)itime.c	5.13 (Berkeley) %G%"
+literal|"@(#)itime.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,30 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/fs.h>
 end_include
 
@@ -105,16 +81,16 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -388,6 +364,9 @@ argument_list|(
 name|df
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|df
@@ -487,9 +466,14 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|nddates
 operator|+
 literal|1
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -739,6 +723,10 @@ name|disk
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ddatev
 argument_list|)
 expr_stmt|;
@@ -1203,6 +1191,9 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sscanf
 argument_list|(
 name|tbuf
