@@ -2279,6 +2279,16 @@ parameter_list|)
 value|((win)->_bkgd = ch)
 end_define
 
+begin_define
+define|#
+directive|define
+name|getbkgd
+parameter_list|(
+name|win
+parameter_list|)
+value|((win)->_bkgd)
+end_define
+
 begin_comment
 comment|/* It seems older SYSV curses define these */
 end_comment
