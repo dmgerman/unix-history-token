@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -230,9 +230,6 @@ name|if_mtu
 operator|=
 name|LOMTU
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ifp
 operator|->
 name|if_flags
@@ -241,16 +238,6 @@ name|IFF_LOOPBACK
 operator||
 name|IFF_MULTICAST
 expr_stmt|;
-else|#
-directive|else
-name|ifp
-operator|->
-name|if_flags
-operator|=
-name|IFF_LOOPBACK
-expr_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_ioctl
@@ -759,17 +746,12 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 specifier|register
 name|struct
 name|ifreq
 modifier|*
 name|ifr
 decl_stmt|;
-endif|#
-directive|endif
 specifier|register
 name|int
 name|error
@@ -821,9 +803,6 @@ name|lortrequest
 expr_stmt|;
 comment|/* 		 * Everything else is done at a higher level. 		 */
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -879,8 +858,6 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=

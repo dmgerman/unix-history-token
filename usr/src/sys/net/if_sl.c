@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -365,9 +365,6 @@ name|if_mtu
 operator|=
 name|SLMTU
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|sc
 operator|->
 name|sc_if
@@ -380,20 +377,6 @@ name|SC_AUTOCOMP
 operator||
 name|IFF_MULTICAST
 expr_stmt|;
-else|#
-directive|else
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_flags
-operator|=
-name|IFF_POINTOPOINT
-operator||
-name|SC_AUTOCOMP
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_if
@@ -2660,17 +2643,12 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 specifier|register
 name|struct
 name|ifreq
 modifier|*
 name|ifr
 decl_stmt|;
-endif|#
-directive|endif
 specifier|register
 name|int
 name|s
@@ -2730,9 +2708,6 @@ operator|=
 name|EAFNOSUPPORT
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -2808,11 +2783,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
