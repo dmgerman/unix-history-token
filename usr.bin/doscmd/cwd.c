@@ -3883,7 +3883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return file system statistics for drive.  * Return the DOS errno on failure.  */
+comment|/*  * Return filesystem statistics for drive.  * Return the DOS errno on failure.  */
 end_comment
 
 begin_function

@@ -91,7 +91,7 @@ value|"/var/tmp/"
 end_define
 
 begin_comment
-comment|/* Use a big file system */
+comment|/* Use a big filesystem */
 end_comment
 
 begin_define

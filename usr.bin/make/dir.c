@@ -2823,7 +2823,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Only do this once -- the second time folks are checking to 	 * see if the file was actually updated, so we need to actually go 	 * to the file system. 	 */
+comment|/* 	 * Only do this once -- the second time folks are checking to 	 * see if the file was actually updated, so we need to actually go 	 * to the filesystem. 	 */
 if|if
 condition|(
 name|DEBUG

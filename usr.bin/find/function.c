@@ -3003,7 +3003,7 @@ name|fts_statp
 operator|->
 name|st_dev
 expr_stmt|;
-comment|/* 		 * Statfs follows symlinks; find wants the link's file system, 		 * not where it points. 		 */
+comment|/* 		 * Statfs follows symlinks; find wants the link's filesystem, 		 * not where it points. 		 */
 if|if
 condition|(
 name|entry

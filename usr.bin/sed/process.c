@@ -2205,7 +2205,7 @@ break|break;
 case|case
 name|AP_FILE
 case|:
-comment|/* 			 * Read files probably shouldn't be cached.  Since 			 * it's not an error to read a non-existent file, 			 * it's possible that another program is interacting 			 * with the sed script through the file system.  It 			 * would be truly bizarre, but possible.  It's probably 			 * not that big a performance win, anyhow. 			 */
+comment|/* 			 * Read files probably shouldn't be cached.  Since 			 * it's not an error to read a non-existent file, 			 * it's possible that another program is interacting 			 * with the sed script through the filesystem.  It 			 * would be truly bizarre, but possible.  It's probably 			 * not that big a performance win, anyhow. 			 */
 if|if
 condition|(
 operator|(
