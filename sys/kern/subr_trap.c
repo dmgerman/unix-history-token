@@ -461,7 +461,7 @@ name|td_frame
 operator|=
 name|framep
 expr_stmt|;
-comment|/* 		 * This updates the p_sflag's for the checks below in one 		 * "atomic" operation with turning off the astpending flag. 		 * If another AST is triggered while we are handling the 		 * AST's saved in sflag, the astpending flag will be set and 		 * ast() will be called again. 		 */
+comment|/* 	 * This updates the p_sflag's for the checks below in one 	 * "atomic" operation with turning off the astpending flag. 	 * If another AST is triggered while we are handling the 	 * AST's saved in sflag, the astpending flag will be set and 	 * ast() will be called again. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
