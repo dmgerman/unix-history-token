@@ -4,7 +4,7 @@ comment|/*	$NetBSD: fsdb.c,v 1.2 1995/10/08 23:18:10 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 1995 John T. Kohl  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR `AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  *  Copyright (c) 1995 John T. Kohl  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR `AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *		$Id$  */
 end_comment
 
 begin_ifndef
@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -153,18 +159,7 @@ file|"fsck.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from crt0.o */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -189,17 +184,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
 block|{
-name|errx
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: fsdb [-d] [-f] fsname\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"usage: %s [-d] -f<fsname>"
-argument_list|,
-name|__progname
 argument_list|)
 expr_stmt|;
 block|}
@@ -245,10 +244,6 @@ name|fsys
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|stat
-name|stb
-decl_stmt|;
 while|while
 condition|(
 operator|-
@@ -263,7 +258,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:d"
+literal|"fd"
 argument_list|)
 operator|)
 condition|)
@@ -276,10 +271,7 @@ block|{
 case|case
 literal|'f'
 case|:
-name|fsys
-operator|=
-name|optarg
-expr_stmt|;
+comment|/* The -f option is left for historical 				 * reasons and has no meaning. 				 */
 break|break;
 case|case
 literal|'d'
@@ -304,13 +296,6 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-name|fsys
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
 name|argc
 operator|!=
 literal|1
@@ -326,7 +311,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1297,7 +1281,7 @@ name|elptr
 operator|=
 name|el_init
 argument_list|(
-name|__progname
+literal|"fsdb"
 argument_list|,
 name|stdin
 argument_list|,
@@ -2322,11 +2306,6 @@ block|{
 name|ino_t
 name|inum
 decl_stmt|;
-name|struct
-name|dinode
-modifier|*
-name|dp
-decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
@@ -2538,9 +2517,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|rval
-decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -2803,9 +2779,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|ino_t
-name|inum
-decl_stmt|;
 name|struct
 name|inodesc
 name|idesc
@@ -3030,11 +3003,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|rval
-init|=
-literal|1
-decl_stmt|;
 name|int
 name|type
 decl_stmt|;
