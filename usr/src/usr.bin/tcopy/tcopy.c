@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.15 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,18 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -85,7 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
