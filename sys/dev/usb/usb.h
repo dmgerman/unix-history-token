@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb.h,v 1.3 1998/07/25 15:22:11 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb.h,v 1.3 1998/12/14 09:32:24 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1190,6 +1190,20 @@ begin_define
 define|#
 directive|define
 name|USUBCLASS_AUDIOSTREAM
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLASS_CDC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_MODEM
 value|2
 end_define
 

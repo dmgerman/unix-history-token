@@ -4,7 +4,7 @@ comment|/*	$NetBSD: hid.c,v 1.2 1998/07/24 20:57:46 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: hid.c,v 1.2 1998/12/14 09:32:23 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -295,12 +295,6 @@ name|hid_data
 modifier|*
 name|s
 decl_stmt|;
-name|u_char
-modifier|*
-name|p
-init|=
-name|d
-decl_stmt|;
 name|s
 operator|=
 name|malloc
@@ -333,13 +327,13 @@ name|s
 operator|->
 name|p
 operator|=
-name|p
+name|d
 expr_stmt|;
 name|s
 operator|->
 name|end
 operator|=
-name|p
+name|d
 operator|+
 name|len
 expr_stmt|;
