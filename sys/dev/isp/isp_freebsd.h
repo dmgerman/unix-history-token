@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.1 1998/04/22 17:54:52 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.h,v 1.12 1998/09/08 01:01:53 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -23,11 +23,42 @@ directive|define
 name|_ISP_FREEBSD_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MAJOR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_PLATFORM_VERSION_MINOR
+value|95
+end_define
+
 begin_include
 include|#
 directive|include
-file|<pci.h>
+file|"opt_scsi.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCSI_CAM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_freebsd_cam.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -68,12 +99,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<scsi/scsi_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -102,7 +127,7 @@ file|<sys/kernel.h>
 end_include
 
 begin_comment
-comment|/*  * Quick hack fix to get around osreldate.h not being present.  * #include<osreldate.h>  */
+comment|/*  * Now that __FreeBSD_version is in sys/param.h, we can  * automatically handle pre-3.0 cases.  */
 end_comment
 
 begin_ifndef
@@ -115,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|300002
+value|226000
 end_define
 
 begin_endif
@@ -173,14 +198,6 @@ name|MAXISPREQUEST
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|ISP_VERSION_STRING
-define|\
-value|"Version 0.92 Alpha Fri Apr 17 09:34:03 PDT 1998"
-end_define
-
 begin_include
 include|#
 directive|include
@@ -218,35 +235,12 @@ parameter_list|)
 value|if (isp->isp_dblev>= lev) printf x
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSIDEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DFLT_DBLEVEL
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|DFLT_DBLEVEL
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -259,6 +253,9 @@ begin_define
 define|#
 directive|define
 name|ISP_UNLOCK
+parameter_list|(
+name|isp
+parameter_list|)
 value|(void) splx(isp_spl_save)
 end_define
 
@@ -266,7 +263,30 @@ begin_define
 define|#
 directive|define
 name|ISP_LOCK
+parameter_list|(
+name|isp
+parameter_list|)
 value|isp_spl_save = splbio()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ILOCK
+parameter_list|(
+name|isp
+parameter_list|)
+value|ISP_LOCK(isp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_IUNLOCK
+parameter_list|(
+name|isp
+parameter_list|)
+value|ISP_UNLOCK(isp)
 end_define
 
 begin_define
@@ -293,7 +313,8 @@ name|XS_ISP
 parameter_list|(
 name|xs
 parameter_list|)
-value|(xs)->sc_link->adapter_softc
+define|\
+value|((struct ispsoftc *) (xs)->sc_link->adapter_softc)
 end_define
 
 begin_define
@@ -458,6 +479,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HBA_DATAOVR
+value|XS_DRIVER_STUFFUP
+end_define
+
+begin_define
+define|#
+directive|define
+name|HBA_ARQFAIL
+value|XS_DRIVER_STUFFUP
+end_define
+
+begin_define
+define|#
+directive|define
 name|XS_SNS_IS_VALID
 parameter_list|(
 name|xs
@@ -537,14 +572,32 @@ parameter_list|)
 value|(((xs)->flags& ITSDONE) != 0)
 end_define
 
+begin_comment
+comment|/*  * We decide whether to use tags based upon whether we're polling.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|XS_POLLDCMD
+name|XS_CANTAG
 parameter_list|(
 name|xs
 parameter_list|)
-value|((xs)->flags& SCSI_NOMASK)
+value|(((xs)->flags& SCSI_NOMASK) != 0)
+end_define
+
+begin_comment
+comment|/*  * Our default tag  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XS_KINDOF_TAG
+parameter_list|(
+name|xs
+parameter_list|)
+value|REQFLAG_OTAG
 end_define
 
 begin_define
@@ -686,6 +739,22 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PVS
+value|"Qlogic ISP Driver, FreeBSD Non-Cam"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SCSI_CAM */
+end_comment
 
 begin_endif
 endif|#

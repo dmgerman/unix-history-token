@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.2 1998/05/01 18:10:50 bde Exp $ */
+comment|/* $Id: ispvar.h,v 1.17 1998/09/14 23:22:51 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -69,6 +69,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ISP_CORE_VERSION_MAJOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_CORE_VERSION_MINOR
+value|3
+end_define
 
 begin_comment
 comment|/*  * Vector for MD code to provide specific services.  */
@@ -250,24 +264,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_LUNS
-value|8
+name|MAX_FC_TARG
+value|126
 end_define
+
+begin_comment
+comment|/* queue length must be a power of two */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_FC_TARG
-value|126
+name|QENTRY_LEN
+value|64
 end_define
 
 begin_define
 define|#
 directive|define
 name|RQUEST_QUEUE_LEN
-parameter_list|(
-name|isp
-parameter_list|)
 value|MAXISPREQUEST
 end_define
 
@@ -275,17 +290,7 @@ begin_define
 define|#
 directive|define
 name|RESULT_QUEUE_LEN
-parameter_list|(
-name|isp
-parameter_list|)
 value|(MAXISPREQUEST/4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QENTRY_LEN
-value|64
 end_define
 
 begin_define
@@ -310,6 +315,33 @@ parameter_list|)
 value|((n) * QENTRY_LEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_NXT_QENTRY
+parameter_list|(
+name|idx
+parameter_list|,
+name|qlen
+parameter_list|)
+value|(((idx) + 1)& ((qlen)-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_QAVAIL
+parameter_list|(
+name|in
+parameter_list|,
+name|out
+parameter_list|,
+name|qlen
+parameter_list|)
+define|\
+value|((in == out)? (qlen - 1) : ((in> out)? \ 		((qlen - 1) - (in - out)) : (out - in - 1)))
+end_define
+
 begin_comment
 comment|/*  * SCSI (as opposed to FC-PH) Specific Host Adapter Parameters  */
 end_comment
@@ -319,10 +351,6 @@ typedef|typedef
 struct|struct
 block|{
 name|u_int
-name|isp_adapter_enabled
-range|:
-literal|1
-decl_stmt|,
 name|isp_req_ack_active_neg
 range|:
 literal|1
@@ -344,6 +372,10 @@ range|:
 literal|2
 decl_stmt|,
 name|isp_diffmode
+range|:
+literal|1
+decl_stmt|,
+name|isp_fast_mttr
 range|:
 literal|1
 decl_stmt|,
@@ -378,25 +410,35 @@ name|isp_retry_delay
 decl_stmt|;
 struct|struct
 block|{
-name|u_int8_t
-name|dev_flags
-decl_stmt|;
-comment|/* Device Flags - see below */
-name|u_int8_t
-name|exc_throttle
-decl_stmt|;
-name|u_int8_t
-name|sync_period
-decl_stmt|;
 name|u_int
-name|sync_offset
+name|dev_update
 range|:
-literal|4
+literal|1
 decl_stmt|,
 name|dev_enable
 range|:
 literal|1
+decl_stmt|,
+name|exc_throttle
+range|:
+literal|7
+decl_stmt|,
+name|sync_offset
+range|:
+literal|4
+decl_stmt|,
+name|sync_period
+range|:
+literal|8
 decl_stmt|;
+name|u_int16_t
+name|dev_flags
+decl_stmt|;
+comment|/* persistent device flags */
+name|u_int16_t
+name|cur_dflags
+decl_stmt|;
+comment|/* current device flags */
 block|}
 name|isp_devparam
 index|[
@@ -420,63 +462,92 @@ begin_define
 define|#
 directive|define
 name|DPARM_DISC
-value|0x80
+value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_PARITY
-value|0x40
+value|0x4000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_WIDE
-value|0x20
+value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_SYNC
-value|0x10
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_TQING
-value|0x08
+value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_ARQ
-value|0x04
+value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_QFRZ
-value|0x02
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPARM_RENEG
-value|0x01
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
+name|DPARM_NARROW
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Possibly only available with>= 7.55 fw */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPARM_ASYNC
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Possibly only available with>= 7.55 fw */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DPARM_DEFAULT
-value|(0xff& ~DPARM_QFRZ)
+value|(0xFFFF& ~DPARM_QFRZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPARM_SAFE_DFLT
+value|(DPARM_DEFAULT& ~(DPARM_WIDE|DPARM_SYNC|DPARM_TQING))
 end_define
 
 begin_define
@@ -529,17 +600,33 @@ comment|/* WWN of adapter */
 name|u_int8_t
 name|isp_loopid
 decl_stmt|;
-comment|/* FCAL of this adapter inst */
+comment|/* hard loop id */
 name|u_int8_t
-name|isp_retry_count
+name|isp_alpa
+decl_stmt|;
+comment|/* ALPA */
+name|u_int8_t
+name|isp_execthrottle
 decl_stmt|;
 name|u_int8_t
 name|isp_retry_delay
 decl_stmt|;
 name|u_int8_t
+name|isp_retry_count
+decl_stmt|;
+name|u_int8_t
 name|isp_fwstate
 decl_stmt|;
 comment|/* ISP F/W state */
+name|u_int16_t
+name|isp_maxalloc
+decl_stmt|;
+name|u_int16_t
+name|isp_maxfrmlen
+decl_stmt|;
+name|u_int16_t
+name|isp_fwoptions
+decl_stmt|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
 specifier|volatile
 name|caddr_t
@@ -726,39 +813,82 @@ modifier|*
 name|isp_mdvec
 decl_stmt|;
 comment|/* 	 * State, debugging, etc.. 	 */
-name|u_int32_t
-name|isp_state
-range|:
-literal|3
-decl_stmt|,
-name|isp_dogactive
-range|:
-literal|1
-decl_stmt|,
-name|isp_dblev
-range|:
-literal|4
-decl_stmt|,
-name|isp_confopts
-range|:
+name|u_int
+label|:
 literal|8
-decl_stmt|,
+operator|,
+name|isp_confopts
+operator|:
+literal|8
+operator|,
+operator|:
+literal|2
+operator|,
+name|isp_dblev
+operator|:
+literal|3
+operator|,
+name|isp_gotdparms
+operator|:
+literal|1
+operator|,
+name|isp_dogactive
+operator|:
+literal|1
+operator|,
+name|isp_bustype
+operator|:
+literal|1
+operator|,
+comment|/* BUS Implementation */
+name|isp_type
+operator|:
+literal|8
+expr_stmt|;
+comment|/* HBA Type and Revision */
+name|u_int16_t
 name|isp_fwrev
-range|:
-literal|16
 decl_stmt|;
-comment|/* 	 * Host Adapter Type and Parameters. 	 * Some parameters nominally stored in NVRAM on card. 	 */
+comment|/* Running F/W revision */
+name|u_int16_t
+name|isp_romfw_rev
+decl_stmt|;
+comment|/* 'ROM' F/W revision */
 name|void
 modifier|*
 name|isp_param
 decl_stmt|;
-name|u_int8_t
-name|isp_type
-decl_stmt|;
-name|int16_t
+comment|/* 	 * Volatile state 	 */
+specifier|volatile
+name|u_int
+operator|:
+literal|19
+operator|,
+name|isp_state
+operator|:
+literal|3
+operator|,
+name|isp_sendmarker
+operator|:
+literal|1
+operator|,
+comment|/* send a marker entry */
+name|isp_update
+operator|:
+literal|1
+operator|,
+comment|/* update paramters */
 name|isp_nactive
+operator|:
+literal|9
+expr_stmt|;
+comment|/* how many commands active */
+comment|/* 	 * Result and Request Queue indices. 	 */
+specifier|volatile
+name|u_int8_t
+name|isp_reqodx
 decl_stmt|;
-comment|/* 	 * Result and Request Queues. 	 */
+comment|/* index of last ISP pickup */
 specifier|volatile
 name|u_int8_t
 name|isp_reqidx
@@ -771,22 +901,19 @@ decl_stmt|;
 comment|/* index of next result */
 specifier|volatile
 name|u_int8_t
-name|isp_sendmarker
-decl_stmt|;
-specifier|volatile
-name|u_int8_t
 name|isp_seqno
 decl_stmt|;
+comment|/* rolling sequence # */
 comment|/* 	 * Sheer laziness, but it gets us around the problem 	 * where we don't have a clean way of remembering 	 * which transaction is bound to which ISP queue entry. 	 * 	 * There are other more clever ways to do this, but, 	 * jeez, so I blow a couple of KB per host adapter... 	 * and it *is* faster. 	 */
 specifier|volatile
 name|ISP_SCSI_XFER_T
 modifier|*
 name|isp_xflist
 index|[
-name|MAXISPREQUEST
+name|RQUEST_QUEUE_LEN
 index|]
 decl_stmt|;
-comment|/* 	 * request/result queues 	 */
+comment|/* 	 * request/result queues and dma handles for them. 	 */
 specifier|volatile
 name|caddr_t
 name|isp_rquest
@@ -852,8 +979,46 @@ begin_comment
 comment|/* don't download f/w */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISP_FW_REV
+parameter_list|(
+name|maj
+parameter_list|,
+name|min
+parameter_list|)
+value|((maj)<< 10| (min))
+end_define
+
 begin_comment
-comment|/*  * Adapter Types  */
+comment|/*  * Bus (implementation) types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_BT_PCI
+value|0
+end_define
+
+begin_comment
+comment|/* PCI Implementations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_BT_SBUS
+value|1
+end_define
+
+begin_comment
+comment|/* SBus Implementations */
+end_comment
+
+begin_comment
+comment|/*  * Chip Types  */
 end_comment
 
 begin_define
@@ -867,28 +1032,42 @@ begin_define
 define|#
 directive|define
 name|ISP_HA_SCSI_UNKNOWN
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_HA_SCSI_1020
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_1040A
+name|ISP_HA_SCSI_1020
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_1040B
+name|ISP_HA_SCSI_1020A
 value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1040
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1040A
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1040B
+value|0x6
 end_define
 
 begin_define
@@ -1050,7 +1229,7 @@ comment|/*  * Function Prototypes  */
 end_comment
 
 begin_comment
-comment|/*  * Reset Hardware.  */
+comment|/*  * Reset Hardware. Totally. Assumes that you'll follow this with  * a call to isp_init.  */
 end_comment
 
 begin_decl_stmt
@@ -1062,26 +1241,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Abort this running command..  *  * Second argument is an index into xflist array.  * All locks must be held already.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|isp_abortcmd
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1112,6 +1271,24 @@ end_comment
 begin_decl_stmt
 name|void
 name|isp_uninit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Reset the ISP and call completion for any orphaned commands.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|isp_restart
 name|__P
 argument_list|(
 operator|(
@@ -1162,12 +1339,71 @@ comment|/*  * Command Entry Point  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|int32_t
 name|ispscsicmd
 name|__P
 argument_list|(
 operator|(
+name|ISP_SCSI_XFER_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Platform Dependent to Internal Control Point  *  * For: 	Aborting a running command	- arg is an ISP_SCSI_XFER_T *  *		Resetting a Device		- arg is target to reset  *		Resetting a BUS			- arg is ignored  *		Updating parameters		- arg is ignored  *  * Second argument is an index into xflist array.  * Assumes all locks must be held already.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ISPCTL_RESET_BUS
+block|,
+name|ISPCTL_RESET_DEV
+block|,
+name|ISPCTL_ABORT_CMD
+block|,
+name|ISPCTL_UPDATE_PARAMS
+block|, }
+name|ispctl_t
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|isp_control
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|,
+name|ispctl_t
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * lost command routine (XXXX IN TRANSITION XXXX)  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|isp_lostcmd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|,
 name|ISP_SCSI_XFER_T
 operator|*
 operator|)
