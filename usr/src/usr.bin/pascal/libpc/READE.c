@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READE.c 1.1 %G%"
+literal|"@(#)READE.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,9 @@ index|[
 name|NAMSIZ
 index|]
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 if|if
 condition|(
 name|curfile
@@ -104,8 +107,8 @@ argument_list|(
 name|curfile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|retval
+operator|=
 name|fscanf
 argument_list|(
 name|curfile
@@ -116,6 +119,28 @@ literal|"%*[ \t\n]%74[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 argument_list|,
 name|namebuf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|==
+name|EOF
+condition|)
+block|{
+name|ERROR
+argument_list|(
+name|EPASTEOF
+argument_list|,
+name|curfile
+operator|->
+name|pfname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|retval
 operator|==
 literal|0
 condition|)
