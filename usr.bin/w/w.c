@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.27 1998/05/21 08:46:48 jkoshy Exp $"
+literal|"$Id: w.c,v 1.28 1998/06/09 04:35:20 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -610,26 +610,14 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* Are we w(1) or uptime(1)? */
-name|p
-operator|=
+if|if
+condition|(
+name|strstr
+argument_list|(
 name|__progname
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'-'
-condition|)
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'u'
+argument_list|,
+literal|"uptime"
+argument_list|)
 condition|)
 block|{
 name|wcmd
