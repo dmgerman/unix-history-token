@@ -2794,7 +2794,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * The PAM version as a side effect may put a new username in *user.  */
+comment|/*  * The PAM version as a side effect may put a new username in *name.  */
 end_comment
 
 begin_function
@@ -2941,7 +2941,7 @@ condition|)
 block|{
 name|strcpy
 argument_list|(
-name|user
+name|name
 argument_list|,
 operator|(
 specifier|const
@@ -2971,7 +2971,7 @@ if|if
 condition|(
 name|isroot
 argument_list|(
-name|user
+name|name
 argument_list|)
 operator|&&
 operator|!
