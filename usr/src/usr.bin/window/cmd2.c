@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.9 83/07/28"
+literal|"@(#)cmd2.c	1.10 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":escape c               Set escape character to c.\r\n"
+literal|":escape C               Set escape character to C.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -283,6 +283,13 @@ argument_list|(
 name|w
 argument_list|,
 literal|"                        with nr rows and nc colomns\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":source filename        Execute the commands in `filename'.\r\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
