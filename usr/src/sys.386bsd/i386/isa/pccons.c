@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         5       00083  * --------------------         -----   ----------------------  *  * 15 Aug 92	Pace Willisson		Patches for X server  * 21 Aug 92	Frank Maclachlan	Fixed back-scroll system crash  * 28 Nov 92	Terry Lee		Fixed LED's in X mode  * 09 Feb 93	Rich Murphey		Added 'BELL' mode in X  * 14 Mar 93	Bruce Evans		Added keyboard timeout in pcprobe  * 					Fixed color/mono test and mono  *					kernel color.  Added check for  *					minor.   * 14 Mar 93	Chris G. Demetriou	Moved pg() to i386/cons.c, code  *					cleanup, removed ctl-alt-del.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         6       00162  * --------------------         -----   ----------------------  *  * 15 Aug 92	Pace Willisson		Patches for X server  * 21 Aug 92	Frank Maclachlan	Fixed back-scroll system crash  * 28 Nov 92	Terry Lee		Fixed LED's in X mode  * 09 Feb 93	Rich Murphey		Added 'BELL' mode in X  * 14 Mar 93	Bruce Evans		Added keyboard timeout in pcprobe  * 					Fixed color/mono test and mono  *					kernel color.  Added check for  *					minor.   * 14 Mar 93	Chris G. Demetriou	Moved pg() to i386/cons.c, code  *					cleanup, removed ctl-alt-del.  * 22 Apr 93	Holger Veit		Added cons_highlight/cons_normal  *					to eliminate ESC sequence in   *					init_main.c  */
 end_comment
 
 begin_decl_stmt
@@ -7932,6 +7932,59 @@ end_macro
 begin_block
 block|{}
 end_block
+
+begin_comment
+comment|/* -hv- 22-Apr-93: to make init_main more portable */
+end_comment
+
+begin_function
+name|void
+name|cons_highlight
+parameter_list|()
+block|{
+comment|/* pc text attribute */
+name|vs
+operator|.
+name|kern_fg_at
+operator|=
+literal|0x0f
+expr_stmt|;
+name|vs
+operator|.
+name|kern_bg_at
+operator|=
+literal|0x00
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cons_normal
+parameter_list|()
+block|{
+comment|/* reset to normal attributes */
+name|vs
+operator|.
+name|bg_at
+operator|=
+name|BG_BLACK
+expr_stmt|;
+comment|/* we are in kernel mode */
+name|vs
+operator|.
+name|fg_at
+operator|=
+name|vs
+operator|.
+name|color
+condition|?
+name|FG_LIGHTGREY
+else|:
+name|FG_UNDERLINE
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
