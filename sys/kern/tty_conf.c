@@ -67,13 +67,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|l_ioctl_t
-name|l_nullioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|l_rint_t
 name|l_norint
 decl_stmt|;
@@ -561,7 +554,6 @@ comment|/*  * Do nothing specific version of line  * discipline specific ioctl c
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|l_nullioctl
 parameter_list|(
