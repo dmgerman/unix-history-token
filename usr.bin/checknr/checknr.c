@@ -77,6 +77,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1773,8 +1779,10 @@ name|f
 operator|==
 name|NULL
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cfilename
 argument_list|)
 expr_stmt|;
