@@ -2811,6 +2811,16 @@ operator|&&
 name|i
 operator|==
 literal|0
+operator|&&
+operator|(
+name|vp
+operator|->
+name|v_rdev
+operator|->
+name|si_flags
+operator|&
+name|SI_NAMED
+operator|)
 condition|)
 name|destroy_dev
 argument_list|(

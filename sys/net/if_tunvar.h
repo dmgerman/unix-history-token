@@ -94,6 +94,12 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* Next softc in list */
+name|struct
+name|resource
+modifier|*
+name|r_unit
+decl_stmt|;
+comment|/* resource allocated for this unit */
 block|}
 struct|;
 end_struct
