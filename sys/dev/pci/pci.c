@@ -5125,14 +5125,14 @@ if|if
 condition|(
 name|pci_get_class
 argument_list|(
-name|dev
+name|child
 argument_list|)
 operator|==
 name|PCIC_SERIALBUS
 operator|&&
 name|pci_get_subclass
 argument_list|(
-name|dev
+name|child
 argument_list|)
 operator|==
 name|PCIS_SERIALBUS_USB
@@ -5142,7 +5142,7 @@ if|if
 condition|(
 name|pci_get_progif
 argument_list|(
-name|dev
+name|child
 argument_list|)
 operator|==
 literal|0x00
@@ -5153,7 +5153,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"UHCI USB controller (vendor"
+literal|"UHCI USB controller"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5162,7 +5162,7 @@ if|if
 condition|(
 name|pci_get_progif
 argument_list|(
-name|dev
+name|child
 argument_list|)
 operator|==
 literal|0x10
