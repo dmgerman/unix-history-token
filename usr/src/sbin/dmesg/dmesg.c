@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dmesg.c	4.2 (Berkeley) 83/01/02"
+literal|"@(#)dmesg.c	4.3 (Berkeley) 85/03/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +191,17 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|of
+operator|<
+literal|0
+condition|)
+name|done
+argument_list|(
+literal|"Can't open /usr/adm/msgbuf\n"
+argument_list|)
+expr_stmt|;
 name|read
 argument_list|(
 name|of
@@ -251,7 +262,7 @@ literal|0
 condition|)
 name|done
 argument_list|(
-literal|"No namelist\n"
+literal|"Can't get kernel namelist\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -282,7 +293,7 @@ literal|0
 condition|)
 name|done
 argument_list|(
-literal|"No mem\n"
+literal|"Can't read kernel memory\n"
 argument_list|)
 expr_stmt|;
 name|lseek
