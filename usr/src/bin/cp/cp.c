@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	8.4 (Berkeley) %G%"
+literal|"@(#)cp.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1524,6 +1524,7 @@ if|if
 condition|(
 name|Rflag
 condition|)
+block|{
 if|if
 condition|(
 name|copy_fifo
@@ -1540,6 +1541,7 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
