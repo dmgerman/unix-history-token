@@ -283,7 +283,15 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 */
+comment|/* 	 * We need to check to see if we have to exit or wait due to a 	 * single threading requirement or some other STOP condition. 	 * Don't bother doing all the work if the stop bits are not set 	 * at this time.. If we miss it, we miss it.. no big deal. 	 */
+if|if
+condition|(
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -300,6 +308,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * DO special thread processing, e.g. upcall tweaking and such 	 */
 if|if
 condition|(
