@@ -688,8 +688,8 @@ literal|"passwd.byname"
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
+endif|#
+directive|endif
 comment|/* 	 * Prevent login attempts when YP is not enabled but YP entries 	 * are in /etc/master.passwd. 	 */
 if|if
 condition|(
