@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.2 1997/04/01 18:07:11 pst Exp $"
+literal|"$Id: mountd.c,v 1.11.2.3 1997/04/09 20:31:33 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4614,7 +4614,7 @@ argument|; 		} 		if (addrp) { 			++addrp; 			if (*addrp == (u_long *)NULL) 				d
 literal|0
 argument|); }
 comment|/*  * Translate a net address.  */
-argument|int get_net(cp, net, maskflg) 	char *cp; 	struct netmsk *net; 	int maskflg; { 	struct netent *np; 	long netaddr; 	struct in_addr inetaddr, inetaddr2; 	char *name;  	if (np = getnetbyname(cp)) 		inetaddr = inet_makeaddr(np->n_net,
+argument|int get_net(cp, net, maskflg) 	char *cp; 	struct netmsk *net; 	int maskflg; { 	struct netent *np; 	long netaddr; 	struct in_addr inetaddr, inetaddr2; 	char *name;  	if (!maskflg&& (np = getnetbyname(cp))) 		inetaddr = inet_makeaddr(np->n_net,
 literal|0
 argument|); 	else if (isdigit(*cp)) { 		if ((netaddr = inet_network(cp)) == -
 literal|1
