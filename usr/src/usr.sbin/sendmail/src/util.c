@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.75 (Berkeley) %G%"
+literal|"@(#)util.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3980,8 +3980,8 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 if|if
 condition|(
@@ -4174,8 +4174,8 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -5230,8 +5230,8 @@ modifier|*
 name|where
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 specifier|register
 name|int

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.54 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.55 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.54 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.55 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3492,8 +3492,8 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 block|{
 name|char

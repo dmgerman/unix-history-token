@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.157 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.158 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1976,8 +1976,8 @@ operator|->
 name|q_next
 control|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|char
 name|wbuf
@@ -2174,8 +2174,8 @@ name|e_ntries
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -3770,8 +3770,8 @@ name|mci
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 block|{
 name|char
@@ -6691,8 +6691,8 @@ block|}
 block|}
 block|}
 comment|/* 	**  Restore state and return. 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 block|{
 name|char
@@ -9055,9 +9055,6 @@ name|m_flags
 argument_list|)
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|UGLYUUCP
 if|if
 condition|(
 name|bitnset
@@ -9150,9 +9147,6 @@ name|xbuf
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* UGLYUUCP */
 name|expand
 argument_list|(
 name|template

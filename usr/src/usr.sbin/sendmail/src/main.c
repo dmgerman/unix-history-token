@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.128 (Berkeley) %G%"
+literal|"@(#)main.c	8.129 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2925,8 +2925,8 @@ operator|+=
 name|optind
 expr_stmt|;
 comment|/* 	**  Do basic initialization. 	**	Read system control file. 	**	Extract special fields for local use. 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -3805,8 +3805,8 @@ name|ExitStat
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -5372,8 +5372,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(

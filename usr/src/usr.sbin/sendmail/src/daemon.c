@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.101 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.102 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.101 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.102 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,8 +232,8 @@ decl_stmt|;
 name|int
 name|socksize
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|bool
 name|j_has_dot
@@ -437,8 +437,8 @@ name|pidf
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 block|{
 name|char
@@ -692,8 +692,8 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 name|hid
 operator|=
@@ -846,8 +846,8 @@ name|EX_NOHOST
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 name|addr
 operator|.
@@ -1029,8 +1029,8 @@ operator|->
 name|h_addrtype
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 case|case
 name|AF_INET
@@ -1150,8 +1150,8 @@ operator|.
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 case|case
 name|AF_INET
@@ -1175,8 +1175,8 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETISO
 case|case
 name|AF_ISO
@@ -1581,8 +1581,8 @@ operator|.
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 case|case
 name|AF_INET
@@ -3995,11 +3995,11 @@ begin_comment
 comment|/* **  ANYNET_NTOA -- convert a network address to printable form. ** **	Parameters: **		sap -- a pointer to a sockaddr structure. ** **	Returns: **		A printable version of that sockaddr. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETLINK
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -4077,8 +4077,8 @@ operator|.
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETUNIX
 case|case
 name|AF_UNIX
@@ -4122,8 +4122,8 @@ name|buf
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 case|case
 name|AF_INET
@@ -4140,8 +4140,8 @@ argument_list|)
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETLINK
 case|case
 name|AF_LINK
@@ -4320,8 +4320,8 @@ operator|.
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 case|case
 name|AF_INET
@@ -4349,8 +4349,8 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETISO
 case|case
 name|AF_ISO

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.187 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.188 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -274,41 +274,14 @@ comment|/* increment for queue size */
 end_comment
 
 begin_comment
-comment|/********************************************************************** **  Compilation options. ** **	#define these if they are available; comment them out otherwise. **********************************************************************/
+comment|/********************************************************************** **  Compilation options. **	#define these to 1 if they are available; **	#define them to 0 otherwise. **  All can be overridden from Makefile. **********************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOG
-value|1
-end_define
-
-begin_comment
-comment|/* enable logging */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UGLYUUCP
-value|1
-end_define
-
-begin_comment
-comment|/* output ugly UUCP From lines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETUNIX
-value|1
-end_define
-
-begin_comment
-comment|/* include unix domain support */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NETINET
+end_ifndef
 
 begin_define
 define|#
@@ -321,69 +294,10 @@ begin_comment
 comment|/* include internet support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MATCHGECOS
-value|1
-end_define
-
-begin_comment
-comment|/* match user names from gecos field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XDEBUG
-value|1
-end_define
-
-begin_comment
-comment|/* enable extended debugging */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|NEWDB
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HESIOD
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|USERDB
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USERDB
-value|1
-end_define
-
-begin_comment
-comment|/* look in user database */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/********************************************************************** **  0/1 Compilation options. **	#define these to 1 if they are available; **	#define them to 0 otherwise. **********************************************************************/
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -410,6 +324,50 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|XDEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|XDEBUG
+value|1
+end_define
+
+begin_comment
+comment|/* enable extended debugging */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MATCHGECOS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MATCHGECOS
+value|1
+end_define
+
+begin_comment
+comment|/* match user names from gecos field */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|DSN
 end_ifndef
 
@@ -422,6 +380,44 @@ end_define
 
 begin_comment
 comment|/* include delivery status notification code */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USERDB
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|NEWDB
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HESIOD
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USERDB
+value|1
+end_define
+
+begin_comment
+comment|/* look in user database */
 end_comment
 
 begin_endif
@@ -474,19 +470,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Most systems have symbolic links today, so default them on.  You **  can turn them off by #undef'ing this below. */
+comment|/********************************************************************** **  "Hard" compilation options. **	#define these if they are available; comment them out otherwise. **  These cannot be overridden from the Makefile, and should really not **  be turned off unless absolutely necessary. **********************************************************************/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HASLSTAT
-value|1
+name|LOG
 end_define
 
 begin_comment
-comment|/* has lstat(2) call */
+comment|/* enable logging -- don't turn off */
 end_comment
+
+begin_comment
+comment|/********************************************************************** **  End of site-specific configuration. **********************************************************************/
+end_comment
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  General "standard C" defines. ** **	These may be undone later, to cope with systems that claim to **	be Standard C but aren't.  Gcc is the biggest offender -- it **	doesn't realize that the library is part of the language. ** **	Life would be much easier if we could get rid of this sort **	of bozo problems. */
@@ -513,6 +515,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* **  Assume you have standard calls; can be #undefed below if necessary. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASLSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* has lstat(2) call */
+end_comment
 
 begin_escape
 end_escape
@@ -3331,11 +3348,12 @@ begin_comment
 comment|/* use tm->tm_name */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|NETUNIX
-end_undef
+value|0
+end_define
 
 begin_comment
 comment|/* no unix domain socket support */
@@ -3433,11 +3451,12 @@ begin_comment
 comment|/* needs the fsync(2) call stub */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|NETUNIX
-end_undef
+value|0
+end_define
 
 begin_comment
 comment|/* no unix domain socket support */
@@ -3666,11 +3685,12 @@ begin_comment
 comment|/* use tm->tm_name */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|NETUNIX
-end_undef
+value|0
+end_define
 
 begin_comment
 comment|/* no unix domain socket support */
@@ -7565,6 +7585,28 @@ end_define
 
 begin_comment
 comment|/* libc has getusershell(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NETUNIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NETUNIX
+value|1
+end_define
+
+begin_comment
+comment|/* include unix domain support */
 end_comment
 
 begin_endif

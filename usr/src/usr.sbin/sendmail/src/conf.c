@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.194 (Berkeley) %G%"
+literal|"@(#)conf.c	8.195 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,8 +1043,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINFO
 name|MAPDEF
 argument_list|(
@@ -10582,8 +10582,8 @@ condition|)
 return|return
 name|ConfFile
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINFO
 block|{
 specifier|extern
@@ -12371,11 +12371,11 @@ begin_comment
 comment|/* **  NI_PROPVAL -- netinfo property value lookup routine ** **	Parameters: **		keydir -- the Netinfo directory name in which to search **			for the key. **		keyprop -- the name of the property in which to find the **			property we are interested.  Defaults to "name". **		keyval -- the value for which we are really searching. **		valprop -- the property name for the value in which we **			are interested. **		sepchar -- if non-nil, this can be multiple-valued, and **			we should return a string separated by this **			character. ** **	Returns: **		NULL -- if: **			1. the directory is not found **			2. the property name is not found **			3. the property contains multiple values **			4. some error occured **		else -- the location of the config file. ** **	Example: **		To search for an alias value, use: **		  ni_propval("/aliases", "name", aliasname, "members", ',') ** **	Notes: **      	Caller should free the return value of ni_proval */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETINFO
-end_ifdef
+end_if
 
 begin_include
 include|#

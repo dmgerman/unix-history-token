@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.140 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.141 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.140		%G%"
+literal|"@(#)sendmail.h	8.141		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,11 +202,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETUNIX
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -219,11 +219,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETINET
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -236,11 +236,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETISO
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -253,11 +253,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETNS
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -270,11 +270,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETX25
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -5273,8 +5273,8 @@ name|sockaddr
 name|sa
 decl_stmt|;
 comment|/* general version */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETUNIX
 name|struct
 name|sockaddr_un
@@ -5283,8 +5283,8 @@ decl_stmt|;
 comment|/* UNIX family */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETINET
 name|struct
 name|sockaddr_in
@@ -5293,8 +5293,8 @@ decl_stmt|;
 comment|/* INET family */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETISO
 name|struct
 name|sockaddr_iso
@@ -5303,8 +5303,8 @@ decl_stmt|;
 comment|/* ISO family */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETNS
 name|struct
 name|sockaddr_ns
@@ -5313,8 +5313,8 @@ decl_stmt|;
 comment|/* XNS family */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NETX25
 name|struct
 name|sockaddr_x25

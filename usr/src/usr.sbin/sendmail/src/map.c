@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.76 (Berkeley) %G%"
+literal|"@(#)map.c	8.77 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1290,8 +1290,8 @@ name|void
 name|map_init
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -1334,8 +1334,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XDEBUG
 name|checkfd012
 argument_list|(
@@ -8555,11 +8555,11 @@ begin_comment
 comment|/* **  NeXT NETINFO Modules */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NETINFO
-end_ifdef
+end_if
 
 begin_define
 define|#

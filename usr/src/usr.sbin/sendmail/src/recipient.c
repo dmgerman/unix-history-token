@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.92 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.93 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2763,8 +2763,8 @@ name|pw
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|MATCHGECOS
 comment|/* see if fuzzy matching allowed */
 if|if
