@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.5 %G%"
+literal|"@(#)asmain.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.5"
+value|"VAX/UNIX Assembler V%G% 4.6"
 end_define
 
 begin_endif
@@ -1282,6 +1282,27 @@ argument_list|(
 name|tmpn1
 argument_list|,
 name|tmpdirprefix
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmpdirprefix
+index|[
+name|strlen
+argument_list|(
+name|tmpdirprefix
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'/'
+condition|)
+name|strcat
+argument_list|(
+name|tmpn1
+argument_list|,
+literal|"/"
 argument_list|)
 expr_stmt|;
 name|strcat
