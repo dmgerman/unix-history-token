@@ -314,8 +314,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_CONTENTION
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Lock contention */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x007fffff
+value|0x00ffffff
 end_define
 
 begin_comment
