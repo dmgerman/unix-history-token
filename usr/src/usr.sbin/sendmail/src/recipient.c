@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.25 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2466,6 +2466,9 @@ name|p
 operator|=
 literal|'/'
 expr_stmt|;
+return|return
+name|TRUE
+return|;
 block|}
 comment|/* 	**  File does exist -- check that it is writable. 	*/
 if|if
@@ -2479,11 +2482,31 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"failed (mode %o: x bits)\n"
+argument_list|,
+name|stb
+operator|.
+name|st_mode
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 name|euid
 operator|=
 name|RealUid
