@@ -462,27 +462,6 @@ name|dec_1000_intr_init
 expr_stmt|;
 break|break;
 default|default:
-comment|/*  		 *  XXX the AlphaServer 1000a support is totally 		 *  untested at this point, so ask the user for  		 *  a status report  		 */
-name|printf
-argument_list|(
-literal|"Warning:  FreeBSD support for the AlphaServer "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"1000A is currently untested!\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Please contact gallatin@freebsd.org& report "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"success or failure.\n"
-argument_list|)
-expr_stmt|;
 name|platform
 operator|.
 name|iobus
@@ -1187,17 +1166,6 @@ literal|0
 index|]
 condition|)
 block|{
-if|if
-condition|(
-name|device
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"dec_1000a_intr_map: ?! UNEXPECTED DEV 0\n"
-argument_list|)
-expr_stmt|;
 name|imrbit
 operator|=
 name|imrmap
