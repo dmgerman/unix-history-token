@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.1 (Berkeley) %G%"
+literal|"@(#)const.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,11 +23,6 @@ begin_endif
 endif|#
 directive|endif
 endif|not lint
-end_endif
-
-begin_endif
-endif|#
-directive|endif
 end_endif
 
 begin_include
