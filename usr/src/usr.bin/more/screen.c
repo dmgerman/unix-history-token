@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	5.7 (Berkeley) %G%"
+literal|"@(#)screen.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,6 +529,10 @@ name|struct
 name|sgttyb
 name|s
 decl_stmt|;
+name|struct
+name|ltchars
+name|l
+decl_stmt|;
 specifier|static
 name|struct
 name|sgttyb
@@ -551,6 +555,19 @@ name|TIOCGETP
 argument_list|,
 operator|&
 name|s
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|2
+argument_list|,
+name|TIOCGLTC
+argument_list|,
+operator|&
+name|l
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Save modes and set certain variables dependent on modes. 		 */
@@ -578,8 +595,9 @@ name|sg_kill
 expr_stmt|;
 name|werase_char
 operator|=
-operator|-
-literal|1
+name|l
+operator|.
+name|t_werasc
 expr_stmt|;
 comment|/* 		 * Set the modes to the way we want them. 		 */
 name|s
