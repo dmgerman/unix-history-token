@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995-1997 Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  *   The author of this software makes no garuntee about the  * performance of this package or its suitability to fulfill any purpose.  *  */
+comment|/*  * (C)opyright 1995-1998 Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  *   The author of this software makes no garuntee about the  * performance of this package or its suitability to fulfill any purpose.  *  */
 end_comment
 
 begin_include
@@ -181,7 +181,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsdr.c,v 2.0.2.3 1997/09/28 07:13:18 darrenr Exp $"
+literal|"@(#)$Id: ipsdr.c,v 2.1 1999/08/04 17:30:57 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: ipt.h,v 2.0.2.7 1997/09/28 07:12:00 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: ipt.h,v 2.1 1999/08/04 17:30:08 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,17 @@ directive|define
 name|__IPT_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|P_DEF
+end_define
 
 begin_ifdef
 ifdef|#
@@ -27,27 +33,46 @@ directive|ifdef
 name|__STDC__
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_struct
 struct|struct
@@ -132,6 +157,29 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|P_DEF
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__P
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|P_DEF
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

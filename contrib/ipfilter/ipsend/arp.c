@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * arp.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * arp.c (C) 1995-1998 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: arp.c,v 2.0.2.6 1997/09/28 07:13:25 darrenr Exp $"
+literal|"@(#)$Id: arp.c,v 2.1 1999/08/04 17:31:03 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,12 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -154,6 +160,12 @@ begin_include
 include|#
 directive|include
 file|"ipsend.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iplang/iplang.h"
 end_include
 
 begin_comment
@@ -331,6 +343,25 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEND
+if|if
+condition|(
+name|arp_getipv4
+argument_list|(
+name|ip
+argument_list|,
+name|ether
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * resend.c (C) 1995-1997 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * resend.c (C) 1995-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: resend.c,v 2.0.2.12 1997/10/23 11:42:46 darrenr Exp $"
+literal|"@(#)$Id: resend.c,v 2.1 1999/08/04 17:31:12 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +194,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_char
-name|buf
+name|pbuf
 index|[
 literal|65536
 index|]
@@ -580,7 +580,7 @@ expr|struct
 name|ip
 operator|*
 operator|)
-name|buf
+name|pbuf
 expr_stmt|;
 name|eh
 operator|=
@@ -650,11 +650,15 @@ operator|->
 name|r_readip
 call|)
 argument_list|(
-name|buf
+operator|(
+name|char
+operator|*
+operator|)
+name|pbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|pbuf
 argument_list|)
 argument_list|,
 name|NULL
@@ -824,7 +828,7 @@ operator|(
 name|ether_header_t
 operator|*
 operator|)
-name|buf
+name|pbuf
 expr_stmt|;
 name|len
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ipmon.c	1.21 6/5/96 (C)1993-1997 Darren Reed"
+literal|"@(#)ipmon.c	1.21 6/5/96 (C)1993-1998 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.0.2.29.2.9 1998/05/23 14:29:45 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.3.2.1 1999/08/14 04:46:07 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,66 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOLARIS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SOLARIS
+value|(defined(__SVR4) || defined(__svr4__))&& defined(sun)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
 
 begin_include
 include|#
@@ -70,12 +130,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -92,23 +146,37 @@ name|__svr4__
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/dirent.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<sys/dir.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -135,25 +203,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<strings.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -166,18 +222,6 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -202,6 +246,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_fsm.h>
 end_include
 
 begin_include
@@ -244,12 +294,6 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include
@@ -443,6 +487,70 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pidfile
+init|=
+literal|"/etc/opt/ipf/ipmon.pid"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199306
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pidfile
+init|=
+literal|"/var/run/ipmon.pid"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pidfile
+init|=
+literal|"/etc/ipmon.pid"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -512,7 +620,7 @@ name|handlehup
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -648,8 +756,19 @@ name|char
 operator|*
 operator|,
 name|int
-operator|,
-name|FILE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|write_pid
+name|__P
+argument_list|(
+operator|(
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -684,7 +803,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|u_short
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -719,6 +838,66 @@ name|char
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|init_tabs
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|getproto
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|protocols
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|udp_ports
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|tcp_ports
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -795,7 +974,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPT_ALL
+name|OPT_LOGALL
 value|(OPT_NAT|OPT_STATE|OPT_FILTER)
 end_define
 
@@ -818,10 +997,14 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
 name|void
 name|handlehup
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|FILE
 modifier|*
@@ -853,10 +1036,466 @@ name|newlog
 operator|=
 name|fp
 expr_stmt|;
+name|init_tabs
+argument_list|()
+expr_stmt|;
 name|donehup
 operator|=
 literal|1
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|init_tabs
+parameter_list|()
+block|{
+name|struct
+name|protoent
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|servent
+modifier|*
+name|s
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|,
+modifier|*
+modifier|*
+name|tab
+decl_stmt|;
+name|u_int
+name|port
+decl_stmt|;
+if|if
+condition|(
+name|protocols
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|protocols
+argument_list|)
+expr_stmt|;
+name|protocols
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|protocols
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|256
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|protocols
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|protocols
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|protocols
+argument_list|,
+literal|256
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|protocols
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setprotoent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|p
+operator|=
+name|getprotoent
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|p
+operator|->
+name|p_proto
+operator|>=
+literal|0
+operator|&&
+name|p
+operator|->
+name|p_proto
+operator|<=
+literal|255
+operator|&&
+name|p
+operator|->
+name|p_name
+operator|!=
+name|NULL
+condition|)
+name|protocols
+index|[
+name|p
+operator|->
+name|p_proto
+index|]
+operator|=
+name|strdup
+argument_list|(
+name|p
+operator|->
+name|p_name
+argument_list|)
+expr_stmt|;
+name|endprotoent
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|udp_ports
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|udp_ports
+argument_list|)
+expr_stmt|;
+name|udp_ports
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|udp_ports
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|65536
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|udp_ports
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|udp_ports
+operator|!=
+name|NULL
+condition|)
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|udp_ports
+argument_list|,
+literal|65536
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|udp_ports
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcp_ports
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|tcp_ports
+argument_list|)
+expr_stmt|;
+name|tcp_ports
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|tcp_ports
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|65536
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp_ports
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcp_ports
+operator|!=
+name|NULL
+condition|)
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|tcp_ports
+argument_list|,
+literal|65536
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp_ports
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setservent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|s
+operator|=
+name|getservent
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|s
+operator|->
+name|s_proto
+operator|==
+name|NULL
+condition|)
+continue|continue;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|s
+operator|->
+name|s_proto
+argument_list|,
+literal|"tcp"
+argument_list|)
+condition|)
+block|{
+name|port
+operator|=
+operator|(
+name|u_int
+operator|)
+name|s
+operator|->
+name|s_port
+expr_stmt|;
+name|name
+operator|=
+name|s
+operator|->
+name|s_name
+expr_stmt|;
+name|tab
+operator|=
+name|tcp_ports
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|s
+operator|->
+name|s_proto
+argument_list|,
+literal|"udp"
+argument_list|)
+condition|)
+block|{
+name|port
+operator|=
+operator|(
+name|u_int
+operator|)
+name|s
+operator|->
+name|s_port
+expr_stmt|;
+name|name
+operator|=
+name|s
+operator|->
+name|s_name
+expr_stmt|;
+name|tab
+operator|=
+name|udp_ports
+expr_stmt|;
+block|}
+else|else
+continue|continue;
+if|if
+condition|(
+operator|(
+name|port
+operator|<
+literal|0
+operator|||
+name|port
+operator|>
+literal|65535
+operator|)
+operator|||
+operator|(
+name|name
+operator|==
+name|NULL
+operator|)
+condition|)
+continue|continue;
+name|tab
+index|[
+name|port
+index|]
+operator|=
+name|strdup
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+name|endservent
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|getproto
+parameter_list|(
+name|p
+parameter_list|)
+name|u_int
+name|p
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|pnum
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|p
+operator|&=
+literal|0xff
+expr_stmt|;
+name|s
+operator|=
+name|protocols
+condition|?
+name|protocols
+index|[
+name|p
+index|]
+else|:
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|pnum
+argument_list|,
+literal|"%u"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|pnum
+expr_stmt|;
+block|}
+return|return
+name|s
+return|;
 block|}
 end_function
 
@@ -872,8 +1511,6 @@ parameter_list|,
 name|buf
 parameter_list|,
 name|bufsize
-parameter_list|,
-name|log
 parameter_list|)
 name|int
 name|fd
@@ -889,13 +1526,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|buf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|log
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,7 +1671,7 @@ name|char
 modifier|*
 name|proto
 decl_stmt|;
-name|u_short
+name|u_int
 name|port
 decl_stmt|;
 block|{
@@ -1052,11 +1682,21 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|struct
-name|servent
+name|char
 modifier|*
-name|serv
+name|s
 decl_stmt|;
+name|port
+operator|=
+name|ntohs
+argument_list|(
+name|port
+argument_list|)
+expr_stmt|;
+name|port
+operator|&=
+literal|0xffff
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1064,12 +1704,9 @@ name|sprintf
 argument_list|(
 name|pname
 argument_list|,
-literal|"%hu"
+literal|"%u"
 argument_list|,
-name|htons
-argument_list|(
 name|port
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1086,30 +1723,57 @@ condition|)
 return|return
 name|pname
 return|;
-name|serv
+name|s
 operator|=
-name|getservbyport
-argument_list|(
-operator|(
-name|int
-operator|)
-name|port
-argument_list|,
-name|proto
-argument_list|)
+name|NULL
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|serv
+name|strcmp
+argument_list|(
+name|proto
+argument_list|,
+literal|"tcp"
+argument_list|)
 condition|)
-return|return
+name|s
+operator|=
+name|tcp_ports
+index|[
+name|port
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|proto
+argument_list|,
+literal|"udp"
+argument_list|)
+condition|)
+name|s
+operator|=
+name|udp_ports
+index|[
+name|port
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|s
+operator|=
 name|pname
-return|;
+expr_stmt|;
 return|return
-name|serv
-operator|->
-name|s_name
+name|s
 return|;
 block|}
 end_function
@@ -1738,7 +2402,7 @@ name|nl
 operator|->
 name|nl_type
 operator|==
-name|ISL_EXPIRE
+name|NL_EXPIRE
 condition|)
 name|strcpy
 argument_list|(
@@ -1790,6 +2454,9 @@ name|res
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|nl
 operator|->
 name|nl_inport
@@ -1827,6 +2494,9 @@ name|res
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|nl
 operator|->
 name|nl_outport
@@ -1864,6 +2534,9 @@ name|res
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|nl
 operator|->
 name|nl_origport
@@ -1913,13 +2586,9 @@ argument|; 	if (opts& OPT_SYSLOG) 		syslog(LOG_INFO,
 literal|"%s"
 argument|, line); 	else 		(void) fprintf(log,
 literal|"%s"
-argument|, line); }   static	void	print_statelog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	ipslog *sl; 	iplog_t	*ipl = (iplog_t *)buf; 	struct	protoent *pr; 	char	*t = line
+argument|, line); }   static	void	print_statelog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	ipslog *sl; 	iplog_t	*ipl = (iplog_t *)buf; 	char	*t = line
 argument_list|,
-argument|*proto
-argument_list|,
-argument|pname[
-literal|6
-argument|]; 	struct	tm	*tm; 	int	res
+argument|*proto; 	struct	tm	*tm; 	int	res
 argument_list|,
 argument|i
 argument_list|,
@@ -1935,17 +2604,23 @@ argument|, tm); 	t += strlen(t); 	(void) sprintf(t,
 literal|".%-.6ld "
 argument|, ipl->ipl_usec); 	t += strlen(t);  	if (sl->isl_type == ISL_NEW) 		strcpy(t,
 literal|"STATE:NEW "
-argument|); 	else if (sl->isl_type == ISL_EXPIRE) 		strcpy(t,
+argument|); 	else if (sl->isl_type == ISL_EXPIRE) { 		if ((sl->isl_p == IPPROTO_TCP)&& 		    (sl->isl_state[
+literal|0
+argument|]> TCPS_ESTABLISHED || 		     sl->isl_state[
+literal|1
+argument|]> TCPS_ESTABLISHED)) 			strcpy(t,
+literal|"STATE:CLOSE "
+argument|); 		else 			strcpy(t,
 literal|"STATE:EXPIRE "
+argument|); 	} else if (sl->isl_type == ISL_FLUSH) 		strcpy(t,
+literal|"STATE:FLUSH "
 argument|); 	else 		sprintf(t,
 literal|"Type: %d "
-argument|, sl->isl_type); 	t += strlen(t);  	pr = getprotobynumber((int)sl->isl_p); 	if (!pr) { 		proto = pname; 		sprintf(proto,
-literal|"%d"
-argument|, (u_int)sl->isl_p); 	} else 		proto = pr->p_name;  	if (sl->isl_p == IPPROTO_TCP || sl->isl_p == IPPROTO_UDP) { 		(void) sprintf(t,
+argument|, sl->isl_type); 	t += strlen(t);  	proto = getproto(sl->isl_p);  	if (sl->isl_p == IPPROTO_TCP || sl->isl_p == IPPROTO_UDP) { 		(void) sprintf(t,
 literal|"%s,%s -> "
-argument|, 			hostname(res, sl->isl_src), 			portname(res, proto, sl->isl_sport)); 		t += strlen(t); 		(void) sprintf(t,
+argument|, 			hostname(res, sl->isl_src), 			portname(res, proto, (u_int)sl->isl_sport)); 		t += strlen(t); 		(void) sprintf(t,
 literal|"%s,%s PR %s"
-argument|, 			hostname(res, sl->isl_dst), 			portname(res, proto, sl->isl_dport), proto); 	} else if (sl->isl_p == IPPROTO_ICMP) { 		(void) sprintf(t,
+argument|, 			hostname(res, sl->isl_dst), 			portname(res, proto, (u_int)sl->isl_dport), proto); 	} else if (sl->isl_p == IPPROTO_ICMP) { 		(void) sprintf(t,
 literal|"%s -> "
 argument|, hostname(res, sl->isl_src)); 		t += strlen(t); 		(void) sprintf(t,
 literal|"%s PR icmp %d"
@@ -1977,11 +2652,7 @@ argument|) { 		ipl = (iplog_t *)buf; 		if ((u_long)ipl& (sizeof(long)-
 literal|1
 argument|)) { 			if (bp) 				bpo = bp; 			bp = (char *)malloc(blen); 			bcopy((char *)ipl, bp, blen); 			if (bpo) { 				free(bpo); 				bpo = NULL; 			} 			buf = bp; 			continue; 		} 		if (ipl->ipl_magic != IPL_MAGIC) {
 comment|/* invalid data or out of sync */
-argument|break; 		} 		psize = ipl->ipl_dsize; 		switch (logtype) 		{ 		case IPL_LOGIPF : 			print_ipflog(log, buf, psize); 			break; 		case IPL_LOGNAT : 			print_natlog(log, buf, psize); 			break; 		case IPL_LOGSTATE : 			print_statelog(log, buf, psize); 			break; 		}  		blen -= psize; 		buf += psize; 	} 	if (bp) 		free(bp); 	return; }   static	void	print_ipflog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	protoent *pr; 	struct	tcphdr	*tp; 	struct	icmp	*ic; 	struct	tm	*tm; 	char	c[
-literal|3
-argument|], pname[
-literal|8
-argument|], *t, *proto; 	u_short	hl, p; 	int	i, lvl, res, len; 	ip_t	*ipc, *ip; 	iplog_t	*ipl; 	ipflog_t *ipf;  	ipl = (iplog_t *)buf; 	ipf = (ipflog_t *)((char *)buf + sizeof(*ipl)); 	ip = (ip_t *)((char *)ipf + sizeof(*ipf)); 	res = (opts& OPT_RESOLVE) ?
+argument|break; 		} 		psize = ipl->ipl_dsize; 		switch (logtype) 		{ 		case IPL_LOGIPF : 			print_ipflog(log, buf, psize); 			break; 		case IPL_LOGNAT : 			print_natlog(log, buf, psize); 			break; 		case IPL_LOGSTATE : 			print_statelog(log, buf, psize); 			break; 		}  		blen -= psize; 		buf += psize; 	} 	if (bp) 		free(bp); 	return; }   static	void	print_ipflog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	tcphdr_t	*tp; 	struct	icmp	*ic; 	struct	tm	*tm; 	char	*t, *proto; 	u_short	hl, p; 	int	i, lvl, res, len; 	ip_t	*ipc, *ip; 	iplog_t	*ipl; 	ipflog_t *ipf;  	ipl = (iplog_t *)buf; 	ipf = (ipflog_t *)((char *)buf + sizeof(*ipl)); 	ip = (ip_t *)((char *)ipf + sizeof(*ipf)); 	res = (opts& OPT_RESOLVE) ?
 literal|1
 argument|:
 literal|0
@@ -2053,75 +2724,67 @@ name|linux
 argument_list|)
 argument|len = (int)sizeof(ipf->fl_ifname); 	(void) sprintf(t,
 literal|"%*.*s"
-argument|, len, len, ipf->fl_ifname);
+argument|, len, len, ipf->fl_ifname); 	t += strlen(t);
+if|#
+directive|if
+name|SOLARIS
+argument|if (isalpha(*(t -
+literal|1
+argument|))) 		*t++ =
+literal|'0'
+argument|+ ipf->fl_unit;
+endif|#
+directive|endif
 else|#
 directive|else
 argument|for (len =
 literal|0
 argument|; len<
 literal|3
-argument|; len++) 		if (!ipf->fl_ifname[len]) 			break; 	if (ipf->fl_ifname[len]) 		len++; 	(void) sprintf(t,
+argument|; len++) 		if (ipf->fl_ifname[len] ==
+literal|'\0'
+argument|) 			break; 	if (ipf->fl_ifname[len]) 		len++; 	(void) sprintf(t,
 literal|"%*.*s%u"
-argument|, len, len, ipf->fl_ifname, ipf->fl_unit);
+argument|, len, len, ipf->fl_ifname, ipf->fl_unit); 	t += strlen(t);
 endif|#
 directive|endif
-argument|t += strlen(t); 	(void) sprintf(t,
+argument|(void) sprintf(t,
 literal|" @%hu:%hu "
 argument|, ipf->fl_group, ipf->fl_rule +
 literal|1
-argument|); 	pr = getprotobynumber((int)p); 	if (!pr) { 		proto = pname; 		sprintf(proto,
-literal|"%d"
-argument|, (u_int)p); 	} else 		proto = pr->p_name;   	if (ipf->fl_flags& FF_SHORT) { 		c[
-literal|0
-argument|] =
+argument|); 	t += strlen(t); 	proto = getproto(p);   	if (ipf->fl_flags& FF_SHORT) { 		*t++ =
 literal|'S'
-argument|; 		lvl = LOG_ERR; 	} else if (ipf->fl_flags& FR_PASS) { 		if (ipf->fl_flags& FR_LOGP) 			c[
-literal|0
-argument|] =
+argument|; 		lvl = LOG_ERR; 	} else if (ipf->fl_flags& FR_PASS) { 		if (ipf->fl_flags& FR_LOGP) 			*t++ =
 literal|'p'
-argument|; 		else 			c[
-literal|0
-argument|] =
+argument|; 		else 			*t++ =
 literal|'P'
-argument|; 		lvl = LOG_NOTICE; 	} else if (ipf->fl_flags& FR_BLOCK) { 		if (ipf->fl_flags& FR_LOGB) 			c[
-literal|0
-argument|] =
+argument|; 		lvl = LOG_NOTICE; 	} else if (ipf->fl_flags& FR_BLOCK) { 		if (ipf->fl_flags& FR_LOGB) 			*t++ =
 literal|'b'
-argument|; 		else 			c[
-literal|0
-argument|] =
+argument|; 		else 			*t++ =
 literal|'B'
-argument|; 		lvl = LOG_WARNING; 	} else if (ipf->fl_flags& FF_LOGNOMATCH) { 		c[
-literal|0
-argument|] =
+argument|; 		lvl = LOG_WARNING; 	} else if (ipf->fl_flags& FF_LOGNOMATCH) { 		*t++ =
 literal|'n'
-argument|; 		lvl = LOG_NOTICE; 	} else { 		c[
-literal|0
-argument|] =
+argument|; 		lvl = LOG_NOTICE; 	} else { 		*t++ =
 literal|'L'
-argument|; 		lvl = LOG_INFO; 	} 	c[
-literal|1
-argument|] =
+argument|; 		lvl = LOG_INFO; 	} 	if (ipf->fl_loglevel !=
+literal|0xffff
+argument|) 		lvl = ipf->fl_loglevel; 	*t++ =
 literal|' '
-argument|; 	c[
-literal|2
-argument|] =
+argument|; 	*t =
 literal|'\0'
-argument|; 	(void) strcat(line, c); 	t = line + strlen(line);  	if ((p == IPPROTO_TCP || p == IPPROTO_UDP)&& !(ip->ip_off&
-literal|0x1fff
-argument|)) { 		tp = (struct tcphdr *)((char *)ip + hl); 		if (!(ipf->fl_flags& (FI_SHORT<<
+argument|;  	if ((p == IPPROTO_TCP || p == IPPROTO_UDP)&& 	    !(ip->ip_off& IP_OFFMASK)) { 		tp = (tcphdr_t *)((char *)ip + hl); 		if (!(ipf->fl_flags& (FI_SHORT<<
 literal|16
 argument|))) { 			(void) sprintf(t,
 literal|"%s,%s -> "
-argument|, 				hostname(res, ip->ip_src), 				portname(res, proto, tp->th_sport)); 			t += strlen(t); 			(void) sprintf(t,
+argument|, 				hostname(res, ip->ip_src), 				portname(res, proto, (u_int)tp->th_sport)); 			t += strlen(t); 			(void) sprintf(t,
 literal|"%s,%s PR %s len %hu %hu "
-argument|, 				hostname(res, ip->ip_dst), 				portname(res, proto, tp->th_dport), 				proto, hl, ip->ip_len); 			t += strlen(t);  			if (p == IPPROTO_TCP) { 				*t++ =
+argument|, 				hostname(res, ip->ip_dst), 				portname(res, proto, (u_int)tp->th_dport), 				proto, hl, ip->ip_len); 			t += strlen(t);  			if (p == IPPROTO_TCP) { 				*t++ =
 literal|'-'
 argument|; 				for (i =
 literal|0
-argument|; tcpfl[i].value; i++) 					if (tp->th_flags& tcpfl[i].value) 						*t++ = tcpfl[i].flag; 			} 			if (opts& OPT_VERBOSE) { 				(void) sprintf(t,
+argument|; tcpfl[i].value; i++) 					if (tp->th_flags& tcpfl[i].value) 						*t++ = tcpfl[i].flag; 				if (opts& OPT_VERBOSE) { 					(void) sprintf(t,
 literal|" %lu %lu %hu"
-argument|, 					(u_long)tp->th_seq, 					(u_long)tp->th_ack, tp->th_win); 				t += strlen(t); 			} 			*t =
+argument|, 						(u_long)(ntohl(tp->th_seq)), 						(u_long)(ntohl(tp->th_ack)), 						ntohs(tp->th_win)); 					t += strlen(t); 				} 			} 			*t =
 literal|'\0'
 argument|; 		} else { 			(void) sprintf(t,
 literal|"%s -> "
@@ -2131,21 +2794,17 @@ argument|, 				hostname(res, ip->ip_dst), proto, 				hl, ip->ip_len); 		} 	} els
 literal|"%s -> "
 argument|, hostname(res, ip->ip_src)); 		t += strlen(t); 		(void) sprintf(t,
 literal|"%s PR icmp len %hu %hu icmp %d/%d"
-argument|, 			hostname(res, ip->ip_dst), hl, ip->ip_len, 			ic->icmp_type, ic->icmp_code); 		if (ic->icmp_type == ICMP_UNREACH || 		    ic->icmp_type == ICMP_SOURCEQUENCH || 		    ic->icmp_type == ICMP_PARAMPROB || 		    ic->icmp_type == ICMP_REDIRECT || 		    ic->icmp_type == ICMP_TIMXCEED) { 			ipc =&ic->icmp_ip; 			tp = (struct tcphdr *)((char *)ipc + hl);  			p = (u_short)ipc->ip_p; 			pr = getprotobynumber((int)p); 			if (!pr) { 				proto = pname; 				(void) sprintf(proto,
-literal|"%d"
-argument|, (int)p); 			} else 				proto = pr->p_name;  			t += strlen(t); 			(void) sprintf(t,
+argument|, 			hostname(res, ip->ip_dst), hl, ip->ip_len, 			ic->icmp_type, ic->icmp_code); 		if (ic->icmp_type == ICMP_UNREACH || 		    ic->icmp_type == ICMP_SOURCEQUENCH || 		    ic->icmp_type == ICMP_PARAMPROB || 		    ic->icmp_type == ICMP_REDIRECT || 		    ic->icmp_type == ICMP_TIMXCEED) { 			ipc =&ic->icmp_ip; 			tp = (tcphdr_t *)((char *)ipc + hl);  			proto = getproto(ipc->ip_p);  			t += strlen(t); 			(void) sprintf(t,
 literal|" for %s,%s -"
-argument|, 				hostname(res, ipc->ip_src), 				portname(res, proto, tp->th_sport)); 			t += strlen(t); 			(void) sprintf(t,
+argument|, 				hostname(res, ipc->ip_src), 				portname(res, proto, (u_int)tp->th_sport)); 			t += strlen(t); 			(void) sprintf(t,
 literal|" %s,%s PR %s len %hu %hu"
-argument|, 				hostname(res, ipc->ip_dst), 				portname(res, proto, tp->th_dport), 				proto, ipc->ip_hl<<
+argument|, 				hostname(res, ipc->ip_dst), 				portname(res, proto, (u_int)tp->th_dport), 				proto, ipc->ip_hl<<
 literal|2
 argument|, ipc->ip_len); 		} 	} else { 		(void) sprintf(t,
 literal|"%s -> "
 argument|, hostname(res, ip->ip_src)); 		t += strlen(t); 		(void) sprintf(t,
 literal|"%s PR %s len %hu (%hu)"
-argument|, 			hostname(res, ip->ip_dst), proto, hl, ip->ip_len); 		t += strlen(t); 		if (ip->ip_off&
-literal|0x1fff
-argument|) 			(void) sprintf(t,
+argument|, 			hostname(res, ip->ip_dst), proto, hl, ip->ip_len); 		t += strlen(t); 		if (ip->ip_off& IP_OFFMASK) 			(void) sprintf(t,
 literal|" frag %s%s%hu@%hu"
 argument|, 				ip->ip_off& IP_MF ?
 literal|"+"
@@ -2155,15 +2814,17 @@ argument|, 				ip->ip_off& IP_DF ?
 literal|"-"
 argument|:
 literal|""
-argument|, 				ip->ip_len - hl, (ip->ip_off&
-literal|0x1fff
-argument|)<<
+argument|, 				ip->ip_len - hl, 				(ip->ip_off& IP_OFFMASK)<<
 literal|3
 argument|); 	} 	t += strlen(t);  	if (ipf->fl_flags& FR_KEEPSTATE) { 		(void) strcpy(t,
 literal|" K-S"
 argument|); 		t += strlen(t); 	}  	if (ipf->fl_flags& FR_KEEPFRAG) { 		(void) strcpy(t,
 literal|" K-F"
-argument|); 		t += strlen(t); 	}  	*t++ =
+argument|); 		t += strlen(t); 	}  	if (ipf->fl_flags& FR_INQUE) 		strcpy(t,
+literal|" IN"
+argument|); 	else if (ipf->fl_flags& FR_OUTQUE) 		strcpy(t,
+literal|" OUT"
+argument|); 	t += strlen(t); 	*t++ =
 literal|'\n'
 argument|; 	*t++ =
 literal|'\0'
@@ -2171,11 +2832,21 @@ argument|; 	if (opts& OPT_SYSLOG) 		syslog(lvl,
 literal|"%s"
 argument|, line); 	else 		(void) fprintf(log,
 literal|"%s"
-argument|, line); 	if (opts& OPT_HEXHDR) 		dumphex(log, (u_char *)buf, sizeof(iplog_t)); 	if (opts& OPT_HEXBODY) 		dumphex(log, (u_char *)ip, ipf->fl_plen + ipf->fl_hlen); }   static void usage(prog) char *prog; { 	fprintf(stderr,
+argument|, line); 	if (opts& OPT_HEXHDR) 		dumphex(log, (u_char *)buf, sizeof(iplog_t) + sizeof(*ipf)); 	if (opts& OPT_HEXBODY) 		dumphex(log, (u_char *)ip, ipf->fl_plen + ipf->fl_hlen); }   static void usage(prog) char *prog; { 	fprintf(stderr,
 literal|"%s: [-NFhstvxX] [-f<logfile>]\n"
 argument|, prog); 	exit(
 literal|1
-argument|); }   static void flushlogs(file, log) char *file; FILE *log; { 	int	fd, flushed =
+argument|); }   static void write_pid(file) char *file; { 	FILE *fp = NULL; 	int fd;  	if ((fd = open(file, O_CREAT|O_TRUNC|O_WRONLY,
+literal|0644
+argument|))>=
+literal|0
+argument|) 		fp = fdopen(fd,
+literal|"w"
+argument|); 	if (!fp) { 		close(fd); 		fprintf(stderr,
+literal|"unable to open/create pid file: %s\n"
+argument|, file); 		return; 	} 	fprintf(fp,
+literal|"%d"
+argument|, getpid()); 	fclose(fp); 	close(fd); }   static void flushlogs(file, log) char *file; FILE *log; { 	int	fd, flushed =
 literal|0
 argument|;  	if ((fd = open(file, O_RDWR)) == -
 literal|1
@@ -2219,7 +2890,7 @@ argument|; 	char	buf[
 literal|512
 argument|], *iplfile[
 literal|3
-argument|]; 	extern	int	optind; 	extern	char	*optarg;  	fd[
+argument|], *s; 	extern	int	optind; 	extern	char	*optarg;  	fd[
 literal|0
 argument|] = fd[
 literal|1
@@ -2242,12 +2913,18 @@ literal|1
 argument|] = IPNAT_NAME; 	iplfile[
 literal|2
 argument|] = IPSTATE_NAME;  	while ((c = getopt(argc, argv,
-literal|"?aDf:FhI:nN:o:O:sS:tvxX"
+literal|"?aDf:FhnN:o:O:pP:sS:tvxX"
 argument|)) != -
 literal|1
 argument|) 		switch (c) 		{ 		case
 literal|'a'
-argument|: 			opts |= OPT_ALL; 			break; 		case
+argument|: 			opts |= OPT_LOGALL; 			fdt[
+literal|0
+argument|] = IPL_LOGIPF; 			fdt[
+literal|1
+argument|] = IPL_LOGNAT; 			fdt[
+literal|2
+argument|] = IPL_LOGSTATE; 			break; 		case
 literal|'D'
 argument|: 			make_daemon =
 literal|1
@@ -2298,10 +2975,16 @@ literal|2
 argument|] = IPL_LOGSTATE; 			break; 		case
 literal|'p'
 argument|: 			opts |= OPT_PORTNUM; 			break; 		case
+literal|'P'
+argument|: 			pidfile = optarg; 			break; 		case
 literal|'s'
-argument|: 			openlog(argv[
+argument|: 			s = strrchr(argv[
 literal|0
-argument|], LOG_NDELAY|LOG_PID, LOGFAC); 			opts |= OPT_SYSLOG; 			break; 		case
+argument|],
+literal|'/'
+argument|); 			if (s == NULL) 				s = argv[
+literal|0
+argument|]; 			else 				s++; 			openlog(s, LOG_NDELAY|LOG_PID, LOGFAC); 			s = NULL; 			opts |= OPT_SYSLOG; 			break; 		case
 literal|'S'
 argument|: 			opts |= OPT_STATE; 			fdt[
 literal|2
@@ -2321,7 +3004,7 @@ argument|: 		case
 literal|'?'
 argument|: 			usage(argv[
 literal|0
-argument|]); 		}
+argument|]); 		}  	init_tabs();
 comment|/* 	 * Default action is to only open the filter log file. 	 */
 argument|if ((fdt[
 literal|0
@@ -2367,17 +3050,17 @@ argument|, argv[optind], 				STRERROR(errno)); 			exit(-
 literal|1
 argument|); 		} 		setvbuf(log, NULL, _IONBF,
 literal|0
-argument|); 	}  	if (make_daemon&& (log != stdout)) { 		if (fork()>
+argument|); 	} else 		log = NULL;  	if (make_daemon&& (log != stdout)) { 		if (fork()>
 literal|0
 argument|) 			exit(
 literal|0
-argument|); 		close(
+argument|); 		write_pid(pidfile); 		close(
 literal|0
 argument|); 		close(
 literal|1
 argument|); 		close(
 literal|2
-argument|); 		setsid(); 	}  	signal(SIGHUP, handlehup);  	for (doread =
+argument|); 		setsid(); 	} else 		write_pid(pidfile);  	signal(SIGHUP, handlehup);  	for (doread =
 literal|1
 argument|; doread; ) { 		nr =
 literal|0
@@ -2399,7 +3082,7 @@ argument|); 				} 			} else { 				tr = (lseek(fd[i],
 literal|0
 argument|, SEEK_CUR)< sb.st_size); 				if (!tr&& !(opts& OPT_TAIL)) 					doread =
 literal|0
-argument|; 			} 			if (!tr) 				continue; 			nr += tr;  			tr = read_log(fd[i],&n, buf, sizeof(buf), log); 			if (donehup) { 				donehup =
+argument|; 			} 			if (!tr) 				continue; 			nr += tr;  			tr = read_log(fd[i],&n, buf, sizeof(buf)); 			if (donehup) { 				donehup =
 literal|0
 argument|; 				if (newlog) { 					fclose(log); 					log = newlog; 					newlog = NULL; 				} 			}  			switch (tr) 			{ 			case -
 literal|1

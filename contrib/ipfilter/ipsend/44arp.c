@@ -154,6 +154,12 @@ directive|include
 file|"ipsend.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"iplang/iplang.h"
+end_include
+
 begin_comment
 comment|/*  * lookup host and return  * its IP address in address  * (4 bytes)  */
 end_comment
@@ -323,6 +329,25 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEND
+if|if
+condition|(
+name|arp_getipv4
+argument_list|(
+name|ip
+argument_list|,
+name|ether
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 name|mib
 index|[
 literal|0

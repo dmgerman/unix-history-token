@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_ifdef
@@ -201,7 +201,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ip_nat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_state.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipl.h"
 end_include
 
 begin_if
@@ -232,7 +250,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.0.2.13.2.4 1998/05/23 14:29:44 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.2 1999/08/06 15:26:08 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,19 +258,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|void
-name|frsync
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -321,6 +326,18 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|frsync
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +514,72 @@ name|IPL_NAME
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|showversion
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|get_flags
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: ipf [-AdDEInoPrsUvVyzZ] %s %s %s\n"
+argument_list|,
+literal|"[-l block|pass|nomatch]"
+argument_list|,
+literal|"[-F i|o|a|s|S]"
+argument_list|,
+literal|"[-f filename]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|int
 name|main
@@ -528,7 +611,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AdDEf:F:Il:noPrsUvyzZ"
+literal|"AdDEf:F:Il:noPrsUvVyzZ"
 argument_list|)
 operator|)
 operator|!=
@@ -541,6 +624,12 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'?'
+case|:
+name|usage
+argument_list|()
+expr_stmt|;
 case|case
 literal|'A'
 case|:
@@ -679,6 +768,13 @@ case|:
 name|opts
 operator||=
 name|OPT_VERBOSE
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+name|showversion
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -838,6 +934,58 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|get_flags
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|)
+operator|&&
+operator|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCGETFF
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"SIOCFRENB"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+return|return
+name|i
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|set_state
 parameter_list|(
@@ -921,12 +1069,13 @@ name|fr
 decl_stmt|;
 name|u_int
 name|add
-init|=
-name|SIOCADAFR
 decl_stmt|,
 name|del
+decl_stmt|;
+name|int
+name|linenum
 init|=
-name|SIOCRMAFR
+literal|0
 decl_stmt|;
 operator|(
 name|void
@@ -950,6 +1099,17 @@ expr_stmt|;
 name|del
 operator|=
 name|SIOCRMIFR
+expr_stmt|;
+block|}
+else|else
+block|{
+name|add
+operator|=
+name|SIOCADAFR
+expr_stmt|;
+name|del
+operator|=
+name|SIOCRMAFR
 expr_stmt|;
 block|}
 if|if
@@ -1037,6 +1197,9 @@ name|fp
 argument_list|)
 condition|)
 block|{
+name|linenum
+operator|++
+expr_stmt|;
 comment|/* 		 * treat CR as EOL.  LF is converted to NUL by getline(). 		 */
 if|if
 condition|(
@@ -1105,6 +1268,8 @@ operator|=
 name|parse
 argument_list|(
 name|line
+argument_list|,
+name|linenum
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1298,13 +1463,11 @@ argument|) 				break; 			size -= len; 		} 	} while (*str ==
 literal|'\0'
 argument||| *str ==
 literal|'\n'
-argument|); 	return (str); }   static void packetlogon(opt) char	*opt; { 	int	err
+argument|); 	return (str); }   static void packetlogon(opt) char	*opt; { 	int	flag
 argument_list|,
-argument|flag =
+argument|err;  	err = get_flags(); 	if (err !=
 literal|0
-argument|;  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		if ((err = ioctl(fd, SIOCGETFF,&flag))) 			perror(
-literal|"ioctl(SIOCGETFF)"
-argument|);  		printf(
+argument|) { 		if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) 			printf(
 literal|"log flag is currently %#x\n"
 argument|, flag); 	}  	flag&= ~(FF_LOGPASS|FF_LOGNOMATCH|FF_LOGBLOCK);  	if (index(opt,
 literal|'p'
@@ -1328,9 +1491,7 @@ argument|); 	}  	if (opendevice(ipfname) != -
 literal|2
 argument|&& (err = ioctl(fd, SIOCSETFF,&flag))) 		perror(
 literal|"ioctl(SIOCSETFF)"
-argument|);  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		if ((err = ioctl(fd, SIOCGETFF,&flag))) 			perror(
-literal|"ioctl(SIOCGETFF)"
-argument|);  		printf(
+argument|);  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		flag = get_flags(); 		printf(
 literal|"log flag is now %#x\n"
 argument|, flag); 	} }   static	void	flushfilter(arg) char	*arg; { 	int	fl =
 literal|0
@@ -1395,7 +1556,7 @@ argument|) 		perror(
 literal|"ioctl(SIOCSWAPA)"
 argument|); 	else 		printf(
 literal|"Set %d now inactive\n"
-argument|, in); }   static void frsync() { 	int frsyn =
+argument|, in); }   void frsync() { 	int frsyn =
 literal|0
 argument|;  	if (opendevice(ipfname) != -
 literal|2
@@ -1490,13 +1651,11 @@ argument|].fr_skip); }
 if|#
 directive|if
 name|SOLARIS
-argument|static void blockunknown() { 	int	flag;  	if (opendevice(ipfname) == -
+argument|static void blockunknown() { 	u_32_t	flag;  	if (opendevice(ipfname) == -
 literal|1
-argument|) 		return;  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		if (ioctl(fd, SIOCGETFF,&flag)) 			perror(
-literal|"ioctl(SIOCGETFF)"
-argument|);  		printf(
+argument|) 		return;  	flag = get_flags(); 	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) 		printf(
 literal|"log flag is currently %#x\n"
-argument|, flag); 	}  	flag ^= FF_BLOCKNONIP;  	if (opendevice(ipfname) != -
+argument|, flag);  	flag ^= FF_BLOCKNONIP;  	if (opendevice(ipfname) != -
 literal|2
 argument|&& ioctl(fd, SIOCSETFF,&flag)) 		perror(
 literal|"ioctl(SIOCSETFF)"
@@ -1505,12 +1664,64 @@ literal|"ioctl(SIOCGETFF)"
 argument|);  		printf(
 literal|"log flag is now %#x\n"
 argument|, flag); 	} }
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+argument|static void showversion() { 	struct friostat fio; 	u_32_t flags; 	char *s;  	printf(
+literal|"ipf: %s (%d)\n"
+argument|, IPL_VERSION, sizeof(frentry_t));  	if (opendevice(ipfname) != -
+literal|2
+argument|&& ioctl(fd, SIOCGETFS,&fio)) { 		perror(
+literal|"ioctl(SIOCGETFS"
+argument|); 		return; 	} 	flags = get_flags();  	printf(
+literal|"Kernel: %-*.*s\n"
+argument|, (int)sizeof(fio.f_version), 		(int)sizeof(fio.f_version), fio.f_version); 	printf(
+literal|"Running: %s\n"
+argument|, fio.f_running ?
+literal|"yes"
+argument|:
+literal|"no"
+argument|); 	printf(
+literal|"Log Flags: %#x = "
+argument|, flags); 	s =
+literal|""
+argument|; 	if (flags& FF_LOGPASS) { 		printf(
+literal|"pass"
+argument|); 		s =
+literal|", "
+argument|; 	} 	if (flags& FF_LOGBLOCK) { 		printf(
+literal|"%sblock"
+argument|, s); 		s =
+literal|", "
+argument|; 	} 	if (flags& FF_LOGNOMATCH) { 		printf(
+literal|"%snomatch"
+argument|, s); 		s =
+literal|", "
+argument|; 	} 	if (flags& FF_BLOCKNONIP) { 		printf(
+literal|"%snonip"
+argument|, s); 		s =
+literal|", "
+argument|; 	} 	if (!*s) 		printf(
+literal|"none set"
+argument|); 	putchar(
+literal|'\n'
+argument|);  	printf(
+literal|"Default: "
+argument|); 	if (fio.f_defpass& FR_PASS) 		s =
+literal|"pass"
+argument|; 	else if (fio.f_defpass& FR_BLOCK) 		s =
+literal|"block"
+argument|; 	else 		s =
+literal|"nomatch -> block"
+argument|; 	printf(
+literal|"%s all, Logging: %savailable\n"
+argument|, s, fio.f_logging ?
+literal|""
+argument|:
+literal|"un"
+argument|); 	printf(
+literal|"Active list: %d\n"
+argument|, fio.f_active); }
+end_block
 
 end_unit
 
