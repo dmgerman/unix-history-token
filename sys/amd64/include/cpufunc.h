@@ -1233,10 +1233,10 @@ name|void
 name|load_dr0
 parameter_list|(
 name|u_int
-name|sel
+name|dr0
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr0" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr0" : : "r" (dr0));
 block|}
 end_function
 
@@ -1268,10 +1268,10 @@ name|void
 name|load_dr1
 parameter_list|(
 name|u_int
-name|sel
+name|dr1
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr1" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr1" : : "r" (dr1));
 block|}
 end_function
 
@@ -1303,10 +1303,10 @@ name|void
 name|load_dr2
 parameter_list|(
 name|u_int
-name|sel
+name|dr2
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr2" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr2" : : "r" (dr2));
 block|}
 end_function
 
@@ -1338,10 +1338,10 @@ name|void
 name|load_dr3
 parameter_list|(
 name|u_int
-name|sel
+name|dr3
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr3" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr3" : : "r" (dr3));
 block|}
 end_function
 
@@ -1373,10 +1373,10 @@ name|void
 name|load_dr4
 parameter_list|(
 name|u_int
-name|sel
+name|dr4
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr4" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr4" : : "r" (dr4));
 block|}
 end_function
 
@@ -1408,10 +1408,10 @@ name|void
 name|load_dr5
 parameter_list|(
 name|u_int
-name|sel
+name|dr5
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr5" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr5" : : "r" (dr5));
 block|}
 end_function
 
@@ -1443,10 +1443,10 @@ name|void
 name|load_dr6
 parameter_list|(
 name|u_int
-name|sel
+name|dr6
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr6" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr6" : : "r" (dr6));
 block|}
 end_function
 
@@ -1478,10 +1478,10 @@ name|void
 name|load_dr7
 parameter_list|(
 name|u_int
-name|sel
+name|dr7
 parameter_list|)
 block|{
-asm|__asm __volatile("movl %0,%%dr7" : : "r" (sel));
+asm|__asm __volatile("movl %0,%%dr7" : : "r" (dr7));
 block|}
 end_function
 
@@ -1940,7 +1940,7 @@ name|void
 name|load_dr0
 parameter_list|(
 name|u_int
-name|sel
+name|dr0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1959,7 +1959,7 @@ name|void
 name|load_dr1
 parameter_list|(
 name|u_int
-name|sel
+name|dr1
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1978,7 +1978,7 @@ name|void
 name|load_dr2
 parameter_list|(
 name|u_int
-name|sel
+name|dr2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1997,7 +1997,7 @@ name|void
 name|load_dr3
 parameter_list|(
 name|u_int
-name|sel
+name|dr3
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2016,7 +2016,7 @@ name|void
 name|load_dr4
 parameter_list|(
 name|u_int
-name|sel
+name|dr4
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2035,7 +2035,7 @@ name|void
 name|load_dr5
 parameter_list|(
 name|u_int
-name|sel
+name|dr5
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2054,7 +2054,7 @@ name|void
 name|load_dr6
 parameter_list|(
 name|u_int
-name|sel
+name|dr6
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2073,7 +2073,7 @@ name|void
 name|load_dr7
 parameter_list|(
 name|u_int
-name|sel
+name|dr7
 parameter_list|)
 function_decl|;
 end_function_decl
