@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  *  *	@(#)histedit.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  *  *	@(#)histedit.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * editline.h: Line editor interface  */
+comment|/*  * histedit.h: Line editor and history interface.  */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,10 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_comment
+comment|/*  * ==== Editing ====  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -432,6 +436,239 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * ==== History ====  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|history
+name|History
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|HistEvent
+block|{
+name|int
+name|num
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+block|}
+name|HistEvent
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * History access functions.  */
+end_comment
+
+begin_decl_stmt
+name|History
+modifier|*
+name|history_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|history_end
+name|__P
+argument_list|(
+operator|(
+name|History
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|HistEvent
+modifier|*
+name|history
+name|__P
+argument_list|(
+operator|(
+name|History
+operator|*
+operator|,
+name|int
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|H_FUNC
+value|0
+end_define
+
+begin_comment
+comment|/* , UTSL		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_EVENT
+value|1
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_FIRST
+value|2
+end_define
+
+begin_comment
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_LAST
+value|3
+end_define
+
+begin_comment
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_PREV
+value|4
+end_define
+
+begin_comment
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_NEXT
+value|5
+end_define
+
+begin_comment
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_CURR
+value|6
+end_define
+
+begin_comment
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ADD
+value|7
+end_define
+
+begin_comment
+comment|/* , const char*);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ENTER
+value|8
+end_define
+
+begin_comment
+comment|/* , const char*);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_END
+value|9
+end_define
+
+begin_comment
+comment|/* , void);		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_NEXT_STR
+value|10
+end_define
+
+begin_comment
+comment|/* , const char*);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_PREV_STR
+value|11
+end_define
+
+begin_comment
+comment|/* , const char*);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_NEXT_EVENT
+value|12
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_PREV_EVENT
+value|13
+end_define
+
+begin_comment
+comment|/* , const int);	*/
+end_comment
 
 begin_endif
 endif|#
