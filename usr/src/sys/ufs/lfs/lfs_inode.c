@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -604,7 +604,7 @@ operator||
 name|IMOD
 operator|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * I'm not real sure what to do here; once we have fsync and partial 	 * segments working in the LFS context, this must be fixed to be 	 * correct.  The contents of the inode have to be pushed back to 	 * stable storage; note that the ifile contains the access time of 	 * the inode and must be updated as well. 	 */
+comment|/* 	 * XXX 	 * I'm not real sure what to do here; once we have fsync and partial 	 * segments working in the LFS context, this must be fixed to be 	 * correct.  The contents of the inode have to be pushed back to 	 * stable storage. 	 */
 return|return
 operator|(
 literal|0
@@ -860,13 +860,13 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_UBWRITE
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX: BZERO INODE BLOCK POINTERS HERE, FOR CONSISTENCY. */
+comment|/* 	 * XXX 	 * Bzero inode block pointers here, for consistency with ffs. 	 * Segment usage information has to be updated when the blocks 	 * are free. 	 * Block count in the inode has to be fixed when blocks are 	 * free. 	 */
 operator|(
 name|void
 operator|)
