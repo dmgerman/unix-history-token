@@ -852,6 +852,12 @@ operator|&
 name|tapclones
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|tapmtx
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 return|return
