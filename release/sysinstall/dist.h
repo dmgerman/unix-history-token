@@ -120,35 +120,12 @@ name|DIST_PORTS
 value|0x4000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_XIG_ENVIRONMENT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DIST_XIG_SERVER
-value|0x8000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|DIST_USR1
 value|0x8000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -349,12 +326,6 @@ end_define
 begin_comment
 comment|/* no SMAILCF, it's part of USBIN */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_XIG_ENVIRONMENT
-end_ifndef
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
@@ -723,15 +694,6 @@ directive|define
 name|DIST_XF86_ALL
 value|0x1FFFF
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !USE_XIG_ENVIRONMENT */
-end_comment
 
 begin_endif
 endif|#
