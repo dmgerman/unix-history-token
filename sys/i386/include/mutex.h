@@ -185,15 +185,11 @@ parameter_list|)
 value|__STRING(x)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* #ifndef I386_CPU */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|I386_CPU
+end_ifndef
 
 begin_comment
 comment|/*  * For 486 and newer processors.  */
@@ -214,20 +210,18 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	$" _V(MTX_UNOWNED) ",%%eax;"
-comment|/* Unowned cookie */
-value|\ "	" MPLOCKED ""							\ "	cmpxchgl %3,%1;"
+value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	" MPLOCKED ""							\ "	cmpxchgl %3,%1;"
 comment|/* Try */
 value|\ "	jz	1f;"
 comment|/* Got it */
-value|\ "	andl	$" _V(MTX_FLAGMASK) ",%%eax;"
+value|\ "	andl	$" _V(MTX_FLAGMASK) ",%0;"
 comment|/* turn off spec bits */
-value|\ "	cmpl	%%eax,%3;"
+value|\ "	cmpl	%0,%3;"
 comment|/* already have it? */
 value|\ "	je	2f;"
 comment|/* yes, recurse */
-value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:"									\ "	" MPLOCKED ""							\ "	orl $" _V(MTX_RECURSE) ",%1;"					\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "=&a" (_res),
-comment|/* 0 (dummy output) */
+value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:"									\ "	" MPLOCKED ""							\ "	orl $" _V(MTX_RECURSE) ",%1;"					\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "+a" (_res),
+comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_lock),
 comment|/* 1 */
 value|\ 	  "+m" (mtxp->mtx_recurse)
@@ -238,7 +232,7 @@ value|\ 	  "gi" (type),
 comment|/* 4 */
 value|\ 	  "g" (mtxp)
 comment|/* 5 */
-value|\ 	: "memory", "ecx", "edx"
+value|\ 	: "cc", "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -258,9 +252,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	pushfl;"							\ "	cli;"								\ "	movl	$" _V(MTX_UNOWNED) ",%%eax;"
-comment|/* Unowned cookie */
-value|\ "	" MPLOCKED ""							\ "	cmpxchgl %3,%1;"
+value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	pushfl;"							\ "	cli;"								\ "	" MPLOCKED ""							\ "	cmpxchgl %3,%1;"
 comment|/* Try */
 value|\ "	jz	2f;"
 comment|/* got it */
@@ -268,8 +260,8 @@ value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"
 comment|/* mtx_enter_hard(mtxp, type, oflags) */
 value|\ "	addl	$12,%%esp;"						\ "	jmp	1f;"							\ "2:	popl	%2;"
 comment|/* save flags */
-value|\ "1:"									\ "# getlock_spin_block"							\ 	: "=&a" (_res),
-comment|/* 0 (dummy output) */
+value|\ "1:"									\ "# getlock_spin_block"							\ 	: "+a" (_res),
+comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_lock),
 comment|/* 1 */
 value|\ 	  "=m" (mtxp->mtx_saveintr)
@@ -280,7 +272,7 @@ value|\ 	  "gi" (type),
 comment|/* 4 */
 value|\ 	  "g" (mtxp)
 comment|/* 5 */
-value|\ 	: "memory", "ecx", "edx"
+value|\ 	: "cc", "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -300,16 +292,14 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	$" _V(MTX_UNOWNED) ",%%eax;"
-comment|/* Unowned cookie */
-value|\ "	" MPLOCKED ""							\ "	cmpxchgl %2,%1;"
+value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	" MPLOCKED ""							\ "	cmpxchgl %2,%1;"
 comment|/* Try */
 value|\ "	jz	1f;"
 comment|/* got it */
 value|\ "	pushl	%3;"							\ "	pushl	%4;"							\ "	call	mtx_enter_hard;"
 comment|/* mtx_enter_hard(mtxp, type) */
-value|\ "	addl	$8,%%esp;"						\ "1:"									\ "# getlock_norecurse"							\ 	: "=&a" (_res),
-comment|/* 0 (dummy output) */
+value|\ "	addl	$8,%%esp;"						\ "1:"									\ "# getlock_norecurse"							\ 	: "+a" (_res),
+comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_lock)
 comment|/* 1 */
 value|\ 	: "r" (tid),
@@ -318,7 +308,7 @@ value|\ 	  "gi" (type),
 comment|/* 3 */
 value|\ 	  "g" (mtxp)
 comment|/* 4 */
-value|\ 	: "memory", "ecx", "edx"
+value|\ 	: "cc", "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -352,7 +342,7 @@ value|\ 	  "g" (mtxp),
 comment|/* 3 */
 value|\ 	  "r" (MTX_UNOWNED)
 comment|/* 4 */
-value|\ 	: "memory", "ecx", "edx"
+value|\ 	: "cc", "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -404,13 +394,13 @@ value|\ 	  "g" (mtxp),
 comment|/* 4 */
 value|\ 	  "r" (MTX_UNOWNED)
 comment|/* 5 */
-value|\ 	: "memory", "ecx", "edx"
+value|\ 	: "cc", "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
 
 begin_comment
-comment|/*  * Release a spin lock (with possible recursion).  *  * We use cmpxchgl to clear lock (instead of simple store) to flush posting  * buffers and make the change visible to other CPU's.  */
+comment|/*  * Release a spin lock (with possible recursion).  *  * We use xchgl to clear lock (instead of simple store) to flush posting  * buffers and make the change visible to other CPU's.  */
 end_comment
 
 begin_define
@@ -420,15 +410,15 @@ name|_exitlock_spin
 parameter_list|(
 name|mtxp
 parameter_list|)
-value|({						\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	%1,%2;"							\ "	decl	%2;"							\ "	js	1f;"							\ "	movl	%2,%1;"							\ "	jmp	2f;"							\ "1:	movl	%0,%2;"							\ "	movl	$ " _V(MTX_UNOWNED) ",%%ecx;"				\ "	pushl	%3;"							\ "	" MPLOCKED ""							\ "	cmpxchgl %%ecx,%0;"				  		\ "	popfl;"								\ "2:"									\ "# exitlock_spin"							\ 	: "+m" (mtxp->mtx_lock),
+value|({						\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	%1,%2;"							\ "	decl	%2;"							\ "	js	1f;"							\ "	movl	%2,%1;"							\ "	jmp	2f;"							\ "1:	movl	$ " _V(MTX_UNOWNED) ",%2;"				\ "	pushl	%3;"							\ "	xchgl	%2,%0;"					  		\ "	popfl;"								\ "2:"									\ "# exitlock_spin"							\ 	: "+m" (mtxp->mtx_lock),
 comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_recurse),
 comment|/* 1 */
-value|\ 	  "=&a" (_res)
+value|\ 	  "=r" (_res)
 comment|/* 2 */
 value|\ 	: "g"  (mtxp->mtx_saveintr)
 comment|/* 3 */
-value|\ 	: "memory", "ecx"
+value|\ 	: "cc", "memory", "ecx"
 comment|/* used */
 value|);			\ })
 end_define
