@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpsubs.c	5.5 (Berkeley) %G%"
+literal|"@(#)tftpsubs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,7 +1073,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|from
