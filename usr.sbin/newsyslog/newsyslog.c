@@ -316,7 +316,7 @@ comment|/* File permissions on the log */
 name|int
 name|flags
 decl_stmt|;
-comment|/* Flags (CE_COMPACT& CE_BZCOMPACT& CE_BINARY)  */
+comment|/* CE_COMPACT, CE_BZCOMPACT, CE_BINARY */
 name|int
 name|sig
 decl_stmt|;
@@ -1516,15 +1516,9 @@ name|struct
 name|conf_entry
 modifier|*
 name|first
-init|=
-name|NULL
-decl_stmt|;
-name|struct
-name|conf_entry
+decl_stmt|,
 modifier|*
 name|working
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|passwd
@@ -1539,6 +1533,12 @@ decl_stmt|;
 name|int
 name|eol
 decl_stmt|;
+name|first
+operator|=
+name|working
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1707,11 +1707,6 @@ condition|(
 operator|(
 name|working
 operator|=
-operator|(
-expr|struct
-name|conf_entry
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1745,11 +1740,6 @@ name|working
 operator|->
 name|next
 operator|=
-operator|(
-expr|struct
-name|conf_entry
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
