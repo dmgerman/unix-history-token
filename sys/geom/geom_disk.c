@@ -1450,6 +1450,8 @@ name|sbuf_len
 argument_list|(
 name|sb
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|sbuf_delete
