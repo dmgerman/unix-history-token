@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwupdate.c	3.21 (Berkeley) %G%"
+literal|"@(#)wwupdate.c	3.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,7 +391,7 @@ expr_stmt|;
 if|if
 condition|(
 name|gain
-operator|>=
+operator|>
 name|best_gain
 condition|)
 block|{
