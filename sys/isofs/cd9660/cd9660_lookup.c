@@ -1597,7 +1597,7 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(
