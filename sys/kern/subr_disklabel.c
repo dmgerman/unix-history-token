@@ -63,6 +63,12 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notquite
+end_ifdef
+
 begin_comment
 comment|/*  * Mutex to use when delaying niced I/O bound processes in bioqdisksort().  */
 end_comment
@@ -113,6 +119,11 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Seek sort for disks.  *  * The buf_queue keep two queues, sorted in ascending block order.  The first  * queue holds those requests which are positioned after the current block  * (in the first request); the second, which starts at queue->switch_point,  * holds requests which came in after their block number was passed.  Thus  * we implement a one way scan, retracting after reaching the end of the drive  * to the first request on the second queue, at which time it becomes the  * first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead blocks are  * allocated.  */
 end_comment
@@ -151,6 +162,9 @@ name|bio
 modifier|*
 name|be
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notquite
 name|struct
 name|thread
 modifier|*
@@ -237,6 +251,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
