@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scalech.c	(Berkeley)	1.4	84/02/27  *  * Font scaling for character format fonts.  *  *	Use:	scalech  [ -s# ]  charfile1> charfile2  *  *		Takes input from charfile1 (which must be in the format  *	written by rst2ch), scales by # (default = 50%) and writes to stdout.  *	If charfile1 is missing, stdin is read.  The -s flag sets the scaling  *	factor to # (which is a percentage REDUCTION - can't make fonts bigger)  */
+comment|/*	scalech.c	(Berkeley)	1.4	84/04/12  *  * Font scaling for character format fonts.  *  *	Use:	scalech  [ -s# ]  charfile1> charfile2  *  *		Takes input from charfile1 (which must be in the format  *	written by rst2ch), scales by # (default = 50%) and writes to stdout.  *	If charfile1 is missing, stdin is read.  The -s flag sets the scaling  *	factor to # (which is a percentage REDUCTION - can't make fonts bigger)  */
 end_comment
 
 begin_include
@@ -343,7 +343,7 @@ name|strcmp
 argument_list|(
 name|ibuff
 argument_list|,
-literal|"header\n"
+literal|"fontheader\n"
 argument_list|)
 condition|)
 name|error
@@ -353,7 +353,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"header\n"
+literal|"fontheader\n"
 argument_list|)
 expr_stmt|;
 while|while
