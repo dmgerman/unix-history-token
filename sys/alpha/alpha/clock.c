@@ -117,6 +117,16 @@ directive|include
 file|<alpha/alpha/timerreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
+end_include
+
+begin_comment
+comment|/* for CPU definitions, etc */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -617,6 +627,20 @@ name|cycles_per_sec
 operator|=
 name|pcc
 expr_stmt|;
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|==
+name|ST_DEC_21000
+condition|)
+block|{
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 	 * Use the calibrated i8254 frequency if it seems reasonable. 	 * Otherwise use the default, and don't use the calibrated i586 	 * frequency. 	 */
 name|delta
 operator|=
@@ -693,6 +717,8 @@ name|tc_frequency
 operator|=
 name|timer_freq
 expr_stmt|;
+name|out
+label|:
 ifdef|#
 directive|ifdef
 name|EVCNT_COUNTERS
@@ -828,12 +854,23 @@ name|freq
 operator|/
 name|hz
 expr_stmt|;
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|!=
+name|ST_DEC_21000
+condition|)
+block|{
 name|tc_init
 argument_list|(
 operator|&
 name|i8254_timecounter
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ncpus
@@ -888,10 +925,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+specifier|static
+name|__inline
+name|int
+name|get_8254_ctr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
+name|__inline
 name|int
-name|getit
+name|get_8254_ctr
 parameter_list|(
 name|void
 parameter_list|)
@@ -985,6 +1034,39 @@ name|sec
 decl_stmt|,
 name|start_sec
 decl_stmt|;
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|==
+name|ST_DEC_21000
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"No i8254- using firmware default of %u Hz\n"
+argument_list|,
+name|firmware_freq
+argument_list|)
+expr_stmt|;
+operator|*
+name|pcc
+operator|=
+name|firmware_freq
+expr_stmt|;
+operator|*
+name|timer
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|bootverbose
@@ -1050,7 +1132,7 @@ block|}
 comment|/* Start keeping track of the PCC and i8254. */
 name|prev_count
 operator|=
-name|getit
+name|get_8254_ctr
 argument_list|()
 expr_stmt|;
 if|if
@@ -1071,7 +1153,7 @@ operator|=
 name|alpha_rpcc
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Wait for the mc146818A seconds counter to change.  Read the i8254 	 * counter for each iteration since this is convenient and only 	 * costs a few usec of inaccuracy. The timing of the final reads 	 * of the counters almost matches the timing of the initial reads, 	 * so the main cause of inaccuracy is the varying latency from  	 * inside getit() or rtcin(RTC_STATUSA) to the beginning of the 	 * rtcin(RTC_SEC) that returns a changed seconds count.  The 	 * maximum inaccuracy from this cause is< 10 usec on 486's. 	 */
+comment|/* 	 * Wait for the mc146818A seconds counter to change.  Read the i8254 	 * counter for each iteration since this is convenient and only 	 * costs a few usec of inaccuracy. The timing of the final reads 	 * of the counters almost matches the timing of the initial reads, 	 * so the main cause of inaccuracy is the varying latency from  	 * inside get_8254_ctr() or rtcin(RTC_STATUSA) to the beginning of the 	 * rtcin(RTC_SEC) that returns a changed seconds count.  The 	 * maximum inaccuracy from this cause is< 10 usec on 486's. 	 */
 name|start_sec
 operator|=
 name|sec
@@ -1097,7 +1179,7 @@ name|fail
 goto|;
 name|count
 operator|=
-name|getit
+name|get_8254_ctr
 argument_list|()
 expr_stmt|;
 if|if
@@ -1306,6 +1388,16 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|!=
+name|ST_DEC_21000
+condition|)
+block|{
 if|if
 condition|(
 name|timecounter
@@ -1350,6 +1442,7 @@ operator|&
 name|clock_lock
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|hardclock
 argument_list|(
@@ -2198,6 +2291,22 @@ name|int
 name|mode
 parameter_list|)
 block|{
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|==
+name|ST_DEC_21000
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|timer2_state
@@ -2239,8 +2348,26 @@ end_function
 begin_function
 name|int
 name|release_timer2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|==
+name|ST_DEC_21000
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|timer2_state
@@ -2320,6 +2447,22 @@ name|int
 name|period
 parameter_list|)
 block|{
+comment|/* 	 * XXX: TurboLaser doesn't have an i8254 counter. 	 * XXX: A replacement is needed, and another method 	 * XXX: of determining this would be nice. 	 */
+if|if
+condition|(
+name|hwrpb
+operator|->
+name|rpb_type
+operator|==
+name|ST_DEC_21000
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
