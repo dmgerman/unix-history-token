@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.9	%G%"
+literal|"@(#)deliver.c	1.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -659,6 +659,17 @@ literal|0
 condition|)
 block|{
 comment|/* child -- set up input& exec mailer */
+comment|/* make diagnostic output be standard output */
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|dup
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -1331,6 +1342,13 @@ block|{
 name|syserr
 argument_list|(
 literal|"Broken pipe"
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
