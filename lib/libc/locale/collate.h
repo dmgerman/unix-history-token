@@ -102,16 +102,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|__collate_version
-index|[
-name|STR_LEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_char
 name|__collate_substitute_table
 index|[
@@ -177,6 +167,7 @@ begin_function_decl
 name|int
 name|__collate_load_tables
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
