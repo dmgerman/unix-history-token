@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1994 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1994 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
 end_comment
 
 begin_comment
@@ -560,8 +560,6 @@ literal|0
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|struct
 name|lmc_resrv
@@ -1036,18 +1034,18 @@ return|return
 name|ENXIO
 return|;
 block|}
-comment|/* 		 * Check that this isn't a duplicate module (broken 		 * modules are too stupid to check this for 		 * themselves). We must do this *BEFORE* we call 		 * the entry point of the module, since we might 		 * be able to unload the module aftwewards without 		 * panicking the system. This defeats the purpose of 		 * the lkmexists() checking that takes place for 		 * properly designed modules, but I can't find a better 		 * way to do it, so... 		 * XXX FIXME: Name matching can easily be defeated if 		 * the user renames the module. :( 		 */
+comment|/* 		 * Check that this isn't a duplicate module (broken 		 * modules are too stupid to check this for 		 * themselves). We must do this *BEFORE* we call 		 * the entry point of the module, since we might not 		 * be able to unload the module aftwewards without 		 * panicking the system. This defeats the purpose of 		 * the lkmexists() checking that takes place for 		 * properly designed modules, but I can't find a better 		 * way to do it, so... 		 * XXX FIXME: Name matching can easily be defeated if 		 * the user renames the module. :( 		 */
 for|for
 control|(
-name|j
+name|i
 operator|=
 literal|0
 init|;
-name|j
+name|i
 operator|<
 name|MAXLKMS
 condition|;
-name|j
+name|i
 operator|++
 control|)
 block|{
@@ -1056,7 +1054,7 @@ condition|(
 operator|!
 name|lkmods
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|used
@@ -1064,7 +1062,7 @@ operator|||
 operator|&
 name|lkmods
 index|[
-name|j
+name|i
 index|]
 operator|==
 name|curp
@@ -1079,7 +1077,7 @@ name|modname
 argument_list|,
 name|lkmods
 index|[
-name|j
+name|i
 index|]
 operator|.
 name|private
