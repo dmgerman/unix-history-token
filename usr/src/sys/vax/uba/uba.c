@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.8	%G%	*/
+comment|/*	uba.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -250,9 +250,6 @@ name|PSWP
 argument_list|)
 expr_stmt|;
 block|}
-name|reg
-operator|--
-expr_stmt|;
 name|bdp
 operator|=
 literal|0
@@ -330,7 +327,11 @@ operator|~
 operator|(
 literal|1
 operator|<<
+operator|(
 name|bdp
+operator|-
+literal|1
+operator|)
 operator|)
 expr_stmt|;
 block|}
@@ -338,6 +339,9 @@ name|splx
 argument_list|(
 name|a
 argument_list|)
+expr_stmt|;
+name|reg
+operator|--
 expr_stmt|;
 name|ubinfo
 operator|=
@@ -869,7 +873,11 @@ name|uh_bdpfree
 operator||=
 literal|1
 operator|<<
+operator|(
 name|bdp
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
