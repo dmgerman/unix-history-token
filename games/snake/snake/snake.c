@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"snake.h"
 end_include
 
@@ -325,10 +331,6 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|long
 name|atol
 parameter_list|()
