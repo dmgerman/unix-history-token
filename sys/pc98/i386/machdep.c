@@ -4732,9 +4732,9 @@ block|{
 literal|0
 block|,
 comment|/* segment base address (overwritten by APM)  */
-literal|0xfffff
+literal|0xffff
 block|,
-comment|/* length */
+comment|/* length (overwritten by APM)  */
 name|SDT_MEMERA
 block|,
 comment|/* segment type */
@@ -4751,7 +4751,7 @@ block|,
 literal|1
 block|,
 comment|/* default 32 vs 16 bit size */
-literal|1
+literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
@@ -4760,9 +4760,9 @@ block|{
 literal|0
 block|,
 comment|/* segment base address (overwritten by APM)  */
-literal|0xfffff
+literal|0xffff
 block|,
-comment|/* length */
+comment|/* length (overwritten by APM)  */
 name|SDT_MEMERA
 block|,
 comment|/* segment type */
@@ -4779,7 +4779,7 @@ block|,
 literal|0
 block|,
 comment|/* default 32 vs 16 bit size */
-literal|1
+literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
@@ -4788,9 +4788,9 @@ block|{
 literal|0
 block|,
 comment|/* segment base address (overwritten by APM) */
-literal|0xfffff
+literal|0xffff
 block|,
-comment|/* length */
+comment|/* length (overwritten by APM)  */
 name|SDT_MEMRWA
 block|,
 comment|/* segment type */
@@ -4804,10 +4804,10 @@ literal|0
 block|,
 literal|0
 block|,
-literal|1
+literal|0
 block|,
 comment|/* default 32 vs 16 bit size */
-literal|1
+literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|, }
