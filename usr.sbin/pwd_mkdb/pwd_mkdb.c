@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)pwd_mkdb.c	8.5 (Berkeley) 4/20/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	8.5 (Berkeley) 4/20/94"
+literal|"$Id: pwd_mkdb.c,v 1.20 1997/10/10 06:27:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,6 +355,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -1386,7 +1401,7 @@ name|COMPACT
 parameter_list|(
 name|e
 parameter_list|)
-value|t = e; while (*p++ = *t++);
+value|t = e; while ((*p++ = *t++));
 if|if
 condition|(
 operator|!
@@ -3180,6 +3195,8 @@ decl_stmt|;
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -3305,6 +3322,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)pw_scan.c	8.3 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)pw_scan.c	8.3 (Berkeley) 4/2/94"
+literal|"$Id: pw_scan.c,v 1.6 1997/10/10 06:27:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -648,6 +655,7 @@ name|_PWF_SHELL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strsep
@@ -657,6 +665,7 @@ name|bp
 argument_list|,
 literal|":"
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* too many */
