@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reg.h,v 1.2 1998/06/10 10:55:26 dfr Exp $ */
+comment|/* $Id: reg.h,v 1.3 1999/04/03 22:19:57 jdp Exp $ */
 end_comment
 
 begin_comment
@@ -285,6 +285,22 @@ index|]
 decl_stmt|;
 name|u_int64_t
 name|fpr_cr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Placeholder.  */
+end_comment
+
+begin_struct
+struct|struct
+name|dbreg
+block|{
+name|unsigned
+name|long
+name|wankage
 decl_stmt|;
 block|}
 struct|;
