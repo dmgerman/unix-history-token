@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.19 %G%"
+literal|"@(#)asparse.c 4.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2351,6 +2351,14 @@ condition|(
 name|exprisname
 condition|)
 block|{
+name|stpt
+operator|->
+name|s_type
+operator|=
+name|locxp
+operator|->
+name|e_xtype
+expr_stmt|;
 switch|switch
 condition|(
 name|stpt
