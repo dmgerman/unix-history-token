@@ -41,6 +41,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_CLOCKID_T_
+value|int
+end_define
+
+begin_comment
+comment|/* clockid_t */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_BSD_PTRDIFF_T_
 value|long
 end_define
@@ -74,12 +85,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_SUSECONDS_T_
+value|int
+end_define
+
+begin_comment
+comment|/* suseconds_t */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_BSD_TIME_T_
 value|int
 end_define
 
 begin_comment
 comment|/* time() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_TIMER_T_
+value|int
+end_define
+
+begin_comment
+comment|/* timer_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_USECONDS_T_
+value|unsigned int
+end_define
+
+begin_comment
+comment|/* useconds_t */
 end_comment
 
 begin_typedef
@@ -110,50 +154,6 @@ end_define
 
 begin_comment
 comment|/* va_list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_CLOCKID_T_
-value|int
-end_define
-
-begin_comment
-comment|/* clockid_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_TIMER_T_
-value|int
-end_define
-
-begin_comment
-comment|/* timer_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_SUSECONDS_T_
-value|int
-end_define
-
-begin_comment
-comment|/* suseconds_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_USECONDS_T_
-value|unsigned int
-end_define
-
-begin_comment
-comment|/* useconds_t */
 end_comment
 
 begin_comment
