@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.38 1994/10/23 21:27:04 wollman Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.39 1995/01/08 13:41:28 dufault Exp $  */
 end_comment
 
 begin_comment
@@ -1030,54 +1030,6 @@ comment|/* SCSI initiator with scatter gather */
 end_comment
 
 begin_comment
-comment|/* Which CCBs to use.  If you use the "RESID" ones then the  * host adapter will return the DATA OVER/UNDERRUN condition  * on short reads and writes.  *  * This apparently FAILS on old 1542s.  Perhaps we can auto configure  * it somehow using an inquiry for a long string?  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_define
-define|#
-directive|define
-name|INITIATOR_CCB
-value|AHA_INIT_RESID_CCB
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_SCAT_GATH_CCB
-value|AHA_INIT_SG_RESID_CCB
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INITIATOR_CCB
-value|AHA_INITIATOR_CCB
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_SCAT_GATH_CCB
-value|AHA_INIT_SCAT_GATH_CCB
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * aha_ccb.host_stat values  */
 end_comment
 
@@ -1328,13 +1280,13 @@ name|u_char
 name|boardid
 decl_stmt|;
 comment|/* type of board */
-comment|/* 0x20 = BusLogic 545, but it gets 					   the command wrong, only returns 					   one byte */
-comment|/* 0x31 = AHA-1540 */
-comment|/* 0x41 = AHA-1540A/1542A/1542B */
-comment|/* 0x42 = AHA-1640 */
-comment|/* 0x43 = AHA-1542C */
-comment|/* 0x44 = AHA-1542CF */
-comment|/* 0x45 = AHA-1542CF, BIOS v2.01 */
+comment|/* 0x20 (' ') = BusLogic 545, but it gets 					   the command wrong, only returns 					   one byte */
+comment|/* 0x31 ('1') = AHA-1540 */
+comment|/* 0x41 ('A') = AHA-1540A/1542A/1542B */
+comment|/* 0x42 ('B') = AHA-1640 */
+comment|/* 0x43 ('C') = AHA-1542C */
+comment|/* 0x44 ('D') = AHA-1542CF */
+comment|/* 0x45 ('E') = AHA-1542CF, BIOS v2.01 */
 name|u_char
 name|spec_opts
 decl_stmt|;
@@ -1559,6 +1511,15 @@ name|int
 name|aha_scsi_dev
 decl_stmt|;
 comment|/* scsi bus address  */
+comment|/* We use different op codes for different revs of the board 	 * if we think residual codes will work. 	 */
+name|short
+name|init_opcode
+decl_stmt|;
+comment|/* Command to use for initiator */
+name|short
+name|sg_opcode
+decl_stmt|;
+comment|/* Command to use for scatter/gather */
 name|struct
 name|scsi_link
 name|sc_link
@@ -3851,6 +3812,19 @@ name|struct
 name|aha_extbios
 name|extbios
 decl_stmt|;
+comment|/* Assume that residual codes don't work.  If they 	 * do we enable that after we figure out what kind of 	 * board it is. 	 */
+name|aha
+operator|->
+name|init_opcode
+operator|=
+name|AHA_INITIATOR_CCB
+expr_stmt|;
+name|aha
+operator|->
+name|sg_opcode
+operator|=
+name|AHA_INIT_SCAT_GATH_CCB
+expr_stmt|;
 comment|/* 	 * reset board, If it doesn't respond, assume  	 * that it's not there.. good for the probe 	 */
 name|outb
 argument_list|(
@@ -4145,6 +4119,24 @@ literal|0x34
 operator|)
 condition|)
 block|{
+specifier|static
+name|char
+modifier|*
+name|revs
+index|[]
+init|=
+block|{
+literal|"154xB-3.2"
+block|,
+literal|"1640"
+block|,
+literal|"154xC"
+block|,
+literal|"154xCF"
+block|,
+literal|"154xCF-2.01"
+block|}
+decl_stmt|;
 name|aha_cmd
 argument_list|(
 name|unit
@@ -4181,11 +4173,29 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AHADEBUG */
+comment|/* Say exactly what we think this is in case we ever get rev 		 * dependent problems: 		 */
 name|printf
 argument_list|(
-literal|"aha%d: 1542C/CF detected, unlocking mailbox\n"
+literal|"aha%d is a %s-V%c.%c: enabling mailbox and residuals\n"
 argument_list|,
 name|unit
+argument_list|,
+name|revs
+index|[
+name|inquire
+operator|.
+name|boardid
+operator|-
+literal|0x41
+index|]
+argument_list|,
+name|inquire
+operator|.
+name|revision_1
+argument_list|,
+name|inquire
+operator|.
+name|revision_2
 argument_list|)
 expr_stmt|;
 name|aha_cmd
@@ -4208,6 +4218,18 @@ name|extbios
 operator|.
 name|mailboxlock
 argument_list|)
+expr_stmt|;
+name|aha
+operator|->
+name|init_opcode
+operator|=
+name|AHA_INIT_RESID_CCB
+expr_stmt|;
+name|aha
+operator|->
+name|sg_opcode
+operator|=
+name|AHA_INIT_SG_RESID_CCB
 expr_stmt|;
 block|}
 comment|/* 	 * setup dma channel from jumpers and save int 	 * level 	 */
@@ -4938,9 +4960,19 @@ name|xs
 operator|->
 name|datalen
 condition|?
-name|INIT_SCAT_GATH_CCB
+name|ahadata
+index|[
+name|unit
+index|]
+operator|->
+name|sg_opcode
 else|:
-name|INITIATOR_CCB
+name|ahadata
+index|[
+name|unit
+index|]
+operator|->
+name|init_opcode
 operator|)
 expr_stmt|;
 block|}
