@@ -58,6 +58,8 @@ name|dn_expand
 argument_list|(
 argument|msg
 argument_list|,
+argument|msglen
+argument_list|,
 argument|comp_dn
 argument_list|,
 argument|exp_dn
@@ -82,6 +84,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|length
+decl_stmt|,
+name|msglen
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +108,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|eom
+decl_stmt|,
+modifier|*
+name|eomorig
 decl_stmt|;
 name|int
 name|len
@@ -124,6 +131,14 @@ operator|=
 name|exp_dn
 operator|+
 name|length
+operator|-
+literal|1
+expr_stmt|;
+name|eomorig
+operator|=
+name|msg
+operator|+
+name|msglen
 operator|-
 literal|1
 expr_stmt|;
@@ -195,6 +210,7 @@ name|n
 operator|>=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|isupper
@@ -254,6 +270,20 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cp
+operator|>
+name|eomorig
+condition|)
+comment|/* out of range */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 name|INDIR_MASK
@@ -295,6 +325,23 @@ literal|0xff
 operator|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|<
+name|msg
+operator|||
+name|cp
+operator|>
+name|eomorig
+condition|)
+comment|/* out of range */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 break|break;
 default|default:
 return|return

@@ -488,6 +488,8 @@ operator|)
 operator|&
 name|answer
 argument_list|,
+name|eom
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -643,6 +645,8 @@ operator|)
 operator|&
 name|answer
 argument_list|,
+name|eom
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -774,6 +778,8 @@ operator|*
 operator|)
 operator|&
 name|answer
+argument_list|,
+name|eom
 argument_list|,
 name|cp
 argument_list|,

@@ -793,6 +793,8 @@ name|dn_expand
 argument_list|(
 name|msg
 argument_list|,
+literal|512
+argument_list|,
 name|cp
 argument_list|,
 name|name
