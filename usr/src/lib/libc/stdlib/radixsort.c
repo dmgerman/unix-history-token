@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.2 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ value|{ \ 	register u_char ch, *s1, *s2; \ 	register int incr, *incrp; \ 	for (i
 end_define
 
 begin_comment
-comment|/*  * Stackp points to context structures, where each structure schedules a  * partitioning.  Radixsort exits when the stack is empty.  *  * If the buckets are placed on the stack randomly, the worst case is when:  *  *	(nbuckets - 1) contain (npartitions + 1) elements, with the last  *	bucket containing (nelements - ((npartitions + 1) * (nbuckets - 1))  *	keys.  *  * In this case, stack growth is bounded by:  *  *	(nelements / (npartitions + 1)) - 1  *  * Therefore, we force the largest bucket to be pushed on the stack first.  * Then the worst case is when:  *  * 	(nbuckets - 2) buckets contain (npartitions + 1) elements, with  *	the remaining elements split equally between the first bucket  *	pushed and the last bucket pushed.  *  * In this case, stack growth is bounded when:  *	  *	for (partition_cnt = 0; nelements> npartitions; ++partition_cnt)   *		nelements =  *		    (nelements - (npartitions + 1) * (nbuckets - 2)) / 2;  * The bound is:  *  *	limit = partition_cnt * (nbuckets - 1);  */
+comment|/*  * Stackp points to context structures, where each structure schedules a  * partitioning.  Radixsort exits when the stack is empty.  *  * If the buckets are placed on the stack randomly, the worst case is when  * all the buckets but one contain (NPARTITION + 1) elements and the bucket  * pushed on the stack last contains the rest of the elements.  In this case,  * stack growth is bounded by:  *  *	(nelements / (npartitions + 1)) - 1  *  * This is a very large number.  By forcing the largest bucket to be pushed  * on the stack first the worst case is when all but two buckets each contain  * (NPARTITION + 1) elements, with the remaining elements split equally between  * the first and last buckets pushed on the stack.  In this case, stack growth  * is bounded when:  *  *	for (partition_cnt = 0; nelements> npartitions; ++partition_cnt)  *		nelements =  *		    (nelements - (npartitions + 1) * (nbuckets - 2)) / 2;  * The bound is:  *  *	limit = partition_cnt * (nbuckets - 1);  *  * This is a much smaller number.  */
 end_comment
 
 begin_typedef
@@ -257,7 +257,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*  	 * T1 is the constant part of the equation, the number of elements 	 * represented on the stack between the top and bottom entries. 	 * Don't round as the divide by 2 rounds down (correct for value 	 * being subtracted).  The nelem value has to be rounded up before 	 * each divide because we want an upper bound. 	 */
+comment|/* 	 * T1 is the constant part of the equation, the number of elements 	 * represented on the stack between the top and bottom entries. 	 * It doesn't get rounded as the divide by 2 rounds down (correct 	 * for a value being subtracted).  T2, the nelem value, has to be 	 * rounded up before each divide because we want an upper bound; 	 * this could overflow if nmemb is the maximum int. 	 */
 name|t1
 operator|=
 operator|(
