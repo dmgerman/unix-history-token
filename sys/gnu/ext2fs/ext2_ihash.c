@@ -158,6 +158,8 @@ name|ufs_ihash_mtx
 argument_list|,
 literal|"ufs ihash"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

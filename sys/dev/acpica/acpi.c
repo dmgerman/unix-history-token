@@ -1181,6 +1181,8 @@ name|acpi_mutex
 argument_list|,
 literal|"ACPI global lock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

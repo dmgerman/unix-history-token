@@ -1977,6 +1977,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+name|MTX_NETWORK_LOCK
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -2245,6 +2247,8 @@ name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
 operator||

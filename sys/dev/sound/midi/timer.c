@@ -443,6 +443,8 @@ name|timerinfo_mtx
 argument_list|,
 literal|"tmrinf"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -499,6 +501,8 @@ operator|->
 name|mtx
 argument_list|,
 literal|"tmrmtx"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -675,6 +679,8 @@ name|timerinfo_mtx
 argument_list|,
 literal|"tmrinf"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -777,6 +783,8 @@ operator|&
 name|timerinfo_mtx
 argument_list|,
 literal|"tmrinf"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

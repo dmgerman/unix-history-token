@@ -2795,6 +2795,8 @@ name|ifq_mtx
 argument_list|,
 literal|"at1_inq"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -2806,6 +2808,8 @@ operator|.
 name|ifq_mtx
 argument_list|,
 literal|"at2_inq"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

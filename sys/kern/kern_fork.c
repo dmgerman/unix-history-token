@@ -1854,6 +1854,8 @@ name|p_mtx
 argument_list|,
 literal|"process lock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_DUPOK

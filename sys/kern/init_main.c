@@ -1089,6 +1089,8 @@ name|pg_mtx
 argument_list|,
 literal|"process group"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_DUPOK
@@ -1149,6 +1151,8 @@ operator|.
 name|s_mtx
 argument_list|,
 literal|"session"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -1405,6 +1409,8 @@ operator|.
 name|fd_mtx
 argument_list|,
 name|FILEDESC_LOCK_DESC
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

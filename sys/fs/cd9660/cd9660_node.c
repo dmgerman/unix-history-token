@@ -179,6 +179,8 @@ name|cd9660_ihash_mtx
 argument_list|,
 literal|"cd9660_ihash"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

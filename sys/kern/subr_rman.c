@@ -225,6 +225,8 @@ name|rman_mtx
 argument_list|,
 literal|"rman head"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -300,6 +302,8 @@ operator|->
 name|rm_mtx
 argument_list|,
 literal|"rman"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

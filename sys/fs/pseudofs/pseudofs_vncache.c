@@ -269,6 +269,8 @@ name|pfs_vncache_mutex
 argument_list|,
 literal|"pseudofs_vncache"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE

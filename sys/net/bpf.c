@@ -1394,6 +1394,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+literal|"bpf cdev lock"
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -4847,6 +4849,8 @@ name|bif_mtx
 argument_list|,
 literal|"bpf interface lock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -5244,6 +5248,8 @@ operator|&
 name|bpf_mtx
 argument_list|,
 literal|"bpf global lock"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

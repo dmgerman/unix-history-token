@@ -249,7 +249,7 @@ name|mtx
 parameter_list|,
 name|desc
 parameter_list|)
-value|mtx_init(mtx, desc, MTX_DEF)
+value|mtx_init(mtx, desc, NULL, MTX_DEF)
 end_define
 
 begin_define

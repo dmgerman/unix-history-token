@@ -225,6 +225,8 @@ name|zone_mtx
 argument_list|,
 literal|"zone subsystem"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -568,6 +570,8 @@ name|zmtx
 argument_list|,
 literal|"zone"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -795,6 +799,8 @@ operator|->
 name|zmtx
 argument_list|,
 literal|"zone"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

@@ -7525,6 +7525,8 @@ name|clock_lock
 argument_list|,
 literal|"clk"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_RECURSE
@@ -7536,6 +7538,8 @@ operator|&
 name|icu_lock
 argument_list|,
 literal|"icu"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_SPIN
 operator||

@@ -301,6 +301,8 @@ name|callout_lock
 argument_list|,
 literal|"callout"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_RECURSE

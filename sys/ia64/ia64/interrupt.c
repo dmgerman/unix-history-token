@@ -774,6 +774,8 @@ name|ia64_intrs_lock
 argument_list|,
 literal|"ithread table lock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;

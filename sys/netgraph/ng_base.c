@@ -2454,6 +2454,8 @@ name|q_mtx
 argument_list|,
 literal|"ng_node"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
@@ -10995,6 +10997,8 @@ name|ng_worklist_mtx
 argument_list|,
 literal|"ng_worklist"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
@@ -11004,6 +11008,8 @@ operator|&
 name|ng_typelist_mtx
 argument_list|,
 literal|"netgraph types mutex"
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -11015,6 +11021,8 @@ name|ng_nodelist_mtx
 argument_list|,
 literal|"netgraph nodelist mutex"
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -11025,6 +11033,8 @@ name|ng_idhash_mtx
 argument_list|,
 literal|"netgraph idhash mutex"
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -11034,6 +11044,8 @@ operator|&
 name|ngq_mtx
 argument_list|,
 literal|"netgraph netisr mutex"
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)

@@ -1401,6 +1401,8 @@ name|ifq_mtx
 argument_list|,
 literal|"unknown"
 argument_list|,
+name|MTX_NETWORK_LOCK
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1932,6 +1934,8 @@ argument_list|,
 name|ifp
 operator|->
 name|if_name
+argument_list|,
+literal|"if send queue"
 argument_list|,
 name|MTX_DEF
 argument_list|)

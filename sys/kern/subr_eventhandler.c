@@ -145,6 +145,8 @@ name|eventhandler_mutex
 argument_list|,
 literal|"eventhandler"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE

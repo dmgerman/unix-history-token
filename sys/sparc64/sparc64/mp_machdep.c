@@ -720,6 +720,8 @@ name|ap_boot_mtx
 argument_list|,
 literal|"ap boot"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;

@@ -6668,6 +6668,8 @@ name|plex
 operator|->
 name|name
 argument_list|,
+literal|"plex"
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

@@ -707,6 +707,8 @@ name|ifq_mtx
 argument_list|,
 literal|"ppp_inq"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -721,6 +723,8 @@ name|ifq_mtx
 argument_list|,
 literal|"ppp_fastq"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -734,6 +738,8 @@ operator|.
 name|ifq_mtx
 argument_list|,
 literal|"ppp_rawq"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

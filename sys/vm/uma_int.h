@@ -722,7 +722,8 @@ name|ZONE_LOCK_INIT
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_init(&(z)->uz_lock, (z)->uz_name, MTX_DEF)
+define|\
+value|mtx_init(&(z)->uz_lock, (z)->uz_name, "UMA zone", MTX_DEF)
 end_define
 
 begin_define
@@ -765,7 +766,7 @@ parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|mtx_init(&(z)->uz_cpu[(cpu)].uc_lock, (z)->uz_lname, MTX_DUPOK|MTX_DEF)
+value|mtx_init(&(z)->uz_cpu[(cpu)].uc_lock, (z)->uz_lname, "UMA cpu",	\ 	    MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define

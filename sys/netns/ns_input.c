@@ -307,6 +307,8 @@ name|ifq_mtx
 argument_list|,
 literal|"ns_inq"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

@@ -4874,6 +4874,8 @@ name|allpmaps_lock
 argument_list|,
 literal|"allpmaps"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_QUIET

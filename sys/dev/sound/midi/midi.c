@@ -693,6 +693,8 @@ name|midiinfo_mtx
 argument_list|,
 literal|"midinf"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -775,6 +777,8 @@ name|midiinfo_mtx
 argument_list|,
 literal|"midinf"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -856,6 +860,8 @@ operator|&
 name|midiinfo_mtx
 argument_list|,
 literal|"midinf"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -957,6 +963,8 @@ name|midiinfo_mtx
 argument_list|,
 literal|"midinf"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1053,6 +1061,8 @@ name|flagqueue_mtx
 argument_list|,
 literal|"midflq"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1067,6 +1077,8 @@ name|vc_mtx
 argument_list|,
 literal|"synsvc"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1080,6 +1092,8 @@ operator|.
 name|status_mtx
 argument_list|,
 literal|"synsst"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

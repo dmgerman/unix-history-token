@@ -1152,6 +1152,8 @@ name|vpi_lock
 argument_list|,
 literal|"vnode pollinfo"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1196,6 +1198,8 @@ name|mountlist_mtx
 argument_list|,
 literal|"mountlist"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1205,6 +1209,8 @@ operator|&
 name|mntvnode_mtx
 argument_list|,
 literal|"mntvnode"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -1216,6 +1222,8 @@ name|mntid_mtx
 argument_list|,
 literal|"mntid"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1225,6 +1233,8 @@ operator|&
 name|spechash_mtx
 argument_list|,
 literal|"spechash"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -1241,6 +1251,8 @@ operator|&
 name|vnode_free_list_mtx
 argument_list|,
 literal|"vnode_free_list"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -3831,6 +3843,8 @@ operator|->
 name|v_interlock
 argument_list|,
 literal|"vnode interlock"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

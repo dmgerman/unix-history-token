@@ -2276,6 +2276,8 @@ name|h_interlock
 argument_list|,
 literal|"hpfsnode interlock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

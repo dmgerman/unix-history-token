@@ -3245,6 +3245,8 @@ name|lock
 argument_list|,
 literal|"isp"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

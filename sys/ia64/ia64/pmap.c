@@ -1366,6 +1366,8 @@ name|pmap_ridmutex
 argument_list|,
 literal|"RID allocator lock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

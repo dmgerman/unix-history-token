@@ -1356,6 +1356,8 @@ name|mbuf_gen
 argument_list|,
 literal|"mbuf subsystem general lists lock"
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1710,6 +1712,8 @@ name|i
 index|]
 argument_list|,
 literal|"mbuf PCPU list lock"
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)

@@ -5665,6 +5665,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+name|MTX_NETWORK_LOCK
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE

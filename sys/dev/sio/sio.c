@@ -2345,6 +2345,8 @@ name|sio_lock
 argument_list|,
 name|sio_driver_name
 argument_list|,
+name|NULL
+argument_list|,
 operator|(
 name|comconsole
 operator|!=

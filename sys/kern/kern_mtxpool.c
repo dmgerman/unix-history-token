@@ -182,6 +182,8 @@ index|]
 argument_list|,
 literal|"pool mutex"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_NOWITNESS

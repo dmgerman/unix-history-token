@@ -100,6 +100,8 @@ name|sema
 operator|->
 name|sema_mtx
 argument_list|,
+name|description
+argument_list|,
 literal|"sema backing lock"
 argument_list|,
 name|MTX_DEF

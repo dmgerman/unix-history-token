@@ -357,6 +357,8 @@ name|pargs_ref_lock
 argument_list|,
 literal|"struct pargs.ref"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1372,6 +1374,8 @@ name|pg_mtx
 argument_list|,
 literal|"process group"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_DUPOK
@@ -1393,6 +1397,8 @@ operator|->
 name|s_mtx
 argument_list|,
 literal|"session"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

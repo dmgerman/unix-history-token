@@ -7554,6 +7554,8 @@ name|sf_lock
 argument_list|,
 literal|"sf_bufs list lock"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

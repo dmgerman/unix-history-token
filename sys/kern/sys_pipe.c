@@ -1226,6 +1226,8 @@ name|pmtx
 argument_list|,
 literal|"pipe mutex"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE

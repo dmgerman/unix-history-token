@@ -143,6 +143,8 @@ name|phys_pager_mtx
 argument_list|,
 literal|"phys_pager list"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

@@ -1459,6 +1459,8 @@ name|ifq_mtx
 argument_list|,
 literal|"usb_xmitq"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -1472,6 +1474,8 @@ operator|.
 name|ifq_mtx
 argument_list|,
 literal|"usb_xmitq_hipri"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

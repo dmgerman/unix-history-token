@@ -168,6 +168,8 @@ name|taskqueue_queues_mutex
 argument_list|,
 literal|"taskqueue list"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -288,6 +290,8 @@ operator|->
 name|tq_mutex
 argument_list|,
 literal|"taskqueue"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

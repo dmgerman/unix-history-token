@@ -425,6 +425,8 @@ name|smp_rv_mtx
 argument_list|,
 literal|"smp rendezvous"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;

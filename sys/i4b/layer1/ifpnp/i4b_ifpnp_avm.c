@@ -4861,6 +4861,8 @@ name|ifq_mtx
 argument_list|,
 literal|"i4b_avm_pnp_rx"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
@@ -4953,6 +4955,8 @@ operator|.
 name|ifq_mtx
 argument_list|,
 literal|"i4b_avm_pnp_tx"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)

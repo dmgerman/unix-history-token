@@ -674,6 +674,8 @@ index|]
 argument_list|,
 literal|"vm buckets hash mutexes"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

@@ -182,6 +182,8 @@ name|ntfs_nthash_mtx
 argument_list|,
 literal|"ntfs nthash"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

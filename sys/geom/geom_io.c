@@ -217,6 +217,8 @@ name|bio_queue_lock
 argument_list|,
 literal|"bio queue"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

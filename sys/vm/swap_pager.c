@@ -935,6 +935,8 @@ name|sw_alloc_mtx
 argument_list|,
 literal|"swap_pager list"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

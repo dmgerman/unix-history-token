@@ -5864,6 +5864,8 @@ name|sellock
 argument_list|,
 literal|"sellck"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;

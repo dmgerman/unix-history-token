@@ -790,7 +790,7 @@ name|l
 parameter_list|,
 name|s
 parameter_list|)
-value|mtx_init(l, s, MTX_DEF)
+value|mtx_init(l, s, NULL, MTX_DEF)
 end_define
 
 begin_define

@@ -333,6 +333,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+literal|"ichsmb"
+argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
