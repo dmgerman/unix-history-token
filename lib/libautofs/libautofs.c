@@ -278,17 +278,7 @@ operator|*
 name|sfsp
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"getmntlst bufsize %ld, cnt %d\n"
-argument_list|,
-name|bufsize
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
+comment|/*fprintf(stderr, "getmntlst bufsize %ld, cnt %d\n", bufsize, cnt);*/
 operator|*
 name|sfsp
 operator|=
@@ -333,15 +323,7 @@ name|cntp
 operator|=
 name|cnt
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"getmntlst ok, cnt %d\n"
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
+comment|/*fprintf(stderr, "getmntlst ok, cnt %d\n", cnt);*/
 return|return
 operator|(
 literal|0
@@ -359,13 +341,7 @@ name|sfsp
 operator|=
 name|NULL
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"getmntlst bad\n"
-argument_list|)
-expr_stmt|;
+comment|/*fprintf(stderr, "getmntlst bad\n");*/
 return|return
 operator|(
 operator|-
@@ -469,17 +445,7 @@ operator|==
 name|cnt
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"autoh_get bad %d %d\n"
-argument_list|,
-name|i
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
+comment|/*fprintf(stderr, "autoh_get bad %d %d\n", i, cnt);*/
 name|errno
 operator|=
 name|ENOENT
