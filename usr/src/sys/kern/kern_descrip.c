@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.8	82/09/08	*/
+comment|/*	kern_descrip.c	5.9	82/09/08	*/
 end_comment
 
 begin_include
@@ -2377,6 +2377,32 @@ argument_list|,
 name|flag
 argument_list|,
 name|fp
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|opause
+argument_list|()
+end_macro
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|u
+argument_list|,
+name|PSLEP
 argument_list|)
 expr_stmt|;
 block|}
