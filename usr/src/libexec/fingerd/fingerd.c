@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fingerd.c	5.4 (Berkeley) %G%"
+literal|"@(#)fingerd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -338,7 +344,7 @@ expr_stmt|;
 block|}
 name|execv
 argument_list|(
-literal|"/usr/ucb/finger"
+name|_PATH_FINGER
 argument_list|,
 name|av
 argument_list|)
