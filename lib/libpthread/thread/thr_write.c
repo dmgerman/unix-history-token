@@ -84,6 +84,9 @@ decl_stmt|;
 name|ssize_t
 name|ret
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* POSIX says to do just this: */
 if|if
 condition|(
@@ -91,11 +94,16 @@ name|nbytes
 operator|==
 literal|0
 condition|)
+block|{
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Lock the file descriptor for write: */
 if|if
 condition|(
@@ -150,6 +158,9 @@ name|fd
 argument_list|,
 name|FD_WRITE
 argument_list|)
+expr_stmt|;
+name|_thread_leave_cancellation_point
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -334,6 +345,9 @@ name|FD_RDWR
 argument_list|)
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ret

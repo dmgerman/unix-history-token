@@ -31,6 +31,7 @@ begin_function
 name|int
 name|pthread_attr_getschedpolicy
 parameter_list|(
+specifier|const
 name|pthread_attr_t
 modifier|*
 name|attr

@@ -50,6 +50,9 @@ name|pthread1
 init|=
 name|NULL
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Check if the caller has specified an invalid thread: */
 if|if
 condition|(
@@ -63,12 +66,17 @@ name|magic
 operator|!=
 name|PTHREAD_MAGIC
 condition|)
+block|{
 comment|/* Invalid thread: */
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* Check if the caller has specified itself: */
 if|if
 condition|(
@@ -76,12 +84,17 @@ name|pthread
 operator|==
 name|_thread_run
 condition|)
+block|{
 comment|/* Avoid a deadlock condition: */
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EDEADLK
 operator|)
 return|;
+block|}
 comment|/* 	 * Find the thread in the list of active threads or in the 	 * list of dead threads: 	 */
 if|if
 condition|(
@@ -146,6 +159,17 @@ operator|!=
 name|PS_DEAD
 condition|)
 block|{
+comment|/* Clear the interrupted flag: */
+name|_thread_run
+operator|->
+name|interrupted
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * Protect against being context switched out while 		 * adding this thread to the join queue. 		 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
 comment|/* Add the running thread to the join queue: */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -171,6 +195,53 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|!=
+literal|0
+condition|)
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+operator|(
+name|pthread
+operator|->
+name|join_queue
+operator|)
+argument_list|,
+name|_thread_run
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_CANCEL_NEEDED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|_thread_exit_cleanup
+argument_list|()
+expr_stmt|;
+name|pthread_exit
+argument_list|(
+name|PTHREAD_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Check if the thread is not detached: */
 if|if
 condition|(
@@ -223,6 +294,9 @@ operator|=
 name|pthread
 operator|->
 name|ret
+expr_stmt|;
+name|_thread_leave_cancellation_point
+argument_list|()
 expr_stmt|;
 comment|/* Return the completion status: */
 return|return

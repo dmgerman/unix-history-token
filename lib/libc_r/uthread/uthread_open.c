@@ -74,12 +74,12 @@ name|mode
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Check if the file is being created: */
 if|if
 condition|(
@@ -155,6 +155,9 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Return the file descriptor or -1 on error: */
 return|return
 operator|(

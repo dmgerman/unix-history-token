@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -784,6 +790,15 @@ operator|->
 name|magic
 operator|=
 name|PTHREAD_MAGIC
+expr_stmt|;
+comment|/* Set the initial cancel state */
+name|_thread_initial
+operator|->
+name|cancelflags
+operator|=
+name|PTHREAD_CANCEL_ENABLE
+operator||
+name|PTHREAD_CANCEL_DEFERRED
 expr_stmt|;
 comment|/* Default the priority of the initial thread: */
 name|_thread_initial

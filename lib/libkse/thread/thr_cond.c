@@ -470,9 +470,6 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 if|if
 condition|(
 name|cond
@@ -506,6 +503,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -625,10 +625,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Reset the timeout flag: */
+comment|/* Reset the timeout and interrupted flags: */
 name|_thread_run
 operator|->
 name|timeout
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_run
+operator|->
+name|interrupted
 operator|=
 literal|0
 expr_stmt|;
@@ -744,7 +750,73 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Lock the mutex: */
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 						 * Lock the condition variable 						 * while removing the thread. 						 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|cond_queue_remove
+argument_list|(
+operator|*
+name|cond
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_queue
+argument_list|)
+operator|==
+name|NULL
+condition|)
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
+expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 					 * Note that even though this thread may have 					 * been canceled, POSIX requires that the mutex 					 * be reaquired prior to cancellation. 					 */
 name|rval
 operator|=
 name|_mutex_cv_lock
@@ -776,6 +848,31 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|(
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_CANCEL_NEEDED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|_thread_exit_cleanup
+argument_list|()
+expr_stmt|;
+name|pthread_exit
+argument_list|(
+name|PTHREAD_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -809,9 +906,6 @@ name|int
 name|rval
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 if|if
 condition|(
@@ -881,6 +975,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -1021,10 +1118,16 @@ name|abstime
 operator|->
 name|tv_nsec
 expr_stmt|;
-comment|/* Reset the timeout flag: */
+comment|/* Reset the timeout and interrupted flags: */
 name|_thread_run
 operator|->
 name|timeout
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_run
+operator|->
+name|interrupted
 operator|=
 literal|0
 expr_stmt|;
@@ -1130,14 +1233,24 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Check if the wait timedout: */
+comment|/* 					 * Check if the wait timedout or was 					 * interrupted (canceled): 					 */
 if|if
 condition|(
+operator|(
 name|_thread_run
 operator|->
 name|timeout
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Lock the mutex: */
@@ -1214,7 +1327,7 @@ name|rval
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-comment|/* 						 * Lock the mutex and ignore 						 * any errors: 						 */
+comment|/* 						 * Lock the mutex and ignore any 						 * errors.  Note that even though 						 * this thread may have been 						 * canceled, POSIX requires that 						 * the mutex be reaquired prior 						 * to cancellation. 						 */
 operator|(
 name|void
 operator|)
@@ -1248,6 +1361,31 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|(
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_CANCEL_NEEDED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|_thread_exit_cleanup
+argument_list|()
+expr_stmt|;
+name|pthread_exit
+argument_list|(
+name|PTHREAD_CANCELED
+argument_list|)
+expr_stmt|;
+block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -1323,10 +1461,8 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
-comment|/* 			 * Enter a loop to dequeue threads from the condition 			 * queue until we find one that hasn't previously 			 * timed out. 			 */
-while|while
+if|if
 condition|(
-operator|(
 operator|(
 name|pthread
 operator|=
@@ -1336,22 +1472,6 @@ operator|*
 name|cond
 argument_list|)
 operator|)
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
-name|pthread
-operator|->
-name|timeout
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{ 			}
-if|if
-condition|(
-name|pthread
 operator|!=
 name|NULL
 condition|)
@@ -1505,15 +1625,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * The thread is already running if the 				 * timeout flag is set. 				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|timeout
-operator|==
-literal|0
-condition|)
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
@@ -1585,7 +1696,7 @@ block|{
 name|pthread_t
 name|pthread
 decl_stmt|;
-if|if
+while|while
 condition|(
 operator|(
 name|pthread
@@ -1621,6 +1732,26 @@ operator|&=
 operator|~
 name|PTHREAD_FLAGS_IN_CONDQ
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|timeout
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|pthread
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|)
+condition|)
+comment|/* 			 * Only exit the loop when we find a thread 			 * that hasn't timed out or been canceled; 			 * those threads are already running and don't 			 * need their run state changed. 			 */
+break|break;
 block|}
 return|return
 operator|(

@@ -170,11 +170,6 @@ name|pthread_h
 init|=
 name|NULL
 decl_stmt|;
-name|pthread_t
-name|last_thread
-init|=
-name|NULL
-decl_stmt|;
 name|struct
 name|itimerval
 name|itimer
@@ -192,8 +187,6 @@ decl_stmt|,
 name|tv1
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|set_timer
 init|=
 literal|0
@@ -270,6 +263,38 @@ name|_thread_kern_in_sched
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_AT_CANCEL_POINT
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_CANCEL_ASYNCHRONOUS
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+comment|/*  			 * Cancelations override signals. 			 * 			 * Stick a cancellation point at the start of 			 * each async-cancellable thread's resumption. 			 * 			 * We allow threads woken at cancel points to do their 			 * own checks. 			 */
+name|pthread_testcancel
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|_sched_switch_hook
@@ -396,6 +421,10 @@ block|{
 case|case
 name|PS_DEAD
 case|:
+case|case
+name|PS_STATE_MAX
+case|:
+comment|/* to silence -Wall */
 comment|/* 				 * Dead threads are not placed in any queue: 				 */
 break|break;
 case|case
@@ -625,6 +654,7 @@ argument_list|(
 name|_thread_run
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 comment|/* Unprotect the scheduling queues: */
@@ -1531,12 +1561,6 @@ name|int
 name|wait_reqd
 parameter_list|)
 block|{
-name|char
-name|bufr
-index|[
-literal|128
-index|]
-decl_stmt|;
 name|int
 name|count
 init|=
@@ -1566,12 +1590,6 @@ name|struct
 name|pthread
 modifier|*
 name|pthread
-decl_stmt|,
-modifier|*
-name|pthread_next
-decl_stmt|;
-name|ssize_t
-name|num
 decl_stmt|;
 name|struct
 name|timespec
@@ -3068,9 +3086,9 @@ operator|->
 name|flags
 operator|&
 name|PTHREAD_FLAGS_PRIVATE
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 name|tid_out
 operator|=
@@ -3090,9 +3108,9 @@ operator|->
 name|flags
 operator|&
 name|PTHREAD_FLAGS_PRIVATE
+operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 name|tid_in
 operator|=

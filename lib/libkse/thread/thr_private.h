@@ -595,7 +595,7 @@ define|#
 directive|define
 name|PTHREAD_MUTEX_STATIC_INITIALIZER
 define|\
-value|{ PTHREAD_MUTEX_DEFAULT, PTHREAD_PRIO_NONE, TAILQ_INITIALIZER, \ 	NULL, { NULL }, 0, 0, 0, 0, TAILQ_INITIALIZER, \ 	_SPINLOCK_INITIALIZER }
+value|{ PTHREAD_MUTEX_DEFAULT, PTHREAD_PRIO_NONE, TAILQ_INITIALIZER, \ 	NULL, { NULL }, MUTEX_FLAGS_PRIVATE, 0, 0, 0, TAILQ_INITIALIZER, \ 	_SPINLOCK_INITIALIZER }
 end_define
 
 begin_struct
@@ -1274,6 +1274,22 @@ comment|/* 	 * TRUE if the last state saved was a signal context. FALSE if the 	
 name|int
 name|sig_saved
 decl_stmt|;
+comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
+define|#
+directive|define
+name|PTHREAD_AT_CANCEL_POINT
+value|0x0004
+define|#
+directive|define
+name|PTHREAD_CANCELLING
+value|0x0008
+define|#
+directive|define
+name|PTHREAD_CANCEL_NEEDED
+value|0x0010
+name|int
+name|cancelflags
+decl_stmt|;
 comment|/* 	 * Current signal mask and pending signals. 	 */
 name|sigset_t
 name|sigmask
@@ -1367,7 +1383,7 @@ comment|/* 	 * Set to TRUE if this thread should yield after undeferring 	 * sig
 name|int
 name|yield_on_sig_undefer
 decl_stmt|;
-comment|/* Miscellaneous data. */
+comment|/* Miscellaneous flags; only set with signals deferred. */
 name|int
 name|flags
 decl_stmt|;
@@ -1393,16 +1409,31 @@ define|#
 directive|define
 name|PTHREAD_FLAGS_IN_WAITQ
 value|0x0010
-comment|/* in waiting queue using pqe link*/
+comment|/* in waiting queue using pqe link */
 define|#
 directive|define
 name|PTHREAD_FLAGS_IN_PRIOQ
 value|0x0020
-comment|/* in priority queue using pqe link*/
+comment|/* in priority queue using pqe link */
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_MUTEXQ
+value|0x0040
+comment|/* in mutex queue using qe link */
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_FILEQ
+value|0x0080
+comment|/* in file lock queue using qe link */
+define|#
+directive|define
+name|PTHREAD_FLAGS_IN_FDQ
+value|0x0100
+comment|/* in fd lock queue using qe link */
 define|#
 directive|define
 name|PTHREAD_FLAGS_TRACE
-value|0x0040
+value|0x0200
 comment|/* for debugging purposes */
 comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
 name|char
@@ -2463,6 +2494,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_funlock_owned
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|_thread_create
 parameter_list|(
@@ -2570,6 +2610,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_mutex_notify_priochange
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|_mutex_reinit
 parameter_list|(
@@ -2581,11 +2630,9 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_mutex_notify_priochange
+name|_mutex_unlock_private
 parameter_list|(
-name|struct
-name|pthread
-modifier|*
+name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2757,6 +2804,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_thread_exit_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_thread_fd_unlock
 parameter_list|(
 name|int
@@ -2778,6 +2834,15 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_fd_unlock_owned
+parameter_list|(
+name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2976,6 +3041,33 @@ name|pthread_addr_t
 name|_thread_gc
 parameter_list|(
 name|pthread_addr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_enter_cancellation_point
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_leave_cancellation_point
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_cancellation_point
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4955,6 +5047,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* #include<sys/mman.h> */
+end_comment
+
+begin_function_decl
+name|int
+name|_thread_sys_msync
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

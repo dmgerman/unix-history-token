@@ -116,15 +116,9 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|i
-decl_stmt|;
-name|int
 name|ret
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 name|pthread_t
 name|gc_thread
@@ -512,6 +506,14 @@ operator|->
 name|arg
 operator|=
 name|arg
+expr_stmt|;
+name|new_thread
+operator|->
+name|cancelflags
+operator|=
+name|PTHREAD_CANCEL_ENABLE
+operator||
+name|PTHREAD_CANCEL_DEFERRED
 expr_stmt|;
 comment|/* 			 * Write a magic value to the thread structure 			 * to help identify valid ones: 			 */
 name|new_thread

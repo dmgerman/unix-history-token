@@ -38,6 +38,9 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -71,6 +74,9 @@ name|FD_RDWR
 argument_list|)
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ret

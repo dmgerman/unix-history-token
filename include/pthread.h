@@ -216,6 +216,45 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Flags for cancelling threads  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_ENABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_DISABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_DEFERRED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCEL_ASYNCHRONOUS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CANCELED
+value|((void *) 1)
+end_define
+
+begin_comment
 comment|/*  * Forward structure definitions.  *  * These are mostly opaque to the user.  */
 end_comment
 
@@ -1388,12 +1427,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOT_YET
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|pthread_cancel
@@ -1447,11 +1480,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -1682,6 +1710,7 @@ name|pthread_attr_getinheritsched
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1698,6 +1727,7 @@ name|pthread_attr_getschedparam
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1715,6 +1745,7 @@ name|pthread_attr_getschedpolicy
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1731,6 +1762,7 @@ name|pthread_attr_getscope
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|pthread_attr_t
 operator|*
 operator|,
@@ -1833,6 +1865,7 @@ name|pthread_t
 operator|,
 name|int
 operator|,
+specifier|const
 expr|struct
 name|sched_param
 operator|*

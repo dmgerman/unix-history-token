@@ -56,6 +56,9 @@ block|{
 name|pid_t
 name|ret
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
@@ -128,6 +131,9 @@ break|break;
 block|}
 block|}
 name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
+name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
 return|return
