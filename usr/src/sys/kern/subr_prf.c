@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -278,7 +278,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|kprintf
 name|__P
@@ -1228,7 +1227,6 @@ comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|kprintf
 parameter_list|(
@@ -1833,7 +1831,7 @@ name|long
 argument_list|)
 operator|*
 name|NBBY
-operator|>>
+operator|/
 literal|3
 operator|)
 operator|+
