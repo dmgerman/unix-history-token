@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	2.15 (Berkeley) %G%"
+literal|"@(#)collect.c	2.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +232,12 @@ function|collhupsig
 parameter_list|()
 function|;
 end_function
+
+begin_decl_stmt
+name|char
+name|getsub
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|noreset
@@ -519,7 +525,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|c
+name|getsub
 operator|=
 literal|0
 expr_stmt|;
@@ -550,7 +556,7 @@ operator|&=
 operator|~
 name|GNL
 operator|,
-name|c
+name|getsub
 operator|++
 expr_stmt|;
 end_if
@@ -580,20 +586,6 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|c
-condition|)
-name|grabh
-argument_list|(
-name|hp
-argument_list|,
-name|GSUBJECT
-argument_list|)
-expr_stmt|;
 end_if
 
 begin_expr_stmt
@@ -711,6 +703,24 @@ endif|VMUNIX
 name|flush
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|getsub
+condition|)
+block|{
+name|grabh
+argument_list|(
+name|hp
+argument_list|,
+name|GSUBJECT
+argument_list|)
+expr_stmt|;
+name|getsub
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|readline
@@ -1638,7 +1648,6 @@ argument_list|(
 literal|"(continue)\n"
 argument_list|)
 expr_stmt|;
-break|break;
 break|break;
 block|}
 block|}

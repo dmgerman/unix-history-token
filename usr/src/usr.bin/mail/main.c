@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.12 (Berkeley) %G%"
+literal|"@(#)main.c	2.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,11 +92,6 @@ name|ibuf
 decl_stmt|,
 modifier|*
 name|ftat
-decl_stmt|;
-specifier|extern
-name|char
-name|_sobuf
-index|[]
 decl_stmt|;
 name|struct
 name|sgttyb
@@ -184,13 +179,6 @@ name|image
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Now, determine how we are being used. 	 * We successively pick off instances of -r, -h, -f, and -i. 	 * If called as "rmail" we note this fact for letter sending. 	 * If there is anything left, it is the base of the list 	 * of users to mail to.  Argp will be set to point to the 	 * first of these users. 	 */
 name|ef
