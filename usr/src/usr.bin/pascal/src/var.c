@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.7 %G%"
+literal|"@(#)var.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ directive|ifdef
 name|OBJ
 name|op
 operator|->
-name|curtmp
+name|curtmps
 operator|.
 name|om_off
 operator|=
@@ -386,7 +386,7 @@ call|)
 argument_list|(
 name|op
 operator|->
-name|curtmp
+name|curtmps
 operator|.
 name|om_off
 operator|-
@@ -406,7 +406,7 @@ name|o2
 operator|=
 name|op
 operator|->
-name|curtmp
+name|curtmps
 operator|.
 name|om_off
 expr_stmt|;
