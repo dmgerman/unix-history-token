@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.9 %G%"
+literal|"@(#)main.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -587,6 +587,18 @@ name|noheader
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+comment|/* 			 * Send mailer verbose flag 			 */
+name|assign
+argument_list|(
+literal|"verbose"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
@@ -862,7 +874,10 @@ name|hdrstop
 argument_list|)
 expr_stmt|;
 name|announce
-argument_list|()
+argument_list|(
+operator|!
+literal|0
+argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
