@@ -148,6 +148,9 @@ name|fdc_data
 modifier|*
 name|fdc
 decl_stmt|;
+return|return
+name|ENXIO
+return|;
 name|fdc
 operator|=
 name|device_get_softc
