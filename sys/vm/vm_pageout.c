@@ -1526,7 +1526,7 @@ operator|==
 name|kernel_object
 operator|)
 condition|?
-name|OBJPC_SYNC
+name|VM_PAGER_PUT_SYNC
 else|:
 literal|0
 operator|)
