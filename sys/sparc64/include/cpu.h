@@ -166,6 +166,12 @@ name|CTL_MACHDEP_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "bootinfo", CTLTYPE_STRUCT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|fork_trampoline
@@ -186,7 +192,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|rd
+name|rdpr
 argument_list|(
 name|tick
 argument_list|)
@@ -194,6 +200,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
