@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ascii/disp_asc.h"
+file|"../apilib/disp_asc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ascii/astosc.h"
+file|"../apilib/astosc.h"
 end_include
 
 begin_include
@@ -1837,7 +1837,9 @@ block|{
 define|#
 directive|define
 name|FieldDec
-parameter_list|()
+parameter_list|(
+name|p
+parameter_list|)
 value|(0)
 comment|/* We don't really use this */
 specifier|register
