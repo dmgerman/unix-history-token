@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.19.1.1 (Berkeley) %G%"
+literal|"@(#)mime.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1138,6 +1138,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_INMIME
+expr_stmt|;
 comment|/* skip the early "comment" prologue */
 name|putline
 argument_list|(
@@ -1378,6 +1384,13 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_INMIME
+expr_stmt|;
 comment|/* skip the late "comment" epilogue */
 while|while
 condition|(
@@ -1527,6 +1540,12 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_INMIME
+expr_stmt|;
 name|collect
 argument_list|(
 name|e
@@ -1598,6 +1617,13 @@ name|boundaries
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_INMIME
 expr_stmt|;
 return|return
 name|bt
