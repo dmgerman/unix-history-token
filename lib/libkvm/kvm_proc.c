@@ -1271,7 +1271,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read tpgrp at&x"
+literal|"can't read tpgrp at %x"
 argument_list|,
 name|tty
 operator|.
