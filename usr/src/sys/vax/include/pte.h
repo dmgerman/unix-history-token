@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	6.3	84/12/20	*/
+comment|/*	pte.h	6.4	85/04/18	*/
 end_comment
 
 begin_comment
@@ -91,12 +91,12 @@ name|unsigned
 name|int
 name|pg_blkno
 range|:
-literal|20
+literal|24
 decl_stmt|,
 comment|/* file system block number */
 name|pg_fileno
 range|:
-literal|5
+literal|1
 decl_stmt|,
 comment|/* file mapped from or TEXT or ZERO */
 name|pg_fod
