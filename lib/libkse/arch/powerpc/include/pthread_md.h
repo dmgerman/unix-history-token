@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|DTV_OFFSET
-value|offsetof(struct tcb, tcb.tcb_tp.tp_dtv)
+value|offsetof(struct tcb, tcb_tp.tp_tdv)
 end_define
 
 begin_define
@@ -267,6 +267,8 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
+argument_list|,
+name|int
 argument_list|)
 expr_stmt|;
 end_expr_stmt
