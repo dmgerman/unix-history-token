@@ -643,22 +643,6 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"al"
-block|,
-literal|"ADMtek AL981/AN985 PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"ax"
-block|,
-literal|"ASIX AX88140A PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
 literal|"fpa"
 block|,
 literal|"DEC DEFPA PCI FDDI card"
@@ -691,17 +675,17 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"de"
+literal|"dc"
 block|,
-literal|"DEC DE435 PCI NIC or other DC21040-AA based card"
+literal|"DEC/Intel 21143 (and clones) PCI fast ethernet card"
 block|}
 block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"dm"
+literal|"de"
 block|,
-literal|"Davicom DM9100/DM9102 PCI fast ethernet card"
+literal|"DEC DE435 PCI NIC or other DC21040-AA based card"
 block|}
 block|,
 block|{
@@ -782,22 +766,6 @@ block|,
 literal|"lnc"
 block|,
 literal|"Lance/PCnet (Isolan/Novell NE2100/NE32-VL) ethernet"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"mx"
-block|,
-literal|"Macronix 98713/98715/98725 PCI ethernet card"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_NETWORK
-block|,
-literal|"pn"
-block|,
-literal|"Lite-On 82168/82169 PNIC PCI ethernet card"
 block|}
 block|,
 block|{

@@ -1567,19 +1567,9 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
-literal|"al"
+literal|"dc"
 block|,
-literal|"ADMtek AL981/AN985 ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ax"
-block|,
-literal|"ASIX AX88140A ethernet adapter"
+literal|"DEC/Intel 21143 or clone Ethernet adapter"
 block|,
 name|FLG_FIXED
 block|,
@@ -1590,16 +1580,6 @@ block|{
 literal|"de"
 block|,
 literal|"DEC DC21040 Ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"dm"
-block|,
-literal|"Davicom DM910x Ethernet adapter"
 block|,
 name|FLG_FIXED
 block|,
@@ -1620,26 +1600,6 @@ block|{
 literal|"rl"
 block|,
 literal|"RealTek 8129/8139 ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"mx"
-block|,
-literal|"Macronix PMAC ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"pn"
-block|,
-literal|"Lite-On 82c168/82c169 PNIC adapter"
 block|,
 name|FLG_FIXED
 block|,
