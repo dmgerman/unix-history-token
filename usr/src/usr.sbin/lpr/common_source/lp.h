@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.h	4.7	84/07/24	*/
+comment|/*	lp.h	4.8	85/02/07	*/
 end_comment
 
 begin_comment
@@ -164,6 +164,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* remote machine name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|RG
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restricted group */
 end_comment
 
 begin_decl_stmt
