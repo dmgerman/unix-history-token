@@ -1936,6 +1936,7 @@ argument_list|)
 expr_stmt|;
 name|des_set_key
 argument_list|(
+operator|&
 name|kdata
 operator|->
 name|session
