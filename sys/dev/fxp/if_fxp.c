@@ -382,6 +382,10 @@ block|{
 name|u_int16_t
 name|devid
 decl_stmt|;
+name|int16_t
+name|revid
+decl_stmt|;
+comment|/* -1 matches anything */
 name|char
 modifier|*
 name|name
@@ -405,11 +409,17 @@ block|{
 block|{
 literal|0x1029
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82559 PCI/CardBus Pro/100"
 block|}
 block|,
 block|{
 literal|0x1030
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82559 Pro/100 Ethernet"
 block|}
@@ -417,11 +427,17 @@ block|,
 block|{
 literal|0x1031
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x1032
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
@@ -429,11 +445,17 @@ block|,
 block|{
 literal|0x1033
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x1034
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
@@ -441,11 +463,17 @@ block|,
 block|{
 literal|0x1035
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1036
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
@@ -453,11 +481,17 @@ block|,
 block|{
 literal|0x1037
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1038
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
@@ -465,11 +499,17 @@ block|,
 block|{
 literal|0x1039
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x103A
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
@@ -477,11 +517,17 @@ block|,
 block|{
 literal|0x103B
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x103C
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
@@ -489,11 +535,17 @@ block|,
 block|{
 literal|0x103D
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x103E
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
@@ -501,11 +553,17 @@ block|,
 block|{
 literal|0x1050
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82801BA (D865) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x1059
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82551QM Pro/100 M Mobile Connection"
 block|}
@@ -513,23 +571,147 @@ block|,
 block|{
 literal|0x1209
 block|,
+operator|-
+literal|1
+block|,
 literal|"Intel 82559ER Embedded 10/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1229
 block|,
-literal|"Intel 82557/8/9 EtherExpress Pro/100(B) Ethernet"
+literal|0x01
+block|,
+literal|"Intel 82557 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x02
+block|,
+literal|"Intel 82557 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x03
+block|,
+literal|"Intel 82557 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x04
+block|,
+literal|"Intel 82558 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x05
+block|,
+literal|"Intel 82558 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x06
+block|,
+literal|"Intel 82559 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x07
+block|,
+literal|"Intel 82559 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x08
+block|,
+literal|"Intel 82559 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x09
+block|,
+literal|"Intel 82559ER Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x0c
+block|,
+literal|"Intel 82550 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x0d
+block|,
+literal|"Intel 82550 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x0e
+block|,
+literal|"Intel 82550 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x0f
+block|,
+literal|"Intel 82551 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|0x10
+block|,
+literal|"Intel 82551 Pro/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82557/8/9 Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x2449
+block|,
+operator|-
+literal|1
 block|,
 literal|"Intel 82801BA/CAM (ICH2/3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0
+block|,
+operator|-
+literal|1
 block|,
 name|NULL
 block|}
@@ -1573,6 +1755,9 @@ block|{
 name|u_int16_t
 name|devid
 decl_stmt|;
+name|u_int8_t
+name|revid
+decl_stmt|;
 name|struct
 name|fxp_ident
 modifier|*
@@ -1591,6 +1776,13 @@ block|{
 name|devid
 operator|=
 name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|revid
+operator|=
+name|pci_get_revid
 argument_list|(
 name|dev
 argument_list|)
@@ -1618,6 +1810,21 @@ operator|->
 name|devid
 operator|==
 name|devid
+operator|&&
+operator|(
+name|ident
+operator|->
+name|revid
+operator|==
+name|revid
+operator|||
+name|ident
+operator|->
+name|revid
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|device_set_desc
