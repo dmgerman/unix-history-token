@@ -62,18 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -753,7 +741,6 @@ block|}
 comment|/* 		 * Fake ndb value so direct/indirect block checks below 		 * will detect any garbage after symlink string. 		 */
 if|if
 condition|(
-operator|(
 name|dp
 operator|->
 name|di_size
@@ -761,7 +748,6 @@ operator|<
 name|sblock
 operator|.
 name|fs_maxsymlinklen
-operator|)
 operator|||
 name|dp
 operator|->

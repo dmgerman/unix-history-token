@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fstab.h>
 end_include
 
@@ -63,30 +69,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -654,8 +636,6 @@ argument_list|,
 name|chkit
 argument_list|)
 operator|)
-operator|!=
-literal|0
 operator|&&
 name|nrun
 operator|>
@@ -891,8 +871,6 @@ argument_list|,
 name|chkit
 argument_list|)
 operator|)
-operator|!=
-literal|0
 operator|&&
 name|nrun
 operator|>
@@ -976,8 +954,6 @@ argument_list|,
 name|chkit
 argument_list|)
 operator|)
-operator|!=
-literal|0
 operator|&&
 name|nrun
 operator|>
@@ -1121,8 +1097,6 @@ name|p
 decl_stmt|;
 name|size_t
 name|len
-init|=
-literal|0
 decl_stmt|;
 for|for
 control|(
