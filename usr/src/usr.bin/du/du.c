@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.21 (Berkeley) %G%"
+literal|"@(#)du.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,23 +105,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-name|getbsize
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|,
-name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
