@@ -3945,7 +3945,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags  drive*/\n"
+literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags  drive alive ri_flags reconfig enabled conflicts next */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4017,7 +4017,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d, %8s,  %2d, 0x%04X, %2d, 0, 0, 0, 1 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d, %8s,  %2d, 0x%04X, %2d, 0, 0, 0, 1, %2d, 0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4054,6 +4054,10 @@ argument_list|,
 name|dp
 operator|->
 name|d_drive
+argument_list|,
+name|dp
+operator|->
+name|d_conflicts
 argument_list|)
 expr_stmt|;
 block|}
@@ -4127,7 +4131,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags conflicts */\n"
+literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags scsiid alive ri_flags reconfig enabled conflicts next */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4243,7 +4247,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d, %8s,  %2d, 0x%04X, %2d, 0, 0, 0, 0, 1 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d, %8s,  %2d, 0x%04X, 0, 0, 0, 0, 1, %2d, 0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
