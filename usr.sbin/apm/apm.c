@@ -1546,11 +1546,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"APM Capacities:\n"
-argument_list|,
-name|aip
-operator|->
-name|ai_capabilities
+literal|"APM Capabilities:\n"
 argument_list|)
 expr_stmt|;
 if|if
