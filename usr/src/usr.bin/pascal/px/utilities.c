@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.8 %G%"
+literal|"@(#)utilities.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,7 +302,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%1ld statements executed in %04d.%02d seconds cpu time.\n"
+literal|"\n%1ld statements executed in %d.%02d seconds cpu time.\n"
 argument_list|,
 name|_stcnt
 argument_list|,
@@ -318,7 +318,7 @@ name|ru_utime
 operator|.
 name|tv_usec
 operator|/
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
 block|}
