@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.93	83/05/01	*/
+comment|/*	tcp_input.c	1.94	83/05/14	*/
 end_comment
 
 begin_include
@@ -2543,6 +2543,45 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * This is a kludge, but the BBN C70 TCP 		 * randomly sends packets with the urgent flag 		 * set and random ti_urp values.  This crashes 		 * the system because so_oobmark ends up being 		 * interpreted as a negative number in soreceive. 		 */
+if|if
+condition|(
+name|ti
+operator|->
+name|ti_urp
+operator|>
+name|tp
+operator|->
+name|t_maxseg
+condition|)
+block|{
+comment|/* XXX */
+name|ti
+operator|->
+name|ti_urp
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+name|tiflags
+operator|&=
+operator|~
+name|TH_URG
+expr_stmt|;
+comment|/* XXX */
+name|ti
+operator|->
+name|ti_flags
+operator|&=
+operator|~
+name|TH_URG
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|bbnurp
+goto|;
+comment|/* XXX */
+block|}
 comment|/* 		 * If this segment advances the known urgent pointer, 		 * then mark the data stream.  This should not happen 		 * in CLOSE_WAIT, CLOSING, LAST_ACK or TIME_WAIT STATES since 		 * a FIN has been received from the remote side.  		 * In these states we ignore the URG. 		 */
 if|if
 condition|(
@@ -2642,6 +2681,9 @@ name|ti
 argument_list|)
 expr_stmt|;
 block|}
+name|bbnurp
+label|:
+comment|/* XXX */
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
 if|if
 condition|(
