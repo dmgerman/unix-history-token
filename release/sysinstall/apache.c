@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: apache.c,v 1.7 1995/10/27 05:16:46 jkh Exp $  *  * Copyright (c) 1995  *	Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Coranth Gryphon  *	for the FreeBSD Project.  * 4. The name of Coranth Gryphon or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY CORANTH GRYPHON ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CORANTH GRYPHON OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: apache.c,v 1.8 1995/10/27 17:31:03 jkh Exp $  *  * Copyright (c) 1995  *	Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Coranth Gryphon  *	for the FreeBSD Project.  * 4. The name of Coranth Gryphon or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY CORANTH GRYPHON ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CORANTH GRYPHON OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -72,13 +72,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|APACHE_BASE
-value|"/usr/local/www"
-end_define
-
-begin_define
-define|#
-directive|define
 name|APACHE_HELPFILE
 value|"apache"
 end_define
@@ -96,6 +89,39 @@ directive|define
 name|FREEBSD_GIF
 value|"/stand/power.gif"
 end_define
+
+begin_comment
+comment|/* These change if the package uses different defaults */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APACHE_BASE
+value|"/usr/local/www"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SUBDIR
+value|"htdocs"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONFIG_SUBDIR
+value|"config"
+end_define
+
+begin_comment
+comment|/* Set up the structure to hold configuration information */
+end_comment
+
+begin_comment
+comment|/* Note that this is only what we could fit onto the one screen */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -116,12 +142,12 @@ index|]
 decl_stmt|;
 comment|/* UserDir */
 name|char
-name|readme
+name|welcome
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* ReadmeName */
+comment|/* Welcome Doc */
 name|char
 name|email
 index|[
@@ -186,14 +212,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|APACHE_README_LEN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|APACHE_HEADER_LEN
+name|APACHE_WELCOME_LEN
 value|32
 end_define
 
@@ -536,17 +555,17 @@ literal|35
 block|,
 literal|18
 block|,
-name|APACHE_README_LEN
+name|APACHE_WELCOME_LEN
 operator|-
 literal|1
 block|,
-literal|"Readme File:"
+literal|"Default Document:"
 block|,
-literal|"The name of the README file found in each directory"
+literal|"The name of the default document found in each directory"
 block|,
 name|tconf
 operator|.
-name|readme
+name|welcome
 block|,
 name|STRINGOBJ
 block|,
@@ -555,7 +574,7 @@ block|}
 block|,
 define|#
 directive|define
-name|LAYOUT_README
+name|LAYOUT_WELCOME
 value|7
 block|{
 literal|19
@@ -988,9 +1007,9 @@ name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|readme
+name|welcome
 argument_list|,
-literal|"README"
+literal|"index.html"
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1008,9 +1027,11 @@ name|tconf
 operator|.
 name|docroot
 argument_list|,
-literal|"%s/htdocs"
+literal|"%s/%s"
 argument_list|,
 name|APACHE_BASE
+argument_list|,
+name|DATA_SUBDIR
 argument_list|)
 expr_stmt|;
 comment|/* Loop over the layout list, create the objects, and add them        onto the chain of objects that dialog uses for traversal*/
@@ -1695,7 +1716,7 @@ condition|(
 operator|!
 name|tconf
 operator|.
-name|readme
+name|welcome
 index|[
 literal|0
 index|]
@@ -1704,9 +1725,9 @@ name|strcpy
 argument_list|(
 name|tconf
 operator|.
-name|readme
+name|welcome
 argument_list|,
-literal|"README"
+literal|"index.html"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1779,9 +1800,11 @@ name|tconf
 operator|.
 name|docroot
 argument_list|,
-literal|"%s/data"
+literal|"%s/%s"
 argument_list|,
 name|APACHE_BASE
+argument_list|,
+name|DATA_SUBDIR
 argument_list|)
 expr_stmt|;
 comment|/*** If DocRoot does not exist, create it ***/
@@ -2083,9 +2106,11 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s/config/access.conf"
+literal|"%s/%s/access.conf"
 argument_list|,
 name|APACHE_BASE
+argument_list|,
+name|CONFIG_SUBDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2177,9 +2202,11 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s/config/httpd.conf"
+literal|"%s/%s/httpd.conf"
 argument_list|,
 name|APACHE_BASE
+argument_list|,
+name|CONFIG_SUBDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2322,9 +2349,11 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s/config/srm.conf"
+literal|"%s/%s/srm.conf"
 argument_list|,
 name|APACHE_BASE
+argument_list|,
+name|CONFIG_SUBDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2361,25 +2390,21 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"FancyIndexing on\nDirectoryIndex index.html\n"
+literal|"FancyIndexing on\nDefaultType text/plain\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"IndexIgnore */.??* *~ *# */HEADER* */%s* */RCS\n"
-argument_list|,
-name|tconf
-operator|.
-name|readme
+literal|"IndexIgnore */.??* *~ *# */HEADER* */README* */RCS\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"HeaderName HEADER\nDefaultType text/plain\n"
+literal|"HeaderName HEADER\nReadmeName README\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2541,7 +2566,7 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
-literal|"UserDir %s\nReadmeName %s\n\n"
+literal|"UserDir %s\nDirectoryIndex %s\n\n"
 argument_list|,
 name|tconf
 operator|.
@@ -2549,7 +2574,7 @@ name|userdir
 argument_list|,
 name|tconf
 operator|.
-name|readme
+name|welcome
 argument_list|)
 expr_stmt|;
 name|fclose
