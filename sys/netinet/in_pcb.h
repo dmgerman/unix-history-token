@@ -1390,7 +1390,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1415,7 +1415,7 @@ name|u_short
 modifier|*
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1434,7 +1434,7 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1470,7 +1470,7 @@ modifier|*
 modifier|*
 parameter_list|,
 name|struct
-name|thread
+name|ucred
 modifier|*
 parameter_list|)
 function_decl|;

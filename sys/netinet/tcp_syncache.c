@@ -2745,8 +2745,9 @@ operator|)
 operator|&
 name|sin6
 argument_list|,
-operator|&
 name|thread0
+operator|.
+name|td_ucred
 argument_list|)
 condition|)
 block|{
@@ -2896,8 +2897,9 @@ operator|)
 operator|&
 name|sin
 argument_list|,
-operator|&
 name|thread0
+operator|.
+name|td_ucred
 argument_list|)
 condition|)
 block|{

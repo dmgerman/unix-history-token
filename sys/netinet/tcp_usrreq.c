@@ -907,6 +907,8 @@ argument_list|,
 name|nam
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1132,6 +1134,8 @@ operator|&
 name|sin
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1148,6 +1152,8 @@ argument_list|,
 name|nam
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1246,6 +1252,8 @@ operator|)
 literal|0
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1368,6 +1376,8 @@ operator|)
 literal|0
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 block|}
@@ -3540,6 +3550,8 @@ operator|)
 literal|0
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -3595,6 +3607,8 @@ operator|&
 name|oinp
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -3986,6 +4000,8 @@ operator|)
 literal|0
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if

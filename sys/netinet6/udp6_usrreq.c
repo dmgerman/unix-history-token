@@ -2357,6 +2357,8 @@ operator|&
 name|sin
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2383,6 +2385,8 @@ argument_list|,
 name|nam
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2526,6 +2530,8 @@ operator|&
 name|sin
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2592,6 +2598,8 @@ argument_list|,
 name|nam
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|splx

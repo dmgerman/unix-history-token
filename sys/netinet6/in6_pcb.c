@@ -316,7 +316,7 @@ name|inp
 parameter_list|,
 name|nam
 parameter_list|,
-name|td
+name|cred
 parameter_list|)
 specifier|register
 name|struct
@@ -330,9 +330,9 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|td
+name|cred
 decl_stmt|;
 block|{
 name|struct
@@ -645,13 +645,9 @@ argument_list|)
 operator|<
 name|IPV6PORT_RESERVED
 operator|&&
-name|td
-operator|&&
 name|suser_cred
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -1238,7 +1234,7 @@ name|in6p_laddr
 argument_list|,
 name|inp
 argument_list|,
-name|td
+name|cred
 argument_list|)
 operator|)
 operator|!=
@@ -1515,7 +1511,7 @@ name|inp
 parameter_list|,
 name|nam
 parameter_list|,
-name|td
+name|cred
 parameter_list|)
 specifier|register
 name|struct
@@ -1529,9 +1525,9 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|td
+name|cred
 decl_stmt|;
 block|{
 name|struct
@@ -1662,7 +1658,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|td
+name|cred
 argument_list|)
 expr_stmt|;
 if|if

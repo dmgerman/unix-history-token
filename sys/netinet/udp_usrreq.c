@@ -3927,6 +3927,8 @@ operator|&
 name|lport
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -4024,6 +4026,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -4855,6 +4859,8 @@ argument_list|,
 name|nam
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|splx
@@ -5026,6 +5032,8 @@ argument_list|,
 name|nam
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 expr_stmt|;
 name|splx

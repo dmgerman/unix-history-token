@@ -110,7 +110,7 @@ name|sockaddr
 operator|*
 operator|,
 expr|struct
-name|thread
+name|ucred
 operator|*
 operator|)
 argument_list|)
@@ -132,7 +132,7 @@ name|sockaddr
 operator|*
 operator|,
 expr|struct
-name|thread
+name|ucred
 operator|*
 operator|)
 argument_list|)
@@ -469,7 +469,7 @@ name|inpcb
 operator|*
 operator|,
 expr|struct
-name|thread
+name|ucred
 operator|*
 operator|)
 argument_list|)

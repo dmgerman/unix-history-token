@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -674,6 +680,8 @@ argument_list|,
 name|in6p
 argument_list|,
 name|td
+operator|->
+name|td_ucred
 argument_list|)
 operator|)
 operator|!=
