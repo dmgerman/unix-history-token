@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.19 1996/05/02 14:20:26 phk Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.20 1996/05/03 21:01:24 phk Exp $ */
 end_comment
 
 begin_comment
@@ -2518,9 +2518,9 @@ name|size
 operator|=
 name|round_page
 argument_list|(
-name|shmseg
+name|uap
 operator|->
-name|shm_segsz
+name|size
 argument_list|)
 expr_stmt|;
 if|if
