@@ -830,5 +830,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|fd_set
+modifier|*
+name|mkfdset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|zerofdset
+parameter_list|(
+name|fd_set
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
