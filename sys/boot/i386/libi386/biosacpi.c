@@ -27,6 +27,12 @@ directive|include
 file|"acfreebsd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acconfig.h"
+end_include
+
 begin_define
 define|#
 directive|define
