@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.50 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3081,6 +3081,24 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
+operator|==
+name|NULL
+operator|&&
+name|registerd_host_only
+condition|)
+block|{
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"Couldn't resolve your address into a host name.\r\n\          Please contact your net administrator"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hp
 operator|&&
 operator|(
 name|strlen
@@ -3110,20 +3128,6 @@ operator|=
 name|hp
 operator|->
 name|h_name
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|registerd_host_only
-condition|)
-block|{
-name|fatal
-argument_list|(
-name|net
-argument_list|,
-literal|"Couldn't resolve your address into a host name.\r\n\          Please contact your net administrator"
-argument_list|)
 expr_stmt|;
 block|}
 else|else
