@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.7 1995/04/30 07:30:43 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.8 1995/04/30 11:04:13 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -516,41 +516,6 @@ argument_list|(
 literal|"Failed to add 'whole' chunk"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ds
-operator|.
-name|dss_slices
-index|[
-name|COMPATIBILITY_SLICE
-index|]
-operator|.
-name|ds_offset
-condition|)
-if|if
-condition|(
-name|Add_Chunk
-argument_list|(
-name|d
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|"-"
-argument_list|,
-name|reserved
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-name|warn
-argument_list|(
-literal|"Failed to add MBR chunk"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -709,47 +674,6 @@ condition|)
 name|warn
 argument_list|(
 literal|"failed to add chunk for slice %d"
-argument_list|,
-name|i
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ce
-operator|==
-name|extended
-condition|)
-if|if
-condition|(
-name|Add_Chunk
-argument_list|(
-name|d
-argument_list|,
-name|ds
-operator|.
-name|dss_slices
-index|[
-name|i
-index|]
-operator|.
-name|ds_offset
-argument_list|,
-literal|1
-argument_list|,
-literal|"-"
-argument_list|,
-name|reserved
-argument_list|,
-name|subtype
-argument_list|,
-name|flags
-argument_list|)
-condition|)
-name|warn
-argument_list|(
-literal|"failed to add MBR chunk for slice %d"
 argument_list|,
 name|i
 operator|-
@@ -1694,6 +1618,21 @@ operator|->
 name|bootmgr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|b
+condition|)
+block|{
+name|d
+operator|->
+name|bootmgr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|d
 operator|->
 name|bootmgr
@@ -1728,6 +1667,7 @@ argument_list|,
 name|DOSPARTOFF
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
