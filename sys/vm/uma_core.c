@@ -7779,7 +7779,7 @@ name|zone
 operator|->
 name|uz_keg
 expr_stmt|;
-comment|/* 	 * This is to prevent us from recursively trying to allocate 	 * buckets.  The problem is that if an allocation forces us to 	 * grab a new bucket we will call page_alloc, which will go off 	 * and cause the vm to allocate vm_map_entries.  If we need new 	 * buckets there too we will recurse in kmem_alloc and bad 	 * things happen.  So instead we return a NULL bucket, and make 	 * the code that allocates buckets smart enough to deal with it 	 */
+comment|/* 	 * This is to prevent us from recursively trying to allocate 	 * buckets.  The problem is that if an allocation forces us to 	 * grab a new bucket we will call page_alloc, which will go off 	 * and cause the vm to allocate vm_map_entries.  If we need new 	 * buckets there too we will recurse in kmem_alloc and bad 	 * things happen.  So instead we return a NULL bucket, and make 	 * the code that allocates buckets smart enough to deal with it 	 * 	 * XXX: While we want this protection for the bucket zones so that 	 * recursion from the VM is handled (and the calling code that 	 * allocates buckets knows how to deal with it), we do not want 	 * to prevent allocation from the slab header zones (slabzone 	 * and slabrefzone) if uk_recurse is not zero for them.  The 	 * reason is that it could lead to NULL being returned for 	 * slab header allocations even in the M_WAITOK case, and the 	 * caller can't handle that.  	 */
 if|if
 condition|(
 name|keg
@@ -7793,6 +7793,20 @@ operator|->
 name|uk_recurse
 operator|!=
 literal|0
+condition|)
+if|if
+condition|(
+operator|(
+name|zone
+operator|!=
+name|slabzone
+operator|)
+operator|&&
+operator|(
+name|zone
+operator|!=
+name|slabrefzone
+operator|)
 condition|)
 return|return
 operator|(
