@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.6 1994/11/26 08:57:40 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a   * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -b<dir>		Base-dir	  * -B<file>		Backup to tar-file.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -c			Check it out, don't do anything.  * -F      		Force  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -v 			Tell us more.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.7 1994/12/01 21:05:28 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a   * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -b<dir>		Base-dir	  * -B<file>		Backup to tar-file.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -c			Check it out, don't do anything.  * -F      		Force  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -v 			Tell us more.  *  */
 end_comment
 
 begin_define
@@ -19,6 +19,13 @@ directive|include
 file|"ctm.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|CTM_STATUS
+value|".ctm_status"
+end_define
+
 begin_function_decl
 specifier|extern
 name|int
@@ -26,6 +33,9 @@ name|Proc
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|unsigned
+name|applied
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -61,6 +71,15 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
+decl_stmt|;
+name|FILE
+modifier|*
+name|statfile
+decl_stmt|;
+name|unsigned
+name|applied
+init|=
+literal|0
 decl_stmt|;
 name|Verbose
 operator|=
@@ -241,6 +260,48 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|statfile
+operator|=
+name|fopen
+argument_list|(
+name|CTM_STATUS
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: "
+name|CTM_STATUS
+literal|" not found.\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|fscanf
+argument_list|(
+name|statfile
+argument_list|,
+literal|"%*s %u"
+argument_list|,
+operator|&
+name|applied
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|statfile
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|argc
 condition|)
@@ -249,6 +310,8 @@ operator||=
 name|Proc
 argument_list|(
 literal|"-"
+argument_list|,
+name|applied
 argument_list|)
 expr_stmt|;
 while|while
@@ -268,7 +331,14 @@ argument_list|(
 operator|*
 name|argv
 operator|++
+argument_list|,
+name|applied
 argument_list|)
+expr_stmt|;
+name|stat
+operator|&=
+operator|~
+name|Exit_Version
 expr_stmt|;
 block|}
 if|if
@@ -307,6 +377,9 @@ parameter_list|(
 name|char
 modifier|*
 name|filename
+parameter_list|,
+name|unsigned
+name|applied
 parameter_list|)
 block|{
 name|FILE
@@ -619,6 +692,8 @@ operator|=
 name|Pass1
 argument_list|(
 name|f
+argument_list|,
+name|applied
 argument_list|)
 operator|)
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.4 1994/09/22 02:49:16 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.5 1994/10/24 20:09:21 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -413,6 +413,13 @@ name|Exit_Done
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|Exit_Version
+value|128
+end_define
+
 begin_function_decl
 name|char
 modifier|*
@@ -579,6 +586,9 @@ parameter_list|(
 name|FILE
 modifier|*
 name|fd
+parameter_list|,
+name|unsigned
+name|applied
 parameter_list|)
 function_decl|;
 end_function_decl

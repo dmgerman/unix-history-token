@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass1.c,v 1.6 1995/02/04 19:20:47 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass1.c,v 1.7 1995/02/25 05:02:18 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -31,6 +31,9 @@ parameter_list|(
 name|FILE
 modifier|*
 name|fd
+parameter_list|,
+name|unsigned
+name|applied
 parameter_list|)
 block|{
 name|u_char
@@ -72,6 +75,9 @@ name|int
 name|slashwarn
 init|=
 literal|0
+decl_stmt|;
+name|unsigned
+name|current
 decl_stmt|;
 if|if
 condition|(
@@ -208,6 +214,40 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 comment|/*<Prefix> */
+name|sscanf
+argument_list|(
+name|Nbr
+argument_list|,
+literal|"%u"
+argument_list|,
+operator|&
+name|current
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|current
+operator|<=
+name|applied
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Delta number %u is already applied; ignoring.\n"
+argument_list|,
+name|current
+argument_list|)
+expr_stmt|;
+return|return
+name|Exit_Version
+return|;
+block|}
 for|for
 control|(
 init|;
