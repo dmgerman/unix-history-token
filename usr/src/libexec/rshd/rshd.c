@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.10 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,6 +1055,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|pwd
+operator|->
+name|pw_uid
+operator|&&
 operator|!
 name|access
 argument_list|(
