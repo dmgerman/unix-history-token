@@ -1400,7 +1400,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 	int _mt = (t);							\ 									\ 	atomic_subtract_long(mbtypes[_mm->m_type], 1);			\ 	atomic_add_long(mbtypes[_mt], 1);				\ 	_mm->m_type = (_mt);						\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 	int _mt = (t);							\ 									\ 	atomic_subtract_long(&mbtypes[_mm->m_type], 1);			\ 	atomic_add_long(&mbtypes[_mt], 1);				\ 	_mm->m_type = (_mt);						\ } while (0)
 end_define
 
 begin_comment
