@@ -357,35 +357,5 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|callrpc
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|xdrproc_t
-operator|,
-name|char
-operator|*
-operator|,
-name|xdrproc_t
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

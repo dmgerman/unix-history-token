@@ -279,12 +279,12 @@ name|int
 operator|,
 name|xdrproc_t
 operator|,
-name|char
+name|void
 operator|*
 operator|,
 name|xdrproc_t
 operator|,
-name|char
+name|void
 operator|*
 operator|)
 argument_list|)

@@ -1426,7 +1426,7 @@ name|inproc
 decl_stmt|,
 name|outproc
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|in
 decl_stmt|,
