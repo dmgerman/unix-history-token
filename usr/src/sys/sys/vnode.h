@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1745,7 +1745,7 @@ name|VOP_ISLOCKED
 parameter_list|(
 name|v
 parameter_list|)
-value|(*((v)->v_op->vn_islocked))(v)
+value|(((v)->v_flag& VXLOCK) || \ 				(*((v)->v_op->vn_islocked))(v))
 end_define
 
 begin_define
