@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_perror.c,v 1.2 1995/05/30 05:41:15 rgrimes Exp $"
+literal|"$Id: clnt_perror.c,v 1.3 1995/10/22 14:51:14 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -539,7 +539,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|clnt_sperror
 argument_list|(
@@ -779,7 +779,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -999,7 +999,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
