@@ -92,9 +92,6 @@ comment|/* arg1 = len			*/
 name|O_IPID
 block|,
 comment|/* arg1 = id			*/
-name|O_IPPRE
-block|,
-comment|/* arg1 = id			*/
 name|O_IPTOS
 block|,
 comment|/* arg1 = id			*/
