@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)api.h	3.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)api.h	3.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -521,7 +521,7 @@ name|session_id
 decl_stmt|,
 name|reserved
 decl_stmt|;
-name|int
+name|short
 name|event_queue_id
 decl_stmt|,
 name|input_queue_id
@@ -549,7 +549,7 @@ name|session_id
 decl_stmt|,
 name|reserved
 decl_stmt|;
-name|int
+name|short
 name|connectors_task_id
 decl_stmt|;
 block|}
@@ -561,6 +561,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|unsigned
 name|char
 name|scancode
 decl_stmt|,
@@ -575,7 +576,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int
+name|short
 name|length
 decl_stmt|;
 comment|/* Length (in bytes) of list */
@@ -601,7 +602,7 @@ name|session_id
 decl_stmt|,
 name|reserved
 decl_stmt|;
-name|int
+name|short
 name|connectors_task_id
 decl_stmt|;
 name|char
@@ -654,7 +655,7 @@ name|session_id
 decl_stmt|,
 name|reserved
 decl_stmt|;
-name|int
+name|short
 name|connectors_task_id
 decl_stmt|;
 block|}
@@ -688,7 +689,7 @@ name|characteristics
 decl_stmt|,
 name|session_type
 decl_stmt|;
-name|int
+name|short
 name|begin
 decl_stmt|;
 comment|/* Offset within buffer */
@@ -709,7 +710,7 @@ decl_stmt|;
 name|BufferDescriptor
 name|source
 decl_stmt|;
-name|int
+name|short
 name|source_end
 decl_stmt|;
 comment|/* Offset within source buffer */
@@ -872,7 +873,7 @@ name|FP_SEG
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
+value|((unsigned int)(((unsigned long)(x))>>16))
 end_define
 
 begin_define
@@ -882,7 +883,23 @@ name|FP_OFF
 parameter_list|(
 name|y
 parameter_list|)
-value|(y)
+value|((unsigned int)(((unsigned long)(y))&0xFFFF))
+end_define
+
+begin_comment
+comment|/*  * Undo the preceeding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEG_OFF_BACK
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)<<16)|(y))
 end_define
 
 begin_comment
@@ -900,6 +917,11 @@ directive|if
 name|defined
 argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ns32000
 argument_list|)
 name|al
 decl_stmt|,
@@ -919,7 +941,7 @@ name|dh
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* defined(vax) */
+comment|/* defined(vax) || defined(ns32000) */
 if|#
 directive|if
 name|defined
@@ -959,7 +981,7 @@ name|dl
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(sun) || defined(tahoe) || defined(ibm032) */
+comment|/* defined(sun) || defined(tahoe) || defined(ibm032) || defined(pyr) */
 block|}
 struct|;
 end_struct
@@ -979,7 +1001,7 @@ decl_stmt|,
 name|dx
 decl_stmt|;
 name|unsigned
-name|int
+name|short
 name|si
 decl_stmt|,
 name|di
@@ -1009,7 +1031,7 @@ struct|struct
 name|SREGS
 block|{
 name|unsigned
-name|int
+name|short
 name|cs
 decl_stmt|,
 name|ds

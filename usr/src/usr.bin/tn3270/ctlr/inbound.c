@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inbound.c	3.4 (Berkeley) %G%"
+literal|"@(#)inbound.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,19 +97,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inbound.ext"
+file|"externs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"outbound.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../telnet.ext"
+file|"declare.h"
 end_include
 
 begin_define
@@ -202,6 +196,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
 name|rememberedshiftstate
 decl_stmt|;
@@ -798,6 +793,9 @@ name|AddHost
 argument_list|(
 name|i
 argument_list|,
+operator|(
+name|char
+operator|)
 name|GetHost
 argument_list|(
 name|from
@@ -1258,8 +1256,6 @@ argument_list|)
 expr_stmt|;
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 name|buffer
 argument_list|,
 literal|1
@@ -1348,6 +1344,9 @@ comment|/* put in blanks */
 block|}
 name|AddChar
 argument_list|(
+operator|(
+name|char
+operator|)
 name|disp_ebc
 index|[
 name|c
@@ -1379,7 +1378,7 @@ name|SendField
 argument_list|(
 name|i
 argument_list|,
-name|command
+name|cmd
 argument_list|)
 specifier|register
 name|int
@@ -1393,7 +1392,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|command
+name|cmd
 decl_stmt|;
 end_decl_stmt
 
@@ -1439,7 +1438,7 @@ name|AID_TREQ
 operator|)
 operator|||
 operator|(
-name|command
+name|cmd
 operator|==
 name|CMD_SNA_READ_MODIFIED_ALL
 operator|)
@@ -1479,7 +1478,7 @@ name|AID_SELPEN
 operator|)
 operator|||
 operator|(
-name|command
+name|cmd
 operator|==
 name|CMD_SNA_READ_MODIFIED_ALL
 operator|)
@@ -1547,6 +1546,9 @@ comment|/* put in blanks */
 block|}
 name|AddChar
 argument_list|(
+operator|(
+name|char
+operator|)
 name|disp_ebc
 index|[
 name|c
@@ -1608,10 +1610,10 @@ begin_function
 name|void
 name|DoReadModified
 parameter_list|(
-name|command
+name|cmd
 parameter_list|)
 name|int
-name|command
+name|cmd
 decl_stmt|;
 comment|/* The command sent */
 block|{
@@ -1701,7 +1703,7 @@ operator|)
 operator|)
 operator|||
 operator|(
-name|command
+name|cmd
 operator|==
 name|CMD_SNA_READ_MODIFIED_ALL
 operator|)
@@ -1716,7 +1718,7 @@ name|AID_TREQ
 operator|)
 operator|||
 operator|(
-name|command
+name|cmd
 operator|==
 name|CMD_SNA_READ_MODIFIED_ALL
 operator|)
@@ -1783,7 +1785,7 @@ name|SendField
 argument_list|(
 name|i
 argument_list|,
-name|command
+name|cmd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1926,6 +1928,9 @@ else|else
 block|{
 name|AddChar
 argument_list|(
+operator|(
+name|char
+operator|)
 name|disp_ebc
 index|[
 name|GetHost
@@ -2281,6 +2286,9 @@ name|AddHost
 argument_list|(
 name|i
 argument_list|,
+operator|(
+name|char
+operator|)
 name|GetHost
 argument_list|(
 name|j
@@ -2352,6 +2360,7 @@ name|scancode
 parameter_list|,
 name|shiftstate
 parameter_list|)
+name|unsigned
 name|int
 name|scancode
 decl_stmt|,
@@ -2388,8 +2397,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Unknown scancode encountered in AcceptKeystroke.\n"
 argument_list|,
 literal|1
@@ -4223,8 +4230,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)outbound.c	3.3 (Berkeley) %G%"
+literal|"@(#)outbound.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,31 +73,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"options.ext"
+file|"externs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../telnet.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"inbound.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"outbound.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../general/bsubs.ext"
+file|"declare.h"
 end_include
 
 begin_define
@@ -690,17 +672,15 @@ begin_function
 name|int
 name|DataFromNetwork
 parameter_list|(
-name|buffer
+name|Buffer
 parameter_list|,
 name|count
 parameter_list|,
 name|control
 parameter_list|)
-specifier|register
-name|unsigned
 name|char
 modifier|*
-name|buffer
+name|Buffer
 decl_stmt|;
 comment|/* what the data is */
 specifier|register
@@ -715,6 +695,19 @@ comment|/* this buffer ended block? */
 block|{
 name|int
 name|origCount
+decl_stmt|;
+specifier|register
+name|unsigned
+name|char
+modifier|*
+name|buffer
+init|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|Buffer
 decl_stmt|;
 specifier|register
 name|int
@@ -758,8 +751,6 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Short count received from host!\n"
 argument_list|,
 literal|1
@@ -830,14 +821,14 @@ break|break;
 default|default:
 block|{
 name|char
-name|buffer
+name|s_buffer
 index|[
 literal|100
 index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
-name|buffer
+name|s_buffer
 argument_list|,
 literal|"Unexpected read command code 0x%x received.\n"
 argument_list|,
@@ -846,9 +837,7 @@ argument_list|)
 expr_stmt|;
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
-name|buffer
+name|s_buffer
 argument_list|,
 literal|1
 argument_list|)
@@ -1216,14 +1205,14 @@ break|break;
 default|default:
 block|{
 name|char
-name|buffer
+name|s_buffer
 index|[
 literal|100
 index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
-name|buffer
+name|s_buffer
 argument_list|,
 literal|"Unexpected write command code 0x%x received.\n"
 argument_list|,
@@ -1232,9 +1221,7 @@ argument_list|)
 expr_stmt|;
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
-name|buffer
+name|s_buffer
 argument_list|,
 literal|1
 argument_list|)
@@ -1770,14 +1757,8 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* XXX Should do SOMETHING! */
-name|buffer
-operator|+=
-literal|0
-expr_stmt|;
-name|count
-operator|-=
-literal|0
-expr_stmt|;
+comment|/* XXX buffer += 0; */
+comment|/* XXX count -= 0; */
 comment|/* For now, just use this character */
 break|break;
 case|case
@@ -1855,7 +1836,7 @@ break|break;
 default|default:
 block|{
 name|char
-name|buffer
+name|s_buffer
 index|[
 literal|100
 index|]
@@ -1882,22 +1863,22 @@ operator|&
 name|unk_order
 decl_stmt|;
 name|int
-name|i
+name|s_i
 decl_stmt|;
 for|for
 control|(
-name|i
+name|s_i
 operator|=
 literal|0
 init|;
-name|i
+name|s_i
 operator|<=
 name|highestof
 argument_list|(
 name|orders_def
 argument_list|)
 condition|;
-name|i
+name|s_i
 operator|++
 control|)
 block|{
@@ -1905,7 +1886,7 @@ if|if
 condition|(
 name|orders_def
 index|[
-name|i
+name|s_i
 index|]
 operator|.
 name|code
@@ -1918,7 +1899,7 @@ operator|=
 operator|&
 name|orders_def
 index|[
-name|i
+name|s_i
 index|]
 expr_stmt|;
 break|break;
@@ -1926,7 +1907,7 @@ block|}
 block|}
 name|sprintf
 argument_list|(
-name|buffer
+name|s_buffer
 argument_list|,
 literal|"Unsupported order '%s' (%s, 0x%x) received.\n"
 argument_list|,
@@ -1943,9 +1924,7 @@ argument_list|)
 expr_stmt|;
 name|ExitString
 argument_list|(
-name|stderr
-argument_list|,
-name|buffer
+name|s_buffer
 argument_list|,
 literal|1
 argument_list|)
@@ -2157,6 +2136,10 @@ condition|)
 block|{
 name|RingBell
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

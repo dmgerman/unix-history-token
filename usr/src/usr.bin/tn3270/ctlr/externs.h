@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * External references from the controller.  */
+comment|/*  * External references from the controller.  *  *	@(#)externs.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -45,12 +45,32 @@ begin_comment
 comment|/* !defined(MSDOS) */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|unsigned
+name|char
+modifier|*
+name|memNSchr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Search for a character ANDED, increment by stride */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
-name|TransparentClock
+name|DataToNetwork
+argument_list|()
 decl_stmt|,
 name|OutputClock
+decl_stmt|,
+name|suspend
+argument_list|()
+decl_stmt|,
+name|TransparentClock
 decl_stmt|,
 name|UnLocked
 decl_stmt|;
@@ -63,7 +83,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|command
+argument_list|()
+decl_stmt|,
 name|ConnectScreen
+argument_list|()
+decl_stmt|,
+name|ExitString
 argument_list|()
 decl_stmt|,
 name|init_inbound
@@ -76,6 +102,9 @@ name|RefreshScreen
 argument_list|()
 decl_stmt|,
 name|RingBell
+argument_list|()
+decl_stmt|,
+name|setconnmode
 argument_list|()
 decl_stmt|,
 name|StopScreen

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	3.3 (Berkeley) %G%"
+literal|"@(#)options.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"options.ext"
+file|"declare.h"
 end_include
 
 begin_function
@@ -152,6 +152,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|pointer
