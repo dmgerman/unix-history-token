@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	5.6 (Berkeley) %G%"
+literal|"@(#)bt_close.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,19 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -296,16 +296,12 @@ argument_list|(
 name|t
 argument_list|,
 name|BTF_INMEM
-argument_list|)
-operator|||
-name|ISSET
-argument_list|(
-name|t
-argument_list|,
+operator||
 name|BTF_RDONLY
 argument_list|)
 operator|||
-name|NOTSET
+operator|!
+name|ISSET
 argument_list|(
 name|t
 argument_list|,
@@ -352,6 +348,26 @@ block|{
 if|if
 condition|(
 operator|(
+name|p
+operator|=
+name|malloc
+argument_list|(
+name|t
+operator|->
+name|bt_psize
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|RET_ERROR
+operator|)
+return|;
+if|if
+condition|(
+operator|(
 name|h
 operator|=
 name|mpool_get
@@ -377,39 +393,6 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-if|if
-condition|(
-operator|(
-name|p
-operator|=
-name|malloc
-argument_list|(
-name|t
-operator|->
-name|bt_psize
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|RET_ERROR
-operator|)
-return|;
-block|}
 name|bcopy
 argument_list|(
 name|h
@@ -423,6 +406,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|status
+operator|=
 name|__bt_dleaf
 argument_list|(
 name|t
@@ -457,7 +442,7 @@ operator|)
 operator|==
 name|RET_SUCCESS
 condition|)
-name|UNSET
+name|CLR
 argument_list|(
 name|t
 argument_list|,
