@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_examine.c,v 1.19 1998/06/08 08:43:19 dfr Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_examine.c,v 1.20 1998/06/10 10:56:09 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -773,7 +773,7 @@ literal|'r'
 case|:
 name|db_printf
 argument_list|(
-literal|"%+11n"
+literal|"%+11ln"
 argument_list|,
 name|addr
 argument_list|)
@@ -784,7 +784,7 @@ literal|'x'
 case|:
 name|db_printf
 argument_list|(
-literal|"%8x"
+literal|"%8lx"
 argument_list|,
 name|addr
 argument_list|)
@@ -795,7 +795,7 @@ literal|'z'
 case|:
 name|db_printf
 argument_list|(
-literal|"%+8x"
+literal|"%+8lx"
 argument_list|,
 name|addr
 argument_list|)
@@ -806,7 +806,7 @@ literal|'d'
 case|:
 name|db_printf
 argument_list|(
-literal|"%11d"
+literal|"%11ld"
 argument_list|,
 name|addr
 argument_list|)
@@ -817,7 +817,7 @@ literal|'u'
 case|:
 name|db_printf
 argument_list|(
-literal|"%11u"
+literal|"%11lu"
 argument_list|,
 name|addr
 argument_list|)
@@ -828,7 +828,7 @@ literal|'o'
 case|:
 name|db_printf
 argument_list|(
-literal|"%16o"
+literal|"%16lo"
 argument_list|,
 name|addr
 argument_list|)
