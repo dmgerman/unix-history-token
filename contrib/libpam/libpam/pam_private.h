@@ -1054,6 +1054,41 @@ name|_PAM_SYSTEM_LOG_PREFIX
 value|"PAM "
 end_define
 
+begin_function_decl
+name|int
+name|pam_authenticate_secondary
+parameter_list|(
+name|pam_handle_t
+modifier|*
+name|pamh
+parameter_list|,
+name|char
+modifier|*
+name|target_username
+parameter_list|,
+name|char
+modifier|*
+name|target_module_type
+parameter_list|,
+name|char
+modifier|*
+name|target_authn_domain
+parameter_list|,
+name|char
+modifier|*
+name|target_supp_data
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|target_module_authtok
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * XXX - Take care with this. It could confuse the logic of a trailing  *       else  */
 end_comment

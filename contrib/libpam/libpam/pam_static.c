@@ -68,9 +68,6 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 specifier|const
 name|char
 modifier|*

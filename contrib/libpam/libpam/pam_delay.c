@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_delay.c  *  * Copyright (c) Andrew G. Morgan<morgan@kernel.org> 1996-9  * All rights reserved.  *  * $Id: pam_delay.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  *  */
+comment|/*  * pam_delay.c  *  * Copyright (c) Andrew G. Morgan<morgan@kernel.org> 1996-9  * All rights reserved.  *  * $Id: pam_delay.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -452,6 +452,7 @@ name|int
 name|usec
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|largest
 decl_stmt|;

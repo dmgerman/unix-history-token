@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_second.c -- PAM secondary authentication  * (based on XSSO draft spec of March 1997)  *  * $Id: pam_second.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  *  */
+comment|/*  * pam_second.c -- PAM secondary authentication  * (based on XSSO draft spec of March 1997)  *  * $Id: pam_second.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -36,26 +36,32 @@ parameter_list|,
 name|char
 modifier|*
 name|target_username
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|target_module_type
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|target_authn_domain
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|target_supp_data
+name|__unused
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|target_module_authtok
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|int

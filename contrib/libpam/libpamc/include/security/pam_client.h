@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_client.h,v 1.4 2001/01/20 22:29:47 agmorgan Exp $  *  * Copyright (c) 1999 Andrew G. Morgan<morgan@linux.kernel.org>  *  * This header file provides the prototypes for the PAM client API  */
+comment|/*  * $Id: pam_client.h,v 1.4 2001/01/20 22:29:47 agmorgan Exp $  * $FreeBSD$  *  * Copyright (c) 1999 Andrew G. Morgan<morgan@linux.kernel.org>  *  * This header file provides the prototypes for the PAM client API  */
 end_comment
 
 begin_ifndef
@@ -432,7 +432,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|do {                                                                       \     int bp_length;                                                         \     __u8 *prompt = (__u8 *) (prmpt);                                       \     bp_length = PAM_BP_LENGTH(prompt);                                     \     if (bp_length< ((length)+(offset))) {                                 \ 	PAM_BP_ASSERT("attempt to write over end of prompt");              \     }                                                                      \     memcpy((offset) + PAM_BP_WDATA(prompt), (data), (length));             \ } while (0)
+value|do {                                                                       \     size_t bp_length;                                                         \     __u8 *prompt = (__u8 *) (prmpt);                                       \     bp_length = PAM_BP_LENGTH(prompt);                                     \     if (bp_length< ((length)+(offset))) {                                 \ 	PAM_BP_ASSERT("attempt to write over end of prompt");              \     }                                                                      \     memcpy((offset) + PAM_BP_WDATA(prompt), (data), (length));             \ } while (0)
 end_define
 
 begin_define
@@ -449,7 +449,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|do {                                                                       \     int __bp_length;                                                       \     const __u8 *__prompt = (const __u8 *) (prmpt);                         \     __bp_length = PAM_BP_LENGTH(__prompt);                                 \     if (((offset)< 0) || (__bp_length< ((length)+(offset)))              \ 	|| ((length)< 0)) {                                               \ 	PAM_BP_ASSERT("invalid extraction from prompt");                   \     }                                                                      \     memcpy((data), (offset) + PAM_BP_RDATA(__prompt), (length));           \ } while (0)
+value|do {                                                                       \     size_t __bp_length;                                                       \     const __u8 *__prompt = (const __u8 *) (prmpt);                         \     __bp_length = PAM_BP_LENGTH(__prompt);                                 \     if (((offset)< 0) || (__bp_length< ((length)+(offset)))              \ 	|| ((length)< 0)) {                                               \ 	PAM_BP_ASSERT("invalid extraction from prompt");                   \     }                                                                      \     memcpy((data), (offset) + PAM_BP_RDATA(__prompt), (length));           \ } while (0)
 end_define
 
 begin_comment

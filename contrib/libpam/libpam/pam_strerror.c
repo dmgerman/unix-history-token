@@ -4,7 +4,7 @@ comment|/* pam_strerror.c */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_strerror.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  */
+comment|/*  * $Id: pam_strerror.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -22,6 +22,7 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|errnum

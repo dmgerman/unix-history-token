@@ -176,6 +176,7 @@ parameter_list|(
 name|void
 modifier|*
 name|appdata
+name|__unused
 parameter_list|,
 name|pamc_bp_t
 modifier|*
@@ -239,8 +240,8 @@ comment|/* the following code is used to get text input */
 end_comment
 
 begin_decl_stmt
-specifier|volatile
 specifier|static
+specifier|volatile
 name|int
 name|expired
 init|=
@@ -298,6 +299,7 @@ name|time_is_up
 parameter_list|(
 name|int
 name|ignore
+name|__unused
 parameter_list|)
 block|{
 name|expired
@@ -688,7 +690,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -971,7 +973,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_sigprocmask
+name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
