@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)lfs_alloc.c 1.21 %G%"
+literal|"@(#)lfs_alloc.c 1.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|"../h/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ndir.h"
 end_include
 
 begin_include
@@ -5005,9 +5011,6 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|time_t
-name|tim
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -5108,7 +5111,7 @@ name|fs
 operator|->
 name|fs_time
 operator|=
-name|TIME
+name|time
 expr_stmt|;
 if|if
 condition|(
@@ -5239,19 +5242,15 @@ operator|->
 name|i_count
 operator|++
 expr_stmt|;
-name|tim
-operator|=
-name|TIME
-expr_stmt|;
 name|iupdat
 argument_list|(
 name|ip
 argument_list|,
 operator|&
-name|tim
+name|time
 argument_list|,
 operator|&
-name|tim
+name|time
 argument_list|,
 literal|0
 argument_list|)
