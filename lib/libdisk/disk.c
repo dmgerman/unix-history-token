@@ -1970,6 +1970,10 @@ literal|"fla"
 block|,
 literal|"ida"
 block|,
+literal|"mlxd"
+block|,
+literal|"amrd"
+block|,
 literal|0
 block|}
 decl_stmt|;
