@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20020308
+value|0x20020403
 end_define
 
 begin_comment

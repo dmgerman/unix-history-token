@@ -108,6 +108,41 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_FLUSH_CPU_CACHE
+parameter_list|()
+value|wbinvd()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_FLUSH_CPU_CACHE
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* XXX ia64_fc()? */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ACPI_DEBUG
 end_ifdef
 
@@ -209,6 +244,13 @@ begin_define
 define|#
 directive|define
 name|__sti
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
 end_define
 

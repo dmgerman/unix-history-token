@@ -172,6 +172,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * ACPI Table interfaces  */
+end_comment
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsGetRootPointer
@@ -179,9 +183,25 @@ parameter_list|(
 name|UINT32
 name|Flags
 parameter_list|,
-name|ACPI_PHYSICAL_ADDRESS
+name|ACPI_POINTER
 modifier|*
-name|RsdpPhysicalAddress
+name|Address
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiOsTableOverride
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|ExistingTable
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+name|NewTable
 parameter_list|)
 function_decl|;
 end_function_decl

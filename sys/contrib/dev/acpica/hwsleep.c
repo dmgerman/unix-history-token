@@ -519,6 +519,9 @@ operator|->
 name|AccessBitMask
 expr_stmt|;
 comment|/* Write #2: SLP_TYP + SLP_EN */
+name|ACPI_FLUSH_CPU_CACHE
+argument_list|()
+expr_stmt|;
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK

@@ -170,9 +170,9 @@ parameter_list|(
 name|UINT32
 name|Flags
 parameter_list|,
-name|ACPI_PHYSICAL_ADDRESS
+name|ACPI_POINTER
 modifier|*
-name|RsdpPhysicalAddress
+name|RsdpAddress
 parameter_list|)
 function_decl|;
 end_function_decl

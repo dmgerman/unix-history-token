@@ -34,6 +34,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|COMPILER_DEPENDENT_INT64
+value|long
+end_define
+
+begin_define
+define|#
+directive|define
 name|COMPILER_DEPENDENT_UINT64
 value|unsigned long
 end_define
@@ -100,22 +107,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|causeinterrupt
-parameter_list|(
-name|level
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BREAKPOINT3
 end_define
 
 begin_define
 define|#
 directive|define
-name|acpi_disable_irqs
+name|ACPI_DISABLE_IRQS
 parameter_list|()
 value|__cli()
 end_define
@@ -123,7 +121,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|acpi_enable_irqs
+name|ACPI_ENABLE_IRQS
 parameter_list|()
 value|__sti()
 end_define
@@ -174,6 +172,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|COMPILER_DEPENDENT_INT64
+value|long long
+end_define
+
+begin_define
+define|#
+directive|define
 name|COMPILER_DEPENDENT_UINT64
 value|unsigned long long
 end_define
@@ -219,22 +224,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|causeinterrupt
-parameter_list|(
-name|level
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BREAKPOINT3
 end_define
 
 begin_define
 define|#
 directive|define
-name|acpi_disable_irqs
+name|ACPI_DISABLE_IRQS
 parameter_list|()
 value|__cli()
 end_define
@@ -242,17 +238,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|acpi_enable_irqs
+name|ACPI_ENABLE_IRQS
 parameter_list|()
 value|__sti()
-end_define
-
-begin_define
-define|#
-directive|define
-name|halt
-parameter_list|()
-value|__asm__ __volatile__ ("sti; hlt":::"memory")
 end_define
 
 begin_comment

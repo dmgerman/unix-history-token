@@ -61,7 +61,7 @@ parameter_list|(
 name|UINT32
 name|Flags
 parameter_list|,
-name|ACPI_PHYSICAL_ADDRESS
+name|ACPI_POINTER
 modifier|*
 name|RsdpPhysicalAddress
 parameter_list|)

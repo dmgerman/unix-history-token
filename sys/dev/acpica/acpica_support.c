@@ -155,21 +155,16 @@ argument_list|,
 name|ACPI_MTX_LOCK
 argument_list|)
 expr_stmt|;
-name|acpi_disable_irqs
+name|ACPI_DISABLE_IRQS
 argument_list|()
 expr_stmt|;
 name|AcpiHwDisableNonWakeupGpes
 argument_list|()
 expr_stmt|;
 comment|/* flush caches */
-ifdef|#
-directive|ifdef
-name|__i386__
-name|wbinvd
+name|ACPI_FLUSH_CPU_CACHE
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* write the value to command port and wait until we enter sleep state */
 do|do
 block|{
@@ -206,7 +201,7 @@ do|;
 name|AcpiHwEnableNonWakeupGpes
 argument_list|()
 expr_stmt|;
-name|acpi_enable_irqs
+name|ACPI_ENABLE_IRQS
 argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
