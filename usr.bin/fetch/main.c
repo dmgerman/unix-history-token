@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.11 1996/08/03 13:14:47 jkh Exp $ */
+comment|/* $Id: main.c,v 1.12 1996/08/04 00:35:39 jmz Exp $ */
 end_comment
 
 begin_include
@@ -978,7 +978,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Couldn't open FTP connection or login to %s."
+literal|"couldn't open FTP connection or login to %s."
 argument_list|,
 name|host
 argument_list|)
@@ -1025,7 +1025,7 @@ name|ftperr
 argument_list|(
 name|ftp
 argument_list|,
-literal|"Couldn't cd to %s: "
+literal|"couldn't cd to %s: "
 argument_list|,
 name|change_to_dir
 argument_list|)
@@ -1242,7 +1242,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not open output file %s\n"
+literal|"could not open output file %s."
 argument_list|,
 name|outputfile
 argument_list|)
@@ -2322,7 +2322,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not send GET command to HTTP server\n"
+literal|"could not send GET command to HTTP server."
 argument_list|)
 expr_stmt|;
 name|FD_ZERO
@@ -2402,7 +2402,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not open output file %s\n"
+literal|"could not open output file %s."
 argument_list|,
 name|outputfile
 argument_list|)
@@ -2509,7 +2509,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Communication error with HTTP server\n"
+literal|"communication error with HTTP server."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3129,7 +3129,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not lookup host %s\n"
+literal|"could not lookup host %s."
 argument_list|,
 name|host
 argument_list|)
@@ -3260,7 +3260,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not bind to socket\n"
+literal|"could not bind to socket."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3289,7 +3289,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Connection failed"
+literal|"connection failed."
 argument_list|)
 expr_stmt|;
 return|return
