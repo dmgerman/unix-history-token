@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.8 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.9 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1031,15 +1031,23 @@ name|clnp
 decl_stmt|;
 comment|/* ptr to fixed part of header */
 name|struct
-name|iso_addr
-name|src
+name|sockaddr_iso
+name|source
 decl_stmt|;
 comment|/* source address of pkt */
 name|struct
-name|iso_addr
-name|dst
+name|sockaddr_iso
+name|target
 decl_stmt|;
 comment|/* destination address of pkt */
+define|#
+directive|define
+name|src
+value|source.siso_addr
+define|#
+directive|define
+name|dst
+value|target.siso_addr
 name|caddr_t
 name|hoff
 decl_stmt|;
@@ -1078,6 +1086,12 @@ name|int
 name|iso_systype
 decl_stmt|;
 comment|/* used by ESIS config resp */
+specifier|extern
+name|struct
+name|sockaddr_iso
+name|blank_siso
+decl_stmt|;
+comment|/* used for initializing */
 name|int
 name|need_afrin
 init|=
@@ -1342,33 +1356,11 @@ operator|->
 name|cnf_hdr_len
 expr_stmt|;
 comment|/*  	 *	extract the source and destination address 	 *	drop packet on failure 	 */
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|src
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|src
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|dst
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dst
-argument_list|)
-argument_list|)
+name|source
+operator|=
+name|target
+operator|=
+name|blank_siso
 expr_stmt|;
 name|hoff
 operator|=
@@ -2051,10 +2043,10 @@ operator|(
 name|m
 operator|,
 operator|&
-name|src
+name|source
 operator|,
 operator|&
-name|dst
+name|target
 operator|,
 name|clnp
 operator|->
