@@ -380,6 +380,10 @@ literal|"python"
 block|,
 literal|"Software related to the Python language."
 block|,
+literal|"ruby"
+block|,
+literal|"Software related to the Ruby language."
+block|,
 literal|"russian"
 block|,
 literal|"Ported software for the Russian market."
