@@ -1345,7 +1345,7 @@ comment|/*  * If this were a device node, the data may have been received in res
 end_comment
 
 begin_comment
-unit|devintr() { 	int error; 				 * here */
+unit|devintr() { 	int error;
 comment|/* get packet from device and send on */
 end_comment
 
