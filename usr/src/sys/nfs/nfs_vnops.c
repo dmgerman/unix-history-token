@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.86 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.87 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8234,9 +8234,15 @@ operator|->
 name|d_namlen
 operator|=
 operator|(
-name|u_short
+name|u_char
 operator|)
 name|len
+expr_stmt|;
+name|dp
+operator|->
+name|d_type
+operator|=
+name|DT_UNKNOWN
 expr_stmt|;
 name|nfsm_adv
 argument_list|(
@@ -8293,7 +8299,7 @@ name|off
 operator|=
 name|fxdr_unsigned
 argument_list|(
-name|off_t
+name|u_long
 argument_list|,
 operator|*
 name|tl
@@ -9176,6 +9182,22 @@ operator|=
 name|tlen
 operator|+
 name|DIRHDSIZ
+expr_stmt|;
+name|dp
+operator|->
+name|d_type
+operator|=
+name|IFTODT
+argument_list|(
+name|VTTOIF
+argument_list|(
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_type
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|uiop
 operator|->
