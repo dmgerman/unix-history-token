@@ -473,16 +473,21 @@ operator|.
 name|s_addr
 argument_list|)
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|IN_EXPERIMENTAL
 define|#
 directive|define
-name|IN_BADCLASS
+name|IN_EXPERIMENTAL
 parameter_list|(
 name|i
 parameter_list|)
 value|(((long) (i)& 0xe0000000) == 0xe0000000)
+endif|#
+directive|endif
 if|if
 condition|(
-name|IN_BADCLASS
+name|IN_EXPERIMENTAL
 argument_list|(
 name|i
 argument_list|)
