@@ -667,6 +667,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* NOTREACHED */
+while|while
+condition|(
+literal|1
+condition|)
+empty_stmt|;
 block|}
 end_function
 

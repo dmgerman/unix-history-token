@@ -1452,6 +1452,8 @@ name|struct
 name|msqid_ds
 modifier|*
 name|msqptr
+init|=
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
