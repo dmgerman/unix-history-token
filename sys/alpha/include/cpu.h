@@ -623,21 +623,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|child_return
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int64_t
 name|console_restart
 name|__P
