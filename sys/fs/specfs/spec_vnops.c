@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1250,6 +1256,59 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_BDEV_ACCESS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bdev_access
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bdev_access
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bdev_access
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bdev_access
+argument_list|,
+literal|0
+argument_list|,
+literal|"allow block device access"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Vnode op for read  */
 end_comment
@@ -1272,7 +1331,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -1282,7 +1340,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -1403,9 +1460,11 @@ block|{
 case|case
 name|VBLK
 case|:
-ifdef|#
-directive|ifdef
-name|ALLOW_BDEV_ACCESS
+if|if
+condition|(
+name|bdev_access
+condition|)
+block|{
 if|if
 condition|(
 name|uio
@@ -1720,9 +1779,7 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* ALLOW_BDEV_ACCESS */
+block|}
 case|case
 name|VCHR
 case|:
@@ -1805,7 +1862,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -1815,7 +1871,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -1931,9 +1986,11 @@ block|{
 case|case
 name|VBLK
 case|:
-ifdef|#
-directive|ifdef
-name|ALLOW_BDEV_ACCESS
+if|if
+condition|(
+name|bdev_access
+condition|)
+block|{
 if|if
 condition|(
 name|uio
@@ -2219,9 +2276,7 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* ALLOW_BDEV_ACCESS */
+block|}
 case|case
 name|VCHR
 case|:
