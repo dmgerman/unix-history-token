@@ -1741,9 +1741,25 @@ case|case
 literal|'F'
 case|:
 comment|/* Undocumented magic Dangerously Dedicated mode */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 name|rv
 operator|=
 literal|1
