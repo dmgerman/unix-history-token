@@ -3533,6 +3533,13 @@ argument_list|(
 name|td1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TD_CAN_RUN
+argument_list|(
+name|td1
+argument_list|)
+condition|)
 name|setrunqueue
 argument_list|(
 name|td1

@@ -1288,7 +1288,16 @@ operator|->
 name|kg_iq
 argument_list|)
 expr_stmt|;
-comment|/* all kses in ksegrp */
+comment|/* idle kses in ksegrp */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|kg
+operator|->
+name|kg_lq
+argument_list|)
+expr_stmt|;
+comment|/* loan kses in ksegrp */
 name|kg
 operator|->
 name|kg_proc
@@ -1317,6 +1326,12 @@ expr_stmt|;
 name|kg
 operator|->
 name|kg_idle_kses
+operator|=
+literal|0
+expr_stmt|;
+name|kg
+operator|->
+name|kg_loan_kses
 operator|=
 literal|0
 expr_stmt|;

@@ -839,6 +839,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDI_LOAN
+value|0x20
+end_define
+
+begin_comment
+comment|/* bound thread's KSE is lent */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TD_IS_SLEEPING
 parameter_list|(
 name|td
@@ -1013,6 +1024,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_SET_LOAN
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_LOAN)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_CLR_SLEEPING
 parameter_list|(
 name|td
@@ -1058,6 +1079,16 @@ parameter_list|(
 name|td
 parameter_list|)
 value|TD_CLR_INHIB((td), TDI_IWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_LOAN
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_LOAN)
 end_define
 
 begin_define
@@ -1335,6 +1366,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KEF_ONLOANQ
+value|0x01000
+end_define
+
+begin_comment
+comment|/* KSE is on loan queue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KEF_DIDRUN
 value|0x02000
 end_define
@@ -1387,6 +1429,14 @@ comment|/* (ke_kgrlist) Idle KSEs. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
+argument|kse
+argument_list|)
+name|kg_lq
+expr_stmt|;
+comment|/* (ke_kgrlist) Loan KSEs. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
 argument|thread
 argument_list|)
 name|kg_threads
@@ -1434,6 +1484,10 @@ name|int
 name|kg_runq_kses
 decl_stmt|;
 comment|/* Num KSEs on runq. */
+name|int
+name|kg_loan_kses
+decl_stmt|;
+comment|/* Num KSEs on loan queue. */
 name|struct
 name|kse_thr_mailbox
 modifier|*
