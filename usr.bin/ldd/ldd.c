@@ -870,8 +870,6 @@ break|break;
 case|case
 literal|0
 case|:
-name|rval
-operator||=
 name|execl
 argument_list|(
 operator|*
@@ -886,8 +884,6 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-operator|!=
-literal|0
 expr_stmt|;
 name|warn
 argument_list|(
