@@ -440,9 +440,9 @@ literal|2
 argument_list|)
 block|,
 comment|/* WDISP_22 */
-name|_RF_A
+name|_RF_S
 operator||
-name|_RF_B
+name|_RF_A
 operator||
 name|_RF_SZ
 argument_list|(
@@ -485,9 +485,9 @@ literal|0
 argument_list|)
 block|,
 comment|/* 13 */
-name|_RF_A
+name|_RF_S
 operator||
-name|_RF_B
+name|_RF_A
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1150,6 +1150,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char *reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22",  	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44",  	"L44", "REGISTER", "UA64", "UA16" };
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1561,6 +1573,11 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
+specifier|const
+name|Elf_Sym
+modifier|*
+name|sym
+decl_stmt|;
 name|Elf_Addr
 name|relocbase
 decl_stmt|;
@@ -1714,6 +1731,33 @@ name|rtype
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * Work around what appears to be confusion between binutils 		 * and the v9 ABI.  LO10 and HI22 relocations are listed as 		 * S + A, but for STB_LOCAL symbols it seems that the value 		 * in the Elf_Sym refered to by the symbol index is wrong, 		 * instead the value is in the addend field of the Elf_Rela 		 * record.  So if the symbol is local don't look it up, just 		 * use the addend as its value and add in the relocbase. 		 */
+name|sym
+operator|=
+name|elf_get_sym
+argument_list|(
+name|lf
+argument_list|,
+name|symidx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ELF_ST_BIND
+argument_list|(
+name|sym
+operator|->
+name|st_info
+argument_list|)
+operator|==
+name|STB_LOCAL
+condition|)
+name|value
+operator|+=
+name|relocbase
+expr_stmt|;
+else|else
+block|{
 name|addr
 operator|=
 name|elf_lookup
@@ -1741,6 +1785,7 @@ name|value
 operator|+=
 name|addr
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
