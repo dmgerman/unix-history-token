@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.4 %G%"
+literal|"@(#)diffreg.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -555,6 +555,11 @@ argument_list|(
 name|f2
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+literal|0
+expr_stmt|;
+comment|/* files don't differ */
 goto|goto
 name|same
 goto|;
@@ -590,6 +595,11 @@ goto|;
 block|}
 name|notsame
 label|:
+comment|/* 	 *	Files certainly differ at this point; set status accordingly 	 */
+name|status
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
