@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.7 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -632,57 +632,6 @@ comment|/* fortune buffer for -m */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|Usage
-index|[]
-init|=
-block|{
-ifdef|#
-directive|ifdef
-name|NO_REGEX
-literal|"usage:  fortune [ - ] [ -fwsloa ] [ [N%] file/dir/\"all\" ]"
-block|,
-else|#
-directive|else
-comment|/* NO_REGEX */
-literal|"usage:  fortune [ - ] [ -fwsloai ] [ -m pattern ] [ [N%] file/dir/\"all\" ]"
-block|,
-endif|#
-directive|endif
-comment|/* NO_REGEX */
-literal|"	- - give this summary of usage"
-block|,
-literal|"	f - list fortune files"
-block|,
-literal|"	w - wait after printing message in order to give time to read"
-block|,
-literal|"	s - short fortunes only"
-block|,
-literal|"	l - long fortunes only"
-block|,
-literal|"	o - offensive fortunes only"
-block|,
-literal|"	a - any fortune, regular or offensive"
-block|,
-ifndef|#
-directive|ifndef
-name|NO_REGEX
-literal|"	m - print fortunes which match a pattern"
-block|,
-literal|"	i - ignore case in matching patterns"
-block|,
-endif|#
-directive|endif
-comment|/* NO_REGEX */
-literal|"		Mail suggested fortunes to \"fortune@berkeley.edu\""
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|Fort_len
 init|=
@@ -984,9 +933,15 @@ name|av
 index|[]
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 name|int
 name|fd
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 name|char
 name|line
 index|[
@@ -1421,13 +1376,13 @@ end_comment
 begin_expr_stmt
 name|getargs
 argument_list|(
-name|ac
+name|argc
 argument_list|,
-name|av
+name|argv
 argument_list|)
 specifier|register
 name|int
-name|ac
+name|argc
 expr_stmt|;
 end_expr_stmt
 
@@ -1435,30 +1390,13 @@ begin_decl_stmt
 specifier|register
 name|char
 modifier|*
-name|av
-index|[]
+modifier|*
+name|argv
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|sp
-decl_stmt|;
-specifier|register
-name|int
-name|j
-decl_stmt|;
-specifier|register
-name|short
-name|bad
-decl_stmt|;
 specifier|register
 name|int
 name|ignore_case
@@ -1474,11 +1412,19 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* NO_REGEX */
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
 name|ignore_case
-operator|=
-name|FALSE
-expr_stmt|;
-name|bad
 operator|=
 name|FALSE
 expr_stmt|;
@@ -1486,130 +1432,88 @@ name|pat
 operator|=
 name|NULL
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|ac
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|av
-index|[
-name|i
-index|]
-index|[
-literal|0
-index|]
-operator|!=
-literal|'-'
-condition|)
-break|break;
-elseif|else
-if|if
-condition|(
-name|av
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|j
-operator|=
-literal|0
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 while|while
 condition|(
-name|Usage
-index|[
-name|j
-index|]
-operator|!=
-name|NULL
-condition|)
-name|puts
-argument_list|(
-name|Usage
-index|[
-name|j
-operator|++
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-else|else
-for|for
-control|(
-name|sp
+operator|(
+name|ch
 operator|=
-operator|&
-name|av
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
-init|;
-operator|*
-name|sp
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"aDfilm:osw"
+argument_list|)
+operator|)
 operator|!=
-literal|'\0'
-condition|;
-name|sp
-operator|++
-control|)
+name|EOF
+condition|)
+else|#
+directive|else
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"afilm:osw"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+endif|#
+directive|endif
+comment|/* DEBUG */
 switch|switch
 condition|(
-operator|*
-name|sp
+name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+comment|/* any fortune */
+name|All_forts
+operator|++
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|DEBUG
+case|case
+literal|'D'
+case|:
+name|Debug
+operator|++
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* DEBUG */
+case|case
+literal|'e'
+case|:
+name|Equal_probs
+operator|++
+expr_stmt|;
+comment|/* scatter un-allocted prob equally */
+break|break;
 case|case
 literal|'f'
 case|:
 comment|/* find fortune files */
 name|Find_files
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'w'
-case|:
-comment|/* give time to read */
-name|Wait
-operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-comment|/* short ones only */
-name|Short_only
-operator|++
-expr_stmt|;
-name|Long_only
-operator|=
-name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -1633,157 +1537,101 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'a'
+literal|'s'
 case|:
-comment|/* any fortune */
-name|All_forts
+comment|/* short ones only */
+name|Short_only
 operator|++
+expr_stmt|;
+name|Long_only
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
-literal|'m'
+literal|'w'
 case|:
-comment|/* dump out the fortunes */
+comment|/* give time to read */
+name|Wait
+operator|++
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|NO_REGEX
 case|case
 literal|'i'
 case|:
+comment|/* case-insensitive match */
+case|case
+literal|'m'
+case|:
+comment|/* dump out the fortunes */
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't match fortunes on this system (Sorry)\n"
+literal|"fortune: can't match fortunes on this system (Sorry)\n"
 argument_list|)
 expr_stmt|;
-name|bad
-operator|++
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
 comment|/* NO_REGEX */
+case|case
+literal|'m'
+case|:
+comment|/* dump out the fortunes */
 name|Match
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|sp
-index|[
-literal|1
-index|]
-condition|)
-block|{
 name|pat
 operator|=
-operator|++
-name|sp
+name|optarg
 expr_stmt|;
-while|while
-condition|(
-operator|*
-name|sp
-condition|)
-name|sp
-operator|++
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|i
-operator|+
-literal|1
-operator|<
-name|ac
-condition|)
-name|pat
-operator|=
-name|av
-index|[
-operator|++
-name|i
-index|]
-expr_stmt|;
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"must give pattern\n"
-argument_list|)
-expr_stmt|;
-name|bad
-operator|++
-expr_stmt|;
-break|break;
-block|}
 break|break;
 case|case
 literal|'i'
 case|:
+comment|/* case-insensitive match */
 name|ignore_case
 operator|++
 expr_stmt|;
 break|break;
-case|case
-literal|'e'
-case|:
-name|Equal_probs
-operator|++
-expr_stmt|;
-break|break;
-ifdef|#
-directive|ifdef
-name|DEBUG
-case|case
-literal|'D'
-case|:
-name|Debug
-operator|++
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* DEBUG */
 endif|#
 directive|endif
 comment|/* NO_REGEX */
+case|case
+literal|'?'
+case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown flag: '%c'\n"
-argument_list|,
-operator|*
-name|sp
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|bad
-operator|++
+block|}
+name|argc
+operator|-=
+name|optind
 expr_stmt|;
-break|break;
-block|}
-block|}
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bad
-operator|&&
-operator|!
 name|form_file_list
 argument_list|(
-operator|&
-name|av
-index|[
-name|i
-index|]
+name|argv
 argument_list|,
-name|ac
-operator|-
-name|i
+name|argc
 argument_list|)
 condition|)
 name|exit
@@ -1880,36 +1728,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* REGCMP */
-name|bad
-operator|++
-expr_stmt|;
 block|}
 block|}
 endif|#
 directive|endif
 comment|/* NO_REGEX */
-if|if
-condition|(
-name|bad
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"use \"%s -\" to get usage\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -3639,6 +3462,10 @@ begin_comment
 comment|/*  * is_fortfile:  *	Return TRUE if the file is a fortune database file.  We try and  *	exclude files without reading them if possible to avoid  *	overhead.  Files which start with ".", or which have "illegal"  *	suffixes, as contained in suflist[], are ruled out.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|is_fortfile
 argument_list|(
@@ -5331,9 +5158,15 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 name|int
 name|fd
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 name|assert
 argument_list|(
 name|fp
@@ -6602,6 +6435,109 @@ end_endif
 begin_comment
 comment|/* NO_REGEX */
 end_comment
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"fortune [-a"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"D"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"f"
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_REGEX
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"i"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NO_REGEX */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"losw]"
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_REGEX
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" [-m pattern]"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NO_REGEX */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"[ [#%%] file/directory/all]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
