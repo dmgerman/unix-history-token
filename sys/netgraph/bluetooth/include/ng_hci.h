@@ -6332,13 +6332,53 @@ name|u_int8_t
 name|num_responses
 decl_stmt|;
 comment|/* number of responses */
-comment|/* these are repeated "num_responses" times  	bdaddr_t	bdaddr;                    --- unit address(es) 	u_int8_t	page_scan_rep_mode;        --- page scan rep. mode(s)  	u_int8_t	page_scan_period_mode;     --- page scan period mode(s)  	u_int8_t	page_scan_mode;            --- page scan mode(s)  	u_int8_t	uclass[NG_HCI_CLASS_SIZE]; --- unit class(es)  	u_int16_t	clock_offset;              --- clock offset(s) */
+comment|/*	ng_hci_inquiry_response[num_responses]   -- see below */
 block|}
 name|__attribute__
 typedef|((
 name|packed
 typedef|))
 name|ng_hci_inquiry_result_ep
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|bdaddr_t
+name|bdaddr
+decl_stmt|;
+comment|/* unit address */
+name|u_int8_t
+name|page_scan_rep_mode
+decl_stmt|;
+comment|/* page scan rep. mode */
+name|u_int8_t
+name|page_scan_period_mode
+decl_stmt|;
+comment|/* page scan period mode */
+name|u_int8_t
+name|page_scan_mode
+decl_stmt|;
+comment|/* page scan mode */
+name|u_int8_t
+name|class
+index|[
+name|NG_HCI_CLASS_SIZE
+index|]
+decl_stmt|;
+comment|/* unit class */
+name|u_int16_t
+name|clock_offset
+decl_stmt|;
+comment|/* clock offset */
+block|}
+name|__attribute__
+typedef|((
+name|packed
+typedef|))
+name|ng_hci_inquiry_response
 typedef|;
 end_typedef
 
