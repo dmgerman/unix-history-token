@@ -153,7 +153,7 @@ name|SIGTRAMP_START
 parameter_list|(
 name|pc
 parameter_list|)
-value|0xcfbfdfd8
+value|0xbfbfdfd8
 end_define
 
 begin_define
@@ -163,7 +163,7 @@ name|SIGTRAMP_END
 parameter_list|(
 name|pc
 parameter_list|)
-value|0xcfbfdff0
+value|0xbfbfdff0
 end_define
 
 begin_endif
