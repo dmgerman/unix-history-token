@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.14.2.1 1996/11/23 08:32:09 phk Exp $  *  *  */
+comment|/*-  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.14.2.2 1997/08/27 01:32:28 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -102,23 +102,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|mountdevfs
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*-     * Called from the generic VFS startups.  * This is the second stage of DEVFS initialisation.  * The probed devices have already been loaded and the  * basic structure of the DEVFS created.  * We take the oportunity to mount the hidden DEVFS layer, so that  * devices from devfs get sync'd.  */
+end_comment
 
 begin_function
 specifier|static
@@ -128,7 +114,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * fill in the missing members on the "hidden" mount 	 */
+name|struct
+name|mount
+modifier|*
+name|mp
+init|=
 name|dev_root
 operator|->
 name|dnp
@@ -136,6 +126,9 @@ operator|->
 name|dvm
 operator|->
 name|mount
+decl_stmt|;
+comment|/*- 	 * fill in the missing members on the "hidden" mount 	 */
+name|mp
 operator|->
 name|mnt_op
 operator|=
@@ -144,13 +137,7 @@ index|[
 name|MOUNT_DEVFS
 index|]
 expr_stmt|;
-name|dev_root
-operator|->
-name|dnp
-operator|->
-name|dvm
-operator|->
-name|mount
+name|mp
 operator|->
 name|mnt_vfc
 operator|=
@@ -159,14 +146,14 @@ index|[
 name|MOUNT_DEVFS
 index|]
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_vnodecovered
+operator|=
+name|NULLVP
+expr_stmt|;
 comment|/* Mark a reference for the "invisible" blueprint mount */
-name|dev_root
-operator|->
-name|dnp
-operator|->
-name|dvm
-operator|->
-name|mount
+name|mp
 operator|->
 name|mnt_vfc
 operator|->
@@ -186,7 +173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  mp	 - pointer to 'mount' structure  *  path - addr in user space of mount point (ie /usr or whatever)  *  data - addr in user space of mount params including the  *         name of the block special file to treat as a filesystem.  *  ndp  - namei data pointer  *  p    - proc pointer  * devfs is special in that it doesn't require any device to be mounted..  * It makes up it's data as it goes along.  * it must be mounted during single user.. until it is, only std{in/out/err}  * and the root filesystem are available.  */
+comment|/*-  *  mp	 - pointer to 'mount' structure  *  path - addr in user space of mount point (ie /usr or whatever)  *  data - addr in user space of mount params including the  *         name of the block special file to treat as a filesystem.  *  ndp  - namei data pointer  *  p    - proc pointer  * devfs is special in that it doesn't require any device to be mounted..  * It makes up it's data as it goes along.  * it must be mounted during single user.. until it is, only std{in/out/err}  * and the root filesystem are available.  */
 end_comment
 
 begin_comment
@@ -225,7 +212,7 @@ name|devfsmount
 modifier|*
 name|devfs_mp_p
 decl_stmt|;
-comment|/* devfs specific mount control block	*/
+comment|/* devfs specific mount block	*/
 name|int
 name|error
 decl_stmt|;
@@ -239,7 +226,7 @@ literal|"mount "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  *  If they just want to update, we don't need to do anything.  */
+comment|/*- 	 *  If they just want to update, we don't need to do anything. 	 */
 if|if
 condition|(
 name|mp
@@ -253,24 +240,129 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*  *  Well, it's not an update, it's a real mount request.  *  Time to get dirty.  * HERE we should check to see if we are already mounted here.  */
+comment|/*- 	 *  Well, it's not an update, it's a real mount request. 	 *  Time to get dirty. 	 * HERE we should check to see if we are already mounted here. 	 */
+name|devfs_mp_p
+operator|=
+operator|(
+expr|struct
+name|devfsmount
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|devfs_mp_p
+argument_list|,
+name|M_DEVFSMNT
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|devfs_mp_p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|devfs_mp_p
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|devfs_mp_p
+operator|->
+name|mount
+operator|=
+name|mp
+expr_stmt|;
+comment|/*- 	 *  Fill out some fields 	 */
+name|mp
+operator|->
+name|mnt_data
+operator|=
+operator|(
+name|qaddr_t
+operator|)
+name|devfs_mp_p
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_type
+operator|=
+name|MOUNT_DEVFS
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|long
+operator|)
+name|devfs_mp_p
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|1
+index|]
+operator|=
+name|MOUNT_DEVFS
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+name|MNT_LOCAL
+expr_stmt|;
 if|if
 condition|(
 name|error
 operator|=
-name|mountdevfs
+name|dev_dup_plane
 argument_list|(
-name|mp
-argument_list|,
-name|p
+name|devfs_mp_p
 argument_list|)
 condition|)
-return|return
+block|{
+name|mp
+operator|->
+name|mnt_data
+operator|=
 operator|(
-name|error
+name|qaddr_t
 operator|)
+literal|0
+expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|devfs_mp_p
+argument_list|,
+name|M_DEVFSMNT
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
-comment|/*  *  Copy in the name of the directory the filesystem  *  is to be mounted on.  *  And we clear the remainder of the character strings  *  to be tidy.  *  Then, we try to fill in the filesystem stats structure  *  as best we can with whatever we can think of at the time  */
+block|}
+comment|/*- 	 *  Copy in the name of the directory the filesystem 	 *  is to be mounted on. 	 *  And we clear the remainder of the character strings 	 *  to be tidy. 	 *  Then, we try to fill in the filesystem stats structure 	 *  as best we can with whatever we can think of at the time 	 */
 name|devfs_mp_p
 operator|=
 operator|(
@@ -405,156 +497,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mountdevfs
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|devfsmount
-modifier|*
-name|devfs_mp_p
-decl_stmt|;
-name|devfs_mp_p
-operator|=
-operator|(
-expr|struct
-name|devfsmount
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|devfs_mp_p
-argument_list|,
-name|M_DEVFSMNT
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|devfs_mp_p
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|devfs_mp_p
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|devfs_mp_p
-operator|->
-name|mount
-operator|=
-name|mp
-expr_stmt|;
-comment|/*  *  Fill out some fields  */
-name|mp
-operator|->
-name|mnt_data
-operator|=
-operator|(
-name|qaddr_t
-operator|)
-name|devfs_mp_p
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_type
-operator|=
-name|MOUNT_DEVFS
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_fsid
-operator|.
-name|val
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|long
-operator|)
-name|devfs_mp_p
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_fsid
-operator|.
-name|val
-index|[
-literal|1
-index|]
-operator|=
-name|MOUNT_DEVFS
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_LOCAL
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|=
-name|dev_dup_plane
-argument_list|(
-name|devfs_mp_p
-argument_list|)
-condition|)
-block|{
-name|mp
-operator|->
-name|mnt_data
-operator|=
-operator|(
-name|qaddr_t
-operator|)
-literal|0
-expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|devfs_mp_p
-argument_list|,
-name|M_DEVFSMNT
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|error
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|devfs_start
 parameter_list|(
 name|struct
@@ -585,7 +527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Unmount the filesystem described by mp.  */
+comment|/*-  *  Unmount the filesystem described by mp.  */
 end_comment
 
 begin_function
@@ -837,7 +779,7 @@ name|mp
 operator|->
 name|mnt_data
 decl_stmt|;
-comment|/*  *  Fill in the stat block.  */
+comment|/*-  *  Fill in the stat block.  */
 name|DBPRINT
 argument_list|(
 operator|(
@@ -927,7 +869,7 @@ index|]
 operator|=
 name|MOUNT_DEVFS
 expr_stmt|;
-comment|/*  *  Copy the mounted on and mounted from names into  *  the passed in stat block, if it is not the one  *  in the mount structure.  */
+comment|/*- 	 *  Copy the mounted on and mounted from names into 	 *  the passed in stat block, if it is not the one 	 *  in the mount structure. 	 */
 if|if
 condition|(
 name|sbp
@@ -996,7 +938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Go through the disk queues to initiate sandbagged IO;  * go through the inodes to write those that have been modified;  * initiate the writing of the super block if it has been modified.  *  * Note: we are always called with the filesystem marked `MPBUSY'.  */
+comment|/*-  * Go through the disk queues to initiate sandbagged IO;  * go through the inodes to write those that have been modified;  * initiate the writing of the super block if it has been modified.  *  * Note: we are always called with the filesystem marked `MPBUSY'.  */
 end_comment
 
 begin_function
@@ -1050,8 +992,8 @@ literal|"sync "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write back modified superblock. 	 * Consistency check that the superblock 	 * is still in the buffer cache. 	 */
-comment|/* 	 * Write back each (modified) inode. 	 */
+comment|/*- 	 * Write back modified superblock. 	 * Consistency check that the superblock 	 * is still in the buffer cache. 	 */
+comment|/*- 	 * Write back each (modified) inode. 	 */
 name|loop
 label|:
 for|for
@@ -1073,7 +1015,7 @@ operator|=
 name|nvp
 control|)
 block|{
-comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
+comment|/*- 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
 if|if
 condition|(
 name|vp
@@ -1187,7 +1129,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Force stale file system control information to be flushed. 	 *( except that htat makes no sense with devfs 	 */
+comment|/*- 	 * Force stale file system control information to be flushed. 	 *( except that htat makes no sense with devfs 	 */
 return|return
 operator|(
 name|allerror

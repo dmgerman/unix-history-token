@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.32.2.1 1996/11/23 08:32:08 phk Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.32.2.2 1997/08/27 01:32:26 julian Exp $  */
 end_comment
 
 begin_include
@@ -267,6 +267,7 @@ argument_list|(
 literal|"DEVFS: ready for devices\n"
 argument_list|)
 expr_stmt|;
+comment|/* part 2 of this is done later */
 block|}
 end_function
 
@@ -1266,7 +1267,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* *									* * Creates a new dev_node to go with it					* * 'by' gives us info to make our node					* * If 'by is null and proto exists, then the 'by' field of		* * the proto is used intead 						* * note the 'links' count is 0 (except if a dir)				* * but it is only cleared on a transition				* * so this is ok till we link it to something				* * If the node already exists on the wanted plane, just return it	* \***********************************************************************/
+comment|/***********************************************************************\ * Add a new element to the devfs plane. 				* *									* * Creates a new dev_node to go with it if the prototype should not be	* * reused. (Is a DIR, or we select SPLIT_DEVS at compile time)		* * 'by' gives us info to make our node if we don't have a prototype.	* * If 'by is null and proto exists, then the 'by' field of		* * the proto is used intead in the CREATE case.				* * note the 'links' count is 0 (except if a dir)				* * but it is only cleared on a transition				* * so this is ok till we link it to something				* * Even in SPLIT_DEVS mode,						* * if the node already exists on the wanted plane, just return it	* \***********************************************************************/
 end_comment
 
 begin_comment
@@ -1308,6 +1309,10 @@ literal|"dev_add_node\n"
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+name|SPLIT_DEVS
 comment|/* 	 * If we have a prototype, then check if there is already a sibling 	 * on the mount plane we are looking at, if so, just return it. 	 */
 if|if
 condition|(
@@ -1370,6 +1375,43 @@ name|by
 operator|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* SPLIT_DEVS */
+if|if
+condition|(
+name|proto
+condition|)
+block|{
+switch|switch
+condition|(
+name|proto
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|DEV_BDEV
+case|:
+case|case
+name|DEV_CDEV
+case|:
+case|case
+name|DEV_DDEV
+case|:
+operator|*
+name|dn_pp
+operator|=
+name|proto
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* SPLIT_DEVS */
 if|if
 condition|(
 operator|!
@@ -2250,15 +2292,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * then free the main node 	 */
+comment|/* 	 * then free the main node 	 * If we are not running in SPLIT_DEVS mode, then 	 * THIS is what gets rid of the propogated nodes. 	 */
+while|while
+condition|(
+name|dnp
+operator|->
+name|linklist
+condition|)
+block|{
 name|dev_free_name
 argument_list|(
-operator|(
-name|devnm_p
-operator|)
-name|devnmp
+name|dnp
+operator|->
+name|linklist
 argument_list|)
 expr_stmt|;
+block|}
 return|return ;
 block|}
 end_function
@@ -2458,8 +2507,6 @@ decl_stmt|;
 name|int
 name|type
 init|=
-name|back
-operator|->
 name|dnp
 operator|->
 name|type
@@ -2484,8 +2531,6 @@ name|name
 argument_list|,
 name|parent
 argument_list|,
-name|dnp
-operator|->
 name|type
 argument_list|,
 name|NULL
@@ -2533,10 +2578,6 @@ block|}
 comment|/* 	 * If it is a directory, then recurse down all the other 	 * subnodes in it.... 	 * note that this time we don't pass on the mount info.. 	 */
 if|if
 condition|(
-name|newnmp
-operator|->
-name|dnp
-operator|->
 name|type
 operator|==
 name|DEV_DIR
@@ -3007,19 +3048,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-case|case
-name|VNON
-case|:
-name|printf
-argument_list|(
-literal|"bad-type2 (VNON)"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case VNON: 		printf("bad-type2 (VNON)"); 		return(EINVAL);
+endif|#
+directive|endif
 block|}
 operator|*
 name|dn_pp
@@ -3149,7 +3183,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Create a vnode for a block device.  * Used for root filesystem, argdev, and swap areas.  * Also used for memory file system special devices.  */
+comment|/*   * Create a vnode for a block device.  * Used for mounting the root file system.  */
 end_comment
 
 begin_function
