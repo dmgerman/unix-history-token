@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
+comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)ex.c	4.2 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -171,6 +181,18 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HORSE
+name|horse
+argument_list|(
+name|ac
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Defend against d's, v's, w's, and a's in directories of 	 * path leading to our true name. 	 */
 name|av
 index|[
@@ -1550,6 +1572,14 @@ unit|}  preserve
 operator|(
 operator|)
 block|{
+ifdef|#
+directive|ifdef
+name|VMUNIX
+name|tflush
+argument_list|()
+block|;
+endif|#
+directive|endif
 name|synctmp
 argument_list|()
 block|;
