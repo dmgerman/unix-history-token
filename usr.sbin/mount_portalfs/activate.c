@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: activate.c,v 1.5 1998/07/06 07:19:23 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,7 +524,7 @@ argument_list|,
 operator|&
 name|msg
 argument_list|,
-name|MSG_EOR
+literal|0
 argument_list|)
 operator|)
 operator|<
