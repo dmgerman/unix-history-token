@@ -13,23 +13,6 @@ directive|include
 file|"opt_cy_pci_fastintr.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_OLDPCI
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"The cy device requires the old pci compatibility shims"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -83,6 +66,23 @@ include|#
 directive|include
 file|<i386/isa/intr_machdep.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The cy device requires the old pci compatibility shims"
+end_error
 
 begin_endif
 endif|#

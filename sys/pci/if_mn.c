@@ -3,23 +3,6 @@ begin_comment
 comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: if_mn.c,v 1.1 1999/02/01 13:06:40 phk Exp $  *  * Driver for Siemens reference design card "Easy321-R1".  *  * This card contains a FALC54 E1/T1 framer and a MUNICH32X 32-channel HDLC  * controller.   *  * The driver supports E1 mode with up to 31 channels.  We send CRC4 but don't  * check it coming in.  *  * The FALC54 and MUNICH32X have far too many registers and weird modes for  * comfort, so I have not bothered typing it all into a "fooreg.h" file,  * you will (badly!) need the documentation anyway if you want to mess with  * this gadget.  *  * $FreeBSD$  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_OLDPCI
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"The mn device requires the old pci compatibility shims"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Stuff to describe the MUNIC32X and FALC54 chips.  */
 end_comment
@@ -171,6 +154,23 @@ include|#
 directive|include
 file|<netgraph/netgraph.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The mn device requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
