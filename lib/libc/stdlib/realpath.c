@@ -127,6 +127,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|int
+name|symlinks
+init|=
+literal|0
+decl_stmt|;
 comment|/* Save the starting point. */
 if|if
 condition|(
@@ -297,6 +302,22 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|symlinks
+operator|>
+name|MAXSYMLINKS
+condition|)
+block|{
+name|errno
+operator|=
+name|ELOOP
+expr_stmt|;
+goto|goto
+name|err1
+goto|;
+block|}
 name|n
 operator|=
 name|readlink
