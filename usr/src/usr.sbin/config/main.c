@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.20 (Berkeley) %G%"
+literal|"@(#)main.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,6 +323,11 @@ name|confp
 operator|=
 operator|&
 name|conf_list
+expr_stmt|;
+name|compp
+operator|=
+operator|&
+name|comp_list
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	5.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -75,6 +75,9 @@ decl_stmt|;
 name|int
 name|fuw_swapsize
 decl_stmt|;
+name|int
+name|fuw_swapflag
+decl_stmt|;
 block|}
 name|fuw
 struct|;
@@ -90,6 +93,18 @@ decl_stmt|;
 block|}
 name|fus
 struct|;
+struct|struct
+block|{
+comment|/* when component dev specification */
+name|dev_t
+name|fup_compdev
+decl_stmt|;
+name|int
+name|fup_compinfo
+decl_stmt|;
+block|}
+name|fup
+struct|;
 block|}
 name|fun
 union|;
@@ -103,12 +118,24 @@ name|f_swapsize
 value|fun.fuw.fuw_swapsize
 define|#
 directive|define
+name|f_swapflag
+value|fun.fuw.fuw_swapflag
+define|#
+directive|define
 name|f_rootdev
 value|fun.fus.fus_rootdev
 define|#
 directive|define
 name|f_dumpdev
 value|fun.fus.fus_dumpdev
+define|#
+directive|define
+name|f_compdev
+value|fun.fup.fup_compdev
+define|#
+directive|define
+name|f_compinfo
+value|fun.fup.fup_compinfo
 block|}
 struct|;
 end_struct
@@ -157,6 +184,20 @@ define|#
 directive|define
 name|SWAPSPEC
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPDEVICE
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPSPEC
+value|8
 end_define
 
 begin_comment
@@ -568,6 +609,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|seen_cd
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|struct
 name|device
@@ -627,6 +674,13 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|confp
+decl_stmt|,
+modifier|*
+name|comp_list
+decl_stmt|,
+modifier|*
+modifier|*
+name|compp
 decl_stmt|;
 end_decl_stmt
 
