@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -178,6 +178,34 @@ define|#
 directive|define
 name|TP_RTV_ALPHA
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_REXMTVAL
+parameter_list|(
+name|tpcb
+parameter_list|)
+define|\
+value|((tp_rttadd + (tpcb)->tp_rtt + ((tpcb)->tp_rtv)<< 2) / tp_rttdiv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_RANGESET
+parameter_list|(
+name|tv
+parameter_list|,
+name|value
+parameter_list|,
+name|min
+parameter_list|,
+name|max
+parameter_list|)
+define|\
+value|((tv = value)> (max) ? (tv = max) : (tv< min ? tv = min : tv))
 end_define
 
 begin_comment
@@ -698,6 +726,28 @@ begin_comment
 comment|/* local item : perf meas on, svp */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TPP_ptpdu_size
+value|0xf0
+end_define
+
+begin_comment
+comment|/* preferred TPDU size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPP_inact_time
+value|0xf2
+end_define
+
+begin_comment
+comment|/* inactivity time exchanged */
+end_comment
+
 begin_comment
 comment|/******************************************************  * Some fundamental data types  *****************************************************/
 end_comment
@@ -888,31 +938,6 @@ name|int
 name|ProtoHook
 typedef|;
 end_typedef
-
-begin_comment
-comment|/******************************************************  * Some fundamental constants  *****************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TP_MIN_WIN
-value|2048
-end_define
-
-begin_define
-define|#
-directive|define
-name|TP_MAX_WIN
-value|16384
-end_define
-
-begin_define
-define|#
-directive|define
-name|TP_MAX_WIN_UNPRIV
-value|8192
-end_define
 
 begin_comment
 comment|/******************************************************  * Macro used all over, for driver  *****************************************************/
@@ -1163,6 +1188,15 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tp_rttadd
+decl_stmt|,
+name|tp_rttdiv
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
