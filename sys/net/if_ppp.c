@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.2 1994/09/23 00:13:18 wollman Exp $ */
+comment|/* $Id: if_ppp.c,v 1.4 1994/10/05 21:22:42 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -1425,7 +1425,7 @@ comment|/*  * Line specific close routine.  * Detach the tty from the ppp unit. 
 end_comment
 
 begin_function
-name|void
+name|int
 name|pppclose
 parameter_list|(
 name|tp
@@ -1548,6 +1548,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* success */
 block|}
 end_function
 
@@ -4419,7 +4425,7 @@ comment|/*  * Start output on async tty interface.  Get another datagram  * to s
 end_comment
 
 begin_function
-name|void
+name|int
 name|pppstart
 parameter_list|(
 name|tp
@@ -4505,7 +4511,9 @@ literal|0
 condition|)
 block|{
 comment|/* sorry, I can't talk now */
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -4535,7 +4543,9 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 for|for
 control|(
@@ -4585,7 +4595,9 @@ argument_list|)
 operator|>
 name|PPP_HIWAT
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* 	 * See if we have an existing packet partly sent. 	 * If not, get a new packet and start sending it. 	 * We take packets on the priority queue ahead of those 	 * on the normal queue. 	 */
 name|m
@@ -4615,7 +4627,9 @@ name|m
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* 	     * The extra PPP_FLAG will start up a new packet, and thus 	     * will flush any accumulated garbage.  We do this whenever 	     * the line may have been idle for some time. 	     */
 if|if
 condition|(
@@ -5065,7 +5079,9 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 comment|/* can't do any more at the moment */
 block|}
 comment|/* Finished with this mbuf; free it and move on. */
@@ -5142,6 +5158,9 @@ operator|->
 name|sc_bytessent
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -6139,7 +6158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|pppinput
 parameter_list|(
 name|c
@@ -6201,7 +6220,9 @@ name|sc
 operator|->
 name|sc_devp
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 operator|++
 name|sc
 operator|->
@@ -6455,7 +6476,9 @@ operator||
 name|SC_ESCAPED
 operator|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -6500,7 +6523,9 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* 	 * Remove FCS trailer.  Somewhat painful... 	 */
 name|ilen
@@ -6621,7 +6646,9 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -6647,7 +6674,9 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -6667,7 +6696,9 @@ name|c
 operator|)
 operator|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|sc
@@ -6703,7 +6734,9 @@ name|sc_flags
 operator||=
 name|SC_ESCAPED
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/*      * Initialize buffer on first octet received.      * First octet could be address or protocol (when compressing      * address/control).      * Second octet is control.      * Third octet is first or second (when compressing protocol)      * octet of protocol.      * Fourth octet is second octet of protocol.      */
 if|if
@@ -7110,7 +7143,9 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 name|flush
 label|:
 if|if
@@ -7154,6 +7189,9 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
