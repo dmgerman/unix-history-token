@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.80 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.81 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11638,17 +11638,31 @@ name|spec_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 	 * Set access flag. 	 */
+specifier|register
+name|struct
+name|nfsnode
+modifier|*
+name|np
+init|=
 name|VTONFS
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|)
+decl_stmt|;
+comment|/* 	 * Set access flag. 	 */
+name|np
 operator|->
 name|n_flag
 operator||=
 name|NACC
+expr_stmt|;
+name|np
+operator|->
+name|n_atim
+operator|=
+name|time
 expr_stmt|;
 return|return
 operator|(
@@ -11693,17 +11707,31 @@ name|spec_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 	 * Set update flags. 	 */
+specifier|register
+name|struct
+name|nfsnode
+modifier|*
+name|np
+init|=
 name|VTONFS
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|)
+decl_stmt|;
+comment|/* 	 * Set update flag. 	 */
+name|np
 operator|->
 name|n_flag
 operator||=
 name|NUPD
+expr_stmt|;
+name|np
+operator|->
+name|n_mtim
+operator|=
+name|time
 expr_stmt|;
 return|return
 operator|(
@@ -11951,17 +11979,31 @@ name|fifo_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 	 * Set access flag. 	 */
+specifier|register
+name|struct
+name|nfsnode
+modifier|*
+name|np
+init|=
 name|VTONFS
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|)
+decl_stmt|;
+comment|/* 	 * Set access flag. 	 */
+name|np
 operator|->
 name|n_flag
 operator||=
 name|NACC
+expr_stmt|;
+name|np
+operator|->
+name|n_atim
+operator|=
+name|time
 expr_stmt|;
 return|return
 operator|(
@@ -12006,17 +12048,31 @@ name|fifo_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 	 * Set update flag. 	 */
+specifier|register
+name|struct
+name|nfsnode
+modifier|*
+name|np
+init|=
 name|VTONFS
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|)
+decl_stmt|;
+comment|/* 	 * Set update flag. 	 */
+name|np
 operator|->
 name|n_flag
 operator||=
 name|NUPD
+expr_stmt|;
+name|np
+operator|->
+name|n_mtim
+operator|=
+name|time
 expr_stmt|;
 return|return
 operator|(
