@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -420,6 +426,25 @@ operator|(
 expr|union
 name|sockunion
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|rshd_errx
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1729,7 +1754,7 @@ argument_list|,
 literal|"getsockname: %m"
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1861,7 +1886,7 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1903,7 +1928,7 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1945,7 +1970,7 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1987,7 +2012,7 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2119,7 +2144,7 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2174,7 +2199,7 @@ name|errorstr
 operator|=
 literal|"Login incorrect."
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2279,7 +2304,7 @@ name|errorstr
 operator|=
 literal|"Login incorrect."
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2362,7 +2387,7 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|0
 argument_list|,
@@ -2455,7 +2480,7 @@ argument_list|,
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2476,7 +2501,7 @@ name|NULL
 argument_list|)
 argument_list|)
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2641,7 +2666,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2665,7 +2690,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2681,7 +2706,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2703,7 +2728,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3580,7 +3605,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3862,6 +3887,64 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Report error to client.  Note: can't be used until second socket has  * connected to client, or older clients will hang waiting for that  * connection first.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|rshd_errx
+parameter_list|(
+name|int
+name|errcode
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sent_null
+operator|==
+literal|0
+condition|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|"\1"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|verrx
+argument_list|(
+name|errcode
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+end_function
+
 begin_function
 name|void
 name|getstr
@@ -3926,7 +4009,7 @@ name|cnt
 operator|==
 literal|0
 condition|)
-name|errx
+name|rshd_errx
 argument_list|(
 literal|1
 argument_list|,
