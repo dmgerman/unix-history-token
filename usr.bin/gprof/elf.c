@@ -595,10 +595,6 @@ name|type
 operator|!=
 name|STT_FUNC
 operator|||
-name|bind
-operator|==
-name|STB_WEAK
-operator|||
 operator|(
 name|aflag
 operator|&&
