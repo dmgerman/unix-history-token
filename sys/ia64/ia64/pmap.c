@@ -4900,6 +4900,9 @@ name|pmap_kenter_temporary
 parameter_list|(
 name|vm_offset_t
 name|pa
+parameter_list|,
+name|int
+name|i
 parameter_list|)
 block|{
 return|return
@@ -4910,6 +4913,12 @@ operator|)
 name|IA64_PHYS_TO_RR7
 argument_list|(
 name|pa
+operator|-
+operator|(
+name|i
+operator|*
+name|PAGE_SIZE
+operator|)
 argument_list|)
 return|;
 block|}

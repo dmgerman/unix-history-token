@@ -720,6 +720,9 @@ argument_list|(
 operator|(
 name|vm_offset_t
 name|pa
+operator|,
+name|int
+name|i
 operator|)
 argument_list|)
 decl_stmt|;

@@ -302,6 +302,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXDUMPPGS
+value|(DFLTPHYS/PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLSIZE
 value|1
 end_define
