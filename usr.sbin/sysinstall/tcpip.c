@@ -664,14 +664,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
+operator|!
+name|msgYesNo
 argument_list|(
-literal|"Running multi-user, assuming that the network is already up\n"
+literal|"Running multi-user, assume that the network is already configured?"
 argument_list|)
-expr_stmt|;
+condition|)
 return|return
 name|DITEM_SUCCESS
 return|;
