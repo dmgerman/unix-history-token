@@ -40,7 +40,581 @@ begin_typedef
 typedef|typedef
 specifier|volatile
 name|u_int
-name|breg_t
+name|bregister_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * if other persuasion endian, then compiler will probably require that  * these next  * macros be reversed  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTBYTE
+parameter_list|(
+name|what
+parameter_list|)
+value|bregister_t  what:8; int :24
+end_define
+
+begin_define
+define|#
+directive|define
+name|BTWORD
+parameter_list|(
+name|what
+parameter_list|)
+value|bregister_t  what:16; int: 16
+end_define
+
+begin_define
+define|#
+directive|define
+name|BTLONG
+parameter_list|(
+name|what
+parameter_list|)
+value|bregister_t  what:32
+end_define
+
+begin_struct
+struct|struct
+name|bt848_registers
+block|{
+name|BTBYTE
+argument_list|(
+name|dstatus
+argument_list|)
+expr_stmt|;
+comment|/* 0, 1,2,3 */
+define|#
+directive|define
+name|BT848_DSTATUS_PRES
+value|(1<<7)
+define|#
+directive|define
+name|BT848_DSTATUS_HLOC
+value|(1<<6)
+define|#
+directive|define
+name|BT848_DSTATUS_FIELD
+value|(1<<5)
+define|#
+directive|define
+name|BT848_DSTATUS_NUML
+value|(1<<4)
+define|#
+directive|define
+name|BT848_DSTATUS_CSEL
+value|(1<<3)
+define|#
+directive|define
+name|BT848_DSTATUS_LOF
+value|(1<<1)
+define|#
+directive|define
+name|BT848_DSTATUS_COF
+value|(1<<0)
+name|BTBYTE
+argument_list|(
+name|iform
+argument_list|)
+expr_stmt|;
+comment|/* 4, 5,6,7 */
+name|BTBYTE
+argument_list|(
+name|tdec
+argument_list|)
+expr_stmt|;
+comment|/* 8, 9,a,b */
+name|BTBYTE
+argument_list|(
+name|e_crop
+argument_list|)
+expr_stmt|;
+comment|/* c, d,e,f */
+name|BTBYTE
+argument_list|(
+name|e_vdelay_lo
+argument_list|)
+expr_stmt|;
+comment|/* 10, 11,12,13 */
+name|BTBYTE
+argument_list|(
+name|e_vactive_lo
+argument_list|)
+expr_stmt|;
+comment|/* 14, 15,16,17 */
+name|BTBYTE
+argument_list|(
+name|e_delay_lo
+argument_list|)
+expr_stmt|;
+comment|/* 18, 19,1a,1b */
+name|BTBYTE
+argument_list|(
+name|e_hactive_lo
+argument_list|)
+expr_stmt|;
+comment|/* 1c, 1d,1e,1f */
+name|BTBYTE
+argument_list|(
+name|e_hscale_hi
+argument_list|)
+expr_stmt|;
+comment|/* 20, 21,22,23 */
+name|BTBYTE
+argument_list|(
+name|e_hscale_lo
+argument_list|)
+expr_stmt|;
+comment|/* 24, 25,26,27 */
+name|BTBYTE
+argument_list|(
+name|bright
+argument_list|)
+expr_stmt|;
+comment|/* 28, 29,2a,2b */
+name|BTBYTE
+argument_list|(
+name|e_control
+argument_list|)
+expr_stmt|;
+comment|/* 2c, 2d,2e,2f */
+name|BTBYTE
+argument_list|(
+name|contrast_lo
+argument_list|)
+expr_stmt|;
+comment|/* 30, 31,32,33 */
+name|BTBYTE
+argument_list|(
+name|sat_u_lo
+argument_list|)
+expr_stmt|;
+comment|/* 34, 35,36,37 */
+name|BTBYTE
+argument_list|(
+name|sat_v_lo
+argument_list|)
+expr_stmt|;
+comment|/* 38, 39,3a,3b */
+name|BTBYTE
+argument_list|(
+name|hue
+argument_list|)
+expr_stmt|;
+comment|/* 3c, 3d,3e,3f */
+name|BTBYTE
+argument_list|(
+name|e_scloop
+argument_list|)
+expr_stmt|;
+comment|/* 40, 41,42,43 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 44, 45,46,47 */
+name|BTBYTE
+argument_list|(
+name|oform
+argument_list|)
+expr_stmt|;
+comment|/* 48, 49,4a,4b */
+name|BTBYTE
+argument_list|(
+name|e_vscale_hi
+argument_list|)
+expr_stmt|;
+comment|/* 4c, 4d,4e,4f */
+name|BTBYTE
+argument_list|(
+name|e_vscale_lo
+argument_list|)
+expr_stmt|;
+comment|/* 50, 51,52,53 */
+name|BTBYTE
+argument_list|(
+name|test
+argument_list|)
+expr_stmt|;
+comment|/* 54, 55,56,57 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 58, 59,5a,5b */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 5c, 5d,5e,5f */
+name|BTLONG
+argument_list|(
+name|adelay
+argument_list|)
+expr_stmt|;
+comment|/* 60, 61,62,63 */
+name|BTBYTE
+argument_list|(
+name|bdelay
+argument_list|)
+expr_stmt|;
+comment|/* 64, 65,66,67 */
+name|BTBYTE
+argument_list|(
+name|adc
+argument_list|)
+expr_stmt|;
+comment|/* 68, 69,6a,6b */
+name|BTBYTE
+argument_list|(
+name|e_vtc
+argument_list|)
+expr_stmt|;
+comment|/* 6c, 6d,6e,6f */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 70, 71,72,73 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 74, 75,76,77 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 78, 79,7a,7b */
+name|BTLONG
+argument_list|(
+name|sreset
+argument_list|)
+expr_stmt|;
+comment|/* 7c, 7d,7e,7f */
+name|u_char
+name|filler
+index|[
+literal|0x8c
+operator|-
+literal|0x80
+index|]
+decl_stmt|;
+name|BTBYTE
+argument_list|(
+name|o_crop
+argument_list|)
+expr_stmt|;
+comment|/* 8c, 8d,8e,8f */
+name|BTBYTE
+argument_list|(
+name|o_vdelay_lo
+argument_list|)
+expr_stmt|;
+comment|/* 90, 91,92,93 */
+name|BTBYTE
+argument_list|(
+name|o_vactive_lo
+argument_list|)
+expr_stmt|;
+comment|/* 94, 95,96,97 */
+name|BTBYTE
+argument_list|(
+name|o_delay_lo
+argument_list|)
+expr_stmt|;
+comment|/* 98, 99,9a,9b */
+name|BTBYTE
+argument_list|(
+name|o_hactive_lo
+argument_list|)
+expr_stmt|;
+comment|/* 9c, 9d,9e,9f */
+name|BTBYTE
+argument_list|(
+name|o_hscale_hi
+argument_list|)
+expr_stmt|;
+comment|/* a0, a1,a2,a3 */
+name|BTBYTE
+argument_list|(
+name|o_hscale_lo
+argument_list|)
+expr_stmt|;
+comment|/* a4, a5,a6,a7 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* a8, a9,aa,ab */
+name|BTBYTE
+argument_list|(
+name|o_control
+argument_list|)
+expr_stmt|;
+comment|/* ac, ad,ae,af */
+name|u_char
+name|fillter1
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|BTBYTE
+argument_list|(
+name|o_scloop
+argument_list|)
+expr_stmt|;
+comment|/* c0, c1,c2,c3 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* c4, c5,c6,c7 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* c8, c9,ca,cb */
+name|BTBYTE
+argument_list|(
+name|o_vscale_hi
+argument_list|)
+expr_stmt|;
+comment|/* cc, cd,ce,cf */
+name|BTBYTE
+argument_list|(
+name|o_vscale_lo
+argument_list|)
+expr_stmt|;
+comment|/* d0, d1,d2,d3 */
+name|BTBYTE
+argument_list|(
+name|color_fmt
+argument_list|)
+expr_stmt|;
+comment|/* d4, d5,d6,d7 */
+name|BTBYTE
+argument_list|(
+name|color_ctl
+argument_list|)
+expr_stmt|;
+comment|/* d8, d9,da,db */
+name|BTBYTE
+argument_list|(
+name|cap_ctl
+argument_list|)
+expr_stmt|;
+comment|/* dc, dd,de,df */
+name|BTBYTE
+argument_list|(
+name|vbi_pack_size
+argument_list|)
+expr_stmt|;
+comment|/* e0, e1,e2,e3 */
+name|BTBYTE
+argument_list|(
+name|vbi_pack_del
+argument_list|)
+expr_stmt|;
+comment|/* e4, e5,e6,e7 */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* e8, e9,ea,eb */
+name|BTBYTE
+argument_list|(
+name|o_vtc
+argument_list|)
+expr_stmt|;
+comment|/* ec, ed,ee,ef */
+name|u_char
+name|filler2
+index|[
+literal|0x100
+operator|-
+literal|0xf0
+index|]
+decl_stmt|;
+name|BTLONG
+argument_list|(
+name|int_stat
+argument_list|)
+expr_stmt|;
+comment|/* 100, 101,102,103 */
+name|BTLONG
+argument_list|(
+name|int_mask
+argument_list|)
+expr_stmt|;
+comment|/* 104, 105,106,107 */
+define|#
+directive|define
+name|BT848_INT_RISCS
+value|(0xf<<28)
+define|#
+directive|define
+name|BT848_INT_RISC_EN
+value|(1<<27)
+define|#
+directive|define
+name|BT848_INT_RACK
+value|(1<<25)
+define|#
+directive|define
+name|BT848_INT_FIELD
+value|(1<<24)
+define|#
+directive|define
+name|BT848_INT_SCERR
+value|(1<<19)
+define|#
+directive|define
+name|BT848_INT_OCERR
+value|(1<<18)
+define|#
+directive|define
+name|BT848_INT_PABORT
+value|(1<<17)
+define|#
+directive|define
+name|BT848_INT_RIPERR
+value|(1<<16)
+define|#
+directive|define
+name|BT848_INT_PPERR
+value|(1<<15)
+define|#
+directive|define
+name|BT848_INT_FDSR
+value|(1<<14)
+define|#
+directive|define
+name|BT848_INT_FTRGT
+value|(1<<13)
+define|#
+directive|define
+name|BT848_INT_FBUS
+value|(1<<12)
+define|#
+directive|define
+name|BT848_INT_RISCI
+value|(1<<11)
+define|#
+directive|define
+name|BT848_INT_GPINT
+value|(1<<9)
+define|#
+directive|define
+name|BT848_INT_I2CDONE
+value|(1<<8)
+define|#
+directive|define
+name|BT848_INT_VPRES
+value|(1<<5)
+define|#
+directive|define
+name|BT848_INT_HLOCK
+value|(1<<4)
+define|#
+directive|define
+name|BT848_INT_OFLOW
+value|(1<<3)
+define|#
+directive|define
+name|BT848_INT_HSYNC
+value|(1<<2)
+define|#
+directive|define
+name|BT848_INT_VSYNC
+value|(1<<1)
+define|#
+directive|define
+name|BT848_INT_FMTCHG
+value|(1<<0)
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* 108, 109,10a,10b */
+name|BTWORD
+argument_list|(
+name|gpio_dma_ctl
+argument_list|)
+expr_stmt|;
+comment|/* 10c, 10d,10e,10f */
+name|BTLONG
+argument_list|(
+name|i2c_data_ctl
+argument_list|)
+expr_stmt|;
+comment|/* 110, 111,112,113 */
+name|BTLONG
+argument_list|(
+name|risc_strt_add
+argument_list|)
+expr_stmt|;
+comment|/* 114, 115,116,117 */
+name|BTLONG
+argument_list|(
+name|gpio_out_en
+argument_list|)
+expr_stmt|;
+comment|/* 118, 119,11a,11b */
+comment|/* really 24 bits */
+name|BTLONG
+argument_list|(
+name|gpio_reg_inp
+argument_list|)
+expr_stmt|;
+comment|/* 11c, 11d,11e,11f */
+comment|/* really 24 bits */
+name|BTLONG
+argument_list|(
+name|risc_count
+argument_list|)
+expr_stmt|;
+comment|/* 120, 121,122,123 */
+name|u_char
+name|filler3
+index|[
+literal|0x200
+operator|-
+literal|0x124
+index|]
+decl_stmt|;
+name|BTLONG
+argument_list|(
+name|gpio_data
+argument_list|)
+expr_stmt|;
+comment|/* 200, 201,202,203 */
+comment|/* really 24 bits */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|struct
+name|bt848_registers
+modifier|*
+name|bt848_reg_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|struct
+name|bt848_registers
+modifier|*
+name|bt848_regptr_t
 typedef|;
 end_typedef
 
@@ -49,55 +623,6 @@ define|#
 directive|define
 name|BKTR_DSTATUS
 value|0x000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_PRES
-value|(1<<7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_HLOC
-value|(1<<6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_FIELD
-value|(1<<5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_NUML
-value|(1<<4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_CSEL
-value|(1<<3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_LOF
-value|(1<<1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_DSTATUS_COF
-value|(1<<0)
 end_define
 
 begin_define
@@ -411,153 +936,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BT848_INT_RISCS
-value|(0xf<<28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_RISC_EN
-value|(1<<27)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_RACK
-value|(1<<25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_FIELD
-value|(1<<24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_SCERR
-value|(1<<19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_OCERR
-value|(1<<18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_PABORT
-value|(1<<17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_RIPERR
-value|(1<<16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_PPERR
-value|(1<<15)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_FDSR
-value|(1<<14)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_FTRGT
-value|(1<<13)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_FBUS
-value|(1<<12)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_RISCI
-value|(1<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_GPINT
-value|(1<<9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_I2CDONE
-value|(1<<8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_VPRES
-value|(1<<5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_HLOCK
-value|(1<<4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_OFLOW
-value|(1<<3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_HSYNC
-value|(1<<2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_VSYNC
-value|(1<<1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BT848_INT_FMTCHG
-value|(1<<0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BKTR_RISC_COUNT
 value|0x120
 end_define
@@ -610,7 +988,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|tvtuner
+name|TVTUNER
 block|{
 name|int
 name|frequency
@@ -628,6 +1006,45 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|EEPROMBLOCKSIZE
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|CARDTYPE
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|u_char
+name|tuner
+decl_stmt|;
+name|u_char
+name|dbx
+decl_stmt|;
+name|u_char
+name|eepromAddr
+decl_stmt|;
+name|u_char
+name|eepromSize
+decl_stmt|;
+comment|/* bytes / EEPROMBLOCKSIZE */
+name|u_char
+name|audiomuxs
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* tuner, external, internal/unused, mute */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * BrookTree 848  info structure, one per bt848 card installed.  */
 end_comment
@@ -637,15 +1054,14 @@ typedef|typedef
 struct|struct
 name|bktr_softc
 block|{
-name|char
-modifier|*
+name|bt848_reg_t
 name|base
 decl_stmt|;
-comment|/* saa7116 register physical address */
+comment|/* Bt848 register physical address */
 name|vm_offset_t
 name|phys_base
 decl_stmt|;
-comment|/* saa7116 register physical address */
+comment|/* Bt848 register physical address */
 name|pcici_t
 name|tag
 decl_stmt|;
@@ -931,8 +1347,13 @@ name|meteor_video
 name|video
 decl_stmt|;
 name|struct
-name|tvtuner
+name|TVTUNER
 name|tuner
+decl_stmt|;
+name|struct
+name|CARDTYPE
+modifier|*
+name|card
 decl_stmt|;
 name|u_char
 name|card_type
