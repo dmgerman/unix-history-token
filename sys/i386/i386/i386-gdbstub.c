@@ -101,24 +101,10 @@ begin_comment
 comment|/* Create private copies of common functions used by the stub.  This prevents    nasty interactions between app code and the stub (for instance if user steps    into strlen, etc..) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|strlen
-value|gdb_strlen
-end_define
-
-begin_define
-define|#
-directive|define
-name|strcpy
-value|gdb_strcpy
-end_define
-
 begin_function
 specifier|static
 name|int
-name|strlen
+name|gdb_strlen
 parameter_list|(
 specifier|const
 name|char
@@ -154,7 +140,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|strcpy
+name|gdb_strcpy
 parameter_list|(
 name|char
 modifier|*
@@ -547,7 +533,7 @@ expr_stmt|;
 comment|/* remove sequence chars from buffer */
 name|count
 operator|=
-name|strlen
+name|gdb_strlen
 argument_list|(
 name|buffer
 argument_list|)
@@ -1874,7 +1860,7 @@ argument_list|,
 name|NUMREGBYTES
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -1937,7 +1923,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -1946,7 +1932,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -2013,7 +1999,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -2023,7 +2009,7 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -2097,7 +2083,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -2105,7 +2091,7 @@ literal|"E03"
 argument_list|)
 expr_stmt|;
 else|else
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
@@ -2114,7 +2100,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|strcpy
+name|gdb_strcpy
 argument_list|(
 name|remcomOutBuffer
 argument_list|,
