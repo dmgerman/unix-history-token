@@ -7656,7 +7656,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_cred
+name|mac_copy_cred
 argument_list|(
 name|src
 argument_list|,

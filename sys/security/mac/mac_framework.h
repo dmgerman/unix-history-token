@@ -1588,17 +1588,17 @@ end_comment
 
 begin_function_decl
 name|void
-name|mac_create_cred
+name|mac_copy_cred
 parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|cred_parent
+name|cr1
 parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred_child
+name|cr2
 parameter_list|)
 function_decl|;
 end_function_decl
