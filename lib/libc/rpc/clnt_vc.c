@@ -1224,7 +1224,6 @@ name|ct_addr
 operator|.
 name|buf
 argument_list|,
-operator|&
 name|raddr
 operator|->
 name|buf
