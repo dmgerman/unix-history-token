@@ -63,10 +63,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -313,8 +313,6 @@ parameter_list|,
 name|family
 parameter_list|,
 name|m
-parameter_list|,
-name|rt
 parameter_list|)
 name|struct
 name|ifnet
@@ -328,11 +326,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-name|struct
-name|rtentry
-modifier|*
-name|rt
 decl_stmt|;
 block|{
 name|struct

@@ -1619,8 +1619,6 @@ operator|->
 name|sa_family
 argument_list|,
 name|m
-argument_list|,
-name|rt
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1643,8 +1641,6 @@ operator|->
 name|sa_family
 argument_list|,
 name|m
-argument_list|,
-name|rt
 argument_list|)
 expr_stmt|;
 break|break;

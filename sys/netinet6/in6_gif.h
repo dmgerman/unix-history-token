@@ -71,10 +71,6 @@ operator|,
 expr|struct
 name|mbuf
 operator|*
-operator|,
-expr|struct
-name|rtentry
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
