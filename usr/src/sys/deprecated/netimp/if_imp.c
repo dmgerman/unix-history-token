@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.12	82/03/10	*/
+comment|/*	if_imp.c	4.13	82/03/12	*/
 end_comment
 
 begin_include
@@ -470,9 +470,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|s
-decl_stmt|;
 specifier|register
 name|struct
 name|imp_leader
@@ -1387,8 +1384,6 @@ decl_stmt|,
 name|dlink
 decl_stmt|,
 name|len
-decl_stmt|,
-name|dnet
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -1447,14 +1442,6 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
-name|dnet
-operator|=
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_net
-expr_stmt|;
 name|dhost
 operator|=
 name|ip
@@ -1617,25 +1604,12 @@ name|il_mtype
 operator|=
 name|IMPTYPE_DATA
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|imp
-operator|->
-name|il_network
-operator|=
-name|dnet
-expr_stmt|;
-else|#
-directive|else
 name|imp
 operator|->
 name|il_network
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|imp
 operator|->
 name|il_host
@@ -1904,8 +1878,6 @@ name|start
 goto|;
 block|}
 block|}
-name|drop
-label|:
 name|m_freem
 argument_list|(
 name|m
