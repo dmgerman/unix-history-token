@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)verify.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,8 +29,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|quiet
-value|0
+name|verbose
+value|1
 end_define
 
 begin_comment
@@ -488,7 +488,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* **	verify_cylinders does full track certification for every track ** on the cylinder.  This is done for speed and minimal head movement.  If ** an error occurs on any single track the track is flagged for later ** verification by verify sectors. */
+comment|/* **	verify_cylinders does full track certification for every track ** on the cylinder. */
 end_comment
 
 begin_macro
@@ -517,6 +517,13 @@ block|{
 name|dskadr
 name|dskaddr
 decl_stmt|;
+if|if
+condition|(
+name|pats
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* verify each track of each cylinder */
 for|for
 control|(
@@ -530,11 +537,9 @@ name|dskaddr
 operator|.
 name|cylinder
 operator|<
-operator|(
 name|base_cyl
 operator|+
 name|cyl_count
-operator|)
 condition|;
 name|dskaddr
 operator|.
@@ -569,14 +574,14 @@ name|dskaddr
 argument_list|,
 name|pats
 argument_list|,
-name|quiet
+name|verbose
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/* **	verify_track verifies a single track. If the full track write and ** compare operation fails then each sector is read individually to determin ** which sectors are really bad.  If a sector is bad it is flagged as bad by ** the verify sector routine. */
+comment|/* **	verify_track verifies a single track.  If a full-track write fails, ** the sector is flagged; if a full-track read fails, then each sector ** is read individually to determine which sectors are really bad. ** If a sector is bad it is flagged as bad by flag_sector. */
 end_comment
 
 begin_macro
@@ -645,6 +650,12 @@ name|int
 name|pattern_count
 init|=
 name|pats
+decl_stmt|;
+name|int
+name|sectorflagged
+init|=
+operator|-
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -722,6 +733,10 @@ name|dcb
 operator|.
 name|operrsta
 argument_list|,
+name|dcb
+operator|.
+name|err_code
+argument_list|,
 name|verbosity
 argument_list|)
 expr_stmt|;
@@ -783,15 +798,15 @@ name|dcb
 operator|.
 name|operrsta
 argument_list|,
+name|dcb
+operator|.
+name|err_code
+argument_list|,
 name|verbosity
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|pattern_count
-operator|=
-literal|16
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -852,7 +867,6 @@ operator|!
 name|data_ok
 argument_list|()
 condition|)
-block|{
 name|flag_sector
 argument_list|(
 name|dskaddr
@@ -861,10 +875,13 @@ name|dcb
 operator|.
 name|operrsta
 argument_list|,
+name|dcb
+operator|.
+name|err_code
+argument_list|,
 name|verbosity
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|dskaddr
 operator|->
@@ -957,18 +974,39 @@ name|dskaddr
 operator|->
 name|sector
 operator|=
+call|(
+name|char
+call|)
+argument_list|(
 name|i
 operator|/
 name|offset
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dskaddr
+operator|->
+name|sector
+operator|!=
+name|sectorflagged
+condition|)
 name|flag_sector
 argument_list|(
 name|dskaddr
 argument_list|,
-name|DATA_ERROR
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 name|verbosity
 argument_list|)
+expr_stmt|;
+name|sectorflagged
+operator|=
+name|dskaddr
+operator|->
+name|sector
 expr_stmt|;
 block|}
 block|}
@@ -977,7 +1015,7 @@ condition|(
 name|index
 operator|+
 literal|1
-operator|<=
+operator|<
 name|pattern_count
 condition|)
 block|{
@@ -1036,7 +1074,9 @@ argument|dskaddr
 argument_list|,
 argument|status
 argument_list|,
-argument|verbose
+argument|ecode
+argument_list|,
+argument|verbosity
 argument_list|)
 end_macro
 
@@ -1055,7 +1095,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|verbose
+name|ecode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|verbosity
 decl_stmt|;
 end_decl_stmt
 
@@ -1072,12 +1118,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|verbosity
+operator|!=
+literal|0
 condition|)
 block|{
 name|print
 argument_list|(
-literal|"Error at sector %d, status=0x%x."
+literal|"Error at sector %d (cyl %d trk %d sect %d),\n"
 argument_list|,
 name|to_sector
 argument_list|(
@@ -1085,12 +1133,58 @@ operator|*
 name|dskaddr
 argument_list|)
 argument_list|,
+name|dskaddr
+operator|->
+name|cylinder
+argument_list|,
+name|dskaddr
+operator|->
+name|track
+argument_list|,
+name|dskaddr
+operator|->
+name|sector
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|status
+condition|)
+name|print
+argument_list|(
+literal|"  status=%b"
+argument_list|,
+name|status
+argument_list|,
+name|ERRBITS
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"  data comparison error"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|C_INFO
+operator|.
+name|type
+operator|==
+name|SMD_ECTLR
+operator|&&
+name|ecode
+condition|)
+name|printf
+argument_list|(
+literal|", ecode=0x%x"
+argument_list|,
+name|ecode
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Sector will be relocated.\n"
+literal|".\n  Sector will be relocated.\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_cmd.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)proc_cmd.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,13 @@ name|START
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXIT
+value|12
+end_define
+
 begin_decl_stmt
 specifier|static
 name|cmd_text_element
@@ -122,6 +129,14 @@ block|,
 literal|"RESET"
 block|,
 literal|"Reinitialize VDFORMAT, and start over"
+block|}
+block|,
+block|{
+name|EXIT
+block|,
+literal|"EXIT"
+block|,
+literal|"Terminate program"
 block|}
 block|,
 block|{
@@ -322,6 +337,34 @@ index|]
 operator|.
 name|vc_type
 expr_stmt|;
+name|cptr
+operator|=
+name|drive_types
+index|[
+name|type
+index|]
+operator|.
+name|cmd_text
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|cptr
+condition|)
+block|{
+operator|*
+name|cptr
+operator|=
+name|toupper
+argument_list|(
+operator|*
+name|cptr
+argument_list|)
+expr_stmt|;
+name|cptr
+operator|++
+expr_stmt|;
+block|}
 block|}
 name|drive_types
 index|[
@@ -499,6 +542,15 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+name|EXIT
+case|:
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
 default|default:
 comment|/* ignore */
 break|break;
@@ -1374,7 +1426,7 @@ name|get_text_cmd
 argument_list|(
 name|drive_types
 operator|+
-literal|2
+name|smddrives
 argument_list|,
 name|tokens
 argument_list|)

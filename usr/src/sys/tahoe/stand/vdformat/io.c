@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)io.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|wait_for_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|clean_up
@@ -88,6 +94,15 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+name|int
+name|didmsg
+init|=
+literal|0
+decl_stmt|;
+name|wait_for_char
+operator|=
+literal|0
+expr_stmt|;
 name|vdtimeout
 operator|=
 name|wait
@@ -126,10 +141,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|kill_processes
-operator|==
-name|false
-operator|&&
 name|input
 argument_list|()
 condition|)
@@ -143,11 +154,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|didmsg
+operator|==
+literal|0
+operator|&&
 name|kill_processes
 operator|==
 name|true
 condition|)
 block|{
+name|didmsg
+operator|=
+literal|1
+expr_stmt|;
 name|indent
 argument_list|()
 expr_stmt|;
@@ -312,9 +331,9 @@ operator|)
 condition|)
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|PADC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|uncache
@@ -326,6 +345,20 @@ operator|.
 name|operrsta
 operator|)
 argument_list|)
+expr_stmt|;
+name|uncache
+argument_list|(
+operator|&
+operator|(
+name|dcb
+operator|.
+name|err_code
+operator|)
+argument_list|)
+expr_stmt|;
+name|wait_for_char
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_block
@@ -535,6 +568,10 @@ operator|=
 name|dskaddr
 operator|->
 name|track
+expr_stmt|;
+name|wait_for_char
+operator|=
+literal|0
 expr_stmt|;
 name|dcb
 operator|.
@@ -799,6 +836,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|wait_for_char
+operator|=
+literal|1
+expr_stmt|;
 return|return
 name|dcb
 operator|.
@@ -1186,6 +1227,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\ndrive not ready, attempting to spin up..."
+argument_list|)
+expr_stmt|;
 name|access_with_no_trailer
 argument_list|(
 name|VDSTART
@@ -1212,6 +1258,11 @@ literal|5500000
 operator|)
 operator|+
 literal|62000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" retrying drive configuration\n"
 argument_list|)
 expr_stmt|;
 name|configure_drive

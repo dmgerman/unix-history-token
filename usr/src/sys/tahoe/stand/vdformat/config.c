@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)config.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,18 @@ index|]
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|smddrives
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* first 3 types are smd-e only */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmd.c	1.1	86/07/05	*/
+comment|/*	cmd.c	1.2	86/11/04	*/
 end_comment
 
 begin_include
@@ -224,7 +224,7 @@ index|[
 literal|133
 index|]
 decl_stmt|;
-name|gets
+name|agets
 argument_list|(
 name|line
 argument_list|)
@@ -980,7 +980,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|gets
+name|agets
 argument_list|(
 name|line
 argument_list|)
@@ -1252,7 +1252,7 @@ decl_stmt|;
 name|int
 name|results
 decl_stmt|;
-name|gets
+name|agets
 argument_list|(
 name|line
 argument_list|)
@@ -1403,7 +1403,7 @@ decl_stmt|,
 modifier|*
 name|t_ptr
 decl_stmt|;
-name|gets
+name|agets
 argument_list|(
 name|line
 argument_list|)
@@ -1566,6 +1566,10 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|wait_for_char
+decl_stmt|;
 name|char
 name|answer
 index|[
@@ -1575,6 +1579,15 @@ decl_stmt|;
 name|boolean
 name|retval
 decl_stmt|;
+name|int
+name|old_wait_status
+init|=
+name|wait_for_char
+decl_stmt|;
+name|wait_for_char
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1598,7 +1611,7 @@ argument_list|(
 literal|"? [Yes/No] "
 argument_list|)
 expr_stmt|;
-name|gets
+name|agets
 argument_list|(
 name|answer
 argument_list|)
@@ -1668,6 +1681,10 @@ literal|"A 'Yes' or 'No' must be entered!\n\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|wait_for_char
+operator|=
+name|old_wait_status
+expr_stmt|;
 return|return
 name|retval
 return|;

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vdfmt.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)vdfmt.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,11 +45,6 @@ argument_list|(
 literal|"VDFORMAT                   Version 3.0 \n\n"
 argument_list|)
 expr_stmt|;
-name|print
-argument_list|(
-literal|"Type `Help' for help, `Start' to execute operations.\n\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -58,6 +53,11 @@ control|)
 block|{
 name|determine_controller_types
 argument_list|()
+expr_stmt|;
+name|print
+argument_list|(
+literal|"\nType `Help' for help, `Start' to execute operations.\n\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -327,6 +327,13 @@ literal|2
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"controller %d: "
+argument_list|,
+name|ctlr
+argument_list|)
+expr_stmt|;
 name|num_controllers
 operator|++
 expr_stmt|;
@@ -429,6 +436,11 @@ name|track_skew
 operator|=
 name|smd_trk_skew
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"smd\n"
+argument_list|)
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000000
@@ -510,6 +522,11 @@ operator|.
 name|track_skew
 operator|=
 name|smd_e_trk_skew
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"smd-e\n"
+argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(

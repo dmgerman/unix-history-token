@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)status.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)status.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,27 @@ literal|"Exercising disk"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|setup
+case|:
+name|printf
+argument_list|(
+literal|"Initializing for operation "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"on controller %d, drive %d.\n"
+argument_list|,
+name|cur
+operator|.
+name|controller
+argument_list|,
+name|cur
+operator|.
+name|drive
+argument_list|)
+expr_stmt|;
 default|default:
 name|print
 argument_list|(

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)start.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,12 @@ name|abort_environ
 argument_list|)
 condition|)
 block|{
+name|cur
+operator|.
+name|state
+operator|=
+name|setup
+expr_stmt|;
 name|load_verify_patterns
 argument_list|()
 expr_stmt|;

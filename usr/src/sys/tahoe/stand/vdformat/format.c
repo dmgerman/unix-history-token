@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,11 +143,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* format the disk surface */
+name|printf
+argument_list|(
+literal|"Starting format on system areas\n"
+argument_list|)
+expr_stmt|;
 name|format_relocation_area
 argument_list|()
 expr_stmt|;
 name|format_maintainence_area
 argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Starting format on data area\n"
+argument_list|)
 expr_stmt|;
 name|format_users_data_area
 argument_list|()
@@ -166,11 +176,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* verify the surface */
+name|printf
+argument_list|(
+literal|"Starting verify on system areas\n"
+argument_list|)
+expr_stmt|;
 name|verify_relocation_area
 argument_list|()
 expr_stmt|;
 name|verify_maintainence_area
 argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Starting verify on data area\n"
+argument_list|)
 expr_stmt|;
 name|verify_users_data_area
 argument_list|()
@@ -368,6 +388,11 @@ argument_list|,
 name|sector_count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kill_processes
+condition|)
+return|return;
 block|}
 block|}
 end_block
