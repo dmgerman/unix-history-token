@@ -115,7 +115,7 @@ block|,
 block|{
 literal|"hosts"
 block|,
-literal|"hosts.byaddr"
+literal|"hosts.byname"
 block|}
 block|,
 block|{
