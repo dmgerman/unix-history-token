@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id.c	5.4 (Berkeley) %G%"
+literal|"@(#)id.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,6 +600,7 @@ if|if
 condition|(
 name|pw
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -612,6 +613,22 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"groups\t"
+argument_list|)
+expr_stmt|;
+name|group
+argument_list|(
+name|pw
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -788,7 +805,6 @@ argument_list|,
 name|rid
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -799,11 +815,12 @@ argument_list|)
 expr_stmt|;
 name|group
 argument_list|(
-name|pw
+name|NULL
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1301,6 +1318,8 @@ modifier|*
 name|gr
 decl_stmt|;
 name|int
+name|cnt
+decl_stmt|,
 name|id
 decl_stmt|,
 name|lastid
@@ -1454,12 +1473,17 @@ name|lastid
 operator|=
 operator|-
 literal|1
-init|;
-operator|--
-name|ngroups
-operator|>=
+operator|,
+name|cnt
+operator|=
 literal|0
+init|;
+name|cnt
+operator|<
+name|ngroups
 condition|;
+operator|++
+name|cnt
 control|)
 block|{
 if|if
@@ -1471,7 +1495,7 @@ name|id
 operator|=
 name|groups
 index|[
-name|ngroups
+name|cnt
 index|]
 operator|)
 condition|)
