@@ -269,6 +269,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|NETISR_MPSAFE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* ISR does not need Giant */
+end_comment
+
 begin_function_decl
 name|void
 name|netisr_register
@@ -281,6 +292,8 @@ parameter_list|,
 name|struct
 name|ifqueue
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

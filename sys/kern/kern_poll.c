@@ -772,6 +772,8 @@ operator|)
 name|netisr_poll
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|netisr_register
@@ -785,6 +787,8 @@ operator|)
 name|netisr_pollmore
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

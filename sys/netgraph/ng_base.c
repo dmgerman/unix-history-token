@@ -11049,6 +11049,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+comment|/* XXX could use NETISR_MPSAFE but need to verify code */
 name|netisr_register
 argument_list|(
 name|NETISR_NETGRAPH
@@ -11060,6 +11061,8 @@ operator|)
 name|ngintr
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx

@@ -5271,6 +5271,8 @@ name|arpintr
 argument_list|,
 operator|&
 name|arpintrq
+argument_list|,
+name|NETISR_MPSAFE
 argument_list|)
 expr_stmt|;
 block|}

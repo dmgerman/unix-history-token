@@ -1647,6 +1647,8 @@ decl_stmt|;
 name|u_short
 name|net
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|ea
 operator|=
 name|mtod

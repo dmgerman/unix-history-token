@@ -801,6 +801,8 @@ name|ip6_input
 argument_list|,
 operator|&
 name|ip6intrq
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|scope6_init
@@ -1018,6 +1020,9 @@ name|srcrt
 init|=
 literal|0
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX for now */
 ifdef|#
 directive|ifdef
 name|IPSEC

@@ -3070,6 +3070,8 @@ name|natmpcb
 modifier|*
 name|npcb
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC

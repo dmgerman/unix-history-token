@@ -210,6 +210,9 @@ name|ifqueue
 modifier|*
 name|ni_queue
 decl_stmt|;
+name|int
+name|ni_flags
+decl_stmt|;
 block|}
 name|netisrs
 index|[
@@ -217,14 +220,6 @@ literal|32
 index|]
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|netisr_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -266,6 +261,9 @@ name|struct
 name|ifqueue
 modifier|*
 name|inq
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|KASSERT
@@ -317,6 +315,31 @@ name|ni_queue
 operator|=
 name|inq
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|NETISR_MPSAFE
+operator|)
+operator|&&
+operator|!
+name|debug_mpsafenet
+condition|)
+name|flags
+operator|&=
+operator|~
+name|NETISR_MPSAFE
+expr_stmt|;
+name|netisrs
+index|[
+name|num
+index|]
+operator|.
+name|ni_flags
+operator|=
+name|flags
+expr_stmt|;
 block|}
 end_function
 
@@ -332,9 +355,6 @@ name|struct
 name|netisr
 modifier|*
 name|ni
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -389,12 +409,6 @@ name|ni_queue
 operator|!=
 name|NULL
 condition|)
-block|{
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|IF_DRAIN
 argument_list|(
 name|ni
@@ -402,12 +416,6 @@ operator|->
 name|ni_queue
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -422,7 +430,7 @@ comment|/* dispatch count */
 name|int
 name|isrs_directed
 decl_stmt|;
-comment|/* ...successfully dispatched */
+comment|/* ...directly dispatched */
 name|int
 name|isrs_deferred
 decl_stmt|;
@@ -431,6 +439,10 @@ name|int
 name|isrs_queued
 decl_stmt|;
 comment|/* intentionally queueued */
+name|int
+name|isrs_drop
+decl_stmt|;
+comment|/* dropped 'cuz no handler */
 name|int
 name|isrs_swi_count
 decl_stmt|;
@@ -605,6 +617,29 @@ name|_net_isr
 argument_list|,
 name|OID_AUTO
 argument_list|,
+name|drop
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|isrstat
+operator|.
+name|isrs_drop
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_isr
+argument_list|,
+name|OID_AUTO
+argument_list|,
 name|swi_count
 argument_list|,
 name|CTLFLAG_RD
@@ -675,7 +710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Call the netisr directly instead of queueing the packet, if possible.  *  * Ideally, the permissibility of calling the routine would be determined  * by checking if splnet() was asserted at the time the device interrupt  * occurred; if so, this indicates that someone is in the network stack.  *  * However, bus_setup_intr uses INTR_TYPE_NET, which sets splnet before  * calling the interrupt handler, so the previous mask is unavailable.  * Approximate this by checking intr_nesting_level instead; if any SWI  * handlers are running, the packet is queued instead.  */
+comment|/*  * Call the netisr directly instead of queueing the packet, if possible.  */
 end_comment
 
 begin_function
@@ -701,6 +736,7 @@ operator|.
 name|isrs_count
 operator|++
 expr_stmt|;
+comment|/* XXX redundant */
 name|KASSERT
 argument_list|(
 operator|!
@@ -749,6 +785,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|isrstat
+operator|.
+name|isrs_drop
+operator|++
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -756,15 +797,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Do direct dispatch only for MPSAFE netisrs (and 	 * only when enabled).  Note that when a netisr is 	 * marked MPSAFE we permit multiple concurrent instances 	 * to run.  We guarantee only the order in which 	 * packets are processed for each "dispatch point" in 	 * the system (i.e. call to netisr_dispatch or 	 * netisr_queue).  This insures ordering of packets 	 * from an interface but does not guarantee ordering 	 * between multiple places in the system (e.g. IP 	 * dispatched from interfaces vs. IP queued from IPSec). 	 */
 if|if
 condition|(
 name|netisr_enable
 operator|&&
-name|mtx_trylock
-argument_list|(
+operator|(
+name|ni
+operator|->
+name|ni_flags
 operator|&
-name|netisr_mtx
-argument_list|)
+name|NETISR_MPSAFE
+operator|)
 condition|)
 block|{
 name|isrstat
@@ -772,23 +816,12 @@ operator|.
 name|isrs_directed
 operator|++
 expr_stmt|;
-comment|/* 		 * One slight problem here is that packets might bypass 		 * each other in the stack, if an earlier one happened 		 * to get stuck in the queue. 		 * 		 * we can either: 		 *	a. drain the queue before handling this packet, 		 *	b. fallback to queueing the packet, 		 *	c. sweep the issue under the rug and ignore it. 		 * 		 * Currently, we do a).  Previously, we did c). 		 */
-name|netisr_processqueue
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
+comment|/* 		 * NB: We used to drain the queue before handling 		 * the packet but now do not.  Doing so here will 		 * not preserve ordering so instead we fallback to 		 * guaranteeing order only from dispatch points 		 * in the system (see above). 		 */
 name|ni
 operator|->
 name|ni_handler
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|netisr_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -891,6 +924,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|isrstat
+operator|.
+name|isrs_drop
+operator|++
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -979,12 +1017,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-name|mtx_lock
-argument_list|(
-operator|&
-name|netisr_mtx
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|bits
@@ -1061,6 +1093,55 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|NETISR_MPSAFE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_queue
+operator|==
+name|NULL
+condition|)
+name|ni
+operator|->
+name|ni_handler
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|netisr_processqueue
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|ni
 operator|->
 name|ni_queue
@@ -1082,17 +1163,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 do|while
 condition|(
 name|polling
 condition|)
 do|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|netisr_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1106,18 +1182,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|mtx_init
-argument_list|(
-operator|&
-name|netisr_mtx
-argument_list|,
-literal|"netisr lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|swi_add
@@ -1132,7 +1196,7 @@ name|NULL
 argument_list|,
 name|SWI_NET
 argument_list|,
-literal|0
+name|INTR_MPSAFE
 argument_list|,
 operator|&
 name|net_ih

@@ -981,6 +981,8 @@ operator|)
 name|pppintr
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX layering violation - if_ppp can work over any lower 		 * level transport that cares to attach to it. 		 */
@@ -5011,6 +5013,8 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|sc

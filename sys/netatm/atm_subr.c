@@ -521,6 +521,8 @@ name|atm_intr
 argument_list|,
 operator|&
 name|atm_intrq
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize subsystems 	 */
@@ -1582,6 +1584,8 @@ name|void
 modifier|*
 name|token
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * Get function to call and token value 	 */
 name|KB_DATASTART
 argument_list|(

@@ -1504,6 +1504,8 @@ name|ip_input
 argument_list|,
 operator|&
 name|ipintrq
+argument_list|,
+name|NETISR_MPSAFE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4114,6 +4116,9 @@ operator|.
 name|ips_delivered
 operator|++
 expr_stmt|;
+name|NET_PICKUP_GIANT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|args
@@ -4208,6 +4213,9 @@ name|m
 operator|,
 name|hlen
 operator|)
+expr_stmt|;
+name|NET_DROP_GIANT
+argument_list|()
 expr_stmt|;
 return|return;
 name|bad

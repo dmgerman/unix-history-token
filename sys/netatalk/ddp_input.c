@@ -183,6 +183,8 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * Phase 2 packet handling  	 */
 name|ddp_input
 argument_list|(
@@ -270,6 +272,8 @@ name|m
 argument_list|,
 name|SZ_ELAPHDR
 argument_list|)
+expr_stmt|;
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(

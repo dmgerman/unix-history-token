@@ -2846,6 +2846,8 @@ name|at1intr
 argument_list|,
 operator|&
 name|atintrq1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|netisr_register
@@ -2856,6 +2858,8 @@ name|at2intr
 argument_list|,
 operator|&
 name|atintrq2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|netisr_register
@@ -2866,6 +2870,8 @@ name|aarpintr
 argument_list|,
 operator|&
 name|aarpintrq
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
