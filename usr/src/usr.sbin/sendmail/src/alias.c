@@ -97,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.32 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.33 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.32 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.33 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.32 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.33 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,61 @@ end_escape
 begin_comment
 comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
 end_comment
+
+begin_comment
+comment|/* **  Sun YP servers read the dbm files directly, so we have to build them **  even if NEWDB */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBM
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWDB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IF_MAKEDBMFILES
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YPCOMPAT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IF_MAKEDBMFILES
+value|if (makedbmfiles)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1244,6 +1299,9 @@ name|FILE
 modifier|*
 name|af
 decl_stmt|;
+name|bool
+name|makedbmfiles
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -1556,11 +1614,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|#
-directive|else
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
-name|DBM
+name|IF_MAKEDBMFILES
+ifdef|#
+directive|ifdef
+name|NEWDB
+name|makedbmfiles
+operator|=
+name|access
+argument_list|(
+literal|"/var/yp/Makefile"
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+name|IF_MAKEDBMFILES
+block|{
 operator|(
 name|void
 operator|)
@@ -1674,8 +1750,7 @@ argument_list|(
 name|aliasfile
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 endif|#
 directive|endif
 block|}
@@ -2309,15 +2384,19 @@ operator|.
 name|q_user
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IF_MAKEDBMFILES
+name|IF_MAKEDBMFILES
 name|store
-argument_list|(
+parameter_list|(
 name|key
-argument_list|,
+parameter_list|,
 name|content
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 block|}
@@ -2447,8 +2526,11 @@ argument_list|(
 literal|"readaliases: db close failure"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MAKEDBMFILES
 name|store
 argument_list|(
 name|key
