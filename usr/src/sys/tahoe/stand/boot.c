@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	1.4	86/11/25	*/
+comment|/*	boot.c	1.5	86/12/18	*/
 end_comment
 
 begin_include
@@ -777,7 +777,7 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|0x800
+name|RELOC
 argument_list|,
 name|x
 operator|.
@@ -802,7 +802,7 @@ name|x
 operator|.
 name|a_text
 operator|+
-literal|0x800
+name|RELOC
 operator|)
 expr_stmt|;
 if|if
