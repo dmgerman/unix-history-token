@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.22 1995/12/08 23:20:48 phk Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.23 1995/12/15 00:54:30 bde Exp $  */
 end_comment
 
 begin_include
@@ -2740,12 +2740,8 @@ directive|ifdef
 name|DEVFS
 name|devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-literal|"spkr"
-argument_list|,
 operator|&
 name|spkr_cdevsw
 argument_list|,
@@ -2753,11 +2749,13 @@ literal|0
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0600
+argument_list|,
+literal|"speaker"
 argument_list|)
 expr_stmt|;
 endif|#
