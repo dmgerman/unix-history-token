@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.9 (Berkeley) %G%"
+literal|"@(#)table.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1686,6 +1686,24 @@ literal|"	andl2	N,AL\n	orl2	ZF,AL\n"
 block|,
 name|ASSIGN
 block|,
+name|INAREG
+block|,
+name|SFLD
+block|,
+name|TANY
+block|,
+name|SCON
+block|,
+name|TANY
+block|,
+name|NAREG
+block|,
+name|RESC1
+block|,
+literal|"	andl2	N,AL\n	orl2	ZF,AL\n	ZI\n"
+block|,
+name|ASSIGN
+block|,
 name|FOREFF
 block|,
 name|SFLD
@@ -1700,7 +1718,7 @@ name|TWORD
 block|,
 name|NAREG
 operator||
-name|NASL
+name|NASR
 block|,
 name|RNOP
 block|,
@@ -1721,12 +1739,10 @@ block|,
 name|TWORD
 block|,
 name|NAREG
-operator||
-name|NASL
 block|,
 name|RESC1
 block|,
-literal|"	shll	$H,AR,A1\n	andl2	M,A1\n	andl2	N,AL\n\ 	orl2	A1,AL\n	shrl	$H,A1,A1\n"
+literal|"	shll	$H,AR,A1\n	andl2	M,A1\n	andl2	N,AL\n\ 	orl2	A1,AL\n	ZI\n"
 block|,
 comment|/* dummy UNARY MUL entry to get U* to possibly match OPLTYPE */
 name|UNARY
