@@ -457,7 +457,7 @@ name|VM_PROT_READ
 expr_stmt|;
 name|kva
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
 argument_list|,
