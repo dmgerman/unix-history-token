@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: rtsol.c,v 1.11 2000/08/13 06:14:59 itojun Exp $	*/
+comment|/*	$KAME: rtsol.c,v 1.12 2001/11/12 11:47:11 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -352,6 +352,21 @@ argument_list|(
 expr|struct
 name|sockaddr_in6
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|sin6_allrouters
+operator|.
+name|sin6_family
+operator|=
+name|AF_INET6
+expr_stmt|;
+name|sin6_allrouters
+operator|.
+name|sin6_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sin6_allrouters
 argument_list|)
 expr_stmt|;
 if|if
