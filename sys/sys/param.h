@@ -15,6 +15,12 @@ directive|define
 name|_SYS_PARAM_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_null.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -60,24 +66,6 @@ end_define
 begin_comment
 comment|/* Master, propagated to newvers */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
