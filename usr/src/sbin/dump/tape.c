@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.20 (Berkeley) %G%"
+literal|"@(#)tape.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,12 @@ ifdef|#
 directive|ifdef
 name|sunos
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -2398,9 +2404,6 @@ decl_stmt|;
 name|int
 name|waitpid
 decl_stmt|;
-name|sig_t
-name|interrupt
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2408,6 +2411,28 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|sunos
+name|void
+function_decl|(
+modifier|*
+name|interrupt
+function_decl|)
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+else|#
+directive|else
+name|sig_t
+name|interrupt
+decl_stmt|;
+endif|#
+directive|endif
 name|interrupt
 operator|=
 name|signal
