@@ -822,31 +822,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-name|bpfattach
-argument_list|(
-operator|&
-name|is
-operator|->
-name|bpf
-argument_list|,
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/*          * Search down the ifa address list looking for the AF_LINK type entry          */
 name|ifa
 operator|=
@@ -953,7 +928,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" ethernet address %s"
+literal|"is%d: address %s\n"
+argument_list|,
+name|unit
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -965,6 +942,31 @@ name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+name|bpfattach
+argument_list|(
+operator|&
+name|is
+operator|->
+name|bpf
+argument_list|,
+name|ifp
+argument_list|,
+name|DLT_EN10MB
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1740,7 +1742,9 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"Isolink card failed to initialise\n"
+literal|"is%d: card failed to initialise\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2388,7 +2392,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"is%d:BABL\n"
+literal|"is%d: BABL\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2412,7 +2416,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"is%d:CERR\n"
+literal|"is%d: CERR\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2436,7 +2440,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"is%d:MISS\n"
+literal|"is%d: MISS\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2459,7 +2463,7 @@ name|MERR
 condition|)
 name|printf
 argument_list|(
-literal|"is%d:MERR\n"
+literal|"is%d: MERR\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2494,7 +2498,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"!(isr&RXON)\n"
+literal|"is%d: !(isr&RXON)\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|is
@@ -2529,7 +2535,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"!(isr&TXON)\n"
+literal|"is%d: !(isr&TXON)\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|is
@@ -2837,7 +2845,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"is%d error: out of sync\n"
+literal|"is%d: error: out of sync\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2899,7 +2907,7 @@ name|FRAM
 condition|)
 name|printf
 argument_list|(
-literal|"is%d:FRAM\n"
+literal|"is%d: FRAM\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2914,7 +2922,7 @@ name|OFLO
 condition|)
 name|printf
 argument_list|(
-literal|"is%d:OFLO\n"
+literal|"is%d: OFLO\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2929,7 +2937,7 @@ name|CRC
 condition|)
 name|printf
 argument_list|(
-literal|"is%d:CRC\n"
+literal|"is%d: CRC\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2944,7 +2952,7 @@ name|RBUFF
 condition|)
 name|printf
 argument_list|(
-literal|"is%d:RBUFF\n"
+literal|"is%d: RBUFF\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3026,7 +3034,7 @@ name|rmd
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"is%d:Chained buffer\n"
+literal|"is%d: Chained buffer\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3355,6 +3363,15 @@ literal|0
 condition|)
 return|return;
 comment|/*          * Pull packet off interface.  Off is nonzero if packet          * has trailing header; neget will then force this header          * information to be at the front, but we still have to drop          * the type and length which are at the front of any trailer data.          */
+name|is
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_ipackets
+operator|++
+expr_stmt|;
 name|m
 operator|=
 name|isget
@@ -4332,6 +4349,10 @@ name|int
 name|len
 decl_stmt|,
 name|i
+decl_stmt|,
+name|printed
+init|=
+literal|0
 decl_stmt|;
 name|rmd
 operator|=
@@ -4387,6 +4408,25 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|printed
+condition|)
+block|{
+name|printed
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"is%d: data: "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%x "
@@ -4407,6 +4447,11 @@ name|i
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|printed
+condition|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -4453,6 +4498,10 @@ name|rmd
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|printed
+init|=
+literal|0
 decl_stmt|;
 name|u_short
 name|len
@@ -4478,7 +4527,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"is%d:Transmit buffer %d, len = %d\n"
+literal|"is%d: Transmit buffer %d, len = %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4489,7 +4538,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"is%d:Status %x\n"
+literal|"is%d: Status %x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4503,7 +4552,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"addr %x, flags %x, bcnt %x, mcnt %x\n"
+literal|"is%d: addr %x, flags %x, bcnt %x, mcnt %x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|rmd
 operator|->
@@ -4535,6 +4586,25 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|printed
+condition|)
+block|{
+name|printed
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"is%d: data: "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%x "
@@ -4555,6 +4625,11 @@ name|i
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|printed
+condition|)
 name|printf
 argument_list|(
 literal|"\n"
