@@ -15,24 +15,6 @@ name|termios
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|gettyflags
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|gettynums
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|gettystrs
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 specifier|extern
 name|char

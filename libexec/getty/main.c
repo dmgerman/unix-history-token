@@ -190,13 +190,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"extern.h"
+file|"gettytab.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"gettytab.h"
+file|"extern.h"
 end_include
 
 begin_include
