@@ -36,6 +36,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -79,18 +97,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pioctl.h>
 end_include
 
 begin_function_decl
@@ -235,8 +241,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|outfile
-init|=
-name|stderr
 decl_stmt|;
 end_decl_stmt
 
@@ -581,6 +585,10 @@ name|sigexit
 init|=
 literal|0
 decl_stmt|;
+name|outfile
+operator|=
+name|stdout
+expr_stmt|;
 while|while
 condition|(
 operator|(

@@ -32,6 +32,8 @@ block|,
 name|Quad
 block|,
 name|Signal
+block|,
+name|Sockaddr
 block|}
 enum|;
 end_enum
