@@ -777,7 +777,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -785,7 +784,11 @@ argument_list|,
 literal|"ioctl"
 argument_list|)
 expr_stmt|;
-block|}
+name|free
+argument_list|(
+name|asyreq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -915,7 +918,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -923,7 +925,11 @@ argument_list|,
 literal|"ioctl"
 argument_list|)
 expr_stmt|;
-block|}
+name|free
+argument_list|(
+name|asyreq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1074,7 +1080,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -1082,7 +1087,11 @@ argument_list|,
 literal|"ioctl"
 argument_list|)
 expr_stmt|;
-block|}
+name|free
+argument_list|(
+name|asyreq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
