@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)skeleton.c	5.3 (Berkeley) %G%"
+literal|"@(#)skeleton.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ init|=
 block|{
 literal|"#ifndef lint"
 block|,
-literal|"char yysccsid[] = \"@(#)yaccpar	1.1 (Berkeley) 12/10/89\";"
+literal|"char yysccsid[] = \"@(#)yaccpar	1.4 (Berkeley) 02/25/90\";"
 block|,
 literal|"#endif"
 block|,
