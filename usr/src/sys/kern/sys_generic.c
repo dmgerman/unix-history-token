@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.1	82/07/15	*/
+comment|/*	sys_generic.c	5.2	82/07/22	*/
 end_comment
 
 begin_include
@@ -98,6 +98,43 @@ include|#
 directive|include
 file|"../h/fs.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MUSH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../h/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/share.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHARGE
+parameter_list|(
+name|nothing
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Read system call.  */
@@ -1165,6 +1202,13 @@ operator|==
 name|IFCHR
 condition|)
 block|{
+specifier|register
+name|c
+operator|=
+name|u
+operator|.
+name|u_count
+expr_stmt|;
 operator|(
 operator|*
 name|cdevsw
@@ -1180,6 +1224,19 @@ operator|)
 operator|(
 name|dev
 operator|)
+expr_stmt|;
+name|CHARGE
+argument_list|(
+name|sc_tio
+operator|*
+operator|(
+name|c
+operator|-
+name|u
+operator|.
+name|u_count
+operator|)
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -1718,6 +1775,15 @@ operator||=
 name|IUPD
 operator||
 name|ICHG
+expr_stmt|;
+name|CHARGE
+argument_list|(
+name|sc_tio
+operator|*
+name|u
+operator|.
+name|u_count
+argument_list|)
 expr_stmt|;
 operator|(
 operator|*
