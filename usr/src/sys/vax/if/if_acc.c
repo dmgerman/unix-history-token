@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.21	82/10/10	*/
+comment|/*	if_acc.c	4.22	82/10/17	*/
 end_comment
 
 begin_include
@@ -673,8 +673,6 @@ name|addr
 decl_stmt|;
 name|int
 name|info
-decl_stmt|,
-name|i
 decl_stmt|;
 if|if
 condition|(
