@@ -1571,21 +1571,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Random kthread setting terminate\n"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 endif|#
