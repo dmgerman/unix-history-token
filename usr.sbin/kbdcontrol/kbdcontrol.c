@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.7.4.3 1998/01/30 10:49:02 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.7.4.4 1998/05/06 11:09:54 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4468,6 +4468,12 @@ operator|=
 name|n
 expr_stmt|;
 block|}
+name|rate
+operator|.
+name|pad
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
