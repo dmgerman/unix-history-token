@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.6	81/10/17	*/
+comment|/*	tty.h	4.7	82/01/14	*/
 end_comment
 
 begin_ifdef
@@ -101,11 +101,10 @@ name|t_rsel
 decl_stmt|;
 comment|/* tty */
 name|struct
-name|chan
+name|proc
 modifier|*
-name|T_CHAN
+name|t_wsel
 decl_stmt|;
-comment|/* ### */
 name|caddr_t
 name|T_LINEP
 decl_stmt|;
@@ -398,7 +397,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIMEOUT
+name|TS_TIMEOUT
 value|000001
 end_define
 
@@ -409,7 +408,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WOPEN
+name|TS_WOPEN
 value|000002
 end_define
 
@@ -420,7 +419,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISOPEN
+name|TS_ISOPEN
 value|000004
 end_define
 
@@ -431,7 +430,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FLUSH
+name|TS_FLUSH
 value|000010
 end_define
 
@@ -442,7 +441,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CARR_ON
+name|TS_CARR_ON
 value|000020
 end_define
 
@@ -453,7 +452,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUSY
+name|TS_BUSY
 value|000040
 end_define
 
@@ -464,7 +463,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASLEEP
+name|TS_ASLEEP
 value|000100
 end_define
 
@@ -475,7 +474,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XCLUDE
+name|TS_XCLUDE
 value|000200
 end_define
 
@@ -486,7 +485,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TTSTOP
+name|TS_TTSTOP
 value|000400
 end_define
 
@@ -497,7 +496,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HUPCLS
+name|TS_HUPCLS
 value|001000
 end_define
 
@@ -508,7 +507,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TBLOCK
+name|TS_TBLOCK
 value|002000
 end_define
 
@@ -519,12 +518,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RCOLL
+name|TS_RCOLL
 value|004000
 end_define
 
 begin_comment
 comment|/* collision in read select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_WCOLL
+value|010000
+end_define
+
+begin_comment
+comment|/* collision in write select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_NBIO
+value|020000
+end_define
+
+begin_comment
+comment|/* tty in non-blocking mode */
 end_comment
 
 begin_comment
