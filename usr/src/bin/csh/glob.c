@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	4.8 (Berkeley) %G%"
+literal|"@(#)glob.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2368,6 +2368,8 @@ name|gpathp
 operator|++
 operator|=
 name|c
+operator|&
+name|TRIM
 expr_stmt|;
 operator|*
 name|gpathp
