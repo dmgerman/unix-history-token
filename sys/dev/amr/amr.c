@@ -145,13 +145,6 @@ directive|include
 file|<dev/amr/amr_tables.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|AMR_CDEV_MAJOR
-value|132
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -199,11 +192,6 @@ operator|.
 name|d_name
 operator|=
 literal|"amr"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|AMR_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt
