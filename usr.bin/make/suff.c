@@ -181,6 +181,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Counter for assigning suffix numbers */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -189,10 +193,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Counter for assigning suffix numbers */
-end_comment
 
 begin_comment
 comment|/*  * Structure describing an individual suffix.  */
@@ -234,7 +234,7 @@ comment|/* The empty suffix */
 name|Lst
 name|searchPath
 decl_stmt|;
-comment|/* The path along which files of this suffix 				 * may be found */
+comment|/* Path for files with this suffix */
 name|int
 name|sNum
 decl_stmt|;
@@ -334,6 +334,10 @@ name|LstSrc
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* The NULL suffix for this run */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Suff
@@ -343,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The NULL suffix for this run */
+comment|/* The empty suffix required for POSIX single-suffix transformation rules */
 end_comment
 
 begin_decl_stmt
@@ -354,160 +358,6 @@ name|emptySuff
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* The empty suffix required for POSIX 				 * single-suffix transformation rules */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|SuffInsert
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|Suff
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|SuffRemove
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|Suff
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|Boolean
-name|SuffParseTransform
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|Suff
-modifier|*
-modifier|*
-parameter_list|,
-name|Suff
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|SuffRebuildGraph
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|SuffAddSrc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|SuffRemoveSrc
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|SuffAddLevel
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|Src
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|Src
-modifier|*
-name|SuffFindThem
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|Src
-modifier|*
-name|SuffFindCmds
-parameter_list|(
-name|Src
-modifier|*
-parameter_list|,
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|Boolean
-name|SuffApplyTransform
-parameter_list|(
-name|GNode
-modifier|*
-parameter_list|,
-name|GNode
-modifier|*
-parameter_list|,
-name|Suff
-modifier|*
-parameter_list|,
-name|Suff
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|static
 name|void
@@ -517,76 +367,6 @@ name|GNode
 modifier|*
 parameter_list|,
 name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|SuffFindArchiveDeps
-parameter_list|(
-name|GNode
-modifier|*
-parameter_list|,
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|SuffFindNormalDeps
-parameter_list|(
-name|GNode
-modifier|*
-parameter_list|,
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|SuffPrintName
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|SuffPrintSuff
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|SuffPrintTrans
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1027,7 +807,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_endif
-unit|static void SuffFree(void *sp) {     Suff *s = sp;      if (s == suffNull) 	suffNull = NULL;      if (s == emptySuff) 	emptySuff = NULL;      Lst_Destroy(&s->ref, NOFREE);     Lst_Destroy(&s->children, NOFREE);     Lst_Destroy(&s->parents, NOFREE);     Lst_Destroy(&s->searchPath, Dir_Destroy);      free(s->name);     free(s); }
+unit|static void SuffFree(void *sp) { 	Suff *s = sp;  	if (s == suffNull) 		suffNull = NULL;  	if (s == emptySuff) 		emptySuff = NULL;  	Lst_Destroy(&s->ref, NOFREE); 	Lst_Destroy(&s->children, NOFREE); 	Lst_Destroy(&s->parents, NOFREE); 	Lst_Destroy(&s->searchPath, Dir_Destroy);  	free(s->name); 	free(s); }
 endif|#
 directive|endif
 end_endif
@@ -1328,7 +1108,7 @@ name|suffNull
 operator|=
 name|emptySuff
 expr_stmt|;
-comment|/*      * Clear suffNull's children list (the other suffixes are built new, but      * suffNull is used as is).      * NOFREE is used because all suffixes are are on the suffClean list.      * suffNull should not have parents.      */
+comment|/* 	 * Clear suffNull's children list (the other suffixes are built new, but 	 * suffNull is used as is). 	 * NOFREE is used because all suffixes are are on the suffClean list. 	 * suffNull should not have parents. 	 */
 name|Lst_Destroy
 argument_list|(
 operator|&
@@ -1390,14 +1170,14 @@ name|LstNode
 modifier|*
 name|singleLn
 decl_stmt|;
-comment|/* element in suffix list of any suffix 				     * that exactly matches str */
+comment|/* element in suffix list of any suffix 				 * that exactly matches str */
 name|Suff
 modifier|*
 name|single
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Source of possible transformation to 				     * null suffix */
+comment|/* Source of possible transformation to 				 * null suffix */
 name|srcLn
 operator|=
 name|NULL
@@ -1406,7 +1186,7 @@ name|singleLn
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*      * Loop looking first for a suffix that matches the start of the      * string and then for one that exactly matches the rest of it. If      * we can find two that meet these criteria, we've successfully      * parsed the string.      */
+comment|/* 	 * Loop looking first for a suffix that matches the start of the 	 * string and then for one that exactly matches the rest of it. If 	 * we can find two that meet these criteria, we've successfully 	 * parsed the string. 	 */
 for|for
 control|(
 init|;
@@ -1460,7 +1240,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Ran out of source suffixes -- no such rule 	     */
+comment|/* 			 * Ran out of source suffixes -- no such rule 			 */
 if|if
 condition|(
 name|singleLn
@@ -1468,7 +1248,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Not so fast Mr. Smith! There was a suffix that encompassed 		 * the entire string, so we assume it was a transformation 		 * to the null suffix (thank you POSIX). We still prefer to 		 * find a double rule over a singleton, hence we leave this 		 * check until the end. 		 * 		 * XXX: Use emptySuff over suffNull? 		 */
+comment|/* 				 * Not so fast Mr. Smith! There was a suffix 				 * that encompassed the entire string, so we 				 * assume it was a transformation to the null 				 * suffix (thank you POSIX). We still prefer to 				 * find a double rule over a singleton, hence we 				 * leave this check until the end. 				 * 				 * XXX: Use emptySuff over suffNull? 				 */
 operator|*
 name|srcPtr
 operator|=
@@ -1627,8 +1407,9 @@ comment|/* GNode of transformation rule */
 name|Suff
 modifier|*
 name|s
-decl_stmt|,
+decl_stmt|;
 comment|/* source suffix */
+name|Suff
 modifier|*
 name|t
 decl_stmt|;
@@ -1657,7 +1438,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Make a new graph node for the transformation. It will be filled in 	 * by the Parse module. 	 */
+comment|/* 		 * Make a new graph node for the transformation. 		 * It will be filled in by the Parse module. 		 */
 name|gn
 operator|=
 name|Targ_NewGN
@@ -1676,7 +1457,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * New specification for transformation rule. Just nuke the old list 	 * of commands so they can be filled in again... We don't actually 	 * free the commands themselves, because a given command can be 	 * attached to several different transformations. 	 */
+comment|/* 		 * New specification for transformation rule. Just nuke the 		 * old list of commands so they can be filled in again... 		 * We don't actually free the commands themselves, because a 		 * given command can be attached to several different 		 * transformations. 		 */
 name|gn
 operator|=
 name|Lst_Datum
@@ -1722,7 +1503,7 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-comment|/*      * link the two together in the proper relationship and order      */
+comment|/* 	 * link the two together in the proper relationship and order 	 */
 name|DEBUGF
 argument_list|(
 name|SUFF
@@ -1929,7 +1710,7 @@ name|s2
 init|=
 name|NULL
 decl_stmt|;
-comment|/*      * First see if it is a transformation from this suffix.      */
+comment|/* 	 * First see if it is a transformation from this suffix. 	 */
 name|cp
 operator|=
 name|SuffStrIsPrefix
@@ -1947,10 +1728,6 @@ if|if
 condition|(
 name|cp
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2003,7 +1780,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Found target. Link in and return, since it can't be anything 	     * else. 	     */
+comment|/* 			 * Found target. Link in and return, since it can't be 			 * anything else. 			 */
 name|SuffInsert
 argument_list|(
 operator|&
@@ -2031,7 +1808,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*      * Not from, maybe to?      */
+comment|/* 	* Not from, maybe to? 	*/
 name|cp
 operator|=
 name|SuffSuffIsSuffix
@@ -2057,7 +1834,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Null-terminate the source suffix in order to find it. 	 */
+comment|/* 		 * Null-terminate the source suffix in order to find it. 		 */
 name|cp
 index|[
 literal|1
@@ -2079,7 +1856,7 @@ argument_list|,
 name|SuffSuffHasNameP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Replace the start of the target suffix 	 */
+comment|/* 		 * Replace the start of the target suffix 		 */
 name|cp
 index|[
 literal|1
@@ -2099,7 +1876,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Found it -- establish the proper relationship 	     */
+comment|/* 			 * Found it -- establish the proper relationship 			 */
 name|s2
 operator|=
 name|Lst_Datum
@@ -2267,7 +2044,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Look for any existing transformations from or to this suffix. 	 * XXX: Only do this after a Suff_ClearSuffixes? 	 */
+comment|/* 		 * Look for any existing transformations from or to this suffix. 		 * XXX: Only do this after a Suff_ClearSuffixes? 		 */
 name|Lst_ForEach
 argument_list|(
 operator|&
@@ -2774,7 +2551,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-comment|/* 	 * If the suffix has been marked as the NULL suffix, also create a Src 	 * structure for a file with no suffix attached. Two birds, and all 	 * that... 	 */
+comment|/* 		 * If the suffix has been marked as the NULL suffix, also 		 * create a Src structure for a file with no suffix attached. 		 * Two birds, and all that... 		 */
 name|s2
 operator|=
 name|emalloc
@@ -3445,7 +3222,7 @@ name|file
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A file is considered to exist if either a node exists in the 	 * graph for it or the file actually exists. 	 */
+comment|/* 		 * A file is considered to exist if either a node exists in the 		 * graph for it or the file actually exists. 		 */
 if|if
 condition|(
 name|Targ_FindNode
@@ -3602,8 +3379,9 @@ comment|/* General-purpose list node */
 name|GNode
 modifier|*
 name|t
-decl_stmt|,
+decl_stmt|;
 comment|/* Target GNode */
+name|GNode
 modifier|*
 name|s
 decl_stmt|;
@@ -3719,7 +3497,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * The node matches the prefix ok, see if it has a known 	     * suffix. 	     */
+comment|/* 			 * The node matches the prefix ok, see if it has 			 * a known 			 * suffix. 			 */
 name|ln
 operator|=
 name|Lst_Find
@@ -3743,7 +3521,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * It even has a known suffix, see if there's a transformation 		 * defined between the node's suffix and the target's suffix. 		 * 		 * XXX: Handle multi-stage transformations here, too. 		 */
+comment|/* 				 * It even has a known suffix, see if there's 				 * a transformation defined between the node's 				 * suffix and the target's suffix. 				 * 				 * XXX: Handle multi-stage transformations 				 * here, too. 				 */
 name|suff
 operator|=
 name|Lst_Datum
@@ -3768,7 +3546,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		     * Hot Damn! Create a new Src structure to describe 		     * this transformation (making sure to duplicate the 		     * source node's name so Suff_FindDeps can free it 		     * again (ick)), and return the new structure. 		     */
+comment|/* 					 * Hot Damn! Create a new Src structure 					 * to describe this transformation 					 * (making sure to duplicate the 					 * source node's name so Suff_FindDeps 					 * can free it again (ick)), and return 					 * the new structure. 					 */
 name|ret
 operator|=
 name|emalloc
@@ -3878,7 +3656,8 @@ argument_list|(
 name|SUFF
 argument_list|,
 operator|(
-literal|"\tusing existing source %s\n"
+literal|"\tusing existing source "
+literal|"%s\n"
 operator|,
 name|s
 operator|->
@@ -4717,7 +4496,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Not already linked, so form the proper links between the 	 * target and source. 	 */
+comment|/* 		 * Not already linked, so form the proper links between the 		 * target and source. 		 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -4758,7 +4537,7 @@ operator|==
 name|OP_DOUBLEDEP
 condition|)
 block|{
-comment|/* 	 * When a :: node is used as the implied source of a node, we have 	 * to link all its cohorts in as sources as well. Only the initial 	 * sGn gets the target in its iParents list, however, as that 	 * will be sufficient to get the .IMPSRC variable set for tGn 	 */
+comment|/* 		 * When a :: node is used as the implied source of a node, 		 * we have to link all its cohorts in as sources as well. Only 		 * the initial sGn gets the target in its iParents list, however 		 * as that will be sufficient to get the .IMPSRC variable set 		 * for tGn 		 */
 for|for
 control|(
 name|ln
@@ -4805,7 +4584,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Not already linked, so form the proper links between the 		 * target and source. 		 */
+comment|/* 				 * Not already linked, so form the proper 				 * links between the target and source. 				 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -4835,7 +4614,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * Locate the transformation rule itself      */
+comment|/* 	 * Locate the transformation rule itself 	 */
 name|tname
 operator|=
 name|str_concat
@@ -4875,7 +4654,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Not really such a transformation rule (can happen when we're 	 * called to link an OP_MEMBER and OP_ARCHV node), so return 	 * FALSE. 	 */
+comment|/* 		 * Not really such a transformation rule (can happen when we're 		 * called to link an OP_MEMBER and OP_ARCHV node), so return 		 * FALSE. 		 */
 return|return
 operator|(
 name|FALSE
@@ -4910,7 +4689,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Record last child for expansion purposes      */
+comment|/* 	 * Record last child for expansion purposes 	 */
 name|ln
 operator|=
 name|Lst_Last
@@ -4921,7 +4700,7 @@ operator|->
 name|children
 argument_list|)
 expr_stmt|;
-comment|/*      * Pass the buck to Make_HandleUse to apply the rule      */
+comment|/* 	 * Pass the buck to Make_HandleUse to apply the rule 	 */
 name|Make_HandleUse
 argument_list|(
 name|gn
@@ -4929,7 +4708,7 @@ argument_list|,
 name|tGn
 argument_list|)
 expr_stmt|;
-comment|/*      * Deal with wildcards and variables in any acquired sources      */
+comment|/* 	 * Deal with wildcards and variables in any acquired sources 	 */
 name|ln
 operator|=
 name|Lst_Succ
@@ -4952,7 +4731,7 @@ name|ln
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Keep track of another parent to which this beast is transformed so      * the .IMPSRC variable can be set correctly for the parent.      */
+comment|/* 	 * Keep track of another parent to which this beast is transformed so 	 * the .IMPSRC variable can be set correctly for the parent. 	 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -5035,7 +4814,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* Start of member's name */
-comment|/*      * The node is an archive(member) pair. so we must find a      * suffix for both of them.      */
+comment|/* 	 * The node is an archive(member) pair. so we must find a 	 * suffix for both of them. 	 */
 name|eoarch
 operator|=
 name|strchr
@@ -5074,7 +4853,7 @@ name|eoarch
 operator|+
 literal|1
 expr_stmt|;
-comment|/*      * To simplify things, call Suff_FindDeps recursively on the member now,      * so we can simply compare the member's .PREFIX and .TARGET variables      * to locate its suffix. This allows us to figure out the suffix to      * use for the archive without having to do a quadratic search over the      * suffix list, backtracking for each one...      */
+comment|/* 	 * To simplify things, call Suff_FindDeps recursively on the member now, 	 * so we can simply compare the member's .PREFIX and .TARGET variables 	 * to locate its suffix. This allows us to figure out the suffix to 	 * use for the archive without having to do a quadratic search over the 	 * suffix list, backtracking for each one... 	 */
 name|mem
 operator|=
 name|Targ_FindNode
@@ -5091,7 +4870,7 @@ argument_list|,
 name|slst
 argument_list|)
 expr_stmt|;
-comment|/*      * Create the link between the two nodes right off      */
+comment|/* 	 * Create the link between the two nodes right off 	 */
 if|if
 condition|(
 name|Lst_Member
@@ -5134,7 +4913,7 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * Copy in the variables from the member node to this one.      */
+comment|/* 	 * Copy in the variables from the member node to this one. 	 */
 for|for
 control|(
 name|i
@@ -5210,7 +4989,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Didn't know what it was -- use .NULL suffix if not in make mode 	 */
+comment|/* 		 * Didn't know what it was -- use .NULL suffix if not in 		 * make mode 		 */
 name|DEBUGF
 argument_list|(
 name|SUFF
@@ -5225,7 +5004,7 @@ operator|=
 name|suffNull
 expr_stmt|;
 block|}
-comment|/*      * Set the other two local variables required for this target.      */
+comment|/* 	* Set the other two local variables required for this target. 	*/
 name|Var_Set
 argument_list|(
 name|MEMBER
@@ -5253,12 +5032,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Member has a known suffix, so look for a transformation rule from 	 * it to a possible suffix of the archive. Rather than searching 	 * through the entire list, we just look at suffixes to which the 	 * member's suffix may be transformed... 	 */
+comment|/* 		 * Member has a known suffix, so look for a transformation rule 		 * from it to a possible suffix of the archive. Rather than 		 * searching through the entire list, we just look at suffixes 		 * to which the member's suffix may be transformed... 		 */
 name|LstNode
 modifier|*
 name|ln
 decl_stmt|;
-comment|/* 	 * Use first matching suffix... 	 */
+comment|/* 		 * Use first matching suffix... 		 */
 name|ln
 operator|=
 name|Lst_Find
@@ -5280,7 +5059,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Got one -- apply it 	     */
+comment|/* 			 * Got one -- apply it 			 */
 if|if
 condition|(
 operator|!
@@ -5304,7 +5083,8 @@ argument_list|(
 name|SUFF
 argument_list|,
 operator|(
-literal|"\tNo transformation from %s -> %s\n"
+literal|"\tNo transformation from "
+literal|"%s -> %s\n"
 operator|,
 name|ms
 operator|->
@@ -5328,7 +5108,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * Replace the opening and closing parens now we've no need of the separate      * pieces.      */
+comment|/* 	 * Replace the opening and closing parens now we've no need 	 * of the separate pieces. 	 */
 operator|*
 name|eoarch
 operator|=
@@ -5339,7 +5119,7 @@ name|eoname
 operator|=
 literal|')'
 expr_stmt|;
-comment|/*      * Pretend gn appeared to the left of a dependency operator so      * the user needn't provide a transformation from the member to the      * archive.      */
+comment|/* 	 * Pretend gn appeared to the left of a dependency operator so 	 * the user needn't provide a transformation from the member to the 	 * archive. 	 */
 if|if
 condition|(
 name|OP_NOP
@@ -5357,7 +5137,7 @@ operator||=
 name|OP_DEPENDS
 expr_stmt|;
 block|}
-comment|/*      * Flag the member as such so we remember to look in the archive for      * its modification time.      */
+comment|/* 	 * Flag the member as such so we remember to look in the archive for 	 * its modification time. 	 */
 name|mem
 operator|->
 name|type
@@ -5407,7 +5187,7 @@ comment|/* List of sources at which to look */
 name|Lst
 name|targs
 decl_stmt|;
-comment|/* List of targets to which things can be 			     * transformed. They all have the same file, 			     * but different suff and pref fields */
+comment|/* List of targets to which things can be 				 * transformed. They all have the same file, 				 * but different suff and pref fields */
 name|Src
 modifier|*
 name|bottom
@@ -5447,7 +5227,7 @@ name|gn
 operator|->
 name|name
 expr_stmt|;
-comment|/*      * Begin at the beginning...      */
+comment|/* 	 * Begin at the beginning... 	 */
 name|ln
 operator|=
 name|Lst_First
@@ -5468,7 +5248,7 @@ operator|&
 name|targs
 argument_list|)
 expr_stmt|;
-comment|/*      * We're caught in a catch-22 here. On the one hand, we want to use any      * transformation implied by the target's sources, but we can't examine      * the sources until we've expanded any variables/wildcards they may hold,      * and we can't do that until we've set up the target's local variables      * and we can't do that until we know what the proper suffix for the      * target is (in case there are two suffixes one of which is a suffix of      * the other) and we can't know that until we've found its implied      * source, which we may not want to use if there's an existing source      * that implies a different transformation.      *      * In an attempt to get around this, which may not work all the time,      * but should work most of the time, we look for implied sources first,      * checking transformations to all possible suffixes of the target,      * use what we find to set the target's local variables, expand the      * children, then look for any overriding transformations they imply.      * Should we find one, we discard the one we found before.      */
+comment|/* 	 * We're caught in a catch-22 here. On the one hand, we want to use any 	 * transformation implied by the target's sources, but we can't examine 	 * the sources until we've expanded any variables/wildcards they may 	 * hold, and we can't do that until we've set up the target's local 	 * variables and we can't do that until we know what the proper suffix 	 * for the target is (in case there are two suffixes one of which is a 	 * suffix of the other) and we can't know that until we've found its 	 * implied source, which we may not want to use if there's an existing 	 * source that implies a different transformation. 	 * 	 * In an attempt to get around this, which may not work all the time, 	 * but should work most of the time, we look for implied sources first, 	 * checking transformations to all possible suffixes of the target, 	 * use what we find to set the target's local variables, expand the 	 * children, then look for any overriding transformations they imply. 	 * Should we find one, we discard the one we found before. 	 */
 while|while
 condition|(
 name|ln
@@ -5476,7 +5256,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Look for next possible suffix... 	 */
+comment|/* 		 * Look for next possible suffix... 		 */
 name|ln
 operator|=
 name|Lst_FindFrom
@@ -5506,7 +5286,7 @@ name|Src
 modifier|*
 name|target
 decl_stmt|;
-comment|/* 	     * Allocate a Src structure to which things can be transformed 	     */
+comment|/* 			 * Allocate a Src structure to which things can be 			 * transformed 			 */
 name|target
 operator|=
 name|emalloc
@@ -5575,7 +5355,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	     * Allocate room for the prefix, whose end is found by subtracting 	     * the length of the suffix from the end of the name. 	     */
+comment|/* 			 * Allocate room for the prefix, whose end is found 			 * by subtracting the length of the suffix from 			 * the end of the name. 			 */
 name|prefLen
 operator|=
 operator|(
@@ -5621,7 +5401,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	     * Add nodes from which the target can be made 	     */
+comment|/* 			 * Add nodes from which the target can be made 			 */
 name|SuffAddLevel
 argument_list|(
 operator|&
@@ -5630,7 +5410,7 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Record the target so we can nuke it 	     */
+comment|/* 			 * Record the target so we can nuke it 			 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -5639,7 +5419,7 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Search from this suffix's successor... 	     */
+comment|/* 			 * Search from this suffix's successor... 			 */
 name|ln
 operator|=
 name|Lst_Succ
@@ -5649,7 +5429,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Handle target of unknown suffix...      */
+comment|/* 	 * Handle target of unknown suffix... 	 */
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -5750,7 +5530,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Only use the default suffix rules if we don't have commands 	 * or dependencies defined for this gnode 	 */
+comment|/* 		 * Only use the default suffix rules if we don't have commands 		 * or dependencies defined for this gnode 		 */
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -5807,7 +5587,7 @@ name|targ
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Using the list of possible sources built up from the target suffix(es),      * try and find an existing file/target that matches.      */
+comment|/* 	 * Using the list of possible sources built up from the target 	 * suffix(es), try and find an existing file/target that matches. 	 */
 name|bottom
 operator|=
 name|SuffFindThem
@@ -5825,7 +5605,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * No known transformations -- use the first suffix found for setting 	 * the local variables. 	 */
+comment|/* 		 * No known transformations -- use the first suffix found for 		 * setting the local variables. 		 */
 if|if
 condition|(
 operator|!
@@ -5858,7 +5638,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * Work up the transformation path to find the suffix of the 	 * target to which the transformation was made. 	 */
+comment|/* 		 * Work up the transformation path to find the suffix of the 		 * target to which the transformation was made. 		 */
 for|for
 control|(
 name|targ
@@ -5879,7 +5659,7 @@ name|parent
 control|)
 continue|continue;
 block|}
-comment|/*      * The .TARGET variable we always set to be the name at this point,      * since it's only set to the path if the thing is only a source and      * if it's only a source, it doesn't matter what we put here as far      * as expanding sources is concerned, since it has none...      */
+comment|/* 	 * The .TARGET variable we always set to be the name at this point, 	 * since it's only set to the path if the thing is only a source and 	 * if it's only a source, it doesn't matter what we put here as far 	 * as expanding sources is concerned, since it has none... 	 */
 name|Var_Set
 argument_list|(
 name|TARGET
@@ -5916,7 +5696,7 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-comment|/*      * Now we've got the important local variables set, expand any sources      * that still contain variables or wildcards in their names.      */
+comment|/* 	 * Now we've got the important local variables set, expand any sources 	 * that still contain variables or wildcards in their names. 	 */
 name|SuffExpandChildren
 argument_list|(
 name|gn
@@ -5946,7 +5726,7 @@ argument_list|)
 expr_stmt|;
 name|sfnd_abort
 label|:
-comment|/* 	 * Deal with finding the thing on the default search path if the 	 * node is only a source (not on the lhs of a dependency operator 	 * or [XXX] it has neither children or commands). 	 */
+comment|/* 		 * Deal with finding the thing on the default search path if the 		 * node is only a source (not on the lhs of a dependency 		 * operator or [XXX] it has neither children or commands). 		 */
 if|if
 condition|(
 name|OP_NOP
@@ -6033,7 +5813,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		     * Suffix known for the thing -- trim the suffix off 		     * the path to form the proper .PREFIX variable. 		     */
+comment|/* 					 * Suffix known for the thing -- trim 					 * the suffix off the path to form the 					 * proper .PREFIX variable. 					 */
 name|int
 name|savep
 init|=
@@ -6147,7 +5927,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		     * The .PREFIX gets the full path if the target has 		     * no known suffix. 		     */
+comment|/* 					 * The .PREFIX gets the full path if 					 * the target has no known suffix. 					 */
 if|if
 condition|(
 name|gn
@@ -6208,7 +5988,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Not appropriate to search for the thing -- set the 	     * path to be the name so Dir_MTime won't go grovelling for 	     * it. 	     */
+comment|/* 			 * Not appropriate to search for the thing -- set the 			 * path to be the name so Dir_MTime won't go 			 * grovelling for it. 			 */
 if|if
 condition|(
 name|gn
@@ -6274,7 +6054,7 @@ goto|goto
 name|sfnd_return
 goto|;
 block|}
-comment|/*      * If the suffix indicates that the target is a library, mark that in      * the node's type field.      */
+comment|/* 	 * If the suffix indicates that the target is a library, mark that in 	 * the node's type field. 	 */
 if|if
 condition|(
 name|targ
@@ -6293,7 +6073,7 @@ operator||=
 name|OP_LIB
 expr_stmt|;
 block|}
-comment|/*      * Check for overriding transformation rule implied by sources      */
+comment|/* 	 * Check for overriding transformation rule implied by sources 	 */
 if|if
 condition|(
 operator|!
@@ -6322,7 +6102,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Free up all the Src structures in the transformation path 	     * up to, but not including, the parent node. 	     */
+comment|/* 			 * Free up all the Src structures in the 			 * transformation path up to, but not including, 			 * the parent node. 			 */
 while|while
 condition|(
 name|bottom
@@ -6374,12 +6154,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * No idea from where it can come -- return now. 	 */
+comment|/* 		 * No idea from where it can come -- return now. 		 */
 goto|goto
 name|sfnd_abort
 goto|;
 block|}
-comment|/*      * We now have a list of Src structures headed by 'bottom' and linked via      * their 'parent' pointers. What we do next is create links between      * source and target nodes (which may or may not have been created)      * and set the necessary local variables in each target. The      * commands for each target are set from the commands of the      * transformation rule used to get from the src suffix to the targ      * suffix. Note that this causes the commands list of the original      * node, gn, to be replaced by the commands of the final      * transformation rule. Also, the unmade field of gn is incremented.      * Etc.      */
+comment|/* 	 * We now have a list of Src structures headed by 'bottom' and linked 	 * via their 'parent' pointers. What we do next is create links between 	 * source and target nodes (which may or may not have been created) 	 * and set the necessary local variables in each target. The 	 * commands for each target are set from the commands of the 	 * transformation rule used to get from the src suffix to the targ 	 * suffix. Note that this causes the commands list of the original 	 * node, gn, to be replaced by the commands of the final 	 * transformation rule. Also, the unmade field of gn is incremented. 	 * Etc. 	 */
 if|if
 condition|(
 name|bottom
@@ -6515,7 +6295,7 @@ operator|!=
 name|gn
 condition|)
 block|{
-comment|/* 	     * Finish off the dependency-search process for any nodes 	     * between bottom and gn (no point in questing around the 	     * filesystem for their implicit source when it's already 	     * known). Note that the node can't have any sources that 	     * need expanding, since SuffFindThem will stop on an existing 	     * node, so all we need to do is set the standard and System V 	     * variables. 	     */
+comment|/* 			 * Finish off the dependency-search process for any 			 * nodes between bottom and gn (no point in questing 			 * around the filesystem for their implicit source 			 * when it's already known). Note that the node can't 			 * have any sources that need expanding, since 			 * SuffFindThem will stop on an existing 			 * node, so all we need to do is set the standard and 			 * System V variables. 			 */
 name|targ
 operator|->
 name|node
@@ -6582,7 +6362,7 @@ operator|->
 name|refCount
 operator|++
 expr_stmt|;
-comment|/*      * So Dir_MTime doesn't go questing for it...      */
+comment|/* 	 * So Dir_MTime doesn't go questing for it... 	 */
 name|free
 argument_list|(
 name|gn
@@ -6601,7 +6381,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*      * Nuke the transformation path and the Src structures left over in the      * two lists.      */
+comment|/* 	 * Nuke the transformation path and the Src structures left over in the 	 * two lists. 	 */
 name|sfnd_return
 label|:
 if|if
@@ -6720,7 +6500,7 @@ operator|&
 name|OP_DEPS_FOUND
 condition|)
 block|{
-comment|/* 	 * If dependencies already found, no need to do it again... 	 */
+comment|/* 		 * If dependencies already found, no need to do it again... 		 */
 return|return;
 block|}
 else|else
@@ -6772,7 +6552,7 @@ operator|&
 name|OP_LIB
 condition|)
 block|{
-comment|/* 	 * If the node is a library, it is the arch module's job to find it 	 * and set the TARGET variable accordingly. We merely provide the 	 * search path, assuming all libraries end in ".a" (if the suffix 	 * hasn't been defined, there's nothing we can do for it, so we just 	 * set the TARGET variable to the node's name in order to give it a 	 * value). 	 */
+comment|/* 		* If the node is a library, it is the arch module's job to find 		* it and set the TARGET variable accordingly. We merely provide 		* the search path, assuming all libraries end in ".a" (if the 		* suffix hasn't been defined, there's nothing we can do for it, 		* so we just set the TARGET variable to the node's name in order 		* to give it a value). 		*/
 name|LstNode
 modifier|*
 name|ln
@@ -6862,7 +6642,7 @@ name|gn
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Because a library (-lfoo) target doesn't follow the standard 	 * filesystem conventions, we don't set the regular variables for 	 * the thing. .PREFIX is simply made empty... 	 */
+comment|/* 		* Because a library (-lfoo) target doesn't follow the standard 		* filesystem conventions, we don't set the regular variables for 		* the thing. .PREFIX is simply made empty... 		*/
 name|Var_Set
 argument_list|(
 name|PREFIX
@@ -6954,7 +6734,7 @@ name|flags
 operator||=
 name|SUFF_NULL
 expr_stmt|;
-comment|/* 	 * XXX: Here's where the transformation mangling would take place 	 */
+comment|/* 		 * XXX: Here's where the transformation mangling 		 * would take place 		 */
 name|suffNull
 operator|=
 name|s
@@ -6966,7 +6746,8 @@ name|Parse_Error
 argument_list|(
 name|PARSE_WARNING
 argument_list|,
-literal|"Desired null suffix %s not defined."
+literal|"Desired null suffix %s "
+literal|"not defined."
 argument_list|,
 name|name
 argument_list|)
@@ -6990,7 +6771,7 @@ name|sNum
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Create null suffix for single-suffix rules (POSIX). The thing doesn't      * actually go on the suffix list or everyone will think that's its      * suffix.      */
+comment|/* 	* Create null suffix for single-suffix rules (POSIX). The thing doesn't 	* actually go on the suffix list or everyone will think that's its 	* suffix. 	*/
 name|emptySuff
 operator|=
 name|suffNull
