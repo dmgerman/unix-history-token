@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subdir.c	5.4 (Berkeley) %G%"
+literal|"@(#)subdir.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,6 +361,16 @@ begin_comment
 comment|/*  * return possibly corrected directory for searching  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+name|xdir
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|char
 modifier|*
@@ -405,9 +415,29 @@ name|pre
 operator|==
 name|XQTPRE
 condition|)
+block|{
+if|if
+condition|(
+name|xdir
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|sprintf
+argument_list|(
+name|xdir
+argument_list|,
+literal|"%s/X."
+argument_list|,
+name|Spool
+argument_list|)
+expr_stmt|;
 return|return
-name|XEQTDIR
+name|xdir
 return|;
+block|}
 return|return
 name|d
 return|;
