@@ -4,7 +4,7 @@ comment|/* To do:   * Don't store drive configuration on the config DB: read eac
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: config.c,v 1.20 1998/10/26 02:05:34 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: config.c,v 1.19 1998/10/05 02:48:15 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -4565,6 +4565,9 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* index in plexes subdisk table */
+name|int
+name|namedsdno
+decl_stmt|;
 name|sdno
 operator|=
 name|get_empty_sd
@@ -4714,8 +4717,37 @@ break|break;
 case|case
 name|kw_name
 case|:
+name|namedsdno
+operator|=
+name|find_subdisk
+argument_list|(
+name|token
+index|[
 operator|++
 name|parameter
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* find an existing sd with this name */
+if|if
+condition|(
+name|namedsdno
+operator|>=
+literal|0
+condition|)
+name|throw_rude_remark
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"Duplicate subdisk %s"
+argument_list|,
+name|token
+index|[
+name|parameter
+index|]
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -5131,6 +5163,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* don't give it to a volume */
+name|int
+name|namedplexno
+decl_stmt|;
 name|current_plex
 operator|=
 operator|-
@@ -5199,10 +5234,6 @@ break|break;
 case|case
 name|kw_name
 case|:
-block|{
-name|int
-name|namedplexno
-decl_stmt|;
 name|namedplexno
 operator|=
 name|find_plex
@@ -5235,7 +5266,6 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|token
