@@ -205,7 +205,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|printf(BIG(val) ? "#define\t%s 0x%qx\n" : "#define\t%s %qd\n", name, val)
+value|printf(BIG(val) ? "#define\t%s 0x%llx\n" : "#define\t%s %lld\n", name, val)
 end_define
 
 begin_define
