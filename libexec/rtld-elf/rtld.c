@@ -2159,6 +2159,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* setup TLS for main thread */
+name|dbg
+argument_list|(
+literal|"initializing initial thread local storage"
+argument_list|)
+expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|entry
+argument_list|,
+argument|&list_main
+argument_list|,
+argument|link
+argument_list|)
+block|{
+comment|/* 	 * Allocate all the initial objects out of the static TLS 	 * block even if they didn't ask for it. 	 */
+name|allocate_tls_offset
+argument_list|(
+name|entry
+operator|->
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+name|allocate_initial_tls
+argument_list|(
+name|obj_list
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|relocate_objects
@@ -2265,35 +2294,6 @@ argument_list|)
 expr_stmt|;
 name|lockdflt_init
 argument_list|()
-expr_stmt|;
-comment|/* setup TLS for main thread */
-name|dbg
-argument_list|(
-literal|"initializing initial thread local storage"
-argument_list|)
-expr_stmt|;
-name|STAILQ_FOREACH
-argument_list|(
-argument|entry
-argument_list|,
-argument|&list_main
-argument_list|,
-argument|link
-argument_list|)
-block|{
-comment|/* 	 * Allocate all the initial objects out of the static TLS 	 * block even if they didn't ask for it. 	 */
-name|allocate_tls_offset
-argument_list|(
-name|entry
-operator|->
-name|obj
-argument_list|)
-expr_stmt|;
-block|}
-name|allocate_initial_tls
-argument_list|(
-name|obj_list
-argument_list|)
 expr_stmt|;
 comment|/* Make a list of init functions to call. */
 name|objlist_init
