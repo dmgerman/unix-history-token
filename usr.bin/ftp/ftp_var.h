@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: ftp_var.h,v 1.4 1997/06/25 08:56:41 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|PAGER
-value|"less"
+value|"more"
 end_define
 
 begin_comment
