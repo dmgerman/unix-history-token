@@ -256,16 +256,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|MSGMAX
-end_undef
-
-begin_comment
-comment|/* ALWAYS compute MGSMAX! */
-end_comment
-
 begin_define
 define|#
 directive|define
