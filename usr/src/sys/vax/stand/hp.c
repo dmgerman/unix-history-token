@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.13	83/02/17	*/
+comment|/*	hp.c	4.14	83/02/17	*/
 end_comment
 
 begin_comment
@@ -464,15 +464,15 @@ comment|/*9730*/
 block|,
 operator|-
 literal|1
-comment|/*Capr*/
+comment|/*Cap*/
 block|,
 operator|-
 literal|1
-comment|/* eagle */
+comment|/* Eagle */
 block|,
 operator|-
 literal|1
-comment|/* 48 sect eagle */
+comment|/* Eagle */
 block|,
 name|MBDT_RM02
 block|,
