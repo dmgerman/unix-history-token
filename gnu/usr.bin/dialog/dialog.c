@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dialog.h>
 end_include
 
@@ -641,7 +647,10 @@ name|end_dialog
 argument_list|()
 expr_stmt|;
 return|return
+name|WEXITSTATUS
+argument_list|(
 name|retval
+argument_list|)
 return|;
 block|}
 elseif|else
