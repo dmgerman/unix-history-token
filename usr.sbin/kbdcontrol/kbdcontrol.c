@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.15 1998/08/03 09:12:39 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.16 1998/08/03 11:33:22 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ literal|"gs "
 block|,
 literal|"rs "
 block|,
-literal|"ns "
+literal|"us "
 block|}
 decl_stmt|;
 end_decl_stmt
