@@ -99,6 +99,17 @@ begin_comment
 comment|/* ICH4 needs special handling too */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICH5ID
+value|0x24d58086
+end_define
+
+begin_comment
+comment|/* ICH5 needs to be treated as ICH4 */
+end_comment
+
 begin_comment
 comment|/* buffer descriptor */
 end_comment
@@ -229,6 +240,8 @@ modifier|*
 name|irq
 decl_stmt|;
 name|int
+name|regtype
+decl_stmt|,
 name|nambarid
 decl_stmt|,
 name|nabmbarid
@@ -2231,7 +2244,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Sysctl to control ac97 speed (some boards overclocked ac97). */
+comment|/*  * Sysctl to control ac97 speed (some boards appear to end up using  * XTAL_IN rather than BIT_CLK for link timing).  */
 end_comment
 
 begin_function
@@ -2297,7 +2310,7 @@ comment|/* -------------------------------------------------------------------- 
 end_comment
 
 begin_comment
-comment|/* Calibrate card (some boards are overclocked and need scaling) */
+comment|/* Calibrate card to determine the clock source.  The source maybe a  * function of the ac97 codec initialization code (to be investigated).  */
 end_comment
 
 begin_function
@@ -2775,9 +2788,10 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* ICH4 may fail when busmastering is enabled. Continue */
+comment|/* ICH4/ICH5 may fail when busmastering is enabled. Continue */
 if|if
 condition|(
+operator|(
 name|pci_get_devid
 argument_list|(
 name|sc
@@ -2786,6 +2800,18 @@ name|dev
 argument_list|)
 operator|!=
 name|ICH4ID
+operator|)
+operator|&&
+operator|(
+name|pci_get_devid
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|!=
+name|ICH5ID
+operator|)
 condition|)
 block|{
 return|return
@@ -2976,7 +3002,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801AA (ICH)"
+literal|"Intel ICH (82801AA)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2989,7 +3015,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801AB (ICH)"
+literal|"Intel ICH (82801AB)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3002,7 +3028,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801BA (ICH2)"
+literal|"Intel ICH2 (82801BA)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3015,7 +3041,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801CA (ICH3)"
+literal|"Intel ICH3 (82801CA)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3028,12 +3054,29 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801DB (ICH4)"
+literal|"Intel ICH4 (82801DB)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1000
 return|;
+comment|/* allow a better driver to override us */
+case|case
+name|ICH5ID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel ICH5 (82801EB)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1000
+return|;
+comment|/* allow a better driver to override us */
 case|case
 name|SIS7012ID
 case|:
@@ -3054,7 +3097,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce AC97 controller"
+literal|"Nvidia nForce"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3067,7 +3110,20 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce2 AC97 controller"
+literal|"Nvidia nForce2"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+literal|0x74451022
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AMD-768"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3193,42 +3249,61 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 	 * By default, ich4 has NAMBAR and NABMBAR i/o spaces as 	 * read-only.  Need to enable "legacy support", by poking into 	 * pci config space.  The driver should use MMBAR and MBBAR, 	 * but doing so will mess things up here.  ich4 has enough new 	 * features it warrants it's own driver.  	 */
+comment|/* 	 * Enable bus master. On ich4/5 this may prevent the detection of 	 * the primary codec becoming ready in ich_init(). 	 */
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ICH4ID
-condition|)
-block|{
-name|pci_write_config
+operator|)
+operator|||
+operator|(
+name|pci_get_devid
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_ICH_LEGACY
-argument_list|,
-name|ICH_LEGACY_ENABLE
-argument_list|,
-literal|1
 argument_list|)
+operator|==
+name|ICH5ID
+operator|)
+condition|)
+block|{
+name|sc
+operator|->
+name|nambarid
+operator|=
+name|PCIR_MMBAR
 expr_stmt|;
-block|}
+name|sc
+operator|->
+name|nabmbarid
+operator|=
+name|PCIR_MBBAR
+expr_stmt|;
+name|sc
+operator|->
+name|regtype
+operator|=
+name|SYS_RES_MEMORY
+expr_stmt|;
 name|pci_enable_io
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable bus master. On ich4 this may prevent the detection of 	 * the primary codec becoming ready in ich_init(). 	 */
-name|pci_enable_busmaster
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|nambarid
@@ -3243,13 +3318,29 @@ name|PCIR_NABMBAR
 expr_stmt|;
 name|sc
 operator|->
+name|regtype
+operator|=
+name|SYS_RES_IOPORT
+expr_stmt|;
+name|pci_enable_io
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|)
+expr_stmt|;
+block|}
+name|sc
+operator|->
 name|nambar
 operator|=
 name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|regtype
 argument_list|,
 operator|&
 name|sc
@@ -3274,7 +3365,9 @@ name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|regtype
 argument_list|,
 operator|&
 name|sc
@@ -3838,7 +3931,9 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|regtype
 argument_list|,
 name|sc
 operator|->
@@ -3859,7 +3954,9 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|regtype
 argument_list|,
 name|sc
 operator|->
@@ -3953,7 +4050,9 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|regtype
 argument_list|,
 name|sc
 operator|->
@@ -3968,7 +4067,9 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|regtype
 argument_list|,
 name|sc
 operator|->
