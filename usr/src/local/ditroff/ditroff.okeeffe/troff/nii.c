@@ -5,13 +5,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)nii.c	2.1 (CWI) 85/07/18"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nii.c	2.1 (CWI) 85/07/18"
+literal|"@(#)nii.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,13 +318,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|iflg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|enda
 decl_stmt|;
 end_decl_stmt
 

@@ -5,13 +5,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[]="@(#)n10.c	1.2	(CWI)	86/08/15"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n10.c	1.2	(CWI)	86/08/15"
+literal|"@(#)n10.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -333,12 +337,6 @@ modifier|*
 name|getint
 argument_list|()
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|setbrk
-parameter_list|()
-function_decl|;
 name|struct
 name|stat
 name|stbuf
@@ -396,7 +394,7 @@ argument_list|)
 expr_stmt|;
 name|codestr
 operator|=
-name|setbrk
+name|malloc
 argument_list|(
 operator|(
 name|int
@@ -1927,10 +1925,6 @@ block|{
 name|int
 name|waitf
 decl_stmt|;
-name|obufp
-operator|=
-name|obuf
-expr_stmt|;
 name|oputs
 argument_list|(
 name|t
@@ -1948,7 +1942,10 @@ condition|)
 block|{
 name|close
 argument_list|(
+name|fileno
+argument_list|(
 name|ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wait
