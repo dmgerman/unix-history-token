@@ -1543,7 +1543,9 @@ specifier|static
 name|__inline
 name|void
 name|ahc_list_lockinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 

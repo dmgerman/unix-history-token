@@ -37457,7 +37457,9 @@ end_function
 begin_function
 name|void
 name|ahd_dump_all_cards_state
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ahd_softc
