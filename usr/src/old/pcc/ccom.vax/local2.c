@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.34 (Berkeley) %G%"
+literal|"@(#)local2.c	1.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2353,16 +2353,26 @@ name|name
 operator|=
 literal|""
 expr_stmt|;
+comment|/* size of floating argument is always 2 */
 name|p
 operator|->
 name|tn
 operator|.
 name|lval
 operator|=
-name|szty
-argument_list|(
+operator|(
+literal|1
+operator|+
+operator|(
 name|ty
-argument_list|)
+operator|==
+name|FLOAT
+operator|||
+name|ty
+operator|==
+name|DOUBLE
+operator|)
+operator|)
 operator|*
 operator|(
 name|SZINT
