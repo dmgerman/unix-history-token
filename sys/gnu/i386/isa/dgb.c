@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.33 1998/04/21 02:39:48 brian Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.34 1998/04/21 21:06:22 brian Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
 end_comment
 
 begin_include
@@ -187,31 +187,18 @@ end_include
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|DGB_DEBUG
 end_define
+
+begin_comment
+comment|/* Enable debugging info via sysctl */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<gnu/i386/isa/dgreg.h>
 end_include
-
-begin_comment
-comment|/* This avoids warnings: we're an isa device only  * so it does not matter...  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|outb
-end_undef
-
-begin_define
-define|#
-directive|define
-name|outb
-value|outbv
-end_define
 
 begin_define
 define|#
@@ -561,11 +548,11 @@ name|u_char
 name|altpin
 decl_stmt|;
 comment|/* do we need alternate pin setting ? */
-name|ushort
+name|int
 name|numports
 decl_stmt|;
 comment|/* number of ports on card */
-name|ushort
+name|int
 name|port
 decl_stmt|;
 comment|/* I/O port */
@@ -659,10 +646,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*static void	dgbintr		__P((int unit));*/
-end_comment
 
 begin_comment
 comment|/* Device switch entry points. */
@@ -1411,6 +1394,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DGB_DEBUG
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1440,6 +1429,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1527,10 +1521,11 @@ typedef|typedef
 struct|struct
 block|{
 comment|/* If we were called and don't want to disturb we need: */
-name|short
+name|int
 name|port
-decl_stmt|,
+decl_stmt|;
 comment|/* write to this port */
+name|u_char
 name|data
 decl_stmt|;
 comment|/* this data on exit */
@@ -8408,18 +8403,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void dgbintr(unit) 	int	unit; { }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -12680,7 +12663,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-comment|/* 	 * XXX can skip a lot more cases if Smarts.  Maybe 	 * (IGNCR | ISTRIP | IXON) in c_iflag.  But perhaps we 	 * shouldn't skip if (TS_CNTTB | TS_LNCH) is set in t_state. 	 */
 if|if
 condition|(
 operator|!
