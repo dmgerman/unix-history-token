@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -214,6 +214,27 @@ operator|->
 name|p_addr
 operator|->
 name|u_pcb
+expr_stmt|;
+comment|/* cache segtab for ULTBMiss() */
+name|p2
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_segtab
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|p2
+operator|->
+name|p_vmspace
+operator|->
+name|vm_pmap
+operator|.
+name|pm_segtab
 expr_stmt|;
 comment|/* 	 * Arrange for a non-local goto when the new process 	 * is started, to resume here, returning nonzero from setjmp. 	 */
 ifdef|#
