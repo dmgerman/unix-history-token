@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)token.c	4.2 %G%"
+literal|"@(#)token.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,75 +352,6 @@ literal|333
 block|, }
 struct|;
 end_struct
-
-begin_macro
-name|ptoken
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|n
-operator|<
-literal|128
-condition|)
-name|printf
-argument_list|(
-literal|"lex: %c\n"
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|n
-operator|<=
-literal|256
-condition|)
-name|printf
-argument_list|(
-literal|"lex:? %o\n"
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|n
-operator|<
-name|LASTTOKEN
-condition|)
-name|printf
-argument_list|(
-literal|"lex: %s\n"
-argument_list|,
-name|tok
-index|[
-name|n
-operator|-
-literal|257
-index|]
-operator|.
-name|tnm
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"lex:? %o\n"
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_block
 
 begin_function
 name|char

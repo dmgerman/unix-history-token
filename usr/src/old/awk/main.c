@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.3 %G%"
+literal|"@(#)main.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,14 @@ end_comment
 begin_decl_stmt
 name|int
 name|dbg
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ldbg
 init|=
 literal|0
 decl_stmt|;
@@ -410,6 +418,27 @@ literal|0
 condition|)
 block|{
 name|dbg
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"-l"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ldbg
 operator|=
 literal|1
 expr_stmt|;
