@@ -659,7 +659,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|struct
+name|resource
+modifier|*
 name|pcic_alloc_resource
 parameter_list|(
 name|device_t
