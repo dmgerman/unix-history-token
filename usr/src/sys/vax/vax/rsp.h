@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rsp.h	4.1	83/06/01	*/
+comment|/*	rsp.h	4.2	83/06/01	*/
 end_comment
 
 begin_comment
@@ -122,7 +122,6 @@ index|]
 decl_stmt|;
 comment|/* drive is open */
 block|}
-name|tu
 struct|;
 end_struct
 
