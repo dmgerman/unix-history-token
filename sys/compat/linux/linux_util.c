@@ -67,8 +67,6 @@ name|td
 parameter_list|,
 name|sgp
 parameter_list|,
-name|prefix
-parameter_list|,
 name|path
 parameter_list|,
 name|pbuf
@@ -85,11 +83,6 @@ modifier|*
 name|sgp
 decl_stmt|;
 comment|/* Pointer to stackgap memory */
-specifier|const
-name|char
-modifier|*
-name|prefix
-decl_stmt|;
 name|char
 modifier|*
 name|path
@@ -121,6 +114,11 @@ name|vatroot
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|prefix
 decl_stmt|;
 name|char
 modifier|*
@@ -156,6 +154,10 @@ operator|*
 name|pbuf
 operator|=
 name|path
+expr_stmt|;
+name|prefix
+operator|=
+name|linux_emul_path
 expr_stmt|;
 for|for
 control|(

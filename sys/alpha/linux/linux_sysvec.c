@@ -743,9 +743,6 @@ name|p_thread
 argument_list|,
 name|NULL
 argument_list|,
-comment|/* XXXKSE */
-name|linux_emul_path
-argument_list|,
 name|imgp
 operator|->
 name|interpreter_name

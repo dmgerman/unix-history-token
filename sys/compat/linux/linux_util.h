@@ -211,10 +211,6 @@ operator|,
 name|caddr_t
 operator|*
 operator|,
-specifier|const
-name|char
-operator|*
-operator|,
 name|char
 operator|*
 operator|,
@@ -242,7 +238,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_find(p, sgp, linux_emul_path, path,	\&path, i);						\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
+value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_find(p, sgp, path,&path, i);	\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
 end_define
 
 begin_define
