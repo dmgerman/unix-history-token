@@ -911,20 +911,21 @@ comment|/* EEProm type */
 literal|0
 block|,
 comment|/* EEProm size */
+comment|/* Tuner, Extern, Intern, Mute, Enabled */
 block|{
-literal|0x00
+literal|0x621000
 block|,
-literal|0x00
+literal|0x621000
 block|,
-literal|0x00
+literal|0x621000
 block|,
-literal|0x00
+literal|0xE21000
 block|,
-literal|0
+literal|1
 block|}
 block|,
 comment|/* audio MUX values */
-literal|0x00
+literal|0xfff000
 block|}
 block|,
 comment|/* GPIO mask */
