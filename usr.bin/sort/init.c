@@ -654,6 +654,9 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|pos
 argument_list|)
@@ -739,6 +742,9 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|pos
 argument_list|)
@@ -1383,6 +1389,9 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|tpos
 argument_list|)
@@ -1485,6 +1494,9 @@ literal|'-'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 name|argv
 index|[
 name|i
@@ -1524,6 +1536,9 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|tpos
 argument_list|)
@@ -1562,6 +1577,9 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|tpos
 argument_list|)
