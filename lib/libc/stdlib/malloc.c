@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.22 1997/03/18 07:54:24 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.23 1997/05/30 20:39:32 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -206,10 +206,29 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pthread_private.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pthread_mutex
+name|_malloc_lock
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|pthread_mutex_t
 name|malloc_lock
+init|=
+operator|&
+name|_malloc_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -229,14 +248,6 @@ parameter_list|()
 value|pthread_mutex_unlock(&malloc_lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|THREAD_LOCK_INIT
-parameter_list|()
-value|pthread_mutex_init(&malloc_lock, 0);
-end_define
-
 begin_else
 else|#
 directive|else
@@ -253,13 +264,6 @@ begin_define
 define|#
 directive|define
 name|THREAD_UNLOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|THREAD_LOCK_INIT
 parameter_list|()
 end_define
 
@@ -1984,9 +1988,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|THREAD_LOCK_INIT
-argument_list|()
-expr_stmt|;
 name|INIT_MMAP
 argument_list|()
 expr_stmt|;
