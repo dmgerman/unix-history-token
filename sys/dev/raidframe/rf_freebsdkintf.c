@@ -6274,13 +6274,25 @@ comment|/* XXX */
 block|if ((raidbp->rf_buf.bio_cmd& BIO_READ) == 0) { 			raidbp->rf_buf.b_vp->v_numoutput++; 		}
 endif|#
 directive|endif
-name|BIO_STRATEGY
+operator|(
+operator|*
+name|devsw
 argument_list|(
+name|raidbp
+operator|->
+name|rf_buf
+operator|.
+name|bio_dev
+argument_list|)
+operator|->
+name|d_strategy
+operator|)
+operator|(
 operator|&
 name|raidbp
 operator|->
 name|rf_buf
-argument_list|)
+operator|)
 expr_stmt|;
 break|break;
 default|default:
