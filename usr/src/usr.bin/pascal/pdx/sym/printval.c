@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printval.c 1.2 %G%"
+literal|"@(#)printval.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,7 +231,7 @@ literal|"'%c'"
 argument_list|,
 name|pop
 argument_list|(
-name|long
+name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -265,9 +265,9 @@ name|printf
 argument_list|(
 literal|"%ld"
 argument_list|,
-name|pop
+name|popsmall
 argument_list|(
-name|long
+name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -336,9 +336,9 @@ name|found
 decl_stmt|;
 name|scalar
 operator|=
-name|pop
+name|popsmall
 argument_list|(
-name|long
+name|s
 argument_list|)
 expr_stmt|;
 name|found
@@ -637,9 +637,6 @@ operator|->
 name|type
 argument_list|)
 operator|)
-expr_stmt|;
-name|alignstack
-argument_list|()
 expr_stmt|;
 name|printval
 argument_list|(

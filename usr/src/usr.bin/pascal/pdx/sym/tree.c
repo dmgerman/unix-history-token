@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.1 %G%"
+literal|"@(#)tree.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1687,46 +1687,45 @@ end_comment
 begin_macro
 name|evalindex
 argument_list|(
-argument|s
+argument|arraytype
+argument_list|,
+argument|index
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|SYM
 modifier|*
-name|s
+name|arraytype
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|index
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 name|long
-name|i
-decl_stmt|;
-name|long
 name|lb
 decl_stmt|,
 name|ub
 decl_stmt|;
-name|s
+name|SYM
+modifier|*
+name|indextype
+decl_stmt|;
+name|indextype
 operator|=
-name|rtype
-argument_list|(
-name|s
-argument_list|)
+name|arraytype
 operator|->
 name|chain
 expr_stmt|;
-name|i
-operator|=
-name|pop
-argument_list|(
-name|long
-argument_list|)
-expr_stmt|;
 name|lb
 operator|=
-name|s
+name|indextype
 operator|->
 name|symvalue
 operator|.
@@ -1736,7 +1735,7 @@ name|lower
 expr_stmt|;
 name|ub
 operator|=
-name|s
+name|indextype
 operator|->
 name|symvalue
 operator|.
@@ -1746,11 +1745,11 @@ name|upper
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|index
 operator|<
 name|lb
 operator|||
-name|i
+name|index
 operator|>
 name|ub
 condition|)
@@ -1763,7 +1762,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|i
+name|index
 operator|-
 name|lb
 operator|)
@@ -1804,7 +1803,7 @@ argument_list|,
 name|RECORD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't do this for compiled code. 	 */
+comment|/*      * Don't do this for compiled code.      */
 if|#
 directive|if
 operator|(
