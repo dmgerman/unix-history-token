@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.5 (Berkeley) %G%"
+literal|"@(#)output.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +417,16 @@ operator|->
 name|rt_ifp
 operator|==
 name|ifp
+operator|&&
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+operator|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if
