@@ -2566,7 +2566,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"/dev/%-10s %*d "
+literal|"%-10s %*d "
 argument_list|,
 name|ksw
 operator|->
