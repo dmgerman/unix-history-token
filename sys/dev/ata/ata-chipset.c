@@ -19412,6 +19412,21 @@ index|[]
 init|=
 block|{
 block|{
+name|ATA_SIS182
+block|,
+literal|0x00
+block|,
+name|SISSATA
+block|,
+literal|0
+block|,
+name|ATA_SA150
+block|,
+literal|"SiS 182"
+block|}
+block|,
+comment|/* south */
+block|{
 name|ATA_SIS181
 block|,
 literal|0x00

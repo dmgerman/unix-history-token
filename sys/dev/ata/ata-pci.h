@@ -1388,7 +1388,7 @@ begin_define
 define|#
 directive|define
 name|ATA_SIS965
-value|0x09641039
+value|0x09651039
 end_define
 
 begin_define
@@ -1403,6 +1403,13 @@ define|#
 directive|define
 name|ATA_SIS181
 value|0x01811039
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SIS182
+value|0x01821039
 end_define
 
 begin_define
