@@ -211,6 +211,8 @@ name|blkcnt
 decl_stmt|;
 name|int
 name|underflow
+decl_stmt|,
+name|overrun
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
