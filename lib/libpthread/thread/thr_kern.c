@@ -4418,6 +4418,16 @@ operator|*
 operator|)
 name|kse_sched_multi
 expr_stmt|;
+name|newthread
+operator|->
+name|kse
+operator|->
+name|k_mbx
+operator|.
+name|km_quantum
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * This thread needs a new KSE and KSEG. 		 */
 name|crit
 operator|=
@@ -7469,6 +7479,14 @@ operator|->
 name|k_kseg
 operator|=
 name|NULL
+expr_stmt|;
+name|kse
+operator|->
+name|k_mbx
+operator|.
+name|km_quantum
+operator|=
+literal|20000
 expr_stmt|;
 name|kse
 operator|->
