@@ -1018,6 +1018,16 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+name|setgroups
+argument_list|(
+literal|1
+argument_list|,
+operator|&
+name|nobody
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
 block|}
 name|from
 operator|.
