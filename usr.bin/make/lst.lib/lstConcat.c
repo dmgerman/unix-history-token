@@ -49,7 +49,7 @@ file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *	If LST_CONCLINK is specified, the second list is destroyed since  *	its pointers have been corrupted and the list is no longer useable.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Concat --  *	Concatenate two lists. New elements are created to hold the data  *	elements, if specified, but the elements themselves are not copied.  *	If the elements should be duplicated to avoid confusion with another  *	list, the Lst_Duplicate function should be called first.  *  * Results:  *	SUCCESS if all went well. FAILURE otherwise.  *  * Arguments:  *	list1	The list to which list2 is to be appended  *	list2	The list to append to list1  *	flags	LST_CONCNEW if LstNode's should be duplicated  *		LST_CONCLINK if should just be relinked  *  * Side Effects:  *	New elements are created and appended the the first list.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -180,11 +180,6 @@ operator|->
 name|lastPtr
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|list2
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
