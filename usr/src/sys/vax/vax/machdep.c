@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.58	82/07/22	*/
+comment|/*	machdep.c	4.59	82/07/22	*/
 end_comment
 
 begin_include
@@ -1377,7 +1377,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Send an interrupt to process  *  * SHOULD CHANGE THIS TO PASS ONE MORE WORK SO THAT ALL INFORMATION  * PROVIDED BY HARDWARE IS AVAILABLE TO THE USER PROCESS.  */
+comment|/*  * Send an interrupt to process  *  * SHOULD CHANGE THIS TO PASS ONE MORE WORD SO THAT ALL INFORMATION  * PROVIDED BY HARDWARE IS AVAILABLE TO THE USER PROCESS.  */
 end_comment
 
 begin_macro
@@ -3713,7 +3713,7 @@ name|sbifs
 argument_list|)
 expr_stmt|;
 comment|/* THE FUNNY BITS IN THE FOLLOWING ARE FROM THE ``BLACK */
-comment|/* BOOK AND SHOULD BE PUT IN AN ``sbi.h'' */
+comment|/* BOOK'' AND SHOULD BE PUT IN AN ``sbi.h'' */
 name|mtpr
 argument_list|(
 name|SBIFS
