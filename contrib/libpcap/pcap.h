@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.31 2000/10/28 00:01:31 guy Exp $ (LBL)  */
+comment|/* -*- Mode: c; tab-width: 8; indent-tabs-mode: 1; c-basic-offset: 8; -*- */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.34 2001/12/09 05:10:03 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -91,6 +95,16 @@ name|struct
 name|pcap_dumper
 name|pcap_dumper_t
 typedef|;
+typedef|typedef
+name|struct
+name|pcap_if
+name|pcap_if_t
+typedef|;
+typedef|typedef
+name|struct
+name|pcap_addr
+name|pcap_addr_t
+typedef|;
 comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  *  * Do not change the layout of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  *  * Also, do not change the interpretation of any of the members of this  * structure, in any way (this includes using values other than  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"  * field).  *  * Instead:  *  *	introduce a new structure for the new format, if the layout  *	of the structure changed;  *  *	send mail to "tcpdump-workers@tcpdump.org", requesting a new  *	magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed file  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old file header as well as files with the new file header  *	(using the magic number to determine the header format).  *  * Then supply the changes to "patches@tcpdump.org", so that future  * versions of libpcap and programs that use it (such as tcpdump) will  * be able to read your new capture file format.  */
 struct|struct
 name|pcap_file_header
@@ -157,6 +171,76 @@ name|u_int
 name|ps_ifdrop
 decl_stmt|;
 comment|/* drops by interface XXX not yet supported */
+block|}
+struct|;
+comment|/*  * Item in a list of interfaces.  */
+struct|struct
+name|pcap_if
+block|{
+name|struct
+name|pcap_if
+modifier|*
+name|next
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name to hand to "pcap_open_live()" */
+name|char
+modifier|*
+name|description
+decl_stmt|;
+comment|/* textual description of interface, or NULL */
+name|struct
+name|pcap_addr
+modifier|*
+name|addresses
+decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
+comment|/* PCAP_IF_ interface flags */
+block|}
+struct|;
+define|#
+directive|define
+name|PCAP_IF_LOOPBACK
+value|0x00000001
+comment|/* interface is loopback */
+comment|/*  * Representation of an interface address.  */
+struct|struct
+name|pcap_addr
+block|{
+name|struct
+name|pcap_addr
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|sockaddr
+modifier|*
+name|addr
+decl_stmt|;
+comment|/* address */
+name|struct
+name|sockaddr
+modifier|*
+name|netmask
+decl_stmt|;
+comment|/* netmask for that address */
+name|struct
+name|sockaddr
+modifier|*
+name|broadaddr
+decl_stmt|;
+comment|/* broadcast address for that address */
+name|struct
+name|sockaddr
+modifier|*
+name|dstaddr
+decl_stmt|;
+comment|/* P2P destination address for that address */
 block|}
 struct|;
 typedef|typedef
@@ -308,6 +392,28 @@ modifier|*
 parameter_list|,
 name|struct
 name|bpf_program
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_getnonblock
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_setnonblock
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -464,6 +570,24 @@ modifier|*
 parameter_list|,
 specifier|const
 name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_findalldevs
+parameter_list|(
+name|pcap_if_t
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|pcap_freealldevs
+parameter_list|(
+name|pcap_if_t
 modifier|*
 parameter_list|)
 function_decl|;

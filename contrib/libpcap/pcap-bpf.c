@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.44 2000/10/28 00:01:28 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-bpf.c,v 1.48 2001/12/10 07:14:14 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,31 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_comment
+comment|/*  * XXX - I'm guessing here AIX defines IFT_ values in<net/if_types.h>,  * as BSD does.  If not, this code won't compile, but, if not, you  * want to send us a bug report and fall back on using DLPI.  * It's not as if BPF used to work right on AIX before this change;  * this change attempts to fix the fact that it didn't....  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/if_types.h>
+end_include
+
+begin_comment
+comment|/* for IFT_ values */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -177,6 +202,7 @@ name|struct
 name|bpf_stat
 name|s
 decl_stmt|;
+comment|/* 	 * "ps_recv" counts packets handed to the filter, not packets 	 * that passed the filter.  This includes packets later dropped 	 * because we ran out of buffer space. 	 * 	 * "ps_drop" counts packets dropped inside the BPF device 	 * because we ran out of buffer space.  It doesn't count 	 * packets dropped by the interface driver.  It counts 	 * only packets that passed the filter. 	 * 	 * Both statistics include packets not yet read from the kernel 	 * by libpcap, and thus not yet seen by the application. 	 */
 if|if
 condition|(
 name|ioctl
@@ -476,6 +502,26 @@ operator|->
 name|bh_hdrlen
 expr_stmt|;
 comment|/* 		 * XXX A bpf_hdr matches a pcap_pkthdr. 		 */
+ifdef|#
+directive|ifdef
+name|_AIX
+comment|/* 		 * AIX's BPF returns seconds/nanoseconds time stamps, not 		 * seconds/microseconds time stamps. 		 * 		 * XXX - I'm guessing here that it's a "struct timestamp"; 		 * if not, this code won't compile, but, if not, you 		 * want to send us a bug report and fall back on using 		 * DLPI.  It's not as if BPF used to work right on 		 * AIX before this change; this change attempts to fix 		 * the fact that it didn't.... 		 */
+name|bhp
+operator|->
+name|bh_tstamp
+operator|.
+name|tv_usec
+operator|=
+name|bhp
+operator|->
+name|bh_tstamp
+operator|.
+name|tv_usec
+operator|/
+literal|1000
+expr_stmt|;
+endif|#
+directive|endif
 call|(
 modifier|*
 name|callback
@@ -1006,21 +1052,56 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|__OpenBSD__
+name|_AIX
+comment|/* 	 * AIX's BPF returns IFF_ types, not DLT_ types, in BIOCGDLT. 	 */
 switch|switch
 condition|(
 name|v
 condition|)
 block|{
 case|case
-name|DLT_LOOP
+name|IFT_ETHER
 case|:
-comment|/* 		 * XXX - DLT_LOOP has a network-byte-order, rather than 		 * a host-byte-order, AF_ value as the link-layer 		 * header; will the BPF code generator handle that 		 * correctly on little-endian machines? 		 */
+case|case
+name|IFT_ISO88023
+case|:
 name|v
 operator|=
-name|DLT_NULL
+name|DLT_EN10MB
 expr_stmt|;
 break|break;
+case|case
+name|IFT_FDDI
+case|:
+name|v
+operator|=
+name|DLT_FDDI
+expr_stmt|;
+break|break;
+case|case
+name|IFT_ISO88025
+case|:
+name|v
+operator|=
+name|DLT_IEEE802
+expr_stmt|;
+break|break;
+default|default:
+comment|/* 		 * We don't know what to map this to yet. 		 */
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"unknown interface type %lu"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 endif|#
 directive|endif
@@ -1208,10 +1289,10 @@ if|if
 condition|(
 name|promisc
 condition|)
+block|{
 comment|/* set promiscuous mode, okay if it fails */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|p
@@ -1222,7 +1303,26 @@ name|BIOCPROMISC
 argument_list|,
 name|NULL
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"BIOCPROMISC: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|ioctl

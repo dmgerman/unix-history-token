@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.62 2000/10/28 00:01:30 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.65 2001/12/10 07:14:19 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -877,6 +877,7 @@ modifier|*
 name|ps
 parameter_list|)
 block|{
+comment|/* 	 * If packet filtering is being done in the kernel: 	 * 	 *	"ps_recv" counts only packets that passed the filter. 	 *	This does not include packets dropped because we 	 *	ran out of buffer space.  (XXX - perhaps it should, 	 *	by adding "ps_drop" to "ps_recv", for compatibility 	 *	with some other platforms.  On the other hand, on 	 *	some platforms "ps_recv" counts only packets that 	 *	passed the filter, and on others it counts packets 	 *	that didn't pass the filter....) 	 * 	 *	"ps_drop" counts packets that passed the kernel filter 	 *	(if any) but were dropped because the input queue was 	 *	full. 	 * 	 *	"ps_ifdrop" counts packets dropped by the network 	 *	inteface (regardless of whether they would have passed 	 *	the input filter, of course). 	 * 	 * If packet filtering is not being done in the kernel: 	 * 	 *	"ps_recv" counts only packets that passed the filter. 	 * 	 *	"ps_drop" counts packets that were dropped because the 	 *	input queue was full, regardless of whether they passed 	 *	the userland filter. 	 * 	 *	"ps_ifdrop" counts packets dropped by the network 	 *	inteface (regardless of whether they would have passed 	 *	the input filter, of course). 	 * 	 * These statistics don't include packets not yet read from 	 * the kernel by libpcap, but they may include packets not 	 * yet read from libpcap by the application. 	 */
 name|ps
 operator|->
 name|ps_recv
@@ -1274,22 +1275,43 @@ operator|=
 name|DLT_FDDI
 expr_stmt|;
 break|break;
-default|default:
-comment|/* 		 * XXX 		 * Currently, the Ultrix packet filter supports only 		 * Ethernet and FDDI.  Eventually, support for SLIP and PPP 		 * (and possibly others: T1?) should be added. 		 */
 ifdef|#
 directive|ifdef
-name|notdef
-name|warning
-argument_list|(
-literal|"Packet filter data-link type %d unknown, assuming Ethernet"
-argument_list|,
-name|devparams
-operator|.
-name|end_dev_type
-argument_list|)
+name|ENDT_SLIP
+case|case
+name|ENDT_SLIP
+case|:
+name|p
+operator|->
+name|linktype
+operator|=
+name|DLT_SLIP
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ENDT_PPP
+case|case
+name|ENDT_PPP
+case|:
+name|p
+operator|->
+name|linktype
+operator|=
+name|DLT_PPP
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENDT_LOOPBACK
+case|case
+name|ENDT_LOOPBACK
+case|:
+comment|/* 		 * It appears to use Ethernet framing, at least on 		 * Digital UNIX 4.0. 		 */
 name|p
 operator|->
 name|linktype
@@ -1303,6 +1325,41 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENDT_TRN
+case|case
+name|ENDT_TRN
+case|:
+name|p
+operator|->
+name|linktype
+operator|=
+name|DLT_IEEE802
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+default|default:
+comment|/* 		 * XXX - what about ENDT_IEEE802?  The pfilt.h header 		 * file calls this "IEEE 802 networks (non-Ethernet)", 		 * but that doesn't specify a specific link layer type; 		 * it could be 802.4, or 802.5 (except that 802.5 is 		 * ENDT_TRN), or 802.6, or 802.11, or....  That's why 		 * DLT_IEEE802 was hijacked to mean Token Ring in various 		 * BSDs, and why we went along with that hijacking. 		 * 		 * XXX - what about ENDT_HDLC and ENDT_NULL? 		 * Presumably, as ENDT_OTHER is just "Miscellaneous 		 * framing", there's not much we can do, as that 		 * doesn't specify a particular type of header. 		 */
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"unknown data-link type %lu"
+argument_list|,
+name|devparams
+operator|.
+name|end_dev_type
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* set truncation */
 ifdef|#
@@ -1535,6 +1592,21 @@ operator|)
 return|;
 name|bad
 label|:
+if|if
+condition|(
+name|p
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|p
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|p
