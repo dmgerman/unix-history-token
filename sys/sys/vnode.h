@@ -2265,6 +2265,10 @@ expr|struct
 name|ucred
 operator|*
 name|cred
+operator|,
+name|int
+operator|*
+name|privused
 operator|)
 argument_list|)
 decl_stmt|;

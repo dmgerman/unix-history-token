@@ -1561,6 +1561,8 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
