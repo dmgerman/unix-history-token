@@ -229,13 +229,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/pci/pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/pci/pci_device.h>
+file|<i386/pci/pcireg.h>
 end_include
 
 begin_endif
@@ -1196,9 +1190,7 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|unsigned
-name|new_cmdmode
-decl_stmt|;
+comment|/* XXX unsigned new_cmdmode; */
 if|if
 condition|(
 name|sc
@@ -1324,7 +1316,9 @@ name|tulip_if
 argument_list|)
 expr_stmt|;
 block|}
-name|tulip_cmdnode
+name|sc
+operator|->
+name|tulip_cmdmode
 operator||=
 name|TULIP_CMD_THRSHLD160
 expr_stmt|;
@@ -3238,19 +3232,11 @@ specifier|static
 name|int
 name|tulip_intr
 parameter_list|(
-name|int
-name|unit
-parameter_list|)
-block|{
 name|tulip_softc_t
 modifier|*
 name|sc
-init|=
-name|tulips
-index|[
-name|unit
-index|]
-decl_stmt|;
+parameter_list|)
+block|{
 name|tulip_uint32_t
 name|csr
 decl_stmt|;
@@ -3259,12 +3245,7 @@ name|spins
 init|=
 literal|0
 decl_stmt|;
-name|tulip_intrs
-index|[
-name|unit
-index|]
-operator|++
-expr_stmt|;
+comment|/* XXX tulip_intrs[unit]++; */
 while|while
 condition|(
 operator|(
@@ -3332,7 +3313,9 @@ name|tulip_unit
 argument_list|)
 expr_stmt|;
 return|return
-name|unit
+operator|(
+literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -3432,7 +3415,9 @@ operator|=
 name|spins
 expr_stmt|;
 return|return
-name|unit
+operator|(
+literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3867,6 +3852,12 @@ end_function
 begin_escape
 end_escape
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTICAST
+end_ifdef
+
 begin_function
 specifier|static
 name|unsigned
@@ -4015,6 +4006,12 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+endif|MULTICAST
+end_endif
+
 begin_escape
 end_escape
 
@@ -4036,6 +4033,9 @@ name|sc
 operator|->
 name|tulip_setupdata
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTICAST
 name|struct
 name|ether_multistep
 name|step
@@ -4045,6 +4045,8 @@ name|ether_multi
 modifier|*
 name|enm
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -4075,6 +4077,9 @@ operator|&=
 operator|~
 name|TULIP_STS_RXSTOPPED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTICAST
 if|if
 condition|(
 name|sc
@@ -4246,11 +4251,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 comment|/* 	 * Else can get perfect filtering for 16 addresses. 	 */
 name|i
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTICAST
 name|ETHER_FIRST_MULTI
 argument_list|(
 name|step
@@ -4333,6 +4343,8 @@ name|enm
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * If an IP address is enabled, turn on broadcast 	 */
 if|if
 condition|(
@@ -4439,7 +4451,12 @@ literal|2
 index|]
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MULTICAST
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4769,6 +4786,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -4850,6 +4870,9 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+endif|#
+directive|endif
+comment|/* MULTICAST */
 default|default:
 block|{
 name|error
@@ -4915,12 +4938,18 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTICAST
 name|ifp
 operator|->
 name|if_flags
 operator||=
 name|IFF_MULTICAST
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MULTICAST */
 operator|*
 name|sc
 operator|->
@@ -5538,25 +5567,39 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
+name|char
+modifier|*
 name|tulip_pci_probe
 parameter_list|(
 name|pcici_t
 name|config_id
+parameter_list|,
+name|pcidi_t
+name|device_id
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|tulip_pci_attach
 parameter_list|(
 name|pcici_t
 name|config_id
+parameter_list|,
+name|int
+name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|tulip_count
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -5568,21 +5611,9 @@ name|tulip_pci_probe
 block|,
 name|tulip_pci_attach
 block|,
-literal|0x00021011ul
-block|,
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|1
-literal|"de"
-block|,
-endif|#
-directive|endif
-literal|"digital dc21040 ethernet"
-block|,
-name|tulip_intr
-block|}
+operator|&
+name|tulip_count
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -5683,16 +5714,31 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|char
+modifier|*
 name|tulip_pci_probe
 parameter_list|(
 name|pcici_t
 name|config_id
+parameter_list|,
+name|pcidi_t
+name|device_id
 parameter_list|)
 block|{
 name|int
 name|idx
 decl_stmt|;
+if|if
+condition|(
+name|device_id
+operator|!=
+literal|0x00021011ul
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 for|for
 control|(
 name|idx
@@ -5716,22 +5762,28 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|idx
+operator|(
+literal|"digital dc21040 ethernet"
+operator|)
 return|;
 return|return
-operator|-
-literal|1
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|tulip_pci_attach
 parameter_list|(
 name|pcici_t
 name|config_id
+parameter_list|,
+name|int
+name|unit
 parameter_list|)
 block|{
 name|tulip_softc_t
@@ -5742,23 +5794,15 @@ name|int
 name|retval
 decl_stmt|,
 name|idx
-decl_stmt|,
-name|revinfo
-decl_stmt|,
-name|unit
+comment|/* XXX , revinfo, */
 decl_stmt|;
-name|signed
-name|int
-name|csr
-decl_stmt|;
+comment|/* XXX signed int csr; */
 name|vm_offset_t
 name|va_csrs
 decl_stmt|,
 name|pa_csrs
 decl_stmt|;
-name|int
-name|result
-decl_stmt|;
+comment|/* XXX int result;*/
 name|tulip_desc_t
 modifier|*
 name|rxdescs
@@ -5766,13 +5810,6 @@ decl_stmt|,
 modifier|*
 name|txdescs
 decl_stmt|;
-name|unit
-operator|=
-name|tulip_pci_probe
-argument_list|(
-name|config_id
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -5798,10 +5835,7 @@ name|sc
 operator|==
 name|NULL
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 name|rxdescs
 operator|=
 operator|(
@@ -5839,10 +5873,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 block|}
 name|txdescs
 operator|=
@@ -5891,10 +5922,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 block|}
 name|bzero
 argument_list|(
@@ -5973,16 +6001,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|retval
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"de%d: pci_map_mem failed.\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -6026,10 +6048,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 block|}
 name|tulips
 index|[
@@ -6180,6 +6199,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|pci_map_int
+argument_list|(
+name|config_id
+argument_list|,
+name|tulip_intr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+operator|&
+name|net_imask
+argument_list|)
+expr_stmt|;
 name|TULIP_RESET
 argument_list|(
 name|sc
@@ -6191,9 +6226,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|1
-return|;
 block|}
 end_function
 
