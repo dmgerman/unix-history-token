@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.41 1998/09/20 01:07:50 alex Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.42 1998/09/23 21:26:04 dfr Exp $  *  */
 end_comment
 
 begin_comment
@@ -4431,8 +4431,6 @@ expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-comment|/*THREAD_UNLOCK();*/
-comment|/* XXX */
 return|return
 operator|(
 literal|0
@@ -4528,7 +4526,6 @@ argument_list|(
 literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * Ideally the next two lines would be gone and free() would 	 * exit below.  Unfortunately our spinlock implementation 	 * allows a particular thread to obtain a lock multiple times 	 * without counting how many times said operation has been 	 * performed.  The practical upshot of which is a single unlock 	 * causes all locks to be undone at once.  For this reason, 	 * we return without performing an unlock in the case of 	 * recursion (see also the commented out THREAD_UNLOCK calls 	 * in malloc& realloc). 	 */
 name|malloc_active
 operator|--
 expr_stmt|;
@@ -4600,8 +4597,6 @@ expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-comment|/*THREAD_UNLOCK();*/
-comment|/* XXX */
 return|return
 operator|(
 literal|0
