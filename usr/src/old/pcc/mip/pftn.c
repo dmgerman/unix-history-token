@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.23 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4406,7 +4406,15 @@ argument|if( p->sflags& SHIDES )unhide( p ); 			p->stype = TNULL; 			p->snext = 
 comment|/* step 2: fix any mishashed entries */
 argument|p = clist; 	while( p ){ 		register struct symtab *r
 argument_list|,
-argument|*next;  		q = p; 		next = p->snext; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) { 				*r = *q; 				q->stype = TNULL; 				} 			} 		p = next; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
+argument|*next;  		q = p; 		next = p->snext; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) {
+comment|/* move q in schain list */
+argument|register struct symtab *t = schain[q->slevel]; 				if ( !t ) 					cerror(
+literal|"schain botch during relook"
+argument|); 				while ( t->snext&& t->snext != q ) 					t = t->snext; 				if ( !t->snext ) 					cerror(
+literal|"schain botch during relook"
+argument|); 				t->snext = r;
+comment|/* are we guaranteed r isn't in clist too? */
+argument|*r = *q; 				q->stype = TNULL; 				} 			} 		p = next; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
 literal|1
 argument|; ; ++q ){ 		if( q>=&stab[SYMTSZ] ) q = stab; 		if( q == p ) cerror(
 literal|"symbol table full"
