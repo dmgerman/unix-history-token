@@ -4,12 +4,12 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$RCSfile: perl.c,v $$Revision: 1.4 $$Date: 1995/05/30 05:03:10 $\nPatch level: ###\n"
+literal|"$RCSfile: perl.c,v $$Revision: 1.5 $$Date: 1996/06/02 19:59:24 $\nPatch level: ###\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: perl.c,v $  * Revision 1.4  1995/05/30 05:03:10  rgrimes  * Remove trailing whitespace.  *  * Revision 1.3  1995/05/28  19:21:54  ache  * Fix $] variable value (version number), close PR 449  * Submitted by: Bill Fenner<fenner@parc.xerox.com>  *  * Revision 1.2  1994/10/27  23:16:54  wollman  * Convince Perl to that is is part of the system, as /usr/bin/perl (binary)  * and /usr/share/perl (library).  The latter was chosen as analogous to other  * directories already present in /usr/share, like /usr/share/groff_font and  * (particularly) /usr/share/mk.  *  * Revision 1.1.1.1  1994/09/10  06:27:33  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:37  nate  * PERL!  *  * Revision 4.0.1.8  1993/02/05  19:39:30  lwall  * patch36: the taintanyway code wasn't tainting anyway  * patch36: Malformed cmd links core dump apparently fixed  *  * Revision 4.0.1.7  92/06/08  14:50:39  lwall  * patch20: PERLLIB now supports multiple directories  * patch20: running taintperl explicitly now does checks even if $< == $>  * patch20: -e 'cmd' no longer fails silently if /tmp runs out of space  * patch20: perl -P now uses location of sed determined by Configure  * patch20: form feed for formats is now specifiable via $^L  * patch20: paragraph mode now skips extra newlines automatically  * patch20: eval "1 #comment" didn't work  * patch20: couldn't require . files  * patch20: semantic compilation errors didn't abort execution  *  * Revision 4.0.1.6  91/11/11  16:38:45  lwall  * patch19: default arg for shift was wrong after first subroutine definition  * patch19: op/regexp.t failed from missing arg to bcmp()  *  * Revision 4.0.1.5  91/11/05  18:03:32  lwall  * patch11: random cleanup  * patch11: $0 was being truncated at times  * patch11: cppstdin now installed outside of source directory  * patch11: -P didn't allow use of #elif or #undef  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: added eval {}  * patch11: eval confused by string containing null  *  * Revision 4.0.1.4  91/06/10  01:23:07  lwall  * patch10: perl -v printed incorrect copyright notice  *  * Revision 4.0.1.3  91/06/07  11:40:18  lwall  * patch4: changed old $^P to $^X  *  * Revision 4.0.1.2  91/06/07  11:26:16  lwall  * patch4: new copyright notice  * patch4: added $^P variable to control calling of perldb routines  * patch4: added $^F variable to specify maximum system fd, default 2  * patch4: debugger lost track of lines in eval  *  * Revision 4.0.1.1  91/04/11  17:49:05  lwall  * patch1: fixed undefined environ problem  *  * Revision 4.0  91/03/20  01:37:44  lwall  * 4.0 baseline.  *  */
+comment|/*  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: perl.c,v $  * Revision 1.5  1996/06/02 19:59:24  gpalmer  * Use setreuid instead of seteuid for permissions management  *  * Revision 1.4  1995/05/30 05:03:10  rgrimes  * Remove trailing whitespace.  *  * Revision 1.3  1995/05/28  19:21:54  ache  * Fix $] variable value (version number), close PR 449  * Submitted by: Bill Fenner<fenner@parc.xerox.com>  *  * Revision 1.2  1994/10/27  23:16:54  wollman  * Convince Perl to that is is part of the system, as /usr/bin/perl (binary)  * and /usr/share/perl (library).  The latter was chosen as analogous to other  * directories already present in /usr/share, like /usr/share/groff_font and  * (particularly) /usr/share/mk.  *  * Revision 1.1.1.1  1994/09/10  06:27:33  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:37  nate  * PERL!  *  * Revision 4.0.1.8  1993/02/05  19:39:30  lwall  * patch36: the taintanyway code wasn't tainting anyway  * patch36: Malformed cmd links core dump apparently fixed  *  * Revision 4.0.1.7  92/06/08  14:50:39  lwall  * patch20: PERLLIB now supports multiple directories  * patch20: running taintperl explicitly now does checks even if $< == $>  * patch20: -e 'cmd' no longer fails silently if /tmp runs out of space  * patch20: perl -P now uses location of sed determined by Configure  * patch20: form feed for formats is now specifiable via $^L  * patch20: paragraph mode now skips extra newlines automatically  * patch20: eval "1 #comment" didn't work  * patch20: couldn't require . files  * patch20: semantic compilation errors didn't abort execution  *  * Revision 4.0.1.6  91/11/11  16:38:45  lwall  * patch19: default arg for shift was wrong after first subroutine definition  * patch19: op/regexp.t failed from missing arg to bcmp()  *  * Revision 4.0.1.5  91/11/05  18:03:32  lwall  * patch11: random cleanup  * patch11: $0 was being truncated at times  * patch11: cppstdin now installed outside of source directory  * patch11: -P didn't allow use of #elif or #undef  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: added eval {}  * patch11: eval confused by string containing null  *  * Revision 4.0.1.4  91/06/10  01:23:07  lwall  * patch10: perl -v printed incorrect copyright notice  *  * Revision 4.0.1.3  91/06/07  11:40:18  lwall  * patch4: changed old $^P to $^X  *  * Revision 4.0.1.2  91/06/07  11:26:16  lwall  * patch4: new copyright notice  * patch4: added $^P variable to control calling of perldb routines  * patch4: added $^F variable to specify maximum system fd, default 2  * patch4: debugger lost track of lines in eval  *  * Revision 4.0.1.1  91/04/11  17:49:05  lwall  * patch1: fixed undefined environ problem  *  * Revision 4.0  91/03/20  01:37:44  lwall  * 4.0 baseline.  *  */
 end_comment
 
 begin_comment
@@ -178,6 +178,16 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fdscript
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -239,6 +249,9 @@ literal|""
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|which
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SETUID_SCRIPTS_ARE_SECURE_NOW
@@ -1558,6 +1571,70 @@ name|COEFFSIZE
 argument_list|)
 expr_stmt|;
 comment|/* for remembering status of dead pids */
+if|if
+condition|(
+name|strnEQ
+argument_list|(
+name|scriptname
+argument_list|,
+literal|"/dev/fd/"
+argument_list|,
+literal|8
+argument_list|)
+operator|&&
+name|isDIGIT
+argument_list|(
+name|scriptname
+index|[
+literal|8
+index|]
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|s
+init|=
+name|scriptname
+operator|+
+literal|8
+decl_stmt|;
+name|fdscript
+operator|=
+name|atoi
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|isDIGIT
+argument_list|(
+operator|*
+name|s
+argument_list|)
+condition|)
+name|s
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+condition|)
+name|scriptname
+operator|=
+name|s
+operator|+
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|fdscript
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|origfilename
 operator|=
 name|savestr
@@ -1587,6 +1664,50 @@ name|scriptname
 operator|=
 literal|""
 expr_stmt|;
+if|if
+condition|(
+name|fdscript
+operator|>=
+literal|0
+condition|)
+block|{
+name|rsfp
+operator|=
+name|fdopen
+argument_list|(
+name|fdscript
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_FCNTL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|F_SETFD
+argument_list|)
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|rsfp
+argument_list|)
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* ensure close-on-exec */
+endif|#
+directive|endif
+block|}
+elseif|else
 if|if
 condition|(
 name|preprocess
@@ -1737,9 +1858,27 @@ literal|"Can't take set-id script from stdin"
 argument|);
 endif|#
 directive|endif
-argument|rsfp = stdin;     }     else 	rsfp = fopen(scriptname,
+argument|rsfp = stdin;     }     else { 	rsfp = fopen(scriptname,
 literal|"r"
-argument|);     if ((FILE*)rsfp == Nullfp) {
+argument|);
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_FCNTL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|F_SETFD
+argument_list|)
+argument|fcntl(fileno(rsfp),F_SETFD,
+literal|1
+argument|);
+comment|/* ensure close-on-exec */
+endif|#
+directive|endif
+argument|}     if ((FILE*)rsfp == Nullfp) {
 ifdef|#
 directive|ifdef
 name|DOSUID
@@ -1776,7 +1915,9 @@ argument|)
 comment|/* normal stat is insecure */
 argument|fatal(
 literal|"Can't stat script \"%s\""
-argument|,origfilename);     if (statbuf.st_mode& (S_ISUID|S_ISGID)) { 	int len;
+argument|,origfilename);     if (fdscript<
+literal|0
+argument|&& statbuf.st_mode& (S_ISUID|S_ISGID)) { 	int len;
 ifdef|#
 directive|ifdef
 name|IAMSUID
@@ -1971,8 +2112,46 @@ directive|ifdef
 name|IAMSUID
 argument|else if (preprocess) 	fatal(
 literal|"-P not allowed for setuid/setgid script\n"
+argument|);     else if (fdscript>=
+literal|0
+argument|) 	fatal(
+literal|"fd script not allowed in suidperl\n"
 argument|);     else 	fatal(
 literal|"Script is not setuid/setgid in suidperl\n"
+argument|);
+comment|/* We absolutely must clear out any saved ids here, so we */
+comment|/* exec taintperl, substituting fd script for scriptname. */
+comment|/* (We pass script name as "subdir" of fd, which taintperl will grok.) */
+argument|rewind(rsfp);     for (which =
+literal|1
+argument|; origargv[which]&& origargv[which] != scriptname; which++) ;     if (!origargv[which]) 	fatal(
+literal|"Permission denied"
+argument|);     (void)sprintf(buf,
+literal|"/dev/fd/%d/%.127s"
+argument|, fileno(rsfp), origargv[which]);     origargv[which] = buf;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_FCNTL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|F_SETFD
+argument_list|)
+argument|fcntl(fileno(rsfp),F_SETFD,
+literal|0
+argument|);
+comment|/* ensure no close-on-exec */
+endif|#
+directive|endif
+argument|(void)sprintf(tokenbuf,
+literal|"%s/tperl%s"
+argument|, BIN, patchlevel);     execv(tokenbuf, origargv);
+comment|/* try again */
+argument|fatal(
+literal|"Can't do setuid\n"
 argument|);
 else|#
 directive|else
@@ -2687,6 +2866,8 @@ literal|'v'
 argument|: 	fputs(
 literal|"\nThis is perl, version 4.0\n\n"
 argument|,stdout); 	fputs(rcsid,stdout); 	fputs(
+literal|"+ suidperl security patch\n"
+argument|, stdout); 	fputs(
 literal|"\nCopyright (c) 1989, 1990, 1991, Larry Wall\n"
 argument|,stdout);
 ifdef|#
