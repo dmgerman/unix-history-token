@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999, 2000 Andrew J. Korty  * All rights reserved.  * Copyright (c) 2001,2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_ssh.c,v 1.23 2001/08/20 01:44:02 akorty Exp $  */
+comment|/*-  * Copyright (c) 1999, 2000, 2001, 2002 Andrew J. Korty  * All rights reserved.  * Copyright (c) 2001,2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_ssh.c,v 1.33 2002/08/09 15:32:06 akorty Exp $  */
 end_comment
 
 begin_include
@@ -148,6 +148,16 @@ include|#
 directive|include
 file|"pam_ssh.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+name|module_name
+index|[]
+init|=
+name|MODULE_NAME
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -298,7 +308,7 @@ decl_stmt|;
 comment|/* PAM state */
 specifier|static
 name|int
-name|key_idx
+name|index
 init|=
 literal|0
 decl_stmt|;
@@ -338,7 +348,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -434,7 +446,7 @@ name|data_name
 argument_list|,
 literal|"ssh_private_key_%d"
 argument_list|,
-name|key_idx
+name|index
 argument_list|)
 condition|)
 block|{
@@ -442,7 +454,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 name|free
@@ -507,7 +521,7 @@ name|data_name
 argument_list|,
 literal|"ssh_key_comment_%d"
 argument_list|,
-name|key_idx
+name|index
 argument_list|)
 condition|)
 block|{
@@ -515,7 +529,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 name|free
@@ -566,7 +582,7 @@ operator|)
 return|;
 block|}
 operator|++
-name|key_idx
+name|index
 expr_stmt|;
 return|return
 operator|(
@@ -588,6 +604,10 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+parameter_list|,
+name|char
+modifier|*
+name|socket
 parameter_list|)
 block|{
 name|AuthenticationConnection
@@ -610,7 +630,7 @@ name|final
 decl_stmt|;
 comment|/* final return value */
 name|int
-name|key_idx
+name|index
 decl_stmt|;
 comment|/* for saved keys */
 name|Key
@@ -665,7 +685,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -717,7 +739,11 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %s: %m"
+argument_list|,
+name|module_name
+argument_list|,
+name|socket
 argument_list|)
 expr_stmt|;
 return|return
@@ -733,12 +759,12 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|key_idx
+name|index
 operator|=
 literal|0
 init|;
 condition|;
-name|key_idx
+name|index
 operator|++
 control|)
 block|{
@@ -752,7 +778,7 @@ name|data_name
 argument_list|,
 literal|"ssh_private_key_%d"
 argument_list|,
-name|key_idx
+name|index
 argument_list|)
 condition|)
 block|{
@@ -760,7 +786,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 name|ssh_close_authentication_connection
@@ -814,7 +842,7 @@ name|data_name
 argument_list|,
 literal|"ssh_key_comment_%d"
 argument_list|,
-name|key_idx
+name|index
 argument_list|)
 condition|)
 block|{
@@ -822,7 +850,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 name|ssh_close_authentication_connection
@@ -943,16 +973,17 @@ modifier|*
 name|file
 decl_stmt|;
 comment|/* current key file */
+name|char
+modifier|*
+name|keyfiles
+decl_stmt|;
+comment|/* list of key files to add */
 specifier|const
 name|char
 modifier|*
 name|kfspec
 decl_stmt|;
 comment|/* list of key files to add */
-name|char
-modifier|*
-name|keyfiles
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -982,6 +1013,17 @@ modifier|*
 name|user
 decl_stmt|;
 comment|/* username */
+name|log_init
+argument_list|(
+name|module_name
+argument_list|,
+name|SYSLOG_LEVEL_ERROR
+argument_list|,
+name|SYSLOG_FACILITY_AUTHPRIV
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|keyfiles
 operator|=
 name|NULL
@@ -1067,10 +1109,10 @@ operator|)
 return|;
 if|if
 condition|(
+operator|!
+operator|(
 name|user
-operator|==
-name|NULL
-operator|||
+operator|&&
 operator|(
 name|pwent
 operator|=
@@ -1079,23 +1121,16 @@ argument_list|(
 name|user
 argument_list|)
 operator|)
-operator|==
-name|NULL
-operator|||
+operator|&&
 name|pwent
 operator|->
 name|pw_dir
-operator|==
-name|NULL
-operator|||
+operator|&&
+operator|*
 name|pwent
 operator|->
 name|pw_dir
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
+operator|)
 condition|)
 return|return
 operator|(
@@ -1103,6 +1138,9 @@ name|PAM_AUTH_ERR
 operator|)
 return|;
 comment|/* pass prompt message to application and receive passphrase */
+if|if
+condition|(
+operator|(
 name|retval
 operator|=
 name|pam_get_authtok
@@ -1116,10 +1154,7 @@ name|pass
 argument_list|,
 name|NEED_PASSPHRASE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|retval
+operator|)
 operator|!=
 name|PAM_SUCCESS
 condition|)
@@ -1155,7 +1190,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1219,12 +1256,12 @@ operator|++
 expr_stmt|;
 name|free
 argument_list|(
-name|keyfiles
+name|dotdir
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|dotdir
+name|keyfiles
 argument_list|)
 expr_stmt|;
 if|if
@@ -1380,6 +1417,11 @@ parameter_list|)
 block|{
 name|char
 modifier|*
+name|agent_pid
+decl_stmt|;
+comment|/* copy of agent PID */
+name|char
+modifier|*
 name|agent_socket
 decl_stmt|;
 comment|/* agent socket */
@@ -1430,11 +1472,6 @@ modifier|*
 name|per_session
 decl_stmt|;
 comment|/* per-session filename */
-name|char
-modifier|*
-name|agent_pid
-decl_stmt|;
-comment|/* agent pid */
 specifier|const
 name|struct
 name|passwd
@@ -1456,6 +1493,17 @@ modifier|*
 name|tty
 decl_stmt|;
 comment|/* tty or display name */
+name|log_init
+argument_list|(
+name|module_name
+argument_list|,
+name|SYSLOG_LEVEL_ERROR
+argument_list|,
+name|SYSLOG_FACILITY_AUTHPRIV
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* dump output of ssh-agent in ~/.ssh */
 if|if
 condition|(
@@ -1523,7 +1571,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1678,7 +1728,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: %s: %m"
+argument_list|,
+name|module_name
 argument_list|,
 name|SSH_AGENT
 argument_list|)
@@ -1891,7 +1943,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -2036,20 +2090,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|agent_socket
+name|agent_pid
 condition|)
 name|free
 argument_list|(
-name|agent_socket
+name|agent_pid
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|agent_pid
+name|agent_socket
 condition|)
 name|free
 argument_list|(
-name|agent_pid
+name|agent_socket
 argument_list|)
 expr_stmt|;
 return|return
@@ -2096,7 +2150,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: %s: %m"
+argument_list|,
+name|module_name
 argument_list|,
 name|SSH_AGENT
 argument_list|)
@@ -2126,7 +2182,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"cannot execute %s"
+literal|"%s: cannot execute %s"
+argument_list|,
+name|module_name
 argument_list|,
 name|SSH_AGENT
 argument_list|)
@@ -2150,7 +2208,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s exited %s %d"
+literal|"%s: %s exited %s %d"
+argument_list|,
+name|module_name
 argument_list|,
 name|SSH_AGENT
 argument_list|,
@@ -2224,6 +2284,8 @@ operator|=
 name|add_keys
 argument_list|(
 name|pamh
+argument_list|,
+name|agent_socket
 argument_list|)
 operator|)
 operator|!=
@@ -2305,7 +2367,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%m"
+literal|"%s: %m"
+argument_list|,
+name|module_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -2582,7 +2646,9 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: %s: %m"
+argument_list|,
+name|module_name
 argument_list|,
 name|ssh_agent_pid
 argument_list|)
