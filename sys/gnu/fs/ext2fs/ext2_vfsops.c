@@ -448,8 +448,6 @@ name|ext2_sync
 block|,
 name|ext2_vget
 block|,
-name|vfs_vrele
-block|,
 name|ext2_fhtovp
 block|,
 name|ext2_vptofh
