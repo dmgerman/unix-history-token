@@ -1552,6 +1552,9 @@ block|{
 name|dev_t
 name|dev
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|dev
 operator|=
 name|ap
