@@ -134,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -283,6 +277,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|isleap
+parameter_list|(
+name|y
+parameter_list|)
+value|(((y) % 4) == 0&& ((y) % 100) != 0 || ((y) % 400) == 0)
+end_define
 
 begin_function
 name|int
@@ -814,7 +818,7 @@ condition|)
 block|{
 name|yrdays
 operator|=
-name|DAYSPERLYEAR
+literal|366
 expr_stmt|;
 name|cumdays
 operator|=
@@ -828,7 +832,7 @@ else|else
 block|{
 name|yrdays
 operator|=
-name|DAYSPERNYEAR
+literal|365
 expr_stmt|;
 name|cumdays
 operator|=
