@@ -447,6 +447,10 @@ operator|<
 name|curthread
 operator|->
 name|td_priority
+operator|&&
+name|curthread
+operator|->
+name|td_kse
 condition|)
 name|curthread
 operator|->

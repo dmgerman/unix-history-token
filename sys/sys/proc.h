@@ -583,7 +583,7 @@ name|kse_thr_mailbox
 modifier|*
 name|td_mailbox
 decl_stmt|;
-comment|/* the userland mailbox address */
+comment|/* The userland mailbox address */
 name|struct
 name|ucred
 modifier|*
@@ -605,11 +605,11 @@ name|thread
 modifier|*
 name|td_standin
 decl_stmt|;
-comment|/* (?) use this for an upcall */
+comment|/* (?) Use this for an upcall */
 name|u_int
 name|td_usticks
 decl_stmt|;
-comment|/* Statclock hits in kernel, for UTS */
+comment|/* (?) Statclock kernel hits, for UTS */
 name|u_int
 name|td_critnest
 decl_stmt|;
@@ -646,7 +646,7 @@ enum|enum
 block|{
 name|TDS_INACTIVE
 init|=
-literal|0x20
+literal|0x0
 block|,
 name|TDS_INHIBITED
 block|,
@@ -743,6 +743,17 @@ end_define
 
 begin_comment
 comment|/* Caused a panic, let it drive crashdump. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_CAN_UNBIND
+value|0x000004
+end_define
+
+begin_comment
+comment|/* Only temporarily bound. */
 end_comment
 
 begin_define
@@ -924,6 +935,59 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDI_IDLE
+value|0x40
+end_define
+
+begin_comment
+comment|/* kse_release() made us surplus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDI_EXITING
+value|0x80
+end_define
+
+begin_comment
+comment|/* Thread is in exit processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_IS_UNBOUND
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_flags& TDF_UNBOUND)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_BOUND
+parameter_list|(
+name|td
+parameter_list|)
+value|(!TD_IS_UNBOUND(td))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CAN_UNBIND
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|(((td)->td_flags& (TDF_UNBOUND|TDF_CAN_UNBIND)) == TDF_CAN_UNBIND)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_IS_SLEEPING
 parameter_list|(
 name|td
@@ -974,7 +1038,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_LENT
+name|TD_LENDER
 parameter_list|(
 name|td
 parameter_list|)
@@ -989,6 +1053,26 @@ parameter_list|(
 name|td
 parameter_list|)
 value|((td)->td_inhibitors& TDI_IWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_IDLE
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_IDLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_EXITING
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_EXITING)
 end_define
 
 begin_define
@@ -1118,6 +1202,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_SET_IDLE
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_IDLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_EXITING
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_EXITING)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_CLR_SLEEPING
 parameter_list|(
 name|td
@@ -1178,6 +1282,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_CLR_IDLE
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_IDLE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_SET_RUNNING
 parameter_list|(
 name|td
@@ -1226,7 +1340,7 @@ value|do {			\ 		(td)->td_flags&= ~TDF_ONSLEEPQ;	\ 		(td)->td_wchan = NULL;			\ 
 end_define
 
 begin_comment
-comment|/*  * Traps for young players:  * The main thread variable that controls whether a thread acts as a threaded  * or unthreaded thread is the td_bound counter (0 == unbound).  * UPCALLS run with the UNBOUND flags clear, after they are first scheduled.  * i.e. they bind themselves to whatever thread thay are first scheduled with.  * You may see BOUND threads in KSE processes but you should never see  * UNBOUND threads in non KSE processes.  */
+comment|/*  * Traps for young players:  * The main thread variable that controls whether a thread acts as a threaded  * or unthreaded thread is the TDF_UNBOUND flag.  * i.e. they bind themselves to whatever thread thay are first scheduled with.  * You may see BOUND threads in KSE processes but you should never see  * UNBOUND threads in non KSE processes.  */
 end_comment
 
 begin_comment
@@ -1287,9 +1401,9 @@ comment|/* Active associated thread. */
 name|struct
 name|thread
 modifier|*
-name|ke_bound
+name|ke_owner
 decl_stmt|;
-comment|/* Thread bound to this KSE (*) */
+comment|/* Always points to the owner */
 name|int
 name|ke_cpticks
 decl_stmt|;
@@ -1340,9 +1454,9 @@ decl_stmt|;
 comment|/* (j) Run queue index. */
 enum|enum
 block|{
-name|KES_IDLE
+name|KES_UNUSED
 init|=
-literal|0x10
+literal|0x0
 block|,
 name|KES_ONRUNQ
 block|,
@@ -1532,14 +1646,6 @@ argument_list|(
 argument_list|,
 argument|kse
 argument_list|)
-name|kg_iq
-expr_stmt|;
-comment|/* (ke_kgrlist) Idle KSEs. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse
-argument_list|)
 name|kg_lq
 expr_stmt|;
 comment|/* (ke_kgrlist) Loan KSEs. */
@@ -1631,10 +1737,6 @@ name|int
 name|kg_numthreads
 decl_stmt|;
 comment|/* Num threads in total */
-name|int
-name|kg_idle_kses
-decl_stmt|;
-comment|/* num KSEs idle */
 name|int
 name|kg_kses
 decl_stmt|;

@@ -1974,6 +1974,12 @@ name|ke_thread
 operator|=
 name|td2
 expr_stmt|;
+name|ke2
+operator|->
+name|ke_owner
+operator|=
+name|td2
+expr_stmt|;
 name|td2
 operator|->
 name|td_kse

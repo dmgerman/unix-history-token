@@ -473,6 +473,26 @@ end_comment
 
 begin_function_decl
 name|void
+name|db_stack_thread
+parameter_list|(
+name|db_expr_t
+name|addr
+parameter_list|,
+name|boolean_t
+name|have_addr
+parameter_list|,
+name|db_expr_t
+name|count
+parameter_list|,
+name|char
+modifier|*
+name|modif
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|kdb_init
 parameter_list|(
 name|void
@@ -594,6 +614,12 @@ name|db_write_cmd
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|db_cmdfcn_t
+name|db_show_one_thread
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -601,7 +627,7 @@ literal|0
 end_if
 
 begin_endif
-unit|db_cmdfcn_t	db_help_cmd; db_cmdfcn_t	db_show_all_threads; db_cmdfcn_t	db_show_one_thread; db_cmdfcn_t	ipc_port_print; db_cmdfcn_t	vm_page_print;
+unit|db_cmdfcn_t	db_help_cmd; db_cmdfcn_t	db_show_all_threads; db_cmdfcn_t	ipc_port_print; db_cmdfcn_t	vm_page_print;
 endif|#
 directive|endif
 end_endif

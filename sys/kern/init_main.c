@@ -1396,6 +1396,12 @@ name|ke_thread
 operator|=
 name|td
 expr_stmt|;
+name|ke
+operator|->
+name|ke_owner
+operator|=
+name|td
+expr_stmt|;
 name|p
 operator|->
 name|p_peers

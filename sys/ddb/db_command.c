@@ -1464,12 +1464,16 @@ block|,
 literal|0
 block|}
 block|,
-if|#
-directive|if
+block|{
+literal|"thread"
+block|,
+name|db_show_one_thread
+block|,
 literal|0
-block|{ "thread",	db_show_one_thread,	0,	0 },
-endif|#
-directive|endif
+block|,
+literal|0
+block|}
+block|,
 if|#
 directive|if
 literal|0

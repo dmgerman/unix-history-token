@@ -310,7 +310,6 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-comment|/* printf("KSE thread returned"); */
 block|}
 comment|/* 	 * Charge system time if profiling. 	 * 	 * XXX should move PS_PROFIL to a place that can obviously be 	 * accessed safely without sched_lock. 	 */
 if|if
