@@ -432,6 +432,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bremfreel
 parameter_list|(
@@ -2629,6 +2630,7 @@ comment|/*  *	bremfreel:  *  *	Removes a buffer from the free list, must be call
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|bremfreel
 parameter_list|(
@@ -7680,6 +7682,7 @@ comment|/*  *	flushbufqueues:  *  *	Try to flush a buffer in the dirty queue.  W
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|flushwithdeps
 init|=
