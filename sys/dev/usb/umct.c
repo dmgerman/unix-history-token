@@ -1118,6 +1118,22 @@ name|ed
 operator|->
 name|bEndpointAddress
 expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|product
+operator|==
+name|USB_PRODUCT_MCT_SITECOM_USB232
+condition|)
+name|ucom
+operator|->
+name|sc_obufsize
+operator|=
+literal|16
+expr_stmt|;
+comment|/* device is broken */
+else|else
 name|ucom
 operator|->
 name|sc_obufsize
