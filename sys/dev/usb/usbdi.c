@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.19 1999/01/03 01:00:56 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.20 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usbdi.c,v 1.7 1999/01/07 23:31:42 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1004,23 +1004,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static usbd_status usbd_do_transfer(reqh) 	usbd_request_handle reqh; { 	usbd_pipe_handle pipe = reqh->pipe;  	DPRINTFN(10,("usbd_do_transfer: reqh=%p\n", reqh)); 	reqh->done = 0; 	s = splusb(); 	if (pipe->state == USBD_PIPE_IDLE || 	    (iface&& iface->state == USBD_INTERFACE_IDLE)) { 		splx(s); 		return (USBD_IS_IDLE); 	} 	SIMPLEQ_INSERT_TAIL(&pipe->queue, reqh, next); 	if (pipe->state == USBD_PIPE_ACTIVE&& 	    (!iface || iface->state == USBD_INTERFACE_ACTIVE)) { 		r = usbd_start(pipe); 	} else 		r = USBD_NOT_STARTED; 	splx(s); 	return (r); }  static usbd_status usbd_start(pipe) 	usbd_pipe_handle pipe; { 	usbd_request_handle reqh;  	DPRINTFN(5, ("usbd_start: pipe=%p, running=%d\n",  		     pipe, pipe->running)); 	if (pipe->running) 		return (USBD_IN_PROGRESS); 	reqh = SIMPLEQ_FIRST(&pipe->queue); 	if (!reqh) {
-comment|/* XXX */
-end_comment
-
-begin_endif
-unit|printf("usbd_start: pipe empty!\n"); 		pipe->running = 0; 		return (USBD_XXX); 	} 	SIMPLEQ_REMOVE_HEAD(&pipe->queue, reqh, next); 	pipe->running = 1; 	pipe->curreqh = reqh; 	return (pipe->methods->transfer(reqh)); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|usbd_request_handle
@@ -2796,25 +2779,23 @@ end_function
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_endif
+unit|u_int8_t  usbd_bus_count() { 	return (usb_bus_count()); }
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
 end_if
-
-begin_function
-name|u_int8_t
-name|usbd_bus_count
-parameter_list|()
-block|{
-return|return
-operator|(
-name|usb_bus_count
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|usbd_status
@@ -3726,12 +3707,15 @@ block|{
 name|usbd_request_handle
 name|reqh
 decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
+if|#
+directive|if
+literal|0
+block|for (;;) { 		reqh = SIMPLEQ_FIRST(&pipe->queue); 		if (reqh == 0) 			break; 		SIMPLEQ_REMOVE_HEAD(&pipe->queue, reqh, next); 		reqh->status = USBD_CANCELLED; 		if (reqh->callback) 			reqh->callback(reqh, reqh->priv, reqh->status); 	}
+else|#
+directive|else
+while|while
+condition|(
+operator|(
 name|reqh
 operator|=
 name|SIMPLEQ_FIRST
@@ -3741,14 +3725,18 @@ name|pipe
 operator|->
 name|queue
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|reqh
-operator|==
-literal|0
+operator|)
 condition|)
-break|break;
+block|{
+name|pipe
+operator|->
+name|methods
+operator|->
+name|abort
+argument_list|(
+name|reqh
+argument_list|)
+expr_stmt|;
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -3761,34 +3749,9 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|reqh
-operator|->
-name|status
-operator|=
-name|USBD_CANCELLED
-expr_stmt|;
-if|if
-condition|(
-name|reqh
-operator|->
-name|callback
-condition|)
-name|reqh
-operator|->
-name|callback
-argument_list|(
-name|reqh
-argument_list|,
-name|reqh
-operator|->
-name|priv
-argument_list|,
-name|reqh
-operator|->
-name|status
-argument_list|)
-expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -5457,10 +5420,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*   * A static buffer is a loss if this routine is used from an interrupt,  * but it's not fatal.  */
-end_comment
-
 begin_function
 name|char
 modifier|*
@@ -5478,6 +5437,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+comment|/* XXX a static buffer is not exactly a good idea, but the only 	 * thing that goes wrong is the string that is being printed 	 */
 name|sprintf
 argument_list|(
 name|buf

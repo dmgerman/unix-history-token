@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: ukbd.c,v 1.20 1998/12/30 19:25:27 augustss Exp $        */
+comment|/*      $NetBSD: ukbd.c,v 1.22 1999/01/09 12:10:36 drochner Exp $        */
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ukbd.c,v 1.5 1999/01/07 23:31:34 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1553,11 +1553,6 @@ argument_list|)
 name|struct
 name|wskbddev_attach_args
 name|a
-decl_stmt|;
-else|#
-directive|else
-name|int
-name|i
 decl_stmt|;
 endif|#
 directive|endif

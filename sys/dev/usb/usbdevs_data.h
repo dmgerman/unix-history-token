@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	FreeBSD $Id$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.14 1998/12/30 03:52:30 augustss Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.19 1999/01/08 11:18:38 augustss Exp   */
 end_comment
 
 begin_comment
@@ -71,30 +67,6 @@ literal|"Andromeda hub"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_NANAO
-block|,
-name|USB_PRODUCT_NANAO_HUB
-block|,
-literal|0
-block|,
-literal|"Nanao"
-block|,
-literal|"hub"
-block|, 	}
-block|,
-block|{
-name|USB_VENDOR_NANAO
-block|,
-name|USB_PRODUCT_NANAO_MONITOR
-block|,
-literal|0
-block|,
-literal|"Nanao"
-block|,
-literal|"monitor"
-block|, 	}
-block|,
-block|{
 name|USB_VENDOR_UNIXTAR
 block|,
 name|USB_PRODUCT_UNIXTAR_UTUSB41
@@ -103,7 +75,7 @@ literal|0
 block|,
 literal|"Unixtar"
 block|,
-literal|"UT-USB41"
+literal|"UT-USB41 hub"
 block|, 	}
 block|,
 block|{
@@ -140,6 +112,18 @@ block|,
 literal|"Microsoft"
 block|,
 literal|"IntelliMouse"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_KENSINGTON
+block|,
+name|USB_PRODUCT_KENSINGTON_MOUSEINABOX
+block|,
+literal|0
+block|,
+literal|"Kensington"
+block|,
+literal|"Mouse-in-a-Box"
 block|, 	}
 block|,
 block|{
@@ -212,6 +196,18 @@ block|,
 literal|"Connectix"
 block|,
 literal|"QuickCam"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ACER
+block|,
+name|USB_PRODUCT_ACER_ACERSCAN_C310U
+block|,
+literal|0
+block|,
+literal|"Acer Peripherals"
+block|,
+literal|"Acerscan C310U"
 block|, 	}
 block|,
 block|{
@@ -359,30 +355,6 @@ literal|"M4848 mouse"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_EIZONANAO
-block|,
-name|USB_PRODUCT_EIZONANAO_HUB
-block|,
-literal|0
-block|,
-literal|"EIZO Nanao"
-block|,
-literal|"hub"
-block|, 	}
-block|,
-block|{
-name|USB_VENDOR_EIZONANAO
-block|,
-name|USB_PRODUCT_EIZONANAO_MONITOR
-block|,
-literal|0
-block|,
-literal|"EIZO Nanao"
-block|,
-literal|"monitor"
-block|, 	}
-block|,
-block|{
 name|USB_VENDOR_CHIC
 block|,
 name|USB_PRODUCT_CHIC_MOUSE1
@@ -427,7 +399,7 @@ literal|0
 block|,
 literal|"Inside Out Networks"
 block|,
-literal|"EdgePort/4"
+literal|"EdgePort/4 serial ports"
 block|, 	}
 block|,
 block|{
@@ -527,6 +499,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_KENSINGTON
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Kensington"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_CHERRY
 block|,
 literal|0
@@ -570,6 +554,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Connectix"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ACER
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Acer Peripherals"
 block|,
 name|NULL
 block|, 	}

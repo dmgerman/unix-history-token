@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.c,v 1.6 1998/12/29 15:23:59 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.c,v 1.8 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb_quirks.c,v 1.5 1999/01/07 23:31:39 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -46,12 +46,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -66,6 +60,24 @@ include|#
 directive|include
 file|<dev/usb/usb_quirks.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|usbdebug
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -273,11 +285,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
-block|{
-specifier|extern
-name|int
-name|usbdebug
-decl_stmt|;
 if|if
 condition|(
 name|usbdebug
@@ -320,7 +327,6 @@ operator|.
 name|uq_flags
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 return|return

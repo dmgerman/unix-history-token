@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
+comment|/*	FreeBSD $Id$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.14 1998/12/30 03:52:30 augustss Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.19 1999/01/08 11:18:38 augustss Exp   */
 end_comment
 
 begin_comment
@@ -99,6 +99,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_KENSINGTON
+value|0x0461
+end_define
+
+begin_comment
+comment|/* Kensington */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_CHERRY
 value|0x046a
 end_define
@@ -142,6 +153,17 @@ end_define
 
 begin_comment
 comment|/* Connectix */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_ACER
+value|0x04a5
+end_define
+
+begin_comment
+comment|/* Acer Peripherals */
 end_comment
 
 begin_define
@@ -381,32 +403,6 @@ comment|/* Andromeda hub */
 end_comment
 
 begin_comment
-comment|/* Nanao products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_NANAO_HUB
-value|0x0000
-end_define
-
-begin_comment
-comment|/* hub */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_NANAO_MONITOR
-value|0x0001
-end_define
-
-begin_comment
-comment|/* monitor */
-end_comment
-
-begin_comment
 comment|/* Unixtar products */
 end_comment
 
@@ -418,7 +414,7 @@ value|0x1446
 end_define
 
 begin_comment
-comment|/* UT-USB41 */
+comment|/* UT-USB41 hub */
 end_comment
 
 begin_comment
@@ -460,6 +456,21 @@ end_define
 
 begin_comment
 comment|/* IntelliMouse */
+end_comment
+
+begin_comment
+comment|/* Kensington products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_KENSINGTON_MOUSEINABOX
+value|0x4d02
+end_define
+
+begin_comment
+comment|/* Mouse-in-a-Box */
 end_comment
 
 begin_comment
@@ -542,6 +553,21 @@ end_define
 
 begin_comment
 comment|/* QuickCam */
+end_comment
+
+begin_comment
+comment|/* Acer products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ACER_ACERSCAN_C310U
+value|0x12a6
+end_define
+
+begin_comment
+comment|/* Acerscan C310U */
 end_comment
 
 begin_comment
@@ -717,32 +743,6 @@ comment|/* M4848 mouse */
 end_comment
 
 begin_comment
-comment|/* EIZO Nanao products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_EIZONANAO_HUB
-value|0x0000
-end_define
-
-begin_comment
-comment|/* hub */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_EIZONANAO_MONITOR
-value|0x0001
-end_define
-
-begin_comment
-comment|/* monitor */
-end_comment
-
-begin_comment
 comment|/* Chic Technology products */
 end_comment
 
@@ -799,7 +799,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* EdgePort/4 */
+comment|/* EdgePort/4 serial ports */
 end_comment
 
 begin_comment

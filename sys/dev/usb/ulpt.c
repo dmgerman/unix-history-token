@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.9 1998/12/30 17:46:20 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.10 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ulpt.c,v 1.4 1999/01/07 23:31:35 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1819,16 +1819,6 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|struct
-name|ulpt_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|devinfo

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.13 1998/12/30 18:06:25 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.14 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: uhub.c,v 1.5 1999/01/07 23:31:34 n_hibma Exp $ */
 end_comment
 
 begin_comment

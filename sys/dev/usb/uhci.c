@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.20 1998/12/30 18:06:25 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.22 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: uhci.c,v 1.6 1999/01/07 23:31:33 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -2294,7 +2294,7 @@ literal|"  %b %b,errcnt=%d,actlen=%d pid=%02x,addr=%d,endpt=%d,"
 literal|"D=%d,maxlen=%d\n"
 argument_list|,
 operator|(
-name|long
+name|int
 operator|)
 name|p
 operator|->
@@ -2305,7 +2305,7 @@ argument_list|,
 literal|"\20\1T\2Q\3VF"
 argument_list|,
 operator|(
-name|long
+name|int
 operator|)
 name|p
 operator|->
@@ -3997,7 +3997,7 @@ block|}
 endif|#
 directive|endif
 comment|/* The transfer is done, compute length and status. */
-comment|/* XXX stop at first inactive to get toggle right. */
+comment|/* XXX Should stop at first inactive to get toggle right. */
 comment|/* XXX Is this correct for control xfers? */
 for|for
 control|(
@@ -4146,7 +4146,7 @@ operator|->
 name|bEndpointAddress
 operator|,
 operator|(
-name|long
+name|int
 operator|)
 name|status
 operator|,

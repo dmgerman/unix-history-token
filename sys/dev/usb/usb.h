@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb.h,v 1.17 1999/01/03 01:09:18 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb.h,v 1.6 1999/01/07 23:31:37 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1671,6 +1671,7 @@ value|0x04
 name|int
 name|actlen
 decl_stmt|;
+comment|/* actual length transferred */
 block|}
 struct|;
 end_struct

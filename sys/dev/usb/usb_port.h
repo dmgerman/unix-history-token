@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
+comment|/*	$NetBSD: usb_port.h,v 1.5 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb_port.h,v 1.8 1999/01/07 23:31:38 n_hibma Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/* Macro's to cope with the differences between NetBSD and FreeBSD  */
+comment|/*  * Macro's to cope with the differences between operating systems.  */
 end_comment
 
 begin_comment
@@ -96,7 +96,6 @@ parameter_list|,
 name|dname
 parameter_list|,
 name|_2
-modifier|...
 parameter_list|)
 define|\
 value|int __CONCAT(dname,_match) __P((struct device *, struct cfdata *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach) \ }
@@ -248,7 +247,7 @@ file|"opt_usb.h"
 end_include
 
 begin_comment
-comment|/* The following is not a type def to avoid error messages  * because of includes in the wrong order.  */
+comment|/*  * The following is not a type def to avoid error messages  * because of includes in the wrong order.  */
 end_comment
 
 begin_define

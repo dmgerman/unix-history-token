@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.14 1998/12/30 18:06:25 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.16 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usbdivar.h,v 1.6 1999/01/07 23:31:45 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -634,22 +634,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|usbd_status
-name|usbd_set_config_no
-name|__P
-argument_list|(
-operator|(
-name|usbd_device_handle
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|usbd_status
 name|usbd_reset_port
 name|__P
 argument_list|(
@@ -840,13 +824,6 @@ operator|(
 name|usbd_bus_handle
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|usbd_use_polling
 decl_stmt|;
 end_decl_stmt
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.c,v 1.11 1999/01/03 01:00:56 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.c,v 1.13 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usbdi_util.c,v 1.5 1999/01/07 23:31:43 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -60,12 +60,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
 
 begin_include
 include|#
@@ -2361,7 +2355,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"usbd_bulk_transfer: transfer %d bytes\n"
+literal|"usbd_bulk_transfer: start transfer %d bytes\n"
 operator|,
 operator|*
 name|size
@@ -2454,6 +2448,18 @@ operator|&
 name|r
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"usbd_bulk_transfer: transferred %d\n"
+operator|,
+operator|*
+name|size
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|r
@@ -2464,7 +2470,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ugenread: error=%d\n"
+literal|"usbd_bulk_transfer: error=%d\n"
 operator|,
 name|r
 operator|)

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_mem.h,v 1.3 1998/12/26 12:53:03 augustss Exp $	*/
+comment|/*	$NetBSD: usb_mem.h,v 1.4 1999/01/09 12:16:54 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb_mem.h,v 1.4 1999/01/07 23:31:38 n_hibma Exp $ */
 end_comment
 
 begin_comment

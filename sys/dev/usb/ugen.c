@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ugen.c,v 1.9 1999/01/03 01:03:22 augustss Exp $	*/
+comment|/*	$NetBSD: ugen.c,v 1.11 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ugen.c,v 1.4 1999/01/07 23:31:32 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -348,10 +348,6 @@ comment|/* device is gone */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* XXX NWH Supposedly in USB_DECLARE_DRIVER_NAME_INIT int ugen_match __P((bdevice *, struct cfdata *, void *)); void ugen_attach __P((bdevice *, struct device *, void *)); */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -2270,11 +2266,15 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"ugenread: transfer %d bytes\n"
+literal|"ugenread: start transfer %d bytes\n"
 operator|,
 name|n
 operator|)
 argument_list|)
+expr_stmt|;
+name|tn
+operator|=
+name|n
 expr_stmt|;
 name|r
 operator|=
@@ -2320,6 +2320,17 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"ugenread: got %d bytes\n"
+operator|,
+name|tn
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|uiomove
@@ -2417,7 +2428,7 @@ index|[
 name|endpt
 index|]
 index|[
-name|IN
+name|OUT
 index|]
 decl_stmt|;
 name|size_t
@@ -5106,16 +5117,6 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|struct
-name|ugen_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|devinfo

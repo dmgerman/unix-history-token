@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ums.c,v 1.18 1998/12/30 17:46:20 augustss Exp $	*/
+comment|/*	$NetBSD: ums.c,v 1.19 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ums.c,v 1.6 1999/01/07 23:31:36 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -389,6 +389,11 @@ comment|/* z direction available */
 name|int
 name|nbuttons
 decl_stmt|;
+define|#
+directive|define
+name|MAX_BUTTONS
+value|7
+comment|/* chosen because sc_buttons is u_char */
 if|#
 directive|if
 name|defined
@@ -422,7 +427,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-comment|/* just for safety and for now */
+comment|/* XXX just for safety and for now */
 name|int
 name|qcount
 decl_stmt|,
@@ -1310,15 +1315,42 @@ comment|/* Bad Z coord, ignore it */
 block|}
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+ifdef|#
+directive|ifdef
+name|USBVERBOSE
+name|printf
+argument_list|(
+literal|"%s: Z dir. ignored due to bugs in ums.c\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+else|#
+directive|else
 name|sc
 operator|->
 name|flags
 operator||=
 name|UMS_Z
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
-comment|/* figure out the number of buttons, 7 is an arbitrary limit */
+comment|/* figure out the number of buttons */
 for|for
 control|(
 name|i
@@ -1327,7 +1359,7 @@ literal|1
 init|;
 name|i
 operator|<=
-literal|7
+name|MAX_BUTTONS
 condition|;
 name|i
 operator|++
@@ -2291,7 +2323,6 @@ operator|->
 name|sc_loc_z
 argument_list|)
 expr_stmt|;
-comment|/* NWH Why are you modifying the button assignments here? 	 * That's the purpose of a high level mouse driver 	 */
 for|for
 control|(
 name|i

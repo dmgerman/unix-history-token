@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.10 1999/01/03 01:00:56 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.11 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb.c,v 1.5 1999/01/07 23:31:37 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1624,58 +1624,23 @@ end_function
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int usb_bus_count() { 	int i, n;  	for (i = n = 0; i< usb_cd.cd_ndevs; i++) 		if (usb_cd.cd_devs[i]) 			n++; 	return (n); }
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
 end_if
-
-begin_function
-name|int
-name|usb_bus_count
-parameter_list|()
-block|{
-name|int
-name|i
-decl_stmt|,
-name|n
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|n
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|usb_cd
-operator|.
-name|cd_ndevs
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|usb_cd
-operator|.
-name|cd_devs
-index|[
-name|i
-index|]
-condition|)
-name|n
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|n
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|usbd_status
@@ -1912,16 +1877,6 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|struct
-name|usb_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|devinfo

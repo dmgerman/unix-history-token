@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: umodem.c,v 1.4 1998/12/30 17:46:20 augustss Exp $	*/
-end_comment
-
-begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$NetBSD: umodem.c,v 1.5 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -43,12 +39,6 @@ argument_list|(
 name|__NetBSD__
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
 
 begin_include
 include|#
@@ -145,7 +135,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbhid.h>
+file|<dev/usb/usbcdc.h>
 end_include
 
 begin_include
@@ -170,12 +160,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usb_quirks.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/hid.h>
 end_include
 
 begin_ifdef
@@ -253,9 +237,19 @@ name|sc_dev
 decl_stmt|;
 comment|/* base device */
 name|usbd_interface_handle
-name|sc_iface
+name|sc_ctl
 decl_stmt|;
-comment|/* interface */
+comment|/* control interface */
+name|usbd_interface_handle
+name|sc_data
+decl_stmt|;
+comment|/* data interface */
+name|uByte
+name|cmCaps
+decl_stmt|;
+name|uByte
+name|acmCaps
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -411,7 +405,7 @@ index|]
 decl_stmt|;
 name|sc
 operator|->
-name|sc_iface
+name|sc_ctl
 operator|=
 name|iface
 expr_stmt|;
@@ -480,16 +474,6 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|struct
-name|umodem_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|self
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|devinfo

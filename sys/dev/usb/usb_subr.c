@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.24 1999/01/01 15:21:42 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.27 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: usb_subr.c,v 1.6 1999/01/07 23:31:40 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -318,27 +318,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|usb_interface_descriptor_t
-modifier|*
-name|usbd_find_idesc
-name|__P
-argument_list|(
-operator|(
-name|usb_config_descriptor_t
-operator|*
-name|cd
-operator|,
-name|int
-name|ifaceidx
-operator|,
-name|int
-name|altidx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -3788,9 +3767,6 @@ name|int
 name|addr
 decl_stmt|;
 block|{
-name|bdevice
-name|bdev
-decl_stmt|;
 name|struct
 name|usb_attach_arg
 name|uaa
@@ -3829,6 +3805,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 comment|/* XXX uaa is a static var. Not a problem as it _should_ be used only  * during probe and attach. Should be changed however  */
+name|bdevice
+name|bdev
+decl_stmt|;
 name|bdev
 operator|=
 name|device_add_child
@@ -5340,31 +5319,6 @@ name|aux
 argument_list|)
 operator|)
 return|;
-block|}
-end_function
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_function
-specifier|static
-name|void
-name|usbd_bus_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-block|{
-comment|/* FIXME print the device address and the configuration used 	 */
 block|}
 end_function
 
