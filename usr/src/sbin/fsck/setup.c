@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.9 (Berkeley) %G%"
+literal|"@(#)setup.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -656,6 +656,12 @@ operator|.
 name|fs_interleave
 argument_list|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_interleave
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|reply
@@ -665,17 +671,9 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
-name|sblock
-operator|.
-name|fs_interleave
-operator|=
-literal|1
-expr_stmt|;
 name|sbdirty
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -697,6 +695,14 @@ operator|.
 name|fs_npsect
 argument_list|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_npsect
+operator|=
+name|sblock
+operator|.
+name|fs_nsect
+expr_stmt|;
 if|if
 condition|(
 name|reply
@@ -706,19 +712,9 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-block|{
-name|sblock
-operator|.
-name|fs_npsect
-operator|=
-name|sblock
-operator|.
-name|fs_nsect
-expr_stmt|;
 name|sbdirty
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * read in the summary info. 	 */
 for|for
