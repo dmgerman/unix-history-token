@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.16 1999/04/28 10:52:39 dt Exp $  *  * This device-driver helps the userland controlprogram for a LORAN-C  * receiver avoid monopolizing the CPU.  *  * This is clearly a candidate for the "most weird hardware support in  * FreeBSD" prize.  At this time only two copies of the receiver are  * known to exist in the entire world.  *  * Details can be found at:  *     ftp://ftp.eecis.udel.edu/pub/ntp/loran.tar.Z  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.17 1999/05/06 22:13:04 peter Exp $  *  * This device-driver helps the userland controlprogram for a LORAN-C  * receiver avoid monopolizing the CPU.  *  * This is clearly a candidate for the "most weird hardware support in  * FreeBSD" prize.  At this time only two copies of the receiver are  * known to exist in the entire world.  *  * Details can be found at:  *     ftp://ftp.eecis.udel.edu/pub/ntp/loran.tar.Z  *  */
 end_comment
 
 begin_ifdef
@@ -146,23 +146,26 @@ name|home
 decl_stmt|;
 comment|/* Fields used only in userland */
 name|void
+function_decl|(
+modifier|*
+name|proc
+function_decl|)
+parameter_list|(
+name|struct
+name|datapoint
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
 modifier|*
 name|ident
 decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|double
-name|ival
-decl_stmt|;
-name|double
-name|qval
-decl_stmt|;
-name|double
-name|sval
-decl_stmt|;
-name|double
-name|mval
+name|char
+modifier|*
+name|name
 decl_stmt|;
 block|}
 struct|;
