@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clock.c	7.2 (Berkeley) 5/12/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         3       00082  * --------------------         -----   ----------------------  *  * 14 Aug 92	Arne Henrik Juul	Added code in the kernel to  *					allow for DST in the BIOS.  * 17 Jan 93	Bruce Evans		Fixed leap year and second  *					calculations  * 01 Feb 93	Julian Elischer		Added code to for the cpu  *					speed independent spinwait()  *					function, (used by scsi and others)  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clock.c	7.2 (Berkeley) 5/12/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         4       00113  * --------------------         -----   ----------------------  *  * 14 Aug 92	Arne Henrik Juul	Added code in the kernel to  *					allow for DST in the BIOS.  * 17 Jan 93	Bruce Evans		Fixed leap year and second  *					calculations  * 01 Feb 93	Julian Elischer		Added code to for the cpu  *					speed independent spinwait()  *					function, (used by scsi and others)  * 25 Mar 93	Sean Eric Fagan		Add microtimer support using timer 1  * 08 Apr 93	Poul-Henning Kamp/P-HK	Fixes, and support for dcfclock  */
 end_comment
 
 begin_comment
@@ -55,6 +55,12 @@ directive|include
 file|"i386/isa/rtc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"i386/isa/timerreg.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -69,12 +75,27 @@ name|DAYEN
 value|303
 end_define
 
+begin_comment
+comment|/* X-tals being what they are, it's nice to be able to fudge this one... */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XTALSPEED
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|XTALSPEED
 value|1193182
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|startrtclock
@@ -93,18 +114,27 @@ comment|/* use the clock (while it's free) 					to find the cpu speed */
 comment|/* initialize 8253 clock */
 name|outb
 argument_list|(
-name|IO_TIMER1
-operator|+
-literal|3
+name|TIMER_MODE
 argument_list|,
-literal|0x36
+name|TIMER_SEL0
+operator||
+name|TIMER_RATEGEN
+operator||
+name|TIMER_16BIT
 argument_list|)
 expr_stmt|;
+comment|/* Correct rounding will buy us a better precision in timekeeping */
 name|outb
 argument_list|(
 name|IO_TIMER1
 argument_list|,
+operator|(
 name|XTALSPEED
+operator|+
+name|hz
+operator|/
+literal|2
+operator|)
 operator|/
 name|hz
 argument_list|)
@@ -114,7 +144,13 @@ argument_list|(
 name|IO_TIMER1
 argument_list|,
 operator|(
+operator|(
 name|XTALSPEED
+operator|+
+name|hz
+operator|/
+literal|2
+operator|)
 operator|/
 name|hz
 operator|)
