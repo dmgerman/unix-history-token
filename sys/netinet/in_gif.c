@@ -817,6 +817,17 @@ name|s_addr
 condition|)
 block|{
 comment|/* cache route doesn't match */
+name|bzero
+argument_list|(
+name|dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dst
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dst
 operator|->
 name|sin_family
