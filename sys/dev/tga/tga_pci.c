@@ -6,20 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
 file|"opt_fb.h"
 end_include
 
@@ -331,14 +317,6 @@ block|,
 name|DEC_DEVICEID_TGA
 block|,
 literal|"DEC TGA (21030) 2D Graphics Accelerator"
-block|}
-block|,
-block|{
-name|DEC_VENDORID
-block|,
-name|DEC_DEVICEID_TGA2
-block|,
-literal|"DEC TGA2 (21130) 3D Graphics Accelerator"
 block|}
 block|,
 block|{
