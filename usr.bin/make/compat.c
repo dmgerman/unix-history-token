@@ -848,9 +848,6 @@ literal|'\0'
 condition|)
 block|{
 comment|/* 	 * If *cp isn't the null character, we hit a "meta" character and 	 * need to pass the command off to the shell. We give the shell the 	 * -e flag as well as -c if it's supposed to exit when it hits an 	 * error. 	 */
-ifndef|#
-directive|ifndef
-name|_PATH_DEFSHELLDIR
 specifier|static
 name|char
 modifier|*
@@ -860,28 +857,9 @@ literal|4
 index|]
 init|=
 block|{
-literal|"sh"
+literal|"/bin/sh"
 block|}
 decl_stmt|;
-else|#
-directive|else
-comment|/* _PATH_DEFSHELLDIR */
-specifier|static
-name|char
-modifier|*
-name|shargv
-index|[
-literal|4
-index|]
-init|=
-block|{
-name|_PATH_DEFSHELLDIR
-literal|"/sh"
-block|}
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* _PATH_DEFSHELLDIR */
 name|shargv
 index|[
 literal|1
@@ -936,9 +914,6 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * This command must be passed by the shell for other reasons.. 	 * or.. possibly not at all. 	 */
-ifndef|#
-directive|ifndef
-name|_PATH_DEFSHELLDIR
 specifier|static
 name|char
 modifier|*
@@ -948,28 +923,9 @@ literal|4
 index|]
 init|=
 block|{
-literal|"sh"
+literal|"/bin/sh"
 block|}
 decl_stmt|;
-else|#
-directive|else
-comment|/* _PATH_DEFSHELLDIR */
-specifier|static
-name|char
-modifier|*
-name|shargv
-index|[
-literal|4
-index|]
-init|=
-block|{
-name|_PATH_DEFSHELLDIR
-literal|"/sh"
-block|}
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* _PATH_DEFSHELLDIR */
 if|if
 condition|(
 name|internal
@@ -1162,7 +1118,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|execvp
+name|execv
 argument_list|(
 name|av
 index|[

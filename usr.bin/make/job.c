@@ -4571,7 +4571,7 @@ comment|/* REMOTE */
 operator|(
 name|void
 operator|)
-name|execvp
+name|execv
 argument_list|(
 name|shellPath
 argument_list|,
@@ -8742,16 +8742,6 @@ name|commandShell
 operator|->
 name|name
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_PATH_DEFSHELLDIR
-name|shellPath
-operator|=
-name|shellName
-expr_stmt|;
-else|#
-directive|else
-comment|/* _PATH_DEFSHELLDIR */
 name|shellPath
 operator|=
 name|str_concat
@@ -8763,9 +8753,6 @@ argument_list|,
 name|STR_ADDSLASH
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _PATH_DEFSHELLDIR */
 block|}
 if|if
 condition|(
