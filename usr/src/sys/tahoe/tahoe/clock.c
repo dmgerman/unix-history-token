@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.c	1.3	86/12/06	*/
+comment|/*	clock.c	1.4	86/12/23	*/
 end_comment
 
 begin_include
@@ -64,10 +64,12 @@ specifier|register
 name|int
 name|t
 decl_stmt|;
+specifier|static
 name|struct
 name|cphdr
 name|cpclock
 decl_stmt|;
+comment|/* must be in data space */
 name|cpclock
 operator|.
 name|cp_unit
@@ -87,9 +89,30 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|extern
+name|int
+name|tickadj
+decl_stmt|;
+comment|/* XXX */
 name|hz
 operator|=
 literal|60
+expr_stmt|;
+name|tick
+operator|=
+literal|1000000
+operator|/
+name|hz
+expr_stmt|;
+name|tickadj
+operator|=
+literal|240000
+operator|/
+operator|(
+literal|60
+operator|*
+name|hz
+operator|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -108,12 +131,12 @@ argument_list|(
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* try to insure last cmd completed */
 if|if
 condition|(
 name|cnlast
 condition|)
 block|{
+comment|/* try to insure last cmd was taken by cp */
 for|for
 control|(
 name|t
@@ -154,8 +177,21 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 operator|&
 name|cpclock
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
