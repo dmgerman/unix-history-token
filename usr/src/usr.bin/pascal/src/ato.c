@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ato.c 1.3 %G%"
+literal|"@(#)ato.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* This is an sccs experiment */
+end_comment
 
 begin_include
 include|#
