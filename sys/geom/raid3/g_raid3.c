@@ -5788,6 +5788,29 @@ literal|"Request finished."
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+operator|(
+name|pbp
+operator|->
+name|bio_pflags
+operator|&
+name|G_RAID3_BIO_PFLAG_VERIFY
+operator|)
+operator|!=
+literal|0
+condition|)
+name|G_RAID3_LOGREQ
+argument_list|(
+literal|1
+argument_list|,
+name|pbp
+argument_list|,
+literal|"Verification error."
+argument_list|)
+expr_stmt|;
+else|else
 name|G_RAID3_LOGREQ
 argument_list|(
 literal|0
@@ -5797,6 +5820,7 @@ argument_list|,
 literal|"Request failed."
 argument_list|)
 expr_stmt|;
+block|}
 name|pbp
 operator|->
 name|bio_pflags
