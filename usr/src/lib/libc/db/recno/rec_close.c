@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	5.9 (Berkeley) %G%"
+literal|"@(#)rec_close.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,21 +171,34 @@ name|t
 argument_list|,
 name|BTF_RINMEM
 argument_list|)
-operator|&&
+condition|)
+if|if
+condition|(
 name|ISSET
 argument_list|(
 name|t
 argument_list|,
 name|BTF_CLOSEFP
 argument_list|)
-condition|?
+condition|)
+block|{
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|t
 operator|->
 name|bt_rfp
 argument_list|)
-else|:
+condition|)
+name|rval
+operator|=
+name|RET_ERROR
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|close
 argument_list|(
 name|t
