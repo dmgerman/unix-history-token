@@ -555,7 +555,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\ndconschat exiting with signal %d ...\n"
+literal|"\n[dconschat exiting with signal %d ...]\n"
 argument_list|,
 name|sig
 argument_list|)
@@ -563,7 +563,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\ndconschat exiting...\n"
+literal|"\n[dconschat exiting...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
