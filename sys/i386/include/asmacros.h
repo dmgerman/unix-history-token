@@ -401,7 +401,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			PIC_PROLOGUE; \ 			movl PIC_GOT(AVECNAME(x)),%eax; \ 			PIC_EPILOGUE; \ 			jmpl *(%eax)
+value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			PIC_PROLOGUE; \ 			movl PIC_GOT(AVECNAME(x)),%eax; \ 			PIC_EPILOGUE; \ 			jmpl *(%eax)
 end_define
 
 begin_define
@@ -411,7 +411,7 @@ name|ARCH_SELECT
 parameter_list|(
 name|x
 parameter_list|)
-value|START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			PIC_PROLOGUE; \ 			call PIC_PLT(CNAME(__get_hw_float)); \ 			testl %eax,%eax; \ 			movl PIC_GOT(ANAME(x)),%eax; \ 			jne 8f; \ 			movl PIC_GOT(GNAME(x)),%eax; \ 			8: \ 			movl PIC_GOT(AVECNAME(x)),%edx; \ 			movl %eax,(%edx); \ 			PIC_EPILOGUE; \ 			jmpl *%eax
+value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			PIC_PROLOGUE; \ 			call PIC_PLT(CNAME(__get_hw_float)); \ 			testl %eax,%eax; \ 			movl PIC_GOT(ANAME(x)),%eax; \ 			jne 8f; \ 			movl PIC_GOT(GNAME(x)),%eax; \ 			8: \ 			movl PIC_GOT(AVECNAME(x)),%edx; \ 			movl %eax,(%edx); \ 			PIC_EPILOGUE; \ 			jmpl *%eax
 end_define
 
 begin_else
@@ -431,7 +431,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			jmpl *AVECNAME(x)
+value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			jmpl *AVECNAME(x)
 end_define
 
 begin_define
@@ -441,7 +441,7 @@ name|ARCH_SELECT
 parameter_list|(
 name|x
 parameter_list|)
-value|START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call CNAME(__get_hw_float); \ 			testl %eax,%eax; \ 			movl $ANAME(x),%eax; \ 			jne 8f; \ 			movl $GNAME(x),%eax; \ 			8: \ 			movl %eax,AVECNAME(x); \ 			jmpl *%eax
+value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call CNAME(__get_hw_float); \ 			testl %eax,%eax; \ 			movl $ANAME(x),%eax; \ 			jne 8f; \ 			movl $GNAME(x),%eax; \ 			8: \ 			movl %eax,AVECNAME(x); \ 			jmpl *%eax
 end_define
 
 begin_endif
@@ -486,7 +486,7 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):; \ 			call HIDENAME(mcount); 9:
+value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			_START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):; \ 			call HIDENAME(mcount); 9:
 end_define
 
 begin_else
@@ -515,7 +515,7 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):
+value|ARCH_VECTOR(x); ARCH_SELECT(x); ARCH_DISPATCH(x); \ 			_START_ENTRY; \ 			.globl ANAME(x); .type ANAME(x),@function; ANAME(x):
 end_define
 
 begin_endif
