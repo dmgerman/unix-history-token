@@ -3067,6 +3067,8 @@ comment|/* 	 * Call on functions in main.c to deal with these arguments and 	 * 
 name|Main_ParseArgLine
 argument_list|(
 name|line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
