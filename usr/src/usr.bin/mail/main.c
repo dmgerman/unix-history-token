@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.18 (Berkeley) %G%"
+literal|"@(#)main.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,9 +598,13 @@ argument_list|(
 name|MASTER
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Expand returns a savestr, but load only uses the file name 	 * for fopen, so it's save to do this. 	 */
 name|load
 argument_list|(
-name|mailrc
+name|expand
+argument_list|(
+literal|"~/.mailrc"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

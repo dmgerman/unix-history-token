@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.10 (Berkeley) %G%"
+literal|"@(#)temp.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,12 +103,6 @@ specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|PATHSIZE
-index|]
 decl_stmt|;
 name|mktemp
 argument_list|(
@@ -251,7 +245,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|value
+name|getenv
 argument_list|(
 literal|"HOME"
 argument_list|)
@@ -270,33 +264,17 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%s/.mailrc"
-argument_list|,
-name|homedir
-argument_list|)
-expr_stmt|;
-name|mailrc
-operator|=
-name|savestr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"user = %s, mailrc = %s\n"
+literal|"user = %s, homedir = %s\n"
 argument_list|,
 name|myname
 argument_list|,
-name|mailrc
+name|homedir
 argument_list|)
 expr_stmt|;
 block|}
