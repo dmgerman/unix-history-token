@@ -522,9 +522,13 @@ name|ki_rusage
 decl_stmt|;
 comment|/* process rusage statistics */
 name|long
+name|ki_sflag
+decl_stmt|;
+comment|/* PS_* flags */
+name|long
 name|ki_spare
 index|[
-literal|25
+literal|24
 index|]
 decl_stmt|;
 comment|/* spare constants */

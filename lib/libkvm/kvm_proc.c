@@ -733,9 +733,9 @@ condition|(
 operator|(
 name|proc
 operator|.
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|&&
 name|proc
@@ -1685,6 +1685,14 @@ operator|=
 name|proc
 operator|.
 name|p_flag
+expr_stmt|;
+name|kp
+operator|->
+name|ki_sflag
+operator|=
+name|proc
+operator|.
+name|p_sflag
 expr_stmt|;
 name|kp
 operator|->

@@ -2034,6 +2034,14 @@ name|p_stat
 expr_stmt|;
 name|kp
 operator|->
+name|ki_sflag
+operator|=
+name|p
+operator|->
+name|p_sflag
+expr_stmt|;
+name|kp
+operator|->
 name|ki_pctcpu
 operator|=
 name|p
