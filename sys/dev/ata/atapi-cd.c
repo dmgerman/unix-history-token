@@ -3217,7 +3217,7 @@ decl_stmt|;
 if|if
 condition|(
 name|track
-operator|<
+operator|<=
 operator|(
 operator|(
 expr|struct
@@ -6946,7 +6946,6 @@ expr_stmt|;
 name|track
 operator|=
 operator|(
-operator|(
 name|bp
 operator|->
 name|bio_dev
@@ -6957,9 +6956,6 @@ literal|0x00ff0000
 operator|)
 operator|>>
 literal|16
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -6977,6 +6973,8 @@ operator|.
 name|tab
 index|[
 name|track
+operator|-
+literal|1
 index|]
 operator|.
 name|addr
@@ -6994,6 +6992,8 @@ operator|.
 name|tab
 index|[
 name|track
+operator|-
+literal|1
 index|]
 operator|.
 name|control
