@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -551,19 +551,12 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ftsoptions
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
+decl_stmt|,
 name|isdeprecated
 decl_stmt|,
 name|isdepth
 decl_stmt|,
 name|isoutput
-decl_stmt|,
-name|isrelative
 decl_stmt|,
 name|isxargs
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.16 (Berkeley) %G%"
+literal|"@(#)function.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -638,6 +638,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|dotfd
+decl_stmt|;
 specifier|register
 name|int
 name|cnt
@@ -692,7 +696,7 @@ index|]
 argument_list|,
 name|entry
 operator|->
-name|fts_accpath
+name|fts_path
 argument_list|,
 name|plan
 operator|->
@@ -747,6 +751,35 @@ comment|/* NOTREACHED */
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|fchdir
+argument_list|(
+name|dotfd
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"find: chdir: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|execvp
 argument_list|(
 name|plan
@@ -761,9 +794,14 @@ operator|->
 name|e_argv
 argument_list|)
 expr_stmt|;
-name|err
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"%s: %s"
+name|stderr
+argument_list|,
+literal|"find: %s: %s\n"
 argument_list|,
 name|plan
 operator|->
@@ -778,7 +816,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|pid
 operator|=
@@ -859,15 +901,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|isrelative
-condition|)
-name|ftsoptions
-operator||=
-name|FTS_NOCHDIR
-expr_stmt|;
 name|isoutput
 operator|=
 literal|1
@@ -2010,10 +2043,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|void
-name|printlong
-parameter_list|()
-function_decl|;
 name|printlong
 argument_list|(
 name|entry

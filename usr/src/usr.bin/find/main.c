@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -50,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<fts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -78,6 +90,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* time find was run */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dotfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* starting directory */
 end_comment
 
 begin_decl_stmt
@@ -118,16 +140,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* user specified output operator */
-end_comment
-
-begin_decl_stmt
-name|int
-name|isrelative
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* can do -exec/ok on relative path */
 end_comment
 
 begin_decl_stmt
@@ -215,7 +227,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:rsXx"
+literal|"df:sXx"
 argument_list|)
 operator|)
 operator|!=
@@ -242,14 +254,6 @@ name|p
 operator|++
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'r'
-case|:
-name|isrelative
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -339,6 +343,33 @@ name|p
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dotfd
+operator|=
+name|open
+argument_list|(
+literal|"."
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|".: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|find_execute
 argument_list|(
 name|find_formplan
@@ -365,7 +396,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-drsXx] [-f file] [file ...] expression\n"
+literal|"usage: find [-dsXx] [-f file] [file ...] expression\n"
 argument_list|)
 expr_stmt|;
 name|exit
