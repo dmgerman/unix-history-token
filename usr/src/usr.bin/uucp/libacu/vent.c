@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vent.c	4.1 (Berkeley) %G%"
+literal|"@(#)vent.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,11 @@ name|next_fd
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
