@@ -1349,6 +1349,10 @@ name|mp
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|enum
+name|uio_seg
+name|segflg
 parameter_list|)
 block|{
 name|struct
@@ -1514,6 +1518,8 @@ name|flags
 argument_list|)
 argument_list|,
 name|control
+argument_list|,
+name|segflg
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1655,7 +1661,7 @@ modifier|*
 name|linux_args
 parameter_list|)
 block|{
-comment|/*  * linux_ip_copysize defines how many bytes we should copy  * from the beginning of the IP packet before we customize it for BSD.  * It should include all the fields we modify (ip_len and ip_off)  * and be as small as possible to minimize copying overhead.  */
+comment|/*  * linux_ip_copysize defines how many bytes we should copy  * from the beginning of the IP packet before we customize it for BSD.  * It should include all the fields we modify (ip_len and ip_off).  */
 define|#
 directive|define
 name|linux_ip_copysize
@@ -1665,12 +1671,6 @@ name|ip
 modifier|*
 name|packet
 decl_stmt|;
-name|caddr_t
-name|sg
-init|=
-name|stackgap_init
-argument_list|()
-decl_stmt|;
 name|struct
 name|msghdr
 name|msg
@@ -1679,7 +1679,7 @@ name|struct
 name|iovec
 name|aiov
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -1699,7 +1699,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Tweaking the user buffer in place would be bad manners. 	 * We create a corrected IP header with just the needed length, 	 * then use an iovec to glue it to the rest of the user packet 	 * when calling sendit(). 	 */
 name|packet
 operator|=
 operator|(
@@ -1707,15 +1706,18 @@ expr|struct
 name|ip
 operator|*
 operator|)
-name|stackgap_alloc
+name|malloc
 argument_list|(
-operator|&
-name|sg
+name|linux_args
+operator|->
+name|len
 argument_list|,
-name|linux_ip_copysize
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* Make a copy of the beginning of the packet to be sent */
+comment|/* Make kernel copy of the packet to be sent */
 if|if
 condition|(
 operator|(
@@ -1732,15 +1734,15 @@ argument_list|)
 argument_list|,
 name|packet
 argument_list|,
-name|linux_ip_copysize
+name|linux_args
+operator|->
+name|len
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|goout
+goto|;
 comment|/* Convert fields from Linux to BSD raw IP socket format */
 name|packet
 operator|->
@@ -1791,7 +1793,7 @@ name|msg
 operator|.
 name|msg_iovlen
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|msg
 operator|.
@@ -1825,40 +1827,9 @@ index|]
 operator|.
 name|iov_len
 operator|=
-name|linux_ip_copysize
-expr_stmt|;
-name|aiov
-index|[
-literal|1
-index|]
-operator|.
-name|iov_base
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|PTRIN
-argument_list|(
-name|linux_args
-operator|->
-name|msg
-argument_list|)
-operator|+
-name|linux_ip_copysize
-expr_stmt|;
-name|aiov
-index|[
-literal|1
-index|]
-operator|.
-name|iov_len
-operator|=
 name|linux_args
 operator|->
 name|len
-operator|-
-name|linux_ip_copysize
 expr_stmt|;
 name|error
 operator|=
@@ -1876,6 +1847,17 @@ argument_list|,
 name|linux_args
 operator|->
 name|flags
+argument_list|,
+name|UIO_SYSSPACE
+argument_list|)
+expr_stmt|;
+name|goout
+label|:
+name|free
+argument_list|(
+name|packet
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
@@ -3729,6 +3711,8 @@ argument_list|,
 name|linux_args
 operator|.
 name|flags
+argument_list|,
+name|UIO_USERSPACE
 argument_list|)
 expr_stmt|;
 return|return
@@ -4104,6 +4088,8 @@ argument_list|,
 name|linux_args
 operator|.
 name|flags
+argument_list|,
+name|UIO_USERSPACE
 argument_list|)
 expr_stmt|;
 name|free

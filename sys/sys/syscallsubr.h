@@ -758,6 +758,10 @@ name|struct
 name|mbuf
 modifier|*
 name|control
+parameter_list|,
+name|enum
+name|uio_seg
+name|segflg
 parameter_list|)
 function_decl|;
 end_function_decl

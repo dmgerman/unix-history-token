@@ -3166,6 +3166,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|control
+argument_list|,
+name|UIO_USERSPACE
 argument_list|)
 expr_stmt|;
 name|bad
@@ -3202,6 +3204,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|control
+parameter_list|,
+name|segflg
 parameter_list|)
 name|struct
 name|thread
@@ -3223,6 +3227,10 @@ name|struct
 name|mbuf
 modifier|*
 name|control
+decl_stmt|;
+name|enum
+name|uio_seg
+name|segflg
 decl_stmt|;
 block|{
 name|struct
@@ -3354,7 +3362,7 @@ name|auio
 operator|.
 name|uio_segflg
 operator|=
-name|UIO_USERSPACE
+name|segflg
 expr_stmt|;
 name|auio
 operator|.
