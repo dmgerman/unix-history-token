@@ -7,6 +7,10 @@ begin_comment
 comment|/* GNU DIFF was written by Mike Haertel, David Hayes,    Richard Stallman, Len Tower, and Paul Eggert.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -64,6 +68,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"prepend_args.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -1466,6 +1476,20 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|prepend_default_options
+argument_list|(
+name|getenv
+argument_list|(
+literal|"DIFF_OPTIONS"
+argument_list|)
+argument_list|,
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
 comment|/* Decode the options.  */
 while|while
 condition|(
@@ -1478,7 +1502,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789abBcC:dD:efF:hHiI:lL:nNpPqrsS:tTuU:vwW:x:X:y"
+literal|"0123456789abBcC:dD:efF:hHiI:lL:nNopPqrsS:tTuU:vwW:x:X:y"
 argument_list|,
 name|longopts
 argument_list|,
@@ -1978,6 +2002,16 @@ comment|/* When comparing directories, if a file appears only in one 	     direc
 name|entire_new_file_flag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+comment|/* Output in the old tradition style.  */
+name|specify_style
+argument_list|(
+name|OUTPUT_NORMAL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
