@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.28 (Berkeley) 83/05/28"
+literal|"@(#)login.c	4.29 (Berkeley) 83/06/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
