@@ -27,6 +27,27 @@ name|disk
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|void
+name|bio_task_t
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * The bio structure describes an I/O operation in the kernel.  */
 end_comment
@@ -160,6 +181,16 @@ name|bintime
 name|bio_t0
 decl_stmt|;
 comment|/* Time request started */
+name|bio_task_t
+modifier|*
+name|bio_task
+decl_stmt|;
+comment|/* Task_queue handler */
+name|void
+modifier|*
+name|bio_task_arg
+decl_stmt|;
+comment|/* Argument to above */
 comment|/* XXX: these go away when bio chaining is introduced */
 name|daddr_t
 name|bio_pblkno
@@ -515,6 +546,26 @@ name|struct
 name|bio
 modifier|*
 name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bio_taskqueue
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|,
+name|bio_task_t
+modifier|*
+name|fund
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
