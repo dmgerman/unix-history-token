@@ -93,6 +93,16 @@ directive|define
 name|SI_CHILD
 value|0x0010
 comment|/* child of another dev_t */
+define|#
+directive|define
+name|SI_DEVOPEN
+value|0x0020
+comment|/* opened by device */
+define|#
+directive|define
+name|SI_CONSOPEN
+value|0x0040
+comment|/* opened by console */
 name|struct
 name|timespec
 name|si_atime
