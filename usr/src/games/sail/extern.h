@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	2.3 83/12/17  */
+comment|/*  * @(#)extern.h	2.4 84/02/23  */
 end_comment
 
 begin_include
@@ -648,6 +648,20 @@ define|#
 directive|define
 name|W_END
 value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|W_DDEAD
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLOG
+value|10
 end_define
 
 begin_struct
@@ -1370,6 +1384,12 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|isplayer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|hasdriver
 decl_stmt|;
 end_decl_stmt
 
