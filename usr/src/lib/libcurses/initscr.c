@@ -21,7 +21,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	This routine initializes the current and standard screen.  *  * @(#)initscr.c	1.5 (Berkeley) %G%  */
+comment|/*  *	This routine initializes the current and standard screen.  *  * @(#)initscr.c	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_function
@@ -65,24 +65,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-name|isatty
-argument_list|(
-literal|2
-argument_list|)
-condition|)
-name|_tty_ch
-operator|=
-literal|2
-expr_stmt|;
-else|else
-block|{
-name|nfd
-operator|=
-name|getdtablesize
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|_tty_ch
@@ -104,7 +86,6 @@ name|_tty_ch
 argument_list|)
 condition|)
 break|break;
-block|}
 name|gettmode
 argument_list|()
 expr_stmt|;
