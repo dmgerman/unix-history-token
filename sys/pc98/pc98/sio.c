@@ -209,10 +209,6 @@ name|COM_IF_MODEM_CARD
 value|0x17
 end_define
 
-begin_comment
-comment|/* same as COM_IF_NS16550 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -5110,6 +5106,23 @@ decl_stmt|;
 block|{
 comment|/* Do not probe IRQ - pccard doesn't turn on the interrupt line */
 comment|/* until bus_setup_intr */
+ifdef|#
+directive|ifdef
+name|PC98
+name|SET_FLAG
+argument_list|(
+name|dev
+argument_list|,
+name|COM_C_NOPROBE
+operator||
+name|SET_IFTYPE
+argument_list|(
+name|COM_IF_MODEM_CARD
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|SET_FLAG
 argument_list|(
 name|dev
@@ -5117,6 +5130,8 @@ argument_list|,
 name|COM_C_NOPROBE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|sioprobe
@@ -6214,7 +6229,7 @@ operator|==
 literal|0x0100e4a5
 condition|)
 comment|/* RSA-98III */
-name|device_set_flags
+name|SET_FLAG
 argument_list|(
 name|dev
 argument_list|,
@@ -6416,6 +6431,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|iod
+operator|.
+name|if_type
+operator|==
+name|COM_IF_MODEM_CARD
+operator|||
 name|iod
 operator|.
 name|if_type
@@ -8733,6 +8754,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|if_type
+operator|==
+name|COM_IF_MODEM_CARD
+operator|||
 name|if_type
 operator|==
 name|COM_IF_RSA98III
