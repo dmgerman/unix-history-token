@@ -259,6 +259,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|eaccess
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|execl
 name|__P
 argument_list|(
