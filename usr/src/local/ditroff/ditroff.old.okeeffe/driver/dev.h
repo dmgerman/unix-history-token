@@ -91,7 +91,7 @@ comment|/* unused for now */
 name|char
 name|namefont
 index|[
-literal|12
+literal|3
 index|]
 decl_stmt|;
 comment|/* name of this font (e.g., "R" */
