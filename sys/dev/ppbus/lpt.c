@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	From Id: lpt.c,v 1.55.2.1 1996/11/12 09:08:38 phk Exp  *	$Id: nlpt.c,v 1.13 1999/01/27 20:09:19 dillon Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	From Id: lpt.c,v 1.55.2.1 1996/11/12 09:08:38 phk Exp  *	From Id: nlpt.c,v 1.14 1999/02/08 13:55:43 des Exp  *	$Id$  */
 end_comment
 
 begin_comment
@@ -128,25 +128,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ppbus/nlpt.h>
+file|<dev/ppbus/lpt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_nlpt.h"
+file|"opt_lpt.h"
 end_include
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NLPT_DEBUG
+name|LPT_DEBUG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|nlprintf
+name|lprintf
 parameter_list|(
 name|args
 parameter_list|)
@@ -160,19 +160,19 @@ end_else
 begin_define
 define|#
 directive|define
-name|nlprintf
+name|lprintf
 parameter_list|(
 name|args
 parameter_list|)
 define|\
-value|do {						\ 			if (nlptflag)				\ 				printf args;			\ 		} while (0)
+value|do {						\ 			if (lptflag)				\ 				printf args;			\ 		} while (0)
 end_define
 
 begin_decl_stmt
 specifier|static
 name|int
 specifier|volatile
-name|nlptflag
+name|lptflag
 init|=
 literal|1
 decl_stmt|;
@@ -293,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|LPT_NAME
-value|"nlpt"
+value|"lpt"
 end_define
 
 begin_comment
@@ -303,14 +303,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|timeout_t
-name|nlptout
+name|lptout
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 specifier|static
 name|int
-name|nlpt_port_test
+name|lpt_port_test
 parameter_list|(
 name|struct
 name|lpt_data
@@ -329,7 +329,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|nlpt_detect
+name|lpt_detect
 parameter_list|(
 name|struct
 name|lpt_data
@@ -348,7 +348,7 @@ specifier|static
 name|struct
 name|ppb_device
 modifier|*
-name|nlptprobe
+name|lptprobe
 parameter_list|(
 name|struct
 name|ppb_data
@@ -361,7 +361,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|nlptattach
+name|lptattach
 parameter_list|(
 name|struct
 name|ppb_device
@@ -374,7 +374,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|nlptintr
+name|lptintr
 parameter_list|(
 name|int
 name|unit
@@ -385,7 +385,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|nlpt_drvinit
+name|lpt_drvinit
 parameter_list|(
 name|void
 modifier|*
@@ -397,7 +397,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|nlpt_intr
+name|lpt_intr
 parameter_list|(
 name|int
 name|unit
@@ -419,12 +419,12 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|ppb_driver
-name|nlptdriver
+name|lptdriver
 init|=
 block|{
-name|nlptprobe
+name|lptprobe
 block|,
-name|nlptattach
+name|lptattach
 block|,
 name|LPT_NAME
 block|}
@@ -436,7 +436,7 @@ name|DATA_SET
 argument_list|(
 name|ppbdriver_set
 argument_list|,
-name|nlptdriver
+name|lptdriver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -632,35 +632,35 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|d_open_t
-name|nlptopen
+name|lptopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_close_t
-name|nlptclose
+name|lptclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_write_t
-name|nlptwrite
+name|lptwrite
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_read_t
-name|nlptread
+name|lptread
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
-name|nlptioctl
+name|lptioctl
 decl_stmt|;
 end_decl_stmt
 
@@ -675,19 +675,19 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|nlpt_cdevsw
+name|lpt_cdevsw
 init|=
 block|{
-name|nlptopen
+name|lptopen
 block|,
-name|nlptclose
+name|lptclose
 block|,
-name|nlptread
+name|lptread
 block|,
-name|nlptwrite
+name|lptwrite
 block|,
 comment|/*16*/
-name|nlptioctl
+name|lptioctl
 block|,
 name|nullstop
 block|,
@@ -810,13 +810,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal routine to nlptprobe to do port tests of one byte value  */
+comment|/*  * Internal routine to lptprobe to do port tests of one byte value  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nlpt_port_test
+name|lpt_port_test
 parameter_list|(
 name|struct
 name|lpt_data
@@ -885,7 +885,7 @@ operator|--
 name|timeout
 condition|)
 do|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"out=%x\tin=%x\ttout=%d\n"
@@ -915,7 +915,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nlpt_detect
+name|lpt_detect
 parameter_list|(
 name|struct
 name|lpt_data
@@ -1032,7 +1032,7 @@ control|)
 if|if
 condition|(
 operator|!
-name|nlpt_port_test
+name|lpt_port_test
 argument_list|(
 name|sc
 argument_list|,
@@ -1090,7 +1090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlptprobe()  */
+comment|/*  * lptprobe()  */
 end_comment
 
 begin_function
@@ -1098,7 +1098,7 @@ specifier|static
 name|struct
 name|ppb_device
 modifier|*
-name|nlptprobe
+name|lptprobe
 parameter_list|(
 name|struct
 name|ppb_data
@@ -1191,7 +1191,7 @@ name|lpt_dev
 operator|.
 name|name
 operator|=
-name|nlptdriver
+name|lptdriver
 operator|.
 name|name
 expr_stmt|;
@@ -1209,13 +1209,13 @@ name|lpt_dev
 operator|.
 name|intr
 operator|=
-name|nlptintr
+name|lptintr
 expr_stmt|;
 comment|/* 	 * Now, try to detect the printer. 	 */
 if|if
 condition|(
 operator|!
-name|nlpt_detect
+name|lpt_detect
 argument_list|(
 name|sc
 argument_list|)
@@ -1252,7 +1252,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|nlptattach
+name|lptattach
 parameter_list|(
 name|struct
 name|ppb_device
@@ -1340,7 +1340,7 @@ name|LPC_NINIT
 argument_list|)
 expr_stmt|;
 comment|/* check if we can use interrupt, should be done by ppc stuff */
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"oldirq %x\n"
@@ -1391,7 +1391,7 @@ name|sc_irq
 operator|=
 literal|0
 expr_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 name|LPT_NAME
@@ -1404,7 +1404,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"irq %x\n"
@@ -1430,7 +1430,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|nlpt_cdevsw
+name|lpt_cdevsw
 argument_list|,
 name|dev
 operator|->
@@ -1459,7 +1459,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|nlpt_cdevsw
+name|lpt_cdevsw
 argument_list|,
 name|dev
 operator|->
@@ -1496,7 +1496,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|nlptout
+name|lptout
 parameter_list|(
 name|void
 modifier|*
@@ -1513,7 +1513,7 @@ decl_stmt|;
 name|int
 name|pl
 decl_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"T %x "
@@ -1566,7 +1566,7 @@ name|LPTOUTMAX
 expr_stmt|;
 name|timeout
 argument_list|(
-name|nlptout
+name|lptout
 argument_list|,
 operator|(
 name|caddr_t
@@ -1615,7 +1615,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|nlpt_intr
+name|lpt_intr
 argument_list|(
 name|sc
 operator|->
@@ -1650,13 +1650,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlptopen -- reset the printer, then wait until it's selected and not busy.  *	If LP_BYPASS flag is selected, then we do not try to select the  *	printer -- this is just used for passing ioctls.  */
+comment|/*  * lptopen -- reset the printer, then wait until it's selected and not busy.  *	If LP_BYPASS flag is selected, then we do not try to select the  *	printer -- this is just used for passing ioctls.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nlptopen
+name|lptopen
 parameter_list|(
 name|dev_t
 name|dev
@@ -1724,7 +1724,7 @@ operator|->
 name|sc_state
 condition|)
 block|{
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 name|LPT_NAME
@@ -1811,7 +1811,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 name|LPT_NAME
@@ -1940,7 +1940,7 @@ name|sc_state
 operator|=
 literal|0
 expr_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"status %x\n"
@@ -2136,7 +2136,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* only use timeout if using interrupt */
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"irq %x\n"
@@ -2164,7 +2164,7 @@ name|TOUT
 expr_stmt|;
 name|timeout
 argument_list|(
-name|nlptout
+name|lptout
 argument_list|,
 operator|(
 name|caddr_t
@@ -2183,7 +2183,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"opened.\n"
@@ -2199,13 +2199,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlptclose -- close the device, free the local line buffer.  *  * Check for interrupted write call added.  */
+comment|/*  * lptclose -- close the device, free the local line buffer.  *  * Check for interrupted write call added.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nlptclose
+name|lptclose
 parameter_list|(
 name|dev_t
 name|dev
@@ -2403,7 +2403,7 @@ name|sc_xfercnt
 operator|=
 literal|0
 expr_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"closed.\n"
@@ -2419,13 +2419,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlpt_pushbytes()  *	Workhorse for actually spinning and writing bytes to printer  *	Derived from lpa.c  *	Originally by ?  *  *	This code is only used when we are polling the port  */
+comment|/*  * lpt_pushbytes()  *	Workhorse for actually spinning and writing bytes to printer  *	Derived from lpa.c  *	Originally by ?  *  *	This code is only used when we are polling the port  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nlpt_pushbytes
+name|lpt_pushbytes
 parameter_list|(
 name|struct
 name|lpt_data
@@ -2443,7 +2443,7 @@ decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"p"
@@ -2624,13 +2624,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlptread --retrieve printer status in IEEE1284 NIBBLE mode  */
+comment|/*  * lptread --retrieve printer status in IEEE1284 NIBBLE mode  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nlptread
+name|lptread
 parameter_list|(
 name|dev_t
 name|dev
@@ -2792,13 +2792,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlptwrite --copy a line from user space to a local buffer, then call  * putc to get the chars moved to the output queue.  *  * Flagging of interrupted write added.  */
+comment|/*  * lptwrite --copy a line from user space to a local buffer, then call  * putc to get the chars moved to the output queue.  *  * Flagging of interrupted write added.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|nlptwrite
+name|lptwrite
 parameter_list|(
 name|dev_t
 name|dev
@@ -3042,7 +3042,7 @@ name|LP_USE_IRQ
 operator|)
 condition|)
 block|{
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"i"
@@ -3064,7 +3064,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"\nC %d. "
@@ -3080,7 +3080,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|nlpt_intr
+name|lpt_intr
 argument_list|(
 name|sc
 operator|->
@@ -3096,7 +3096,7 @@ name|pl
 argument_list|)
 expr_stmt|;
 block|}
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"W "
@@ -3167,7 +3167,7 @@ name|sc_xfercnt
 operator|)
 condition|)
 block|{
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"p"
@@ -3176,7 +3176,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|nlpt_pushbytes
+name|lpt_pushbytes
 argument_list|(
 name|sc
 argument_list|)
@@ -3207,13 +3207,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nlpt_intr -- handle printer interrupts which occur when the printer is  * ready to accept another char.  *  * do checking for interrupted write call.  */
+comment|/*  * lpt_intr -- handle printer interrupts which occur when the printer is  * ready to accept another char.  *  * do checking for interrupted write call.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|nlpt_intr
+name|lpt_intr
 parameter_list|(
 name|int
 name|unit
@@ -3249,7 +3249,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Is printer online and ready for output? 	 * 	 * Avoid falling back to nlptout() too quickly.  First spin-loop 	 * to see if the printer will become ready ``really soon now''. 	 */
+comment|/* 	 * Is printer online and ready for output? 	 * 	 * Avoid falling back to lptout() too quickly.  First spin-loop 	 * to see if the printer will become ready ``really soon now''. 	 */
 for|for
 control|(
 name|i
@@ -3324,7 +3324,7 @@ name|sc_xfercnt
 condition|)
 block|{
 comment|/* send char */
-comment|/*nlprintf(("%x ", *sc->sc_cp)); */
+comment|/*lprintf(("%x ", *sc->sc_cp)); */
 name|ppb_wdtr
 argument_list|(
 operator|&
@@ -3407,7 +3407,7 @@ operator|)
 name|sc
 argument_list|)
 expr_stmt|;
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"w "
@@ -3449,9 +3449,9 @@ name|sc_state
 operator||=
 name|EERROR
 expr_stmt|;
-comment|/* nlptout() will jump in and try to restart. */
+comment|/* lptout() will jump in and try to restart. */
 block|}
-name|nlprintf
+name|lprintf
 argument_list|(
 operator|(
 literal|"sts %x "
@@ -3466,7 +3466,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|nlptintr
+name|lptintr
 parameter_list|(
 name|int
 name|unit
@@ -3479,7 +3479,7 @@ init|=
 name|spltty
 argument_list|()
 decl_stmt|;
-name|nlpt_intr
+name|lpt_intr
 argument_list|(
 name|unit
 argument_list|)
@@ -3496,7 +3496,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|nlptioctl
+name|lptioctl
 parameter_list|(
 name|dev_t
 name|dev
@@ -3716,7 +3716,7 @@ end_function
 
 begin_expr_stmt
 specifier|static
-name|nlpt_devsw_installed
+name|lpt_devsw_installed
 operator|=
 literal|0
 expr_stmt|;
@@ -3725,7 +3725,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|nlpt_drvinit
+name|lpt_drvinit
 parameter_list|(
 name|void
 modifier|*
@@ -3738,7 +3738,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|nlpt_devsw_installed
+name|lpt_devsw_installed
 condition|)
 block|{
 name|dev
@@ -3756,12 +3756,12 @@ operator|&
 name|dev
 argument_list|,
 operator|&
-name|nlpt_cdevsw
+name|lpt_cdevsw
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|nlpt_devsw_installed
+name|lpt_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
@@ -3772,13 +3772,13 @@ end_function
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|nlptdev
+argument|lptdev
 argument_list|,
 argument|SI_SUB_DRIVERS
 argument_list|,
 argument|SI_ORDER_MIDDLE+CDEV_MAJOR
 argument_list|,
-argument|nlpt_drvinit
+argument|lpt_drvinit
 argument_list|,
 argument|NULL
 argument_list|)
