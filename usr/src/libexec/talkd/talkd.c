@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)talkd.c	1.3 (Berkeley) %G%"
+literal|"@(#)talkd.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -311,8 +311,6 @@ name|print_request
 argument_list|(
 operator|&
 name|request
-argument_list|,
-name|fp
 argument_list|)
 expr_stmt|;
 name|process_request
@@ -373,15 +371,6 @@ literal|"sendto"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|debug
-condition|)
-name|close
-argument_list|(
-name|debugout
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -416,26 +405,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_define
-define|#
-directive|define
-name|swapshort
-parameter_list|(
-name|a
-parameter_list|)
-value|(((a<< 8) | ((unsigned short) a>> 8))& 0xffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|swaplong
-parameter_list|(
-name|a
-parameter_list|)
-value|((swapshort(a)<< 16) | (swapshort(((unsigned)a>> 16))))
-end_define
-
 begin_comment
 comment|/*    * heuristic to detect if need to swap bytes  */
 end_comment
@@ -464,7 +433,7 @@ name|ctl_addr
 operator|.
 name|sin_family
 operator|==
-name|swapshort
+name|ntohs
 argument_list|(
 name|AF_INET
 argument_list|)
@@ -474,7 +443,7 @@ name|req
 operator|->
 name|id_num
 operator|=
-name|swaplong
+name|ntohl
 argument_list|(
 name|req
 operator|->
@@ -485,7 +454,7 @@ name|req
 operator|->
 name|pid
 operator|=
-name|swaplong
+name|ntohl
 argument_list|(
 name|req
 operator|->
@@ -498,7 +467,7 @@ name|addr
 operator|.
 name|sin_family
 operator|=
-name|swapshort
+name|ntohs
 argument_list|(
 name|req
 operator|->
@@ -513,7 +482,7 @@ name|ctl_addr
 operator|.
 name|sin_family
 operator|=
-name|swapshort
+name|ntohs
 argument_list|(
 name|req
 operator|->
