@@ -111,6 +111,11 @@ condition|(
 name|s
 operator|==
 name|NULL
+operator|||
+operator|*
+name|s
+operator|==
+literal|'\0'
 condition|)
 return|return
 operator|(
