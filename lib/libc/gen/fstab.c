@@ -18,15 +18,32 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)fstab.c	8.1 (Berkeley) 6/4/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)fstab.c	8.1 (Berkeley) 6/4/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -261,6 +278,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
+operator|(
 operator|!
 name|S_ISBLK
 argument_list|(
@@ -268,6 +286,15 @@ name|sb
 operator|.
 name|st_mode
 argument_list|)
+operator|&&
+operator|!
+name|S_ISCHR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
 condition|)
 return|return;
 name|_fs_fstab
