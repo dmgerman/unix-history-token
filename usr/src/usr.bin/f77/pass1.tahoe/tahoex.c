@@ -8,13 +8,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/defines.h"
+file|"defines.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/machdefs.h"
+file|"machdefs.h"
 end_include
 
 begin_macro
