@@ -5318,6 +5318,12 @@ name|vm_pageout_stats_free_max
 operator|=
 literal|5
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|curproc
@@ -5342,6 +5348,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * The pageout daemon is never done, so loop forever. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|TRUE
