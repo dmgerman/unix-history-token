@@ -37,12 +37,6 @@ name|GNode
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|LstNode
-struct_decl|;
-end_struct_decl
-
 begin_define
 define|#
 directive|define
