@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.27	83/03/15	*/
+comment|/*	ioctl.h	4.28	83/03/19	*/
 end_comment
 
 begin_comment
@@ -1604,6 +1604,50 @@ end_comment
 
 begin_comment
 comment|/* socket i/o controls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSHIWAT
+value|_IOW(s, 0, int)
+end_define
+
+begin_comment
+comment|/* set high water mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGHIWAT
+value|_IOR(s, 1, int)
+end_define
+
+begin_comment
+comment|/* get high water mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSLOWAT
+value|_IOW(s, 2, int)
+end_define
+
+begin_comment
+comment|/* set low water mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGLOWAT
+value|_IOR(s, 3, int)
+end_define
+
+begin_comment
+comment|/* get low water mark */
 end_comment
 
 begin_define
