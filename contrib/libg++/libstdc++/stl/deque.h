@@ -3304,7 +3304,8 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|__GNUG__
+name|__GNU_G__typo
+comment|/* source depends on this being broken */
 name|map_size
 operator|=
 name|map_allocator_type
