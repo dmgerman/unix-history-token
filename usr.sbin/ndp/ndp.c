@@ -197,24 +197,6 @@ directive|include
 file|"gmt2local.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NI_WITHSCOPEID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NI_WITHSCOPEID
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* packing rule for routing socket */
 end_comment
@@ -801,9 +783,6 @@ literal|1
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -1486,16 +1465,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ndp: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 block|}
@@ -1918,16 +1895,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|errx
 argument_list|(
+literal|1
+argument_list|,
+literal|"RTM_GET(%s) failed"
+argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 name|sin
 operator|=
@@ -2288,8 +2265,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NI_WITHSCOPEID
-operator||
 operator|(
 name|nflag
 condition|?
@@ -2503,16 +2478,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|errx
 argument_list|(
+literal|1
+argument_list|,
+literal|"RTM_GET(%s) failed"
+argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 name|sin
 operator|=
@@ -2730,8 +2705,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NI_WITHSCOPEID
-operator||
 operator|(
 name|nflag
 condition|?
@@ -2992,7 +2965,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -3112,7 +3085,7 @@ name|sin6_len
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* 		 * Some OSes can produce a route that has the LINK flag but 		 * has a non-AF_LINK gateway (e.g. fe80::xx%lo0 on FreeBSD 		 * and BSD/OS, where xx is not the interface identifier on 		 * lo0).  Such routes entry would annoy getnbrinfo() below, 		 * so we skip them. 		 * XXX: such routes should have the GATEWAY flag, not the 		 * LINK flag.  However, there are rotten routing software 		 * that advertises all routes that have the GATEWAY flag. 		 * Thus, KAME kernel intentionally does not set the LINK flag. 		 * What is to be fixed is not ndp, but such routing software 		 * (and the kernel workaround)... 		 */
+comment|/* 		 * Some OSes can produce a route that has the LINK flag but 		 * has a non-AF_LINK gateway (e.g. fe80::xx%lo0 on FreeBSD 		 * and BSD/OS, where xx is not the interface identifier on 		 * lo0).  Such routes entry would annoy getnbrinfo() below, 		 * so we skip them. 		 * XXX: such routes should have the GATEWAY flag, not the 		 * LINK flag.  However, there is rotten routing software 		 * that advertises all routes that have the GATEWAY flag. 		 * Thus, KAME kernel intentionally does not set the LINK flag. 		 * What is to be fixed is not ndp, but such routing software 		 * (and the kernel workaround)... 		 */
 if|if
 condition|(
 name|sdl
@@ -3242,8 +3215,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NI_WITHSCOPEID
-operator||
 operator|(
 name|nflag
 condition|?
@@ -3952,9 +3923,9 @@ decl_stmt|;
 block|{
 specifier|static
 name|char
-name|ebuf
+name|hbuf
 index|[
-literal|32
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 name|u_char
@@ -3979,9 +3950,14 @@ argument_list|(
 name|sdl
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
-name|ebuf
+name|hbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hbuf
+argument_list|)
 argument_list|,
 literal|"%x:%x:%x:%x:%x:%x"
 argument_list|,
@@ -4018,18 +3994,21 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|sprintf
+name|snprintf
 argument_list|(
-name|ebuf
+name|hbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hbuf
+argument_list|)
 argument_list|,
 literal|"(incomplete)"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
-name|ebuf
+name|hbuf
 operator|)
 return|;
 block|}
@@ -4528,17 +4507,14 @@ operator|!=
 name|RTM_DELETE
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 block|}
 do|do
@@ -4680,16 +4656,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ndp: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|bzero
 argument_list|(
@@ -4702,13 +4676,20 @@ name|nd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|nd
 operator|.
 name|ifname
 argument_list|,
 name|ifname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nd
+operator|.
+name|ifname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4729,16 +4710,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ioctl (SIOCGIFINFO_IN6)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl(SIOCGIFINFO_IN6)"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 define|#
 directive|define
@@ -4847,16 +4826,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl(SIOCSIFINFO_FLAGS)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 undef|#
 directive|undef
@@ -5243,11 +5220,11 @@ operator|!
 name|buf
 condition|)
 block|{
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"not enough core"
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -5359,8 +5336,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NI_WITHSCOPEID
-operator||
 operator|(
 name|nflag
 condition|?
@@ -5528,16 +5503,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ndp: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|bzero
 argument_list|(
@@ -5550,13 +5523,20 @@ name|dr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dr
 operator|.
 name|ifname
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dr
+operator|.
+name|ifname
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -5578,16 +5558,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ioctl (SIOCGDRLST_IN6)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl(SIOCGDRLST_IN6)"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 define|#
 directive|define
@@ -5674,8 +5652,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NI_WITHSCOPEID
-operator||
 operator|(
 name|nflag
 condition|?
@@ -5827,32 +5803,6 @@ name|struct
 name|timeval
 name|time
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NI_WITHSCOPEID
-specifier|const
-name|int
-name|niflags
-init|=
-name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
-decl_stmt|;
-name|int
-name|ninflags
-init|=
-operator|(
-name|nflag
-condition|?
-name|NI_NUMERICHOST
-else|:
-literal|0
-operator|)
-operator||
-name|NI_WITHSCOPEID
-decl_stmt|;
-else|#
-directive|else
 specifier|const
 name|int
 name|niflags
@@ -5868,8 +5818,6 @@ name|NI_NUMERICHOST
 else|:
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|namebuf
 index|[
@@ -5930,11 +5878,11 @@ operator|!
 name|buf
 condition|)
 block|{
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"not enough core"
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -6528,16 +6476,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ndp: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|bzero
 argument_list|(
@@ -6550,13 +6496,20 @@ name|pr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|pr
 operator|.
 name|ifname
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pr
+operator|.
+name|ifname
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -6578,16 +6531,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"ioctl (SIOCGPRLST_IN6)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl(SIOCGPRLST_IN6)"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 define|#
 directive|define
@@ -6749,15 +6700,6 @@ name|niflags
 operator|=
 name|NI_NUMERICHOST
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__KAME__
-name|niflags
-operator||=
-name|NI_WITHSCOPEID
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|getnameinfo
@@ -6829,7 +6771,7 @@ comment|/* 		 * meaning of fields, especially flags, is very different 		 * by o
 if|#
 directive|if
 literal|0
-block|printf("  %s", 		       PR.origin == PR_ORIG_RA ? "" : "advertise: ");
+block|printf("  %s", 		    PR.origin == PR_ORIG_RA ? "" : "advertise: ");
 endif|#
 directive|endif
 ifdef|#
@@ -7187,8 +7129,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NI_WITHSCOPEID
-operator||
 operator|(
 name|nflag
 condition|?
@@ -7346,11 +7286,16 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dummyif
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dummyif
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -7421,11 +7366,16 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dummyif
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dummyif
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -7501,11 +7451,16 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dummyif
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dummyif
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -7530,7 +7485,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl (SIOCSNDFLUSH_IN6)"
+literal|"ioctl(SIOCSNDFLUSH_IN6)"
 argument_list|)
 expr_stmt|;
 name|close
@@ -7635,13 +7590,20 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ndifreq
 operator|.
 name|ifname
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ndifreq
+operator|.
+name|ifname
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -7672,7 +7634,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl (SIOCSDEFIFACE_IN6)"
+literal|"ioctl(SIOCSDEFIFACE_IN6)"
 argument_list|)
 expr_stmt|;
 name|close
@@ -7738,13 +7700,20 @@ name|ndifreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ndifreq
 operator|.
 name|ifname
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ndifreq
+operator|.
+name|ifname
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* dummy */
@@ -7769,7 +7738,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"ioctl (SIOCGDEFIFACE_IN6)"
+literal|"ioctl(SIOCGDEFIFACE_IN6)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7873,6 +7842,22 @@ name|p
 init|=
 name|result
 decl_stmt|;
+name|char
+modifier|*
+name|ep
+init|=
+operator|&
+name|result
+index|[
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+index|]
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
 name|days
 operator|=
 name|total
@@ -7916,10 +7901,14 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
-name|p
-operator|+=
-name|sprintf
+name|n
+operator|=
+name|snprintf
 argument_list|(
+name|p
+argument_list|,
+name|ep
+operator|-
 name|p
 argument_list|,
 literal|"%dd"
@@ -7927,6 +7916,25 @@ argument_list|,
 name|days
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+operator|||
+name|n
+operator|>=
+name|ep
+operator|-
+name|p
+condition|)
+return|return
+literal|"?"
+return|;
+name|p
+operator|+=
+name|n
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -7940,10 +7948,14 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
-name|p
-operator|+=
-name|sprintf
+name|n
+operator|=
+name|snprintf
 argument_list|(
+name|p
+argument_list|,
+name|ep
+operator|-
 name|p
 argument_list|,
 literal|"%dh"
@@ -7951,6 +7963,25 @@ argument_list|,
 name|hours
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+operator|||
+name|n
+operator|>=
+name|ep
+operator|-
+name|p
+condition|)
+return|return
+literal|"?"
+return|;
+name|p
+operator|+=
+name|n
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -7964,10 +7995,14 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
-name|p
-operator|+=
-name|sprintf
+name|n
+operator|=
+name|snprintf
 argument_list|(
+name|p
+argument_list|,
+name|ep
+operator|-
 name|p
 argument_list|,
 literal|"%dm"
@@ -7975,9 +8010,32 @@ argument_list|,
 name|mins
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+operator|||
+name|n
+operator|>=
+name|ep
+operator|-
+name|p
+condition|)
+return|return
+literal|"?"
+return|;
+name|p
+operator|+=
+name|n
+expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
+name|p
+argument_list|,
+name|ep
+operator|-
 name|p
 argument_list|,
 literal|"%ds"
