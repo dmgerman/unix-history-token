@@ -685,6 +685,11 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|struct
+name|ufsmount
+modifier|*
+name|ump
+decl_stmt|;
 name|int
 name|needextclean
 decl_stmt|,
@@ -723,6 +728,12 @@ operator|=
 name|oip
 operator|->
 name|i_fs
+expr_stmt|;
+name|ump
+operator|=
+name|oip
+operator|->
+name|i_ump
 expr_stmt|;
 if|if
 condition|(
@@ -1066,6 +1077,8 @@ condition|)
 continue|continue;
 name|ffs_blkfree
 argument_list|(
+name|ump
+argument_list|,
 name|fs
 argument_list|,
 name|oip
@@ -1373,6 +1386,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|UFS_LOCK
+argument_list|(
+name|ump
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oip
@@ -1386,6 +1404,11 @@ operator|->
 name|fs_pendingblocks
 operator|-=
 name|datablocks
+expr_stmt|;
+name|UFS_UNLOCK
+argument_list|(
+name|ump
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2295,6 +2318,8 @@ argument_list|)
 expr_stmt|;
 name|ffs_blkfree
 argument_list|(
+name|ump
+argument_list|,
 name|fs
 argument_list|,
 name|oip
@@ -2395,6 +2420,8 @@ argument_list|)
 expr_stmt|;
 name|ffs_blkfree
 argument_list|(
+name|ump
+argument_list|,
 name|fs
 argument_list|,
 name|oip
@@ -2522,6 +2549,8 @@ argument_list|)
 expr_stmt|;
 name|ffs_blkfree
 argument_list|(
+name|ump
+argument_list|,
 name|fs
 argument_list|,
 name|oip
@@ -3365,6 +3394,10 @@ expr_stmt|;
 block|}
 name|ffs_blkfree
 argument_list|(
+name|ip
+operator|->
+name|i_ump
+argument_list|,
 name|fs
 argument_list|,
 name|ip
