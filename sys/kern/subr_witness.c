@@ -1167,6 +1167,9 @@ comment|/* mtx_object.lo_class */
 literal|"All locks list"
 block|,
 comment|/* mtx_object.lo_name */
+literal|"All locks list"
+block|,
+comment|/* mtx_object.lo_type */
 name|LO_INITIALIZED
 block|,
 comment|/* mtx_object.lo_flags */
@@ -1311,6 +1314,8 @@ operator|&
 name|w_mtx
 argument_list|,
 literal|"witness lock"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_SPIN
 operator||
@@ -1514,7 +1519,7 @@ name|enroll
 argument_list|(
 name|lock
 operator|->
-name|lo_name
+name|lo_type
 argument_list|,
 name|lock
 operator|->
@@ -1794,7 +1799,7 @@ name|enroll
 argument_list|(
 name|lock
 operator|->
-name|lo_name
+name|lo_type
 argument_list|,
 name|class
 argument_list|)
@@ -2662,12 +2667,18 @@ literal|"acquiring duplicate lock of same type: \"%s\"\n"
 argument_list|,
 name|lock
 operator|->
-name|lo_name
+name|lo_type
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 1st @ %s:%d\n"
+literal|" 1st %s @ %s:%d\n"
+argument_list|,
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_name
 argument_list|,
 name|lock1
 operator|->
@@ -2680,7 +2691,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 2nd @ %s:%d\n"
+literal|" 2nd %s @ %s:%d\n"
+argument_list|,
+name|lock
+operator|->
+name|lo_name
 argument_list|,
 name|file
 argument_list|,
@@ -3090,7 +3105,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" 1st %p %s @ %s:%d\n"
+literal|" 1st %p %s (%s) @ %s:%d\n"
 argument_list|,
 name|lock1
 operator|->
@@ -3101,6 +3116,12 @@ operator|->
 name|li_lock
 operator|->
 name|lo_name
+argument_list|,
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_type
 argument_list|,
 name|lock1
 operator|->
@@ -3113,13 +3134,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 2nd %p %s @ %s:%d\n"
+literal|" 2nd %p %s (%s) @ %s:%d\n"
 argument_list|,
 name|lock
 argument_list|,
 name|lock
 operator|->
 name|lo_name
+argument_list|,
+name|lock
+operator|->
+name|lo_type
 argument_list|,
 name|file
 argument_list|,
@@ -3131,7 +3156,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" 1st %p %s @ %s:%d\n"
+literal|" 1st %p %s (%s) @ %s:%d\n"
 argument_list|,
 name|lock2
 operator|->
@@ -3142,6 +3167,12 @@ operator|->
 name|li_lock
 operator|->
 name|lo_name
+argument_list|,
+name|lock2
+operator|->
+name|li_lock
+operator|->
+name|lo_type
 argument_list|,
 name|lock2
 operator|->
@@ -3154,7 +3185,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 2nd %p %s @ %s:%d\n"
+literal|" 2nd %p %s (%s) @ %s:%d\n"
 argument_list|,
 name|lock1
 operator|->
@@ -3165,6 +3196,12 @@ operator|->
 name|li_lock
 operator|->
 name|lo_name
+argument_list|,
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_type
 argument_list|,
 name|lock1
 operator|->
@@ -3177,13 +3214,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" 3rd %p %s @ %s:%d\n"
+literal|" 3rd %p %s (%s) @ %s:%d\n"
 argument_list|,
 name|lock
 argument_list|,
 name|lock
 operator|->
 name|lo_name
+argument_list|,
+name|lock
+operator|->
+name|lo_type
 argument_list|,
 name|file
 argument_list|,
@@ -3264,13 +3305,13 @@ name|__func__
 argument_list|,
 name|lock
 operator|->
-name|lo_name
+name|lo_type
 argument_list|,
 name|lock1
 operator|->
 name|li_lock
 operator|->
-name|lo_name
+name|lo_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -6681,7 +6722,7 @@ name|li_lock
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%s) %s (%p) locked @ %s:%d\n"
+literal|"%s %s %s"
 argument_list|,
 operator|(
 name|instance
@@ -6706,6 +6747,30 @@ argument_list|,
 name|lock
 operator|->
 name|lo_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lock
+operator|->
+name|lo_type
+operator|!=
+name|lock
+operator|->
+name|lo_name
+condition|)
+name|printf
+argument_list|(
+literal|"(%s) "
+argument_list|,
+name|lock
+operator|->
+name|lo_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (%p) locked @ %s:%d\n"
 argument_list|,
 name|lock
 argument_list|,

@@ -29,6 +29,13 @@ name|char
 modifier|*
 name|lo_name
 decl_stmt|;
+comment|/* Individual lock name. */
+specifier|const
+name|char
+modifier|*
+name|lo_type
+decl_stmt|;
+comment|/* General lock type. */
 name|u_int
 name|lo_flags
 decl_stmt|;
