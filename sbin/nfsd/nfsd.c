@@ -1113,7 +1113,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't register with portmap for UDP."
+literal|"can't register with portmap for UDP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1150,7 +1150,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't register with portmap for TCP."
+literal|"can't register with portmap for TCP"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3218,7 +3218,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Accept failed: %m"
+literal|"accept failed: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3338,7 +3338,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"missing system call: NFS not available."
+literal|"missing system call: NFS not available"
 argument_list|)
 expr_stmt|;
 block|}
