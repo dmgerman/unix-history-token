@@ -477,6 +477,8 @@ operator|->
 name|irq
 argument_list|,
 name|INTR_TYPE_CAM
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|ahc_platform_intr
 argument_list|,

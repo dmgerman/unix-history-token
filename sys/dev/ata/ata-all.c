@@ -4306,6 +4306,8 @@ operator|->
 name|r_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|ata_intr
 argument_list|,
