@@ -115,16 +115,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -146,11 +136,6 @@ include|#
 directive|include
 file|<sys/bus.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

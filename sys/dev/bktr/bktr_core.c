@@ -180,22 +180,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|400000
-operator|)
-operator|||
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -205,11 +189,6 @@ end_include
 begin_comment
 comment|/* used by smbus and newbus */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -271,16 +250,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -302,11 +271,6 @@ include|#
 directive|include
 file|<sys/bus.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

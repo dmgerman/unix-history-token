@@ -2045,18 +2045,10 @@ argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-operator|)
 end_if
 
 begin_define
@@ -2381,30 +2373,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|<
-literal|400000
-operator|)
-name|vm_offset_t
-name|phys_base
-decl_stmt|;
-comment|/* 2.x Bt848 register physical address */
-name|pcici_t
-name|tag
-decl_stmt|;
-comment|/* 2.x PCI tag, for doing PCI commands */
-endif|#
-directive|endif
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|400000
-operator|)
 name|int
 name|mem_rid
 decl_stmt|;
@@ -2466,8 +2434,6 @@ modifier|*
 name|vbidev_alias
 decl_stmt|;
 comment|/* alias /dev/vbi to /dev/vbi0 */
-endif|#
-directive|endif
 if|#
 directive|if
 operator|(
@@ -2482,13 +2448,6 @@ decl_stmt|;
 comment|/* Mutex protecting vbi buffer */
 endif|#
 directive|endif
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|310000
-operator|)
 name|bus_space_tag_t
 name|memt
 decl_stmt|;
@@ -2501,8 +2460,6 @@ name|bus_size_t
 name|obmemsz
 decl_stmt|;
 comment|/* Size of card (bytes) */
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -3173,27 +3130,12 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
-
 begin_typedef
 typedef|typedef
 name|u_long
 name|ioctl_cmd_t
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
