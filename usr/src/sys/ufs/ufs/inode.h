@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -393,7 +393,7 @@ begin_struct
 struct|struct
 name|indir
 block|{
-name|long
+name|daddr_t
 name|in_lbn
 decl_stmt|;
 comment|/* logical block number */
@@ -401,6 +401,10 @@ name|int
 name|in_off
 decl_stmt|;
 comment|/* offset in buffer */
+name|int
+name|in_exists
+decl_stmt|;
+comment|/* does this block exist yet */
 block|}
 struct|;
 end_struct
