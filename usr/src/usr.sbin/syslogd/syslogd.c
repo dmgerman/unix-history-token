@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.10 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,16 +45,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_define
-define|#
-directive|define
-name|COMPAT
-end_define
-
-begin_comment
-comment|/* include 4.3 Alpha compatibility */
-end_comment
 
 begin_comment
 comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximimum line length that can be handled.  * NLOGS   -- the maximum number of simultaneous log files.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  */
@@ -762,207 +752,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|CompatMode
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* run in compatibility mode */
-end_comment
-
-begin_decl_stmt
-name|int
-name|CompatCodes
-index|[
-literal|32
-index|]
-init|=
-block|{
-name|LOG_USER
-operator||
-name|LOG_ALERT
-block|,
-comment|/* 0 -- undefined */
-comment|/* kernel priorities */
-name|LOG_KERN
-operator||
-name|LOG_EMERG
-block|,
-comment|/* KERN_EMERG */
-name|LOG_KERN
-operator||
-name|LOG_ALERT
-block|,
-comment|/* KERN_ALERT */
-name|LOG_KERN
-operator||
-name|LOG_CRIT
-block|,
-comment|/* KERN_ERR */
-name|LOG_KERN
-operator||
-name|LOG_ERR
-block|,
-comment|/* KERN_FAIL */
-name|LOG_KERN
-operator||
-name|LOG_WARNING
-block|,
-comment|/* KERN_RECOV */
-name|LOG_KERN
-operator||
-name|LOG_INFO
-block|,
-comment|/* KERN_INFO */
-comment|/* user abnormal conditions priorities */
-name|LOG_USER
-operator||
-name|LOG_EMERG
-block|,
-comment|/* LOG_EMERG */
-name|LOG_USER
-operator||
-name|LOG_ALERT
-block|,
-comment|/* LOG_ALERT */
-name|LOG_USER
-operator||
-name|LOG_CRIT
-block|,
-comment|/* LOG_CRIT */
-name|LOG_USER
-operator||
-name|LOG_ERR
-block|,
-comment|/* LOG_ERR */
-name|LOG_USER
-operator||
-name|LOG_ERR
-block|,
-comment|/* LOG_ERR */
-name|LOG_USER
-operator||
-name|LOG_WARNING
-block|,
-comment|/* LOG_WARNING */
-comment|/* user priorities */
-name|LOG_USER
-operator||
-name|LOG_ALERT
-block|,
-comment|/* LOG_SALERT */
-name|LOG_AUTH
-operator||
-name|LOG_NOTICE
-block|,
-comment|/* LOG_SECURITY */
-name|LOG_USER
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_FIXED */
-name|LOG_MAIL
-operator||
-name|LOG_ERR
-block|,
-comment|/* LOG_MAIL */
-name|LOG_DAEMON
-operator||
-name|LOG_ERR
-block|,
-comment|/* LOG_REJECT */
-name|LOG_USER
-operator||
-name|LOG_NOTICE
-block|,
-comment|/* LOG_NOTICE */
-comment|/* user information priorities */
-name|LOG_USER
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_INFO */
-name|LOG_LOCAL1
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_INFO1 */
-name|LOG_LOCAL2
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_INFO2 */
-name|LOG_LOCAL3
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_INFO3 */
-name|LOG_LOCAL4
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_INFO4 */
-name|LOG_LOCAL5
-operator||
-name|LOG_INFO
-block|,
-comment|/* LOG_INFO5 */
-comment|/* user debug/local priorities */
-name|LOG_USER
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_DEBUG */
-name|LOG_LOCAL1
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_LOCAL1 */
-name|LOG_LOCAL2
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_LOCAL2 */
-name|LOG_LOCAL3
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_LOCAL3 */
-name|LOG_LOCAL4
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_LOCAL4 */
-name|LOG_LOCAL5
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_LOCAL5 */
-name|LOG_LOCAL6
-operator||
-name|LOG_DEBUG
-block|,
-comment|/* LOG_LOCAL6 */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|COMPAT
-end_endif
-
 begin_function
 name|main
 parameter_list|(
@@ -1100,20 +889,6 @@ name|Debug
 operator|++
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|COMPAT
-case|case
-literal|'C'
-case|:
-comment|/* run in compat mode */
-name|CompatMode
-operator|++
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-endif|COMPAT
 case|case
 literal|'p'
 case|:
@@ -2249,131 +2024,6 @@ name|q
 operator|=
 name|line
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT
-if|if
-condition|(
-name|CompatMode
-condition|)
-block|{
-specifier|register
-name|char
-modifier|*
-name|lp
-init|=
-name|index
-argument_list|(
-name|p
-argument_list|,
-literal|':'
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|lp
-operator|&&
-name|lp
-index|[
-literal|1
-index|]
-operator|==
-literal|' '
-operator|&&
-name|lp
-index|[
-literal|17
-index|]
-operator|==
-literal|'-'
-operator|&&
-name|lp
-index|[
-literal|18
-index|]
-operator|==
-literal|'-'
-condition|)
-block|{
-comment|/* 			 * Old format message 			 */
-name|dprintf
-argument_list|(
-literal|"mapping<%d> to<%d>\n"
-argument_list|,
-name|pri
-argument_list|,
-name|CompatCodes
-index|[
-name|pri
-index|]
-argument_list|)
-expr_stmt|;
-name|pri
-operator|=
-name|CompatCodes
-index|[
-name|pri
-index|]
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strncpy
-argument_list|(
-name|q
-argument_list|,
-name|lp
-operator|+
-literal|2
-argument_list|,
-literal|15
-argument_list|)
-expr_stmt|;
-name|q
-operator|+=
-literal|15
-expr_stmt|;
-operator|*
-name|q
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strncpy
-argument_list|(
-name|q
-argument_list|,
-name|p
-argument_list|,
-name|lp
-operator|-
-name|p
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|q
-operator|+=
-name|lp
-operator|-
-name|p
-operator|+
-literal|1
-expr_stmt|;
-name|p
-operator|=
-name|lp
-operator|+
-literal|19
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-endif|COMPAT
 while|while
 condition|(
 operator|(
@@ -2628,38 +2278,6 @@ name|pri
 operator|=
 name|DEFSPRI
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT
-elseif|else
-if|if
-condition|(
-name|CompatMode
-condition|)
-block|{
-name|dprintf
-argument_list|(
-literal|"mapping<%d> to<%d>\n"
-argument_list|,
-name|pri
-argument_list|,
-name|CompatCodes
-index|[
-name|pri
-index|]
-argument_list|)
-expr_stmt|;
-name|pri
-operator|=
-name|CompatCodes
-index|[
-name|pri
-index|]
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|COMPAT
 block|}
 else|else
 block|{
@@ -4492,6 +4110,11 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|sig
+condition|)
+block|{
 name|dprintf
 argument_list|(
 literal|"syslogd: going down on signal %d\n"
@@ -4519,6 +4142,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
