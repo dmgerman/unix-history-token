@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.3 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,7 +1608,19 @@ name|NULL
 return|;
 if|if
 condition|(
-operator|(
+name|blkoff
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|dirp
+operator|->
+name|loc
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|lbn
 operator|=
 name|lblkno
@@ -1620,11 +1632,7 @@ name|dirp
 operator|->
 name|loc
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|d
 operator|=
 name|bmap
