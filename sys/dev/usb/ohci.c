@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb/ohci.c,v 1.92 2000/08/08 19:51:46 tv Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.94 2000/11/10 14:11:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6721,6 +6721,7 @@ name|xfer
 operator|->
 name|nframes
 expr_stmt|;
+comment|/* XXX update frlengths with actual length */
 comment|/* XXX xfer->actlen = actlen; */
 name|xfer
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.120 2000/06/01 15:51:26 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.126 2000/11/10 14:11:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6720,6 +6720,8 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|nframes
+decl_stmt|,
+name|len
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -6824,12 +6826,25 @@ operator|.
 name|td_status
 argument_list|)
 expr_stmt|;
-name|actlen
-operator|+=
+name|len
+operator|=
 name|UHCI_TD_GET_ACTLEN
 argument_list|(
 name|status
 argument_list|)
+expr_stmt|;
+name|xfer
+operator|->
+name|frlengths
+index|[
+name|i
+index|]
+operator|=
+name|len
+expr_stmt|;
+name|actlen
+operator|+=
+name|len
 expr_stmt|;
 block|}
 name|upipe
