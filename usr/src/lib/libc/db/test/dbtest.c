@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.7 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,15 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
 name|enum
 name|S
 name|command
