@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.57 1995/07/16 14:10:55 peter Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.58 1995/07/30 17:49:24 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2817,8 +2817,6 @@ name|sticks
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|opc
 decl_stmt|;
 name|int
 name|args
@@ -2856,12 +2854,6 @@ argument_list|(
 literal|"syscall"
 argument_list|)
 expr_stmt|;
-name|code
-operator|=
-name|frame
-operator|.
-name|tf_eax
-expr_stmt|;
 name|p
 operator|->
 name|p_md
@@ -2889,14 +2881,11 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reconstruct pc, assuming lcall $X,y is 7 bytes, as it is always. 	 */
-name|opc
+name|code
 operator|=
 name|frame
 operator|.
-name|tf_eip
-operator|-
-literal|7
+name|tf_eax
 expr_stmt|;
 comment|/* 	 * Need to check if this is a 32 bit or 64 bit syscall. 	 */
 if|if
@@ -2936,13 +2925,6 @@ operator|=
 name|fuword
 argument_list|(
 name|params
-operator|+
-name|_QUAD_LOWWORD
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|params
@@ -2962,9 +2944,7 @@ operator|->
 name|sv_mask
 condition|)
 name|code
-operator|=
-name|code
-operator|&
+operator|&=
 name|p
 operator|->
 name|p_sysent
@@ -3178,11 +3158,12 @@ break|break;
 case|case
 name|ERESTART
 case|:
+comment|/* 		 * Reconstruct pc, assuming lcall $X,y is 7 bytes. 		 */
 name|frame
 operator|.
 name|tf_eip
-operator|=
-name|opc
+operator|-=
+literal|7
 expr_stmt|;
 break|break;
 case|case
@@ -3311,9 +3292,6 @@ name|trapframe
 name|frame
 decl_stmt|;
 block|{
-name|caddr_t
-name|params
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3334,8 +3312,6 @@ name|sticks
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|opc
 decl_stmt|;
 name|int
 name|rval
@@ -3343,7 +3319,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|code
 decl_stmt|;
 struct|struct
@@ -3429,12 +3405,6 @@ argument_list|(
 literal|"linux syscall"
 argument_list|)
 expr_stmt|;
-name|code
-operator|=
-name|frame
-operator|.
-name|tf_eax
-expr_stmt|;
 name|p
 operator|->
 name|p_md
@@ -3448,51 +3418,12 @@ operator|)
 operator|&
 name|frame
 expr_stmt|;
-name|params
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|frame
-operator|.
-name|tf_esp
-operator|+
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-comment|/* Reconstruct pc, subtract size of int 0x80 */
-name|opc
+name|code
 operator|=
 name|frame
 operator|.
-name|tf_eip
-operator|-
-literal|2
+name|tf_eax
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-literal|0
-condition|)
-block|{
-name|code
-operator|=
-name|fuword
-argument_list|(
-name|params
-argument_list|)
-expr_stmt|;
-name|params
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|p
@@ -3502,9 +3433,7 @@ operator|->
 name|sv_mask
 condition|)
 name|code
-operator|=
-name|code
-operator|&
+operator|&=
 name|p
 operator|->
 name|p_sysent
@@ -3513,10 +3442,6 @@ name|sv_mask
 expr_stmt|;
 if|if
 condition|(
-name|code
-operator|<
-literal|0
-operator|||
 name|code
 operator|>=
 name|p
@@ -3591,15 +3516,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|rval
-index|[
-literal|1
-index|]
-operator|=
-name|frame
-operator|.
-name|tf_edx
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -3651,11 +3567,12 @@ break|break;
 case|case
 name|ERESTART
 case|:
+comment|/* Reconstruct pc, subtract size of int 0x80 */
 name|frame
 operator|.
 name|tf_eip
-operator|=
-name|opc
+operator|-=
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -3663,8 +3580,6 @@ name|EJUSTRETURN
 case|:
 break|break;
 default|default:
-name|bad
-label|:
 if|if
 condition|(
 name|p
