@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.72 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4716,7 +4716,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
@@ -4726,9 +4725,7 @@ operator|==
 name|MD_DAEMON
 operator|||
 name|HoldErrs
-operator|)
-operator|&&
-operator|!
+operator|||
 name|DisConnected
 condition|)
 block|{
