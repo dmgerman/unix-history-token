@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -98,7 +98,7 @@ name|long
 name|v_holdcnt
 decl_stmt|;
 comment|/* page& buffer references */
-name|off_t
+name|daddr_t
 name|v_lastr
 decl_stmt|;
 comment|/* last read (read-ahead) */
@@ -1910,7 +1910,7 @@ name|vnode
 operator|*
 name|vp
 operator|,
-name|u_long
+name|off_t
 name|length
 operator|,
 name|int
