@@ -1249,7 +1249,7 @@ condition|)
 return|return
 name|NULL
 return|;
-continue|continue;
+break|break;
 block|}
 block|}
 if|if
