@@ -1867,6 +1867,20 @@ name|LINUX_TIOCTTYGSTRUCT
 value|0x5426
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_TIOCSBRK
+value|0x5427
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_TIOCCBRK
+value|0x5428
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
