@@ -959,6 +959,7 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
@@ -969,6 +970,7 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -979,6 +981,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:

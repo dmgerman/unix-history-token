@@ -2045,6 +2045,7 @@ name|nd_mrep
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|RC_REPLY
 case|:
