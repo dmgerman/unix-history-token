@@ -216,7 +216,7 @@ struct|struct
 name|bundle
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 comment|/* really all our datalinks */
@@ -236,7 +236,7 @@ comment|/* The /dev/XXXX name */
 name|int
 name|fd
 decl_stmt|;
-comment|/* The /dev/XXXX descriptor */
+comment|/* The /dev/XXXX fdescriptor */
 name|unsigned
 name|header
 range|:
@@ -756,7 +756,7 @@ name|bundle
 modifier|*
 parameter_list|,
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|)
 function_decl|;
@@ -772,7 +772,7 @@ name|bundle
 modifier|*
 parameter_list|,
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|)
 function_decl|;

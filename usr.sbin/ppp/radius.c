@@ -1136,7 +1136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We've either timed out or select()ed on the read descriptor  */
+comment|/*  * We've either timed out or select()ed on the read fdescriptor  */
 end_comment
 
 begin_function
@@ -1288,7 +1288,7 @@ name|void
 name|radius_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1317,7 +1317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct descriptor (descriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (fdescriptor.h)  */
 end_comment
 
 begin_function
@@ -1326,7 +1326,7 @@ name|int
 name|radius_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1430,7 +1430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct descriptor (descriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (fdescriptor.h)  */
 end_comment
 
 begin_function
@@ -1439,7 +1439,7 @@ name|int
 name|radius_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1486,7 +1486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct descriptor (descriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (fdescriptor.h)  */
 end_comment
 
 begin_function
@@ -1495,7 +1495,7 @@ name|int
 name|radius_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

@@ -49,7 +49,7 @@ struct|struct
 name|chat
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 name|struct

@@ -48,7 +48,7 @@ struct|struct
 name|chap
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 struct|struct

@@ -448,7 +448,7 @@ name|int
 name|physical_DescriptorWrite
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|struct
@@ -615,7 +615,7 @@ name|int
 name|physical_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2094,7 +2094,7 @@ name|int
 name|physical_DescriptorWrite
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2983,7 +2983,7 @@ name|void
 name|physical_DescriptorRead
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -5147,7 +5147,7 @@ name|int
 name|physical_doUpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -5563,7 +5563,7 @@ name|int
 name|physical_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

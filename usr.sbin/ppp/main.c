@@ -2840,12 +2840,12 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Exception detected on descriptor %d\n"
+literal|"Exception detected on fdescriptor %d\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* We deal gracefully with link descriptor exceptions */
+comment|/* We deal gracefully with link fdescriptor exceptions */
 if|if
 condition|(
 operator|!

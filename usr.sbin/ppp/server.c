@@ -105,7 +105,7 @@ name|int
 name|server_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -248,7 +248,7 @@ name|int
 name|server_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -356,7 +356,7 @@ name|void
 name|server_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -808,7 +808,7 @@ name|int
 name|server_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

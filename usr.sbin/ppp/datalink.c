@@ -1553,7 +1553,7 @@ name|int
 name|datalink_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2610,7 +2610,7 @@ name|int
 name|datalink_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2724,7 +2724,7 @@ name|void
 name|datalink_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2872,7 +2872,7 @@ name|int
 name|datalink_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

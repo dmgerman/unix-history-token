@@ -747,7 +747,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Using descriptor %d for child\n"
+literal|"Using fdescriptor %d for child\n"
 argument_list|,
 name|p
 operator|->

@@ -364,7 +364,7 @@ name|link
 name|link
 decl_stmt|;
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 name|int
@@ -384,7 +384,7 @@ comment|/* Our hdlc state */
 name|int
 name|fd
 decl_stmt|;
-comment|/* File descriptor for this device */
+comment|/* File fdescriptor for this device */
 name|struct
 name|mbuf
 modifier|*
@@ -896,7 +896,7 @@ name|int
 name|physical_doUpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|fd_set
@@ -922,7 +922,7 @@ name|int
 name|physical_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 specifier|const
@@ -938,7 +938,7 @@ name|void
 name|physical_DescriptorRead
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|struct
