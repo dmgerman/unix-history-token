@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.18 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.19 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.18 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.19 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1504,6 +1504,19 @@ operator|->
 name|mci_state
 operator|=
 name|MCIS_OPEN
+expr_stmt|;
+name|e
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+operator|&
+name|SmtpReplyBuffer
+index|[
+literal|4
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
