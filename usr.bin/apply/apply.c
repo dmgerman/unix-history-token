@@ -223,7 +223,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"illegal magic character specification."
+literal|"illegal magic character specification"
 argument_list|)
 expr_stmt|;
 name|magic
@@ -283,7 +283,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"only one -# argument may be specified."
+literal|"only one -# argument may be specified"
 argument_list|)
 expr_stmt|;
 name|nargs
@@ -1026,7 +1026,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: apply [-a magic] [-0123456789] command arguments ...\n"
+literal|"usage: apply [-a magic] [-d] [-0123456789] command arguments ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
