@@ -5515,8 +5515,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|NTW
 end_endif
+
+begin_comment
+comment|/* NTW */
+end_comment
 
 end_unit
 
