@@ -1,4 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)bib.c	1.4	%G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_comment
 comment|/*    bib - bibliographic formatter          timothy a. budd, 1/82          lookup routines supplied by gary levin 2/82          reworked several new features added, 11/82. */
 end_comment

@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)invert.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/*  input:  records of lines, separated by blank lines     output: key:file1 start/length ... start/length:file2 start/length ... */
@@ -361,7 +379,7 @@ name|sprintf
 argument_list|(
 name|tag_line
 argument_list|,
-literal|" %s %D %D\n"
+literal|" %s %ld %ld\n"
 argument_list|,
 name|filename
 argument_list|,
@@ -482,7 +500,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%D documents   %D distinct keys  %D key occurrences\n"
+literal|"%ld documents   %ld distinct keys  %ld key occurrences\n"
 argument_list|,
 name|records
 argument_list|,
@@ -740,7 +758,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s%s%D%D"
+literal|"%s%s%ld%ld"
 argument_list|,
 name|key
 argument_list|,
@@ -757,7 +775,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%s :%s %D/%D"
+literal|"%s :%s %ld/%ld"
 argument_list|,
 name|key
 argument_list|,
@@ -795,7 +813,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s%s%D%D"
+literal|"%s%s%ld%ld"
 argument_list|,
 name|newkey
 argument_list|,
@@ -838,7 +856,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\n%s :%s %D/%D"
+literal|"\n%s :%s %ld/%ld"
 argument_list|,
 name|key
 argument_list|,
@@ -877,7 +895,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|":%s %D/%D"
+literal|":%s %ld/%ld"
 argument_list|,
 name|file
 argument_list|,
@@ -892,7 +910,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|" %D/%D"
+literal|" %ld/%ld"
 argument_list|,
 name|start
 argument_list|,
