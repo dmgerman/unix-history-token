@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.98 (Berkeley) %G%"
+literal|"@(#)main.c	8.99 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7271,6 +7271,9 @@ operator|==
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|NAMED_BIND
 comment|/* look up MX records */
 name|int
 name|nmx
@@ -7335,6 +7338,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"No MX code compiled in\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
