@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.21 (Berkeley) %G%"
+literal|"@(#)tset.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,41 +803,25 @@ name|mode
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The termcap file generally has a two-character name first in each 	 * entry followed by more descriptive names.  If we ended up with the 	 * first one, we switch to the second one for setting or reporting 	 * information. 	 */
+comment|/* Get the terminal name from the entry. */
 name|p
 operator|=
-name|strpbrk
-argument_list|(
 name|tcapbuf
-argument_list|,
-literal|"|:"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 operator|&&
 operator|*
 name|p
 operator|!=
 literal|':'
-operator|&&
-operator|!
-name|strncmp
-argument_list|(
-name|ttype
-argument_list|,
-name|tcapbuf
-argument_list|,
-name|p
-operator|-
-name|tcapbuf
-argument_list|)
 condition|)
 block|{
 name|t
 operator|=
-operator|++
 name|p
 expr_stmt|;
 if|if
