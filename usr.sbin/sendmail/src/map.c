@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.146 (Berkeley) 11/24/96"
+literal|"@(#)map.c	8.147 (Berkeley) 1/17/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -7090,6 +7090,16 @@ end_undef
 
 begin_comment
 comment|/* symbol conflict in nis.h */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|T_UNSPEC
+end_undef
+
+begin_comment
+comment|/* symbol conflict in nis.h -> ... -> sys/tiuser.h */
 end_comment
 
 begin_include

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.145 (Berkeley) 12/2/96 (with queueing)"
+literal|"@(#)queue.c	8.153 (Berkeley) 1/14/97 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.145 (Berkeley) 12/2/96 (without queueing)"
+literal|"@(#)queue.c	8.153 (Berkeley) 1/14/97 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,37 +151,6 @@ end_define
 begin_comment
 comment|/* version number of this queue format */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NGROUPS_MAX
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|NGROUPS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NGROUPS_MAX
-value|NGROUPS
-end_define
-
-begin_comment
-comment|/* POSIX naming convention */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2544,6 +2513,16 @@ name|bool
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|void
+name|drop_privileges
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
 name|CurrentLA
 operator|=
@@ -2553,13 +2532,9 @@ expr_stmt|;
 comment|/* get load average */
 if|if
 condition|(
-name|shouldqueue
-argument_list|(
-literal|0L
-argument_list|,
-name|curtime
-argument_list|()
-argument_list|)
+name|CurrentLA
+operator|>=
+name|QueueLA
 condition|)
 block|{
 name|char
@@ -2633,18 +2608,28 @@ name|pid_t
 name|pid
 decl_stmt|;
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|intsig
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGCHLD
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|reapchild
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 name|blocksignal
 argument_list|(
 name|SIGCHLD
@@ -2879,10 +2864,6 @@ argument_list|,
 name|intsig
 argument_list|)
 expr_stmt|;
-name|Verbose
-operator|=
-name|FALSE
-expr_stmt|;
 block|}
 name|setproctitle
 argument_list|(
@@ -2943,42 +2924,9 @@ name|uid_t
 operator|)
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|RunAsGid
-operator|!=
-operator|(
-name|gid_t
-operator|)
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|RunAsGid
-argument_list|)
+name|drop_privileges
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|RunAsUid
-operator|!=
-operator|(
-name|uid_t
-operator|)
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|RunAsUid
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	**  Create ourselves an envelope 	*/
 name|CurEnv
 operator|=
@@ -3002,6 +2950,18 @@ operator|=
 name|BlankEnvelope
 operator|.
 name|e_flags
+expr_stmt|;
+comment|/* make sure we have disconnected from parent */
+if|if
+condition|(
+name|forkflag
+condition|)
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 comment|/* 	**  Make sure the alias database is open. 	*/
 name|initmaps
@@ -6358,10 +6318,10 @@ expr_stmt|;
 if|if
 condition|(
 name|qfver
-operator|>
+operator|<=
 name|QF_VERSION
 condition|)
-block|{
+break|break;
 name|syserr
 argument_list|(
 literal|"Version number in qf (%d) greater than max (%d)"
@@ -6371,8 +6331,21 @@ argument_list|,
 name|QF_VERSION
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+name|loseqfile
+argument_list|(
+name|e
+argument_list|,
+literal|"unsupported qf file version"
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
 case|case
 literal|'C'
 case|:
@@ -6638,6 +6611,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+literal|'\0'
 argument_list|,
 name|TRUE
 argument_list|)

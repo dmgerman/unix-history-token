@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.66 (Berkeley) 9/20/96"
+literal|"@(#)alias.c	8.67 (Berkeley) 1/18/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -2216,6 +2216,9 @@ name|lhssize
 decl_stmt|,
 name|rhssize
 decl_stmt|;
+name|int
+name|c
+decl_stmt|;
 name|LineNumber
 operator|++
 expr_stmt|;
@@ -2239,6 +2242,47 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|feof
+argument_list|(
+name|af
+argument_list|)
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"554 alias line too long"
+argument_list|)
+expr_stmt|;
+comment|/* flush to end of line */
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getc
+argument_list|(
+name|af
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|c
+operator|!=
+literal|'\n'
+condition|)
+continue|continue;
+comment|/* skip any continuation lines */
+name|skipping
+operator|=
+name|TRUE
+expr_stmt|;
+continue|continue;
+block|}
 switch|switch
 condition|(
 name|line
@@ -2384,10 +2428,6 @@ init|;
 condition|;
 control|)
 block|{
-specifier|register
-name|char
-name|c
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2585,6 +2625,12 @@ literal|'\n'
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|af
+argument_list|)
 condition|)
 block|{
 name|usrerr
@@ -2592,9 +2638,36 @@ argument_list|(
 literal|"554 alias too long"
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|fgetc
+argument_list|(
+name|af
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|c
+operator|!=
+literal|'\n'
+condition|)
+continue|continue;
+name|skipping
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|skipping
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
