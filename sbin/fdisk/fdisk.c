@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdisk.c,v 1.24 1998/09/16 19:25:47 obrien Exp $"
+literal|"$Id: fdisk.c,v 1.25 1998/11/06 03:25:56 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1664,6 +1664,12 @@ block|{
 literal|0xA7
 block|,
 literal|"NEXTSTEP"
+block|}
+block|,
+block|{
+literal|0xA9
+block|,
+literal|"NetBSD"
 block|}
 block|,
 block|{
