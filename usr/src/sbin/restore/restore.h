@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	@(#)restore.h	3.2	(Berkeley)	83/02/26	*/
+comment|/*	@(#)restore.h	3.4	(Berkeley)	83/03/23	*/
 end_comment
 
 begin_include
@@ -224,11 +224,10 @@ name|ino_t
 name|e_ino
 decl_stmt|;
 comment|/* inode number in previous file sys */
-name|char
-modifier|*
-name|e_newname
+name|long
+name|e_index
 decl_stmt|;
-comment|/* full pathname of rename in new fs */
+comment|/* unique index (for dumpped table) */
 name|struct
 name|entry
 modifier|*
@@ -253,6 +252,12 @@ modifier|*
 name|e_entries
 decl_stmt|;
 comment|/* for directories, their entries */
+name|struct
+name|entry
+modifier|*
+name|e_next
+decl_stmt|;
+comment|/* hash chain list */
 block|}
 struct|;
 end_struct
@@ -301,96 +306,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REMOVE
+name|EXTRACT
 value|0x0001
 end_define
 
 begin_comment
-comment|/* entry to be removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REMOVED
-value|0x0002
-end_define
-
-begin_comment
-comment|/* entry has been removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RENAME
-value|0x0004
-end_define
-
-begin_comment
-comment|/* entry to be renamed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMPNAME
-value|0x0008
-end_define
-
-begin_comment
-comment|/* entry has been given a temporary name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMPNODE
-value|0x0010
-end_define
-
-begin_comment
-comment|/* entry is a temporary, to be replaced */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRACT
-value|0x0020
-end_define
-
-begin_comment
-comment|/* entry is to be extracted from the tape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RENUMBER
-value|0x0040
-end_define
-
-begin_comment
-comment|/* entry is to be assigned a new inode number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHANGE
-value|0x0080
-end_define
-
-begin_comment
-comment|/* entry is to be deleted and extracted */
+comment|/* entry is to be replaced from the tape */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NEW
-value|0x0100
+value|0x0002
 end_define
 
 begin_comment
@@ -401,26 +329,38 @@ begin_define
 define|#
 directive|define
 name|KEEP
-value|0x0200
+value|0x0004
 end_define
 
 begin_comment
 comment|/* entry is not to change */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|REMOVED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* entry has been removed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMPNAME
+value|0x0020
+end_define
+
+begin_comment
+comment|/* entry has been given a temporary name */
+end_comment
+
 begin_comment
 comment|/*  * functions defined on entry structs  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|entry
-modifier|*
-modifier|*
-name|entry
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -457,16 +397,6 @@ specifier|extern
 name|struct
 name|entry
 modifier|*
-name|pathcheck
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|entry
-modifier|*
 name|addentry
 parameter_list|()
 function_decl|;
@@ -486,6 +416,15 @@ specifier|extern
 name|char
 modifier|*
 name|savename
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|gentempname
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -513,38 +452,6 @@ name|NIL
 value|((struct entry *)(0))
 end_define
 
-begin_define
-define|#
-directive|define
-name|lookupino
-parameter_list|(
-name|inum
-parameter_list|)
-value|(entry[(inum)])
-end_define
-
-begin_define
-define|#
-directive|define
-name|addino
-parameter_list|(
-name|inum
-parameter_list|,
-name|np
-parameter_list|)
-value|(entry[(inum)] = (np))
-end_define
-
-begin_define
-define|#
-directive|define
-name|deleteino
-parameter_list|(
-name|inum
-parameter_list|)
-value|(entry[(inum)] = (struct entry *)NIL)
-end_define
-
 begin_comment
 comment|/*  * Constants associated with entry structs  */
 end_comment
@@ -566,8 +473,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TMPCHAR
-value|(0x01)
+name|TMPHDR
+value|"RSTTMP"
 end_define
 
 begin_comment
@@ -670,7 +577,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|markfile
+name|nodeupdates
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -703,7 +610,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|char
+modifier|*
 name|strcat
 parameter_list|()
 function_decl|;
@@ -711,7 +619,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|char
+modifier|*
 name|strcpy
 parameter_list|()
 function_decl|;
@@ -719,8 +628,35 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|char
+modifier|*
 name|mktemp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
