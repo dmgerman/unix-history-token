@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_ieee80211.h,v 1.2 2000/03/10 05:44:23 onoe Exp $	*/
+comment|/*	$NetBSD: if_ieee80211.h,v 1.5 2000/07/21 04:47:40 onoe Exp $	*/
 end_comment
 
 begin_comment
@@ -593,13 +593,85 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_WEP_KEYLEN
+value|5
+end_define
+
+begin_comment
+comment|/* 40bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_WEP_IVLEN
+value|3
+end_define
+
+begin_comment
+comment|/* 24bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_WEP_KIDLEN
+value|1
+end_define
+
+begin_comment
+comment|/* 1 octet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_WEP_CRCLEN
+value|4
+end_define
+
+begin_comment
+comment|/* CRC-32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_WEP_NKID
+value|4
+end_define
+
+begin_comment
+comment|/* number of key ids */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_NWID_LEN
 value|32
 end_define
 
 begin_comment
-comment|/* nwid is u_int8_t array of IEEE80211_NWID_LEN pointed at by ifr.ifr_data */
+comment|/* nwid is pointed at by ifr.ifr_data */
 end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_nwid
+block|{
+name|u_int8_t
+name|i_len
+decl_stmt|;
+name|u_int8_t
+name|i_nwid
+index|[
+name|IEEE80211_NWID_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -613,6 +685,62 @@ define|#
 directive|define
 name|SIOCG80211NWID
 value|_IOWR('i', 231, struct ifreq)
+end_define
+
+begin_comment
+comment|/* the first member must be matched with struct ifreq */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_nwkey
+block|{
+name|char
+name|i_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if_name, e.g. "wi0" */
+name|int
+name|i_wepon
+decl_stmt|;
+comment|/* wep enabled flag */
+name|int
+name|i_defkid
+decl_stmt|;
+comment|/* default encrypt key id */
+struct|struct
+block|{
+name|int
+name|i_keylen
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|i_keydat
+decl_stmt|;
+block|}
+name|i_key
+index|[
+name|IEEE80211_WEP_NKID
+index|]
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCS80211NWKEY
+value|_IOW('i', 232, struct ieee80211_nwkey)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCG80211NWKEY
+value|_IOWR('i', 233, struct ieee80211_nwkey)
 end_define
 
 begin_endif
