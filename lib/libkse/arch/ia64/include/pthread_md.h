@@ -594,7 +594,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * Get the current kse.  *  * Line _kcb_get(), this can only be called while in a critical region.  */
+comment|/*  * Get the current kse.  *  * Like _kcb_get(), this can only be called while in a critical region.  */
 end_comment
 
 begin_expr_stmt
