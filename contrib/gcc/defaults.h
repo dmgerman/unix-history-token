@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of various defaults for how to do assembler output    (most of which are designed to be appropriate for GAS or for    some BSD assembler).     Written by Ron Guilmette (rfg@netcom.com)  Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of various defaults for how to do assembler output    (most of which are designed to be appropriate for GAS or for    some BSD assembler).    Copyright (C) 1992, 1996 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -72,36 +72,6 @@ name|VALUE
 parameter_list|)
 define|\
 value|do { fprintf (FILE, "\t%s\t", ASM_LONG);				\      ASM_OUTPUT_INTERNAL_LABEL (FILE, "L", (VALUE));			\      fputc ('\n', FILE);						\    } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* This is how to output an element of a case-vector that is relative.    Some targets don't use this, but we have to define it anyway.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
-define|\
-value|do { fprintf (FILE, "\t%s\t", ASM_SHORT);				\      ASM_OUTPUT_INTERNAL_LABEL (FILE, "L", (VALUE));			\      fputc ('-', FILE);							\      ASM_OUTPUT_INTERNAL_LABEL (FILE, "L", (REL));			\      fputc ('\n', FILE);						\    } while (0)
 end_define
 
 begin_endif
@@ -219,6 +189,34 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* This is how to output a reference to a user-level label named NAME.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASM_OUTPUT_LABELREF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_LABELREF
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do { fputs (USER_LABEL_PREFIX, FILE); fputs (NAME, FILE); } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* This determines whether or not we support weak symbols.  */
 end_comment
 
@@ -257,6 +255,37 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If we have a definition of INCOMING_RETURN_ADDR_RTX, assume that    the rest of the DWARF 2 frame unwind support is also provided.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|DWARF2_UNWIND_INFO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INCOMING_RETURN_ADDR_RTX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|1
+end_define
 
 begin_endif
 endif|#
