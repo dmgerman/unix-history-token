@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: http://www.compaq.com/productinfo/development/openhci.html  * USB spec: http://www.usb.org/developers/data/usbspec.zip  */
+comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: http://www.compaq.com/productinfo/development/openhci.html  * USB spec: http://www.usb.org/developers/docs/usbspec.zip  */
 end_comment
 
 begin_include
