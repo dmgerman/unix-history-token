@@ -87,7 +87,7 @@ file|"tod.h"
 end_include
 
 begin_comment
-comment|/* #define DEBUG /**/
+comment|/* #define DEBUG */
 end_comment
 
 begin_define

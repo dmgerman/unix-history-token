@@ -78,11 +78,19 @@ comment|/* will object to messages without Subjects */
 end_comment
 
 begin_comment
-comment|/* #define REJECT	/* will reject messages without Subjects 			   (OBJECT must be defined also) */
+comment|/* #define REJECT */
 end_comment
 
 begin_comment
-comment|/* #define UNBUFFERED	/* use unbuffered output */
+comment|/* will reject messages without Subjects 			   (OBJECT must be defined also) */
+end_comment
+
+begin_comment
+comment|/* #define UNBUFFERED */
+end_comment
+
+begin_comment
+comment|/* use unbuffered output */
 end_comment
 
 begin_include
