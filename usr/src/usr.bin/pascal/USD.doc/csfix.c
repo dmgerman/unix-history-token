@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csfix.c	6.1 (Berkeley) %G%"
+literal|"@(#)csfix.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,6 +517,23 @@ name|line
 index|]
 operator|=
 name|c
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\0'
+condition|)
+name|c
+operator|=
+name|flagee
+index|[
+name|cp
+operator|-
+name|line
+operator|-
+literal|1
+index|]
 expr_stmt|;
 name|printf
 argument_list|(
