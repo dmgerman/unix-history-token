@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/vfs__bio.c,v 1.1.1.1 1993/06/12 14:57:30 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/vfs__bio.c,v 1.2 1993/07/18 11:27:45 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -825,6 +825,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
