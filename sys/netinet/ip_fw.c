@@ -7812,7 +7812,7 @@ condition|)
 block|{
 name|LIST_FOREACH
 argument_list|(
-argument|ftmp
+argument|fcp
 argument_list|,
 argument|head
 argument_list|,
@@ -7821,7 +7821,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|ftmp
+name|fcp
 operator|->
 name|fw_number
 operator|!=
@@ -7829,7 +7829,7 @@ name|IPFW_DEFAULT_RULE
 condition|)
 name|nbr
 operator|=
-name|ftmp
+name|fcp
 operator|->
 name|fw_number
 expr_stmt|;
