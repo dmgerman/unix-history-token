@@ -280,7 +280,7 @@ comment|/* don't include in a core */
 end_comment
 
 begin_comment
-comment|/*  *	Maps are doubly-linked lists of map entries, kept sorted  *	by address.  A single hint is provided to start  *	searches again from the last successful search,  *	insertion, or removal.  *  *	Note: the lock structure cannot be the first element of vm_map  *	because this can result in a running lockup between two or more  *	system processes trying to kmem_alloc_wait() due to kmem_alloc_wait()  *	and free tsleep/waking up 'map' and the underlying lockmgr also  *	sleeping and waking up on 'map'.  The lockup occurs when the map fills  *	up.  The 'exec' map, for example.  */
+comment|/*  *	Maps are doubly-linked lists of map entries, kept sorted  *	by address.  A single hint is provided to start  *	searches again from the last successful search,  *	insertion, or removal.  *  *	Note: the lock structure cannot be the first element of vm_map  *	because this can result in a running lockup between two or more  *	system processes trying to kmem_alloc_wait() due to kmem_alloc_wait()  *	and free tsleep/waking up 'map' and the underlying lockmgr also  *	sleeping and waking up on 'map'.  The lockup occurs when the map fills  *	up.  The 'exec' map, for example.  *  * List of locks  *	(c)	const until freed  */
 end_comment
 
 begin_struct
@@ -326,23 +326,98 @@ name|vm_map_entry_t
 name|first_free
 decl_stmt|;
 comment|/* First free space hint */
-name|struct
-name|pmap
-modifier|*
+name|pmap_t
 name|pmap
 decl_stmt|;
-comment|/* Physical map */
+comment|/* (c) Physical map */
 define|#
 directive|define
 name|min_offset
 value|header.start
+comment|/* (c) */
 define|#
 directive|define
 name|max_offset
 value|header.end
+comment|/* (c) */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|vm_offset_t
+name|vm_map_max
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+block|{
+return|return
+operator|(
+name|map
+operator|->
+name|max_offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|vm_offset_t
+name|vm_map_min
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+block|{
+return|return
+operator|(
+name|map
+operator|->
+name|min_offset
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|pmap_t
+name|vm_map_pmap
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+block|{
+return|return
+operator|(
+name|map
+operator|->
+name|pmap
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*   * Shareable process virtual address space.  * May eventually be merged with vm_map.  * Several fields are temporary (text, data stuff).  */
@@ -561,38 +636,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_map_clear_recursive
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_offset_t
-name|vm_map_min
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_offset_t
-name|vm_map_max
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|pmap
-modifier|*
-name|vm_map_pmap
 parameter_list|(
 name|vm_map_t
 name|map
