@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	4.3 (Berkeley) %G%"
+literal|"@(#)if.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Find the interface with address add.  */
+comment|/*  * Find the interface with address addr.  */
 end_comment
 
 begin_function
@@ -139,6 +139,80 @@ operator|&
 name|ifp
 operator|->
 name|int_broadaddr
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+break|break;
+block|}
+return|return
+operator|(
+name|ifp
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Find the point-to-point interface with destination address addr.  */
+end_comment
+
+begin_function
+name|struct
+name|interface
+modifier|*
+name|if_ifwithdstaddr
+parameter_list|(
+name|addr
+parameter_list|)
+name|struct
+name|sockaddr
+modifier|*
+name|addr
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|interface
+modifier|*
+name|ifp
+decl_stmt|;
+for|for
+control|(
+name|ifp
+operator|=
+name|ifnet
+init|;
+name|ifp
+condition|;
+name|ifp
+operator|=
+name|ifp
+operator|->
+name|int_next
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|same
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|int_dstaddr
 argument_list|,
 name|addr
 argument_list|)
