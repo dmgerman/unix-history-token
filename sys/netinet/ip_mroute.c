@@ -1096,7 +1096,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * one-back cache used by ipip_input to locate a tunnel's vif  * given a datagram's src ip address.  */
+comment|/*  * one-back cache used by mroute_encapcheck to locate a tunnel's vif  * given a datagram's src ip address.  */
 end_comment
 
 begin_decl_stmt
