@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -170,8 +176,7 @@ operator|*
 operator|,
 name|int
 operator|,
-expr|struct
-name|proc
+name|d_thread_t
 operator|*
 operator|)
 argument_list|)
@@ -208,8 +213,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-expr|struct
-name|proc
+name|d_thread_t
 operator|*
 operator|)
 argument_list|)
@@ -271,8 +275,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|,
-expr|struct
-name|proc
+name|d_thread_t
 operator|*
 operator|)
 argument_list|)
@@ -318,8 +321,7 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
-expr|struct
-name|proc
+name|d_thread_t
 operator|*
 operator|)
 argument_list|)
@@ -356,8 +358,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-expr|struct
-name|proc
+name|d_thread_t
 operator|*
 operator|)
 argument_list|)
@@ -397,8 +398,7 @@ parameter_list|,
 name|int
 name|proto
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -639,8 +639,7 @@ name|sockaddr
 modifier|*
 name|nam
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -1235,8 +1234,7 @@ name|mbuf
 modifier|*
 name|control
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -1620,8 +1618,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -1822,8 +1819,7 @@ name|sockaddr
 modifier|*
 name|nam
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
