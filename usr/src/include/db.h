@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,112 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|RET_ERROR
+value|-1
+end_define
+
 begin_comment
-comment|/* flags for DB.put() call */
+comment|/* Return values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RET_SUCCESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RET_SPECIAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PAGE_NUMBER
+value|ULONG_MAX
+end_define
+
+begin_comment
+comment|/*>= # of pages in a file */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|pgno_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MAX_PAGE_OFFSET
+value|USHRT_MAX
+end_define
+
+begin_comment
+comment|/*>= # of bytes in a page */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|index_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MAX_REC_NUMBER
+value|ULONG_MAX
+end_define
+
+begin_comment
+comment|/*>= # of records in a tree */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|recno_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Key/data structure -- a Data-Base Thang. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* data */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* data length */
+block|}
+name|DBT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags for DB.put() call. */
 end_comment
 
 begin_define
@@ -70,7 +174,7 @@ comment|/* BTREE, HASH, RECNO */
 end_comment
 
 begin_comment
-comment|/* flags for DB.seq() call */
+comment|/* Flags for DB.seq() call. */
 end_comment
 
 begin_define
@@ -128,30 +232,22 @@ begin_comment
 comment|/* BTREE, RECNO */
 end_comment
 
-begin_comment
-comment|/* key/data structure -- a data-base thang */
-end_comment
-
 begin_typedef
 typedef|typedef
-struct|struct
+enum|enum
 block|{
-name|void
-modifier|*
-name|data
-decl_stmt|;
-comment|/* data */
-name|size_t
-name|size
-decl_stmt|;
-comment|/* data length */
+name|DB_BTREE
+block|,
+name|DB_HASH
+block|,
+name|DB_RECNO
 block|}
-name|DBT
+name|DBTYPE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* access method description structure */
+comment|/* Access method description structure. */
 end_comment
 
 begin_typedef
@@ -159,27 +255,15 @@ typedef|typedef
 struct|struct
 name|__db
 block|{
+name|DBTYPE
+name|type
+decl_stmt|;
+comment|/* type of underlying db */
 name|void
 modifier|*
 name|internal
 decl_stmt|;
 comment|/* access method private */
-define|#
-directive|define
-name|DB_BTREE
-value|1
-define|#
-directive|define
-name|DB_HASH
-value|2
-define|#
-directive|define
-name|DB_RECNO
-value|3
-name|int
-name|type
-decl_stmt|;
-comment|/* type of underlying db */
 name|int
 argument_list|(
 argument|*close
@@ -187,7 +271,6 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-specifier|const
 expr|struct
 name|__db
 operator|*
@@ -316,11 +399,11 @@ begin_define
 define|#
 directive|define
 name|BTREEVERSION
-value|2
+value|3
 end_define
 
 begin_comment
-comment|/* structure used to pass parameters to the btree routines */
+comment|/* Structure used to pass parameters to the btree routines. */
 end_comment
 
 begin_typedef
@@ -340,17 +423,52 @@ name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
 name|int
+name|maxkeypage
+decl_stmt|;
+comment|/* maximum keys per page */
+name|int
+name|minkeypage
+decl_stmt|;
+comment|/* minimum keys per page */
+name|int
 name|psize
 decl_stmt|;
 comment|/* page size */
+comment|/* comparison, prefix functions */
 name|int
-function_decl|(
-modifier|*
-name|compare
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* compare function */
+argument_list|(
+argument|*compare
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|DBT
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*prefix
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|DBT
+operator|*
+operator|,
+specifier|const
+name|DBT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 name|lorder
 decl_stmt|;
@@ -375,7 +493,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* structure used to pass parameters to the hashing routines */
+comment|/* Structure used to pass parameters to the hashing routines. */
 end_comment
 
 begin_typedef
@@ -416,7 +534,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* structure used to pass parameters to the record routines */
+comment|/* Structure used to pass parameters to the record routines. */
 end_comment
 
 begin_typedef
@@ -428,6 +546,16 @@ directive|define
 name|R_FIXEDLEN
 value|0x01
 comment|/* fixed-length records */
+define|#
+directive|define
+name|R_NOKEY
+value|0x02
+comment|/* key not required */
+define|#
+directive|define
+name|R_SNAPSHOT
+value|0x04
+comment|/* snapshot the input */
 name|u_long
 name|flags
 decl_stmt|;
@@ -435,6 +563,10 @@ name|int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
+name|int
+name|lorder
+decl_stmt|;
+comment|/* byte order */
 name|size_t
 name|reclen
 decl_stmt|;
@@ -449,7 +581,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* key structure for the record routines */
+comment|/* Key structure for the record routines. */
 end_comment
 
 begin_typedef
@@ -544,7 +676,38 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 name|DB
 modifier|*
-name|btree_open
+name|dbopen
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|DBTYPE
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DBINTERFACE_PRIVATE
+end_ifdef
+
+begin_decl_stmt
+name|DB
+modifier|*
+name|__bt_open
 name|__P
 argument_list|(
 operator|(
@@ -567,7 +730,7 @@ end_decl_stmt
 begin_decl_stmt
 name|DB
 modifier|*
-name|hash_open
+name|__hash_open
 name|__P
 argument_list|(
 operator|(
@@ -590,7 +753,7 @@ end_decl_stmt
 begin_decl_stmt
 name|DB
 modifier|*
-name|recno_open
+name|__rec_open
 name|__P
 argument_list|(
 operator|(
@@ -609,6 +772,25 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__dbpanic
+name|__P
+argument_list|(
+operator|(
+name|DB
+operator|*
+name|dbp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS
