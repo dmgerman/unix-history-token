@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rusersd.c,v 1.2 1994/11/18 22:40:11 ats Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/pmap_clnt.h>
 end_include
 
 begin_include
@@ -50,6 +63,18 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_define
@@ -121,6 +146,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -292,7 +318,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot create udp service."
+literal|"cannot create udp service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -322,7 +348,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RUSERSPROG, RUSERSVERS_IDLE, %s)."
+literal|"unable to register (RUSERSPROG, RUSERSVERS_IDLE, %s)"
 argument_list|,
 name|proto
 condition|?
@@ -358,7 +384,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RUSERSPROG, RUSERSVERS_ORIG, %s)."
+literal|"unable to register (RUSERSPROG, RUSERSVERS_ORIG, %s)"
 argument_list|,
 name|proto
 condition|?
