@@ -1006,7 +1006,7 @@ operator|)
 argument_list|,
 literal|0
 argument_list|,
-name|n
+name|n2
 operator|*
 sizeof|sizeof
 argument_list|(

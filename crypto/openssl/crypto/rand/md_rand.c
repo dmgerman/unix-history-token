@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifdef
@@ -198,6 +198,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* may be set only when a thread                                            * holds CRYPTO_LOCK_RAND                                            * (to prevent double locking) */
+end_comment
+
+begin_comment
+comment|/* access to lockin_thread is synchronized by CRYPTO_LOCK_RAND2 */
 end_comment
 
 begin_decl_stmt
@@ -477,16 +481,35 @@ name|do_not_lock
 decl_stmt|;
 comment|/* 	 * (Based on the rand(3) manpage) 	 * 	 * The input is chopped up into units of 20 bytes (or less for 	 * the last block).  Each of these blocks is run through the hash 	 * function as follows:  The data passed to the hash function 	 * is the current 'md', the same number of bytes from the 'state' 	 * (the location determined by in incremented looping index) as 	 * the current 'block', the new key data 'block', and 'count' 	 * (which is incremented after each use). 	 * The result of this is kept in 'md' and also xored into the 	 * 'state' at the same locations that were used as input into the          * hash function. 	 */
 comment|/* check if we already have the lock */
+if|if
+condition|(
+name|crypto_lock_rand
+condition|)
+block|{
+name|CRYPTO_r_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
 name|do_not_lock
 operator|=
-name|crypto_lock_rand
-operator|&&
 operator|(
 name|locking_thread
 operator|==
 name|CRYPTO_thread_id
 argument_list|()
 operator|)
+expr_stmt|;
+name|CRYPTO_r_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|do_not_lock
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1108,14 +1131,24 @@ name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
 comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
-name|crypto_lock_rand
-operator|=
-literal|1
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
 expr_stmt|;
 name|locking_thread
 operator|=
 name|CRYPTO_thread_id
 argument_list|()
+expr_stmt|;
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|crypto_lock_rand
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1290,10 +1323,6 @@ literal|1
 expr_stmt|;
 comment|/* before unlocking, we must clear 'crypto_lock_rand' */
 name|crypto_lock_rand
-operator|=
-literal|0
-expr_stmt|;
-name|locking_thread
 operator|=
 literal|0
 expr_stmt|;
@@ -1771,16 +1800,35 @@ name|int
 name|do_not_lock
 decl_stmt|;
 comment|/* check if we already have the lock 	 * (could happen if a RAND_poll() implementation calls RAND_status()) */
+if|if
+condition|(
+name|crypto_lock_rand
+condition|)
+block|{
+name|CRYPTO_r_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
 name|do_not_lock
 operator|=
-name|crypto_lock_rand
-operator|&&
 operator|(
 name|locking_thread
 operator|==
 name|CRYPTO_thread_id
 argument_list|()
 operator|)
+expr_stmt|;
+name|CRYPTO_r_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|do_not_lock
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1794,14 +1842,24 @@ name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
 comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
-name|crypto_lock_rand
-operator|=
-literal|1
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
 expr_stmt|;
 name|locking_thread
 operator|=
 name|CRYPTO_thread_id
 argument_list|()
+expr_stmt|;
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|crypto_lock_rand
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -1832,10 +1890,6 @@ condition|)
 block|{
 comment|/* before unlocking, we must clear 'crypto_lock_rand' */
 name|crypto_lock_rand
-operator|=
-literal|0
-expr_stmt|;
-name|locking_thread
 operator|=
 literal|0
 expr_stmt|;

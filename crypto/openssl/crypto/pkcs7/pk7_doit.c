@@ -2479,7 +2479,18 @@ name|EVP_MD
 modifier|*
 name|md_tmp
 decl_stmt|;
-comment|/* Add signing time */
+comment|/* Add signing time if not already present */
+if|if
+condition|(
+operator|!
+name|PKCS7_get_signed_attribute
+argument_list|(
+name|si
+argument_list|,
+name|NID_pkcs9_signingTime
+argument_list|)
+condition|)
+block|{
 name|sign_time
 operator|=
 name|X509_gmtime_adj
@@ -2500,6 +2511,7 @@ argument_list|,
 name|sign_time
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Add digest */
 name|md_tmp
 operator|=

@@ -415,6 +415,11 @@ name|ctx
 operator|->
 name|info_callback
 expr_stmt|;
+name|s
+operator|->
+name|in_handshake
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -432,11 +437,6 @@ name|SSL_clear
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|++
 expr_stmt|;
 for|for
 control|(
@@ -1796,6 +1796,11 @@ expr_stmt|;
 block|}
 name|end
 label|:
+name|s
+operator|->
+name|in_handshake
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|cb
@@ -1810,11 +1815,6 @@ name|SSL_CB_CONNECT_EXIT
 argument_list|,
 name|ret
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|--
 expr_stmt|;
 return|return
 operator|(
@@ -3767,6 +3767,7 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* use same message size as in ssl3_get_certificate_request() 	 * as ServerKeyExchange message may be skipped */
 name|n
 operator|=
 name|ssl3_get_message
@@ -3780,11 +3781,32 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WIN32
+argument_list|)
 literal|1024
 operator|*
-literal|8
+literal|30
 argument_list|,
-comment|/* ?? */
+comment|/* 30k max cert list :-) */
+else|#
+directive|else
+literal|1024
+operator|*
+literal|100
+argument_list|,
+comment|/* 100k max cert list :-) */
+endif|#
+directive|endif
 operator|&
 name|ok
 argument_list|)

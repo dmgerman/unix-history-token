@@ -8,7 +8,11 @@ comment|/* Written by Ulf Moeller. This software is distributed on an "AS IS"   
 end_comment
 
 begin_comment
-comment|/* EME_OAEP as defined in RFC 2437 (PKCS #1 v2.0) */
+comment|/* EME-OAEP as defined in RFC 2437 (PKCS #1 v2.0) */
+end_comment
+
+begin_comment
+comment|/* See Victor Shoup, "OAEP reconsidered," Nov. 2000,  *<URL: http://www.shoup.net/papers/oaep.ps.Z>  * for problems with the security proof for the  * original OAEP scheme, which EME-OAEP is based on.  *   * A new proof can be found in E. Fujisaki, T. Okamoto,  * D. Pointcheval, J. Stern, "RSA-OEAP is Still Alive!",  * Dec. 2000,<URL: http://eprint.iacr.org/2000/061/>.  * The new proof has stronger requirements for the  * underlying permutation: "partial-one-wayness" instead  * of one-wayness.  For the RSA function, this is  * an equivalent notion.  */
 end_comment
 
 begin_if
@@ -163,9 +167,7 @@ name|RSA_R_DATA_TOO_LARGE_FOR_KEY_SIZE
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 if|if
@@ -187,9 +189,7 @@ name|RSA_R_KEY_SIZE_TOO_SMALL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|dbmask
@@ -216,9 +216,7 @@ name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|to
@@ -314,9 +312,7 @@ operator|<=
 literal|0
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -412,9 +408,7 @@ name|dbmask
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -486,6 +480,11 @@ index|[
 name|SHA_DIGEST_LENGTH
 index|]
 decl_stmt|;
+name|int
+name|bad
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|--
@@ -497,6 +496,7 @@ name|SHA_DIGEST_LENGTH
 operator|+
 literal|1
 condition|)
+comment|/* 'num' is the length of the modulus, i.e. does not depend on the 		 * particular ciphertext. */
 goto|goto
 name|decoding_err
 goto|;
@@ -512,9 +512,18 @@ name|lzero
 operator|<
 literal|0
 condition|)
-goto|goto
-name|decoding_err
-goto|;
+block|{
+comment|/* lzero == -1 */
+comment|/* signalling this error immediately after detection might allow 		 * for side-channel attacks (e.g. timing if 'plen' is huge 		 * -- cf. James H. Manger, "A Chosen Ciphertext Attack on RSA Optimal 		 * Asymmetric Encryption Padding (OAEP) [...]", CRYPTO 2001), 		 * so we use a 'bad' flag */
+name|bad
+operator|=
+literal|1
+expr_stmt|;
+name|lzero
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|maskeddb
 operator|=
 name|from
@@ -551,10 +560,8 @@ name|ERR_R_MALLOC_FAILURE
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 name|MGF1
@@ -648,6 +655,8 @@ name|SHA_DIGEST_LENGTH
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|bad
 condition|)
 goto|goto
 name|decoding_err
@@ -696,6 +705,7 @@ name|decoding_err
 goto|;
 else|else
 block|{
+comment|/* everything looks OK */
 name|mlen
 operator|=
 name|dblen
@@ -742,13 +752,11 @@ name|db
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|mlen
-operator|)
 return|;
 name|decoding_err
 label|:
-comment|/* to avoid chosen ciphertext attacks, the error message should not reveal      * which kind of decoding error happened */
+comment|/* to avoid chosen ciphertext attacks, the error message should not reveal 	 * which kind of decoding error happened */
 name|RSAerr
 argument_list|(
 name|RSA_F_RSA_PADDING_CHECK_PKCS1_OAEP
@@ -961,9 +969,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

@@ -105,6 +105,11 @@ name|defined
 argument_list|(
 name|__i386
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 end_if
 
 begin_comment
