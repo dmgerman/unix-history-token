@@ -579,6 +579,8 @@ argument_list|,
 name|CINHAND
 argument_list|,
 name|Playwin
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -782,6 +784,8 @@ argument_list|,
 name|CINHAND
 argument_list|,
 name|Compwin
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|Hasread

@@ -402,6 +402,8 @@ argument_list|,
 argument|cardno
 argument_list|,
 argument|c
+argument_list|,
+argument|blank
 argument_list|)
 end_macro
 
@@ -424,6 +426,12 @@ name|c
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOLEAN
+name|blank
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|prcard
@@ -438,7 +446,7 @@ name|cardno
 argument_list|,
 name|c
 argument_list|,
-name|FALSE
+name|blank
 argument_list|)
 expr_stmt|;
 block|}
@@ -664,6 +672,8 @@ argument_list|,
 argument|n
 argument_list|,
 argument|win
+argument_list|,
+argument|blank
 argument_list|)
 end_macro
 
@@ -684,6 +694,12 @@ begin_decl_stmt
 name|WINDOW
 modifier|*
 name|win
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOLEAN
+name|blank
 decl_stmt|;
 end_decl_stmt
 
@@ -717,10 +733,11 @@ name|win
 argument_list|,
 name|i
 argument_list|,
+operator|*
 name|h
-index|[
-name|i
-index|]
+operator|++
+argument_list|,
+name|blank
 argument_list|)
 expr_stmt|;
 name|wrefresh
