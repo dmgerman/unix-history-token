@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.34.2.1 1999/05/08 21:24:02 dfr Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.34.2.2 1999/05/12 23:51:56 msmith Exp $  *  */
 end_comment
 
 begin_include
@@ -1654,7 +1654,32 @@ literal|28
 operator|,
 name|cmaj
 operator|=
-literal|101
+literal|102
+operator|,
+name|p
+operator|+=
+literal|3
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"ida"
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|bmaj
+operator|=
+literal|29
+operator|,
+name|cmaj
+operator|=
+literal|109
 operator|,
 name|p
 operator|+=
