@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	7.4 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	7.5 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -1304,6 +1304,18 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|vnode
+modifier|*
+name|targetvp
+init|=
+name|LOFSVP
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1315,25 +1327,19 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
+name|targetvp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|targetvp
+condition|)
 return|return
 name|VOP_FSYNC
 argument_list|(
-name|LOFSVP
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
+name|targetvp
 argument_list|,
 name|ap
 operator|->
@@ -1347,6 +1353,11 @@ name|ap
 operator|->
 name|a_p
 argument_list|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_block
