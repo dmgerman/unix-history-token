@@ -1535,25 +1535,6 @@ name|fddi_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update interface statistics. 	 */
-name|ifp
-operator|->
-name|if_ibytes
-operator|+=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
-name|getmicrotime
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_lastchange
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Discard packet if interface is not up. 	 */
 if|if
 condition|(
@@ -1590,6 +1571,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Update interface statistics. 	 */
+name|ifp
+operator|->
+name|if_ibytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+name|getmicrotime
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_lastchange
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Discard non local unicast packets when interface 	 * is in promiscuous mode. 	 */
 if|if
 condition|(
