@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.37 2002/03/28 16:33:48 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.10 2003/05/12 13:12:32 karl Exp $     Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free    Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -363,6 +363,54 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* The amount of indentation to apply at the start of each line. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|current_indent
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Nonzero means that we suppress the indentation of the first paragraph    following any section heading.  */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|do_first_par_indent
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Amount by which @example indentation increases/decreases. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|default_indentation_increment
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Nonzero indicates that filling a line also indents the new line. */
 end_comment
 
@@ -388,22 +436,6 @@ argument_list|(
 name|int
 argument_list|,
 name|force_flush_right
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* The amount of indentation to apply at the start of each line. */
-end_comment
-
-begin_expr_stmt
-name|DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|current_indent
 argument_list|,
 literal|0
 argument_list|)
@@ -443,22 +475,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Amount by which @example indentation increases/decreases. */
-end_comment
-
-begin_expr_stmt
-name|DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|default_indentation_increment
-argument_list|,
-literal|5
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Nonzero means that we are currently hacking the insides of an    insertion which would use a fixed width font. */
 end_comment
 
@@ -491,7 +507,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Nonzero means that we're generating HTML. */
+comment|/* Nonzero means that we're generating HTML. (--html) */
 end_comment
 
 begin_expr_stmt
@@ -507,7 +523,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Nonzero means that we're generating XML. */
+comment|/* Nonzero means that we're generating XML. (--xml) */
 end_comment
 
 begin_expr_stmt
@@ -523,7 +539,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Nonzero means that we're generating DocBook. */
+comment|/* Nonzero means that we're generating DocBook. (--docbook) */
 end_comment
 
 begin_expr_stmt
@@ -539,7 +555,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Nonzero means true 8-bit output for Info and plain text.  */
+comment|/* Nonzero means true 8-bit output for Info and plain text.    (--enable-encoding) */
 end_comment
 
 begin_expr_stmt
@@ -689,6 +705,7 @@ end_comment
 begin_expr_stmt
 name|DECLARE
 argument_list|(
+specifier|const
 name|char
 operator|*
 argument_list|,
@@ -851,6 +868,23 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Name of CSS file to include, if any.  (--css-include).  */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|css_include
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Nonzero means do not output "Node: Foo" for node separations, that    is, generate plain text.  (--no-headers) */
 end_comment
 
@@ -933,6 +967,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Nonzero means that we process @xml and @ifxml.  (--ifxml) */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|process_xml
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Maximum number of references to a single node before complaining.    (--reference-limit) */
 end_comment
 
@@ -981,7 +1031,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Nonzero means prefix each @chapter, ... with a number like 1. (--number-sections) */
+comment|/* Nonzero means prefix each @chapter, ... with a number like    1, 1.1, etc.  (--number-sections) */
 end_comment
 
 begin_expr_stmt
@@ -1263,30 +1313,15 @@ value|"end verbatim"
 end_define
 
 begin_comment
-comment|/* Stuff for splitting large files. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPLIT_SIZE_THRESHOLD
-value|70000
-end_define
-
-begin_comment
-comment|/* What's good enough for Stallman... */
+comment|/* Stuff for splitting large files.  The numbers for Emacs    texinfo-format-buffer are much smaller, but memory capacities have    increased so much, 50k info files seem a bit tiny these days.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_SPLIT_SIZE
-value|50000
+value|300000
 end_define
-
-begin_comment
-comment|/* Is probably good enough for me. */
-end_comment
 
 begin_expr_stmt
 name|DECLARE
@@ -1303,16 +1338,6 @@ end_expr_stmt
 begin_comment
 comment|/* Defaults to true for now. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|command_char
-parameter_list|(
-name|c
-parameter_list|)
-value|(!cr_or_whitespace(c) \&& (c) != '{' \&& (c) != '}' \&& (c) != '=')
-end_define
 
 begin_define
 define|#
@@ -1346,6 +1371,19 @@ parameter_list|)
 define|\
 value|(strncmp (input_text + input_text_offset, string, strlen (string)) == 0)
 end_define
+
+begin_comment
+comment|/* Possibly return Local Variables trailer for Info output.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|info_trailer
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

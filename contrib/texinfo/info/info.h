@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.16 2002/02/23 19:12:02 karl Exp $     Copyright (C) 1993, 97, 98, 99, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.2 2003/02/11 16:39:06 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -470,6 +470,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_cant_find_node
@@ -478,6 +479,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_cant_file_node
@@ -486,6 +488,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_cant_find_window
@@ -494,6 +497,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_cant_find_point
@@ -502,6 +506,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_cant_kill_last
@@ -510,6 +515,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_no_menu_node
@@ -518,6 +524,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_no_foot_node
@@ -526,6 +533,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_no_xref_node
@@ -534,6 +542,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_no_pointer
@@ -542,6 +551,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_unknown_command
@@ -550,6 +560,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_term_too_dumb
@@ -558,6 +569,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_at_node_bottom
@@ -566,6 +578,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_at_node_top
@@ -574,6 +587,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_one_window
@@ -582,6 +596,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_win_too_small
@@ -590,6 +605,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|msg_cant_make_help

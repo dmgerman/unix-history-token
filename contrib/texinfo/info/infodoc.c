@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infodoc.c -- Functions which build documentation nodes.    $Id: infodoc.c,v 1.28 2002/02/27 13:37:33 karl Exp $     Copyright (C) 1993, 97, 98, 99, 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* infodoc.c -- functions which build documentation nodes.    $Id: infodoc.c,v 1.6 2003/05/13 16:22:11 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The (more or less) static text which appears in the internal info    help node.  The actual key bindings are inserted.  Keep the     underlines (****, etc.) in the same N_ call as  the text lines they    refer to, so translations can make the number of *'s or -'s match.  */
+comment|/* The (more or less) static text which appears in the internal info    help node.  The actual key bindings are inserted.  Keep the    underlines (****, etc.) in the same N_ call as  the text lines they    refer to, so translations can make the number of *'s or -'s match.  */
 end_comment
 
 begin_if
@@ -190,16 +190,6 @@ argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"\\%-10[scroll-forward]  Scroll forward a page.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"\\%-10[scroll-backward]  Scroll backward a page.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
 literal|"\\%-10[beginning-of-node]  Go to the beginning of this node.\n"
 argument_list|)
 block|,
@@ -210,12 +200,22 @@ argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"\\%-10[scroll-forward]  Scroll forward 1 line.\n"
+literal|"\\%-10[next-line]  Scroll forward 1 line.\n"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"\\%-10[scroll-backward]  Scroll backward 1 line.\n"
+literal|"\\%-10[prev-line]  Scroll backward 1 line.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[scroll-forward]  Scroll forward a page.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[scroll-backward]  Scroll backward a page.\n"
 argument_list|)
 block|,
 literal|"\n"
@@ -705,7 +705,7 @@ argument|; last++)             if ((map[last].type != ISFUNC) ||                
 literal|1
 argument|!= i)             {               printf_to_message_buffer (
 literal|"%s .. "
-argument|, pretty_keyseq (new_prefix)); 	      new_prefix[prefix_len] = last -
+argument|, pretty_keyseq (new_prefix));               new_prefix[prefix_len] = last -
 literal|1
 argument|;               printf_to_message_buffer (
 literal|"%s\t"
@@ -801,19 +801,19 @@ argument|exec_keys = where_is (info_keymap, InfoCmd(info_execute_command));     
 literal|0
 argument|; function_doc_array[i].func; i++)         {           InfoCommand *cmd = DocInfoCmd(&function_doc_array[i]);            if (InfoFunction(cmd) != info_do_lowercase_version&& !where_is_internal (info_keymap, cmd)&& !where_is_internal (echo_area_keymap, cmd))             {               if (!printed_one_mx)                 {                   printf_to_message_buffer (
 literal|"---------------------\n\n"
-argument|); 		  if (exec_keys&& exec_keys[
+argument|);                   if (exec_keys&& exec_keys[
 literal|0
-argument|]) 		      printf_to_message_buffer 			(_(
+argument|])                       printf_to_message_buffer                         (_(
 literal|"The following commands can only be invoked via %s:\n\n"
-argument|), exec_keys); 		  else 		      printf_to_message_buffer 			(_(
+argument|), exec_keys);                   else                       printf_to_message_buffer                         (_(
 literal|"The following commands cannot be invoked at all:\n\n"
 argument|));                   printed_one_mx =
 literal|1
 argument|;                 }                printf_to_message_buffer                 (
 literal|"%s %s\n     %s\n"
-argument|, 		 exec_keys,                  function_doc_array[i].func_name,                  replace_in_documentation (strlen (function_doc_array[i].doc) 					   ? _(function_doc_array[i].doc) 					   :
+argument|,                  exec_keys,                  function_doc_array[i].func_name,                  replace_in_documentation (strlen (function_doc_array[i].doc)                                            ? _(function_doc_array[i].doc)                                            :
 literal|""
-argument|) 		);              }         }        if (printed_one_mx)         printf_to_message_buffer (
+argument|)                 );              }         }        if (printed_one_mx)         printf_to_message_buffer (
 literal|"\n"
 argument|);        maybe_free (exec_keys);
 endif|#
@@ -868,7 +868,7 @@ endif|#
 directive|endif
 comment|/* not HELP_NODE_GETS_REGENERATED */
 comment|/* Make sure that we have a node containing the help text.  The      argument is false if help will be the only window (so l must be used      to quit help), true if help will be one of several visible windows      (so CTRL-x 0 must be used to quit help).  */
-argument|help_is_only_window_p      = (help_window&& !windows->next         || !help_window&& eligible->height< HELP_SPLIT_SIZE);   create_internal_info_help_node (help_is_only_window_p);
+argument|help_is_only_window_p      = ((help_window&& !windows->next)         || !help_window&& eligible->height< HELP_SPLIT_SIZE);   create_internal_info_help_node (help_is_only_window_p);
 comment|/* Either use the existing window to display the help node, or create      a new window if there was no existing help window. */
 argument|if (!help_window)     {
 comment|/* Split the largest window into 2 windows, and show the help text          in that window. */
@@ -996,7 +996,7 @@ name|INFOKEY
 argument_list|)
 argument|if (Meta_p (keystroke))         {           if (map[ESC].type != ISKMAP)             {               window_message_in_echo_area               (_(
 literal|"ESC %s is undefined."
-argument|), pretty_keyname (UnMeta (keystroke)));               return;             }  	  *k++ =
+argument|), pretty_keyname (UnMeta (keystroke)));               return;             }            *k++ =
 literal|'\e'
 argument|;           keystroke = UnMeta (keystroke);           map = (Keymap)map[ESC].function;         }
 endif|#
@@ -1022,10 +1022,10 @@ name|defined
 argument_list|(
 name|INFOKEY
 argument_list|)
-comment|/* If the key is bound to do-lowercase-version, but its 	     lower-case variant is undefined, say that this key is 	     also undefined.  This is especially important for unbound 	     edit keys that emit an escape sequence: it's terribly 	     confusing to see a message "Home (do-lowercase-version)" 	     or some such when Home is unbound.  */
-argument|if (InfoFunction(map[keystroke].function) == info_do_lowercase_version) 	    { 	      unsigned char lowerkey = Meta_p(keystroke) 				       ? Meta (tolower (UnMeta (keystroke))) 				       : tolower (keystroke);  	      if (map[lowerkey].function == (InfoCommand *)NULL) 		{ 		  message_in_echo_area (_(
+comment|/* If the key is bound to do-lowercase-version, but its              lower-case variant is undefined, say that this key is              also undefined.  This is especially important for unbound              edit keys that emit an escape sequence: it's terribly              confusing to see a message "Home (do-lowercase-version)"              or some such when Home is unbound.  */
+argument|if (InfoFunction(map[keystroke].function) == info_do_lowercase_version)             {               unsigned char lowerkey = Meta_p(keystroke)                                        ? Meta (tolower (UnMeta (keystroke)))                                        : tolower (keystroke);                if (map[lowerkey].function == (InfoCommand *)NULL)                 {                   message_in_echo_area (_(
 literal|"%s is undefined."
-argument|), 					pretty_keyseq (keys)); 		  return; 		} 	    }
+argument|),                                         pretty_keyseq (keys));                   return;                 }             }
 endif|#
 directive|endif
 argument|keyname = pretty_keyseq (keys);
@@ -1183,7 +1183,7 @@ argument|);       pretty_keyseq_internal (keyseq, rep + strlen(rep));     } }
 comment|/* Return a pointer to the last character in s that is found in f. */
 argument|static char * strrpbrk (s, f)      const char *s
 argument_list|,
-argument|*f; {   register const char *e = s + strlen(s);   register const char *t;    while (e-- != s)     {       for (t = f; *t; t++)         if (*e == *t) 	  return (char *)e;     }   return NULL; }
+argument|*f; {   register const char *e = s + strlen(s);   register const char *t;    while (e-- != s)     {       for (t = f; *t; t++)         if (*e == *t)           return (char *)e;     }   return NULL; }
 comment|/* Replace the names of functions with the key that invokes them. */
 argument|char * replace_in_documentation (string, help_is_only_window_p)      char *string;      int help_is_only_window_p; {   unsigned reslen = strlen (string);   register int i
 argument_list|,
@@ -1201,99 +1201,99 @@ argument|;
 comment|/* Is this the start of a replaceable function name? */
 argument|if (string[i] ==
 literal|'\\'
-argument|)       	{ 	  char *fmt = NULL; 	  unsigned min =
+argument|)         {           char *fmt = NULL;           unsigned min =
 literal|0
-argument|; 	  unsigned max =
+argument|;           unsigned max =
 literal|0
-argument|;  	  if(string[j] ==
+argument|;            if(string[j] ==
 literal|'%'
-argument|) 	    { 	      if (string[++j] ==
+argument|)             {               if (string[++j] ==
 literal|'-'
-argument|) 		j++; 	      if (isdigit(string[j])) 		{ 		  min = atoi(string + j); 		  while (isdigit(string[j])) 		    j++; 		  if (string[j] ==
+argument|)                 j++;               if (isdigit(string[j]))                 {                   min = atoi(string + j);                   while (isdigit(string[j]))                     j++;                   if (string[j] ==
 literal|'.'
 argument|&& isdigit(string[j +
 literal|1
-argument|])) 		    { 		      j +=
+argument|]))                     {                       j +=
 literal|1
-argument|; 		      max = atoi(string + j); 		      while (isdigit(string[j])) 			j++; 		    } 		  fmt = (char *)xmalloc (j - i +
+argument|;                       max = atoi(string + j);                       while (isdigit(string[j]))                         j++;                     }                   fmt = (char *)xmalloc (j - i +
 literal|2
-argument|); 		  strncpy (fmt, string + i +
+argument|);                   strncpy (fmt, string + i +
 literal|1
-argument|, j - i); 		  fmt[j - i -
+argument|, j - i);                   fmt[j - i -
 literal|1
 argument|] =
 literal|'s'
-argument|; 		  fmt[j - i] =
+argument|;                   fmt[j - i] =
 literal|'\0'
-argument|; 		} 	      else 		j = i +
+argument|;                 }               else                 j = i +
 literal|1
-argument|; 	    } 	  if (string[j] ==
+argument|;             }           if (string[j] ==
 literal|'['
-argument|) 	    { 	      unsigned arg =
+argument|)             {               unsigned arg =
 literal|0
-argument|; 	      char *argstr = NULL; 	      char *rep_name
+argument|;               char *argstr = NULL;               char *rep_name
 argument_list|,
 argument|*fun_name
 argument_list|,
-argument|*rep; 	      InfoCommand *command; 	      char *repstr = NULL; 	      unsigned replen;
+argument|*rep;               InfoCommand *command;               char *repstr = NULL;               unsigned replen;
 comment|/* Copy in the old text. */
-argument|strncpy (result + next, string + start, i - start); 	      next += (i - start); 	      start = j +
+argument|strncpy (result + next, string + start, i - start);               next += (i - start);               start = j +
 literal|1
 argument|;
 comment|/* Look for an optional numeric arg. */
-argument|i = start; 	      if (isdigit(string[i]) 		  || (string[i] ==
+argument|i = start;               if (isdigit(string[i])                   || (string[i] ==
 literal|'-'
 argument|&& isdigit(string[i +
 literal|1
-argument|])) ) 		{ 		  arg = atoi(string + i); 		  if (string[i] ==
+argument|])) )                 {                   arg = atoi(string + i);                   if (string[i] ==
 literal|'-'
-argument|) 		    i++; 		  while (isdigit(string[i])) 		    i++; 		} 	      start = i;
+argument|)                     i++;                   while (isdigit(string[i]))                     i++;                 }               start = i;
 comment|/* Move to the end of the function name. */
 argument|for (i = start; string[i]&& (string[i] !=
 literal|']'
-argument|); i++);  	      rep_name = (char *)xmalloc (
+argument|); i++);                rep_name = (char *)xmalloc (
 literal|1
-argument|+ i - start); 	      strncpy (rep_name, string + start, i - start); 	      rep_name[i - start] =
+argument|+ i - start);               strncpy (rep_name, string + start, i - start);               rep_name[i - start] =
 literal|'\0'
 argument|;
-comment|/* If we have only one window (because the window size was too 	       small to split it), we have to quit help by going back one 	       noew in the history list, not deleting the window.  */
+comment|/* If we have only one window (because the window size was too                small to split it), we have to quit help by going back one                noew in the history list, not deleting the window.  */
 argument|if (strcmp (rep_name,
 literal|"quit-help"
 argument|) ==
 literal|0
-argument|) 		fun_name = help_is_only_window_p ?
+argument|)                 fun_name = help_is_only_window_p ?
 literal|"history-node"
 argument|:
 literal|"delete-window"
-argument|; 	      else 	        fun_name = rep_name;
+argument|;               else                 fun_name = rep_name;
 comment|/* Find a key which invokes this function in the info_keymap. */
-argument|command = named_function (fun_name);  	      free (rep_name);
-comment|/* If the internal documentation string fails, there is a 		 serious problem with the associated command's documentation. 		 We croak so that it can be fixed immediately. */
-argument|if (!command) 		abort ();  	      if (arg) 	      	{ 		  char *argrep
+argument|command = named_function (fun_name);                free (rep_name);
+comment|/* If the internal documentation string fails, there is a                  serious problem with the associated command's documentation.                  We croak so that it can be fixed immediately. */
+argument|if (!command)                 abort ();                if (arg)                 {                   char *argrep
 argument_list|,
-argument|*p;  		  argrep = where_is (info_keymap, InfoCmd(info_add_digit_to_numeric_arg)); 		  p = argrep ? strrpbrk (argrep,
+argument|*p;                    argrep = where_is (info_keymap, InfoCmd(info_add_digit_to_numeric_arg));                   p = argrep ? strrpbrk (argrep,
 literal|"0123456789-"
-argument|) : NULL; 		  if (p) 		    { 		      argstr = (char *)xmalloc (p - argrep +
+argument|) : NULL;                   if (p)                     {                       argstr = (char *)xmalloc (p - argrep +
 literal|21
-argument|); 		      strncpy (argstr, argrep, p - argrep); 		      sprintf (argstr + (p - argrep),
+argument|);                       strncpy (argstr, argrep, p - argrep);                       sprintf (argstr + (p - argrep),
 literal|"%d"
-argument|, arg); 		    } 		  else 		    command = NULL; 		} 	      rep = command ? where_is (info_keymap, command) : NULL; 	      if (!rep) 	        rep =
+argument|, arg);                     }                   else                     command = NULL;                 }               rep = command ? where_is (info_keymap, command) : NULL;               if (!rep)                 rep =
 literal|"N/A"
-argument|; 	      replen = (argstr ? strlen (argstr) +
-literal|1
-argument|:
+argument|;               replen = (argstr ? strlen (argstr) :
 literal|0
-argument|) + strlen (rep); 	      repstr = (char *)xmalloc (replen); 	      repstr[
+argument|) + strlen (rep) +
+literal|1
+argument|;               repstr = (char *)xmalloc (replen);               repstr[
 literal|0
 argument|] =
 literal|'\0'
-argument|; 	      if (argstr) 		{ 		  strcat(repstr, argstr); 		  strcat(repstr,
+argument|;               if (argstr)                 {                   strcat(repstr, argstr);                   strcat(repstr,
 literal|" "
-argument|); 		  free (argstr); 		} 	      strcat(repstr, rep);  	      if (fmt) 		{ 		  if (replen> max) 		    replen = max; 		  if (replen< min) 		    replen = min; 		} 	      if (next + replen> reslen) 		{ 		  reslen = next + replen +
+argument|);                   free (argstr);                 }               strcat(repstr, rep);                if (fmt)                 {                   if (replen> max)                     replen = max;                   if (replen< min)                     replen = min;                 }               if (next + replen> reslen)                 {                   reslen = next + replen +
 literal|1
-argument|; 		  result = (char *)xrealloc (result, reslen +
+argument|;                   result = (char *)xrealloc (result, reslen +
 literal|1
-argument|); 		}  	      if (fmt) 		  sprintf (result + next, fmt, repstr); 	      else 		  strcpy (result + next, repstr);  	      next = strlen (result); 	      free (repstr);  	      start = i; 	      if (string[i]) 		start++; 	    }  	  maybe_free (fmt); 	}     }   strcpy (result + next, string + start);   return (result); }
+argument|);                 }                if (fmt)                   sprintf (result + next, fmt, repstr);               else                   strcpy (result + next, repstr);                next = strlen (result);               free (repstr);                start = i;               if (string[i])                 start++;             }            maybe_free (fmt);         }     }   strcpy (result + next, string + start);   return (result); }
 comment|/* Return a string of characters which could be typed from the keymap    MAP to invoke FUNCTION. */
 argument|static char *where_is_rep = (char *)NULL; static int where_is_rep_index =
 literal|0
@@ -1305,7 +1305,7 @@ argument|);   where_is_rep_index =
 literal|0
 argument|;    rep = where_is_internal (map, cmd);
 comment|/* If it couldn't be found, return "M-x Foo" (or equivalent). */
-argument|if (!rep)     {       char *name;        name = function_name (cmd);       if (!name)       	return NULL;
+argument|if (!rep)     {       char *name;        name = function_name (cmd);       if (!name)         return NULL;
 comment|/* no such function */
 argument|rep = where_is_internal (map, InfoCmd(info_execute_command));       if (!rep)         return
 literal|""
@@ -1326,6 +1326,7 @@ argument|register FUNCTION_KEYSEQ *k;    for (k = cmd->keys; k; k = k->next)    
 else|#
 directive|else
 comment|/* !INFOKEY */
+comment|/* There is a bug in that create_internal_info_help_node calls      where_is_internal without setting where_is_rep_index to zero.  This      was found by Mandrake and reported by Thierry Vignaud<tvignaud@mandrakesoft.com> around April 24, 2002.       I think the best fix is to make where_is_rep_index another      parameter to this recursively-called function, instead of a static      variable.  But this [!INFOKEY] branch of the code is not enabled      any more, so let's just skip the whole thing.  --karl, 28sep02.  */
 argument|register int i;
 comment|/* If the function is directly invokable in MAP, return the representation      of that keystroke. */
 argument|for (i =

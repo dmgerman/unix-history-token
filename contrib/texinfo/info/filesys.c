@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* filesys.c -- filesystem specific functions.    $Id: filesys.c,v 1.15 2002/03/23 20:45:24 karl Exp $     Copyright (C) 1993, 97, 98, 2000 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* filesys.c -- filesystem specific functions.    $Id: filesys.c,v 1.3 2003/01/31 19:18:11 karl Exp $     Copyright (C) 1993, 1997, 1998, 2000, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -1049,7 +1049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a string containing units of information separated by    the PATH_SEP character, return the next one pointed to by    IDX, or NULL if there are no more.    Advance IDX to the character after the colon. */
+comment|/* Given a string containing units of information separated by the    PATH_SEP character, return the next one after IDX, or NULL if there    are no more.  Advance IDX to the character after the colon. */
 end_comment
 
 begin_function
@@ -1070,42 +1070,34 @@ modifier|*
 name|idx
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
-decl_stmt|,
-name|start
-decl_stmt|;
-name|i
-operator|=
-name|start
-operator|=
+init|=
 operator|*
 name|idx
-expr_stmt|;
+decl_stmt|;
+name|int
+name|start
+init|=
+operator|*
+name|idx
+decl_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|string
+operator|||
 name|i
 operator|>=
 name|strlen
 argument_list|(
 name|string
 argument_list|)
-operator|)
-operator|||
-operator|!
-name|string
 condition|)
 return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
+comment|/* Advance to next PATH_SEP.  */
 while|while
 condition|(
 name|string
@@ -1128,44 +1120,36 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|string
+index|[
+name|i
+index|]
+operator|&&
 name|i
 operator|==
 name|start
 condition|)
-block|{
+comment|/* end of string, and didn't advance */
 return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
-operator|)
 return|;
-block|}
-else|else
 block|{
 name|char
 modifier|*
 name|value
-decl_stmt|;
-name|value
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
+init|=
 name|xmalloc
 argument_list|(
-literal|1
-operator|+
 operator|(
 name|i
 operator|-
 name|start
 operator|)
+operator|+
+literal|1
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|strncpy
 argument_list|(
 name|value
@@ -1190,27 +1174,19 @@ operator|-
 name|start
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
-if|if
-condition|(
-name|string
-index|[
 name|i
-index|]
-condition|)
 operator|++
-name|i
 expr_stmt|;
+comment|/* move past PATH_SEP */
 operator|*
 name|idx
 operator|=
 name|i
 expr_stmt|;
 return|return
-operator|(
 name|value
-operator|)
 return|;
 block|}
 block|}

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* makeinfo -- convert Texinfo source into other formats.    $Id: makeinfo.c,v 1.205 2002/03/28 16:33:48 karl Exp $     Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Makeinfo was authored by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makeinfo -- convert Texinfo source into other formats.    $Id: makeinfo.c,v 1.34 2003/06/02 12:32:29 karl Exp $     Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Makeinfo was authored by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -65,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"insertion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lang.h"
 end_include
 
 begin_include
@@ -408,6 +410,19 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* True when expanding a macro definition.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|executing_macro
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -611,14 +626,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|void
-name|isolate_nodename
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|reader_loop
 parameter_list|()
@@ -739,17 +746,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|add_link
-argument_list|()
-decl_stmt|,
-name|add_escaped_anchor_name
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|me_execute_string_keep_state
@@ -789,14 +785,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|add_link
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_if
 if|#
 directive|if
@@ -816,6 +804,7 @@ begin_function_decl
 name|void
 name|add_word_args
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -928,6 +917,7 @@ operator|&&
 name|__STDC__
 name|error
 argument_list|(
+specifier|const
 name|char
 operator|*
 name|format
@@ -942,6 +932,7 @@ name|format
 argument_list|,
 name|va_alist
 argument_list|)
+decl|const
 name|char
 modifier|*
 name|format
@@ -1055,6 +1046,7 @@ parameter_list|,
 name|int
 name|lno
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|format
@@ -1080,6 +1072,7 @@ decl_stmt|;
 name|int
 name|lno
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|format
@@ -1188,6 +1181,7 @@ operator|&&
 name|__STDC__
 name|line_error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|format
@@ -1202,6 +1196,7 @@ name|format
 parameter_list|,
 name|va_alist
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|format
@@ -1306,6 +1301,7 @@ operator|&&
 name|__STDC__
 name|warning
 argument_list|(
+specifier|const
 name|char
 operator|*
 name|format
@@ -1320,6 +1316,7 @@ name|format
 argument_list|,
 name|va_alist
 argument_list|)
+decl|const
 name|char
 modifier|*
 name|format
@@ -1571,9 +1568,9 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-name|printf
+name|puts
 argument_list|(
-literal|"\n"
+literal|""
 argument_list|)
 expr_stmt|;
 name|puts
@@ -1596,7 +1593,7 @@ argument_list|,
 name|reference_warning_limit
 argument_list|)
 expr_stmt|;
-name|printf
+name|puts
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1606,7 +1603,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Output format selection (default is to produce Info):\n\       --docbook             output DocBook rather than Info.\n\       --html                output HTML rather than Info.\n\       --xml                 output XML (TexinfoML) rather than Info.\n\ "
+literal|"\ Output format selection (default is to produce Info):\n\       --docbook             output DocBook XML rather than Info.\n\       --html                output HTML rather than Info.\n\       --xml                 output Texinfo XML rather than Info.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1632,8 +1629,7 @@ argument_list|,
 name|DEFAULT_SPLIT_SIZE
 argument_list|)
 expr_stmt|;
-block|}
-name|printf
+name|puts
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1642,7 +1638,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Input file options:\n\       --commands-in-node-names   allow @ commands in node names.\n\   -D VAR                         define the variable VAR, as with @set.\n\   -I DIR                         append DIR to the @include search path.\n\   -P DIR                         prepend DIR to the @include search path.\n\   -U VAR                         undefine the variable VAR, as with @clear.\n\ "
+literal|"\ Options for HTML:\n\       --css-include=FILE        include FILE in HTML<style> output;\n\                                   read stdin if FILE is -.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1650,7 +1646,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Conditional processing in input:\n\   --ifhtml          process @ifhtml and @html even if not generating HTML.\n\   --ifinfo          process @ifinfo even if not generating Info.\n\   --ifplaintext     process @ifplaintext even if not generating plain text.\n\   --iftex           process @iftex and @tex; implies --no-split.\n\   --no-ifhtml       do not process @ifhtml and @html text.\n\   --no-ifinfo       do not process @ifinfo text.\n\   --no-ifplaintext  do not process @ifplaintext text.\n\   --no-iftex        do not process @iftex and @tex text.\n\ "
+literal|"\ Input file options:\n\       --commands-in-node-names  allow @ commands in node names.\n\   -D VAR                        define the variable VAR, as with @set.\n\   -I DIR                        append DIR to the @include search path.\n\   -P DIR                        prepend DIR to the @include search path.\n\   -U VAR                        undefine the variable VAR, as with @clear.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1658,7 +1654,15 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\   The defaults for the @if... conditionals depend on the output format:\n\   if generating HTML, --ifhtml is on and the others are off;\n\   if generating Info, --ifinfo is on and the others are off;\n\   if generating plain text, --ifplaintext is on and the others are off;\n\ "
+literal|"\ Conditional processing in input:\n\   --ifhtml          process @ifhtml and @html even if not generating HTML.\n\   --ifinfo          process @ifinfo even if not generating Info.\n\   --ifplaintext     process @ifplaintext even if not generating plain text.\n\   --iftex           process @iftex and @tex; implies --no-split.\n\   --ifxml           process @ifxml and @xml.\n\   --no-ifhtml       do not process @ifhtml and @html text.\n\   --no-ifinfo       do not process @ifinfo text.\n\   --no-ifplaintext  do not process @ifplaintext text.\n\   --no-iftex        do not process @iftex and @tex text.\n\   --no-ifxml        do not process @ifxml and @xml text.\n\ "
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"\   The defaults for the @if... conditionals depend on the output format:\n\   if generating HTML, --ifhtml is on and the others are off;\n\   if generating Info, --ifinfo is on and the others are off;\n\   if generating plain text, --ifplaintext is on and the others are off;\n\   if generating XML, --ifxml is on and the others are off.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1666,7 +1670,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Examples:\n\   makeinfo foo.texi                     write Info to foo's @setfilename\n\   makeinfo --html foo.texi              write HTML to @setfilename\n\   makeinfo --xml foo.texi               write XML to @setfilename\n\   makeinfo --docbook foo.texi           write DocBook XML to @setfilename\n\   makeinfo --no-headers foo.texi        write plain text to standard output\n\ \n\   makeinfo --html --no-headers foo.texi write html without node lines, menus\n\   makeinfo --number-sections foo.texi   write Info with numbered sections\n\   makeinfo --no-split foo.texi          write one Info file however big\n\ "
+literal|"\ Examples:\n\   makeinfo foo.texi                     write Info to foo's @setfilename\n\   makeinfo --html foo.texi              write HTML to @setfilename\n\   makeinfo --xml foo.texi               write Texinfo XML to @setfilename\n\   makeinfo --docbook foo.texi           write DocBook XML to @setfilename\n\   makeinfo --no-headers foo.texi        write plain text to standard output\n\ \n\   makeinfo --html --no-headers foo.texi write html without node lines, menus\n\   makeinfo --number-sections foo.texi   write Info with numbered sections\n\   makeinfo --no-split foo.texi          write one Info file however big\n\ "
 argument_list|)
 argument_list|,
 name|stdout
@@ -1680,6 +1684,8 @@ literal|"\n\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and 
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* end of full help */
 name|xexit
 argument_list|(
 name|exit_value
@@ -1704,6 +1710,16 @@ operator|&
 name|expensive_validation
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"css-include"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|'C'
 block|}
 block|,
 block|{
@@ -1833,6 +1849,17 @@ literal|1
 block|}
 block|,
 block|{
+literal|"ifxml"
+block|,
+literal|0
+block|,
+operator|&
+name|process_xml
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"macro-expand"
 block|,
 literal|1
@@ -1893,6 +1920,17 @@ literal|0
 block|,
 operator|&
 name|process_tex
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"no-ifxml"
+block|,
+literal|0
+block|,
+operator|&
+name|process_xml
 block|,
 literal|0
 block|}
@@ -2204,6 +2242,18 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+comment|/* --css-include */
+name|css_include
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'D'
 case|:
@@ -2756,10 +2806,10 @@ argument_list|(
 literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
 argument_list|,
-literal|"2002"
+literal|"2003"
 argument_list|)
 expr_stmt|;
-name|exit
+name|xexit
 argument_list|(
 literal|0
 argument_list|)
@@ -2787,6 +2837,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|xml
+operator|=
+literal|1
+expr_stmt|;
+name|process_xml
 operator|=
 literal|1
 expr_stmt|;
@@ -2865,6 +2919,14 @@ condition|(
 name|html
 operator|&&
 name|splitting
+operator|&&
+operator|!
+name|STREQ
+argument_list|(
+name|command_output_filename
+argument_list|,
+literal|"-"
+argument_list|)
 condition|)
 block|{
 comment|/* --no-headers --no-split --html indicates confusion. */
@@ -2872,9 +2934,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: --no-headers conflicts with --no-split for --html.\n"
+literal|"%s: can't split --html output to `%s' with --no-headers.\n"
 argument_list|,
 name|progname
+argument_list|,
+name|command_output_filename
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2978,13 +3042,19 @@ argument_list|,
 literal|"stdin"
 argument_list|)
 expr_stmt|;
-return|return
+name|xexit
+argument_list|(
 name|errors_printed
 condition|?
 literal|2
 else|:
 literal|0
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
+comment|/* Avoid bogus warnings.  */
 block|}
 end_function
 
@@ -2996,8 +3066,22 @@ comment|/* Hacking tokens and strings.  */
 end_comment
 
 begin_comment
-comment|/* Return the next token as a string pointer.  We cons the string. */
+comment|/* Return the next token as a string pointer.  We cons the string.  This    `token' means simply a command name.  */
 end_comment
+
+begin_comment
+comment|/* = is so @alias works.  ^ and _ are so macros can be used in math mode    without a space following.  Possibly we should simply allow alpha, to    be compatible with TeX.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMAND_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(!cr_or_whitespace(c) \&& (c) != '{' \&& (c) != '}' \&& (c) != '=' \&& (c) != '_' \&& (c) != '^' \                          )
+end_define
 
 begin_function
 name|char
@@ -3076,7 +3160,7 @@ name|curchar
 argument_list|()
 operator|)
 operator|&&
-name|command_char
+name|COMMAND_CHAR
 argument_list|(
 name|character
 argument_list|)
@@ -3144,7 +3228,7 @@ comment|/* @; and @\ are not Texinfo commands, but they are listed here      any
 return|return
 name|strchr
 argument_list|(
-literal|"~{|}`^\\@?=;:.-,*\'\" !\n\t"
+literal|"~{|}`^\\@?=;:./-,*\'\" !\n\t"
 argument_list|,
 name|character
 argument_list|)
@@ -4081,7 +4165,7 @@ name|char
 modifier|*
 name|tem
 decl_stmt|;
-comment|/* Don't expand non-macros in input, since we want them 	 intact in the macro-expanded output.  */
+comment|/* Don't expand non-macros in input, since we want them          intact in the macro-expanded output.  */
 name|only_macro_expansion
 operator|++
 expr_stmt|;
@@ -4838,7 +4922,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given OUTPUT_FILENAME == ``/foo/bar/baz.html'', return    "/foo/bar/baz/baz.html".  This routine is called only if html&& splitting.       Split html output goes into the subdirectory of the toplevel   filename, without extension.  For example:       @setfilename foo.info   produces output in files foo/index.html, foo/second-node.html, ...      But if the user said -o foo.whatever on the cmd line, then use   foo.whatever unchanged.  */
+comment|/* Given OUTPUT_FILENAME == ``/foo/bar/baz.html'', return    "/foo/bar/baz/baz.html".  This routine is called only if html&& splitting.    Split html output goes into the subdirectory of the toplevel   filename, without extension.  For example:       @setfilename foo.info   produces output in files foo/index.html, foo/second-node.html, ...    But if the user said -o foo.whatever on the cmd line, then use   foo.whatever unchanged.  */
 end_comment
 
 begin_function
@@ -4854,6 +4938,14 @@ modifier|*
 name|output_filename
 decl_stmt|;
 block|{
+specifier|static
+specifier|const
+name|char
+name|index_name
+index|[]
+init|=
+literal|"index.html"
+decl_stmt|;
 name|char
 modifier|*
 name|dir
@@ -4880,14 +4972,6 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-specifier|static
-specifier|const
-name|char
-name|index_name
-index|[]
-init|=
-literal|"index.html"
-decl_stmt|;
 specifier|const
 name|int
 name|index_len
@@ -4913,6 +4997,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* directory of output_filename */
 name|base
 operator|=
 name|filename_part
@@ -4920,6 +5005,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* strips suffix, too */
 name|basename
 operator|=
 name|xstrdup
@@ -4975,25 +5061,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Split html output goes into subdirectory of toplevel name. */
-name|subdir
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-name|FILENAME_CMP
-argument_list|(
-name|base
-argument_list|,
-name|filename_part
-argument_list|(
-name|dir
-argument_list|)
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|save_command_output_filename
@@ -5016,7 +5083,6 @@ operator|=
 name|base
 expr_stmt|;
 comment|/* implicit, omit suffix */
-block|}
 name|free
 argument_list|(
 name|output_filename
@@ -5075,6 +5141,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|mkdir
 argument_list|(
 name|output_filename
@@ -5088,6 +5155,7 @@ operator|&&
 name|errno
 operator|!=
 name|EEXIST
+operator|)
 comment|/* output_filename might exist, but be a non-directory.  */
 operator|||
 operator|(
@@ -5153,6 +5221,7 @@ operator|-
 literal|1
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|errmsg
@@ -5218,7 +5287,7 @@ argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
-name|exit
+name|xexit
 argument_list|(
 literal|1
 argument_list|)
@@ -6116,6 +6185,32 @@ name|close_paragraph
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* maybe we want local variables in info output.  */
+block|{
+name|char
+modifier|*
+name|trailer
+init|=
+name|info_trailer
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|trailer
+condition|)
+block|{
+name|insert_string
+argument_list|(
+name|trailer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|trailer
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|flush_output
 argument_list|()
 expr_stmt|;
@@ -6246,6 +6341,83 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* If enable_encoding and document_encoding are both set, return a Local    Variables section (as a malloc-ed string) so that Emacs' locale    features can work.  Else return NULL.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|info_trailer
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|enable_encoding
+operator|||
+name|document_encoding_code
+operator|<=
+name|US_ASCII
+condition|)
+return|return
+name|NULL
+return|;
+block|{
+define|#
+directive|define
+name|LV_FMT
+value|"\n\037\nLocal Variables:\ncoding: %s\nEnd:\n"
+name|char
+modifier|*
+name|enc_name
+init|=
+name|encoding_table
+index|[
+name|document_encoding_code
+index|]
+operator|.
+name|encname
+decl_stmt|;
+name|char
+modifier|*
+name|lv
+init|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|LV_FMT
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|enc_name
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|lv
+argument_list|,
+name|LV_FMT
+argument_list|,
+name|enc_name
+argument_list|)
+expr_stmt|;
+return|return
+name|lv
+return|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
 
 begin_function
 name|void
@@ -6466,7 +6638,7 @@ condition|)
 block|{
 name|add_word
 argument_list|(
-literal|"<ul>\n"
+literal|"<ul class=\"menu\">\n"
 argument_list|)
 expr_stmt|;
 name|had_menu_commentary
@@ -6532,7 +6704,7 @@ argument_list|)
 expr_stmt|;
 name|add_word_args
 argument_list|(
-literal|"%d"
+literal|"\"%d\""
 argument_list|,
 name|next_menu_item_number
 argument_list|)
@@ -6879,10 +7051,16 @@ name|inhibited
 operator|=
 literal|1
 expr_stmt|;
+name|executing_macro
+operator|++
+expr_stmt|;
 name|execute_macro
 argument_list|(
 name|def
 argument_list|)
+expr_stmt|;
+name|executing_macro
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -7439,6 +7617,8 @@ elseif|else
 if|if
 condition|(
 name|xml
+operator|&&
+name|escape_html
 condition|)
 name|xml_insert_entity
 argument_list|(
@@ -7473,6 +7653,8 @@ elseif|else
 if|if
 condition|(
 name|xml
+operator|&&
+name|escape_html
 condition|)
 name|xml_insert_entity
 argument_list|(
@@ -7515,6 +7697,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|command
+operator|&&
 operator|!
 name|STREQ
 argument_list|(
@@ -7641,7 +7825,7 @@ name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"%c%s expected `{...}'"
+literal|"%c%s expected braces"
 argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
@@ -7894,6 +8078,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|find_proc_name
@@ -7981,6 +8166,7 @@ operator|!=
 name|misplaced_brace
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|proc_name
@@ -8147,6 +8333,7 @@ operator|&&
 name|__STDC__
 name|add_word_args
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|format
@@ -8161,6 +8348,7 @@ name|format
 parameter_list|,
 name|va_alist
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|format
@@ -8304,6 +8492,53 @@ block|}
 end_function
 
 begin_comment
+comment|/* Here is another awful kludge, used in add_char.  Ordinarily, macro    expansions take place in the body of the document, and therefore we    should html_output_head when we see one.  But there's an exception: a    macro call might take place within @copying, and that does not start    the real output, even though we fully expand the copying text.     So we need to be able to check if we are defining the @copying text.    We do this by looking back through the insertion stack.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|defining_copying
+parameter_list|()
+block|{
+name|INSERTION_ELT
+modifier|*
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|insertion_stack
+init|;
+name|i
+condition|;
+name|i
+operator|=
+name|i
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|->
+name|insertion
+operator|==
+name|copying
+condition|)
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Add the character to the current paragraph.  If filling_enabled is    nonzero, then do filling as well. */
 end_comment
 
@@ -8410,10 +8645,23 @@ name|docbook
 condition|)
 block|{
 comment|/* Seems cleaner to use&nbsp; than an 8-bit char.  */
+name|int
+name|saved_escape_html
+init|=
+name|escape_html
+decl_stmt|;
+name|escape_html
+operator|=
+literal|0
+expr_stmt|;
 name|add_word
 argument_list|(
 literal|"&nbsp"
 argument_list|)
+expr_stmt|;
+name|escape_html
+operator|=
+name|saved_escape_html
 expr_stmt|;
 name|character
 operator|=
@@ -8605,16 +8853,24 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* This is sad, but it seems desirable to not force any 	   particular order on the front matter commands.  This way, 	   the document can do @settitle, @documentlanguage, etc, in 	   any order and with any omissions, and we'll still output 	   the html<head> `just in time'.  */
+comment|/* This is sad, but it seems desirable to not force any            particular order on the front matter commands.  This way,            the document can do @settitle, @documentlanguage, etc, in            any order and with any omissions, and we'll still output            the html<head> `just in time'.  */
 if|if
 condition|(
+operator|(
+name|executing_macro
+operator|||
 operator|!
 name|executing_string
+operator|)
 operator|&&
 name|html
 operator|&&
 operator|!
 name|html_output_head_p
+operator|&&
+operator|!
+name|defining_copying
+argument_list|()
 condition|)
 name|html_output_head
 argument_list|()
@@ -8646,7 +8902,11 @@ expr_stmt|;
 comment|/* This horrible kludge of checking for a< prevents<p>                from being inserted when we already have html markup                starting a paragraph, as with<ul> and<h1> and the like.  */
 if|if
 condition|(
+operator|(
 name|html
+operator|||
+name|xml
+operator|)
 operator|&&
 name|escape_html
 operator|&&
@@ -10088,11 +10348,6 @@ name|int
 name|amount
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|html
-condition|)
-return|return;
 comment|/* For every START_POS saved within the brace stack which will be affected      by this indentation, bump that start pos forward. */
 name|adjust_braces_following
 argument_list|(
@@ -10208,6 +10463,14 @@ name|string
 decl_stmt|;
 if|if
 condition|(
+name|docbook
+condition|)
+name|xml_in_xref_token
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|expand
 condition|)
 block|{
@@ -10304,6 +10567,14 @@ argument_list|(
 name|string
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|docbook
+condition|)
+name|xml_in_xref_token
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|string
 return|;
@@ -10382,7 +10653,7 @@ name|char
 modifier|*
 name|tem
 decl_stmt|;
-comment|/* "@xref{,Foo,, Bar, Baz} is not valid usage of @xref.  The 	 first argument must never be blank." --rms. 	 We hereby comply by disallowing such constructs.  */
+comment|/* "@xref{,Foo,, Bar, Baz} is not valid usage of @xref.  The          first argument must never be blank." --rms.          We hereby comply by disallowing such constructs.  */
 if|if
 condition|(
 operator|!
@@ -10688,7 +10959,7 @@ operator|*
 name|arg4
 condition|)
 block|{
-comment|/* arg1 - node name 		 arg2 - reference name 		 arg3 - title or topic (and reference name if arg2 is NULL) 		 arg4 - info file name 		 arg5 - printed manual title  */
+comment|/* arg1 - node name                  arg2 - reference name                  arg3 - title or topic (and reference name if arg2 is NULL)                  arg4 - info file name                  arg5 - printed manual title  */
 name|char
 modifier|*
 name|ref_name
@@ -10725,13 +10996,13 @@ condition|(
 name|html
 condition|)
 block|{
-comment|/* html fixxme: revisit this; external node name not 		     much use to us with numbered nodes. */
+comment|/* html fixxme: revisit this; external node name not                      much use to us with numbered nodes. */
 name|add_html_elt
 argument_list|(
 literal|"<a href="
 argument_list|)
 expr_stmt|;
-comment|/* Note that if we are splitting, and the referenced 		     tag is an anchor rather than a node, we will 		     produce a reference to a file whose name is 		     derived from the anchor name.  However, only 		     nodes create files, so we are referencing a 		     non-existent file.  cm_anchor, which see, deals 		     with that problem.  */
+comment|/* Note that if we are splitting, and the referenced                      tag is an anchor rather than a node, we will                      produce a reference to a file whose name is                      derived from the anchor name.  However, only                      nodes create files, so we are referencing a                      non-existent file.  cm_anchor, which see, deals                      with that problem.  */
 if|if
 condition|(
 name|splitting
@@ -12133,7 +12404,10 @@ modifier|*
 name|name_arg
 decl_stmt|,
 modifier|*
-name|rest
+name|w_arg
+decl_stmt|,
+modifier|*
+name|h_arg
 decl_stmt|,
 modifier|*
 name|alt_arg
@@ -12156,37 +12430,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* expands all macros in image */
-comment|/* We don't (yet) care about the next two args, but read them so they      don't end up in the text.  */
-name|rest
+name|w_arg
 operator|=
 name|get_xref_token
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rest
-condition|)
-name|free
-argument_list|(
-name|rest
-argument_list|)
-expr_stmt|;
-name|rest
+name|h_arg
 operator|=
 name|get_xref_token
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rest
-condition|)
-name|free
-argument_list|(
-name|rest
 argument_list|)
 expr_stmt|;
 name|alt_arg
@@ -12210,6 +12465,16 @@ operator|*
 name|name_arg
 condition|)
 block|{
+name|struct
+name|stat
+name|file_info
+decl_stmt|;
+name|char
+modifier|*
+name|pathname
+init|=
+name|NULL
+decl_stmt|;
 name|char
 modifier|*
 name|fullname
@@ -12242,11 +12507,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|html
-condition|)
-block|{
-if|if
-condition|(
 name|ext_arg
 operator|&&
 operator|*
@@ -12275,24 +12535,18 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|line_error
+name|pathname
+operator|=
+name|get_file_info_in_path
 argument_list|(
-name|_
-argument_list|(
-literal|"@image file `%s' (for HTML) not readable: %s"
-argument_list|)
-argument_list|,
 name|fullname
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|include_files_path
+argument_list|,
+operator|&
+name|file_info
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 block|}
 else|else
 block|{
@@ -12317,6 +12571,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|pathname
+operator|=
+name|get_file_info_in_path
+argument_list|(
+name|fullname
+argument_list|,
+name|include_files_path
+argument_list|,
+operator|&
+name|file_info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pathname
+operator|==
+name|NULL
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|fullname
@@ -12337,20 +12610,86 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+name|pathname
+operator|=
+name|get_file_info_in_path
+argument_list|(
+name|fullname
+argument_list|,
+name|include_files_path
+argument_list|,
+operator|&
+name|file_info
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|html
+condition|)
+block|{
+if|if
+condition|(
+name|pathname
+operator|==
+name|NULL
+operator|&&
+name|access
+argument_list|(
+name|fullname
+argument_list|,
+name|R_OK
+argument_list|)
+operator|!=
+literal|0
+condition|)
 block|{
 name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"No `%s.png' or `.jpg', and no extension supplied"
+literal|"@image file `%s' (for HTML) not readable: %s"
 argument_list|)
 argument_list|,
-name|name_arg
+name|fullname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
+if|if
+condition|(
+name|pathname
+operator|!=
+name|NULL
+operator|&&
+name|access
+argument_list|(
+name|pathname
+argument_list|,
+name|R_OK
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|line_error
+argument_list|(
+name|_
+argument_list|(
+literal|"No such file `%s'"
+argument_list|)
+argument_list|,
+name|fullname
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|add_html_elt
 argument_list|(
@@ -12402,11 +12741,21 @@ condition|(
 name|xml
 condition|)
 block|{
-name|xml_insert_element
+name|xml_insert_element_with_attribute
 argument_list|(
 name|IMAGE
 argument_list|,
 name|START
+argument_list|,
+literal|"width=\"%s\" height=\"%s\" alttext=\"%s\" extension=\"%s\""
+argument_list|,
+name|w_arg
+argument_list|,
+name|h_arg
+argument_list|,
+name|alt_arg
+argument_list|,
+name|ext_arg
 argument_list|)
 expr_stmt|;
 name|add_word
@@ -12424,21 +12773,57 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Try to open foo.txt.  */
+comment|/* Try to open foo.EXT or foo.txt.  */
 name|FILE
 modifier|*
 name|image_file
 decl_stmt|;
+name|char
+modifier|*
+name|txtpath
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|txtname
+init|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|name_arg
+argument_list|)
+operator|+
+operator|(
+name|ext_arg
+operator|&&
+operator|*
+name|ext_arg
+condition|?
+name|strlen
+argument_list|(
+name|ext_arg
+argument_list|)
+operator|+
+literal|1
+else|:
+literal|4
+operator|)
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
 name|strcpy
 argument_list|(
-name|fullname
+name|txtname
 argument_list|,
 name|name_arg
 argument_list|)
 expr_stmt|;
 name|strcat
 argument_list|(
-name|fullname
+name|txtname
 argument_list|,
 literal|".txt"
 argument_list|)
@@ -12447,7 +12832,7 @@ name|image_file
 operator|=
 name|fopen
 argument_list|(
-name|fullname
+name|txtname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -12455,6 +12840,67 @@ expr_stmt|;
 if|if
 condition|(
 name|image_file
+operator|==
+name|NULL
+condition|)
+block|{
+name|txtpath
+operator|=
+name|get_file_info_in_path
+argument_list|(
+name|txtname
+argument_list|,
+name|include_files_path
+argument_list|,
+operator|&
+name|file_info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txtpath
+operator|!=
+name|NULL
+condition|)
+name|image_file
+operator|=
+name|fopen
+argument_list|(
+name|txtpath
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|image_file
+operator|!=
+name|NULL
+operator|||
+name|access
+argument_list|(
+name|fullname
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|pathname
+operator|!=
+name|NULL
+operator|&&
+name|access
+argument_list|(
+name|pathname
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|int
@@ -12482,7 +12928,75 @@ name|last_char_was_newline
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Maybe we need to remove the final newline if the image                  file is only one line to allow in-line images.  On the                  other hand, they could just make the file without a                  final newline.  */
+comment|/* Write magic ^@^H[image ...^@^H] cookie in the info file.  */
+name|add_char
+argument_list|(
+literal|'\0'
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"\010[image"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|fullname
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|pathname
+operator|!=
+name|NULL
+operator|&&
+name|access
+argument_list|(
+name|pathname
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+name|add_word_args
+argument_list|(
+literal|" src=%s"
+argument_list|,
+name|fullname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|alt_arg
+condition|)
+name|add_word_args
+argument_list|(
+literal|" alt=\"%s\""
+argument_list|,
+name|alt_arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|image_file
+operator|!=
+name|NULL
+condition|)
+block|{
+name|add_word
+argument_list|(
+literal|" text=\""
+argument_list|)
+expr_stmt|;
+comment|/* Maybe we need to remove the final newline if the image                      file is only one line to allow in-line images.  On the                      other hand, they could just make the file without a                      final newline.  */
 while|while
 condition|(
 operator|(
@@ -12496,18 +13010,32 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+block|{
+if|if
+condition|(
+name|ch
+operator|==
+literal|'"'
+operator|||
+name|ch
+operator|==
+literal|'\\'
+condition|)
+name|add_char
+argument_list|(
+literal|'\\'
+argument_list|)
+expr_stmt|;
 name|add_char
 argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-name|inhibit_paragraph_indentation
-operator|=
-name|save_inhibit_indentation
-expr_stmt|;
-name|filling_enabled
-operator|=
-name|save_filling_enabled
+block|}
+name|add_char
+argument_list|(
+literal|'"'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12520,7 +13048,26 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-name|fullname
+name|txtname
+argument_list|)
+expr_stmt|;
+block|}
+name|inhibit_paragraph_indentation
+operator|=
+name|save_inhibit_indentation
+expr_stmt|;
+name|filling_enabled
+operator|=
+name|save_filling_enabled
+expr_stmt|;
+name|add_char
+argument_list|(
+literal|'\0'
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"\010]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12532,7 +13079,7 @@ argument_list|(
 literal|"@image file `%s' (for text) unreadable: %s"
 argument_list|)
 argument_list|,
-name|fullname
+name|txtname
 argument_list|,
 name|strerror
 argument_list|(
@@ -12544,6 +13091,15 @@ block|}
 name|free
 argument_list|(
 name|fullname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pathname
+condition|)
+name|free
+argument_list|(
+name|pathname
 argument_list|)
 expr_stmt|;
 block|}
@@ -12563,6 +13119,24 @@ condition|)
 name|free
 argument_list|(
 name|name_arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w_arg
+condition|)
+name|free
+argument_list|(
+name|w_arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h_arg
+condition|)
+name|free
+argument_list|(
+name|h_arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -13098,7 +13672,7 @@ expr_stmt|;
 name|value_level
 operator|++
 expr_stmt|;
-comment|/* While the argument of @value is processed, we need to inhibit 	 textual transformations like "--" into "-", since @set didn't 	 do that when it grabbed the name of the variable.  */
+comment|/* While the argument of @value is processed, we need to inhibit          textual transformations like "--" into "-", since @set didn't          do that when it grabbed the name of the variable.  */
 name|in_fixed_width_font
 operator|++
 expr_stmt|;
@@ -13194,7 +13768,7 @@ block|}
 name|value_level
 operator|--
 expr_stmt|;
-comment|/* No need to decrement in_fixed_width_font, since before 	 we are called with arg == END, the reader loop already 	 popped the brace stack, which restored in_fixed_width_font, 	 among other things.  */
+comment|/* No need to decrement in_fixed_width_font, since before          we are called with arg == END, the reader loop already          popped the brace stack, which restored in_fixed_width_font,          among other things.  */
 if|if
 condition|(
 name|value
@@ -13207,6 +13781,17 @@ name|value
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|warning
+argument_list|(
+name|_
+argument_list|(
+literal|"undefined flag: %s"
+argument_list|)
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|add_word_args
 argument_list|(
 name|_
@@ -13217,6 +13802,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|name

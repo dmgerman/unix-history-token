@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* footnotes.c -- Some functions for manipulating footnotes.    $Id: footnotes.c,v 1.9 1999/09/25 16:10:04 karl Exp $     Copyright (C) 1993, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* footnotes.c -- Some functions for manipulating footnotes.    $Id: footnotes.c,v 1.2 2002/11/06 00:41:17 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -10,14 +10,14 @@ file|"info.h"
 end_include
 
 begin_comment
-comment|/* Non-zero means attempt to show footnotes when displaying a new window. */
+comment|/* Nonzero means attempt to show footnotes when displaying a new window. */
 end_comment
 
 begin_decl_stmt
 name|int
 name|auto_footnotes_p
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 

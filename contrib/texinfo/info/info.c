@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.60 2002/03/11 19:54:29 karl Exp $     Copyright (C) 1993, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.7 2003/05/19 13:10:59 karl Exp $     Copyright (C) 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -535,7 +535,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"d:n:f:o:ORsb"
+literal|"d:n:f:ho:ORsb"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +550,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"d:n:f:o:ORs"
+literal|"d:n:f:ho:ORs"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,16 +575,13 @@ begin_comment
 comment|/* Some "forward" declarations. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|info_short_help
-argument_list|()
-decl_stmt|,
-name|remember_info_program_name
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -704,7 +701,7 @@ operator|&
 name|getopt_long_index
 argument_list|)
 expr_stmt|;
-comment|/* getopt_long () returns EOF when there are no more long options. */
+comment|/* getopt_long returns EOF when there are no more long options. */
 if|if
 condition|(
 name|option_character
@@ -799,6 +796,15 @@ name|xstrdup
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+comment|/* Treat -h like --help. */
+case|case
+literal|'h'
+case|:
+name|print_help_p
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 comment|/* User is specifying the name of a file to output to. */
@@ -1013,7 +1019,7 @@ argument_list|(
 literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
 argument_list|,
-literal|"2002"
+literal|"2003"
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -1587,6 +1593,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
+comment|/* Avoid bogus warnings.  */
 block|}
 end_function
 
@@ -1928,6 +1938,7 @@ comment|/* Initialize strings for gettext.  Because gettext doesn't handle N_ or
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_cant_find_node
@@ -1935,6 +1946,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_cant_file_node
@@ -1942,6 +1954,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_cant_find_window
@@ -1949,6 +1962,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_cant_find_point
@@ -1956,6 +1970,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_cant_kill_last
@@ -1963,6 +1978,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_no_menu_node
@@ -1970,6 +1986,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_no_foot_node
@@ -1977,6 +1994,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_no_xref_node
@@ -1984,6 +2002,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_no_pointer
@@ -1991,6 +2010,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_unknown_command
@@ -1998,6 +2018,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_term_too_dumb
@@ -2005,6 +2026,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_at_node_bottom
@@ -2012,6 +2034,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_at_node_top
@@ -2019,6 +2042,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_one_window
@@ -2026,6 +2050,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_win_too_small
@@ -2033,6 +2058,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg_cant_make_help

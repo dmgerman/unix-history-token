@@ -90,6 +90,17 @@ comment|/* #undef HAVE_DCGETTEXT */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `getenv', and to 0 if you don't.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GETENV
+value|1
+end_define
+
+begin_comment
 comment|/* Define if this function is declared. */
 end_comment
 
@@ -156,9 +167,12 @@ begin_comment
 comment|/* Define to 1 if you have the `feof_unlocked' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FEOF_UNLOCKED */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FEOF_UNLOCKED
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fgets_unlocked' function. */
@@ -183,9 +197,12 @@ begin_comment
 comment|/* Define to 1 if you have the `getc_unlocked' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETC_UNLOCKED */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETC_UNLOCKED
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `getegid' function. */
@@ -240,6 +257,14 @@ comment|/* #undef HAVE_GETTEXT */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `gettimeofday' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETTIMEOFDAY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `getuid' function. */
 end_comment
 
@@ -259,13 +284,24 @@ comment|/* #undef HAVE_ICONV */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<inttypes.h> header file. */
+comment|/* Define if<inttypes.h> exists and doesn't clash with<sys/types.h>. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<inttypes.h> exists, doesn't clash with<sys/types.h>, and    declares uintmax_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTTYPES_H_WITH_UINTMAX
 value|1
 end_define
 
@@ -333,12 +369,9 @@ begin_comment
 comment|/* Define to 1 if you have the<malloc.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_MALLOC_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_MALLOC_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `memcpy' function. */
@@ -389,6 +422,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMSET
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `mkstemp' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKSTEMP
 value|1
 end_define
 
@@ -489,6 +533,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `sigaction' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGACTION
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `sigprocmask' function. */
 end_comment
 
@@ -525,9 +580,23 @@ begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
+value|1
+end_define
+
 begin_comment
-comment|/* #undef HAVE_STDINT_H */
+comment|/* Define if<stdint.h> exists, doesn't clash with<sys/types.h>, and declares    uintmax_t. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H_WITH_UINTMAX
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<stdlib.h> header file. */
@@ -544,9 +613,12 @@ begin_comment
 comment|/* Define to 1 if you have the `stpcpy' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STPCPY */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STPCPY
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strcasecmp' function. */
@@ -700,6 +772,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/stream.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_STREAM_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/time.h> header file. */
 end_comment
 
@@ -782,6 +862,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the 'uintmax_t' type in<stdint.h> or<inttypes.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTMAX_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<unistd.h> header file. */
 end_comment
 
@@ -789,6 +880,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the 'unsigned long long' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNSIGNED_LONG_LONG
 value|1
 end_define
 
@@ -828,12 +930,39 @@ comment|/* #undef HAVE___ARGZ_STRINGIFY */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `__fsetlocking' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___FSETLOCKING */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `__secure_getenv' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___SECURE_GETENV */
+end_comment
+
+begin_comment
 comment|/* Define as const if the declaration of iconv() needs const. */
 end_comment
 
 begin_comment
 comment|/* #undef ICONV_CONST */
 end_comment
+
+begin_comment
+comment|/* Define if integer division by zero raises signal SIGFPE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTDIV0_RAISES_SIGFPE
+value|1
+end_define
 
 begin_comment
 comment|/* Name of package */
@@ -876,7 +1005,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"GNU Texinfo 4.2"
+value|"GNU Texinfo 4.6"
 end_define
 
 begin_comment
@@ -898,8 +1027,16 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2"
+value|"4.6"
 end_define
+
+begin_comment
+comment|/* Define if<inttypes.h> exists and defines unusable PRI* macros. */
+end_comment
+
+begin_comment
+comment|/* #undef PRI_MACROS_BROKEN */
+end_comment
 
 begin_comment
 comment|/* Define as the return type of signal handlers (`int' or `void'). */
@@ -955,7 +1092,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2"
+value|"4.6"
 end_define
 
 begin_comment
@@ -999,6 +1136,14 @@ comment|/* #undef inline */
 end_comment
 
 begin_comment
+comment|/* Define to rpl_mkstemp if the replacement function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef mkstemp */
+end_comment
+
+begin_comment
 comment|/* Define to `long' if<sys/types.h> does not define. */
 end_comment
 
@@ -1012,6 +1157,14 @@ end_comment
 
 begin_comment
 comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* Define to unsigned long or unsigned long long if<stdint.h> and<inttypes.h> don't define. */
+end_comment
+
+begin_comment
+comment|/* #undef uintmax_t */
 end_comment
 
 end_unit

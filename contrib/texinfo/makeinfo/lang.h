@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lang.h -- declarations for language codes etc.    $Id: lang.h,v 1.7 2001/09/11 18:04:29 karl Exp $     Copyright (C) 1999, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* lang.h -- declarations for language codes etc.    $Id: lang.h,v 1.4 2003/05/01 00:05:27 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_ifndef
@@ -366,14 +366,15 @@ enum|enum
 block|{
 name|no_encoding
 block|,
+name|US_ASCII
+block|,
 name|ISO_8859_1
 block|,
-comment|/* default for en, de, */
 name|ISO_8859_2
 block|,
-comment|/* actualy not supported like the rest below */
 name|ISO_8859_3
 block|,
+comment|/* this and none of the rest are supported. */
 name|ISO_8859_4
 block|,
 name|ISO_8859_5
@@ -476,9 +477,9 @@ decl_stmt|;
 comment|/* document encoding type (see above enum) */
 name|char
 modifier|*
-name|ecname
+name|encname
 decl_stmt|;
-comment|/* encoding name like ISO-8859-1 */
+comment|/* encoding name like "ISO-8859-1", valid in Emacs */
 name|iso_map_type
 modifier|*
 name|isotab

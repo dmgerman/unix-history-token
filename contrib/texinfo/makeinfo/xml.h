@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xml.h -- xml output declarations.    $Id: xml.h,v 1.7 2002/03/23 20:41:21 karl Exp $     Copyright (C) 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Philippe Martin<feloy@free.fr>.  */
+comment|/* xml.h -- xml output declarations.    $Id: xml.h,v 1.6 2002/11/11 12:37:34 feloy Exp $     Copyright (C) 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Philippe Martin<feloy@free.fr>.  */
 end_comment
 
 begin_ifndef
@@ -63,6 +63,34 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|xml_last_section_output_position
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xml_in_xref_token
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xml_in_bookinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xml_in_book_title
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xml_in_abstract
 decl_stmt|;
 end_decl_stmt
 
@@ -310,6 +338,14 @@ block|,
 name|ABSTRACT
 block|,
 name|REPLACEABLE
+block|,
+name|ENVAR
+block|,
+name|COMMENT
+block|,
+name|FUNCTION
+block|,
+name|LEGALNOTICE
 block|,
 name|PARA
 block|}

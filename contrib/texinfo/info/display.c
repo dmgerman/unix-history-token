@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* display.c -- How to display Info windows.    $Id: display.c,v 1.7 2002/03/08 21:41:44 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* display.c -- How to display Info windows.    $Id: display.c,v 1.4 2003/05/13 16:20:44 karl Exp $     Copyright (C) 1993, 1997, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -483,6 +483,8 @@ block|{
 name|char
 modifier|*
 name|rep
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|rep_carried_over
@@ -553,6 +555,38 @@ name|pl_index
 operator|+
 name|pl_ignore
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|nodetext
+operator|==
+literal|'\0'
+operator|&&
+operator|(
+name|nodetext
+operator|+
+literal|1
+operator|)
+operator|<
+name|last_node_char
+operator|&&
+operator|*
+operator|(
+name|nodetext
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'\b'
+condition|)
+block|{
+comment|/* Found new style image tag/cookie \0\b[ or \0\b] 		 Just skip for now.  */
+name|nodetext
+operator|++
+expr_stmt|;
+continue|continue;
 block|}
 else|else
 block|{
@@ -869,12 +903,16 @@ operator|->
 name|first_row
 index|]
 expr_stmt|;
-comment|/* If the screen line is inversed, then we have to clear              the line from the screen first.  Why, I don't know. */
+comment|/* If the screen line is inversed, then we have to clear              the line from the screen first.  Why, I don't know.              (But don't do this if we have no visible entries, as can              happen if the window is shrunk very small.)  */
 if|if
 condition|(
+operator|(
+name|entry
+operator|&&
 name|entry
 operator|->
 name|inverse
+operator|)
 comment|/* Need to erase the line if it has escape sequences.  */
 operator|||
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info-utils.h -- Exported functions and variables from info-utils.c.    $Id: info-utils.h,v 1.5 1998/08/10 18:07:28 karl Exp $        Copyright (C) 1993, 96, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info-utils.h -- Exported functions and variables from info-utils.c.    $Id: info-utils.h,v 1.2 2003/03/06 23:21:48 karl Exp $        Copyright (C) 1993, 1996, 1998, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -191,6 +191,19 @@ name|REFERENCE
 modifier|*
 modifier|*
 name|info_concatenate_references
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Copy an existing reference into new memory.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|REFERENCE
+modifier|*
+name|info_copy_reference
 parameter_list|()
 function_decl|;
 end_function_decl
