@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.1 83/08/11"
+literal|"@(#)cmd2.c	3.2 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -934,7 +934,7 @@ name|w
 operator|=
 name|openiwin
 argument_list|(
-name|MIN
+name|MAX
 argument_list|(
 name|n
 argument_list|,
