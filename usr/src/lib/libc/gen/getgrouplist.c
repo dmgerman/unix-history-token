@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getgrouplist.c	8.1 (Berkeley) %G%"
+literal|"@(#)getgrouplist.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,20 +169,6 @@ operator|==
 name|agroup
 condition|)
 continue|continue;
-if|if
-condition|(
-name|ngroups
-operator|>=
-name|maxgroups
-condition|)
-block|{
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
 for|for
 control|(
 name|i
@@ -216,6 +202,20 @@ name|uname
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ngroups
+operator|>=
+name|maxgroups
+condition|)
+block|{
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
 name|groups
 index|[
 name|ngroups
