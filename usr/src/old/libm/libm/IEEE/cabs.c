@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	1.1 (Berkeley) %G%"
+literal|"@(#)cabs.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,42 +28,55 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* HYPOT(X,Y)   * RETURN THE SQUARE ROOT OF X^2 + Y^2  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84.  *  * Required kernel function :  *	cabs(x,y)  *  * Method :  *	hypot(x,y) = cabs(x,y) .  */
+comment|/* CABS(Z)  * RETURN THE ABSOLUTE VALUE OF THE COMPLEX NUMBER  Z = X + iY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84.  * REVISED BY K.C. NG, 7/12/85.  *  * Required kernel function :  *	hypot(x,y)  *  * Method :  *	cabs(z) = hypot(x,y) .  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|double
-name|hypot
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
+name|cabs
+argument_list|(
+name|z
+argument_list|)
+decl|struct
+block|{
 name|double
 name|x
 decl_stmt|,
 name|y
 decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|z
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 name|double
-name|cabs
+name|hypot
 parameter_list|()
 function_decl|;
 return|return
 operator|(
-name|cabs
+name|hypot
 argument_list|(
+name|z
+operator|.
 name|x
 argument_list|,
+name|z
+operator|.
 name|y
 argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
-comment|/* CABS(REAL,IMAG)  * RETURN THE ABSOLUTE VALUE OF THE COMPLEX NUMBER  REAL + i*IMAG  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84;   * REVISED BY K.C. NG on 2/7/85, 2/22/85, 3/7/85, 3/30/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	finite(x)  *	scalb(x,N)  *	sqrt(x)  *  * Method :  *	1. replace real by |real| and imag by |imag|, and swap real and  *	   imag if imag> real (hence real is never smaller than imag).  *	2. Let X=real and Y=imag, cabs(X,Y) is computed by:  *	   Case I, X/Y> 2  *		  *				       Y  *		cabs = X + -----------------------------  *			 		    2  *			    sqrt ( 1 + [X/Y]  )  +  X/Y  *  *	   Case II, X/Y<= 2   *				                   Y  *		cabs = X + --------------------------------------------------  *				          		     2   *				     			[X/Y]   -  2  *			   (sqrt(2)+1) + (X-Y)/Y + -----------------------------  *			 		    			  2  *			    			  sqrt ( 1 + [X/Y]  )  + sqrt(2)  *  *  *  * Special cases:  *	cabs(x,y) is INF if x or y is +INF or -INF; else  *	cabs(x,y) is NAN if x or y is NAN.  *  * Accuracy:  * 	cabs(x,y) returns the sqrt(x^2+y^2) with error less than 1 ulps (units  *	in the last place). See Kahan's "Interval Arithmetic Options in the  *	Proposed IEEE Floating Point Arithmetic Standard", Interval Mathematics  *      1980, Edited by Karl L.E. Nickel, pp 99-128. (A faster but less accurate  *	code follows in	comments.) In a test run with 500,000 random arguments  *	on a VAX, the maximum observed error was .959 ulps.  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* HYPOT(X,Y)  * RETURN THE SQUARE ROOT OF X^2 + Y^2  WHERE Z=X+iY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84;   * REVISED BY K.C. NG, 7/12/85.  *  * Required system supported functions :  *	copysign(x,y)  *	finite(x)  *	scalb(x,N)  *	sqrt(x)  *  * Method :  *	1. replace x by |x| and y by |y|, and swap x and  *	   y if y> x (hence x is never smaller than y).  *	2. Hypot(x,y) is computed by:  *	   Case I, x/y> 2  *		  *				       y  *		hypot = x + -----------------------------  *			 		    2  *			    sqrt ( 1 + [x/y]  )  +  x/y  *  *	   Case II, x/y<= 2   *				                   y  *		hypot = x + --------------------------------------------------  *				          		     2   *				     			[x/y]   -  2  *			   (sqrt(2)+1) + (x-y)/y + -----------------------------  *			 		    			  2  *			    			  sqrt ( 1 + [x/y]  )  + sqrt(2)  *  *  *  * Special cases:  *	hypot(x,y) is INF if x or y is +INF or -INF; else  *	hypot(x,y) is NAN if x or y is NAN.  *  * Accuracy:  * 	hypot(x,y) returns the sqrt(x^2+y^2) with error less than 1 ulps (units  *	in the last place). See Kahan's "Interval Arithmetic Options in the  *	Proposed IEEE Floating Point Arithmetic Standard", Interval Mathematics  *      1980, Edited by Karl L.E. Nickel, pp 99-128. (A faster but less accurate  *	code follows in	comments.) In a test run with 500,000 random arguments  *	on a VAX, the maximum observed error was .959 ulps.  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -196,16 +209,16 @@ end_endif
 
 begin_function
 name|double
-name|cabs
+name|hypot
 parameter_list|(
-name|real
+name|x
 parameter_list|,
-name|imag
+name|y
 parameter_list|)
 name|double
-name|real
+name|x
 decl_stmt|,
-name|imag
+name|y
 decl_stmt|;
 block|{
 specifier|static
@@ -258,58 +271,58 @@ if|if
 condition|(
 name|finite
 argument_list|(
-name|real
+name|x
 argument_list|)
 condition|)
 if|if
 condition|(
 name|finite
 argument_list|(
-name|imag
+name|y
 argument_list|)
 condition|)
 block|{
-name|real
+name|x
 operator|=
 name|copysign
 argument_list|(
-name|real
+name|x
 argument_list|,
 name|one
 argument_list|)
 expr_stmt|;
-name|imag
+name|y
 operator|=
 name|copysign
 argument_list|(
-name|imag
+name|y
 argument_list|,
 name|one
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|imag
+name|y
 operator|>
-name|real
+name|x
 condition|)
 block|{
 name|t
 operator|=
-name|real
+name|x
 expr_stmt|;
-name|real
+name|x
 operator|=
-name|imag
+name|y
 expr_stmt|;
-name|imag
+name|y
 operator|=
 name|t
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|real
+name|x
 operator|==
 name|zero
 condition|)
@@ -320,20 +333,20 @@ operator|)
 return|;
 if|if
 condition|(
-name|imag
+name|y
 operator|==
 name|zero
 condition|)
 return|return
 operator|(
-name|real
+name|x
 operator|)
 return|;
 name|exp
 operator|=
 name|logb
 argument_list|(
-name|real
+name|x
 argument_list|)
 expr_stmt|;
 if|if
@@ -345,12 +358,12 @@ name|int
 operator|)
 name|logb
 argument_list|(
-name|imag
+name|y
 argument_list|)
 operator|>
 name|ibig
 condition|)
-comment|/* raise inexact flag and return |real| */
+comment|/* raise inexact flag and return |x| */
 block|{
 name|one
 operator|+
@@ -358,30 +371,30 @@ name|small
 expr_stmt|;
 return|return
 operator|(
-name|real
+name|x
 operator|)
 return|;
 block|}
-comment|/* start computing sqrt(real^2 + imag^2) */
+comment|/* start computing sqrt(x^2 + y^2) */
 name|r
 operator|=
-name|real
+name|x
 operator|-
-name|imag
+name|y
 expr_stmt|;
 if|if
 condition|(
 name|r
 operator|>
-name|imag
+name|y
 condition|)
 block|{
-comment|/* real/imag> 2 */
+comment|/* x/y> 2 */
 name|r
 operator|=
-name|real
+name|x
 operator|/
-name|imag
+name|y
 expr_stmt|;
 name|r
 operator|=
@@ -399,10 +412,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 1<= real/imag<= 2 */
+comment|/* 1<= x/y<= 2 */
 name|r
 operator|/=
-name|imag
+name|y
 expr_stmt|;
 name|t
 operator|=
@@ -440,13 +453,13 @@ expr_stmt|;
 block|}
 name|r
 operator|=
-name|imag
+name|y
 operator|/
 name|r
 expr_stmt|;
 return|return
 operator|(
-name|real
+name|x
 operator|+
 name|r
 operator|)
@@ -455,16 +468,16 @@ block|}
 elseif|else
 if|if
 condition|(
-name|imag
+name|y
 operator|==
-name|imag
+name|y
 condition|)
-comment|/* imag is +-INF */
+comment|/* y is +-INF */
 return|return
 operator|(
 name|copysign
 argument_list|(
-name|imag
+name|y
 argument_list|,
 name|one
 argument_list|)
@@ -473,23 +486,23 @@ return|;
 else|else
 return|return
 operator|(
-name|imag
+name|y
 operator|)
 return|;
-comment|/* imag is NaN and x is finite */
+comment|/* y is NaN and x is finite */
 elseif|else
 if|if
 condition|(
-name|real
+name|x
 operator|==
-name|real
+name|x
 condition|)
-comment|/* real is +-INF */
+comment|/* x is +-INF */
 return|return
 operator|(
 name|copysign
 argument_list|(
-name|real
+name|x
 argument_list|,
 name|one
 argument_list|)
@@ -500,45 +513,45 @@ if|if
 condition|(
 name|finite
 argument_list|(
-name|imag
+name|y
 argument_list|)
 condition|)
 return|return
 operator|(
-name|real
+name|x
 operator|)
 return|;
-comment|/* real is NaN, imag is finite */
+comment|/* x is NaN, y is finite */
 elseif|else
 if|if
 condition|(
-name|imag
+name|y
 operator|!=
-name|imag
+name|y
 condition|)
 return|return
 operator|(
-name|imag
+name|y
 operator|)
 return|;
-comment|/* real and imag is NaN */
+comment|/* x and y is NaN */
 else|else
 return|return
 operator|(
 name|copysign
 argument_list|(
-name|imag
+name|y
 argument_list|,
 name|one
 argument_list|)
 operator|)
 return|;
-comment|/* imag is INF */
+comment|/* y is INF */
 block|}
 end_function
 
 begin_comment
-comment|/* A faster but less accurate version of cabs(real,imag) */
+comment|/* A faster but less accurate version of cabs(x,y) */
 end_comment
 
 begin_if
@@ -548,7 +561,7 @@ literal|0
 end_if
 
 begin_comment
-unit|double cabs(real,imag) double real, imag; { 	static double zero=0, one=1; 		      small=1.0E-18;
+unit|double hypot(x,y) double x, y; { 	static double zero=0, one=1; 		      small=1.0E-18;
 comment|/* fl(1+small)==1 */
 end_comment
 
@@ -558,38 +571,38 @@ comment|/* fl(1+2**(2*ibig))==1 */
 end_comment
 
 begin_comment
-unit|double copysign(),scalb(),logb(),sqrt(),temp; 	int finite(), exp;  	if(finite(real)) 	    if(finite(imag)) 	    {	 		real=copysign(real,one); 		imag=copysign(imag,one); 		if(imag> real)  		    { temp=real; real=imag; imag=temp; } 		if(real == zero) return(zero); 		if(imag == zero) return(real); 		exp= logb(real); 		real=scalb(real,-exp); 		if(exp-(int)logb(imag)> ibig )
-comment|/* raise inexact flag and return |real| */
+unit|double copysign(),scalb(),logb(),sqrt(),temp; 	int finite(), exp;  	if(finite(x)) 	    if(finite(y)) 	    {	 		x=copysign(x,one); 		y=copysign(y,one); 		if(y> x)  		    { temp=x; x=y; y=temp; } 		if(x == zero) return(zero); 		if(y == zero) return(x); 		exp= logb(x); 		x=scalb(x,-exp); 		if(exp-(int)logb(y)> ibig )
+comment|/* raise inexact flag and return |x| */
 end_comment
 
 begin_comment
-unit|{ one+small; return(scalb(real,exp)); } 		else imag=scalb(imag,-exp); 		return(scalb(sqrt(real*real+imag*imag),exp)); 	    }  	    else if(imag==imag)
-comment|/* imag is +-INF */
+unit|{ one+small; return(scalb(x,exp)); } 		else y=scalb(y,-exp); 		return(scalb(sqrt(x*x+y*y),exp)); 	    }  	    else if(y==y)
+comment|/* y is +-INF */
 end_comment
 
 begin_comment
-unit|return(copysign(imag,one)); 	    else  		     return(imag);
-comment|/* imag is NaN and x is finite */
+unit|return(copysign(y,one)); 	    else  		     return(y);
+comment|/* y is NaN and x is finite */
 end_comment
 
 begin_comment
-unit|else if(real==real)
-comment|/* real is +-INF */
+unit|else if(x==x)
+comment|/* x is +-INF */
 end_comment
 
 begin_comment
-unit|return (copysign(real,one)); 	else if(finite(imag)) 	         return(real);
-comment|/* real is NaN, imag is finite */
+unit|return (copysign(x,one)); 	else if(finite(y)) 	         return(x);
+comment|/* x is NaN, y is finite */
 end_comment
 
 begin_comment
-unit|else if(imag!=imag) return(imag);
-comment|/* real and imag is NaN */
+unit|else if(y!=y) return(y);
+comment|/* x and y is NaN */
 end_comment
 
 begin_comment
-unit|else return(copysign(imag,one));
-comment|/* imag is INF */
+unit|else return(copysign(y,one));
+comment|/* y is INF */
 end_comment
 
 begin_endif
