@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -110,6 +116,66 @@ parameter_list|(
 name|sep
 parameter_list|)
 value|((sep)->se_type == TTCP_TYPE)
+end_define
+
+begin_struct
+struct|struct
+name|procinfo
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|procinfo
+argument_list|)
+name|pr_link
+expr_stmt|;
+name|pid_t
+name|pr_pid
+decl_stmt|;
+comment|/* child pid */
+name|struct
+name|conninfo
+modifier|*
+name|pr_conn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|conninfo
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|conninfo
+argument_list|)
+name|co_link
+expr_stmt|;
+name|struct
+name|sockaddr_storage
+name|co_addr
+decl_stmt|;
+comment|/* source address */
+name|int
+name|co_numchild
+decl_stmt|;
+comment|/* current number of children */
+name|struct
+name|procinfo
+modifier|*
+modifier|*
+name|co_proc
+decl_stmt|;
+comment|/* array of child proc entry */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PERIPSIZE
+value|256
 end_define
 
 begin_struct
@@ -326,6 +392,20 @@ decl_stmt|;
 block|}
 name|se_flags
 struct|;
+name|int
+name|se_maxperip
+decl_stmt|;
+comment|/* max number of children per src */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|conninfo
+argument_list|)
+name|se_conn
+index|[
+name|PERIPSIZE
+index|]
+expr_stmt|;
 block|}
 struct|;
 end_struct
