@@ -472,6 +472,14 @@ literal|"Apple GMAC2 Ethernet Adaptor"
 block|}
 block|,
 block|{
+literal|0x0032106b
+block|,
+name|GEM_APPLE_GMAC
+block|,
+literal|"Apple GMAC3 Ethernet Adaptor"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
