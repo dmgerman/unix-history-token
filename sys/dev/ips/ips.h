@@ -111,6 +111,14 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_IPSBUF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *   IPS CONSTANTS  */
 end_comment

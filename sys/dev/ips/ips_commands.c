@@ -1315,7 +1315,7 @@ argument_list|(
 name|ips_cmd_status_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1359,7 +1359,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -1383,7 +1383,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -1876,7 +1876,7 @@ argument_list|(
 name|ips_cmd_status_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1911,7 +1911,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -1944,7 +1944,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -2095,7 +2095,7 @@ argument_list|(
 name|ips_cmd_status_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2137,7 +2137,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -2172,7 +2172,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -2641,7 +2641,7 @@ argument_list|(
 name|ips_cmd_status_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2674,7 +2674,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -2709,7 +2709,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3304,7 +3304,7 @@ argument_list|(
 name|ips_cmd_status_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3337,7 +3337,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -3375,7 +3375,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3650,7 +3650,7 @@ argument_list|(
 name|ips_cmd_status_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3692,7 +3692,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -3720,7 +3720,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -3763,7 +3763,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -3800,7 +3800,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3811,7 +3811,7 @@ name|free
 argument_list|(
 name|status
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return

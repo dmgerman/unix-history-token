@@ -62,6 +62,18 @@ name|ips_ioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IPSBUF
+argument_list|,
+literal|"ipsbuf"
+argument_list|,
+literal|"IPS driver buffer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -724,7 +736,7 @@ argument_list|(
 name|ips_wait_list_t
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|,
 name|memflags
 argument_list|)
@@ -760,7 +772,7 @@ name|free
 argument_list|(
 name|waiter
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -831,7 +843,7 @@ name|free
 argument_list|(
 name|waiter
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|command
@@ -1040,7 +1052,7 @@ name|free
 argument_list|(
 name|waiter
 argument_list|,
-name|M_DEVBUF
+name|M_IPSBUF
 argument_list|)
 expr_stmt|;
 name|callback
