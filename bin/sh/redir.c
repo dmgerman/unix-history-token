@@ -185,7 +185,7 @@ name|redirtab
 modifier|*
 name|next
 decl_stmt|;
-name|short
+name|int
 name|renamed
 index|[
 literal|10
