@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.17 (Berkeley) %G%"
+literal|"@(#)tape.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1473,7 +1473,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"then enter tape name (default: %s) "
+literal|"Enter ``none'' if there are no more tapes\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"otherwise enter tape name (default: %s) "
 argument_list|,
 name|magtape
 argument_list|)
@@ -1510,6 +1517,64 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|tbf
+argument_list|,
+literal|"none\n"
+argument_list|)
+condition|)
+block|{
+name|curfile
+operator|.
+name|name
+operator|=
+literal|"<name unknown>"
+expr_stmt|;
+name|curfile
+operator|.
+name|action
+operator|=
+name|UNKNOWN
+expr_stmt|;
+name|curfile
+operator|.
+name|dip
+operator|=
+operator|(
+expr|struct
+name|dinode
+operator|*
+operator|)
+name|NIL
+expr_stmt|;
+name|curfile
+operator|.
+name|ino
+operator|=
+name|maxino
+expr_stmt|;
+if|if
+condition|(
+name|gettingfile
+condition|)
+block|{
+name|gettingfile
+operator|=
+literal|0
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|restart
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|tbf
@@ -4209,7 +4274,8 @@ begin_block
 block|{
 name|long
 name|i
-decl_stmt|,
+decl_stmt|;
+name|u_long
 modifier|*
 name|j
 decl_stmt|;
