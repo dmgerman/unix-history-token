@@ -36,7 +36,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__NETBSD_SYSCALLS
+name|__alpha__
 end_ifndef
 
 begin_include
@@ -61,6 +61,18 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -123,6 +135,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -635,6 +655,12 @@ name|struct
 name|clockinfo
 name|clockinfo
 decl_stmt|;
+name|char
+name|outname
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|int
 name|mib
 index|[
@@ -765,11 +791,25 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|outname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|outname
+argument_list|)
+argument_list|,
+literal|"%s.gmon"
+argument_list|,
+name|__progname
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|open
 argument_list|(
-literal|"gmon.out"
+name|outname
 argument_list|,
 name|O_CREAT
 operator||
@@ -787,9 +827,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
-literal|"mcount: gmon.out"
+literal|"_mcleanup: %s - %s"
+argument_list|,
+name|outname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -821,7 +868,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"mcount: gmon.log"
+literal|"_mcleanup: gmon.log"
 argument_list|)
 expr_stmt|;
 return|return;
