@@ -32,12 +32,6 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
 begin_else
 else|#
 directive|else

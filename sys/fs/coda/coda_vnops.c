@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/select.h>
 end_include
 
