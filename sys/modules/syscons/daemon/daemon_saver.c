@@ -108,7 +108,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 modifier|*
 name|message
 decl_stmt|;
@@ -134,7 +134,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 modifier|*
 name|daemon_pic
 index|[]
@@ -185,7 +185,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 modifier|*
 name|daemon_attr
 index|[]
@@ -240,16 +240,16 @@ end_comment
 
 begin_function
 specifier|static
-name|char
+name|u_char
 name|xflip_symbol
 parameter_list|(
-name|char
+name|u_char
 name|symbol
 parameter_list|)
 block|{
 specifier|static
 specifier|const
-name|char
+name|u_char
 name|lchars
 index|[]
 init|=
@@ -257,7 +257,7 @@ literal|"`'(){}[]\\/<>"
 decl_stmt|;
 specifier|static
 specifier|const
-name|char
+name|u_char
 name|rchars
 index|[]
 init|=
@@ -911,7 +911,7 @@ parameter_list|,
 name|int
 name|xoff
 parameter_list|,
-name|char
+name|u_char
 modifier|*
 name|s
 parameter_list|,
@@ -1311,10 +1311,6 @@ name|typos
 argument_list|,
 name|toff
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|message
 argument_list|,
 name|tlen
@@ -1830,10 +1826,6 @@ name|typos
 argument_list|,
 name|toff
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|message
 argument_list|,
 name|tlen
