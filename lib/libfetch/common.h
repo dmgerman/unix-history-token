@@ -19,12 +19,6 @@ begin_comment
 comment|/* Structure used for error message lists */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ERRCAT_
-end_define
-
 begin_struct
 struct|struct
 name|fetcherr
@@ -119,6 +113,23 @@ name|size
 parameter_list|,
 name|size_t
 modifier|*
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_fetch_putln
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
