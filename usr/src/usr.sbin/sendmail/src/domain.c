@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.37 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.38 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.37 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.38 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1182,7 +1182,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	**  We do at least one level of search if 	**	- there is no dot and RES_DEFNAME is set, or 	**	- there is at least one dot, there is no trailing dot, 	**	  and RES_DNSRCH is set. 	*/
+comment|/* 	**  We assume that RES_DEFNAMES and RES_DNSRCH are set -- if we 	**  don't want this behaviour, don't use $[ ... $] at all! 	*/
 if|if
 condition|(
 name|ret
@@ -1190,17 +1190,9 @@ operator|<
 literal|0
 operator|&&
 operator|(
-operator|(
 name|n
 operator|==
 literal|0
-operator|&&
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_DEFNAMES
-operator|)
 operator|||
 operator|(
 name|n
@@ -1212,12 +1204,6 @@ operator|--
 name|cp
 operator|!=
 literal|'.'
-operator|&&
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_DNSRCH
 operator|)
 operator|)
 condition|)
