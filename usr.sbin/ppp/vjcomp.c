@@ -249,6 +249,7 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -257,6 +258,7 @@ name|bp
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -723,6 +725,7 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf

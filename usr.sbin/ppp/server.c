@@ -983,16 +983,19 @@ name|struct
 name|fdescriptor
 modifier|*
 name|d
+name|__unused
 parameter_list|,
 name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 comment|/* We never want to write here ! */
@@ -1029,6 +1032,16 @@ block|}
 block|,
 operator|-
 literal|1
+block|,
+block|{
+literal|""
+block|,
+literal|""
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2091,6 +2104,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|)
 block|{
 if|if

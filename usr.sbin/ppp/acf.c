@@ -167,6 +167,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -180,6 +181,7 @@ name|bp
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -253,6 +255,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -267,6 +270,7 @@ parameter_list|,
 name|u_short
 modifier|*
 name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct

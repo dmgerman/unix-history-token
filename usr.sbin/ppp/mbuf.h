@@ -11,7 +11,7 @@ name|size_t
 name|m_size
 decl_stmt|;
 comment|/* size allocated (excluding header) */
-name|short
+name|u_short
 name|m_offset
 decl_stmt|;
 comment|/* offset from header end to start position */
@@ -74,7 +74,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((bp) ? (u_char *)((bp)+1) + (bp)->m_offset : NULL)
+value|((bp) ? (u_char *)((bp)+1) + (bp)->m_offset : (u_char *)bp)
 end_define
 
 begin_define
@@ -85,7 +85,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((bp) ? (const u_char *)((bp)+1) + (bp)->m_offset : NULL)
+value|((bp) ? (const u_char *)((bp)+1) + (bp)->m_offset : (const u_char *)bp)
 end_define
 
 begin_define
@@ -415,7 +415,7 @@ end_struct_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|size_t
 name|m_length
 parameter_list|(
 name|struct
@@ -536,7 +536,7 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|size_t
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl

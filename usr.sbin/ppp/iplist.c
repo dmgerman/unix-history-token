@@ -919,6 +919,9 @@ name|pos
 operator|<
 literal|0
 operator|||
+operator|(
+name|unsigned
+operator|)
 name|pos
 operator|>=
 name|list
@@ -983,6 +986,9 @@ if|if
 condition|(
 name|pos
 operator|<
+operator|(
+name|int
+operator|)
 name|list
 operator|->
 name|cur

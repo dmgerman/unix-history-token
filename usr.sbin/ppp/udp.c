@@ -245,7 +245,7 @@ value|((d)->type == UDP_DEVICE ? (struct udpdevice *)d : NULL)
 end_define
 
 begin_function
-name|int
+name|unsigned
 name|udp_DeviceSize
 parameter_list|(
 name|void
@@ -619,14 +619,17 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|auxfd
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|nauxfd
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -773,14 +776,17 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|auxfd
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|nauxfd
+name|__unused
 parameter_list|)
 block|{
 if|if

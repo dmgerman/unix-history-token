@@ -432,7 +432,7 @@ literal|"*"
 block|}
 block|}
 struct|;
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for
@@ -713,7 +713,7 @@ literal|"*"
 block|}
 block|}
 struct|;
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for
@@ -931,9 +931,20 @@ name|char
 modifier|*
 name|packet
 parameter_list|,
+ifdef|#
+directive|ifdef
+name|NOINET6
+name|u_int32_t
+name|family
+name|__unused
+parameter_list|,
+else|#
+directive|else
 name|u_int32_t
 name|family
 parameter_list|,
+endif|#
+directive|endif
 specifier|const
 name|struct
 name|filter
@@ -2417,7 +2428,7 @@ name|hptr
 decl_stmt|,
 name|tmp
 decl_stmt|;
-name|int
+name|unsigned
 name|len
 decl_stmt|;
 name|ptr
@@ -2570,6 +2581,9 @@ name|end
 operator|-
 name|ptr
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|namewithdot
 condition|)
@@ -2597,6 +2611,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|len
 operator|>
 name|end
@@ -2756,6 +2773,12 @@ modifier|*
 name|psecs
 parameter_list|)
 block|{
+name|char
+name|logbuf
+index|[
+literal|200
+index|]
+decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -2832,20 +2855,14 @@ name|pri
 decl_stmt|,
 name|logit
 decl_stmt|,
-name|loglen
-decl_stmt|,
 name|result
-decl_stmt|;
-name|char
-name|logbuf
-index|[
-literal|200
-index|]
-decl_stmt|;
-name|int
+decl_stmt|,
 name|datalen
 decl_stmt|,
 name|frag
+decl_stmt|;
+name|unsigned
+name|loglen
 decl_stmt|;
 name|u_char
 name|tos
@@ -4198,6 +4215,15 @@ argument_list|,
 name|psecs
 argument_list|)
 expr_stmt|;
+name|loglen
+operator|+=
+name|strlen
+argument_list|(
+name|logbuf
+operator|+
+name|loglen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|result
@@ -5091,7 +5117,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|size_t
 name|ip_Input
 parameter_list|(
 name|struct
@@ -5113,10 +5139,11 @@ name|u_int32_t
 name|af
 parameter_list|)
 block|{
-name|int
-name|nb
-decl_stmt|,
+name|ssize_t
 name|nw
+decl_stmt|;
+name|size_t
+name|nb
 decl_stmt|;
 name|struct
 name|tun_data
@@ -5152,7 +5179,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"ip_Input: %s: Packet too large (got %d, max %d)\n"
+literal|"ip_Input: %s: Packet too large (got %zd, max %d)\n"
 argument_list|,
 name|l
 operator|->
@@ -5338,6 +5365,9 @@ if|if
 condition|(
 name|nw
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|nb
 condition|)
 block|{
@@ -5352,7 +5382,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ip_Input: %s: wrote %d, got %s\n"
+literal|"ip_Input: %s: wrote %zd, got %s\n"
 argument_list|,
 name|l
 operator|->
@@ -5371,7 +5401,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ip_Input: %s: wrote %d, got %d\n"
+literal|"ip_Input: %s: wrote %zd, got %zd\n"
 argument_list|,
 name|l
 operator|->

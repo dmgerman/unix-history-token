@@ -761,8 +761,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|SpeedToInt
+name|unsigned
+name|SpeedToUnsigned
 parameter_list|(
 name|speed_t
 parameter_list|)
@@ -772,9 +772,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|speed_t
-name|IntToSpeed
+name|UnsignedToSpeed
 parameter_list|(
-name|int
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl

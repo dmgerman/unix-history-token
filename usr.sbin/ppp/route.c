@@ -896,7 +896,7 @@ parameter_list|,
 name|u_int32_t
 name|f
 parameter_list|,
-name|int
+name|unsigned
 name|max
 parameter_list|)
 block|{
@@ -947,6 +947,9 @@ name|flags
 operator|-
 name|name
 operator|<
+operator|(
+name|int
+operator|)
 name|max
 condition|;
 name|p
@@ -979,8 +982,14 @@ name|prompt
 argument_list|,
 literal|"%-*.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|max
 argument_list|,
+operator|(
+name|int
+operator|)
 name|max
 argument_list|,
 name|name
@@ -1497,6 +1506,32 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifs
+index|[
+name|ifm
+operator|->
+name|ifm_index
+operator|-
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Skipping interface %d: Out of memory\n"
+argument_list|,
+name|ifm
+operator|->
+name|ifm_index
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|memcpy
 argument_list|(
 name|ifs
@@ -1547,6 +1582,7 @@ name|ifm
 operator|->
 name|ifm_index
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -2985,7 +3021,7 @@ argument_list|(
 name|LogTCPIP
 argument_list|,
 literal|"route_UpdateMTU: Netif: %d (%s), dst %s,"
-literal|" mtu %d\n"
+literal|" mtu %lu\n"
 argument_list|,
 name|rtm
 operator|->
@@ -3814,9 +3850,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|r
+operator|==
+name|NULL
 condition|)
+block|{
 name|r
 operator|=
 operator|(
@@ -3833,6 +3871,23 @@ name|sticky_route
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"route_Add: Out of memory!\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 name|r
 operator|->
 name|type

@@ -324,7 +324,7 @@ name|char
 modifier|*
 name|filter_Action2Nam
 parameter_list|(
-name|int
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,7 +336,7 @@ name|char
 modifier|*
 name|filter_Op2Nam
 parameter_list|(
-name|int
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl

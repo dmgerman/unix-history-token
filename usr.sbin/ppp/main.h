@@ -8,7 +8,7 @@ specifier|extern
 name|void
 name|Cleanup
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

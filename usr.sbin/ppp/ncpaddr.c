@@ -654,27 +654,26 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|adjust_linklocal
-parameter_list|(
-name|struct
-name|sockaddr_in6
-modifier|*
-name|sin6
-parameter_list|)
-block|{
-comment|/* XXX: ?????!?!?!!!!!  This is horrible ! */
+begin_if
 if|#
 directive|if
 literal|0
+end_if
+
+begin_comment
+unit|static void adjust_linklocal(struct sockaddr_in6 *sin6) {
+comment|/* XXX: ?????!?!?!!!!!  This is horrible ! */
+end_comment
+
+begin_comment
 comment|/*      * The kernel does not understand sin6_scope_id for routing at this moment.      * We should rather keep the embedded ID.      * jinmei@kame.net, 20011026      */
-block|if (IN6_IS_ADDR_LINKLOCAL(&sin6->sin6_addr) ||         IN6_IS_ADDR_MC_LINKLOCAL(&sin6->sin6_addr)) {       sin6->sin6_scope_id =         ntohs(*(u_short *)&sin6->sin6_addr.s6_addr[2]);       *(u_short *)&sin6->sin6_addr.s6_addr[2] = 0;     }
+end_comment
+
+begin_endif
+unit|if (IN6_IS_ADDR_LINKLOCAL(&sin6->sin6_addr) ||         IN6_IS_ADDR_MC_LINKLOCAL(&sin6->sin6_addr)) {       sin6->sin6_scope_id =         ntohs(*(u_short *)&sin6->sin6_addr.s6_addr[2]);       *(u_short *)&sin6->sin6_addr.s6_addr[2] = 0;     } }
 endif|#
 directive|endif
-block|}
-end_function
+end_endif
 
 begin_endif
 endif|#
@@ -1567,12 +1566,12 @@ name|addr
 operator|->
 name|ncpaddr_ip6addr
 expr_stmt|;
-name|adjust_linklocal
-argument_list|(
-operator|&
-name|sin6
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|adjust_linklocal(&sin6);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NI_WITHSCOPEID

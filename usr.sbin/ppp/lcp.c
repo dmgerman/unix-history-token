@@ -502,7 +502,7 @@ name|char
 modifier|*
 name|protoname
 parameter_list|(
-name|int
+name|unsigned
 name|proto
 parameter_list|)
 block|{
@@ -591,10 +591,6 @@ block|}
 decl_stmt|;
 if|if
 condition|(
-name|proto
-operator|<
-literal|0
-operator|||
 name|proto
 operator|>
 sizeof|sizeof
@@ -1187,6 +1183,25 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
+literal|"           LCP ECHO =  %s\n"
+argument_list|,
+name|lcp
+operator|->
+name|cfg
+operator|.
+name|echo
+condition|?
+literal|"enabled"
+else|:
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
 literal|"           PAP =       %s\n"
 argument_list|,
 name|command_ShowNegval
@@ -1508,6 +1523,14 @@ operator|.
 name|lqr
 operator|=
 name|NEG_ACCEPTED
+expr_stmt|;
+name|lcp
+operator|->
+name|cfg
+operator|.
+name|echo
+operator|=
+literal|0
 expr_stmt|;
 name|lcp
 operator|->
@@ -2691,7 +2714,7 @@ name|CALLBACK_E164
 argument_list|)
 condition|)
 block|{
-name|int
+name|size_t
 name|sz
 init|=
 name|strlen
@@ -2728,7 +2751,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Truncating E164 data to %d octets (oops!)\n"
+literal|"Truncating E164 data to %zu octets (oops!)\n"
 argument_list|,
 name|sz
 argument_list|)
@@ -3233,6 +3256,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* Term REQ just sent by FSM */
@@ -3995,8 +4019,6 @@ name|fp
 argument_list|)
 decl_stmt|;
 name|int
-name|sz
-decl_stmt|,
 name|pos
 decl_stmt|,
 name|op
@@ -4004,6 +4026,9 @@ decl_stmt|,
 name|callback_req
 decl_stmt|,
 name|chap_type
+decl_stmt|;
+name|size_t
+name|sz
 decl_stmt|;
 name|u_int32_t
 name|magic
@@ -4027,7 +4052,6 @@ name|proto
 decl_stmt|;
 name|struct
 name|lqrreq
-modifier|*
 name|req
 decl_stmt|;
 name|char
@@ -4067,6 +4091,8 @@ name|nak
 decl_stmt|;
 name|sz
 operator|=
+literal|0
+expr_stmt|;
 name|op
 operator|=
 name|callback_req
@@ -4079,6 +4105,9 @@ name|end
 operator|-
 name|cp
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|opt
@@ -5581,14 +5610,16 @@ break|break;
 case|case
 name|TY_QUALPROTO
 case|:
+name|memcpy
+argument_list|(
+operator|&
 name|req
-operator|=
-operator|(
-expr|struct
-name|lqrreq
-operator|*
-operator|)
+argument_list|,
 name|opt
+argument_list|,
+sizeof|sizeof
+name|req
+argument_list|)
 expr_stmt|;
 name|log_Printf
 argument_list|(
@@ -5601,7 +5632,7 @@ argument_list|,
 name|ntohs
 argument_list|(
 name|req
-operator|->
+operator|.
 name|proto
 argument_list|)
 argument_list|,
@@ -5611,7 +5642,7 @@ operator|)
 name|ntohl
 argument_list|(
 name|req
-operator|->
+operator|.
 name|period
 argument_list|)
 operator|*
@@ -5631,7 +5662,7 @@ condition|(
 name|ntohs
 argument_list|(
 name|req
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|!=
@@ -5679,7 +5710,7 @@ operator|=
 name|ntohl
 argument_list|(
 name|req
-operator|->
+operator|.
 name|period
 argument_list|)
 expr_stmt|;
@@ -5702,7 +5733,7 @@ operator|*
 literal|100
 expr_stmt|;
 name|req
-operator|->
+operator|.
 name|period
 operator|=
 name|htonl
@@ -5731,7 +5762,7 @@ operator|=
 name|ntohl
 argument_list|(
 name|req
-operator|->
+operator|.
 name|period
 argument_list|)
 expr_stmt|;
@@ -6250,11 +6281,18 @@ name|len
 operator|==
 literal|2
 condition|)
+block|{
 name|op
 operator|=
 name|CALLBACK_NONE
 expr_stmt|;
+name|sz
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
+block|{
 name|op
 operator|=
 operator|(
@@ -6277,6 +6315,7 @@ name|len
 operator|-
 literal|3
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|op
@@ -6306,6 +6345,9 @@ literal|"%s Dialstring %.*s\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6327,6 +6369,9 @@ literal|"%s Location %.*s\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6348,6 +6393,9 @@ literal|"%s E.164 (%.*s)\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6369,6 +6417,9 @@ literal|"%s Name %.*s\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6567,7 +6618,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Truncating option arg to %d octets\n"
+literal|"Truncating option arg to %zu octets\n"
 argument_list|,
 name|sz
 argument_list|)
@@ -7256,8 +7307,6 @@ operator|->
 name|hdr
 operator|.
 name|len
-operator|-
-literal|3
 operator|<
 sizeof|sizeof
 name|p
@@ -7269,6 +7318,8 @@ operator|.
 name|enddisc
 operator|.
 name|address
+operator|+
+literal|3
 operator|&&
 name|opt
 operator|->
@@ -7487,14 +7538,14 @@ expr_stmt|;
 if|if
 condition|(
 name|sz
+operator|+
+literal|2
 operator|>
 name|opt
 operator|->
 name|hdr
 operator|.
 name|len
-operator|-
-literal|2
 condition|)
 name|sz
 operator|=
@@ -7943,6 +7994,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|link

@@ -294,14 +294,17 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|auxfd
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|nauxfd
+name|__unused
 parameter_list|)
 block|{
 if|if

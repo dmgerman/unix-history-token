@@ -73,7 +73,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|unsigned
 name|ng_DeviceSize
 parameter_list|(
 name|void

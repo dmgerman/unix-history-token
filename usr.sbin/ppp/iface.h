@@ -50,11 +50,12 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Interface flags (IFF_*) */
-name|int
+name|unsigned
+name|long
 name|mtu
 decl_stmt|;
 comment|/* struct tuninfo MTU */
-name|int
+name|unsigned
 name|addrs
 decl_stmt|;
 comment|/* How many in_addr's */

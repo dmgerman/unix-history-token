@@ -663,7 +663,7 @@ name|char
 modifier|*
 name|cbcpstate
 parameter_list|(
-name|int
+name|unsigned
 name|s
 parameter_list|)
 block|{
@@ -1022,7 +1022,7 @@ name|char
 modifier|*
 name|cbcp_data_Type
 parameter_list|(
-name|int
+name|unsigned
 name|type
 parameter_list|)
 block|{
@@ -3475,6 +3475,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -3519,7 +3520,7 @@ name|dl
 operator|->
 name|cbcp
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 if|if
@@ -3607,7 +3608,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Corrupt CBCP packet (code %d, length %d not %d)"
+literal|"Corrupt CBCP packet (code %d, length %u not %zu)"
 literal|" - ignored\n"
 argument_list|,
 name|head
@@ -4175,7 +4176,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Unrecognised CBCP packet (code %d, length %d)\n"
+literal|"Unrecognised CBCP packet (code %d, length %zd)\n"
 argument_list|,
 name|head
 operator|->

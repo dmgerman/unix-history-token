@@ -399,7 +399,7 @@ value|"netgraph:"
 end_define
 
 begin_function
-name|int
+name|unsigned
 name|ng_DeviceSize
 parameter_list|(
 name|void
@@ -425,11 +425,6 @@ name|ngdevice
 modifier|*
 name|dev
 parameter_list|,
-name|struct
-name|physical
-modifier|*
-name|p
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -442,16 +437,17 @@ index|[
 name|NG_PATHSIZ
 index|]
 decl_stmt|;
-name|int
-name|len
-decl_stmt|,
-name|pos
-decl_stmt|,
-name|dpos
-decl_stmt|;
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|int
+name|pos
+decl_stmt|,
+name|dpos
 decl_stmt|;
 comment|/*    * We expect a node path, one or more spaces, a command, one or more    * spaces and an ascii netgraph structure.    */
 name|data
@@ -617,6 +613,9 @@ literal|0
 init|;
 name|pos
 operator|<
+operator|(
+name|int
+operator|)
 name|len
 condition|;
 control|)
@@ -791,7 +790,7 @@ index|[
 name|NG_PATHSIZ
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 ifdef|#
@@ -1082,11 +1081,12 @@ name|ng_MessageOut
 argument_list|(
 name|dev
 argument_list|,
-name|p
-argument_list|,
 name|v
 argument_list|)
 condition|?
+operator|(
+name|ssize_t
+operator|)
 name|n
 else|:
 operator|-
@@ -1115,6 +1115,9 @@ condition|?
 operator|-
 literal|1
 else|:
+operator|(
+name|ssize_t
+operator|)
 name|n
 return|;
 block|}
@@ -1397,6 +1400,7 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -1574,6 +1578,7 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -2130,7 +2135,7 @@ modifier|*
 name|endp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 if|if
@@ -2349,7 +2354,8 @@ decl_stmt|,
 name|sz
 decl_stmt|,
 name|done
-decl_stmt|,
+decl_stmt|;
+name|unsigned
 name|f
 decl_stmt|;
 name|dev

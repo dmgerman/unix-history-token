@@ -366,7 +366,7 @@ decl_stmt|;
 name|int
 name|cohnum
 decl_stmt|;
-name|int
+name|unsigned
 name|keylen
 decl_stmt|;
 comment|/* 8 or 16 bytes */
@@ -632,9 +632,11 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -1004,6 +1006,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|)
 block|{
 name|log_Printf
@@ -1629,21 +1632,27 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|ccp
 modifier|*
 name|ccp
+name|__unused
 parameter_list|,
 name|u_short
 name|proto
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|mi
+name|mp
+name|__unused
 parameter_list|)
-block|{ }
+block|{
+comment|/* Nothing to see here */
+block|}
 end_function
 
 begin_function
@@ -2186,6 +2195,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|struct
@@ -2374,9 +2384,14 @@ literal|"MPPE: MasterKey is invalid,"
 literal|" MPPE is available only with CHAP81 authentication\n"
 argument_list|)
 expr_stmt|;
+name|mval
+operator|=
+literal|0
+expr_stmt|;
 name|ua_htonl
 argument_list|(
-literal|0x0
+operator|&
+name|mval
 argument_list|,
 name|o
 operator|->
@@ -2968,6 +2983,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -3246,6 +3262,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt

@@ -128,11 +128,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -141,10 +143,12 @@ name|bp
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
 name|proto
+name|__unused
 parameter_list|)
 block|{
 name|log_DumpBp
@@ -186,6 +190,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -200,6 +205,7 @@ parameter_list|,
 name|u_short
 modifier|*
 name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct

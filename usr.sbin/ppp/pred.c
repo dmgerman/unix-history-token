@@ -653,11 +653,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*
 name|o
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -708,11 +710,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*
 name|o
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -773,9 +777,11 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -1563,21 +1569,27 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|ccp
 modifier|*
 name|ccp
+name|__unused
 parameter_list|,
 name|u_short
 name|proto
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|bp
+name|__unused
 parameter_list|)
-block|{ }
+block|{
+comment|/* Nothing to see here */
+block|}
 end_function
 
 begin_function
@@ -1591,6 +1603,7 @@ name|struct
 name|fsm_opt
 modifier|*
 name|o
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1608,6 +1621,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -1619,6 +1633,7 @@ name|struct
 name|ccp_config
 modifier|*
 name|cfg
+name|__unused
 parameter_list|)
 block|{
 name|o
@@ -1641,6 +1656,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -1652,6 +1668,7 @@ name|struct
 name|ccp_config
 modifier|*
 name|cfg
+name|__unused
 parameter_list|)
 block|{
 if|if

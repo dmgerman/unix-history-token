@@ -198,7 +198,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|,
 name|char
 modifier|*

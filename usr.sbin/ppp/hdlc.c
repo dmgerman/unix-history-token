@@ -941,25 +941,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|hdlc_WrapperOctets
-parameter_list|(
-name|struct
-name|lcp
-modifier|*
-name|lcp
-parameter_list|,
-name|u_short
-name|proto
-parameter_list|)
-block|{
-return|return
-literal|2
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|struct
 name|mbuf
@@ -970,11 +951,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -983,10 +966,12 @@ name|bp
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
 name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2018,7 +2003,7 @@ name|u_short
 name|proto
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for
@@ -2092,6 +2077,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -2106,6 +2092,7 @@ parameter_list|,
 name|u_short
 modifier|*
 name|proto
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2387,7 +2374,7 @@ modifier|*
 modifier|*
 name|cp
 parameter_list|,
-name|int
+name|unsigned
 name|n
 parameter_list|,
 name|int

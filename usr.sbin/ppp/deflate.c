@@ -200,9 +200,11 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -2208,6 +2210,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -2275,6 +2278,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -2286,6 +2290,7 @@ name|struct
 name|ccp_config
 modifier|*
 name|cfg
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -2379,6 +2384,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -2549,6 +2555,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt
@@ -2684,6 +2691,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|fsm_opt

@@ -2183,8 +2183,6 @@ name|inskip
 decl_stmt|,
 name|in6skip
 decl_stmt|,
-name|n
-decl_stmt|,
 name|s4
 init|=
 operator|-
@@ -2197,6 +2195,9 @@ literal|1
 decl_stmt|,
 modifier|*
 name|s
+decl_stmt|;
+name|unsigned
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -2503,11 +2504,12 @@ block|{
 name|int
 name|af
 decl_stmt|,
-name|n
-decl_stmt|,
 name|removed
 decl_stmt|,
 name|s
+decl_stmt|;
+name|unsigned
+name|n
 decl_stmt|;
 name|struct
 name|ncpaddr
@@ -3078,9 +3080,10 @@ name|struct
 name|ncpaddr
 name|found
 decl_stmt|;
-name|int
+name|unsigned
 name|n
-decl_stmt|,
+decl_stmt|;
+name|int
 name|res
 decl_stmt|,
 name|s
@@ -3405,6 +3408,9 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|new_flags
 operator|=
 operator|(
@@ -3423,6 +3429,18 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|new_flags
+operator|=
+name|ifrq
+operator|.
+name|ifr_flags
+operator|&
+literal|0xffff
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|how
@@ -3447,6 +3465,9 @@ name|new_flags
 operator|&
 literal|0xffff
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|ifrq
 operator|.
 name|ifr_flagshigh
@@ -3455,6 +3476,8 @@ name|new_flags
 operator|>>
 literal|16
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ID0ioctl
@@ -3735,9 +3758,10 @@ decl_stmt|,
 modifier|*
 name|current
 decl_stmt|;
-name|int
+name|unsigned
 name|f
-decl_stmt|,
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 ifndef|#
@@ -3878,7 +3902,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"> mtu %d has %d address%s:\n"
+literal|"> mtu %lu has %d address%s:\n"
 argument_list|,
 name|iface
 operator|->

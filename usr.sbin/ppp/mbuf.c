@@ -228,7 +228,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|size_t
 name|m_length
 parameter_list|(
 name|struct
@@ -237,7 +237,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 for|for
@@ -1167,7 +1167,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
-name|size_t
+name|u_short
 name|extra
 parameter_list|)
 block|{
@@ -1357,6 +1357,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|n
 operator|<
 name|bp
@@ -1441,6 +1444,9 @@ name|m_len
 control|)
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|n
 operator|<
 name|bp
@@ -1494,7 +1500,7 @@ name|size_t
 name|m_len
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|plen
 decl_stmt|;
 name|int

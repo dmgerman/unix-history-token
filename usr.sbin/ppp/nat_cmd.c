@@ -1202,7 +1202,8 @@ name|pe
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
+decl_stmt|;
+name|unsigned
 name|len
 decl_stmt|;
 name|len
@@ -2521,6 +2522,7 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -2529,6 +2531,7 @@ name|bp
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -2634,6 +2637,7 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -2791,6 +2795,9 @@ case|case
 name|PKT_ALIAS_UNRESOLVED_FRAGMENT
 case|:
 comment|/* Save the data for later */
+if|if
+condition|(
+operator|(
 name|fptr
 operator|=
 name|malloc
@@ -2799,7 +2806,31 @@ name|bp
 operator|->
 name|m_len
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"nat_LayerPull: Dropped unresolved fragment -"
+literal|" out of memory!\n"
+argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|bp
 operator|=
 name|mbuf_Read
@@ -2843,6 +2874,7 @@ operator|++
 name|gfrags
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|PKT_ALIAS_FOUND_HEADER_FRAGMENT

@@ -682,11 +682,13 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* The given FSM is about to start up ! */
@@ -2569,6 +2571,7 @@ name|struct
 name|fdescriptor
 modifier|*
 name|d
+name|__unused
 parameter_list|,
 name|struct
 name|bundle
@@ -3161,6 +3164,7 @@ name|struct
 name|fdescriptor
 modifier|*
 name|d
+name|__unused
 parameter_list|,
 name|struct
 name|bundle
@@ -4153,30 +4157,66 @@ name|bundle
 operator|.
 name|cfg
 operator|.
-name|opt
+name|optmask
 operator|=
+operator|(
+literal|1ull
+operator|<<
 name|OPT_IDCHECK
+operator|)
 operator||
+operator|(
+literal|1ull
+operator|<<
 name|OPT_LOOPBACK
+operator|)
 operator||
+operator|(
+literal|1ull
+operator|<<
 name|OPT_SROUTES
+operator|)
 operator||
+operator|(
+literal|1ull
+operator|<<
 name|OPT_TCPMSSFIXUP
+operator|)
 operator||
+operator|(
+literal|1ull
+operator|<<
 name|OPT_THROUGHPUT
+operator|)
 operator||
+operator|(
+literal|1ull
+operator|<<
 name|OPT_UTMP
+operator|)
+operator||
+operator|(
+literal|1ull
+operator|<<
+name|OPT_NAS_IP_ADDRESS
+operator|)
+operator||
+operator|(
+literal|1ull
+operator|<<
+name|OPT_NAS_IDENTIFIER
+operator|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NOINET6
+name|opt_enable
+argument_list|(
+operator|&
 name|bundle
-operator|.
-name|cfg
-operator|.
-name|opt
-operator||=
+argument_list|,
 name|OPT_IPCP
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4184,13 +4224,13 @@ name|probe
 operator|.
 name|ipv6_available
 condition|)
+name|opt_enable
+argument_list|(
+operator|&
 name|bundle
-operator|.
-name|cfg
-operator|.
-name|opt
-operator||=
+argument_list|,
 name|OPT_IPV6CP
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -5466,19 +5506,16 @@ modifier|*
 name|bundle
 parameter_list|,
 name|int
-name|bit
+name|opt
 parameter_list|)
 block|{
 return|return
-operator|(
+name|Enabled
+argument_list|(
 name|bundle
-operator|->
-name|cfg
-operator|.
+argument_list|,
 name|opt
-operator|&
-name|bit
-operator|)
+argument_list|)
 condition|?
 literal|"enabled"
 else|:
@@ -5820,7 +5857,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Choked Timer:      %ds\n"
+literal|" Choked Timer:      %us\n"
 argument_list|,
 name|arg
 operator|->
@@ -5880,7 +5917,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"%ds"
+literal|"%us"
 argument_list|,
 name|arg
 operator|->
@@ -5911,7 +5948,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|", min %ds"
+literal|", min %us"
 argument_list|,
 name|arg
 operator|->
@@ -6228,6 +6265,42 @@ name|OPT_UTMP
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" NAS-IP-Address:    %-20.20s"
+argument_list|,
+name|optval
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_NAS_IP_ADDRESS
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" NAS-Identifier:    %s\n"
+argument_list|,
+name|optval
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_NAS_IDENTIFIER
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -6380,7 +6453,7 @@ operator|->
 name|upat
 condition|)
 block|{
-name|int
+name|unsigned
 name|up
 init|=
 name|now
@@ -6391,10 +6464,16 @@ name|upat
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|long
-name|long
-operator|)
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|idle
+operator|.
+name|min_timeout
+operator|>
+name|up
+operator|&&
 name|bundle
 operator|->
 name|cfg
@@ -6500,10 +6579,10 @@ name|bundle
 modifier|*
 name|bundle
 parameter_list|,
-name|int
+name|unsigned
 name|timeout
 parameter_list|,
-name|int
+name|unsigned
 name|min_timeout
 parameter_list|)
 block|{
@@ -6517,12 +6596,6 @@ name|timeout
 operator|=
 name|timeout
 expr_stmt|;
-if|if
-condition|(
-name|min_timeout
-operator|>=
-literal|0
-condition|)
 name|bundle
 operator|->
 name|cfg
@@ -7464,7 +7537,8 @@ decl_stmt|,
 name|nfd
 decl_stmt|,
 name|onfd
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|got
 decl_stmt|;
 name|struct
@@ -7732,6 +7806,9 @@ name|MSG_WAITALL
 argument_list|)
 operator|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|iov
 index|[
 literal|0
@@ -7764,7 +7841,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed recvmsg: Got %d, not %u\n"
+literal|"Failed recvmsg: Got %zd, not %u\n"
 argument_list|,
 name|got
 argument_list|,
@@ -8061,7 +8138,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed write: Got %d, not %d\n"
+literal|"Failed write: Got %zd, not %d\n"
 argument_list|,
 name|got
 argument_list|,
@@ -8153,7 +8230,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed write: Got %d, not %d\n"
+literal|"Failed write: Got %zd, not %d\n"
 argument_list|,
 name|got
 argument_list|,
@@ -8440,7 +8517,8 @@ name|reply
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|got
 decl_stmt|;
 name|pid_t
@@ -8910,6 +8988,9 @@ if|if
 condition|(
 name|got
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|iov
 index|[
 literal|0
@@ -8921,7 +9002,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed initial sendmsg: Only sent %d of %u\n"
+literal|"%s: Failed initial sendmsg: Only sent %zd of %u\n"
 argument_list|,
 name|sun
 operator|->
@@ -9073,7 +9154,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed writev: Wrote %d of %d\n"
+literal|"%s: Failed writev: Wrote %zd of %d\n"
 argument_list|,
 name|sun
 operator|->
@@ -9115,7 +9196,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed socketpair read: Got %d of %d\n"
+literal|"%s: Failed socketpair read: Got %zd of %d\n"
 argument_list|,
 name|sun
 operator|->
@@ -10008,7 +10089,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|unsigned
 name|bundle_HighestState
 parameter_list|(
 name|struct
@@ -10022,7 +10103,7 @@ name|datalink
 modifier|*
 name|dl
 decl_stmt|;
-name|int
+name|unsigned
 name|result
 init|=
 name|DATALINK_CLOSED
@@ -10631,7 +10712,7 @@ name|log_Printf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"Reducing MTU from %d to %d (CCP requirement)\n"
+literal|"Reducing MTU from %lu to %lu (CCP requirement)\n"
 argument_list|,
 name|bundle
 operator|->

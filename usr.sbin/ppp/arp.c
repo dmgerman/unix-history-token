@@ -354,9 +354,6 @@ name|addr
 parameter_list|,
 name|int
 name|add
-parameter_list|,
-name|int
-name|s
 parameter_list|)
 block|{
 name|int
@@ -379,8 +376,6 @@ condition|(
 operator|!
 name|arp_EtherAddr
 argument_list|(
-name|s
-argument_list|,
 name|addr
 argument_list|,
 operator|&
@@ -655,9 +650,6 @@ parameter_list|,
 name|struct
 name|in_addr
 name|addr
-parameter_list|,
-name|int
-name|s
 parameter_list|)
 block|{
 return|return
@@ -669,8 +661,6 @@ argument_list|,
 name|addr
 argument_list|,
 literal|1
-argument_list|,
-name|s
 argument_list|)
 operator|)
 return|;
@@ -693,9 +683,6 @@ parameter_list|,
 name|struct
 name|in_addr
 name|addr
-parameter_list|,
-name|int
-name|s
 parameter_list|)
 block|{
 return|return
@@ -707,8 +694,6 @@ argument_list|,
 name|addr
 argument_list|,
 literal|0
-argument_list|,
-name|s
 argument_list|)
 operator|)
 return|;
@@ -781,8 +766,6 @@ condition|(
 operator|!
 name|arp_EtherAddr
 argument_list|(
-name|s
-argument_list|,
 name|addr
 argument_list|,
 operator|&
@@ -1048,9 +1031,6 @@ begin_function
 name|int
 name|arp_EtherAddr
 parameter_list|(
-name|int
-name|s
-parameter_list|,
 name|struct
 name|in_addr
 name|ipaddr

@@ -775,71 +775,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEG_ENDDISC
+name|NEG_ECHO
 value|46
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_LQR
+name|NEG_ENDDISC
 value|47
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PAP
+name|NEG_LQR
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PPPDDEFLATE
+name|NEG_PAP
 value|49
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PRED1
+name|NEG_PPPDDEFLATE
 value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PROTOCOMP
+name|NEG_PRED1
 value|51
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_SHORTSEQ
+name|NEG_PROTOCOMP
 value|52
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_VJCOMP
+name|NEG_SHORTSEQ
 value|53
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_MPPE
+name|NEG_VJCOMP
 value|54
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_CHAP81
+name|NEG_MPPE
 value|55
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEG_CHAP81
+value|56
 end_define
 
 begin_decl_stmt
@@ -848,7 +855,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"3.2"
+literal|"3.4.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -2287,6 +2294,10 @@ if|if
 condition|(
 name|argc
 operator|>=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 name|argv
 operator|/
@@ -2295,6 +2306,7 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 condition|)
 block|{
 name|argc
@@ -2400,6 +2412,7 @@ name|cmdargs
 specifier|const
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 name|log_Printf
@@ -4546,6 +4559,10 @@ if|if
 condition|(
 name|argc
 operator|>=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 name|argv
 operator|/
@@ -4554,6 +4571,7 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 condition|)
 block|{
 name|argc
@@ -5102,6 +5120,8 @@ block|,
 literal|"static address translation"
 block|,
 literal|"nat addr [addr_local addr_alias]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5137,6 +5157,8 @@ block|,
 literal|"enable NAT"
 block|,
 literal|"nat enable yes|no"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5172,6 +5194,8 @@ block|,
 literal|"port redirection"
 block|,
 literal|"nat port proto localaddr:port[-port] aliasport[-aliasport]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5186,6 +5210,8 @@ block|,
 literal|"protocol redirection"
 block|,
 literal|"nat proto proto localIP [publicIP [remoteIP]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5200,6 +5226,8 @@ block|,
 literal|"proxy control"
 block|,
 literal|"nat proxy server host[:port] ..."
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -5217,6 +5245,8 @@ block|,
 literal|"firewall control"
 block|,
 literal|"nat punch_fw [base count]"
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -5233,6 +5263,8 @@ block|,
 literal|"TCP port used by Skinny Station protocol"
 block|,
 literal|"nat skinny_port [port]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5268,6 +5300,8 @@ block|,
 literal|"Default address for incoming connections"
 block|,
 literal|"nat target addr"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5336,6 +5370,14 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -5367,6 +5409,8 @@ block|,
 literal|"Only allow certain ppp modes"
 block|,
 literal|"allow modes mode..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5381,6 +5425,8 @@ block|,
 literal|"Only allow ppp access to certain users"
 block|,
 literal|"allow users logname..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5402,6 +5448,14 @@ name|AllowCommands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -5469,6 +5523,8 @@ block|,
 literal|"Clear iface address(es)"
 block|,
 literal|"iface clear [INET | INET6]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5539,6 +5595,8 @@ block|,
 literal|"Show iface address(es)"
 block|,
 literal|"iface show"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5560,6 +5618,14 @@ name|IfaceCommands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -5593,6 +5659,8 @@ block|,
 literal|"accept option request"
 block|,
 literal|"accept option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5659,6 +5727,8 @@ block|,
 literal|"Run a background command"
 block|,
 literal|"[!]bg command"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5675,6 +5745,8 @@ block|,
 literal|"Clear throughput statistics"
 block|,
 literal|"clear ipcp|ipv6cp|physical [current|overall|peak]..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5691,6 +5763,8 @@ block|,
 literal|"Clone a link"
 block|,
 literal|"clone newname..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5707,6 +5781,8 @@ block|,
 literal|"Close an FSM"
 block|,
 literal|"close [lcp|ccp]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5759,6 +5835,8 @@ block|,
 literal|"Deny option request"
 block|,
 literal|"deny option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5793,6 +5871,8 @@ block|,
 literal|"Disable option"
 block|,
 literal|"disable option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5809,6 +5889,8 @@ block|,
 literal|"Generate a down event"
 block|,
 literal|"down [ccp|lcp]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5825,6 +5907,8 @@ block|,
 literal|"Enable option"
 block|,
 literal|"enable option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5841,6 +5925,8 @@ block|,
 literal|"Set the link identity"
 block|,
 literal|"ident text..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5871,6 +5957,8 @@ block|,
 literal|"Link specific commands"
 block|,
 literal|"link name command ..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5887,6 +5975,8 @@ block|,
 literal|"Load settings"
 block|,
 literal|"load [system ...]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5903,6 +5993,8 @@ block|,
 literal|"log information"
 block|,
 literal|"log word ..."
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -5960,6 +6052,8 @@ block|,
 literal|"Password for manipulation"
 block|,
 literal|"passwd LocalPassword"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5976,6 +6070,8 @@ block|,
 literal|"Quit PPP program"
 block|,
 literal|"quit|bye [all]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5992,6 +6088,8 @@ block|,
 literal|"Remove a link"
 block|,
 literal|"remove"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6008,6 +6106,8 @@ block|,
 literal|"Rename a link"
 block|,
 literal|"rename name"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6022,6 +6122,8 @@ block|,
 literal|"Manipulate resolv.conf"
 block|,
 literal|"resolv readonly|reload|restore|rewrite|writable"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6036,6 +6138,8 @@ block|,
 literal|"Save settings"
 block|,
 literal|"save"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6052,6 +6156,8 @@ block|,
 literal|"Transmit the link identity"
 block|,
 literal|"sendident"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6068,6 +6174,8 @@ block|,
 literal|"Set parameters"
 block|,
 literal|"set[up] var value"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6082,6 +6190,8 @@ block|,
 literal|"Run a subshell"
 block|,
 literal|"shell|! [sh command]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6098,6 +6208,8 @@ block|,
 literal|"Show status and stats"
 block|,
 literal|"show var"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6114,6 +6226,8 @@ block|,
 literal|"Enter terminal mode"
 block|,
 literal|"term"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6135,6 +6249,14 @@ name|Commands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -6580,6 +6702,8 @@ block|,
 literal|"bundle details"
 block|,
 literal|"show bundle"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6596,6 +6720,8 @@ block|,
 literal|"CCP status"
 block|,
 literal|"show cpp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6610,6 +6736,8 @@ block|,
 literal|"VJ compression stats"
 block|,
 literal|"show compress"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6626,6 +6754,8 @@ block|,
 literal|"escape characters"
 block|,
 literal|"show escape"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6640,6 +6770,8 @@ block|,
 literal|"packet filters"
 block|,
 literal|"show filter [in|out|dial|alive]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6656,6 +6788,8 @@ block|,
 literal|"HDLC errors"
 block|,
 literal|"show hdlc"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6670,6 +6804,8 @@ block|,
 literal|"Interface status"
 block|,
 literal|"show iface"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6684,6 +6820,8 @@ block|,
 literal|"IPCP status"
 block|,
 literal|"show ipcp"
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -6701,6 +6839,8 @@ block|,
 literal|"IPV6CP status"
 block|,
 literal|"show ipv6cp"
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -6719,6 +6859,8 @@ block|,
 literal|"Protocol layers"
 block|,
 literal|"show layers"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6735,6 +6877,8 @@ block|,
 literal|"LCP status"
 block|,
 literal|"show lcp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6751,6 +6895,8 @@ block|,
 literal|"(high-level) link info"
 block|,
 literal|"show link"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6765,6 +6911,8 @@ block|,
 literal|"available link names"
 block|,
 literal|"show links"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6779,6 +6927,8 @@ block|,
 literal|"log levels"
 block|,
 literal|"show log"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6793,6 +6943,8 @@ block|,
 literal|"mbuf allocations"
 block|,
 literal|"show mem"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6807,6 +6959,8 @@ block|,
 literal|"NCP status"
 block|,
 literal|"show ncp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6823,6 +6977,8 @@ block|,
 literal|"(low-level) link info"
 block|,
 literal|"show physical"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6837,6 +6993,8 @@ block|,
 literal|"multilink setup"
 block|,
 literal|"show mp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6853,6 +7011,8 @@ block|,
 literal|"protocol summary"
 block|,
 literal|"show proto"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6867,6 +7027,8 @@ block|,
 literal|"routing table"
 block|,
 literal|"show route"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6883,6 +7045,8 @@ block|,
 literal|"STOPPED timeout"
 block|,
 literal|"show stopped"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6897,6 +7061,8 @@ block|,
 literal|"alarm timers"
 block|,
 literal|"show timers"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6913,6 +7079,8 @@ block|,
 literal|"version string"
 block|,
 literal|"show version"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6927,6 +7095,8 @@ block|,
 literal|"client list"
 block|,
 literal|"show who"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6948,6 +7118,14 @@ name|ShowCommands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -7779,9 +7957,6 @@ specifier|static
 name|int
 name|arghidden
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
 name|char
 specifier|const
 modifier|*
@@ -7969,7 +8144,8 @@ index|]
 decl_stmt|;
 name|int
 name|f
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|n
 decl_stmt|;
 if|if
@@ -8074,8 +8250,6 @@ if|if
 condition|(
 name|arghidden
 argument_list|(
-name|argc
-argument_list|,
 name|argv
 argument_list|,
 name|f
@@ -8497,9 +8671,7 @@ operator|)
 operator|)
 condition|)
 name|Cleanup
-argument_list|(
-name|EX_NORMAL
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9411,6 +9583,10 @@ if|if
 condition|(
 operator|*
 name|end
+operator|||
+name|speed
+operator|<
+literal|0
 condition|)
 block|{
 name|log_Printf
@@ -9680,7 +9856,7 @@ decl_stmt|,
 modifier|*
 name|mask
 decl_stmt|;
-name|int
+name|size_t
 name|mlen
 decl_stmt|;
 comment|/* What's what ? */
@@ -13517,20 +13693,37 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
+name|unsigned
+name|long
 name|timeout
 decl_stmt|,
 name|min
 decl_stmt|;
 name|timeout
 operator|=
-name|atoi
+name|strtoul
 argument_list|(
 name|argp
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|min
 operator|=
+name|arg
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|idle
+operator|.
+name|min_timeout
+expr_stmt|;
+if|if
+condition|(
 name|arg
 operator|->
 name|argc
@@ -13540,8 +13733,10 @@ operator|->
 name|argn
 operator|+
 literal|2
-condition|?
-name|atoi
+condition|)
+name|min
+operator|=
+name|strtoul
 argument_list|(
 name|arg
 operator|->
@@ -13553,10 +13748,11 @@ name|argn
 operator|+
 literal|1
 index|]
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
-else|:
-operator|-
-literal|1
 expr_stmt|;
 name|bundle_SetIdleTimer
 argument_list|(
@@ -15935,6 +16131,8 @@ block|,
 literal|"datalink bandwidth"
 block|,
 literal|"set bandwidth value"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16227,6 +16425,8 @@ block|,
 literal|"Endpoint Discriminator"
 block|,
 literal|"set enddisc [IP|magic|label|psn value]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16243,6 +16443,8 @@ block|,
 literal|"escape characters"
 block|,
 literal|"set escape hex-digit ..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16259,6 +16461,8 @@ block|,
 literal|"set filter alive|dial|in|out rule-no permit|deny "
 literal|"[src_addr[/width]] [dst_addr[/width]] [proto "
 literal|"[src [lt|eq|gt port]] [dst [lt|eq|gt port]] [estab] [syn] [finrst]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16296,6 +16500,8 @@ block|,
 literal|"destination address"
 block|,
 literal|"set ifaddr [src-addr [dst-addr [netmask [trg-addr]]]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16397,6 +16603,8 @@ literal|"log level"
 block|,
 literal|"set log [local] [+|-]all|async|cbcp|ccp|chat|command|connect|debug|dns|hdlc|"
 literal|"id0|ipcp|lcp|lqm|phase|physical|radius|sync|tcp/ip|timer|tun..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16448,7 +16656,7 @@ block|,
 block|{
 literal|"lqrperiod"
 block|,
-name|NULL
+literal|"echoperiod"
 block|,
 name|SetVariable
 block|,
@@ -16458,7 +16666,7 @@ name|LOCAL_CX_OPT
 block|,
 literal|"LQR period"
 block|,
-literal|"set lqrperiod value"
+literal|"set lqr/echo period value"
 block|,
 operator|(
 specifier|const
@@ -16683,6 +16891,8 @@ block|,
 literal|"Process title"
 block|,
 literal|"set proctitle [value]"
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -16746,6 +16956,8 @@ block|,
 literal|"Reconnect timeout"
 block|,
 literal|"set reconnect value ntries"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16783,6 +16995,8 @@ block|,
 literal|"Redial timeout"
 block|,
 literal|"set redial secs[+inc[-incmax]][.next] [attempts]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16818,6 +17032,8 @@ block|,
 literal|"diagnostic port"
 block|,
 literal|"set server|socket TcpPort|LocalName|none|open|closed [password [mask]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16834,6 +17050,8 @@ block|,
 literal|"physical speed"
 block|,
 literal|"set speed value|sync"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16850,6 +17068,8 @@ block|,
 literal|"STOPPED timeouts"
 block|,
 literal|"set stopped [LCPseconds [CCPseconds]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16906,6 +17126,8 @@ block|,
 literal|"vj values"
 block|,
 literal|"set vj slots|slotcomp [value]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16950,6 +17172,14 @@ name|VAR_PPPOE
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -18383,16 +18613,14 @@ name|NatEnabled
 operator|=
 literal|0
 expr_stmt|;
+name|opt_disable
+argument_list|(
 name|arg
 operator|->
 name|bundle
-operator|->
-name|cfg
-operator|.
-name|opt
-operator|&=
-operator|~
+argument_list|,
 name|OPT_IFACEALIAS
+argument_list|)
 expr_stmt|;
 comment|/* Don't iface_Clear() - there may be manually configured addresses */
 return|return
@@ -19164,7 +19392,7 @@ name|arg
 parameter_list|)
 block|{
 name|int
-name|bit
+name|opt
 init|=
 operator|(
 name|int
@@ -19181,11 +19409,11 @@ decl_stmt|;
 name|unsigned
 name|keep
 decl_stmt|;
-comment|/* Keep these bits */
+comment|/* Keep this opt */
 name|unsigned
 name|add
 decl_stmt|;
-comment|/* Add these bits */
+comment|/* Add this opt */
 if|if
 condition|(
 name|ident_cmd
@@ -19222,7 +19450,7 @@ name|add
 operator|==
 name|NEG_ENABLED
 operator|&&
-name|bit
+name|opt
 operator|==
 name|OPT_IPV6CP
 operator|&&
@@ -19247,29 +19475,77 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
+name|add
+operator|&&
+operator|(
+operator|(
+name|opt
+operator|==
+name|OPT_NAS_IP_ADDRESS
+operator|&&
+operator|!
+name|Enabled
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_NAS_IDENTIFIER
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|opt
+operator|==
+name|OPT_NAS_IDENTIFIER
+operator|&&
+operator|!
+name|Enabled
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_NAS_IP_ADDRESS
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Cannot disable both NAS-IP-Address and NAS-Identifier\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
 name|add
 condition|)
+name|opt_enable
+argument_list|(
 name|arg
 operator|->
 name|bundle
-operator|->
-name|cfg
-operator|.
+argument_list|,
 name|opt
-operator||=
-name|bit
+argument_list|)
 expr_stmt|;
 else|else
+name|opt_disable
+argument_list|(
 name|arg
 operator|->
 name|bundle
-operator|->
-name|cfg
-operator|.
+argument_list|,
 name|opt
-operator|&=
-operator|~
-name|bit
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -19290,6 +19566,8 @@ name|arg
 parameter_list|)
 block|{
 name|unsigned
+name|long
+name|long
 name|save
 init|=
 name|arg
@@ -19298,7 +19576,7 @@ name|bundle
 operator|->
 name|cfg
 operator|.
-name|opt
+name|optmask
 decl_stmt|;
 name|int
 name|result
@@ -19339,7 +19617,7 @@ name|bundle
 operator|->
 name|cfg
 operator|.
-name|opt
+name|optmask
 operator|=
 name|save
 expr_stmt|;
@@ -19797,6 +20075,230 @@ name|add
 expr_stmt|;
 break|break;
 case|case
+name|NEG_ECHO
+case|:
+comment|/* probably misplaced in this function ! */
+if|if
+condition|(
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|cfg
+operator|.
+name|echo
+operator|&&
+operator|!
+name|add
+condition|)
+block|{
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|cfg
+operator|.
+name|echo
+operator|=
+literal|0
+expr_stmt|;
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|method
+operator|&=
+operator|~
+name|LQM_ECHO
+expr_stmt|;
+if|if
+condition|(
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|method
+operator|&
+name|LQM_ECHO
+operator|&&
+operator|!
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|want_lqrperiod
+operator|&&
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|timer
+operator|.
+name|load
+condition|)
+block|{
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|timer
+operator|.
+name|load
+operator|=
+literal|0
+expr_stmt|;
+name|lqr_StopTimer
+argument_list|(
+name|cx
+operator|->
+name|physical
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|cfg
+operator|.
+name|echo
+operator|&&
+name|add
+condition|)
+block|{
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|cfg
+operator|.
+name|echo
+operator|=
+literal|1
+expr_stmt|;
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|method
+operator||=
+name|LQM_ECHO
+expr_stmt|;
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|timer
+operator|.
+name|load
+operator|=
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|cfg
+operator|.
+name|lqrperiod
+operator|*
+name|SECTICKS
+expr_stmt|;
+if|if
+condition|(
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|fsm
+operator|.
+name|state
+operator|==
+name|ST_OPENED
+condition|)
+call|(
+modifier|*
+name|cx
+operator|->
+name|physical
+operator|->
+name|hdlc
+operator|.
+name|lqm
+operator|.
+name|timer
+operator|.
+name|func
+call|)
+argument_list|(
+operator|&
+name|cx
+operator|->
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|NEG_ENDDISC
 case|:
 name|arg
@@ -20125,6 +20627,29 @@ index|[]
 init|=
 block|{
 block|{
+literal|"echo"
+block|,
+name|NULL
+block|,
+name|NegotiateSet
+block|,
+name|LOCAL_AUTH
+operator||
+name|LOCAL_CX
+block|,
+literal|"Send echo requests"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|NEG_ECHO
+block|}
+block|,
+block|{
 literal|"filter-decapsulation"
 block|,
 name|NULL
@@ -20298,6 +20823,48 @@ name|OPT_LOOPBACK
 block|}
 block|,
 block|{
+literal|"nas-ip-address"
+block|,
+name|NULL
+block|,
+name|OptSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Send NAS-IP-Address to RADIUS"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|OPT_NAS_IP_ADDRESS
+block|}
+block|,
+block|{
+literal|"nas-identifier"
+block|,
+name|NULL
+block|,
+name|OptSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Send NAS-Identifier to RADIUS"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|OPT_NAS_IDENTIFIER
+block|}
+block|,
+block|{
 literal|"passwdauth"
 block|,
 name|NULL
@@ -20449,15 +21016,15 @@ directive|ifndef
 name|NOINET6
 define|#
 directive|define
-name|OPT_MAX
-value|14
+name|NEG_OPT_MAX
+value|17
 comment|/* accept/deny allowed below and not above */
 else|#
 directive|else
 define|#
 directive|define
-name|OPT_MAX
-value|12
+name|NEG_OPT_MAX
+value|15
 endif|#
 directive|endif
 block|{
@@ -20849,6 +21416,14 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -20980,7 +21555,7 @@ name|NEG_HISMASK
 condition|?
 literal|0
 else|:
-name|OPT_MAX
+name|NEG_OPT_MAX
 operator|)
 argument_list|,
 literal|2
@@ -22333,7 +22908,7 @@ condition|(
 name|arg
 operator|->
 name|argc
-operator|==
+operator|<=
 name|arg
 operator|->
 name|argn
@@ -22350,6 +22925,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|argc
 operator|>=
 sizeof|sizeof
