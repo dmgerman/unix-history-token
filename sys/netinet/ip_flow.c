@@ -807,7 +807,7 @@ expr_stmt|;
 name|ipflow_inuse
 operator|--
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|ipf
 argument_list|,
