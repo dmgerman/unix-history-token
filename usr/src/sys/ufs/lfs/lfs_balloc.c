@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -256,6 +256,8 @@ modifier|*
 name|nump
 decl_stmt|;
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -572,15 +574,35 @@ name|devvp
 operator|->
 name|v_rdev
 expr_stmt|;
-call|(
+comment|/* 			 * Call a strategy VOP by hand. 			 */
+name|vop_strategy_a
+operator|.
+name|a_desc
+operator|=
+name|VDESC
+argument_list|(
+name|vop_strategy
+argument_list|)
+expr_stmt|;
+name|vop_strategy_a
+operator|.
+name|a_bp
+operator|=
+name|bp
+expr_stmt|;
+name|VOCALL
+argument_list|(
 name|devvp
 operator|->
 name|v_op
-operator|->
-name|vop_strategy
-call|)
+argument_list|,
+name|VOFFSET
 argument_list|(
-name|bp
+name|vop_strategy
+argument_list|)
+argument_list|, \
+operator|&
+name|vop_strategy_a
 argument_list|)
 expr_stmt|;
 name|curproc

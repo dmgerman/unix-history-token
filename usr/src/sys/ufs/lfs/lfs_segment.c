@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3420,6 +3420,8 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -3472,7 +3474,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|vop_strategy_args
 operator|*
 operator|)
 argument_list|)
@@ -3647,8 +3649,12 @@ operator|->
 name|i_devvp
 operator|->
 name|v_op
-operator|->
+index|[
+name|VOFFSET
+argument_list|(
 name|vop_strategy
+argument_list|)
+index|]
 expr_stmt|;
 comment|/* 	 * When we simply write the blocks we lose a rotation for every block 	 * written.  To avoid this problem, we allocate memory in chunks, copy 	 * the buffers into the chunk and write the chunk.  56K was chosen as 	 * some driver/controllers can't handle unsigned 16 bit transfers. 	 * When the data is copied to the chunk, turn off the the B_LOCKED bit 	 * and brelse the buffer (which will move them to the LRU list).  Add 	 * the B_CALL flag to the buffer header so we can count I/O's for the 	 * checkpoints and so we can release the allocated memory. 	 * 	 * XXX 	 * This should be removed if the new virtual memory system allows us to 	 * easily make the buffers contiguous in kernel memory and if that's 	 * fast enough. 	 */
 define|#
@@ -3887,11 +3893,27 @@ name|b_un
 operator|.
 name|b_addr
 expr_stmt|;
+name|vop_strategy_a
+operator|.
+name|a_desc
+operator|=
+name|VDESC
+argument_list|(
+name|vop_strategy
+argument_list|)
+expr_stmt|;
+name|vop_strategy_a
+operator|.
+name|a_bp
+operator|=
+name|cbp
+expr_stmt|;
 call|(
 name|strategy
 call|)
 argument_list|(
-name|cbp
+operator|&
+name|vop_strategy_a
 argument_list|)
 expr_stmt|;
 block|}
@@ -3988,6 +4010,8 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
+name|USES_VOP_STRATEGY
+expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -4004,7 +4028,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|vop_strategy_args
 operator|*
 operator|)
 argument_list|)
@@ -4042,8 +4066,12 @@ operator|->
 name|i_devvp
 operator|->
 name|v_op
-operator|->
+index|[
+name|VOFFSET
+argument_list|(
 name|vop_strategy
+argument_list|)
+index|]
 expr_stmt|;
 comment|/* Checksum the superblock and copy it into a buffer. */
 name|fs
@@ -4122,11 +4150,27 @@ operator||
 name|B_DELWRI
 operator|)
 expr_stmt|;
+name|vop_strategy_a
+operator|.
+name|a_desc
+operator|=
+name|VDESC
+argument_list|(
+name|vop_strategy
+argument_list|)
+expr_stmt|;
+name|vop_strategy_a
+operator|.
+name|a_bp
+operator|=
+name|bp
+expr_stmt|;
 call|(
 name|strategy
 call|)
 argument_list|(
-name|bp
+operator|&
+name|vop_strategy_a
 argument_list|)
 expr_stmt|;
 name|biowait
@@ -4177,7 +4221,8 @@ call|(
 name|strategy
 call|)
 argument_list|(
-name|bp
+operator|&
+name|vop_strategy_a
 argument_list|)
 expr_stmt|;
 block|}
