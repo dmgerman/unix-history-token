@@ -75,6 +75,16 @@ directive|include
 file|<string.h>
 end_include
 
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|mbrune
+argument_list|,
+literal|"warning: mbrune() is deprecated. See mbrune(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|char
 modifier|*
@@ -164,6 +174,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|mbrrune
+argument_list|,
+literal|"warning: mbrrune() is deprecated. See mbrrune(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|char
@@ -260,6 +280,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|mbmb
+argument_list|,
+literal|"warning: mbmb() is deprecated. See mbmb(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|char
