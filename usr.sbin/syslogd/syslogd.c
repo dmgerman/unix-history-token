@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.12.2.6 1997/04/26 00:05:19 pst Exp $"
+literal|"$Id: syslogd.c,v 1.12.2.7 1997/08/17 14:41:32 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1821,8 +1821,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"cannot create %s"
@@ -2485,8 +2488,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: syslogd [-ds] [-f conffile] [-m markinterval]"
-literal|" [-p logpath] [-a allowaddr]\n"
+literal|"usage: syslogd [-ds] [-a allowed_peer] [-f config_file]"
+literal|" [-m mark_interval]\n                [-p log_socket]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3730,8 +3733,11 @@ name|v
 operator|->
 name|iov_len
 operator|=
-name|sprintf
+name|snprintf
 argument_list|(
+name|greetings
+argument_list|,
+sizeof|sizeof
 name|greetings
 argument_list|,
 literal|"\r\n\7Message from syslogd@%s at %.24s ...\r\n"
@@ -3965,9 +3971,14 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+name|line
+operator|-
+literal|1
 argument_list|,
 literal|"<%d>%.15s %s"
 argument_list|,
@@ -5432,9 +5443,7 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 argument_list|,
 literal|"syslogd: %s: %s"
 argument_list|,
@@ -5455,9 +5464,7 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 argument_list|,
 literal|"syslogd: %s"
 argument_list|,
@@ -6704,8 +6711,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|ebuf
+argument_list|,
+sizeof|sizeof
 name|ebuf
 argument_list|,
 literal|"unknown priority name \"%s\""
@@ -6819,8 +6829,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|ebuf
+argument_list|,
+sizeof|sizeof
 name|ebuf
 argument_list|,
 literal|"unknown facility name \"%s\""
