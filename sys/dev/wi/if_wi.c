@@ -3461,7 +3461,7 @@ name|WI_NIC_EVB2
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM2 MAC:HFA3841"
+literal|"RF:PRISM I MAC:HFA3841"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3470,7 +3470,7 @@ name|WI_NIC_HWB3763
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3763 rev.B"
+literal|"RF:PRISM II MAC:HFA3841 CARD:HWB3763 rev.B"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3479,7 +3479,7 @@ name|WI_NIC_HWB3163
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3163 rev.A"
+literal|"RF:PRISM II MAC:HFA3841 CARD:HWB3163 rev.A"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3488,7 +3488,7 @@ name|WI_NIC_HWB3163B
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3163 rev.B"
+literal|"RF:PRISM II MAC:HFA3841 CARD:HWB3163 rev.B"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3497,7 +3497,7 @@ name|WI_NIC_EVB3
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM2 MAC:HFA3842"
+literal|"RF:PRISM II MAC:HFA3842"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3506,7 +3506,7 @@ name|WI_NIC_HWB1153
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM1 MAC:HFA3841 CARD:HWB1153"
+literal|"RF:PRISM I MAC:HFA3841 CARD:HWB1153"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3515,7 +3515,7 @@ name|WI_NIC_P2_SST
 case|:
 name|printf
 argument_list|(
-literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3163-SST-flash"
+literal|"RF:PRISM II MAC:HFA3841 CARD:HWB3163-SST-flash"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3534,6 +3534,15 @@ case|:
 name|printf
 argument_list|(
 literal|"RF:PRISM2.5 MAC:ISL3874A(PCI)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|WI_NIC_37300P
+case|:
+name|printf
+argument_list|(
+literal|"RF:PRISM2.5 MAC:ISL37300P"
 argument_list|)
 expr_stmt|;
 break|break;

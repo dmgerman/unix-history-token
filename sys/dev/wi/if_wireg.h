@@ -1865,6 +1865,10 @@ directive|define
 name|WI_NIC_3874A
 value|0x8013
 comment|/* Prism2.5 Mini-PCI */
+define|#
+directive|define
+name|WI_NIC_37300P
+value|0x801a
 block|}
 struct|;
 end_struct
