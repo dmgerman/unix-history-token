@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.h,v 1.1.1.1 1998/03/07 19:24:35 jdp Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.h,v 1.2 1998/04/30 07:48:02 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -149,11 +149,11 @@ struct|struct
 name|Struct_Obj_Entry
 block|{
 comment|/*      * These two items have to be set right for compatibility with the      * original ElfKit crt1.o.      */
-name|Elf32_Word
+name|Elf_Word
 name|magic
 decl_stmt|;
 comment|/* Magic number (sanity check) */
-name|Elf32_Word
+name|Elf_Word
 name|version
 decl_stmt|;
 comment|/* Version number of struct format */
@@ -187,7 +187,7 @@ name|size_t
 name|textsize
 decl_stmt|;
 comment|/* Size of text segment in bytes */
-name|Elf32_Addr
+name|Elf_Addr
 name|vaddrbase
 decl_stmt|;
 comment|/* Base address in shared object file */
@@ -196,7 +196,7 @@ name|relocbase
 decl_stmt|;
 comment|/* Relocation constant = mapbase - vaddrbase */
 specifier|const
-name|Elf32_Dyn
+name|Elf_Dyn
 modifier|*
 name|dynamic
 decl_stmt|;
@@ -206,7 +206,7 @@ name|entry
 decl_stmt|;
 comment|/* Entry point */
 specifier|const
-name|Elf32_Phdr
+name|Elf_Phdr
 modifier|*
 name|phdr
 decl_stmt|;
@@ -216,13 +216,13 @@ name|phsize
 decl_stmt|;
 comment|/* Size of program header in bytes */
 comment|/* Items from the dynamic section. */
-name|Elf32_Addr
+name|Elf_Addr
 modifier|*
 name|got
 decl_stmt|;
 comment|/* GOT table */
 specifier|const
-name|Elf32_Rel
+name|Elf_Rel
 modifier|*
 name|rel
 decl_stmt|;
@@ -233,7 +233,7 @@ name|relsize
 decl_stmt|;
 comment|/* Size in bytes of relocation info */
 specifier|const
-name|Elf32_Rel
+name|Elf_Rel
 modifier|*
 name|pltrel
 decl_stmt|;
@@ -244,7 +244,7 @@ name|pltrelsize
 decl_stmt|;
 comment|/* Size in bytes of PLT relocation info */
 specifier|const
-name|Elf32_Sym
+name|Elf_Sym
 modifier|*
 name|symtab
 decl_stmt|;
@@ -261,7 +261,7 @@ name|strsize
 decl_stmt|;
 comment|/* Size in bytes of string table */
 specifier|const
-name|Elf32_Word
+name|Elf_Word
 modifier|*
 name|buckets
 decl_stmt|;
@@ -272,7 +272,7 @@ name|nbuckets
 decl_stmt|;
 comment|/* Number of buckets */
 specifier|const
-name|Elf32_Word
+name|Elf_Word
 modifier|*
 name|chains
 decl_stmt|;
