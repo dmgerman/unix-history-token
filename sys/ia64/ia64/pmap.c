@@ -224,6 +224,21 @@ name|MINPV
 value|2048
 end_define
 
+begin_comment
+comment|/* Preallocate at least this many */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPV
+value|20480
+end_define
+
+begin_comment
+comment|/* But no more than this */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -2197,6 +2212,16 @@ condition|)
 name|initial_pvs
 operator|=
 name|MINPV
+expr_stmt|;
+if|if
+condition|(
+name|initial_pvs
+operator|>
+name|MAXPV
+condition|)
+name|initial_pvs
+operator|=
+name|MAXPV
 expr_stmt|;
 name|pvzone
 operator|=
