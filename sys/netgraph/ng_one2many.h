@@ -115,7 +115,7 @@ comment|/* send packets to all many hooks */
 end_comment
 
 begin_comment
-comment|/* Algorithms for detecting link failure */
+comment|/* Algorithms for detecting link failure (XXX only one so far) */
 end_comment
 
 begin_define
@@ -127,17 +127,6 @@ end_define
 
 begin_comment
 comment|/* use enabledLinks[] array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_ONE2MANY_FAIL_IFACE_LINK
-value|2
-end_define
-
-begin_comment
-comment|/* use interface state */
 end_comment
 
 begin_comment
@@ -156,10 +145,6 @@ name|u_int32_t
 name|failAlg
 decl_stmt|;
 comment|/* how to detect link failure */
-name|u_int32_t
-name|interval
-decl_stmt|;
-comment|/* interval for IFACE_LINK 						   failure algorithm */
 name|u_char
 name|enabledLinks
 index|[
@@ -181,7 +166,7 @@ name|NG_ONE2MANY_CONFIG_TYPE_INFO
 parameter_list|(
 name|atype
 parameter_list|)
-value|{		\ 	  { "xmitAlg",&ng_parse_uint32_type	},	\ 	  { "failAlg",&ng_parse_uint32_type	},	\ 	  { "interval",&ng_parse_uint32_type	},	\ 	  { "enabledLinks",	(atype)			},	\ 	  { NULL }						\ }
+value|{		\ 	  { "xmitAlg",&ng_parse_uint32_type	},	\ 	  { "failAlg",&ng_parse_uint32_type	},	\ 	  { "enabledLinks",	(atype)			},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
