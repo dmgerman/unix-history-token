@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)append.c	5.1 (Berkeley) %G%"
+literal|"@(#)append.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,7 @@ argument_list|(
 name|archive
 argument_list|)
 expr_stmt|;
+comment|/* Read from disk, write to an archive; pad on write. */
 name|SETCF
 argument_list|(
 literal|0
@@ -261,23 +262,13 @@ name|rname
 operator|=
 name|file
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
 argument_list|,
 operator|&
 name|sb
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|sb
-operator|.
-name|st_size
 argument_list|)
 expr_stmt|;
 operator|(
