@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.7 1994/11/03 00:30:27 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.8 1994/11/05 07:23:58 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -76,7 +76,7 @@ name|char
 name|msg
 index|[]
 init|=
-literal|" You are now done with the second phase of the installation.  At this point, FreeBSD is on your hard disk and now we need to go on to the 3rd level installation, which is to ftp, SLIP, DOS floppy, parallel port or carrier pigeon the bindist over.  Select OK to proceed with this phase, or CANCEL to simply drop into the shell."
+literal|" You are now done with the initial phase of the installation, which gets FreeBSD onto your hard disk.  At this point, we need to go on to ftp, SLIP, DOS floppy, parallel port or carrier pigeon a bindist over so that your system is actually usable.  Select Yes to proceed with this phase, or No to simply drop into a shell."
 decl_stmt|;
 end_decl_stmt
 
@@ -88,14 +88,14 @@ block|{
 name|int
 name|exec_sh
 init|=
-literal|0
+literal|1
 decl_stmt|;
 if|if
 condition|(
 operator|!
 name|dialog_yesno
 argument_list|(
-literal|"End of stage 2"
+literal|"End of initial installation"
 argument_list|,
 name|msg
 argument_list|,
@@ -116,7 +116,7 @@ argument_list|)
 condition|)
 name|exec_sh
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|end_dialog
 argument_list|()
