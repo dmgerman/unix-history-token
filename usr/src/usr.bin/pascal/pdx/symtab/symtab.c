@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c 1.1 %G%"
+literal|"@(#)symtab.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * symbol table implementation  */
+comment|/*  * Symbol table implementation.  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ file|"sym/sym.rep"
 end_include
 
 begin_comment
-comment|/*  * symbol table structure definition, no deletions allowed.  */
+comment|/*  * The symbol table structure is currently assumes no deletions.  */
 end_comment
 
 begin_define
@@ -89,7 +89,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * symbol table hash macro  *  * The hash value is returned through the "h" parameter which should  * an unsigned integer.  The other parameters are the symbol table, "st",  * and a pointer to the string to be hashed, "name".  */
+comment|/*  * Macro to hash a string.  *  * The hash value is returned through the "h" parameter which should  * an unsigned integer.  The other parameters are the symbol table, "st",  * and a pointer to the string to be hashed, "name".  */
 end_comment
 
 begin_define
@@ -104,7 +104,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|{ \ 	register char *cp; \ \ 	h = 0; \ 	for (cp = name; *cp != '\0'; cp++) { \ 		h = (h<< 1) | (*cp); \ 	} \ 	h %= st->hshsize; \ }
+value|{ \     register char *cp; \ \     h = 0; \     for (cp = name; *cp != '\0'; cp++) { \ 	h = (h<< 1) | (*cp); \     } \     h %= st->hshsize; \ }
 end_define
 
 begin_comment
