@@ -241,7 +241,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:Lnp:qrs:UuxX:"
+literal|"cdef:iK:k:LnPp:qrs:UuxX:"
 argument_list|)
 operator|)
 operator|!=
@@ -410,6 +410,19 @@ case|:
 name|nflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_LOGICAL
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_PHYSICAL
 expr_stmt|;
 break|break;
 case|case
@@ -625,7 +638,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mtree [-LUcdeinqrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"usage: mtree [-LPUcdeinqrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
 literal|"\t[-X excludes]\n"
 argument_list|)
 expr_stmt|;
