@@ -10425,6 +10425,8 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|error
+operator|=
 name|copyin
 argument_list|(
 name|ifr
@@ -10440,6 +10442,13 @@ name|l_ioctl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
 name|mode
 operator|=
 name|l_ioctl
@@ -10522,7 +10531,15 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+block|{
 comment|/* copy out the updated command info */
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|&
@@ -10538,6 +10555,7 @@ name|l_ioctl
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCGPRIVATE_1
@@ -10557,6 +10575,8 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|error
+operator|=
 name|copyin
 argument_list|(
 name|ifr
@@ -10572,6 +10592,13 @@ name|l_ioctl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
 name|l_ioctl
 operator|.
 name|command
@@ -10582,6 +10609,9 @@ name|error
 operator|=
 name|AIROMAGIC
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|copyout
 argument_list|(
 operator|&
@@ -16354,6 +16384,8 @@ operator|=
 name|rid
 expr_stmt|;
 comment|/* Just copy the data back */
+if|if
+condition|(
 name|copyin
 argument_list|(
 operator|(
@@ -16375,7 +16407,13 @@ name|l_ioctl
 operator|->
 name|len
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+return|return
+operator|-
+name|EFAULT
+return|;
+block|}
 name|an_cmd
 argument_list|(
 name|sc
@@ -17643,6 +17681,8 @@ case|case
 name|AIROFLSHGCHR
 case|:
 comment|/* Get char from aux */
+name|status
+operator|=
 name|copyin
 argument_list|(
 name|l_ioctl
@@ -17659,6 +17699,13 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+condition|)
+return|return
+name|status
+return|;
 name|z
 operator|=
 operator|*
@@ -17696,11 +17743,12 @@ return|return
 operator|-
 literal|1
 return|;
-break|break;
 case|case
 name|AIROFLSHPCHR
 case|:
 comment|/* Send char to card. */
+name|status
+operator|=
 name|copyin
 argument_list|(
 name|l_ioctl
@@ -17717,6 +17765,13 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+condition|)
+return|return
+name|status
+return|;
 name|z
 operator|=
 operator|*
@@ -17789,6 +17844,8 @@ operator|-
 name|EINVAL
 return|;
 block|}
+name|status
+operator|=
 name|copyin
 argument_list|(
 name|l_ioctl
@@ -17804,6 +17861,13 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+condition|)
+return|return
+name|status
+return|;
 if|if
 condition|(
 operator|(
