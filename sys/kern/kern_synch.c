@@ -1526,7 +1526,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"tsleep1"
+literal|"msleep1"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1543,7 +1543,7 @@ operator|==
 name|SRUN
 argument_list|,
 operator|(
-literal|"tsleep"
+literal|"msleep"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1599,7 +1599,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"tsleep: proc %p (pid %d, %s), schedlock %p"
+literal|"msleep: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -1665,7 +1665,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"tsleep caught: proc %p (pid %d, %s), schedlock %p"
+literal|"msleep caught: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -1770,7 +1770,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"tsleep resume: proc %p (pid %d, %s), schedlock %p"
+literal|"msleep resume: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -2023,7 +2023,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * asleep() - async sleep call.  Place process on wait queue and return   * immediately without blocking.  The process stays runnable until await()   * is called.  If ident is NULL, remove process from wait queue if it is still  * on one.  *  * Only the most recent sleep condition is effective when making successive  * calls to asleep() or when calling tsleep().  *  * The timeout, if any, is not initiated until await() is called.  The sleep  * priority, signal, and timeout is specified in the asleep() call but may be  * overriden in the await() call.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
+comment|/*  * asleep() - async sleep call.  Place process on wait queue and return   * immediately without blocking.  The process stays runnable until await()   * is called.  If ident is NULL, remove process from wait queue if it is still  * on one.  *  * Only the most recent sleep condition is effective when making successive  * calls to asleep() or when calling msleep().  *  * The timeout, if any, is not initiated until await() is called.  The sleep  * priority, signal, and timeout is specified in the asleep() call but may be  * overriden in the await() call.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
 end_comment
 
 begin_function
@@ -2161,7 +2161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * await() - wait for async condition to occur.   The process blocks until  * wakeup() is called on the most recent asleep() address.  If wakeup is called  * priority to await(), await() winds up being a NOP.  *  * If await() is called more then once (without an intervening asleep() call),  * await() is still effectively a NOP but it calls mi_switch() to give other  * processes some cpu before returning.  The process is left runnable.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
+comment|/*  * await() - wait for async condition to occur.   The process blocks until  * wakeup() is called on the most recent asleep() address.  If wakeup is called  * prior to await(), await() winds up being a NOP.  *  * If await() is called more then once (without an intervening asleep() call),  * await() is still effectively a NOP but it calls mi_switch() to give other  * processes some cpu before returning.  The process is left runnable.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
 end_comment
 
 begin_function
@@ -2614,7 +2614,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement timeout for tsleep or asleep()/await()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  */
+comment|/*  * Implement timeout for msleep or asleep()/await()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  */
 end_comment
 
 begin_function
@@ -3272,7 +3272,7 @@ argument_list|(
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX this spl is almost unnecessary.  It is partly to allow for 	 * sloppy callers that don't do it (issignal() via CURSIG() is the 	 * main offender).  It is partly to work around a bug in the i386 	 * cpu_switch() (the ipl is not preserved).  We ran for years 	 * without it.  I think there was only a interrupt latency problem. 	 * The main caller, tsleep(), does an splx() a couple of instructions 	 * after calling here.  The buggy caller, issignal(), usually calls 	 * here at spl0() and sometimes returns at splhigh().  The process 	 * then runs for a little too long at splhigh().  The ipl gets fixed 	 * when the process returns to user mode (or earlier). 	 * 	 * It would probably be better to always call here at spl0(). Callers 	 * are prepared to give up control to another process, so they must 	 * be prepared to be interrupted.  The clock stuff here may not 	 * actually need splstatclock(). 	 */
+comment|/* 	 * XXX this spl is almost unnecessary.  It is partly to allow for 	 * sloppy callers that don't do it (issignal() via CURSIG() is the 	 * main offender).  It is partly to work around a bug in the i386 	 * cpu_switch() (the ipl is not preserved).  We ran for years 	 * without it.  I think there was only a interrupt latency problem. 	 * The main caller, msleep(), does an splx() a couple of instructions 	 * after calling here.  The buggy caller, issignal(), usually calls 	 * here at spl0() and sometimes returns at splhigh().  The process 	 * then runs for a little too long at splhigh().  The ipl gets fixed 	 * when the process returns to user mode (or earlier). 	 * 	 * It would probably be better to always call here at spl0(). Callers 	 * are prepared to give up control to another process, so they must 	 * be prepared to be interrupted.  The clock stuff here may not 	 * actually need splstatclock(). 	 */
 name|x
 operator|=
 name|splstatclock
