@@ -198,6 +198,11 @@ modifier|*
 name|remove
 decl_stmt|;
 comment|/* Remove commands */
+name|char
+modifier|*
+name|logstr
+decl_stmt|;
+comment|/* String for logger */
 block|}
 struct|;
 end_struct
