@@ -6206,11 +6206,10 @@ modifier|*
 name|result
 parameter_list|)
 block|{
-specifier|static
 name|char
 name|match
 index|[
-literal|100
+literal|256
 index|]
 decl_stmt|;
 name|int
@@ -6310,7 +6309,7 @@ name|ENOENT
 return|;
 name|val
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|cp
 argument_list|,
@@ -7703,19 +7702,15 @@ name|ep
 operator|=
 name|cp
 init|;
-operator|(
 operator|*
 name|ep
 operator|!=
 literal|'='
-operator|)
 operator|&&
-operator|(
 operator|*
 name|ep
 operator|!=
-literal|0
-operator|)
+literal|'\0'
 condition|;
 name|ep
 operator|++
@@ -7846,7 +7841,7 @@ condition|)
 return|return;
 name|unit
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|op
 argument_list|,
@@ -7951,7 +7946,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|ep
 argument_list|,
@@ -8059,7 +8054,7 @@ condition|(
 operator|*
 name|cp
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 name|cp
 operator|++
@@ -8072,7 +8067,7 @@ condition|(
 operator|*
 name|cp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 break|break;
 block|}
@@ -8095,7 +8090,7 @@ condition|(
 operator|*
 name|cp
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 name|cp
 operator|++
@@ -8108,7 +8103,7 @@ condition|(
 operator|*
 name|cp
 operator|==
-literal|0
+literal|'\0'
 condition|)
 break|break;
 block|}
