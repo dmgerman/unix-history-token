@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.3 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +289,7 @@ name|CRT0
 end_ifdef
 
 begin_comment
-comment|/*  * null mcount and moncontrol,  * just in case some routine is compiled for profiling  */
+comment|/*  * null moncontrol, just in case some routine is compiled for profiling  */
 end_comment
 
 begin_macro
@@ -304,15 +304,6 @@ name|int
 name|val
 decl_stmt|;
 end_decl_stmt
-
-begin_block
-block|{  }
-end_block
-
-begin_macro
-name|mcount
-argument_list|()
-end_macro
 
 begin_block
 block|{  }
