@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.26 1997/12/10 20:33:59 guido Exp $"
+literal|"$Id: mountd.c,v 1.27 1997/12/13 19:50:14 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1498,22 +1498,17 @@ name|tcptransp
 decl_stmt|;
 name|int
 name|c
-decl_stmt|;
-name|int
+decl_stmt|,
+name|error
+decl_stmt|,
 name|mib
 index|[
 literal|3
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|struct
 name|vfsconf
 name|vfc
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|error
 operator|=
@@ -1575,9 +1570,6 @@ argument_list|,
 literal|"NFS support is not available in the running kernel"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 while|while
 condition|(
 operator|(
@@ -1901,7 +1893,9 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_NFS
+name|vfc
+operator|.
+name|vfc_typenum
 expr_stmt|;
 name|mib
 index|[
