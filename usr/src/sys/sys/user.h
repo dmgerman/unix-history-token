@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.4	84/07/11	*/
+comment|/*	user.h	6.5	84/07/21	*/
 end_comment
 
 begin_ifdef
@@ -82,13 +82,6 @@ end_endif
 begin_comment
 comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SHSIZE
-value|32
-end_define
 
 begin_define
 define|#
@@ -450,88 +443,6 @@ name|struct
 name|nameidata
 name|u_nd
 decl_stmt|;
-comment|/* BEGIN TRASH */
-union|union
-block|{
-struct|struct
-block|{
-comment|/* header of executable file */
-name|int
-name|Ux_mag
-decl_stmt|;
-comment|/* magic number */
-name|unsigned
-name|Ux_tsize
-decl_stmt|;
-comment|/* text size */
-name|unsigned
-name|Ux_dsize
-decl_stmt|;
-comment|/* data size */
-name|unsigned
-name|Ux_bsize
-decl_stmt|;
-comment|/* bss size */
-name|unsigned
-name|Ux_ssize
-decl_stmt|;
-comment|/* symbol table size */
-name|unsigned
-name|Ux_entloc
-decl_stmt|;
-comment|/* entry location */
-name|unsigned
-name|Ux_unused
-decl_stmt|;
-name|unsigned
-name|Ux_relflg
-decl_stmt|;
-block|}
-name|Ux_A
-struct|;
-name|char
-name|ux_shell
-index|[
-name|SHSIZE
-index|]
-decl_stmt|;
-comment|/* #! and name of interpreter */
-block|}
-name|u_exdata
-union|;
-define|#
-directive|define
-name|ux_mag
-value|Ux_A.Ux_mag
-define|#
-directive|define
-name|ux_tsize
-value|Ux_A.Ux_tsize
-define|#
-directive|define
-name|ux_dsize
-value|Ux_A.Ux_dsize
-define|#
-directive|define
-name|ux_bsize
-value|Ux_A.Ux_bsize
-define|#
-directive|define
-name|ux_ssize
-value|Ux_A.Ux_ssize
-define|#
-directive|define
-name|ux_entloc
-value|Ux_A.Ux_entloc
-define|#
-directive|define
-name|ux_unused
-value|Ux_A.Ux_unused
-define|#
-directive|define
-name|ux_relflg
-value|Ux_A.Ux_relflg
-comment|/* END TRASH */
 name|int
 name|u_stack
 index|[
