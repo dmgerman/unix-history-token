@@ -87,8 +87,8 @@ directive|endif
 endif|#
 directive|endif
 comment|/* #define BFD_VERSION 213000000 */
-comment|/* #define BFD_VERSION_DATE 20021110 */
-comment|/* #define BFD_VERSION_STRING "2.13 20021110" */
+comment|/* #define BFD_VERSION_DATE 20021010 */
+comment|/* #define BFD_VERSION_STRING "2.13 20021010" */
 comment|/* The word size used by BFD on the host.  This may be 64 with a 32    bit target if the host is 64 bit, or if other 64 bit targets have    been selected with --enable-targets, or if --enable-64-bit-bfd.  */
 define|#
 directive|define
