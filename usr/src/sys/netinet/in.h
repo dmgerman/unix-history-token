@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.7 82/01/24 */
+comment|/* in.h 4.8 82/02/03 */
 end_comment
 
 begin_comment
@@ -271,7 +271,7 @@ block|}
 name|S_un_w
 struct|;
 name|u_long
-name|s_l
+name|S_addr
 decl_stmt|;
 block|}
 name|S_un
@@ -279,8 +279,11 @@ union|;
 define|#
 directive|define
 name|s_addr
-value|S_un.s_l
+value|S_un.S_addr
 comment|/* can be used for most tcp& ip code */
+ifdef|#
+directive|ifdef
+name|vax
 define|#
 directive|define
 name|s_host
@@ -296,16 +299,8 @@ directive|define
 name|s_imp
 value|S_un.S_un_w.s_w2
 comment|/* imp */
-define|#
-directive|define
-name|s_lhost
-value|S_un.S_un_b.s_b1
-comment|/* net library format host on imp */
-define|#
-directive|define
-name|s_lnet
-value|S_un.S_un_b.s_b2
-comment|/* net library format network */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
