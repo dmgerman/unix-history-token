@@ -1674,13 +1674,12 @@ name|md_regs
 expr_stmt|;
 name|oonstack
 operator|=
-name|p
+name|sigonstack
+argument_list|(
+name|tf
 operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator|&
-name|SS_ONSTACK
+name|tf_esp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate space for the signal handler context. 	 */
 if|if

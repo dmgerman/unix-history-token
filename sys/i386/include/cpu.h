@@ -98,13 +98,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|cpu_getstack
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_md.md_regs->tf_esp)
+end_define
+
+begin_define
+define|#
+directive|define
 name|cpu_setstack
 parameter_list|(
 name|p
 parameter_list|,
 name|ap
 parameter_list|)
-value|((p)->p_md.md_regs[SP] = (ap))
+value|((p)->p_md.md_regs->tf_esp = (ap))
 end_define
 
 begin_define

@@ -246,16 +246,6 @@ name|bsa
 operator||=
 name|SS_ONSTACK
 expr_stmt|;
-if|if
-condition|(
-name|lsa
-operator|==
-name|LINUX_SS_ONSTACK_BC
-condition|)
-name|bsa
-operator|=
-name|SS_ONSTACK
-expr_stmt|;
 return|return
 operator|(
 name|bsa

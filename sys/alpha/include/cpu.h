@@ -33,6 +33,16 @@ directive|include
 file|<machine/frame.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|cpu_getstack
+parameter_list|(
+name|p
+parameter_list|)
+value|(alpha_pal_rdusp())
+end_define
+
 begin_comment
 comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the Alpha, we use  * what we push on an interrupt (a trapframe).  */
 end_comment

@@ -779,17 +779,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SS_ONSTACK_BC
-value|0
-end_define
-
-begin_comment
-comment|/* backwards compat SS_ONSTACK */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LINUX_SS_ONSTACK
 value|1
 end_define

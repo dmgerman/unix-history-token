@@ -1267,13 +1267,12 @@ name|md_regs
 expr_stmt|;
 name|oonstack
 operator|=
-name|p
+name|sigonstack
+argument_list|(
+name|regs
 operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator|&
-name|SS_ONSTACK
+name|tf_esp
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1357,17 +1356,8 @@ name|linux_rt_sigframe
 argument_list|)
 operator|)
 expr_stmt|;
-name|p
-operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator||=
-name|SS_ONSTACK
-expr_stmt|;
 block|}
 else|else
-block|{
 name|fp
 operator|=
 operator|(
@@ -1381,7 +1371,6 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
-block|}
 comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
 if|if
 condition|(
@@ -1459,7 +1448,8 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): linux_rt_sendsig -- bad stack %p, SS_ONSTACK: 0x%x "
+literal|"Linux-emul(%ld): linux_rt_sendsig -- bad stack %p, "
+literal|"oonstack=%x\n"
 argument_list|,
 operator|(
 name|long
@@ -1470,13 +1460,7 @@ name|p_pid
 argument_list|,
 name|fp
 argument_list|,
-name|p
-operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator|&
-name|SS_ONSTACK
+name|oonstack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1623,16 +1607,13 @@ name|sf_sc
 operator|.
 name|uc_stack
 operator|.
-name|ss_flags
+name|ss_size
 operator|=
-name|bsd_to_linux_sigaltstack
-argument_list|(
 name|p
 operator|->
 name|p_sigstk
 operator|.
-name|ss_flags
-argument_list|)
+name|ss_size
 expr_stmt|;
 name|frame
 operator|.
@@ -1640,13 +1621,27 @@ name|sf_sc
 operator|.
 name|uc_stack
 operator|.
-name|ss_size
+name|ss_flags
 operator|=
+operator|(
 name|p
 operator|->
-name|p_sigstk
-operator|.
-name|ss_size
+name|p_flag
+operator|&
+name|P_ALTSTACK
+operator|)
+condition|?
+operator|(
+operator|(
+name|oonstack
+operator|)
+condition|?
+name|LINUX_SS_ONSTACK
+else|:
+literal|0
+operator|)
+else|:
+name|LINUX_SS_DISABLE
 expr_stmt|;
 name|bsd_to_linux_sigset
 argument_list|(
@@ -1898,7 +1893,8 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): rt_sendsig flags: 0x%x, sp: %p, ss: 0x%x, mask: 0x%x\n"
+literal|"Linux-emul(%ld): rt_sendsig flags: 0x%x, sp: %p, ss: 0x%x, "
+literal|"mask: 0x%x\n"
 argument_list|,
 operator|(
 name|long
@@ -2128,13 +2124,12 @@ name|md_regs
 expr_stmt|;
 name|oonstack
 operator|=
-name|p
+name|sigonstack
+argument_list|(
+name|regs
 operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator|&
-name|SS_ONSTACK
+name|tf_esp
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2218,17 +2213,8 @@ name|linux_sigframe
 argument_list|)
 operator|)
 expr_stmt|;
-name|p
-operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator||=
-name|SS_ONSTACK
-expr_stmt|;
 block|}
 else|else
-block|{
 name|fp
 operator|=
 operator|(
@@ -2242,7 +2228,6 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
-block|}
 comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
 if|if
 condition|(
@@ -2896,15 +2881,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|p
-operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator|&=
-operator|~
-name|SS_ONSTACK
-expr_stmt|;
 name|lmask
 operator|.
 name|__bits
@@ -3328,15 +3304,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|p
-operator|->
-name|p_sigstk
-operator|.
-name|ss_flags
-operator|&=
-operator|~
-name|SS_ONSTACK
-expr_stmt|;
 name|linux_to_bsd_sigset
 argument_list|(
 operator|&
