@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -1281,6 +1281,8 @@ argument_list|(
 name|EX_CANTCREAT
 argument_list|,
 name|m
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}
@@ -1326,6 +1328,8 @@ argument_list|(
 name|EX_NOUSER
 argument_list|,
 name|m
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}

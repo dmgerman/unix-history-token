@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -986,11 +986,26 @@ block|}
 end_for
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"MAIL FAILURE: %s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|addheader
 argument_list|(
 literal|"subject"
 argument_list|,
-name|msg
+name|buf
 argument_list|,
 name|ee
 argument_list|)
