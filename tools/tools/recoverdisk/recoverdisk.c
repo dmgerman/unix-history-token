@@ -524,7 +524,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\r%13jd %7jd %13jd %3d %13jd %13jd %.8f"
+literal|"\r%13jd %7zu %13jd %3d %13jd %13jd %.8f"
 argument_list|,
 operator|(
 name|intmax_t
@@ -533,9 +533,6 @@ name|lp
 operator|->
 name|start
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|i
 argument_list|,
 operator|(
@@ -664,15 +661,12 @@ name|i
 condition|)
 name|printf
 argument_list|(
-literal|"\nWrite error at %jd/%jd\n"
+literal|"\nWrite error at %jd/%zu\n"
 argument_list|,
 name|lp
 operator|->
 name|start
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -692,15 +686,12 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"\n%jd %jd failed %d\n"
+literal|"\n%jd %zu failed %d\n"
 argument_list|,
 name|lp
 operator|->
 name|start
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|i
 argument_list|,
 name|errno
