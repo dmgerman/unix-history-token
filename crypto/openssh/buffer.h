@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: buffer.h,v 1.6 2000/09/07 20:27:50 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: buffer.h,v 1.7 2000/12/19 23:17:55 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -28,18 +28,15 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for data. */
-name|unsigned
-name|int
+name|u_int
 name|alloc
 decl_stmt|;
 comment|/* Number of bytes allocated for data. */
-name|unsigned
-name|int
+name|u_int
 name|offset
 decl_stmt|;
 comment|/* Offset of first byte containing data. */
-name|unsigned
-name|int
+name|u_int
 name|end
 decl_stmt|;
 comment|/* Offset of last byte containing data. */
@@ -110,8 +107,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;
@@ -134,8 +130,7 @@ modifier|*
 modifier|*
 name|datap
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;
@@ -146,8 +141,7 @@ comment|/* Returns the number of bytes of data in the buffer. */
 end_comment
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int
 name|buffer_len
 parameter_list|(
 name|Buffer
@@ -173,8 +167,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;
@@ -192,8 +185,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|bytes
 parameter_list|)
 function_decl|;
@@ -211,8 +203,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|bytes
 parameter_list|)
 function_decl|;

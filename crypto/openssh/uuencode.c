@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: uuencode.c,v 1.7 2000/09/07 20:27:55 deraadt Exp $	*/
+comment|/*	$OpenBSD: uuencode.c,v 1.12 2001/03/01 02:27:18 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -22,13 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"uuencode.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<resolv.h>
 end_include
 
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: uuencode.c,v 1.7 2000/09/07 20:27:55 deraadt Exp $"
+literal|"$OpenBSD: uuencode.c,v 1.12 2001/03/01 02:27:18 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -37,13 +43,11 @@ begin_function
 name|int
 name|uuencode
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|src
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|srclength
 parameter_list|,
 name|char
@@ -78,8 +82,7 @@ name|char
 modifier|*
 name|src
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|target
 parameter_list|,
@@ -184,8 +187,7 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|data
 parameter_list|,
@@ -193,8 +195,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|buf
 init|=
