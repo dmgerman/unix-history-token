@@ -2100,7 +2100,7 @@ operator|.
 name|ctrl_val
 argument_list|)
 expr_stmt|;
-comment|/* Try for up to 1 ms to verify the desired state was selected. */
+comment|/* 	 * Try for up to 10 ms to verify the desired state was selected. 	 * This is longer than the standard says (1 ms) but in some modes, 	 * systems may take longer to respond. 	 */
 name|sts_val
 operator|=
 name|sc
@@ -2120,7 +2120,7 @@ literal|0
 init|;
 name|tries
 operator|<
-literal|100
+literal|1000
 condition|;
 name|tries
 operator|++
@@ -2135,11 +2135,31 @@ operator|->
 name|perf_status
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If we match the status or the desired status is 8 bits 		 * and matches the relevant bits, assume we succeeded.  It 		 * appears some systems (IBM R32) expect byte-wide access 		 * even though the standard says the register is 32-bit. 		 */
 if|if
 condition|(
 name|status
 operator|==
 name|sts_val
+operator|||
+operator|(
+operator|(
+name|sts_val
+operator|&
+operator|~
+literal|0xff
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|status
+operator|&
+literal|0xff
+operator|)
+operator|==
+name|sts_val
+operator|)
 condition|)
 break|break;
 name|DELAY
@@ -2152,7 +2172,7 @@ if|if
 condition|(
 name|tries
 operator|==
-literal|100
+literal|1000
 condition|)
 block|{
 name|device_printf
