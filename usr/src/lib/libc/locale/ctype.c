@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)ctype.c	4.3 (Berkeley) %G% */
+comment|/* @(#)ctype.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -86,8 +86,6 @@ block|,
 name|_C
 block|,
 name|_S
-operator||
-name|_P
 block|,
 name|_P
 block|,
