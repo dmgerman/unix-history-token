@@ -451,6 +451,11 @@ name|cardstate
 name|state
 decl_stmt|;
 comment|/* Current state of slot */
+name|enum
+name|cardstate
+name|laststate
+decl_stmt|;
+comment|/* Previous state of slot */
 name|int
 name|maxmem
 decl_stmt|;
