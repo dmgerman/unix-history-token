@@ -141,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
@@ -223,13 +229,31 @@ begin_function
 name|int
 name|ext2_update
 parameter_list|(
-name|ap
+name|vp
+parameter_list|,
+name|access
+parameter_list|,
+name|modify
+parameter_list|,
+name|waitfor
 parameter_list|)
 name|struct
-name|vop_update_args
-comment|/* { 		struct vnode *a_vp; 		struct timeval *a_access; 		struct timeval *a_modify; 		int a_waitfor; 	} */
+name|vnode
 modifier|*
-name|ap
+name|vp
+decl_stmt|;
+name|struct
+name|timeval
+modifier|*
+name|access
+decl_stmt|;
+name|struct
+name|timeval
+modifier|*
+name|modify
+decl_stmt|;
+name|int
+name|waitfor
 decl_stmt|;
 block|{
 specifier|register
@@ -268,16 +292,12 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_mount
 operator|->
@@ -344,9 +364,7 @@ name|ip
 operator|->
 name|i_atime
 operator|=
-name|ap
-operator|->
-name|a_access
+name|access
 operator|->
 name|tv_sec
 expr_stmt|;
@@ -363,9 +381,7 @@ name|ip
 operator|->
 name|i_mtime
 operator|=
-name|ap
-operator|->
-name|a_modify
+name|modify
 operator|->
 name|tv_sec
 expr_stmt|;
@@ -512,7 +528,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	if (ap->a_waitfor&& (ap->a_vp->v_mount->mnt_flag& MNT_ASYNC) == 0) 		return (bwrite(bp)); 	else { */
+comment|/* 	if (waitfor&& (vp->v_mount->mnt_flag& MNT_ASYNC) == 0) 		return (bwrite(bp)); 	else { */
 name|bdwrite
 argument_list|(
 name|bp
@@ -789,7 +805,7 @@ name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|ovp
 argument_list|,
@@ -823,7 +839,7 @@ name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|ovp
 argument_list|,
@@ -1002,7 +1018,7 @@ name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|ovp
 argument_list|,
@@ -1344,7 +1360,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|ovp
 argument_list|,

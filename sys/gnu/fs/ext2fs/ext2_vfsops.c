@@ -3358,6 +3358,12 @@ name|ext2_truncate
 expr_stmt|;
 name|ump
 operator|->
+name|um_update
+operator|=
+name|ext2_update
+expr_stmt|;
+name|ump
+operator|->
 name|um_valloc
 operator|=
 name|ext2_valloc

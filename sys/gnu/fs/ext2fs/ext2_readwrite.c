@@ -1459,7 +1459,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|vp
 argument_list|,
