@@ -1026,12 +1026,6 @@ begin_comment
 comment|/*  * i2c things:  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TEST_PAL
-end_define
-
 begin_comment
 comment|/* PLL on a Temic NTSC tuner: 4032FY5 */
 end_comment
@@ -14299,7 +14293,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * the data for each type of tuner  */
+comment|/*  * the data for each type of tuner  *  * if probeCard() fails to detect the proper tuner on boot you can  * override it by setting the following define to the tuner present:  * #define OVERRIDE_TUNER<tuner type>  *  * where<tuner type> is one of the following tuner defines.  */
 end_comment
 
 begin_comment
@@ -14942,6 +14936,29 @@ index|]
 expr_stmt|;
 name|checkTuner
 label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OVERRIDE_TUNER
+argument_list|)
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|OVERRIDE_TUNER
+index|]
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
+endif|#
+directive|endif
 comment|/* differentiate type of tuner */
 if|if
 condition|(
@@ -14999,13 +15016,6 @@ goto|goto
 name|checkDBX
 goto|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_PAL
-argument_list|)
-comment|/** WARNING: this is a test */
 if|if
 condition|(
 name|card
@@ -15042,9 +15052,6 @@ name|checkDBX
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* TEST_PAL */
 comment|/* no tuner found */
 name|bktr
 operator|->
@@ -15060,6 +15067,25 @@ index|]
 expr_stmt|;
 name|checkDBX
 label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OVERRIDE_DBX
+argument_list|)
+name|bktr
+operator|->
+name|card
+operator|.
+name|dbx
+operator|=
+name|OVERRIDE_DBX
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+endif|#
+directive|endif
 comment|/* probe for BTSC (dbx) chips */
 if|if
 condition|(
