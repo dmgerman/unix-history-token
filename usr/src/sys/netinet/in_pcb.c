@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	6.7	85/04/16	*/
+comment|/*	in_pcb.c	6.7	85/04/18	*/
 end_comment
 
 begin_include
@@ -662,6 +662,7 @@ condition|(
 name|in_ifaddr
 condition|)
 block|{
+comment|/* 		 * If the destination address is INADDR_ANY, 		 * use the primary local address. 		 * If the supplied address is INADDR_BROADCAST, 		 * and the primary interface supports broadcast, 		 * choose the broadcast address for that interface. 		 */
 define|#
 directive|define
 name|satosin
@@ -682,8 +683,6 @@ condition|)
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 operator|=
 name|IA_SIN
 argument_list|(
@@ -691,8 +690,6 @@ name|in_ifaddr
 argument_list|)
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 expr_stmt|;
 elseif|else
 if|if
@@ -704,13 +701,20 @@ operator|.
 name|s_addr
 operator|==
 name|INADDR_BROADCAST
+operator|&&
+operator|(
+name|in_ifaddr
+operator|->
+name|ia_ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+operator|)
 condition|)
-comment|/* SHOULD CHECK FOR BROADCAST CAPABILITY */
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 operator|=
 name|satosin
 argument_list|(
@@ -721,8 +725,6 @@ name|ia_broadaddr
 argument_list|)
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 expr_stmt|;
 block|}
 if|if
@@ -745,6 +747,11 @@ operator|*
 operator|)
 name|ifa_ifwithnet
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|)
 expr_stmt|;
@@ -856,11 +863,6 @@ operator|)
 literal|0
 condition|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 comment|/* No route yet, so try to acquire one */
 name|ro
 operator|->
@@ -901,16 +903,30 @@ name|ro_rt
 operator|==
 literal|0
 condition|)
-name|ia
+name|ifp
 operator|=
 operator|(
 expr|struct
-name|in_ifaddr
+name|ifnet
 operator|*
 operator|)
 literal|0
 expr_stmt|;
 else|else
+name|ifp
+operator|=
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_ifp
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ifp
+condition|)
+block|{
 for|for
 control|(
 name|ia
@@ -935,6 +951,16 @@ name|ifp
 condition|)
 break|break;
 block|}
+else|else
+name|ia
+operator|=
+operator|(
+expr|struct
+name|in_ifaddr
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ia
