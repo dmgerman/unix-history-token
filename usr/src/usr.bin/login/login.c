@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	8.3 (Berkeley) %G%"
+literal|"@(#)login.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1336,6 +1336,24 @@ name|localhost
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|!=
+literal|0
+operator|&&
+name|rootlogin
+operator|&&
+name|pwd
+operator|->
+name|pw_uid
+operator|!=
+literal|0
+condition|)
+name|rootlogin
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
