@@ -184,6 +184,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dokerberos
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|command
 init|=
@@ -370,6 +378,21 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+define|#
+directive|define
+name|optlist
+value|"b:cdf:hikmNRrs:tvxy"
+else|#
+directive|else
+define|#
+directive|define
+name|optlist
+value|"b:cdf:himNRrs:tvxy"
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -381,7 +404,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:cdf:himNRrs:tvxy"
+name|optlist
 argument_list|)
 operator|)
 operator|!=
@@ -473,6 +496,19 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+case|case
+literal|'k'
+case|:
+name|dokerberos
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'i'
 case|:
@@ -1082,15 +1118,15 @@ name|stderr
 argument_list|,
 literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"restore -i [-chmvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -i [-chkmvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -r [-cvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -r [-ckvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -R [-cvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -R [-ckvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -x [-chmvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -x [-chkmvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|,
-literal|"restore -t [-chvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -t [-chkvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|)
 expr_stmt|;
 name|done

@@ -280,6 +280,18 @@ comment|/* Assume non-cartridge tape */
 end_comment
 
 begin_decl_stmt
+name|int
+name|dokerberos
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use Kerberos authentication */
+end_comment
+
+begin_decl_stmt
 name|long
 name|dev_bsize
 init|=
@@ -522,6 +534,21 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+define|#
+directive|define
+name|optstring
+value|"0123456789aB:b:cd:f:h:kns:T:uWw"
+else|#
+directive|else
+define|#
+directive|define
+name|optstring
+value|"0123456789aB:b:cd:f:h:ns:T:uWw"
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -533,13 +560,16 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789aB:b:cd:f:h:ns:T:uWw"
+name|optstring
 argument_list|)
 operator|)
 operator|!=
 operator|-
 literal|1
 condition|)
+undef|#
+directive|undef
+name|optstring
 switch|switch
 condition|(
 name|ch
@@ -705,6 +735,19 @@ literal|10L
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+case|case
+literal|'k'
+case|:
+name|dokerberos
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'n'
 case|:
@@ -2357,24 +2400,20 @@ name|void
 name|usage
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dump [-0123456789acnu] [-B records] [-b blocksize] [-d density] [-f file]\n            [-h level] [-s feet] [-T date] filesystem\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       dump [-W | -w]\n"
+literal|"usage: dump [-0123456789ac"
+ifdef|#
+directive|ifdef
+name|KERBEROS
+literal|"k"
+endif|#
+directive|endif
+literal|"nu] [-B records] [-b blocksize] [-d density] [-f file]\n"
+literal|"		[-h level] [-s feet] [-T date] filesystem\n"
+literal|"	dump [-W | -w]\n"
 argument_list|)
 expr_stmt|;
 name|exit
