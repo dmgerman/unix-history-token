@@ -39,7 +39,7 @@ modifier|*
 name|outc
 function_decl|)
 parameter_list|(
-name|char
+name|int
 parameter_list|)
 parameter_list|)
 block|{
@@ -190,7 +190,7 @@ modifier|*
 name|outc
 function_decl|)
 parameter_list|(
-name|char
+name|int
 parameter_list|)
 parameter_list|)
 block|{

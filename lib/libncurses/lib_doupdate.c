@@ -521,7 +521,7 @@ begin_function
 name|int
 name|_outch
 parameter_list|(
-name|char
+name|int
 name|ch
 parameter_list|)
 block|{
@@ -877,7 +877,7 @@ specifier|static
 name|int
 name|countc
 parameter_list|(
-name|char
+name|int
 name|c
 parameter_list|)
 block|{

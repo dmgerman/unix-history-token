@@ -1610,7 +1610,7 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|char
+name|int
 parameter_list|)
 parameter_list|)
 function_decl|;
