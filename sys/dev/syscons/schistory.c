@@ -15,14 +15,6 @@ directive|include
 file|"opt_syscons.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NSC
-operator|>
-literal|0
-end_if
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1361,15 +1353,6 @@ end_endif
 
 begin_comment
 comment|/* SC_NO_HISTORY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSC */
 end_comment
 
 end_unit

@@ -6,63 +6,14 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vga.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_vga.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_vesa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_fb.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|VGA_NO_MODE_CHANGE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|VESA
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|NVGA
-operator|>
-literal|0
-operator|&&
-name|defined
-argument_list|(
-name|VESA
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -9101,7 +9052,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (NVGA> 0&& VESA) || KLD_MODULE */
+comment|/* VGA_NO_MODE_CHANGE */
 end_comment
 
 end_unit

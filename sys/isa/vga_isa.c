@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vga.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_vga.h"
 end_include
 
@@ -30,14 +24,6 @@ end_include
 begin_comment
 comment|/* should be removed in the future, XXX */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|NVGA
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -949,15 +935,6 @@ end_endif
 
 begin_comment
 comment|/* FB_INSTALL_CDEV */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NVGA> 0 */
 end_comment
 
 end_unit

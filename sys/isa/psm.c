@@ -10,22 +10,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"psm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_psm.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NPSM
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -4782,18 +4768,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* Validate unit number */
-if|if
-condition|(
-name|unit
-operator|>=
-name|NPSM
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Get device data */
 name|sc
 operator|=
@@ -11462,15 +11436,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPSM> 0 */
-end_comment
 
 end_unit
 

@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"splash.h"
 end_include
 
@@ -43,14 +37,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|NSC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -18163,15 +18149,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSC */
-end_comment
 
 end_unit
 

@@ -75,6 +75,10 @@ value|MAX(NATKBDC, 1)
 end_define
 
 begin_comment
+comment|/* XXX */
+end_comment
+
+begin_comment
 comment|/* macros */
 end_comment
 
@@ -327,14 +331,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|NATKBDC
-operator|>
-literal|0
-end_if
-
 begin_function
 name|atkbdc_softc_t
 modifier|*
@@ -488,15 +484,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NATKBDC> 0 */
-end_comment
 
 begin_comment
 comment|/* the backdoor to the keyboard controller! XXX */
