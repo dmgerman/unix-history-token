@@ -759,7 +759,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * There was no 'elh' passed on. This could still be 	 * either phase1 or phase2. 	 * We have a long header, but we may be running on a pahse 1 net. 	 * Extract out all the info regarding this packet's src& dst. 	 */
+comment|/* 	 * There was no 'elh' passed on. This could still be 	 * either phase1 or phase2. 	 * We have a long header, but we may be running on a phase 1 net. 	 * Extract out all the info regarding this packet's src& dst. 	 */
 name|ddpstat
 operator|.
 name|ddps_long
@@ -938,7 +938,7 @@ operator|==
 name|ATADDR_ANYNET
 condition|)
 block|{
-comment|/* 	     * The TO address doesn't specify a net, 	     * So by definition it's for this net. 	     * Try find ifaddr info with the right phase,  	     * the right interface, and either to our node, a bradcast, 	     * or looped back (though that SHOULD be covered in the other 	     * cases). 	     * 	     * XXX If we have multiple interfaces, then the first with 	     * this node number will match (which may NOT be what we want, 	     * but it's probably safe in 99.999% of cases. 	     */
+comment|/* 	     * The TO address doesn't specify a net, 	     * So by definition it's for this net. 	     * Try find ifaddr info with the right phase,  	     * the right interface, and either to our node, a broadcast, 	     * or looped back (though that SHOULD be covered in the other 	     * cases). 	     * 	     * XXX If we have multiple interfaces, then the first with 	     * this node number will match (which may NOT be what we want, 	     * but it's probably safe in 99.999% of cases. 	     */
 for|for
 control|(
 name|aa
@@ -1136,10 +1136,7 @@ operator|.
 name|s_net
 argument_list|)
 operator|<
-name|ntohs
-argument_list|(
 literal|0xff00
-argument_list|)
 operator|)
 operator|||
 operator|(
@@ -1152,10 +1149,7 @@ operator|.
 name|s_net
 argument_list|)
 operator|>
-name|ntohs
-argument_list|(
 literal|0xfffe
-argument_list|)
 operator|)
 operator|)
 condition|)
@@ -1244,7 +1238,7 @@ name|mlen
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If it aint for a net on any of our interfaces,      * or it IS for a net on a different interface than it came in on,      * (and it is not looped back) then consider if we shoulf forward it.      * As we a re not really a router this is a bit cheaky, but it may be      * useful some day.      */
+comment|/*      * If it aint for a net on any of our interfaces,      * or it IS for a net on a different interface than it came in on,      * (and it is not looped back) then consider if we should forward it.      * As we are not really a router this is a bit cheeky, but it may be      * useful some day.      */
 if|if
 condition|(
 operator|(
