@@ -1880,11 +1880,10 @@ index|[
 literal|22
 index|]
 decl_stmt|;
-comment|/* 	 * The specifcation allows for 256 bytes of data, total. 	 * We avoid overflow problems with common usages of u_int8_t 	 * sizes by not getting at the last 4 bytes. 	 */
 define|#
 directive|define
 name|SID_VENDOR_SPECIFIC_1_SIZE
-value|(256 - 96 - 4)
+value|160
 name|u_int8_t
 name|vendor_specific1
 index|[
