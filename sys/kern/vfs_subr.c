@@ -614,7 +614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For any iteration/modification of vnode_free_list */
+comment|/*  * Lock for any access to the following:  *	vnode_free_list  *	numvnodes  *	freevnodes  */
 end_comment
 
 begin_decl_stmt
@@ -2618,6 +2618,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|numvnodes
@@ -2631,6 +2637,12 @@ operator|/
 literal|10
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
 name|vnlruproc_sig
 operator|=
 literal|0
@@ -2648,6 +2660,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
 name|done
 operator|=
 literal|0
@@ -3075,6 +3093,12 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vnode_free_list_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Try to reuse vnodes if we hit the max.  This situation only 	 * occurs in certain large-memory (2G+) situations.  We cannot 	 * attempt to directly reclaim vnodes due to nasty recursion 	 * problems. 	 */
 if|if
 condition|(
@@ -3101,12 +3125,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Attempt to reuse a vnode already on the free list, allocating 	 * a new vnode if we can't find one or if we have not reached a 	 * good minimum for good LRU performance. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vnode_free_list_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|freevnodes
@@ -3638,7 +3656,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|vnodeallocs++; 	if (vnodeallocs % vnoderecycleperiod == 0&& 	    freevnodes< vnoderecycleminfreevn&& 	    vnoderecyclemintotalvn< numvnodes) {
+block|mp_fixme("This code does not lock access to numvnodes&& freevnodes."); 	vnodeallocs++; 	if (vnodeallocs % vnoderecycleperiod == 0&& 	    freevnodes< vnoderecycleminfreevn&& 	    vnoderecyclemintotalvn< numvnodes) {
 comment|/* Recycle vnodes. */
 block|cache_purgeleafdirs(vnoderecyclenumber); 	}
 endif|#
@@ -11623,6 +11641,7 @@ name|len
 decl_stmt|,
 name|n
 decl_stmt|;
+comment|/* 	 * Stale numvnodes access is not fatal here. 	 */
 name|req
 operator|->
 name|lock
