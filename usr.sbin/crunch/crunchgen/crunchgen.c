@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -858,7 +864,19 @@ argument_list|(
 name|tempfname
 argument_list|)
 argument_list|,
-literal|"/tmp/crunchgen_%sXXXXXX"
+literal|"%s/crunchgen_%sXXXXXX"
+argument_list|,
+name|getenv
+argument_list|(
+literal|"TMPDIR"
+argument_list|)
+condition|?
+name|getenv
+argument_list|(
+literal|"TMPDIR"
+argument_list|)
+else|:
+name|_PATH_TMP
 argument_list|,
 name|confname
 argument_list|)
