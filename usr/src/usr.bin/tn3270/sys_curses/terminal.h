@@ -39,7 +39,7 @@ name|TermIsStartField
 parameter_list|(
 name|x
 parameter_list|)
-value|(GetTerminal(x)&ATTR_MASK)
+value|((GetTerminal(x)&ATTR_MASK) == ATTR_MASK)
 end_define
 
 begin_define
