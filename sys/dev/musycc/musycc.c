@@ -6674,6 +6674,7 @@ operator|(
 name|m
 operator|->
 name|m_flags
+operator|&
 name|M_EXT
 operator|)
 operator|==
