@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/growfs/growfs.c,v 1.5 2000/12/12 19:31:00 tomsoft Exp $  *  */
+comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/growfs/growfs.c,v 1.5 2000/12/12 19:31:00 tomsoft Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -388,7 +388,7 @@ comment|/* last valid inode */
 end_comment
 
 begin_comment
-comment|/*  * An  array of elements of type struct gfs_bpp describes all blocks  to  * be relocated in order to free the space needed for the cylinder group  * summary for all cylinder groups located in the first cylinder group.  */
+comment|/*  * An array of elements of type struct gfs_bpp describes all blocks to  * be relocated in order to free the space needed for the cylinder group  * summary for all cylinder groups located in the first cylinder group.  */
 end_comment
 
 begin_struct
@@ -761,7 +761,7 @@ comment|/* ************************************************************ growfs *
 end_comment
 
 begin_comment
-comment|/*  * Here  we actually start growing the file system. We basically  read  the  * cylinder  summary  from the first cylinder group as we want  to  update  * this  on  the fly during our various operations. First  we  handle  the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder  groups.  Now  we handle the  cylinder  group  containing  the  * cylinder  summary  which  might result in a  relocation  of  the  whole  * structure.  In the end we write back the updated cylinder summary,  the  * new superblock, and slightly patched versions of the super block  * copies.  */
+comment|/*  * Here we actually start growing the file system. We basically read the  * cylinder summary from the first cylinder group as we want to update  * this on the fly during our various operations. First we handle the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder groups.  Now we handle the cylinder group containing the  * cylinder summary which might result in a relocation of the whole  * structure.  In the end we write back the updated cylinder summary, the  * new superblock, and slightly patched versions of the super block  * copies.  */
 end_comment
 
 begin_function
@@ -1526,7 +1526,7 @@ name|fs_flags
 operator|&=
 name|FS_DOSOFTDEP
 expr_stmt|;
-comment|/* 	 * XXX 	 * The following fields are currently distributed from the  superblock 	 * to the copies: 	 *     fs_minfree 	 *     fs_rotdelay 	 *     fs_maxcontig 	 *     fs_maxbpg 	 *     fs_minfree, 	 *     fs_optim 	 *     fs_flags regarding SOFTPDATES 	 * 	 * We probably should rather change the summary for the cylinder group 	 * statistics here to the value of what would be in there, if the file 	 * system were created initially with the new size. Therefor we  still 	 * need to find an easy way of calculating that. 	 * Possibly we can try to read the first superblock copy and apply the 	 * "diffed" stats between the old and new superblock by still  copying 	 * certain parameters onto that. 	 */
+comment|/* 	 * XXX 	 * The following fields are currently distributed from the superblock 	 * to the copies: 	 *     fs_minfree 	 *     fs_rotdelay 	 *     fs_maxcontig 	 *     fs_maxbpg 	 *     fs_minfree, 	 *     fs_optim 	 *     fs_flags regarding SOFTPDATES 	 * 	 * We probably should rather change the summary for the cylinder group 	 * statistics here to the value of what would be in there, if the file 	 * system were created initially with the new size. Therefor we still 	 * need to find an easy way of calculating that. 	 * Possibly we can try to read the first superblock copy and apply the 	 * "diffed" stats between the old and new superblock by still copying 	 * certain parameters onto that. 	 */
 comment|/* 	 * Write out the duplicate super blocks. 	 */
 for|for
 control|(
@@ -1602,7 +1602,7 @@ comment|/* ************************************************************ initcg *
 end_comment
 
 begin_comment
-comment|/*  * This creates a new cylinder group structure, for more details please  see  * the  source of newfs(8), as this function is taken over almost unchanged.  * As  this  is  never called for the  first  cylinder  group,  the  special  * provisions for that case are removed here.  */
+comment|/*  * This creates a new cylinder group structure, for more details please see  * the source of newfs(8), as this function is taken over almost unchanged.  * As this is never called for the first cylinder group, the special  * provisions for that case are removed here.  */
 end_comment
 
 begin_function
@@ -2857,7 +2857,7 @@ comment|/* ******************************************************* frag_adjust *
 end_comment
 
 begin_comment
-comment|/*  * Here  we add or subtract (sign +1/-1) the available fragments in  a  given  * block to or from the fragment statistics. By subtracting before and adding  * after  an operation on the free frag map we can easy update  the  fragment  * statistic, which seems to be otherwise a rather complex operation.  */
+comment|/*  * Here we add or subtract (sign +1/-1) the available fragments in a given  * block to or from the fragment statistics. By subtracting before and adding  * after an operation on the free frag map we can easy update the fragment  * statistic, which seems to be otherwise a rather complex operation.  */
 end_comment
 
 begin_function
@@ -2919,7 +2919,7 @@ name|f
 operator|++
 control|)
 block|{
-comment|/* 		 * Count contiguos free fragments. 		 */
+comment|/* 		 * Count contiguous free fragments. 		 */
 if|if
 condition|(
 name|isset
@@ -3028,7 +3028,7 @@ comment|/* ******************************************************* cond_bl_upd *
 end_comment
 
 begin_comment
-comment|/*  * Here we conditionally update a pointer to a fragment. We check for all  * relocated blocks if any of it's fragments is referenced by the current  * field,  and update the pointer to the respective fragment in  our  new  * block.  If  we find a reference we write back the  block  immediately,  * as there is no easy way for our general block reading engine to figure  * out if a write back operation is needed.  */
+comment|/*  * Here we conditionally update a pointer to a fragment. We check for all  * relocated blocks if any of its fragments is referenced by the current  * field, and update the pointer to the respective fragment in our new  * block.  If we find a reference we write back the block immediately,  * as there is no easy way for our general block reading engine to figure  * out if a write back operation is needed.  */
 end_comment
 
 begin_function
@@ -3262,7 +3262,7 @@ comment|/* ************************************************************ updjcg *
 end_comment
 
 begin_comment
-comment|/*  * Here we do all needed work for the former last cylinder group. It has to be  * changed  in  any case, even if the file system ended exactly on the  end  of  * this  group, as there is some slightly inconsistent handling of the  number  * of cylinders in the cylinder group. We start again by reading the  cylinder  * group from disk. If the last block was not fully available, we first handle  * the  missing  fragments, then we handle all new full blocks  in  that  file  * system  and  finally we handle the new last fragmented block  in  the  file  * system.  We again have to handle the fragment statistics rotational  layout  * tables and cluster summary during all those operations.  */
+comment|/*  * Here we do all needed work for the former last cylinder group. It has to be  * changed in any case, even if the file system ended exactly on the end of  * this group, as there is some slightly inconsistent handling of the number  * of cylinders in the cylinder group. We start again by reading the cylinder  * group from disk. If the last block was not fully available, we first handle  * the missing fragments, then we handle all new full blocks in that file  * system and finally we handle the new last fragmented block in the file  * system.  We again have to handle the fragment statistics rotational layout  * tables and cluster summary during all those operations.  */
 end_comment
 
 begin_function
@@ -3387,7 +3387,7 @@ name|cgun2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If  the  cylinder  group had already it's  new  final  size  almost 	 * nothing is to be done ... except: 	 * For some reason the value of cg_ncyl in the last cylinder group has 	 * to  be  zero instead of fs_cpg. As this is now no longer  the  last 	 * cylinder group we have to change that value now to fs_cpg. 	 */
+comment|/* 	 * If the cylinder group had already its new final size almost 	 * nothing is to be done ... except: 	 * For some reason the value of cg_ncyl in the last cylinder group has 	 * to be zero instead of fs_cpg. As this is now no longer the last 	 * cylinder group we have to change that value now to fs_cpg. 	 */
 if|if
 condition|(
 name|cgbase
@@ -3680,7 +3680,7 @@ operator|.
 name|fs_frag
 expr_stmt|;
 block|}
-comment|/* 	 * Now  we have to update the free fragment bitmap for our new  free 	 * space.  There again we have to handle the fragmentation and  also 	 * the  rotational  layout tables and the cluster summary.  This  is 	 * also  done per fragment for the first new block if the  old  file 	 * system end was not on a block boundary, per fragment for the  new 	 * last block if the new file system end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
+comment|/* 	 * Now we have to update the free fragment bitmap for our new free 	 * space.  There again we have to handle the fragmentation and also 	 * the rotational layout tables and the cluster summary.  This is 	 * also done per fragment for the first new block if the old file 	 * system end was not on a block boundary, per fragment for the new 	 * last block if the new file system end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
 if|if
 condition|(
 name|osblock
@@ -3768,7 +3768,7 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Check  if the fragment just created could join  an 			 * already existing fragment at the former end of the 			 * file system. 			 */
+comment|/* 			 * Check if the fragment just created could join an 			 * already existing fragment at the former end of the 			 * file system. 			 */
 if|if
 condition|(
 name|isblock
@@ -3804,7 +3804,7 @@ operator|)
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * The block is now completely available 				 */
+comment|/* 				 * The block is now completely available. 				 */
 name|DBG_PRINT0
 argument_list|(
 literal|"block was\n"
@@ -4132,7 +4132,7 @@ name|cs_nbfree
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Handle the last new block if there are stll some new fragments left. 	 * Here  we don't have to bother about the cluster summary or the  even 	 * the rotational layout table. 	 */
+comment|/* 	 * Handle the last new block if there are stll some new fragments left. 	 * Here we don't have to bother about the cluster summary or the even 	 * the rotational layout table. 	 */
 if|if
 condition|(
 name|i
@@ -4300,7 +4300,7 @@ comment|/* ********************************************************** updcsloc *
 end_comment
 
 begin_comment
-comment|/*  * Here  we update the location of the cylinder summary. We have  two  possible  * ways of growing the cylinder summary.  * (1)	We can try to grow the summary in the current location, and  relocate  *	possibly used blocks within the current cylinder group.  * (2)	Alternatively we can relocate the whole cylinder summary to the first  *	new completely empty cylinder group. Once the cylinder summary is  no  *	longer in the beginning of the first cylinder group you should  never  *	use  a version of fsck which is not aware of the possibility to  have  *	this structure in a non standard place.  * Option (1) is considered to be less intrusive to the structure of the  file-  * system. So we try to stick to that whenever possible. If there is not enough  * space  in the cylinder group containing the cylinder summary we have to  use  * method  (2). In case of active snapshots in the file system we  probably  can  * completely avoid implementing copy on write if we stick to method (2) only.  */
+comment|/*  * Here we update the location of the cylinder summary. We have two possible  * ways of growing the cylinder summary.  * (1)	We can try to grow the summary in the current location, and relocate  *	possibly used blocks within the current cylinder group.  * (2)	Alternatively we can relocate the whole cylinder summary to the first  *	new completely empty cylinder group. Once the cylinder summary is no  *	longer in the beginning of the first cylinder group you should never  *	use a version of fsck which is not aware of the possibility to have  *	this structure in a non standard place.  * Option (1) is considered to be less intrusive to the structure of the file-  * system. So we try to stick to that whenever possible. If there is not enough  * space in the cylinder group containing the cylinder summary we have to use  * method (2). In case of active snapshots in the file system we probably can  * completely avoid implementing copy on write if we stick to method (2) only.  */
 end_comment
 
 begin_function
@@ -4533,7 +4533,7 @@ name|cg_time
 operator|=
 name|utime
 expr_stmt|;
-comment|/* 	 * XXX	In the case of having active snapshots we may need much more 	 *	blocks for the copy on write. We need each block twice,  and 	 *	also  up to 8*3 blocks for indirect blocks for all  possible 	 *	references. 	 */
+comment|/* 	 * XXX	In the case of having active snapshots we may need much more 	 *	blocks for the copy on write. We need each block twice, and 	 *	also up to 8*3 blocks for indirect blocks for all possible 	 *	references. 	 */
 if|if
 condition|(
 comment|/*((int)sblock.fs_time&0x3)>0||*/
@@ -4544,7 +4544,7 @@ operator|<
 name|blocks
 condition|)
 block|{
-comment|/* 		 * There  is  not enough space in the old cylinder  group  to 		 * relocate  all blocks as needed, so we relocate  the  whole 		 * cylinder  group summary to a new group. We try to use  the 		 * first complete new cylinder group just created. Within the 		 * cylinder  group we allign the area immediately  after  the 		 * cylinder  group  information location in order  to  be  as 		 * close as possible to the original implementation of ffs. 		 * 		 * First  we have to make sure we'll find enough space in  the 		 * new  cylinder  group. If not, then we  currently  give  up. 		 * We  start  with freeing everything which was  used  by  the 		 * fragments of the old cylinder summary in the current group. 		 * Now  we write back the group meta data, read in the  needed 		 * meta data from the new cylinder group, and start allocating 		 * within  that  group. Here we can assume, the  group  to  be 		 * completely empty. Which makes the handling of fragments and 		 * clusters a lot easier. 		 */
+comment|/* 		 * There is not enough space in the old cylinder group to 		 * relocate all blocks as needed, so we relocate the whole 		 * cylinder group summary to a new group. We try to use the 		 * first complete new cylinder group just created. Within the 		 * cylinder group we align the area immediately after the 		 * cylinder group information location in order to be as 		 * close as possible to the original implementation of ffs. 		 * 		 * First we have to make sure we'll find enough space in the 		 * new cylinder group. If not, then we currently give up. 		 * We start with freeing everything which was used by the 		 * fragments of the old cylinder summary in the current group. 		 * Now we write back the group meta data, read in the needed 		 * meta data from the new cylinder group, and start allocating 		 * within that group. Here we can assume, the group to be 		 * completely empty. Which makes the handling of fragments and 		 * clusters a lot easier. 		 */
 name|DBG_TRC
 expr_stmt|;
 if|if
@@ -4585,7 +4585,7 @@ operator|.
 name|fs_fsize
 operator|)
 expr_stmt|;
-comment|/* 		 * Set up last cluster size ("lcs") already here. Calculate 		 * the size for the trailing cluster just behind where  "d" 		 * points to. 		 */
+comment|/* 		 * Set up last cluster size ("lcs") already here. Calculate 		 * the size for the trailing cluster just behind where "d" 		 * points to. 		 */
 if|if
 condition|(
 name|sblock
@@ -4740,7 +4740,7 @@ name|cs_nffree
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Point  "d" to the last fragment of the  last 			 * (incomplete) block of the clinder summary. 			 */
+comment|/* 			 * Point "d" to the last fragment of the last 			 * (incomplete) block of the cylinder summary. 			 */
 name|d
 operator|++
 expr_stmt|;
@@ -5485,7 +5485,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXX	Handle the cluster statistics here in the case  this 		 *	cylinder group is now almost full, and the remaining 		 *	space is less then the maximum cluster size. This is 		 *	probably not needed, as you would hardly find a file 		 *	system which has only MAXCSBUFS+FS_MAXCONTIG of free 		 *	space right behind the cylinder group information in 		 *	any new cylinder group. 		 */
+comment|/* 		 * XXX	Handle the cluster statistics here in the case this 		 *	cylinder group is now almost full, and the remaining 		 *	space is less then the maximum cluster size. This is 		 *	probably not needed, as you would hardly find a file 		 *	system which has only MAXCSBUFS+FS_MAXCONTIG of free 		 *	space right behind the cylinder group information in 		 *	any new cylinder group. 		 */
 comment|/* 		 * Update our statistics in the cylinder summary. 		 */
 operator|*
 name|cs
@@ -5550,7 +5550,7 @@ name|DBG_LEAVE
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * We have got enough of space in the current cylinder group, so we 	 * can relocate just a few blocks, and let the summary  information 	 * grow in place where it is right now. 	 */
+comment|/* 	 * We have got enough of space in the current cylinder group, so we 	 * can relocate just a few blocks, and let the summary information 	 * grow in place where it is right now. 	 */
 name|DBG_TRC
 expr_stmt|;
 name|cbase
@@ -5687,7 +5687,7 @@ name|gfs_bpp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Lock all new frags needed for the cylinder group summary. This  is 	 * done per fragment in the first and last block of the new  required 	 * area, and per block for all other blocks. 	 * 	 * Handle the first new  block here (but only if some fragments where 	 * already used for the cylinder summary). 	 */
+comment|/* 	 * Lock all new frags needed for the cylinder group summary. This is 	 * done per fragment in the first and last block of the new required 	 * area, and per block for all other blocks. 	 * 	 * Handle the first new block here (but only if some fragments where 	 * already used for the cylinder summary). 	 */
 name|ind
 operator|=
 literal|0
@@ -5832,7 +5832,7 @@ name|cs_nffree
 operator|--
 expr_stmt|;
 block|}
-comment|/* 		 * No cluster handling is needed here, as there was at least 		 * one  fragment in use by the cylinder summary in  the  old 		 * file system. 		 * No block-free counter handling here as this block was not 		 * a free block. 		 */
+comment|/* 		 * No cluster handling is needed here, as there was at least 		 * one fragment in use by the cylinder summary in the old 		 * file system. 		 * No block-free counter handling here as this block was not 		 * a free block. 		 */
 block|}
 name|frag_adjust
 argument_list|(
@@ -6448,7 +6448,7 @@ name|old
 condition|)
 block|{
 comment|/* no more blocks listed */
-comment|/* 				 * XXX	A relative blocknumber should not be 				 *	zero,   which  is   not   explicitly 				 *	guaranteed by our code. 				 */
+comment|/* 				 * XXX	A relative blocknumber should not be 				 *	zero, which is not explicitly 				 *	guaranteed by our code. 				 */
 break|break;
 block|}
 comment|/* 			 * Allocate a complete block in the same (current) 			 * cylinder group. 			 */
@@ -6560,7 +6560,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 * Special handling is required if this was the  first 			 * block. We have to consider the fragments which were 			 * used by the cylinder summary in the original  block 			 * which  re to be free in the copy of our  block.  We 			 * have  to be careful if this first block happens  to 			 * be also the last block to be relocated. 			 */
+comment|/* 			 * Special handling is required if this was the first 			 * block. We have to consider the fragments which were 			 * used by the cylinder summary in the original block 			 * which re to be free in the copy of our block.  We 			 * have to be careful if this first block happens to 			 * be also the last block to be relocated. 			 */
 if|if
 condition|(
 name|bp
@@ -6796,7 +6796,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * !!! Attach the cylindergroup offset here.  			 */
+comment|/* 			 * !!! Attach the cylindergroup offset here. 			 */
 name|bp
 index|[
 name|i
@@ -6935,7 +6935,7 @@ name|new
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Now we have to update all references to any fragment which 		 * belongs  to any block relocated. We iterate now  over  all 		 * cylinder  groups,  within those over all non  zero  length  		 * inodes. 		 */
+comment|/* 		 * Now we have to update all references to any fragment which 		 * belongs to any block relocated. We iterate now over all 		 * cylinder groups, within those over all non zero length 		 * inodes. 		 */
 for|for
 control|(
 name|cylno
@@ -7358,7 +7358,7 @@ comment|/* ************************************************************* alloc *
 end_comment
 
 begin_comment
-comment|/*  * Here we allocate a free block in the current cylinder group. It is assumed,  * that  acg contains the current cylinder group. As we may take a block  from  * somewhere in the file system we have to handle cluster summary here.  */
+comment|/*  * Here we allocate a free block in the current cylinder group. It is assumed,  * that acg contains the current cylinder group. As we may take a block from  * somewhere in the file system we have to handle cluster summary here.  */
 end_comment
 
 begin_function
@@ -7446,7 +7446,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * We start seeking for free blocks only from the space available after 	 * the  end of the new grown cylinder summary. Otherwise we allocate  a 	 * block here which we have to relocate a couple of seconds later again 	 * again, and we are not prepared to to this anyway. 	 */
+comment|/* 	 * We start seeking for free blocks only from the space available after 	 * the end of the new grown cylinder summary. Otherwise we allocate a 	 * block here which we have to relocate a couple of seconds later again 	 * again, and we are not prepared to to this anyway. 	 */
 name|blkno
 operator|=
 operator|-
@@ -7807,7 +7807,7 @@ argument_list|,
 name|blkno
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We  possibly have split a cluster here, so we have  to  do 		 * recalculate the sizes of the remaining cluster halves now, 		 * and use them for updating the cluster summary information. 		 * 		 * Lets start with the blocks before our allocated block ... 		 */
+comment|/* 		 * We possibly have split a cluster here, so we have to do 		 * recalculate the sizes of the remaining cluster halves now, 		 * and use them for updating the cluster summary information. 		 * 		 * Lets start with the blocks before our allocated block ... 		 */
 for|for
 control|(
 name|lcs1
@@ -7978,7 +7978,7 @@ comment|/* *********************************************************** isblock *
 end_comment
 
 begin_comment
-comment|/*  * Here  we check if all frags of a block are free. For more details  again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
+comment|/*  * Here we check if all frags of a block are free. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
 begin_function
@@ -8161,7 +8161,7 @@ comment|/* ********************************************************** clrblock *
 end_comment
 
 begin_comment
-comment|/*  * Here we allocate a complete block in the block map. For more details again  * please  see the source of newfs(8), as this function is taken over  almost  * unchanged.  */
+comment|/*  * Here we allocate a complete block in the block map. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
 begin_function
@@ -8306,7 +8306,7 @@ comment|/* ********************************************************** setblock *
 end_comment
 
 begin_comment
-comment|/*  * Here we free a complete block in the free block map. For more details again  * please  see the source of newfs(8), as this function is taken  over  almost  * unchanged.  */
+comment|/*  * Here we free a complete block in the free block map. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
 begin_function
@@ -8446,7 +8446,7 @@ comment|/* ************************************************************ ginode *
 end_comment
 
 begin_comment
-comment|/*  * This function provides access to an individual inode. We find out in which  * block  the  requested inode is located, read it from disk if  needed,  and  * return  the pointer into that block. We maintain a cache of one  block  to  * not  read the same block again and again if we iterate linearly  over  all  * inodes.  */
+comment|/*  * This function provides access to an individual inode. We find out in which  * block the requested inode is located, read it from disk if needed, and  * return the pointer into that block. We maintain a cache of one block to  * not read the same block again and again if we iterate linearly over all  * inodes.  */
 end_comment
 
 begin_function
@@ -8652,7 +8652,7 @@ comment|/* ****************************************************** charsperline *
 end_comment
 
 begin_comment
-comment|/*  * Figure out how many lines our current terminal has. For more details again  * please  see the source of newfs(8), as this function is taken over  almost  * unchanged.  */
+comment|/*  * Figure out how many lines our current terminal has. For more details again  * please see the source of newfs(8), as this function is taken over almost  * unchanged.  */
 end_comment
 
 begin_function
@@ -8757,7 +8757,7 @@ comment|/* ************************************************************** main *
 end_comment
 
 begin_comment
-comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs file system. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old file system size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the file system to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The  foreseen last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() system call to  provide  * userland access to the file system locking facility.  */
+comment|/*  * growfs(8)  is a utility which allows to increase the size of an existing  * ufs file system. Currently this can only be done on unmounted file system.  * It recognizes some command line options to specify the new desired size,  * and it does some basic checkings. The old file system size is determined  * and after some more checks like we can really access the new last block  * on the disk etc. we calculate the new parameters for the superblock. After  * having done this we just call growfs() which will do the work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand what data structures are always replicated in the snapshot on  * creation, for all other blocks we touch during our procedure, we have to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in that  * way.  * Also we have to consider in what order we actually update the critical  * data structures of the file system to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The foreseen last step then will be to provide for growing even mounted  * file systems. There we have to extend the mount() system call to provide  * userland access to the file system locking facility.  */
 end_comment
 
 begin_function
@@ -8965,7 +8965,7 @@ literal|'/'
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * No path prefix was given, so try in that order: 		 *     /dev/r%s 		 *     /dev/%s 		 *     /dev/vinum/r%s 		 *     /dev/vinum/%s. 		 *  		 * FreeBSD now doesn't distinguish between raw and  block 		 * devices any longer, but it should still work this way. 		 */
+comment|/* 		 * No path prefix was given, so try in that order: 		 *     /dev/r%s 		 *     /dev/%s 		 *     /dev/vinum/r%s 		 *     /dev/vinum/%s. 		 * 		 * FreeBSD now doesn't distinguish between raw and block 		 * devices any longer, but it should still work this way. 		 */
 name|len
 operator|=
 name|strlen
@@ -9182,7 +9182,7 @@ name|device
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Try  to read a label and gess the slice if not  specified.  This 	 * code  should guess the right thing and avaid to bother the  user 	 * user with the task of specifying the option -v on vinum volumes. 	 */
+comment|/* 	 * Try to read a label and guess the slice if not specified. This 	 * code should guess the right thing and avoid to bother the user 	 * with the task of specifying the option -v on vinum volumes. 	 */
 name|cp
 operator|=
 name|device
@@ -9280,7 +9280,7 @@ literal|"unknown device"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if that partition looks suited for growing a file system. 	 */
+comment|/* 	 * Check if that partition is suitable for growing a file system. 	 */
 if|if
 condition|(
 name|pp
@@ -10287,7 +10287,7 @@ comment|/* *********************************************************** updclst *
 end_comment
 
 begin_comment
-comment|/*  * This updates most paramters and the bitmap related to cluster. We have to  * assume, that sblock, osblock, acg are set up.  */
+comment|/*  * This updates most parameters and the bitmap related to cluster. We have to  * assume that sblock, osblock, acg are set up.  */
 end_comment
 
 begin_function
