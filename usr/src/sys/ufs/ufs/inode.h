@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.22	83/02/10	*/
+comment|/*	inode.h	4.23	83/05/21	*/
 end_comment
 
 begin_comment
@@ -172,12 +172,16 @@ name|ic_flags
 decl_stmt|;
 comment|/* 100: status, currently unused */
 name|long
+name|ic_blocks
+decl_stmt|;
+comment|/* 104: blocks actually held */
+name|long
 name|ic_spare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
-comment|/* 104: reserved, currently unused */
+comment|/* 108: reserved, currently unused */
 block|}
 name|i_ic
 struct|;
@@ -309,6 +313,13 @@ define|#
 directive|define
 name|i_ctime
 value|i_ic.ic_ctime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_blocks
+value|i_ic.ic_blocks
 end_define
 
 begin_define
@@ -471,6 +482,13 @@ define|#
 directive|define
 name|di_rdev
 value|di_ic.ic_db[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_blocks
+value|di_ic.ic_blocks
 end_define
 
 begin_ifdef
