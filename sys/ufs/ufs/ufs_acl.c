@@ -742,10 +742,9 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX: Will be ENOATTR. */
 comment|/* XXX: If ufs_getacl() should work on file systems without 		 * the EA configured, add case EOPNOTSUPP here. */
 case|case
-name|ENOENT
+name|ENOATTR
 case|:
 comment|/* 			 * Legitimately no ACL set on object, purely 			 * emulate it through the inode.  These fields will 			 * be updated when the ACL is synchronized with 			 * the inode later. 			 */
 name|ap
@@ -987,10 +986,9 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* XXX: Will be ENOATTR. */
 comment|/* XXX: If ufs_getacl() should work on file systems without 		 * the EA configured, add case EOPNOTSUPP here. */
 case|case
-name|ENOENT
+name|ENOATTR
 case|:
 name|bzero
 argument_list|(
@@ -1327,13 +1325,12 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Attempting to delete a non-present default ACL 			 * will return success for portability purposes. 			 * (TRIX) 			 * 			 * XXX: Note that since we can't distinguish 			 * "that EA is not supported" from "that EA is not 			 * defined", the success case here overlaps the 			 * the ENOENT->EOPNOTSUPP case below. 		 	 */
-comment|/* XXX: the ENOENT here will eventually be ENOATTR. */
+comment|/* 			 * Attempting to delete a non-present default ACL 			 * will return success for portability purposes. 			 * (TRIX) 			 * 			 * XXX: Note that since we can't distinguish 			 * "that EA is not supported" from "that EA is not 			 * defined", the success case here overlaps the 			 * the ENOATTR->EOPNOTSUPP case below. 		 	 */
 if|if
 condition|(
 name|error
 operator|==
-name|ENOENT
+name|ENOATTR
 condition|)
 name|error
 operator|=
@@ -1384,12 +1381,11 @@ name|EINVAL
 expr_stmt|;
 block|}
 comment|/* 	 * Map lack of attribute definition in UFS_EXTATTR into lack of 	 * support for ACLs on the file system. 	 */
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 if|if
 condition|(
 name|error
 operator|==
-name|ENOENT
+name|ENOATTR
 condition|)
 return|return
 operator|(

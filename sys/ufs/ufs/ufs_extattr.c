@@ -2908,10 +2908,9 @@ condition|(
 operator|!
 name|uele
 condition|)
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
-name|ENOENT
+name|ENOATTR
 operator|)
 return|;
 name|LIST_REMOVE
@@ -3657,10 +3656,9 @@ condition|(
 operator|!
 name|attribute
 condition|)
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
-name|ENOENT
+name|ENOATTR
 operator|)
 return|;
 if|if
@@ -3891,10 +3889,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
-name|ENOENT
+name|ENOATTR
 expr_stmt|;
 goto|goto
 name|vopunlock_exit
@@ -3915,7 +3912,13 @@ block|{
 comment|/* 		 * The inode itself has a different generation number 		 * than the attribute data.  For now, the best solution 		 * is to coerce this to undefined, and let it get cleaned 		 * up by the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr_get: inode number inconsistency (%d, %d)\n"
+literal|"ufs_extattr_get (%s): inode number inconsistency (%d, %d)\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|,
 name|ueh
 operator|.
@@ -3926,10 +3929,9 @@ operator|->
 name|i_gen
 argument_list|)
 expr_stmt|;
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
-name|ENOENT
+name|ENOATTR
 expr_stmt|;
 goto|goto
 name|vopunlock_exit
@@ -4386,10 +4388,9 @@ condition|(
 operator|!
 name|attribute
 condition|)
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
-name|ENOENT
+name|ENOATTR
 operator|)
 return|;
 if|if
@@ -4883,10 +4884,9 @@ condition|(
 operator|!
 name|attribute
 condition|)
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
-name|ENOENT
+name|ENOATTR
 operator|)
 return|;
 if|if
@@ -5098,10 +5098,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
-name|ENOENT
+name|ENOATTR
 expr_stmt|;
 goto|goto
 name|vopunlock_exit
@@ -5122,7 +5121,13 @@ block|{
 comment|/* 		 * The inode itself has a different generation number than 		 * the attribute data.  For now, the best solution is to 		 * coerce this to undefined, and let it get cleaned up by 		 * the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr_rm: inode number inconsistency (%d, %d)\n"
+literal|"ufs_extattr_rm (%s): inode number inconsistency (%d, %d)\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|,
 name|ueh
 operator|.
@@ -5133,10 +5138,9 @@ operator|->
 name|i_gen
 argument_list|)
 expr_stmt|;
-comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
-name|ENOENT
+name|ENOATTR
 expr_stmt|;
 goto|goto
 name|vopunlock_exit

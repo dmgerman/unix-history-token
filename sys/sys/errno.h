@@ -1133,8 +1133,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ENOATTR
+value|87
+end_define
+
+begin_comment
+comment|/* Attribute not found */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELAST
-value|86
+value|87
 end_define
 
 begin_comment
