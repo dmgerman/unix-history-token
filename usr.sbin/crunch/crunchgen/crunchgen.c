@@ -4350,7 +4350,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\tcrunchide -k __crunched_%s_stub "
+literal|"\tcrunchide -k _crunched_%s_stub "
 argument_list|,
 name|p
 operator|->
