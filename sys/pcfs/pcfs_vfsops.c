@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Header: /usr/src/CVS/sys/pcfs/pcfs_vfsops.c,v 1.1.2.1 1993/02/07 21:57:25 friedl Exp $  *  *  April 6, 1992  *  *	Changed MOUNT_PCFS to MOUNT_MSDOS, this whole package should be renamed  *	to msdosfs, but I did not have the time to do it.  Some one please do  *	this and resubmit it to the patchkit!  *	Rodney W. Grimes  *  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Header: /a/cvs/386BSD/src/sys.386bsd/pcfs/pcfs_vfsops.c,v 1.1.1.1 1993/06/12 14:57:13 rgrimes Exp $  *  *  April 6, 1992  *  *	Changed MOUNT_PCFS to MOUNT_MSDOS, this whole package should be renamed  *	to msdosfs, but I did not have the time to do it.  Some one please do  *	this and resubmit it to the patchkit!  *	Rodney W. Grimes  *  */
 end_comment
 
 begin_include
@@ -692,6 +692,8 @@ name|struct
 name|pcfsmount
 modifier|*
 name|pmp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|buf
