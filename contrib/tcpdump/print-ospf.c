@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ospf.c,v 1.24 97/04/26 13:31:46 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.27 1999/11/21 09:36:58 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -2419,30 +2436,12 @@ operator|)
 name|bp2
 expr_stmt|;
 comment|/* Print the source and destination address  */
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%s> %s:"
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|(void) printf("%s> %s:", 	    ipaddr_string(&ip->ip_src), 	    ipaddr_string(&ip->ip_dst));
+endif|#
+directive|endif
 comment|/* XXX Before we do anything else, strip off the MD5 trailer */
 name|TCHECK
 argument_list|(

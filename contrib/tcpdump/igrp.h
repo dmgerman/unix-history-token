@@ -14,13 +14,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|WORDS_BIGENDIAN
-name|u_char
+name|u_int
 name|ig_v
 range|:
 literal|4
 decl_stmt|;
 comment|/* protocol version number */
-name|u_char
+name|u_int
 name|ig_op
 range|:
 literal|4
@@ -28,13 +28,13 @@ decl_stmt|;
 comment|/* opcode */
 else|#
 directive|else
-name|u_char
+name|u_int
 name|ig_op
 range|:
 literal|4
 decl_stmt|;
 comment|/* opcode */
-name|u_char
+name|u_int
 name|ig_v
 range|:
 literal|4
