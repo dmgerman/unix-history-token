@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.9	82/03/28	*/
+comment|/*	raw_pup.c	4.10	82/04/04	*/
 end_comment
 
 begin_include
@@ -253,6 +253,24 @@ name|pup_length
 operator|=
 name|len
 expr_stmt|;
+if|#
+directive|if
+name|vax
+operator|||
+name|pdp11
+name|pup
+operator|->
+name|pup_length
+operator|=
+name|htons
+argument_list|(
+name|pup
+operator|->
+name|pup_length
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|spup
 operator|=
 operator|(
@@ -318,7 +336,12 @@ name|bad
 goto|;
 return|return
 operator|(
-name|enoutput
+call|(
+modifier|*
+name|ifp
+operator|->
+name|if_output
+call|)
 argument_list|(
 name|ifp
 argument_list|,
