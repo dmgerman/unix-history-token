@@ -84,6 +84,16 @@ modifier|*
 name|pm_dev
 decl_stmt|;
 comment|/* block special device mounted */
+name|struct
+name|g_consumer
+modifier|*
+name|pm_cp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|pm_bo
+decl_stmt|;
 name|uid_t
 name|pm_uid
 decl_stmt|;
