@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)mv.c	5.11 (Berkeley) 4/3/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mv.c	5.11 (Berkeley) 4/3/91"
+literal|"$Id: mv.c,v 1.7 1993/11/09 18:58:03 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +130,12 @@ name|iflg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|stdin_ok
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -194,11 +204,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-if"
+literal|"if"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 operator|)
 condition|)
 switch|switch
@@ -212,6 +223,10 @@ block|{
 case|case
 literal|'i'
 case|:
+name|fflg
+operator|=
+literal|0
+expr_stmt|;
 name|iflg
 operator|=
 literal|1
@@ -220,18 +235,15 @@ break|break;
 case|case
 literal|'f'
 case|:
+name|iflg
+operator|=
+literal|0
+expr_stmt|;
 name|fflg
 operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'-'
-case|:
-comment|/* undocumented; for compatibility */
-goto|goto
-name|endarg
-goto|;
 case|case
 literal|'?'
 case|:
@@ -240,8 +252,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|endarg
-label|:
 name|argc
 operator|-=
 name|optind
@@ -258,6 +268,13 @@ literal|2
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+name|stdin_ok
+operator|=
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If the stat on the target fails or the target isn't a directory, 	 * try the move.  More than 2 arguments is an error in this case. 	 */
 if|if
@@ -476,12 +493,7 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|int
-name|ask
-decl_stmt|,
-name|ch
-decl_stmt|;
-comment|/* 	 * Check access.  If interactive and file exists, ask user if it 	 * should be replaced.  Otherwise if file exists but isn't writable 	 * make sure the user wants to clobber it. 	 */
+comment|/* (1)	If the destination path exists, the -f option is not specified 	 *	and either of the following conditions are true: 	 * 	 *	(a) The perimissions of the destination path do not permit 	 *	    writing and the standard input is a terminal. 	 *	(b) The -i option is specified. 	 * 	 *	the mv utility shall write a prompt to standard error and  	 *	read a line from standard input.  If the response is not 	 *	affirmative, mv shall do nothing more with the current 	 *	source file... 	 */
 if|if
 condition|(
 operator|!
@@ -496,10 +508,14 @@ name|F_OK
 argument_list|)
 condition|)
 block|{
+name|int
 name|ask
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
 if|if
 condition|(
 name|iflg
@@ -525,6 +541,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|stdin_ok
+operator|&&
 name|access
 argument_list|(
 name|to
@@ -598,6 +616,10 @@ condition|(
 name|ch
 operator|!=
 literal|'y'
+operator|&&
+name|ch
+operator|!=
+literal|'Y'
 condition|)
 return|return
 operator|(
@@ -606,6 +628,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* (2)	If rename() succeeds, mv shall do nothing more with the  	 *	current source file.  If it fails for any other reason than 	 *	EXDEV, mv shall write a diagnostic message to the standard 	 *	error and do nothing more with the current source file. 	 * 	 * (3)	If the destination path exists, and it is a file of type 	 *	directory and source_file is not a file of type directory, 	 *	or it is a file not of type directory, and source file is 	 *	a file of type directory, mv shall write a diagnostic  	 *	message to standard error, and do nothing more with the 	 *	current source file... 	 */
 if|if
 condition|(
 operator|!
@@ -653,7 +676,66 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If rename fails, and it's a regular file, do the copy internally; 	 * otherwise, use cp and rm. 	 */
+comment|/* (4)	If the destination path exists, mv shall attempt to remove it. 	 *	If this fails for any reason, mv shall write a diagnostic  	 *	message to the standard error and do nothing more with the 	 *	current source file... 	 */
+if|if
+condition|(
+operator|!
+name|stat
+argument_list|(
+name|to
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+condition|?
+name|rmdir
+argument_list|(
+name|to
+argument_list|)
+else|:
+name|unlink
+argument_list|(
+name|to
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mv: can't remove %s: %s\n"
+argument_list|,
+name|to
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+comment|/* (5)	The file hierarchy rooted in source_file shall be duplicated 	 *	as a file hiearchy rooted in the destination path... 	 */
 if|if
 condition|(
 name|stat
@@ -1297,7 +1379,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mv [-if] src target;\n   or: mv [-if] src1 ... srcN directory\n"
+literal|"usage: mv [-fi] source_file target_file\n"
+literal|"       mv [-fi] source_file ... target_dir\n"
 argument_list|)
 expr_stmt|;
 name|exit
