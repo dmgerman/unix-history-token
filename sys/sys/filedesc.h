@@ -71,6 +71,12 @@ modifier|*
 name|fd_rdir
 decl_stmt|;
 comment|/* root directory */
+name|struct
+name|vnode
+modifier|*
+name|fd_jdir
+decl_stmt|;
+comment|/* jail root directory */
 name|int
 name|fd_nfiles
 decl_stmt|;

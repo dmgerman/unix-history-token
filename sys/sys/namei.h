@@ -64,6 +64,12 @@ modifier|*
 name|ni_rootdir
 decl_stmt|;
 comment|/* logical root directory */
+name|struct
+name|vnode
+modifier|*
+name|ni_topdir
+decl_stmt|;
+comment|/* logical top directory */
 comment|/* 	 * Results: returned from/manipulated by lookup 	 */
 name|struct
 name|vnode

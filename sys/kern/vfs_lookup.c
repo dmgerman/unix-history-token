@@ -384,6 +384,14 @@ name|fdp
 operator|->
 name|fd_rdir
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_topdir
+operator|=
+name|fdp
+operator|->
+name|fd_jdir
+expr_stmt|;
 name|dp
 operator|=
 name|fdp
@@ -1476,7 +1484,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    or at absolute root directory 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other file system. 	 */
+comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    or at absolute root directory 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other file system. 	 * 3. If the vnode is the top directory of 	 *    the jail or chroot, don't let them out. 	 */
 if|if
 condition|(
 name|cnp
@@ -1499,6 +1507,12 @@ operator|==
 name|ndp
 operator|->
 name|ni_rootdir
+operator|||
+name|dp
+operator|==
+name|ndp
+operator|->
+name|ni_topdir
 operator|||
 name|dp
 operator|==
