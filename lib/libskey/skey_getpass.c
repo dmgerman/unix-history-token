@@ -59,6 +59,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|pass
+init|=
+literal|""
 decl_stmt|;
 name|char
 modifier|*
@@ -105,11 +107,22 @@ condition|(
 operator|!
 name|pwok
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"(s/key required)\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sflag
+condition|)
+return|return
+operator|(
+name|pass
+operator|)
+return|;
+block|}
 name|pass
 operator|=
 name|getpass
