@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.2 (Berkeley) %G%"
+literal|"@(#)lex.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * lex.c  *  * Lexical scanner routines for the f77 compiler, pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	lex.c,v $  * Revision 5.2  85/08/10  04:45:41  donn  * Jerry Berkman's changes to ifdef 66 code and handle -r8/double flag.  *   * Revision 5.1  85/08/10  03:48:20  donn  * 4.3 alpha  *   * Revision 1.2  84/10/27  02:20:09  donn  * Fixed bug where the input file and the name field of the include file  * structure shared -- when the input file name was freed, the include file  * name got stomped on, leading to peculiar error messages.  *   */
+comment|/*  * lex.c  *  * Lexical scanner routines for the f77 compiler, pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	lex.c,v $  * Revision 5.4  86/01/07  14:01:13  donn  * Fix the scanning for character constants in gettok() so that it handles  * the case when an error has occurred and there is no closing quote.  *   * Revision 5.3  85/11/25  00:24:06  donn  * 4.3 beta  *   * Revision 5.2  85/08/10  04:45:41  donn  * Jerry Berkman's changes to ifdef 66 code and handle -r8/double flag.  *   * Revision 5.1  85/08/10  03:48:20  donn  * 4.3 alpha  *   * Revision 1.2  84/10/27  02:20:09  donn  * Fixed bug where the input file and the name field of the include file  * structure shared -- when the input file name was freed, the include file  * name got stomped on, leading to peculiar error messages.  *   */
 end_comment
 
 begin_include
@@ -3476,6 +3476,10 @@ name|token
 expr_stmt|;
 while|while
 condition|(
+name|nextch
+operator|<=
+name|lastch
+operator|&&
 operator|*
 name|nextch
 operator|!=
