@@ -3519,12 +3519,22 @@ name|idle_cpus_mask
 operator|&
 name|me
 decl_stmt|;
-comment|/* 		 * Only try to kick off another CPU if 		 * the thread is unpinned 		 * or pinned to another cpu, 		 * and there are other available and idle CPUs. 		 * if we are idle, then skip straight to preemption. 		 */
+comment|/* 		 * Only try to kick off another CPU if 		 * the thread is unpinned 		 * or pinned to another cpu, 		 * and there are other available and idle CPUs. 		 * if we are idle, or it's an interrupt, 		 * then skip straight to preemption. 		 */
 if|if
 condition|(
 operator|(
 operator|!
 name|idle
+operator|)
+operator|&&
+operator|(
+operator|(
+name|flags
+operator|&
+name|SRQ_INTR
+operator|)
+operator|==
+literal|0
 operator|)
 operator|&&
 operator|(
