@@ -2488,7 +2488,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * Need to tell ExCA registers to route via PCI interrupts.  There 	 * are two ways to do this.  Once is to set INTR_ENABLE and the 	 * other is to set CSC to 0.  Since both methods are mutually 	 * compatible, we do both. 	 */
-name|exca_write
+name|exca_putb
 argument_list|(
 operator|&
 name|sc
@@ -2500,7 +2500,7 @@ argument_list|,
 name|EXCA_INTR_ENABLE
 argument_list|)
 expr_stmt|;
-name|exca_write
+name|exca_putb
 argument_list|(
 operator|&
 name|sc
@@ -3059,6 +3059,14 @@ operator|.
 name|flags
 operator||=
 name|EXCA_HAS_MEMREG_WIN
+expr_stmt|;
+name|sc
+operator|->
+name|exca
+operator|.
+name|chipset
+operator|=
+name|EXCA_CARDBUS
 expr_stmt|;
 name|cbb_chipinit
 argument_list|(
@@ -3791,7 +3799,7 @@ operator||
 name|CARD_VPP_0V
 argument_list|)
 expr_stmt|;
-name|exca_write
+name|exca_putb
 argument_list|(
 operator|&
 name|sc
@@ -4029,7 +4037,6 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we should do what old card does to ensure that we don't 	 * XXX call the function's interrupt routine(s). 	 */
 comment|/* 	 * XXX need to turn on ISA interrupts, if we ever support them, but 	 * XXX for now that's all we need to do. 	 */
 return|return
 operator|(
@@ -4759,7 +4766,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4769,14 +4775,6 @@ argument_list|,
 literal|"PC Card card activation failed\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -4832,7 +4830,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4842,14 +4839,6 @@ argument_list|,
 literal|"CardBus card activation failed\n"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|flags
-operator|&=
-operator|~
-name|CBB_CARD_OK
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
