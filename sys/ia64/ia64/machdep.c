@@ -3062,12 +3062,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|pcpup
-operator|->
-name|pc_current_pmap
-operator|=
-name|kernel_pmap
-expr_stmt|;
 name|ia64_set_k4
 argument_list|(
 operator|(
@@ -3141,6 +3135,12 @@ expr_stmt|;
 comment|/* 	 * Initialize the virtual memory system. 	 */
 name|pmap_bootstrap
 argument_list|()
+expr_stmt|;
+name|pcpup
+operator|->
+name|pc_current_pmap
+operator|=
+name|kernel_pmap
 expr_stmt|;
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
