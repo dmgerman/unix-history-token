@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.53 1996/09/27 13:50:59 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.53.2.1 1998/03/02 05:54:02 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -566,6 +566,20 @@ name|tp
 operator|,
 name|int
 name|hi_ip
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|si_intr
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1570,7 +1584,10 @@ name|paddr
 decl_stmt|;
 name|u_long
 name|mapval
+init|=
+literal|0
 decl_stmt|;
+comment|/* shut up gcc, should not be needed */
 switch|switch
 condition|(
 name|pci_conf_read
@@ -1655,7 +1672,7 @@ operator|(
 name|pci_inthand_t
 operator|*
 operator|)
-name|siintr
+name|si_intr
 argument_list|,
 operator|(
 name|void
@@ -3076,6 +3093,16 @@ literal|0
 operator|)
 return|;
 block|}
+name|id
+operator|->
+name|id_intr
+operator|=
+operator|(
+name|inthand2_t
+operator|*
+operator|)
+name|si_intr
+expr_stmt|;
 name|si_softc
 index|[
 name|id
@@ -9499,7 +9526,7 @@ name|lost
 operator|||
 name|si_realpoll
 condition|)
-name|siintr
+name|si_intr
 argument_list|(
 operator|-
 literal|1
@@ -9556,8 +9583,9 @@ comment|/* input staging area */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|siintr
+name|si_intr
 parameter_list|(
 name|int
 name|unit
@@ -9632,7 +9660,7 @@ name|DBG_POLL
 else|:
 name|DBG_INTR
 operator|,
-literal|"siintr(%d)\n"
+literal|"si_intr(%d)\n"
 operator|,
 name|unit
 operator|)
@@ -9981,7 +10009,7 @@ name|pp
 operator|,
 name|DBG_INTR
 operator|,
-literal|"siintr hi_stat = 0x%x, pend = %d\n"
+literal|"si_intr hi_stat = 0x%x, pend = %d\n"
 operator|,
 name|ccbp
 operator|->
@@ -10662,7 +10690,7 @@ name|DBG_POLL
 else|:
 name|DBG_INTR
 operator|,
-literal|"end siintr(%d)\n"
+literal|"end si_intr(%d)\n"
 operator|,
 name|unit
 operator|)
