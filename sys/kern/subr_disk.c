@@ -180,15 +180,6 @@ literal|"cmd=getattr "
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|BIO_SETATTR
-case|:
-name|printf
-argument_list|(
-literal|"cmd=setattr "
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|printf
 argument_list|(
