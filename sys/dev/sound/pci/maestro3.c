@@ -5710,11 +5710,6 @@ argument_list|)
 expr_stmt|;
 comment|/* zero entire dac/adc area */
 block|}
-name|m3_enable_ints
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* [m3_assp_continue] */
 name|m3_wr_1
 argument_list|(
@@ -7238,6 +7233,11 @@ name|REGB_ENABLE_RESET
 argument_list|)
 expr_stmt|;
 name|m3_amp_enable
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|m3_enable_ints
 argument_list|(
 name|sc
 argument_list|)
