@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)hash.c 1.19 94/09/23 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -87,6 +89,7 @@ name|hashp
 parameter_list|(
 name|key
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|key
@@ -1018,6 +1021,7 @@ name|List
 modifier|*
 name|list
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|key
@@ -1132,31 +1136,39 @@ begin_comment
 comment|/*  * walk a list with a specific proc  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|walklist
-argument_list|(
+parameter_list|(
 name|list
-argument_list|,
+parameter_list|,
 name|proc
-argument_list|,
+parameter_list|,
 name|closure
-argument_list|)
+parameter_list|)
 name|List
 modifier|*
 name|list
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|proc
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|int
+parameter_list|(
+function_decl|*proc
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+name|Node
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|void
@@ -1235,29 +1247,39 @@ begin_comment
 comment|/*  * sort the elements of a list (in place)  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|sortlist
-argument_list|(
+parameter_list|(
 name|list
-argument_list|,
+parameter_list|,
 name|comp
-argument_list|)
+parameter_list|)
 name|List
 modifier|*
 name|list
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|comp
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|int
+parameter_list|(
+function_decl|*comp
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|Node
+operator|*
+operator|,
+specifier|const
+name|Node
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1539,7 +1561,25 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|printnode
+name|PROTO
+argument_list|(
+operator|(
+name|Node
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+specifier|static
 name|int
 name|printnode
 parameter_list|(

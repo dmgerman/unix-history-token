@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)mkmodules.c 1.45 94/09/30 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -75,6 +77,15 @@ modifier|*
 name|Rcsbin
 init|=
 name|RCSBIN_DFLT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|CVSroot
+init|=
+name|CVSROOT_DFLT
 decl_stmt|;
 end_decl_stmt
 
@@ -226,16 +237,10 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|char
 name|temp
 index|[
@@ -316,6 +321,12 @@ literal|"a %s file can be used to configure 'cvs commit' checking"
 block|}
 block|,
 block|{
+name|CVSROOTADM_TAGINFO
+block|,
+literal|"a %s file can be used to configure 'cvs tag' checking"
+block|}
+block|,
+block|{
 name|CVSROOTADM_IGNORE
 block|,
 literal|"a %s file can be used to specify files to ignore"
@@ -328,6 +339,12 @@ literal|"a %s file can specify extra CVSROOT files to auto-checkout"
 block|}
 block|,
 block|{
+name|CVSROOTADM_WRAPPER
+block|,
+literal|"a %s file can be used to specify files to treat as wrappers"
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -335,34 +352,15 @@ block|}
 block|}
 struct|;
 comment|/*      * Just save the last component of the path for error messages      */
-if|if
-condition|(
-operator|(
 name|program_name
 operator|=
-name|strrchr
+name|last_component
 argument_list|(
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-literal|'/'
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|program_name
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-else|else
-name|program_name
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -672,10 +670,9 @@ condition|(
 name|fp
 condition|)
 block|{
-comment|/* 	 * File format: 	 *  [<whitespace>]<filename><whitespace><error message><end-of-line> 	 */
-for|for
-control|(
-init|;
+comment|/* 	 * File format: 	 *  [<whitespace>]<filename><whitespace><error message><end-of-line> 	 * 	 * comment lines begin with '#' 	 */
+while|while
+condition|(
 name|fgets
 argument_list|(
 name|line
@@ -689,9 +686,19 @@ name|fp
 argument_list|)
 operator|!=
 name|NULL
-condition|;
-control|)
+condition|)
 block|{
+comment|/* skip lines starting with # */
+if|if
+condition|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -1505,6 +1512,11 @@ name|dotpag
 index|[
 literal|50
 index|]
+decl_stmt|,
+name|dotdb
+index|[
+literal|50
+index|]
 decl_stmt|;
 operator|(
 name|void
@@ -1533,6 +1545,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|sprintf
+argument_list|(
+name|dotdb
+argument_list|,
+literal|"%s.db"
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink_file
 argument_list|(
 name|dotdir
@@ -1544,6 +1568,14 @@ operator|)
 name|unlink_file
 argument_list|(
 name|dotpag
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink_file
+argument_list|(
+name|dotdb
 argument_list|)
 expr_stmt|;
 name|error
@@ -1581,6 +1613,11 @@ name|newpag
 index|[
 literal|50
 index|]
+decl_stmt|,
+name|newdb
+index|[
+literal|50
+index|]
 decl_stmt|;
 name|char
 name|dotdir
@@ -1592,6 +1629,11 @@ name|dotpag
 index|[
 literal|50
 index|]
+decl_stmt|,
+name|dotdb
+index|[
+literal|50
+index|]
 decl_stmt|;
 name|char
 name|bakdir
@@ -1600,6 +1642,11 @@ literal|50
 index|]
 decl_stmt|,
 name|bakpag
+index|[
+literal|50
+index|]
+decl_stmt|,
+name|bakdb
 index|[
 literal|50
 index|]
@@ -1624,6 +1671,18 @@ argument_list|(
 name|dotpag
 argument_list|,
 literal|"%s.pag"
+argument_list|,
+name|CVSROOTADM_MODULES
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|dotdb
+argument_list|,
+literal|"%s.db"
 argument_list|,
 name|CVSROOTADM_MODULES
 argument_list|)
@@ -1661,6 +1720,20 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
+name|bakdb
+argument_list|,
+literal|"%s%s.db"
+argument_list|,
+name|BAKPREFIX
+argument_list|,
+name|CVSROOTADM_MODULES
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
 name|newdir
 argument_list|,
 literal|"%s.dir"
@@ -1683,6 +1756,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|sprintf
+argument_list|(
+name|newdb
+argument_list|,
+literal|"%s.db"
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|chmod
 argument_list|(
 name|newdir
@@ -1696,6 +1781,16 @@ operator|)
 name|chmod
 argument_list|(
 name|newpag
+argument_list|,
+literal|0666
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|newdb
 argument_list|,
 literal|0666
 argument_list|)
@@ -1719,6 +1814,14 @@ operator|)
 name|unlink_file
 argument_list|(
 name|bakpag
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink_file
+argument_list|(
+name|bakdb
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1748,6 +1851,17 @@ name|void
 operator|)
 name|rename
 argument_list|(
+name|dotdb
+argument_list|,
+name|bakdb
+argument_list|)
+expr_stmt|;
+comment|/* mv modules.db .#modules.db */
+operator|(
+name|void
+operator|)
+name|rename
+argument_list|(
 name|newdir
 argument_list|,
 name|dotdir
@@ -1765,6 +1879,17 @@ name|dotpag
 argument_list|)
 expr_stmt|;
 comment|/* mv "temp".pag modules.pag */
+operator|(
+name|void
+operator|)
+name|rename
+argument_list|(
+name|newdb
+argument_list|,
+name|dotdb
+argument_list|)
+expr_stmt|;
+comment|/* mv "temp".db modules.db */
 comment|/* OK -- make my day */
 name|SIG_endCrSect
 argument_list|()
@@ -1936,6 +2061,29 @@ name|Lock_Cleanup
 parameter_list|()
 block|{ }
 end_function
+
+begin_decl_stmt
+name|int
+name|server_active
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|server_cleanup
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{ }
+end_function
+
+begin_escape
+end_escape
 
 begin_function
 specifier|static

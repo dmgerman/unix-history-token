@@ -23,6 +23,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -31,12 +32,13 @@ literal|"$CVSid: @(#)myndbm.c 1.7 94/09/23 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -7,6 +7,136 @@ begin_comment
 comment|/* $CVSid: @(#)system.h 1.18 94/09/25 $ */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|alloca
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|alloca
+value|__builtin_alloca
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ALLOCA_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<alloca.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_comment
+comment|/* AIX alloca decl has to be the first thing in the file, bletch! */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|alloca
+end_pragma
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not _AIX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOCA_IN_STDLIB
+end_ifdef
+
+begin_comment
+comment|/* then we need do nothing */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|char
+modifier|*
+name|alloca
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not ALLOCA_IN_STDLIB */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not _AIX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_ALLOCA_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __GNUS__ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -19,38 +149,80 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STAT_MACROS_BROKEN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISBLK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISCHR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISDIR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|S_ISREG
-end_ifndef
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISFIFO
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISLNK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISSOCK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISMPB
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISMPC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISNWK
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Doesn't have POSIX.1 stat stuff. */
+comment|/* Not all systems have S_IFMT, but we probably want to use it if we    do.  See ChangeLog for a more detailed discussion. */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|mode_t
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|mode_t
-value|unsigned short
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -67,6 +239,15 @@ name|S_IFBLK
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -76,6 +257,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFBLK)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISBLK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFBLK)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -97,6 +298,15 @@ name|S_IFCHR
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -106,6 +316,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFCHR)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISCHR
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFCHR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -127,6 +357,15 @@ name|S_IFDIR
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -136,6 +375,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFDIR)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISDIR
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFDIR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -157,6 +416,15 @@ name|S_IFREG
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -166,6 +434,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFREG)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISREG
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFREG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -187,6 +475,15 @@ name|S_IFIFO
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -196,6 +493,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFIFO)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISFIFO
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFIFO)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -217,6 +534,15 @@ name|S_IFLNK
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -226,6 +552,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFLNK)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISLNK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFLNK)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -247,6 +593,15 @@ name|S_IFSOCK
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -256,6 +611,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFSOCK)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISSOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFSOCK)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -281,6 +656,15 @@ begin_comment
 comment|/* V7 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -300,6 +684,36 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFMPC)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISMPB
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFMPB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_ISMPC
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFMPC)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -325,6 +739,15 @@ begin_comment
 comment|/* HP/UX */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -334,6 +757,26 @@ name|m
 parameter_list|)
 value|(((m)& S_IFMT) == S_IFNWK)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISNWK
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)& S_IFNWK)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -366,6 +809,253 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECOY_PERMISSIONS
+end_ifdef
+
+begin_comment
+comment|/* OS/2, really */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRUSR
+value|S_IREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWUSR
+value|S_IWRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IXUSR
+value|S_IEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IRWXU
+value|(S_IRUSR | S_IWUSR | S_IXUSR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IRGRP
+value|S_IREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWGRP
+value|S_IWRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IXGRP
+value|S_IEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IRWXG
+value|(S_IRGRP | S_IWGRP | S_IXGRP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IROTH
+value|S_IREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWOTH
+value|S_IWRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IXOTH
+value|S_IEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IRWXO
+value|(S_IROTH | S_IWOTH | S_IXOTH)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! NEED_DECOY_PERMISSIONS */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IRUSR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IRUSR
+value|0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWUSR
+value|0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IXUSR
+value|0100
+end_define
+
+begin_comment
+comment|/* Read, write, and execute by owner.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRWXU
+value|(S_IRUSR|S_IWUSR|S_IXUSR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IRGRP
+value|(S_IRUSR>> 3)
+end_define
+
+begin_comment
+comment|/* Read by group.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IWGRP
+value|(S_IWUSR>> 3)
+end_define
+
+begin_comment
+comment|/* Write by group.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IXGRP
+value|(S_IXUSR>> 3)
+end_define
+
+begin_comment
+comment|/* Execute by group.  */
+end_comment
+
+begin_comment
+comment|/* Read, write, and execute by group.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRWXG
+value|(S_IRWXU>> 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IROTH
+value|(S_IRGRP>> 3)
+end_define
+
+begin_comment
+comment|/* Read by others.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IWOTH
+value|(S_IWGRP>> 3)
+end_define
+
+begin_comment
+comment|/* Write by others.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IXOTH
+value|(S_IXGRP>> 3)
+end_define
+
+begin_comment
+comment|/* Execute by others.  */
+end_comment
+
+begin_comment
+comment|/* Read, write, and execute by others.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IRWXO
+value|(S_IRWXG>> 3)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !def S_IRUSR */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEED_DECOY_PERMISSIONS */
+end_comment
 
 begin_if
 if|#
@@ -410,11 +1100,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TM_IN_SYS_TIME
-end_ifdef
+begin_if
+if|#
+directive|if
+name|TIME_WITH_SYS_TIME
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_TIME_H
+end_if
 
 begin_include
 include|#
@@ -438,11 +1151,82 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_IO_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DIRECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<direct.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|timezone
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|timezone
+end_undef
+
+begin_comment
+comment|/* needed for sgi */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SYS_TIMEB_H
-end_ifndef
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/timeb.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_struct
 struct|struct
@@ -457,19 +1241,9 @@ name|short
 name|millitm
 decl_stmt|;
 comment|/* Field not used		*/
-ifdef|#
-directive|ifdef
-name|timezone
-name|short
-name|tzone
-decl_stmt|;
-else|#
-directive|else
 name|short
 name|timezone
 decl_stmt|;
-endif|#
-directive|endif
 name|short
 name|dstflag
 decl_stmt|;
@@ -477,17 +1251,6 @@ comment|/* Field not used		*/
 block|}
 struct|;
 end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/timeb.h>
-end_include
 
 begin_endif
 endif|#
@@ -538,18 +1301,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  MAXPATHLEN and PATH_MAX ** **     On most systems MAXPATHLEN is defined in sys/param.h to be 1024. Of **     those that this is not true, again most define PATH_MAX in limits.h **     or sys/limits.h which usually gets included by limits.h. On the few **     remaining systems that neither statement is true, _POSIX_PATH_MAX  **     is defined. ** **     So: **         1. If PATH_MAX is defined just use it. **         2. If MAXPATHLEN is defined but not PATH_MAX, then define **            PATH_MAX in terms of MAXPATHLEN. **         3. If neither is defined, include limits.h and check for **            PATH_MAX again. **         4. If PATH_MAX is still not defined but _POSIX_PATH_MAX is, **            then define PATH_MAX in terms of _POSIX_PATH_MAX. **         5. And if even _POSIX_PATH_MAX doesn't exist just put in **            a reasonable value. ** **     This works on: **         Sun Sparc 10        SunOS 4.1.3&  Solaris 1.2 **         HP 9000/700         HP/UX 8.07&  HP/UX 9.01 **         Tektronix XD88/10   UTekV 3.2e **         IBM RS6000          AIX 3.2 **         Dec Alpha           OSF 1 ???? **         Intel 386           BSDI BSD/386 **         Apollo              Domain 10.4 **         NEC                 SVR4 */
+comment|/* **  MAXPATHLEN and PATH_MAX ** **     On most systems MAXPATHLEN is defined in sys/param.h to be 1024. Of **     those that this is not true, again most define PATH_MAX in limits.h **     or sys/limits.h which usually gets included by limits.h. On the few **     remaining systems that neither statement is true, _POSIX_PATH_MAX  **     is defined. ** **     So: **         1. If PATH_MAX is defined just use it. **         2. If MAXPATHLEN is defined but not PATH_MAX, then define **            PATH_MAX in terms of MAXPATHLEN. **         3. If neither is defined, include limits.h and check for **            PATH_MAX again. **         3.1 If we now have PATHSIZE, define PATH_MAX in terms of that. **             and ignore the rest.  Since _POSIX_PATH_MAX (checked for **             next) is the *most* restrictive (smallest) value, if we **             trust _POSIX_PATH_MAX, several of our buffers are too small. **         4. If PATH_MAX is still not defined but _POSIX_PATH_MAX is, **            then define PATH_MAX in terms of _POSIX_PATH_MAX. **         5. And if even _POSIX_PATH_MAX doesn't exist just put in **            a reasonable value. **         *. All in all, this is an excellent argument for using pathconf() **            when at all possible.  Or better yet, dynamically allocate **            our buffers and use getcwd() not getwd(). ** **     This works on: **         Sun Sparc 10        SunOS 4.1.3&  Solaris 1.2 **         HP 9000/700         HP/UX 8.07&  HP/UX 9.01 **         Tektronix XD88/10   UTekV 3.2e **         IBM RS6000          AIX 3.2 **         Dec Alpha           OSF 1 ???? **         Intel 386           BSDI BSD/386 **         Intel 386           SCO OpenServer Release 5 **         Apollo              Domain 10.4 **         NEC                 SVR4 */
 end_comment
 
 begin_comment
-comment|/* On MOST systems this will get you MAXPATHLEN */
+comment|/* On MOST systems this will get you MAXPATHLEN.    Windows NT doesn't have this file, tho.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -590,6 +1364,28 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|PATHSIZE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PATH_MAX
+value|PATHSIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* no PATHSIZE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_POSIX_PATH_MAX
 end_ifdef
 
@@ -618,7 +1414,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_PATH_MAX */
+comment|/* no _POSIX_PATH_MAX */
 end_comment
 
 begin_endif
@@ -627,7 +1423,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PATH_MAX   */
+comment|/* no PATHSIZE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* no PATH_MAX   */
 end_comment
 
 begin_endif
@@ -648,16 +1453,44 @@ begin_comment
 comment|/* PATH_MAX   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/* The NeXT (without _POSIX_SOURCE, which we don't want) has a utime.h    which doesn't define anything.  It would be cleaner to have configure    check for struct utimbuf, but for now I'm checking NeXT here (so I don't    have to debug the configure check across all the machines).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_UTIME_H
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NeXT
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<utime.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_SYS_UTIME_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/utime.h>
 end_include
 
 begin_else
@@ -850,7 +1683,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not STDC_HJEADERS and not HAVE_STRING_H */
+comment|/* not STDC_HEADERS and not HAVE_STRING_H */
 end_comment
 
 begin_include
@@ -877,6 +1710,74 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_comment
+comment|/* Not all systems set the same error code on a non-existent-file    error.  This tries to ask the question somewhat portably.    On systems that don't have ENOTEXIST, this should behave just like    x == ENOENT.  "x" is probably errno, of course. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENOTEXIST
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EOS2ERR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|existence_error
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x) == ENOTEXIST) || ((x) == ENOENT) || ((x) == EOS2ERR))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|existence_error
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x) == ENOTEXIST) || ((x) == ENOENT))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|existence_error
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == ENOENT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -973,6 +1874,129 @@ name|getwd
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* check for POSIX signals */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SIGACTION
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SIGPROCMASK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|POSIX_SIGNALS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIX 1.6 doesn't properly support sigaction */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MINIX
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|POSIX_SIGNALS
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If !POSIX, try for BSD.. Reason: 4.4BSD implements these as wrappers */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|POSIX_SIGNALS
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SIGVEC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SIGSETMASK
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SIGBLOCK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BSD_SIGNALS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Under OS/2, this must be included _after_ stdio.h; that's why we do    it here. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_OWN_TCPIP_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"tcpip.h"
+end_include
 
 begin_endif
 endif|#
@@ -1078,22 +2102,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* unistd.h defines _POSIX_VERSION on POSIX.1 systems.  */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|DIRENT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_POSIX_VERSION
-argument_list|)
+name|HAVE_DIRENT_H
 end_if
 
 begin_include
@@ -1105,21 +2117,17 @@ end_include
 begin_define
 define|#
 directive|define
-name|NLENGTH
+name|NAMLEN
 parameter_list|(
 name|dirent
 parameter_list|)
-value|(strlen((dirent)->d_name))
+value|strlen((dirent)->d_name)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* not (DIRENT or _POSIX_VERSION) */
-end_comment
 
 begin_define
 define|#
@@ -1131,18 +2139,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|NLENGTH
+name|NAMLEN
 parameter_list|(
 name|dirent
 parameter_list|)
-value|((dirent)->d_namlen)
+value|(dirent)->d_namlen
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HAVE_SYS_NDIR_H
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -1155,11 +2163,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HAVE_SYS_DIR_H
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -1172,11 +2180,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HAVE_NDIR_H
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -1193,10 +2201,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not (DIRENT or _POSIX_VERSION) */
-end_comment
 
 begin_comment
 comment|/* Convert B 512-byte blocks to kilobytes if K is nonzero,    otherwise return it unchanged. */
@@ -1296,6 +2300,157 @@ end_define
 begin_comment
 comment|/* write permission, other */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Under MS-DOS and its derivatives (like Windows NT), mkdir takes only one    argument; permission is handled very differently on those systems than in    in Unix.  So we leave such systems a hook on which they can hang their    own definitions.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVS_MKDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CVS_MKDIR
+value|mkdir
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Some file systems are case-insensitive.  If FOLD_FN_CHAR is    #defined, it maps the character C onto its "canonical" form.  In a    case-insensitive system, it would map all alphanumeric characters    to lower case.  Under Windows NT, / and \ are both path component    separators, so FOLD_FN_CHAR would map them both to /.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FOLD_FN_CHAR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FOLD_FN_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fnfold
+parameter_list|(
+name|filename
+parameter_list|)
+value|(filename)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fncmp
+value|strcmp
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Different file systems have different path component separators.    For the VMS port we might need to abstract further back than this.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISDIRSEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISDIRSEP
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == '/')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* On some systems, lines in text files should be terminated with CRLF,    not just LF, and the read and write routines do this translation    for you.  LINES_CRLF_TERMINATED is #defined on such systems.    - OPEN_BINARY is the flag to pass to the open function for      untranslated I/O.    - FOPEN_BINARY_READ is the string to pass to fopen to get      untranslated reading.    - FOPEN_BINARY_WRITE is the string to pass to fopen to get      untranslated writing.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LINES_CRLF_TERMINATED
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPEN_BINARY
+value|(O_BINARY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_BINARY_READ
+value|("rb")
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_BINARY_WRITE
+value|("wb")
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPEN_BINARY
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_BINARY_READ
+value|("r")
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_BINARY_WRITE
+value|("w")
+end_define
 
 begin_endif
 endif|#

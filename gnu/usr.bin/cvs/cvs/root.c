@@ -17,20 +17,22 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)root.c,v 1.2 1994/09/15 05:32:17 zoo Exp"
+literal|"$CVSid: @(#)root.c,v 1.2 1994/09/15 05:32:17 zoo Exp"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -125,26 +127,6 @@ argument_list|,
 name|CVSADM
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|cvsadm
-argument_list|,
-name|CVSADM
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|dir
-operator|!=
-name|NULL
-condition|)
 operator|(
 name|void
 operator|)
@@ -159,7 +141,19 @@ argument_list|,
 name|CVSADM_ROOT
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|cvsadm
+argument_list|,
+name|CVSADM
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -170,7 +164,8 @@ argument_list|,
 name|CVSADM_ROOT
 argument_list|)
 expr_stmt|;
-comment|/*      * Do not bother looking for a readable file if there is no cvsadm      * directory present.      *      * It is possiible that not all repositories will have a CVS/Root      * file. This is ok, but the user will need to specify -d      * /path/name or have the environment variable CVSROOT set in      * order to continue.      */
+block|}
+comment|/*      * Do not bother looking for a readable file if there is no cvsadm      * directory present.      *      * It is possible that not all repositories will have a CVS/Root      * file. This is ok, but the user will need to specify -d      * /path/name or have the environment variable CVSROOT set in      * order to continue.      */
 if|if
 condition|(
 operator|(
@@ -326,6 +321,31 @@ literal|'\0'
 expr_stmt|;
 comment|/* strip the newline */
 comment|/*      * root now contains a candidate for CVSroot. It must be an      * absolute pathname      */
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+comment|/* It must specify a server via remote CVS or be an absolute pathname.  */
+if|if
+condition|(
+operator|(
+name|strchr
+argument_list|(
+name|root
+argument_list|,
+literal|':'
+argument_list|)
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|!
+name|isabsolute
+argument_list|(
+name|root
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|root
@@ -335,6 +355,8 @@ index|]
 operator|!=
 literal|'/'
 condition|)
+endif|#
+directive|endif
 block|{
 name|error
 argument_list|(
@@ -364,6 +386,30 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+if|if
+condition|(
+operator|(
+name|strchr
+argument_list|(
+name|root
+argument_list|,
+literal|':'
+argument_list|)
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|!
+name|isdir
+argument_list|(
+name|root
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -372,6 +418,8 @@ argument_list|(
 name|root
 argument_list|)
 condition|)
+endif|#
+directive|endif
 block|{
 name|error
 argument_list|(
@@ -583,6 +631,11 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|noexec
+condition|)
+return|return;
 comment|/* record the current cvs root */
 if|if
 condition|(
@@ -641,8 +694,8 @@ literal|"%s\n"
 argument_list|,
 name|rootdir
 argument_list|)
-operator|==
-name|EOF
+operator|<
+literal|0
 condition|)
 name|error
 argument_list|(

@@ -17,6 +17,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -25,12 +26,13 @@ literal|"$CVSid: @(#)version.c 1.15 94/10/03 $"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|USE
 argument_list|(
-argument|rcsid
+name|rcsid
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -42,9 +44,93 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"\nConcurrent Versions System (CVS) 1.4 Alpha-2\n"
+literal|"\nConcurrent Versions System (CVS) 1.6.3"
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|config_string
+init|=
+literal|" (client/server)\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|config_string
+init|=
+literal|" (client)\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|config_string
+init|=
+literal|" (server)\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|config_string
+init|=
+literal|"\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
