@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.25 (Berkeley) %G%"
+literal|"@(#)fio.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -866,10 +872,6 @@ expr|struct
 name|message
 argument_list|)
 expr_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|message
@@ -941,7 +943,7 @@ name|f
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 sizeof|sizeof
 expr|*
