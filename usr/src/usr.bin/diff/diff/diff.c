@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.5 %G%"
+literal|"@(#)diff.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -729,6 +729,10 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|tempfile
+condition|)
 name|unlink
 argument_list|(
 name|tempfile
