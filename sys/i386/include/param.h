@@ -21,11 +21,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ALIGNBYTES
+value|(sizeof(int) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_int)(p) + (sizeof(int) - 1))&~ (sizeof(int) - 1))
+value|(((u_int)(p) + ALIGNBYTES)&~ ALIGNBYTES)
 end_define
 
 begin_define
