@@ -684,10 +684,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 name|net_entry
 operator|.
 name|n_addrtype
