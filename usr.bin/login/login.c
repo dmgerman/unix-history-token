@@ -1628,9 +1628,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|rootlogin
-operator|&&
 operator|!
+name|rootlogin
+operator|||
 name|rootok
 condition|)
 block|{
