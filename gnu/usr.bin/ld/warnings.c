@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.5 1994/01/12 23:14:07 jkh Exp $  */
+comment|/*  * $Id: warnings.c,v 1.6 1994/02/13 20:41:48 jkh Exp $  */
 end_comment
 
 begin_include
@@ -2693,6 +2693,14 @@ name|nzlist
 operator|.
 name|nlist
 expr_stmt|;
+comment|/* 		 * XXX This is a temporary fence to correct an 		 * incorrect assumption made in the case of symbols 		 * which do not have entries in the (global) 		 * symbol table. 		 */
+if|if
+condition|(
+name|g
+operator|==
+name|NULL
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
