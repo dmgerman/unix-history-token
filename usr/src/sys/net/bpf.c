@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	7.13 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
+comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	7.14 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -331,6 +331,39 @@ name|NBPFILTER
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199207
+end_if
+
+begin_comment
+comment|/*  * bpfilterattach() is called at boot time in new systems.  We do  * nothing here since old systems will not call this.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|void
+name|bpfilterattach
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
