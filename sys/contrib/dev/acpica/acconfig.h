@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 149 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 150 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20040220
+value|0x20040311
 end_define
 
 begin_comment
@@ -457,6 +457,17 @@ define|#
 directive|define
 name|ACPI_SMBUS_BUFFER_SIZE
 value|34
+end_define
+
+begin_comment
+comment|/* Number of strings associated with the _OSI reserved method */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_OSI_STRINGS
+value|4
 end_define
 
 begin_comment
