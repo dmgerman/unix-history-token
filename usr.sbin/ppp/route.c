@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.9.2.5 1997/06/13 04:01:42 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.9.2.6 1997/06/20 23:45:01 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -223,11 +223,12 @@ name|s
 operator|<
 literal|0
 condition|)
+block|{
 name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"socket: %s"
+literal|"OsSetRoute: socket: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -235,6 +236,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|bzero
 argument_list|(
 operator|&
@@ -2014,7 +2017,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"socket: %s"
+literal|"GetIfIndex: socket: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2123,6 +2126,11 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|free
@@ -2245,6 +2253,11 @@ block|{
 name|IfIndex
 operator|=
 name|index
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
