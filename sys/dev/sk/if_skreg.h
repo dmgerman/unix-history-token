@@ -7853,6 +7853,16 @@ parameter_list|)
 value|SK_UNLOCK((_sc)->sk_softc)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SK_IF_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|SK_LOCK_ASSERT((_sc)->sk_softc)
+end_define
+
 begin_comment
 comment|/* Softc for each logical interface */
 end_comment
