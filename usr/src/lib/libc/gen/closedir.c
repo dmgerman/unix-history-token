@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)closedir.c 4.1 %G%"
+literal|"@(#)closedir.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,7 @@ name|closedir
 parameter_list|(
 name|dirp
 parameter_list|)
+specifier|register
 name|DIR
 modifier|*
 name|dirp
@@ -46,6 +47,19 @@ name|dirp
 operator|->
 name|dd_fd
 argument_list|)
+expr_stmt|;
+name|dirp
+operator|->
+name|dd_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|dirp
+operator|->
+name|dd_loc
+operator|=
+literal|0
 expr_stmt|;
 name|free
 argument_list|(
