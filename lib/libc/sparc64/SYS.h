@@ -38,7 +38,18 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|ENTRY(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(x) ; \ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(__CONCAT(_,x)) ; \ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x))
+value|ENTRY(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(x) ; \ 	.type	CNAME(x),@function ; \ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(__CONCAT(_,x)) ; \ 	.type	CNAME(__CONCAT(_,x)), @function ; \ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SYSEND
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|.size	CNAME(__CONCAT(__sys_,x)), . - CNAME(__CONCAT(__sys_,x)) ; \ 	.size	CNAME(__CONCAT(_,x)), . - CNAME(__CONCAT(__sys_,x)) ; \ 	.size	CNAME(__CONCAT(,x)), . - CNAME(__CONCAT(__sys_,x))
 end_define
 
 begin_define
@@ -55,23 +66,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYSCALL
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|_SYSENTRY(x) ; \ 	_SYSCALL(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|SYSCALL(x) ; \ 	retl ; \ 	 nop
+value|_SYSENTRY(x) ; \ 	_SYSCALL(x) ; \ 	retl ; \ 	 nop ; \ 	_SYSEND(x)
 end_define
 
 begin_define
@@ -82,7 +82,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|ENTRY(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(__CONCAT(_,x)) ; \ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)) ; \ 	mov	__CONCAT(SYS_,x), %g1 ; \ 	ta	%xcc, ST_SYSCALL ; \ 	retl ; \ 	 nop
+value|ENTRY(__CONCAT(__sys_,x)) ; \ 	.weak	CNAME(__CONCAT(_,x)) ; \ 	.type	CNAME(__CONCAT(_,x)),@function ; \ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)) ; \ 	mov	__CONCAT(SYS_,x), %g1 ; \ 	ta	%xcc, ST_SYSCALL ; \ 	retl ; \ 	 nop ; \ 	.size	CNAME(__CONCAT(__sys_,x)), . - CNAME(__CONCAT(__sys_,x)) ; \ 	.size	CNAME(__CONCAT(_,x)), . - CNAME(__CONCAT(__sys_,x))
 end_define
 
 end_unit
