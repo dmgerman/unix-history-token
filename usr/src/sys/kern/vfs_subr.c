@@ -733,6 +733,7 @@ comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|vnode
 modifier|*
@@ -775,85 +776,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|vattr
 name|va_null
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Initialize the vnode structures and initialize each file system type.  */
-end_comment
-
-begin_macro
-name|vfsinit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|struct
-name|vfsops
-modifier|*
-modifier|*
-name|vfsp
-decl_stmt|;
-comment|/* 	 * Initialize the vnode name cache 	 */
-name|nchinit
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Initialize each file system type. 	 */
-name|vattr_null
-argument_list|(
-operator|&
-name|va_null
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|vfsp
-operator|=
-operator|&
-name|vfssw
-index|[
-literal|0
-index|]
-init|;
-name|vfsp
-operator|<=
-operator|&
-name|vfssw
-index|[
-name|MOUNT_MAXTYPE
-index|]
-condition|;
-name|vfsp
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|vfsp
-operator|==
-name|NULL
-condition|)
-continue|continue;
-operator|(
-operator|*
-operator|(
-operator|*
-name|vfsp
-operator|)
-operator|->
-name|vfs_init
-operator|)
-operator|(
-operator|)
-expr_stmt|;
-block|}
-block|}
-end_block
 
 begin_comment
 comment|/*  * Return the next vnode from the free list.  */
