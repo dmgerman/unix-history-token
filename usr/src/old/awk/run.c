@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)run.c	4.5 %G%"
+literal|"@(#)run.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|"stdio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fcntl.h"
 end_include
 
 begin_define
@@ -5447,6 +5453,34 @@ operator|.
 name|optr
 operator|->
 name|sval
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|files
+index|[
+name|i
+index|]
+operator|.
+name|fp
+argument_list|)
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"close on exec failure"
 argument_list|)
 expr_stmt|;
 name|files
