@@ -115,6 +115,7 @@ directive|define
 name|AFORK
 value|0x01
 comment|/* forked but not exec'ed */
+comment|/* ASU is no longer supported */
 define|#
 directive|define
 name|ASU
