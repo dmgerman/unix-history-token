@@ -172,7 +172,7 @@ comment|/* Peers endpoint discriminator */
 name|char
 name|authname
 index|[
-literal|50
+name|AUTHLEN
 index|]
 decl_stmt|;
 comment|/* Peers name (authenticated) */
