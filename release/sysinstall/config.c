@@ -1885,14 +1885,14 @@ name|fprintf
 argument_list|(
 name|rcSite
 argument_list|,
-literal|"# This file now contains just the overrides from /etc/defaults/rc.conf\n"
+literal|"# This file now contains just the overrides from /etc/defaults/rc.conf.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|rcSite
 argument_list|,
-literal|"# please make all changes to this file.\n\n"
+literal|"# Please make all changes to this file, not to /etc/defaults/rc.conf.\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
