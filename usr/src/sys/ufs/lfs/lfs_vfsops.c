@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lfs_vfsops.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lfs_vfsops.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -394,13 +394,6 @@ name|fmp
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|tp
-init|=
-name|NULL
-decl_stmt|;
 specifier|register
 name|struct
 name|buf
@@ -780,7 +773,7 @@ expr_stmt|;
 else|#
 directive|else
 else|SECSIZE
-name|tp
+name|bp
 operator|=
 name|bread
 argument_list|(
@@ -791,12 +784,9 @@ argument_list|,
 name|SBSIZE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|SECSIZE
 if|if
 condition|(
-name|tp
+name|bp
 operator|->
 name|b_flags
 operator|&
@@ -815,7 +805,7 @@ goto|;
 block|}
 name|fs
 operator|=
-name|tp
+name|bp
 operator|->
 name|b_un
 operator|.
@@ -880,7 +870,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|tp
+name|bp
 operator|->
 name|b_un
 operator|.
@@ -903,10 +893,10 @@ argument_list|)
 expr_stmt|;
 name|brelse
 argument_list|(
-name|tp
+name|bp
 argument_list|)
 expr_stmt|;
-name|tp
+name|bp
 operator|=
 name|NULL
 expr_stmt|;
@@ -1202,7 +1192,7 @@ expr_stmt|;
 else|#
 directive|else
 else|SECSIZE
-name|tp
+name|bp
 operator|=
 name|bread
 argument_list|(
@@ -1222,12 +1212,9 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|SECSIZE
 if|if
 condition|(
-name|tp
+name|bp
 operator|->
 name|b_flags
 operator|&
@@ -1250,7 +1237,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|tp
+name|bp
 operator|->
 name|b_un
 operator|.
@@ -1289,10 +1276,10 @@ name|size
 expr_stmt|;
 name|brelse
 argument_list|(
-name|tp
+name|bp
 argument_list|)
 expr_stmt|;
-name|tp
+name|bp
 operator|=
 name|NULL
 expr_stmt|;
@@ -1429,11 +1416,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|tp
+name|bp
 condition|)
 name|brelse
 argument_list|(
-name|tp
+name|bp
 argument_list|)
 expr_stmt|;
 name|u
