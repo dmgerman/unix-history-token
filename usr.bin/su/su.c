@@ -178,7 +178,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<security/pam_misc.h>
+file|<security/openpam.h>
 end_include
 
 begin_define
@@ -328,7 +328,7 @@ name|pam_conv
 name|conv
 init|=
 block|{
-name|misc_conv
+name|openpam_ttyconv
 block|,
 name|NULL
 block|}
