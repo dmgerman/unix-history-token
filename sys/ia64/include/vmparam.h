@@ -252,6 +252,16 @@ comment|/* nominal ``small'' resident set size 					   protected against replace
 end_comment
 
 begin_comment
+comment|/*  * We need region 7 virtual addresses for pagetables.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
+begin_comment
 comment|/*  * Manipulating region bits of an address.  */
 end_comment
 
