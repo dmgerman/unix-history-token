@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.11 (Berkeley) 83/05/28"
+literal|"@(#)rwhod.c	4.12 (Berkeley) 83/06/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -845,9 +845,6 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|wd
@@ -866,8 +863,6 @@ operator|!=
 name|WHODTYPE_STATUS
 condition|)
 continue|continue;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -938,9 +933,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
 if|#
 directive|if
 name|vax
@@ -1073,8 +1065,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 endif|#
 directive|endif
 operator|(
@@ -1451,9 +1441,6 @@ name|ut_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|we
 operator|->
 name|we_utmp
@@ -1470,23 +1457,6 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|we
-operator|->
-name|we_utmp
-operator|.
-name|out_time
-operator|=
-name|utmp
-index|[
-name|i
-index|]
-operator|.
-name|ut_time
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|we
@@ -1543,9 +1513,6 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-ifdef|#
-directive|ifdef
-name|notyet
 name|we
 operator|->
 name|we_idle
@@ -1559,20 +1526,6 @@ operator|.
 name|st_atime
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|we
-operator|->
-name|we_idle
-operator|=
-name|now
-operator|-
-name|stb
-operator|.
-name|st_atime
-expr_stmt|;
-endif|#
-directive|endif
 name|we
 operator|++
 expr_stmt|;
@@ -1629,9 +1582,6 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|notyet
 name|mywd
 operator|.
 name|wd_loadav
@@ -1649,24 +1599,6 @@ operator|*
 literal|100
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|mywd
-operator|.
-name|wd_loadav
-index|[
-name|i
-index|]
-operator|=
-name|avenrun
-index|[
-name|i
-index|]
-operator|*
-literal|100
-expr_stmt|;
-endif|#
-directive|endif
 name|cc
 operator|=
 operator|(
@@ -1682,9 +1614,6 @@ operator|)
 operator|&
 name|mywd
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|mywd
 operator|.
 name|wd_sendtime
@@ -1709,19 +1638,6 @@ name|wd_type
 operator|=
 name|WHODTYPE_STATUS
 expr_stmt|;
-else|#
-directive|else
-name|mywd
-operator|.
-name|wd_sendtime
-operator|=
-name|time
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|np
@@ -1961,9 +1877,6 @@ name|wd_boottime
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|mywd
 operator|.
 name|wd_boottime
@@ -1975,8 +1888,6 @@ operator|.
 name|wd_boottime
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
