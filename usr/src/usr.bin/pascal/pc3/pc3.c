@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c 1.10 %G%"
+literal|"@(#)pc3.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<stab.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pagsiz.h>
 end_include
 
 begin_include
