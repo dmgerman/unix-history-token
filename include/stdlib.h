@@ -176,6 +176,10 @@ directive|ifdef
 name|__LONG_LONG_SUPPORTED
 end_ifdef
 
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -884,6 +888,10 @@ directive|ifdef
 name|__LONG_LONG_SUPPORTED
 end_ifdef
 
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
 begin_function_decl
 name|long
 name|long
@@ -1165,6 +1173,10 @@ directive|ifdef
 name|__LONG_LONG_SUPPORTED
 end_ifdef
 
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
 begin_decl_stmt
 name|long
 name|long
@@ -1372,6 +1384,10 @@ directive|ifdef
 name|__LONG_LONG_SUPPORTED
 end_ifdef
 
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
 begin_function_decl
 name|long
 name|long
@@ -1417,6 +1433,10 @@ ifdef|#
 directive|ifdef
 name|__LONG_LONG_SUPPORTED
 end_ifdef
+
+begin_comment
+comment|/* LONGLONG */
+end_comment
 
 begin_function_decl
 name|unsigned
