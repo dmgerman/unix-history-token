@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	6.8	85/06/02	*/
+comment|/*	uipc_socket2.c	6.9	85/06/08	*/
 end_comment
 
 begin_include
@@ -1144,21 +1144,12 @@ condition|(
 name|so
 operator|->
 name|so_pgrp
-operator|==
-literal|0
-condition|)
-return|return;
-elseif|else
-if|if
-condition|(
-name|so
-operator|->
-name|so_pgrp
-operator|>
+operator|<
 literal|0
 condition|)
 name|gsignal
 argument_list|(
+operator|-
 name|so
 operator|->
 name|so_pgrp
@@ -1169,12 +1160,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|so
+operator|->
+name|so_pgrp
+operator|>
+literal|0
+operator|&&
 operator|(
 name|p
 operator|=
 name|pfind
 argument_list|(
-operator|-
 name|so
 operator|->
 name|so_pgrp
