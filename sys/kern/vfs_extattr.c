@@ -5074,7 +5074,7 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
-comment|/* 	 * There should be 2 references on the file, one from the descriptor 	 * table, and one for us. 	 * 	 * Handle the case where someone closed the file (via its file 	 * descriptor) while we were blocked.  The end result should look 	 * like opening the file succeeded but it was immediately closed. 	 */
+comment|/* 	 * There should be 2 references on the file, one from the descriptor 	 * table, and one for us. 	 * 	 * Handle the case where someone closed the file (via its file 	 * descriptor) while we were blocked.  The end result should look 	 * like opening the file succeeded but it was immediately closed. 	 * We call vn_close() manually because we haven't yet hooked up 	 * the various 'struct file' fields. 	 */
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
