@@ -474,11 +474,13 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|proc
 operator|.
 name|p_flag
 operator|&
 name|P_SA
+operator|)
 operator|==
 literal|0
 condition|)
