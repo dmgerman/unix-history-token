@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.60 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.61 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.60 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.61 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3210,7 +3210,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		requeueflag -- if set, reinstantiate the queue quickly. **			This is used when expanding aliases in the queue. **		e - the envelope in which to run it. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
+comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		requeueflag -- if set, reinstantiate the queue quickly. **			This is used when expanding aliases in the queue. **			If forkflag is also set, it doesn't wait for the **			child. **		e - the envelope in which to run it. ** **	Returns: **		none. ** **	Side Effects: **		The work request is satisfied if possible. */
 end_comment
 
 begin_macro
@@ -3477,7 +3477,12 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|requeueflag
+condition|)
 block|{
 comment|/* 		**  Parent -- pick up results. 		*/
 name|errno
