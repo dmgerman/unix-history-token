@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.4 (Berkeley) %G%"
+literal|"@(#)strings.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +225,8 @@ argument_list|()
 decl_stmt|;
 comment|/* 	 * for backward compatibility, allow '-' to specify 'a' flag; no 	 * longer documented in the man page or usage string. 	 */
 name|asdata
+operator|=
+name|oflg
 operator|=
 literal|0
 expr_stmt|;
