@@ -1392,7 +1392,7 @@ name|IFM_MODE
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& IFM_MMASK)>> IFM_MSHIFT)
+value|((x)& IFM_MMASK)
 end_define
 
 begin_define
