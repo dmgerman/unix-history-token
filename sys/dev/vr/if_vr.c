@@ -651,9 +651,9 @@ name|vr_miibus_readreg
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int
+name|uint16_t
 parameter_list|,
-name|int
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2011,10 +2011,10 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|uint16_t
 name|phy
 parameter_list|,
-name|int
+name|uint16_t
 name|reg
 parameter_list|)
 block|{
