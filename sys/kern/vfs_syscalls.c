@@ -2323,19 +2323,19 @@ operator|&
 name|mountlist_slock
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*  * XXX don't call vfs_bufstats() yet because that routine  * was not imported in the Lite2 merge.  */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-if|if
-condition|(
-name|syncprt
-condition|)
-name|vfs_bufstats
-argument_list|()
-expr_stmt|;
+block|if (syncprt) 		vfs_bufstats();
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
