@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1557,7 +1557,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-comment|/* Now map the second componentname structure kept in this vop's 	 * arguments.  	 */
+comment|/* 	 * Rename is irregular, having two componentname structures. 	 * We need to map the cre in the second structure, 	 * and then bypass takes care of the rest. 	 */
 name|vp
 operator|=
 name|ap
@@ -1647,20 +1647,13 @@ operator|->
 name|cr_gid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|umap_bypass
 argument_list|(
 name|ap
 argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+expr_stmt|;
 comment|/* Restore the additional mapped componentname cred structure. */
 name|crfree
 argument_list|(
@@ -1673,6 +1666,9 @@ name|cn_cred
 operator|=
 name|savecompcredp
 expr_stmt|;
+return|return
+name|error
+return|;
 block|}
 end_function
 
@@ -1735,6 +1731,13 @@ operator|&
 name|vop_print_desc
 block|,
 name|umap_print
+block|}
+block|,
+block|{
+operator|&
+name|vop_rename_desc
+block|,
+name|umap_rename
 block|}
 block|,
 block|{
