@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.7 (Berkeley) %G%"
+literal|"@(#)option.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -589,8 +589,19 @@ name|tmp
 decl_stmt|;
 name|int
 name|typecompare
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|tmp
 operator|.
 name|name
@@ -642,7 +653,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|OPTION
+specifier|const
+name|void
 modifier|*
 name|a
 decl_stmt|,
@@ -657,11 +669,23 @@ return|return
 operator|(
 name|strcmp
 argument_list|(
+operator|(
+operator|(
+name|OPTION
+operator|*
+operator|)
 name|a
+operator|)
 operator|->
 name|name
 argument_list|,
+operator|(
+operator|(
+name|OPTION
+operator|*
+operator|)
 name|b
+operator|)
 operator|->
 name|name
 argument_list|)
