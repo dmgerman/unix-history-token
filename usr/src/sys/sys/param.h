@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BSD
-value|198908
+value|199002
 end_define
 
 begin_comment
-comment|/* system version  (year& month) */
+comment|/* system version (year& month) */
 end_comment
 
 begin_define
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|NMOUNT
-value|20
+value|30
 end_define
 
 begin_comment
@@ -87,7 +87,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* max size of typewriter line */
+comment|/* max size of tty input line */
 end_comment
 
 begin_define
@@ -287,17 +287,6 @@ include|#
 directive|include
 file|"signal.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|ISSIG
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|((p)->p_sig&& \ 	    ((p)->p_flag&STRC || ((p)->p_sig&~ (p)->p_sigmask))&& issig())
-end_define
 
 begin_else
 else|#
@@ -551,7 +540,7 @@ comment|/* clist rounding */
 end_comment
 
 begin_comment
-comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  *  * Note that the blocked devices are assumed to have DEV_BSIZE  * "sectors" and that fragments must be some multiple of this size.  * Block devices are read in BLKDEV_IOSIZE units. This number must  * be a power of two and in the range of  *	DEV_BSIZE<= BLKDEV_IOSIZE<= MAXBSIZE  * This size has no effect upon the file system, but is usually set  * to the block size of the root file system, so as to maximize the  * speed of ``fsck''.  */
+comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  */
 end_comment
 
 begin_define
@@ -584,28 +573,6 @@ define|#
 directive|define
 name|MAXSYMLINKS
 value|8
-end_define
-
-begin_comment
-comment|/*  * Constants for setting the parameters of the kernel memory allocator.  *  * 2 ** MINBUCKET is the smallest unit of memory that will be  * allocated. It must be at least large enough to hold a pointer.  *  * Units of memory less or equal to MAXALLOCSAVE will permanently  * allocate physical memory; requests for these size pieces of  * memory are quite fast. Allocations greater than MAXALLOCSAVE must  * always allocate and free physical memory; requests for these  * size allocations should be done infrequently as they will be slow.  * Constraints: CLBYTES<= MAXALLOCSAVE<= 2 ** (MINBUCKET + 14)  * and MAXALLOCSIZE must be a power of two.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINBUCKET
-value|4
-end_define
-
-begin_comment
-comment|/* 4 => min allocation of 16 bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXALLOCSAVE
-value|(2 * CLBYTES)
 end_define
 
 begin_comment
@@ -661,34 +628,6 @@ value|(((a)[(i)/NBBY]& (1<<((i)%NBBY))) == 0)
 end_define
 
 begin_comment
-comment|/*  * Macros for fast min/max.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)<(b))?(a):(b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)>(b))?(a):(b))
-end_define
-
-begin_comment
 comment|/*  * Macros for counting and rounding.  */
 end_comment
 
@@ -735,6 +674,96 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((((x)-1)&(x))==0)
+end_define
+
+begin_comment
+comment|/*  * Macros for fast min/max:  * with inline expansion, the "function" is faster.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|min((a), (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|max((a), (b))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)<(b))?(a):(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)>(b))?(a):(b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Constants for setting the parameters of the kernel memory allocator.  *  * 2 ** MINBUCKET is the smallest unit of memory that will be  * allocated. It must be at least large enough to hold a pointer.  *  * Units of memory less or equal to MAXALLOCSAVE will permanently  * allocate physical memory; requests for these size pieces of  * memory are quite fast. Allocations greater than MAXALLOCSAVE must  * always allocate and free physical memory; requests for these  * size allocations should be done infrequently as they will be slow.  * Constraints: CLBYTES<= MAXALLOCSAVE<= 2 ** (MINBUCKET + 14)  * and MAXALLOCSIZE must be a power of two.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINBUCKET
+value|4
+end_define
+
+begin_comment
+comment|/* 4 => min allocation of 16 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXALLOCSAVE
+value|(2 * CLBYTES)
 end_define
 
 begin_comment
