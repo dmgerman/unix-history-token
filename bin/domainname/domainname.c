@@ -104,6 +104,22 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|usage
 name|__P
@@ -199,6 +215,9 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 operator|*
@@ -222,6 +241,9 @@ name|getdomainname
 argument_list|(
 name|domainname
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|domainname

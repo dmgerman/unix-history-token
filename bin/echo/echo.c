@@ -85,6 +85,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -95,6 +111,7 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
