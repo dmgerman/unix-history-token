@@ -507,7 +507,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model, so  * setting this to 1 results in an odd hybrid.  */
+comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model, so  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use  * ipnat to translate the destination address to another to another  * local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
 end_comment
 
 begin_decl_stmt
@@ -1897,6 +1897,47 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Don't accept packets with a loopback destination address 	 * unless they arrived via the loopback interface. 	 */
+if|if
+condition|(
+operator|(
+name|ntohl
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+argument_list|)
+operator|&
+name|IN_CLASSA_NET
+operator|)
+operator|==
+operator|(
+name|IN_LOOPBACKNET
+operator|<<
+name|IN_CLASSA_NSHIFT
+operator|)
+operator|&&
+operator|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_flags
+operator|&
+name|IFF_LOOPBACK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Pipe: pass pkt through dummynet. 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
 if|#
 directive|if
@@ -2312,60 +2353,7 @@ name|ip_fw_fwd_addr
 operator|->
 name|sin_addr
 expr_stmt|;
-comment|/* 	 * Don't accept packets with a loopback destination address 	 * unless they arrived via the loopback interface. 	 */
-if|if
-condition|(
-operator|(
-name|ntohl
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-argument_list|)
-operator|&
-name|IN_CLASSA_NET
-operator|)
-operator|==
-operator|(
-name|IN_LOOPBACKNET
-operator|<<
-name|IN_CLASSA_NSHIFT
-operator|)
-operator|&&
-operator|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|->
-name|if_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
-name|ip_fw_fwd_addr
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-return|return;
-block|}
-comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 */
+comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 *          * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible will break IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 */
 name|checkif
 operator|=
 name|ip_checkinterface
