@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rtquery.c,v 1.7 1998/01/14 07:17:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4015,6 +4015,7 @@ name|c
 operator|==
 literal|'\\'
 operator|&&
+operator|*
 name|pc
 operator|!=
 literal|'\0'
