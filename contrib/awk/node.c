@@ -4,7 +4,7 @@ comment|/*  * node.c -- routines for node management  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -787,21 +787,7 @@ condition|)
 name|cant_happen
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|s
-operator|->
-name|flags
-operator|&
-name|NUM
-operator|)
-operator|==
-literal|0
-condition|)
-name|cant_happen
-argument_list|()
-expr_stmt|;
+comment|/* 	if ((s->flags& NUM) == 0) 		cant_happen(); */
 if|if
 condition|(
 name|s
@@ -967,6 +953,8 @@ operator|(
 name|PERM
 operator||
 name|TEMP
+operator||
+name|FIELD
 operator|)
 expr_stmt|;
 name|r
@@ -2125,6 +2113,56 @@ return|return
 name|i
 return|;
 default|default:
+if|if
+condition|(
+name|do_lint
+condition|)
+block|{
+specifier|static
+name|short
+name|warned
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|uc
+init|=
+operator|(
+name|unsigned
+name|char
+operator|)
+name|c
+decl_stmt|;
+comment|/* N.B.: use unsigned char here to avoid Latin-1 problems */
+if|if
+condition|(
+operator|!
+name|warned
+index|[
+name|uc
+index|]
+condition|)
+block|{
+name|warned
+index|[
+name|uc
+index|]
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|(
+literal|"escape sequence `\\%c' treated as plain `%c'"
+argument_list|,
+name|uc
+argument_list|,
+name|uc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 name|c
 return|;

@@ -4,7 +4,7 @@ comment|/*  * field.c - routines for dealing with fields and record parsing  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1257,7 +1257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set_record:  * setup $0, but defer parsing rest of line until reference is made to $(>0)  * or to NF.  At that point, parse only as much as necessary.  */
+comment|/*  * set_record:  * setup $0, but defer parsing rest of line until reference is made to $(>0)  * or to NF.  At that point, parse only as much as necessary.  *  * Manage a private buffer for the contents of $0.  Doing so keeps us safe  * if `getline var' decides to rearrange the contents of the IOBUF that  * $0 might have been pointing into.  The cost is the copying of the buffer;  * but better correct than fast.  */
 end_comment
 
 begin_function
@@ -1291,6 +1291,25 @@ name|NODE
 modifier|*
 name|n
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|databuf
+decl_stmt|;
+specifier|static
+name|unsigned
+name|long
+name|databuf_size
+decl_stmt|;
+define|#
+directive|define
+name|INITIAL_SIZE
+value|512
+define|#
+directive|define
+name|MAX_SIZE
+value|((unsigned long) ~0)
+comment|/* maximally portable ... */
 name|NF
 operator|=
 operator|-
@@ -1371,6 +1390,78 @@ condition|(
 name|freeold
 condition|)
 block|{
+comment|/* buffer management: */
+if|if
+condition|(
+name|databuf_size
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* first time */
+name|emalloc
+argument_list|(
+name|databuf
+argument_list|,
+name|char
+operator|*
+argument_list|,
+name|INITIAL_SIZE
+argument_list|,
+literal|"set_record"
+argument_list|)
+expr_stmt|;
+name|databuf_size
+operator|=
+name|INITIAL_SIZE
+expr_stmt|;
+block|}
+comment|/* 		 * Make sure there's enough room. Since we sometimes need 		 * to place a sentinel at the end, we make sure 		 * databuf_size is> cnt after allocation. 		 */
+if|if
+condition|(
+name|cnt
+operator|>=
+name|databuf_size
+condition|)
+block|{
+while|while
+condition|(
+name|cnt
+operator|>=
+name|databuf_size
+operator|&&
+name|databuf_size
+operator|<=
+name|MAX_SIZE
+condition|)
+name|databuf_size
+operator|*=
+literal|2
+expr_stmt|;
+name|erealloc
+argument_list|(
+name|databuf
+argument_list|,
+name|char
+operator|*
+argument_list|,
+name|databuf_size
+argument_list|,
+literal|"set_record"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* copy the data */
+name|memcpy
+argument_list|(
+name|databuf
+argument_list|,
+name|buf
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+comment|/* manage field 0: */
 name|unref
 argument_list|(
 name|fields_arr
@@ -1388,7 +1479,7 @@ name|n
 operator|->
 name|stptr
 operator|=
-name|buf
+name|databuf
 expr_stmt|;
 name|n
 operator|->
@@ -1452,6 +1543,12 @@ name|field0_valid
 operator|=
 name|TRUE
 expr_stmt|;
+undef|#
+directive|undef
+name|INITIAL_SIZE
+undef|#
+directive|undef
+name|MAX_SIZE
 block|}
 end_function
 
@@ -3661,6 +3758,20 @@ name|arr
 operator|->
 name|param_cnt
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|arr
+operator|->
+name|type
+operator|==
+name|Node_array_ref
+condition|)
+name|arr
+operator|=
+name|arr
+operator|->
+name|orig_array
 expr_stmt|;
 if|if
 condition|(
