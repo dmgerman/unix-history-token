@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.16 84/04/06"
+literal|"@(#)lcmd.c	3.17 84/04/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|l_list
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|l_nline
 parameter_list|()
 function_decl|;
@@ -125,6 +132,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_unset
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_variable
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -171,14 +185,6 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_foreground
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|lcmd_arg
-name|arg_iostat
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -244,6 +250,16 @@ name|struct
 name|lcmd_arg
 name|arg_window
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_null
+index|[]
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -316,15 +332,23 @@ literal|1
 block|,
 name|l_iostat
 block|,
-name|arg_iostat
+name|arg_null
 block|,
 literal|"label"
 block|,
-literal|1
+literal|2
 block|,
 name|l_label
 block|,
 name|arg_label
+block|,
+literal|"list"
+block|,
+literal|2
+block|,
+name|l_list
+block|,
+name|arg_null
 block|,
 literal|"nlines"
 block|,
@@ -373,6 +397,14 @@ block|,
 name|l_unset
 block|,
 name|arg_unset
+block|,
+literal|"variable"
+block|,
+literal|1
+block|,
+name|l_variable
+block|,
+name|arg_null
 block|,
 literal|"window"
 block|,

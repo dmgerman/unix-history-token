@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.25 84/04/05"
+literal|"@(#)cmd2.c	3.26 84/04/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,29 +37,17 @@ literal|"{1-9}   Select window {1-9} and return to conversation mode."
 block|,
 literal|"%{1-9}  Select window {1-9} but stay in command mode."
 block|,
-literal|"escape  Return to conversation mode"
+literal|"escape  Return to conversation mode without changing window."
 block|,
-literal|"        and don't change the current window."
-block|,
-literal|"^^      Return to conversation mode"
-block|,
-literal|"        and change to previously selected window."
+literal|"^^      Return to conversation mode and change to previous window."
 block|,
 literal|"c{1-9}  Close window {1-9}."
-block|,
-literal|"C       Close all windows."
-block|,
-literal|"S       Show all windows in sequence."
-block|,
-literal|"L       List all windows with their labels."
 block|,
 literal|"w       Open a new window."
 block|,
 literal|"m{1-9}  Move window {1-9}."
 block|,
 literal|"M{1-9}  Move window {1-9} to previous position."
-block|,
-literal|"v       List all variables."
 block|,
 literal|"{^Y^E}  Scroll {up, down} one line"
 block|,
@@ -89,21 +77,33 @@ init|=
 block|{
 literal|":%{1-9}               Select window {1-9}."
 block|,
-literal|":buffer lines         Set the default window buffer size."
+literal|":close {1-9} . . .    Close windows."
 block|,
-literal|":close {1-9}          Close window."
+literal|":close all            Close all windows."
 block|,
 literal|":cursor modes         Set the cursor modes."
 block|,
 literal|":escape C             Set escape character to C."
 block|,
+literal|":foreground {1-9} [off]"
+block|,
+literal|"                      Make {1-9} a foreground window."
+block|,
 literal|":label {1-9} string   Label window {1-9}."
+block|,
+literal|":list                 List all windows."
+block|,
+literal|":nline lines          Set the default number of lines"
+block|,
+literal|"                      in window text buffers."
 block|,
 literal|":source filename      Execute commands in ``filename''."
 block|,
 literal|":terse [off]          Turn on (or off) terse mode."
 block|,
 literal|":unset variable       Deallocate ``variable''."
+block|,
+literal|":variable             List all variables."
 block|,
 literal|":window row col nrow ncol [nline label]"
 block|,
@@ -113,7 +113,9 @@ literal|"                      of size ``nrow'', ``ncol'',"
 block|,
 literal|"                      with ``nline'', and ``label''."
 block|,
-literal|":write {1-9} string   Write ``string'' to window {1-9}."
+literal|":write {1-9} string . . ."
+block|,
+literal|"                      Write strings to window {1-9}."
 block|,
 literal|0
 block|}
@@ -321,184 +323,6 @@ literal|1
 else|:
 literal|0
 return|;
-block|}
-end_block
-
-begin_macro
-name|c_list
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|ww
-modifier|*
-name|w
-decl_stmt|,
-modifier|*
-name|wp
-decl_stmt|;
-specifier|register
-name|i
-expr_stmt|;
-name|int
-name|n
-decl_stmt|;
-for|for
-control|(
-name|n
-operator|=
-literal|0
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NWINDOW
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|window
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|)
-name|n
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"No windows."
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
-name|w
-operator|=
-name|openiwin
-argument_list|(
-name|n
-operator|+
-literal|2
-argument_list|,
-literal|"Windows"
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"Can't open listing window: %s."
-argument_list|,
-name|wwerror
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NWINDOW
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|wp
-operator|=
-name|window
-index|[
-name|i
-index|]
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"%c %c %-13s %-.*s\n"
-argument_list|,
-name|wp
-operator|==
-name|selwin
-condition|?
-literal|'*'
-else|:
-literal|' '
-argument_list|,
-name|i
-operator|+
-literal|'1'
-argument_list|,
-name|wp
-operator|->
-name|ww_state
-operator|==
-name|WWS_HASPROC
-condition|?
-literal|""
-else|:
-literal|"(No process)"
-argument_list|,
-name|wwncol
-operator|-
-literal|20
-argument_list|,
-name|wp
-operator|->
-name|ww_label
-condition|?
-name|wp
-operator|->
-name|ww_label
-else|:
-literal|"(No label)"
-argument_list|)
-expr_stmt|;
-block|}
-name|waitnl
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|closeiwin
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
