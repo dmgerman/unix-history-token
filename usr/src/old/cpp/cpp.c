@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c 1.4 %G%"
+literal|"@(#)cpp.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -930,7 +930,6 @@ comment|/* don't put out lines "# 12 foo.c" */
 end_comment
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|passcom
 decl_stmt|;
@@ -1952,6 +1951,17 @@ name|p
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|trulvl
+operator|||
+name|flslvl
+condition|)
+name|pperror
+argument_list|(
+literal|"missing endif"
+argument_list|)
+expr_stmt|;
 name|inp
 operator|=
 name|p
