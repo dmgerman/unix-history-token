@@ -4154,10 +4154,7 @@ operator|->
 name|groups
 argument_list|)
 expr_stmt|;
-comment|/* pwd may have been invalidated */
-if|if
-condition|(
-operator|(
+comment|/* go get a current version of pwd */
 name|pwd
 operator|=
 name|GETPWNAM
@@ -4166,10 +4163,63 @@ name|a_name
 operator|->
 name|val
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pwd
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* This will fail when we rename, so special case that */
+if|if
+condition|(
+name|mode
+operator|==
+name|M_UPDATE
+operator|&&
+operator|(
+name|arg
+operator|=
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'l'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|a_name
+operator|->
+name|val
+operator|=
+name|arg
+operator|->
+name|val
+expr_stmt|;
+comment|/* update new name */
+name|pwd
+operator|=
+name|GETPWNAM
+argument_list|(
+name|a_name
+operator|->
+name|val
+argument_list|)
+expr_stmt|;
+comment|/* refetch renamed rec */
+block|}
+block|}
+if|if
+condition|(
+name|pwd
+operator|==
+name|NULL
+condition|)
+comment|/* can't go on without this */
 name|errx
 argument_list|(
 name|EX_NOUSER
