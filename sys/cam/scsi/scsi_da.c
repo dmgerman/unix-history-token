@@ -493,49 +493,6 @@ name|da_quirk_table
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|DA_OLD_QUIRKS
-comment|/* 	 * Logitec USB/Firewire LHD-P30FU 	 */
-block|{
-comment|/* USB part */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"HITACHI_"
-block|,
-literal|"DK23DA*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* Firewire part */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"LSILogic"
-block|,
-literal|"SYM13FW*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* DA_OLD_QUIRKS */
 block|{
 comment|/* 		 * Fujitsu M2513A MO drives. 		 * Tested devices: M2513A2 firmware versions 1200& 1300. 		 * (dip switch selects whether T_DIRECT or T_OPTICAL device) 		 * Reported by: W.Scholten<whs@xs4all.nl> 		 */
 block|{
@@ -829,59 +786,6 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Maxtor 3000LE USB Drive 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"MAXTOR*"
-block|,
-literal|"K040H2*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * LaCie USB drive, among others 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"Maxtor*"
-block|,
-literal|"D080H4*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-block|{
-name|T_OPTICAL
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"FUJITSU"
-block|,
-literal|"MCF3064AP"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
 comment|/* 		 * Microtech USB CameraMate 		 */
 block|{
 name|T_DIRECT
@@ -933,24 +837,6 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
-comment|/* 		 * Olympus digital cameras (D-370) 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"OLYMPUS"
-block|,
-literal|"D-*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
@@ -1008,78 +894,6 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Nikon Coolpix E775/E995 Cameras  		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"NIKON"
-block|,
-literal|"NIKON DSC E*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Nikon Coolpix E885 Camera 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"Nikon"
-block|,
-literal|"Digital Camera"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * SimpleTech FlashLink UCF-100 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"OEI-USB"
-block|,
-literal|"CompactFlash"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Minolta Dimage 2330 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"MINOLTA"
-block|,
-literal|"DIMAGE 2330*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
 comment|/* 		 * Minolta Dimage E203 		 */
 block|{
 name|T_DIRECT
@@ -1095,42 +909,6 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
-comment|/* 		 * DIVA USB Mp3 Player. 		 * PR: kern/33638 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"DIVA USB"
-block|,
-literal|"Media Reader"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Daisy Technology PhotoClip USB Camera 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"Digital"
-block|,
-literal|"World   DMC"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
@@ -1170,42 +948,6 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * HP 315 Digital Camera 		 * PR: kern/41010 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"HP"
-block|,
-literal|"USB CAMERA"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Fujitsu-Siemens Memorybird pen drive 		 * PR: kern/34712 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"Fujitsu"
-block|,
-literal|"Memorybird"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
 comment|/* 		 * Sony USB Key-Storage 		 * PR: kern/46386 		 */
 block|{
 name|T_DIRECT
@@ -1221,114 +963,6 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
-comment|/* 		 * Lexar Media Jumpdrive 		 * PR: kern/47006 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"LEXAR"
-block|,
-literal|"DIGITAL FILM"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Pentax USB Optio 230 camera 		 * PR: kern/46369 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"PENTAX"
-block|,
-literal|"DIGITAL_CAMERA"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Casio QV-R3 USB camera (uses Pentax chip as above) 		 * PR: kern/46545 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"CASIO"
-block|,
-literal|"DIGITAL_CAMERA"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * M-Systems DiskOnKey USB flash key 		 * PR: kern/47793 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"M-Sys"
-block|,
-literal|"DiskOnKey"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * SanDisk ImageMate (I, II, ...) compact flash 		 * PR: kern/47877 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"SanDisk"
-block|,
-literal|"ImageMate*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
-block|,
-block|{
-comment|/* 		 * Feiya "slider" dual-slot flash reader. The vendor field 		 * is blank so this may match other devices. 		 * PR: kern/50020 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|""
-block|,
-literal|"USB CARD READER"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
@@ -1349,23 +983,6 @@ comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
-block|{
-comment|/* 		 * OTi USB Flash Key 		 * PR: kern/51825 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"OTi"
-block|,
-literal|"Flash Disk"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-block|}
 endif|#
 directive|endif
 comment|/* DA_OLD_QUIRKS */
