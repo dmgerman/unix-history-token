@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"kernel.h"
 end_include
 
@@ -43,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"resourcevar.h"
 end_include
 
 begin_include
@@ -153,10 +153,6 @@ name|struct
 name|pstats
 modifier|*
 name|pstats
-init|=
-name|p
-operator|->
-name|p_stats
 decl_stmt|;
 specifier|register
 name|int
@@ -200,6 +196,17 @@ operator|->
 name|c_next
 expr_stmt|;
 block|}
+comment|/* 	 * Curproc (now in p) is null if no process is running. 	 * We assume that curproc is set in user mode! 	 */
+if|if
+condition|(
+name|p
+condition|)
+name|pstats
+operator|=
+name|p
+operator|->
+name|p_stats
+expr_stmt|;
 comment|/* 	 * Charge the time out based on the mode the cpu is in. 	 * Here again we fudge for the lack of proper interval timers 	 * assuming that the current state has been around at least 	 * one tick. 	 */
 comment|/* 		 * CPU was in user state.  Increment 		 * user time counter, and process process-virtual time 		 * interval timer.  		 */
 name|BUMPTIME
@@ -258,8 +265,7 @@ block|{
 comment|/* 		 * CPU was in system state. 		 */
 if|if
 condition|(
-operator|!
-name|noproc
+name|p
 condition|)
 name|BUMPTIME
 argument_list|(
@@ -281,9 +287,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|noproc
-operator|==
-literal|0
+name|p
 condition|)
 block|{
 if|if
@@ -681,7 +685,9 @@ name|CP_SYS
 expr_stmt|;
 if|if
 condition|(
-name|noproc
+name|curproc
+operator|==
+name|NULL
 operator|&&
 name|CLKF_BASEPRI
 argument_list|(
