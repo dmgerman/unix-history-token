@@ -3723,8 +3723,8 @@ index|]
 decl_stmt|;
 specifier|const
 name|char
-modifier|*
 name|sfmt
+index|[]
 init|=
 literal|"Current Driver State: %s.\n"
 decl_stmt|;
