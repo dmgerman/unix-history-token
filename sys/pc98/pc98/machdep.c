@@ -6617,6 +6617,9 @@ literal|1024
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MAXMEM
 comment|/* 	 * Maxmem isn't the "maximum memory", it's one larger than the 	 * highest page of the physical address space.  It should be 	 * called something like "Maxphyspage". 	 */
 name|Maxmem
 operator|=
@@ -6642,9 +6645,8 @@ name|speculative_mprobe
 operator|=
 name|FALSE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAXMEM
+else|#
+directive|else
 name|Maxmem
 operator|=
 name|MAXMEM
@@ -7641,19 +7643,6 @@ name|PG_RW
 operator||
 name|PG_V
 expr_stmt|;
-name|extmem
-operator|=
-operator|(
-name|Maxmem
-operator|*
-name|PAGE_SIZE
-operator|-
-literal|0x100000
-operator|)
-operator|/
-literal|1024
-expr_stmt|;
-comment|/* extent memory */
 comment|/* 	 * get memory map with INT 15:E820 	 */
 define|#
 directive|define
