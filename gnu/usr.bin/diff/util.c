@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|PR_PROGRAM
-value|"/bin/pr"
+value|"/usr/bin/pr"
 end_define
 
 begin_endif
@@ -822,7 +822,7 @@ name|PR_PROGRAM
 argument_list|,
 name|PR_PROGRAM
 argument_list|,
-literal|"-f"
+literal|"-F"
 argument_list|,
 literal|"-h"
 argument_list|,
@@ -909,7 +909,7 @@ name|sprintf
 argument_list|(
 name|command
 argument_list|,
-literal|"%s -f -h "
+literal|"%s -F -h "
 argument_list|,
 name|PR_PROGRAM
 argument_list|)
