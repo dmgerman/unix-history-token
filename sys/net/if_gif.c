@@ -2125,19 +2125,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|IF_ENQUEUE
-argument_list|(
-name|ifq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* we need schednetisr since the address family may change */
-name|schednetisr
-argument_list|(
-name|isr
-argument_list|)
-expr_stmt|;
 name|gifp
 operator|->
 name|if_ipackets
@@ -2152,6 +2139,19 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+name|IF_ENQUEUE
+argument_list|(
+name|ifq
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* we need schednetisr since the address family may change */
+name|schednetisr
+argument_list|(
+name|isr
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
