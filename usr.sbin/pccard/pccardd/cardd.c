@@ -1,14 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cardd.c,v 1.8 1996/04/18 04:25:11 nate Exp $  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
 
 begin_include
 include|#
@@ -391,19 +384,29 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"Before readslots\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|readslots
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"After readslots\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|slots
@@ -454,11 +457,16 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"Doing select\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|count
 operator|=
 name|select
@@ -475,6 +483,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"select=%d\n"
@@ -482,6 +493,8 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|count
@@ -771,6 +784,9 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"opened %s\n"
@@ -778,6 +794,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|=
 name|xmalloc
@@ -847,6 +865,9 @@ argument_list|(
 literal|"ioctl (PIOCRWMEM)"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"mem=%x\n"
@@ -854,6 +875,8 @@ argument_list|,
 name|mem
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mem
@@ -900,6 +923,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"%p %p\n"
@@ -912,6 +938,8 @@ operator|->
 name|next
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|->
 name|next
@@ -975,6 +1003,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"%p %p %d %d\n"
@@ -995,6 +1026,8 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|state
@@ -1134,6 +1167,24 @@ operator|->
 name|config
 operator|=
 literal|0
+expr_stmt|;
+comment|/* release io */
+name|bit_nset
+argument_list|(
+name|io_avail
+argument_list|,
+name|sp
+operator|->
+name|io
+operator|.
+name|addr
+argument_list|,
+name|sp
+operator|->
+name|io
+operator|.
+name|size
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2006,6 +2057,14 @@ operator|.
 name|addr
 expr_stmt|;
 block|}
+name|sp
+operator|->
+name|mem
+operator|.
+name|cardaddr
+operator|=
+literal|0x4000
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2033,14 +2092,6 @@ name|mem
 operator|.
 name|size
 argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|mem
-operator|.
-name|cardaddr
-operator|=
-literal|0x4000
 expr_stmt|;
 endif|#
 directive|endif
