@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -236,6 +236,17 @@ begin_comment
 comment|/* _verbose -- go into verbose mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMDDBGKILL
+value|15
+end_define
+
+begin_comment
+comment|/* _kill -- kill sendmail */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -307,6 +318,10 @@ block|,
 literal|"_verbose"
 block|,
 name|CMDDBGVERBOSE
+block|,
+literal|"_kill"
+block|,
+name|CMDDBGKILL
 block|,
 endif|#
 directive|endif
@@ -1081,6 +1096,37 @@ argument_list|(
 literal|"200"
 argument_list|,
 literal|"Verbose mode"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMDDBGKILL
+case|:
+comment|/* kill the parent */
+if|if
+condition|(
+name|kill
+argument_list|(
+name|MotherPid
+argument_list|,
+name|SIGTERM
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Mother is dead"
+argument_list|)
+expr_stmt|;
+else|else
+name|message
+argument_list|(
+literal|"500"
+argument_list|,
+literal|"Can't kill Mom"
 argument_list|)
 expr_stmt|;
 break|break;

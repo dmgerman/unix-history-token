@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.81
+literal|3.82
 operator|%
 name|G
 operator|%
@@ -360,6 +360,14 @@ begin_expr_stmt
 name|Mode
 operator|=
 name|MD_DEFAULT
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MotherPid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

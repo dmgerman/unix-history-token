@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.72		%G%"
+literal|"@(#)sendmail.h	3.73		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1971,6 +1971,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* depth of aliasing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MotherPid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* proc id of parent process */
 end_comment
 
 begin_decl_stmt
