@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	8.1 (Berkeley) %G%"
+literal|"@(#)vmstat.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,7 +787,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* uses 16 rows and 12 cols */
+comment|/* uses 17 rows and 12 cols */
 end_comment
 
 begin_define
@@ -1491,19 +1491,8 @@ expr_stmt|;
 name|mvprintw
 argument_list|(
 name|VMSTATROW
-argument_list|,
-name|VMSTATCOL
 operator|+
-literal|10
-argument_list|,
-literal|"vmflt"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|VMSTATROW
-operator|+
-literal|1
+literal|0
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1516,7 +1505,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|2
+literal|1
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1529,7 +1518,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|3
+literal|2
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1542,7 +1531,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|4
+literal|3
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1555,7 +1544,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|5
+literal|4
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1568,7 +1557,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|6
+literal|5
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1581,7 +1570,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|7
+literal|6
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1594,7 +1583,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|8
+literal|7
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1607,7 +1596,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|9
+literal|8
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1620,7 +1609,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|10
+literal|9
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1633,7 +1622,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|11
+literal|10
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1646,7 +1635,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|12
+literal|11
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1659,7 +1648,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|13
+literal|12
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1672,7 +1661,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|14
+literal|13
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1685,7 +1674,7 @@ name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|15
+literal|14
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1694,21 +1683,11 @@ argument_list|,
 literal|"scan"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|LINES
-operator|-
-literal|1
-operator|>
-name|VMSTATROW
-operator|+
-literal|16
-condition|)
 name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|16
+literal|15
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -1725,13 +1704,13 @@ literal|1
 operator|>
 name|VMSTATROW
 operator|+
-literal|17
+literal|16
 condition|)
 name|mvprintw
 argument_list|(
 name|VMSTATROW
 operator|+
-literal|17
+literal|16
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -2903,26 +2882,11 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_vm_faults
-argument_list|,
-name|VMSTATROW
-argument_list|,
-name|VMSTATCOL
-operator|+
-literal|3
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-name|PUTRATE
-argument_list|(
-name|Cnt
-operator|.
 name|v_cow_faults
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|1
+literal|0
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -2939,7 +2903,7 @@ name|v_lookups
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|2
+literal|1
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -2956,7 +2920,7 @@ name|v_hits
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|3
+literal|2
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -2973,7 +2937,7 @@ name|v_zfod
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|4
+literal|3
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -2990,7 +2954,7 @@ name|v_nzfod
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|5
+literal|4
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -3023,7 +2987,7 @@ operator|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|6
+literal|5
 argument_list|,
 name|VMSTATCOL
 operator|+
@@ -3047,7 +3011,7 @@ argument_list|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|7
+literal|6
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3065,7 +3029,7 @@ argument_list|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|8
+literal|7
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3083,7 +3047,7 @@ argument_list|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|9
+literal|8
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3101,7 +3065,7 @@ argument_list|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|10
+literal|9
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3119,7 +3083,7 @@ argument_list|)
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|11
+literal|10
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3134,7 +3098,7 @@ name|v_dfree
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|12
+literal|11
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3149,7 +3113,7 @@ name|v_pfree
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|13
+literal|12
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3164,7 +3128,7 @@ name|v_reactivated
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|14
+literal|13
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3176,6 +3140,21 @@ argument_list|(
 name|Cnt
 operator|.
 name|v_scan
+argument_list|,
+name|VMSTATROW
+operator|+
+literal|14
+argument_list|,
+name|VMSTATCOL
+argument_list|,
+literal|9
+argument_list|)
+expr_stmt|;
+name|PUTRATE
+argument_list|(
+name|Cnt
+operator|.
+name|v_rev
 argument_list|,
 name|VMSTATROW
 operator|+
@@ -3200,36 +3179,11 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_rev
-argument_list|,
-name|VMSTATROW
-operator|+
-literal|16
-argument_list|,
-name|VMSTATCOL
-argument_list|,
-literal|9
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LINES
-operator|-
-literal|1
-operator|>
-name|VMSTATROW
-operator|+
-literal|17
-condition|)
-name|PUTRATE
-argument_list|(
-name|Cnt
-operator|.
 name|v_intrans
 argument_list|,
 name|VMSTATROW
 operator|+
-literal|17
+literal|16
 argument_list|,
 name|VMSTATCOL
 argument_list|,
@@ -3461,7 +3415,23 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/*	PUTRATE(Cnt.v_faults, GENSTATROW + 1, GENSTATCOL + 25, 5);*/
+name|PUTRATE
+argument_list|(
+name|Cnt
+operator|.
+name|v_faults
+argument_list|,
+name|GENSTATROW
+operator|+
+literal|1
+argument_list|,
+name|GENSTATCOL
+operator|+
+literal|25
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
 name|mvprintw
 argument_list|(
 name|DISKROW
